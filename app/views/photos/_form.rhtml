@@ -1,0 +1,9 @@
+<%= render :partial => "show_game_status" %>
+<br /><br />
+<%= render :partial => "guesses", :locals => {:photo => @photo, :comments => @comments, :guesses => @guesses, :revelation => @revelation} %>
+<br /><br />
+<%= start_form_tag :action => 'reload_comments', :id => @photo %>
+<%= submit_tag("Reload Comments") %>
+<%= end_form_tag %>
+<br /><br />
+<%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?', :post => true %>

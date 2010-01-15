@@ -1,0 +1,7 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"utf-8" 
+xml.guesses do
+@guesses.each do |guess|
+  xml.guess :person => Person.find(guess[:person_id])[:username], :year => guess[:guessed_at].year, :month => guess[:guessed_at].month - 1, :day => guess[:guessed_at].day
+end
+end
+xml

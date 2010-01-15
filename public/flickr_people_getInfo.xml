@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="ok">
+<person id="19344162@N00" nsid="19344162@N00" isadmin="0" ispro="1" iconserver="23" gender="F" ignored="0" contact="0" friend="0" family="0" revcontact="0" revfriend="0" revfamily="0">
+	<username>(ariel)</username>
+	<realname>Ariel</realname>
+	<mbox_sha1sum>3274319cfca80c350ff7ee77048dfe3fa70be3dc</mbox_sha1sum>
+	<location>San Francisco</location>
+	<photosurl>http://www.flickr.com/photos/insidevoice/</photosurl>
+
+	<profileurl>http://www.flickr.com/people/insidevoice/</profileurl>
+	<mobileurl>http://www.flickr.com/mob/photostream.gne?id=508605</mobileurl>
+	<photos>
+		<firstdatetaken>2002-07-23 21:39:32</firstdatetaken>
+		<firstdate>1122948617</firstdate>
+		<count>631</count>
+
+	</photos>
+</person>
+</rsp>

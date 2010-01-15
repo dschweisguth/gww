@@ -1,0 +1,20 @@
+<textarea name="textfield" onFocus="this.select();" rows="50" style="width: 800px;" wrap="virtual">
+&lt;b&gt;updated <%= @report_date.strftime  '%A, %B %d, %I%p' %>&lt;/b&gt;
+
+<%= @new_guesses.length %> new guesses from <% @new_guesses.each_with_index do |details, details_index| -%>&lt;a href="http://www.flickr.com/photos/<%= details[:owner][:flickrid] %>/<%= details[:photo][:flickrid] %>/in/pool-guesswheresf/"><%= details[:person][:username] %>&lt;/a&gt;<% if details_index < @new_guesses.length - 1 -%>, <% end -%><% end -%>
+
+
+<%= @new_photos_count %> photos have been added to the pool since the last update. There are still &lt;a href="http://tomapodaca.org/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
+
+<%= @total_correct_guessers %> people have made correct guesses. <%= @total_posters_only %> people have put at least one photo in the pool but not guessed any photos correctly. That means that at least <%= @total_participants %> of our <%= @member_count %> members have participated in the game.
+
+Here are &lt;a href="http://tomapodaca.org/gwsf/guesses.html">the guesses broken down by day, week, month and year.&lt;/a&gt;
+
+Since the beginning of the game, <%= @total_single_guessers %> people have guessed one photo correctly. Here are the <%= @total_correct_guessers - @total_single_guessers %> people who've correctly guessed two or more photos; in parentheses following each name is the number of photos that person has put in the pool:
+<% @people.each do |person_list| -%>
+
+<% if person_list[:guesscount] > 1 -%>
+&lt;b&gt;<%= person_list[:guesscount] %>&lt;/b&gt; - <% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %> (<%= person[:photocount] %>)<% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%>
+<% end -%>
+<% end -%>
+</textarea>

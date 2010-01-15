@@ -1,0 +1,37 @@
+<h1><%= @guesses.length %> guesses still undated</h1>
+
+<table>
+  <tr>
+    <td>posted by</td>
+    <td>guessed by</td>
+    <td>added on</td>
+    <td>last update</td>
+    <td>photo flickr id</td>
+    <td>&nbsp;</td>
+    <td>set date</td>
+  </tr>  
+<% @guesses.each do |guess| -%>
+<% photo = Photo.find(guess[:photo_id]) -%>
+<% if photo[:person_id] != 0 -%>
+  <tr>
+    <td><%=h Person.find(photo[:person_id])[:username] %></td>
+    <td><%=h Person.find(guess[:person_id])[:username] %></td>
+    <td><%= photo[:dateadded].strftime  '%Y/%m/%d' %></td>
+    <td><%= photo[:lastupdate].strftime  '%Y/%m/%d' %></td>
+    <td><%= photo[:flickrid] %></td>
+    <td><%= link_to 'Show', :action => 'show', :id => photo %></td>
+    <td><%= start_form_tag :action => 'force_dates', :id => photo %><%= select_date(date = Date.today) %><%= submit_tag "Submit" %><%= end_form_tag %></td>
+  </tr>
+<% else -%>
+  <tr>
+    <td>unknown</td>
+    <td><%=h Person.find(guess[:person_id])[:username] %></td>
+    <td><%= photo[:dateadded].strftime  '%Y/%m/%d' %></td>
+    <td><%= photo[:lastupdate].strftime  '%Y/%m/%d' %></td>
+    <td><%= photo[:flickrid] %></td>
+    <td><%= link_to 'Show', :action => 'show', :id => photo %></td>
+    <td><%= start_form_tag :action => 'force_dates', :id => photo %><%= select_date(date = Date.today) %><%= submit_tag "Submit" %><%= end_form_tag %></td>
+</tr>
+<% end -%>
+<% end -%>
+</table>

@@ -1,0 +1,79 @@
+<table width="1200">
+  <tr>
+    <td colspan="3" class="dheader">guesses as of <%= @report_date.strftime '%A, %B %d, %I%p' %></td>
+  </tr>
+  <tr>
+    <td class="dholder">
+      <table width="400">
+        <tr>
+          <td colspan="2" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="2" class="dheader">for <%= @yesterday_dates[:begin].strftime '%A, %b. %d' %></td>
+        </tr>
+        <% @yesterday.each do |person_list| %>
+          <tr>
+            <td class="dcurrency"><%= person_list[:guesscount] %></td>
+            <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+    <td class="dholder">
+      <table width="400">
+        <tr>
+          <td colspan="2" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="2" class="dheader">for the week of <%= @thisweek_dates[:begin].strftime '%b. %d' %> so far...</td>
+        </tr>
+      <% @thisweek.each do |person_list| %>
+        <tr>
+          <td class="dcurrency"><%= person_list[:guesscount] %></td>
+          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+        </tr>
+      <% end %>
+        <tr>
+          <td colspan="2" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="2" class="dheader">for the week of <%= @lastweek_dates[:begin].strftime '%b. %d' %>...</td>
+        </tr>
+      <% @lastweek.each do |person_list| %>
+        <tr>
+          <td class="dcurrency"><%= person_list[:guesscount] %></td>
+          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+        </tr>
+      <% end %>
+      </table>
+    </td>
+    <td class="dholder">
+      <table width="400">
+        <tr>
+          <td colspan="2" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="2" class="dheader">for <%= @thismonth_dates[:begin].strftime '%B' %> so far...</td>
+        </tr>
+      <% @thismonth.each do |person_list| %>
+        <tr>
+          <td class="dcurrency"><%= person_list[:guesscount] %></td>
+          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+        </tr>
+      <% end %>
+        <tr>
+          <td colspan="2" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="2" class="dheader">for <%= @lastmonth_dates[:begin].strftime '%B' %>...</td>
+        </tr>
+      <% @lastmonth.each do |person_list| %>
+        <tr>
+          <td class="dcurrency"><%= person_list[:guesscount] %></td>
+          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+        </tr>
+      <% end %>
+      </table>
+    </td>
+  </tr>
+</table>

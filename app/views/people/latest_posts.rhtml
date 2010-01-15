@@ -1,0 +1,22 @@
+<h1><%= @photos.length %> photos posted by <%= @person[:username] %></h1>
+
+<table>
+  <tr>
+    <td>posted by</td>
+    <td>added on</td>
+    <td>last update</td>
+    <td>mapped</td>
+    <td>game status</td>
+    <td>&nbsp;</td>
+  </tr>  
+<% for photo in @photos %>
+  <tr>
+    <td><%=h Person.find(photo[:person_id])[:username] %></td>
+    <td><%= photo[:dateadded].strftime  '%Y/%m/%d' %></td>
+    <td><%= photo[:lastupdate].strftime  '%Y/%m/%d' %></td>
+    <td><%= photo[:mapped] %></td>
+    <td><b><%= photo[:game_status] %></b></td>
+    <td><%= link_to 'Show', :controller => 'photos', :action => 'show', :id => photo %></td>
+  </tr>
+<% end %>
+</table>

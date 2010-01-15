@@ -1,0 +1,29 @@
+<table>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td colspan="5" class="dheader"><%= @guesses.length %> guesses from <%= @person[:username] %></td>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td class="dheader">link</td>
+    <td class="dheader">posted by</td>
+    <td class="dheader">date guessed</td>
+    <td class="dheader">date added</td>
+    <td class="dheader">photo flickr id</td>
+  </tr>  
+<% @guesses.each_with_index do |guess, guess_index| %>
+<% photo = Photo.find(guess[:photo_id]) -%>
+  <tr>
+    <td class="dnum"><%= guess_index + 1 %>.</td>
+    <% if photo[:person_id] != 0 -%>
+    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= Person.find(photo[:person_id])[:flickrid] %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
+    <td class="dvalue"><%=h Person.find(photo[:person_id])[:username] %></td>
+    <% else -%>
+    <td class="dvalue"><b>unknown</b></td>
+    <td class="dvalue"><b>unknown</b></td>
+    <% end -%>
+    <td class="dvalue"><%= guess[:guessed_at].strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= guess[:added_at].strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= photo[:flickrid] %></td>
+  </tr>
+<% end %>
+</table>

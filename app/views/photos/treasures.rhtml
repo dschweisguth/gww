@@ -1,0 +1,63 @@
+<table width="800">
+  <tr>
+    <td colspan="2" class="dheader">treasured photos</td>
+  </tr>
+  <tr>
+    <td class="dholder">
+      <table width="400">
+        <tr>
+          <td colspan="6" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="6" class="dheader">longest</td>
+        </tr>
+        <tr>
+          <td>photo</td>
+          <td>posted by</td>
+          <td>guessed by</td>
+          <td>added on</td>
+          <td>guessed on</td>
+          <td>time elapsed</td>
+        </tr>  
+        <% @photos_longest.each do |photo_info| %>
+          <tr>
+            <td class="dvalue"><%= link_to photo_info[:photo][:id], :action => 'show', :id => photo_info[:photo][:id] %></td>
+            <td class="dvalue"><%=h Person.find(photo_info[:photo][:person_id])[:username] %></td>
+            <td class="dvalue"><%=h Person.find(photo_info[:guess][:person_id])[:username] %></td>
+            <td class="dvalue"><%= photo_info[:photo][:dateadded].strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+            <td class="dvalue"><%= photo_info[:guess][:guessed_at].strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+            <td class="dvalue"><%= photo_info[:elapsed_pretty] %></td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+    <td class="dholder">
+      <table width="400">
+        <tr>
+          <td colspan="6" class="cellspace">&nbsp;</td>
+        </tr>  
+        <tr>
+          <td colspan="6" class="dheader">shortest</td>
+        </tr>
+        <tr>
+          <td>photo</td>
+          <td>posted by</td>
+          <td>guessed by</td>
+          <td>added on</td>
+          <td>guessed on</td>
+          <td>time elapsed</td>
+        </tr>  
+      <% @photos_shortest.each do |photo_info| %>
+        <tr>
+          <td class="dvalue"><%= link_to photo_info[:photo][:id], :action => 'show', :id => photo_info[:photo][:id] %></td>
+          <td class="dvalue"><%=h Person.find(photo_info[:photo][:person_id])[:username] %></td>
+          <td class="dvalue"><%=h Person.find(photo_info[:guess][:person_id])[:username] %></td>
+          <td class="dvalue"><%= photo_info[:photo][:dateadded].strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+          <td class="dvalue"><%= photo_info[:guess][:guessed_at].strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+          <td class="dvalue"><%= photo_info[:elapsed_pretty] %></td>
+        </tr>
+      <% end %>
+      </table>
+    </td>
+  </tr>
+</table>

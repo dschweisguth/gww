@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="ok">
+<group id="32053327@N00" iconserver="10">
+	<name>Guess Where SF</name>
+	<description>Add a photo of San Francisco and see who can guess where it is!
+
+&lt;b&gt;Only a few requirements!&lt;/b&gt;
+
+&lt;b&gt;1.&lt;/b&gt; The photo must be in the city of San Francisco.
+
+
+&lt;b&gt;2.&lt;/b&gt; It must be possible to identify where you took the photo by looking at it. It doesn't have to be easy, just possible.
+
+&lt;b&gt;3.&lt;/b&gt; If you have several photos of a single location, don't add them all to the pool. Add your favorite and reference the others in the caption or comments, if you want people to see them.
+
+&lt;b&gt;4.&lt;/b&gt; Make sure that you don't give the photo's location away in your tags, title, caption or groupings. Don't place your photo on a map before it's been guessed!
+
+&lt;b&gt;5.&lt;/b&gt; Straight-up photos of ocean beach, the golden gate bridge, city hall, etc. are not good for this group because everyone knows where those places are. Try to make your photos a challenge to guess .
+
+You may find photos that haven't been identified yet tagged with &lt;a href=&quot;http://www.flickr.com/groups/guesswheresf/pool/tags/unfoundinSF/&quot;&gt;unfoundinSF&lt;/a&gt;, and correctly guessed photos tagged with &lt;a href=&quot;http://www.flickr.com/groups/guesswheresf/pool/tags/foundinSF/&quot;&gt;foundinSF&lt;/a&gt;. Feel free to tag your own photos appropriately.
+
+Here's a &lt;a href=&quot;http://tomapodaca.org/gwsf/&quot;&gt;more comprehensive list of unfound photos in the pool&lt;/a&gt;.
+
+Inspired by &lt;a href=&quot;http://flickr.com/groups/guesswhere/&quot;&gt;flickr.com/groups/guesswhere/&lt;/a&gt;
+
+</description>
+	<members>721</members>
+	<privacy>3</privacy>
+	<throttle mode="none" />
+</group>
+</rsp>

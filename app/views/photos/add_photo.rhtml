@@ -1,0 +1,9 @@
+<% if @show_form -%>
+Enter a flickr photo id to add the photo to the database
+<%= start_form_tag :action => 'add_photo' %>
+<%= text_field :photo, :flickrid %>
+<%= submit_tag 'Add' %>
+<%= end_form_tag %>
+<% else -%>
+You shouldn't be seeing this
+<% end -%>

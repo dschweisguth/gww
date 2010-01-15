@@ -1,0 +1,28 @@
+<table>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td colspan="3" class="dheader">I think <%= @person[:username] %> commented on <%= @photos.length %> photos</td>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td class="dheader">link</td>
+    <td class="dheader">posted by</td>
+    <td class="dheader">found by</td>
+  </tr>  
+<% @photos.each_with_index do |photo, photo_index| %>
+  <tr>
+    <td class="dnum"><%= photo_index + 1 %>.</td>
+    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= Person.find(photo[:person_id])[:flickrid] %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
+    <td class="dvalue"><%=h Person.find(photo[:person_id])[:username] %></td>
+    <% if photo[:game_status] == 'found' -%>
+    <% guesses = Guess.find_all_by_photo_id(photo[:id]) -%>
+    <% person_names = [] -%>
+    <% guesses.each do |guess| -%>
+    <% person_names.push(Person.find(guess[:person_id])[:username]) -%>
+    <% end -%>
+    <td class="dvalue"><%= person_names.join(', ') %></td>
+    <% else -%>
+    <td class="dvalue"><b><%= photo[:game_status] %></b></td>
+    <% end -%>
+  </tr>
+<% end %>
+</table>

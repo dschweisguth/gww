@@ -1,0 +1,10 @@
+<h1>Listing people</h1>
+
+<table>
+<% @people.each do |person| %>
+<tr>
+  <td><%= person[:guesscount] %></td>
+  <td><%= link_to person[:person][:username], :action => 'show', :id => person[:person][:id] %> (<%= person[:photocount] %>)</td>
+</tr>
+<% end %>
+</table>

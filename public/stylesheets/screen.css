@@ -1,0 +1,401 @@
+/* global style */
+
+body {
+    padding: 0px;
+    margin: 0px 0px 0px 9px;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 15px;
+    color: #000000;
+    text-align: left;
+    background-color: #ffffff;
+}
+a {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #0000ff;
+}
+a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #0000ff;
+}
+a:visited {
+    text-decoration: none;
+    font-weight: bold;
+    color: #333333;
+    background-color: #cccccc;
+}
+span.section {
+    padding: 3px 5px 3px 5px;
+    text-decoration: none;
+    color: #000000;
+    background-color: #cccccc;
+}
+span.notice {
+    padding: 4px 8px 4px 8px;
+    font-weight: bold;
+    color: #666666;
+    background-color: #eeeeee;
+}
+
+/* page-specific */
+
+#page {
+    padding: 0px 0px 0px 0px;
+    margin: 5px 0px -1px 0px;
+    width: 830px;
+    background-color: #ffffff;
+}
+
+/* table styling */
+table {
+    padding: 0px;
+    margin: 6px 0px 0px 0px;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 15px;
+    color: #000000;
+    text-align: left;
+}
+td.header {
+    padding: 4px 0px 2px 0px;
+}
+td.cellspace {
+    padding: 0px 10px 0px 10px;
+}
+td.address {
+    padding: 3px 5px 3px 5px;
+    color: #333333;
+    background-color:  #eeeeee;
+}
+td.dheader {
+    padding: 3px 5px 3px 5px;
+    font-size: 11px;
+    font-weight: bold;
+    vertical-align: top;
+    border-left:  1px solid #ffffff;
+    border-bottom:  1px solid #ffffff;
+    background-color: #dddddd;
+}
+td.dvalue {
+    padding: 3px 5px 3px 5px;
+    vertical-align: top;
+    border-left:  1px solid #ffffff;
+    border-bottom:  1px solid #ffffff;
+    background-color: #eeeeee;
+}
+td.dcurrency {
+    padding: 3px 5px 3px 5px;
+    font-weight: bold;
+    text-align: right;
+    vertical-align: top;
+    border-left:  1px solid #ffffff;
+    border-bottom:  1px solid #ffffff;
+    background-color: #eeeeee;
+}
+td.dnum {
+    padding: 3px 3px 3px 0px;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: right;
+    vertical-align: top;
+    background-color: #ffffff;
+}
+td.doptions {
+    padding: 1px 5px 1px 5px;
+    font-size: 11px;
+    font-weight: bold;
+    vertical-align: top;
+    border-bottom:  1px solid #ffffff;
+    background-color: #ffffff;
+}
+td.dholder {
+  padding: 0px;
+  text-align: left;
+  vertical-align: top;
+}
+td.dmark {
+  padding: 0px;
+  text-align: left;
+  vertical-align: top;
+  background-color: #33ffff;
+}
+table.indented {
+    padding: 0px;
+    margin: 15px 0px 20px 30px;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 15px;
+    color: #000000;
+    text-align: left;
+}
+
+/* for admin */
+span.hilight {
+  background-color: #cccccc;
+}
+
+/* top bar styles */
+
+#topbar {
+    padding: 0px;
+    margin: 0px 10px 0px 10px;
+    background-color: #ffffff;
+}   
+#topbar img.logo {
+    float: right;
+    padding: 0px;
+    margin: 5px 0px 0px 0px;
+}
+#topbar h1.pagetitle {
+    float: left;
+    padding: 0px;
+    margin: 0px 0px 6px 0px;
+    font-size: 24px;
+    line-height: 26px;
+    font-weight: bold;
+}
+#topbar a {
+    text-decoration: none;
+    color: #000000;
+}
+#topbar a:hover {
+    text-decoration: none;
+    color: #7f7f7f;
+}
+
+/* bottom bar styles */
+
+#bottombar {
+    padding: 0px;
+    margin: 0px 0px 15px 15px;
+    background-color: #ffffff;
+}
+
+/* spacers */
+
+#clearfloat {
+    padding: 0px;
+    margin: 0px;
+    clear: both;
+}
+#spacer {
+    padding: 0px;
+    margin: 0px;
+    height: 15px;
+    clear: both;
+}
+#pageline {
+    padding: 10px 0px 0px 0px;
+    margin: 0px 0px 1px 0px;
+    width: 830px;
+    border-bottom: 1px solid #7f7f7f;
+}
+#columnline {
+    padding: 0px;
+    margin: 0px 35px 1px 15px;
+    width: 365px;
+    border-bottom: 1px solid #7f7f7f;
+}
+
+/* page header, above columns on sub-pages */
+
+#pageheader {
+    float: left;
+    padding: 0px;
+    margin: 15px 15px 5px 15px;
+}
+#pageheader h1 {
+    padding: 0px;
+    margin: 0px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* column styles */
+
+#leftcolumn {
+    float: left;
+    padding: 0px;
+    margin: -1px 0px 0px 0px;
+    width: 135px;
+    color: #000000;
+    background-color: #ffffff;
+}
+#rightcolumn {
+    padding: 0px 0px 0px 15px;
+    margin: -1px 0px 0px 135px;
+    color: #000000;
+    background-color: #ffffff;
+}
+#leftcolumn h1, #rightcolumn h1 {
+    padding: 0px;
+    margin: 15px 15px 15px 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+#leftcolumn h2, #rightcolumn h2 {
+    padding: 0px;
+    margin: 0px 35px 15px 0px;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+#leftcolumn h2.topheavy, #rightcolumn h2.topheavy {
+    padding: 0px;
+    margin: 25px 35px 15px 15px;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+#leftcolumn h3, #rightcolumn h3 {
+    padding: 0px;
+    margin: 15px 35px 15px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+}
+#leftcolumn h4, #rightcolumn h4 {
+    padding: 0px;
+    margin: 15px 35px 15px 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #000000;
+}
+#leftcolumn p.question, #rightcolumn p.question {
+    padding: 0px;
+    margin: 15px 35px 15px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+}
+#leftcolumn img, #rightcolumn img {
+    padding: 0px;
+    margin: 0px 10px 0px 15px;
+    border: 1px solid #000000;
+}
+#leftcolumn img.detect, #rightcolumn img.detect {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+#leftcolumn li, #rightcolumn li {
+    padding: 0px;
+    margin: 5px 35px 10px 0px;
+}
+#rightcolumn #client {
+    padding: 0px;
+    margin: 5px 5px 5px 5px;
+    border-bottom: 1px solid #000000;
+}
+
+/* top navigation list styling */
+#topnav {
+    white-space: nowrap;
+    float: left;
+    padding: 0px;
+    margin: 0px 0px 15px 0px;
+    list-style: none;
+    width: 830px;
+    background-color: #ffffff;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+}
+#topnav li {
+    display: inline;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+    border-right: 1px solid #000000;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* background colors for various buttons */
+
+#topnav li.active {
+    background-color: #ffffff;
+}
+
+#topnav li.here {
+    float: left;
+    padding: 3px 12px 3px 12px;
+    text-decoration: none;
+    color: #000000;
+    border-bottom: 2px solid #7f7f7f;
+    border-top: 2px solid #dddddd;
+    background-color: #dddddd;
+}
+
+/* link styling in the nav */
+
+#topnav a {
+    float: left;
+    padding: 3px 12px 3px 12px;
+    text-decoration: none;
+    color: #0000FF;
+    border-bottom: 2px solid #ffffff;
+    border-top: 2px solid #ffffff;
+}
+#topnav a:hover {
+    color: #0000FF;
+    text-decoration: none;
+    background-color: #dddddd;
+    border-bottom: 2px solid #7f7f7f;
+    border-top: 2px solid #dddddd;
+}
+
+/* top navigation list styling */
+#leftnav {
+    white-space: nowrap;
+    padding: 0px;
+    margin: 0px 0px 0px 8px;
+    line-height: 18px;
+    list-style: none;
+}
+#leftnav li {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* background colors for various buttons */
+
+#leftnav span.here {
+    padding: 1px 2px 1px 2px;
+    text-decoration: none;
+    color: #000000;
+    background-color: #dddddd;
+}
+
+#leftnav span.notice {
+    padding: 1px 2px 1px 2px;
+    font-size: 11px;
+    color: #666666;
+    background-color: #eeeeee;
+}
+
+/* link styling in the nav */
+
+#leftnav a {
+    padding: 1px 2px 1px 2px;
+    text-decoration: underline;
+    color: #0000ff;
+}
+#leftnav a:hover {
+    padding: 1px 2px 1px 2px;
+    text-decoration: none;
+    color: #0000ff;
+    background-color: #dddddd;
+}

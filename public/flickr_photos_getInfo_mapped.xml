@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="ok">
+<photo id="257098495" secret="a081b42d6b" server="104" dateuploaded="1159690073" isfavorite="0" license="2" rotation="0" originalformat="jpg">
+	<owner nsid="35034353577@N01" username="Tomas" realname="" location="San Francisco, CA, US" />
+	<title>Dinner</title>
+	<description />
+	<visibility ispublic="1" isfriend="0" isfamily="0" />
+	<dates posted="1159690073" taken="2006-09-29 23:08:32" takengranularity="0" lastupdate="1159758370" />
+	<permissions permcomment="3" permaddmeta="2" />
+	<editability cancomment="1" canaddmeta="1" />
+
+	<comments>0</comments>
+	<notes />
+	<tags>
+		<tag id="6414-257098495-46" author="35034353577@N01" raw="san francisco">sanfrancisco</tag>
+		<tag id="6414-257098495-50" author="35034353577@N01" raw="california">california</tag>
+		<tag id="6414-257098495-65" author="35034353577@N01" raw="birthday">birthday</tag>
+		<tag id="6414-257098495-1288" author="35034353577@N01" raw="dinner">dinner</tag>
+
+		<tag id="6414-257098495-5269" author="35034353577@N01" raw="dom">dom</tag>
+		<tag id="6414-257098495-7796" author="35034353577@N01" raw="cellphone">cellphone</tag>
+	</tags>
+	<location latitude="37.768704" longitude="-122.415482" accuracy="16" />
+	<geoperms ispublic="1" iscontact="0" isfriend="0" isfamily="0" />
+	<urls>
+		<url type="photopage">http://www.flickr.com/photos/tma/257098495/</url>
+
+	</urls>
+</photo>
+</rsp>

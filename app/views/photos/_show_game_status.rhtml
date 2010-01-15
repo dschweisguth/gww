@@ -1,0 +1,20 @@
+<% if @photo[:game_status] == 'found' -%>
+I think this photo was correctly guessed by
+<% person_links = [] -%>
+<% @guess_people.each do |person| -%>
+<% person_links.push(link_to(person[:username], :controller => 'people', :action => 'show', :id => person[:id])) -%>
+<% end -%>
+<%= person_links.join(', ') %>.
+<% elsif @photo[:game_status] == 'revealed' -%>
+I think this photo's location was revealed by the person who posted it.
+<% elsif @photo[:game_status] == 'unfound' -%>
+I think this photo is unfound.
+<% elsif @photo[:game_status] == 'unconfirmed' -%>
+I think this photo is unconfirmed.
+<% end -%>
+
+<%= start_form_tag :action => 'change_game_status', :id => @photo %>
+<%= radio_button(:photo, :game_status, 'unfound') %> unfound 
+<%= radio_button(:photo, :game_status, 'unconfirmed') %> unconfirmed 
+<%= submit_tag("Change status") %>
+<%= end_form_tag %>

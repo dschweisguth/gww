@@ -1,0 +1,7 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"utf-8" 
+xml.times do
+@times.each do |time|
+  xml.time :value => time
+end
+end
+xml

@@ -1,0 +1,18 @@
+<% if @photo[:flickr_status] == 'in pool' -%>
+<a href="http://www.flickr.com/photos/<%= @owner[:flickrid] %>/<%= @photo[:flickrid] %>/in/pool-guesswheresf/"><img src="http://static.flickr.com/<%= @photo[:server] %>/<%= @photo[:flickrid] %>_<%= @photo[:secret] %>_m.jpg" border="0"/></a>
+<% elsif @photo[:flickr_status] == 'not in pool' -%>
+<a href="http://www.flickr.com/photos/<%= @owner[:flickrid] %>/<%= @photo[:flickrid] %>"><img src="http://static.flickr.com/<%= @photo[:server] %>/<%= @photo[:flickrid] %>_<%= @photo[:secret] %>_m.jpg" /></a>
+<% else -%>
+<b>photo no longer on flickr</b>
+<% end -%>
+<br />
+<b>Posted by</b> <%= link_to @owner[:username], :controller => 'people', :action => 'show', :id => @owner[:id] %>.
+<% if @unconfirmed.length > 0 -%>
+<br />
+<%= @owner[:username] %> has <%= @unconfirmed.length %> unconfirmed photos:
+<% @unconfirmed.each_with_index do |photo, photo_index| -%>
+<%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo[:id] %>
+<% end -%>
+<% end -%>
+<br /><br />
+<%= render :partial => 'form' %>

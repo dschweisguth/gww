@@ -1,0 +1,9 @@
+<h1>Editing guess</h1>
+
+<%= start_form_tag :action => 'update', :id => @guess %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Edit' %>
+<%= end_form_tag %>
+
+<%= link_to 'Show', :action => 'show', :id => @guess %> |
+<%= link_to 'Back', :action => 'list' %>

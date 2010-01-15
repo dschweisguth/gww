@@ -1,0 +1,34 @@
+<table class="indented">
+    <tr>
+      <td class="dheader">Choose the correct guess from the comments below:</td>
+    </tr>
+    <tr>
+      <td>
+          <% comments.each do |comment| -%>
+          <% uline = false -%>
+          <% hilite = false -%>
+          <% if comment[:username] == Person.find(@photo[:person_id])[:username] then hilight = true end -%>
+          <% guesses.each do |guess| -%>
+          <% if comment[:username] == Person.find(guess[:person_id])[:username] then uline = true end -%>
+          <% end -%>
+          <%= radio_button(:comment, :id, comment[:id]) %> <b><%= comment[:username] %>:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment[:comment_text] %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br />
+          <% end -%>
+      </td>
+    </tr>
+  </table>
+  <br /><br />
+  <table>
+    <tr>
+      <td class="dheader">Person (if different than commenter)</td>
+    </tr>
+    <tr>
+      <td>
+          <%= text_field_with_auto_complete :person, :username %>
+      </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <%= submit_tag("Add this guess") %>
+        </td>
+    </tr>
+</table>

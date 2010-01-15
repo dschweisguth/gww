@@ -1,0 +1,18 @@
+
+<%= flash[:notice] %><br />
+<%= link_to 'Update Photos', :action => 'update_photos' %> <b>click only once, then wait until this page is updated!</b><br /><br />
+
+<%= link_to 'Unverified Photos', :controller => 'photos', :action => 'unverified' %><br />
+<%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound' %><br />
+<%= link_to 'Treasures', :controller => 'photos', :action => 'treasures' %> (longest &amp; shortest times between post/guess)<br /><br />
+
+<%= link_to 'List People', :controller => 'people', :action => 'list' %><br /><br />
+
+For publication:<br />
+<%= link_to 'Unfound Photos HTML', :controller => 'photos', :action => 'unfound_pretty' %><br />
+<%= link_to 'Unfound Photos XML', :controller => 'photos', :action => 'unfound_data' %><br />
+<%= link_to 'Guesses HTML', :controller => 'people', :action => 'guesses' %><br />
+<%= link_to 'Score Report', :controller => 'people', :action => 'report' %>
+
+<!-- <%= link_to 'Mark Guessed Photos as Found', :action => 'mark_guessed_photos_as_found' %><br /> -->
+<!-- <%= link_to 'Fix Guesses With added_at = 0', :action => 'set_guesses_added' %> -->

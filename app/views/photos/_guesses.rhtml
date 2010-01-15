@@ -1,0 +1,11 @@
+<span id="guess_list">
+<%= render :partial => "guess_list", :locals => {:guesses => guesses, :revelation => revelation} %>
+</span>
+<br /><br />
+<%= start_form_tag :action => 'add_guess', :id => photo %>
+<% if comments && comments.length > 0 -%>
+<%= render :partial => "comments_form", :locals => {:comments => comments, :guesses => guesses} %>
+<% else -%>
+<%= render :partial => "no_comments_form" %>
+<% end -%>
+<%= end_form_tag %>

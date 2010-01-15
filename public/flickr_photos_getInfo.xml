@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<rsp stat="ok">
+  <photo id="372263988" secret="da0b3b068c" server="150" farm="1" dateuploaded="1170014305" isfavorite="0" license="2" rotation="0" originalsecret="da0b3b068c" originalformat="jpg" views="21">
+    <owner nsid="35034353577@N01" username="Tomas" realname="" location="San Francisco, CA, US"/>
+    <title>AJ</title>
+    <description>easy guess where...</description>
+    <visibility ispublic="1" isfriend="0" isfamily="0"/>
+    <dates posted="1170014305" taken="2007-01-27 14:51:38" takengranularity="0" lastupdate="1170271809"/>
+    <permissions permcomment="3" permaddmeta="2"/>
+    <editability cancomment="1" canaddmeta="1"/>
+    <comments>0</comments>
+    <notes/>
+    <tags>
+      <tag id="6414-372263988-46" author="35034353577@N01" raw="san francisco" machine_tag="0">sanfrancisco</tag>
+      <tag id="6414-372263988-50" author="35034353577@N01" raw="california" machine_tag="0">california</tag>
+      <tag id="6414-372263988-2014" author="35034353577@N01" raw="graffiti" machine_tag="0">graffiti</tag>
+      <tag id="6414-372263988-1687" author="35034353577@N01" raw="aj" machine_tag="0">aj</tag>
+      <tag id="6414-372263988-7796" author="35034353577@N01" raw="cellphone" machine_tag="0">cellphone</tag>
+    </tags>
+    <urls>
+      <url type="photopage">http://www.flickr.com/photos/tma/372263988/</url>
+    </urls>
+  </photo>
+</rsp>

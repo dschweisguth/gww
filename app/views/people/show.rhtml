@@ -1,0 +1,34 @@
+<br /><%= link_to 'All Guesses', :action => 'latest_guesses', :id => @person[:id] %> / <%= link_to 'All Posts', :action => 'latest_posts', :id => @person[:id] %> / <%= link_to 'All Comments', :action => 'commented_on', :id => @person[:id] %><br /><br />
+
+<b><%=h @person[:username] %> has posted <%=h @posted_count %> photos</b><br />
+<%=h @unfound_photos.length %> remain unfound. (
+<% @unfound_photos.each_with_index do |photo, photo_index| -%>
+<%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo[:id] %>
+<% end -%>
+)<br />
+<%=h @revealed_photos.length %> were revealed. (
+<% @revealed_photos.each_with_index do |photo, photo_index| -%>
+<%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo[:id] %>
+<% end -%>
+)<br />
+<% @photo_lookup.each do |posted_set| %>
+<%= posted_set[:count] %> guessed by <%= link_to posted_set[:username], :action => 'show', :id => posted_set[:person_id] %> (
+<% posted_set[:photos].each_with_index do |photo, photo_index| -%>
+<%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo[:id] %>
+<% end -%>
+)<br />
+<% end %>
+<br /><br />
+<b><%=h @person[:username] %> has correctly guessed <%=h @guessed_count %> photos</b><br />
+<% @guess_lookup.each do |guess_set| %>
+<%= guess_set[:count] %> posted by <%= link_to guess_set[:username], :action => 'show', :id => guess_set[:person_id] %> (
+<% guess_set[:photos].each_with_index do |photo, photo_index| -%>
+<% if photo[:person_id] == 0 -%>
+<b>x</b>
+<% else -%>
+<%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo[:id] %>
+<% end -%>
+<% end -%>
+)<br />
+<% end %>
+

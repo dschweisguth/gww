@@ -1,0 +1,18 @@
+<h1><%= @guesses.length %> guesses</h1>
+
+<table>
+  <tr>
+    <td>guessed by</td>
+    <td>guessed at</td>
+    <td>added at</td>
+    <td>link</td>
+  </tr>  
+<% @guesses.each do |guess| %>
+  <tr>
+    <td><%=h Person.find(guess[:person_id])[:username] %></td>
+    <td><%= guess[:guessed_at].strftime  '%Y/%m/%d' %></td>
+    <td><%= guess[:added_at].strftime  '%Y/%m/%d' %></td>
+    <td><%= link_to 'photo page', :controller => 'photos', :action => 'show', :id => guess[:photo_id] %></td>
+  </tr>
+<% end %>
+</table>

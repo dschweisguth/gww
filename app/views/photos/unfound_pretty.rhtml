@@ -1,0 +1,35 @@
+<table>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td colspan="5" class="cellspace"><a href="http://anythreewords.com/gwsf/">A version of this list with thumbnails</a> by <a href="http://www.flickr.com/photos/anythreewords/">David Gallagher</a></td>
+  </tr>
+  <tr>
+    <td colspan="6" class="cellspace">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td colspan="5" class="dheader"><%= @photos.length %> unfound photos as of <%= @lasttime.strftime '%A, %B %d, %I%p' %></td>
+  </tr>
+  <tr>
+    <td class="cellspace">&nbsp;</td>
+    <td class="dheader">link</td>
+    <td class="dheader">posted by</td>
+    <td class="dheader">date added</td>
+    <td class="dheader">last updated</td>
+    <td class="dheader">unconfirmed</td>
+  </tr>  
+<% @photos.each_with_index do |photo, photo_index| -%>
+  <tr>
+    <td class="dnum"><%= photo_index + 1 %>.</td>
+    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= Person.find(photo[:person_id])[:flickrid] %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
+    <td class="dvalue"><%=h Person.find(photo[:person_id])[:username] %></td>
+    <td class="dvalue"><%= photo[:dateadded].strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= photo[:lastupdate].strftime  '%Y/%m/%d' %></td>
+<% if photo[:game_status] == 'unfound' -%>
+    <td class="dvalue">&nbsp;</td>
+<% else -%>
+    <td class="dvalue">X</td>
+<% end -%>
+  </tr>
+<% end %>
+</table>
