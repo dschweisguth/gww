@@ -3,6 +3,7 @@ AuthType Basic
 AuthName "What do you think you're doing?"
 AuthUserFile /etc/httpd/passwords
 Require user CHANGE-TO-USER
+Options +ExecCGI
 AddHandler fastcgi-script .fcgi
 
 # If you don't want Rails to look in certain directories,

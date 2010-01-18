@@ -74,6 +74,12 @@ A newer webrick or an older ruby would probably solve the problem more cleanly.
 Install FastCGI (for Linux production)
 --------------------------------------
 
+Background: Dave runs GWW under Apache so that Apache can provide HTTP basic
+    authentication. mod_rails wouldn't build on Dave's old server, so Dave used
+    FastCGI. The situation could be simplified either by moving to a newer
+    server that handled mod_rails or adding basic HTTP authentication to GWW
+    itself and running it under some other, possibly Ruby-centric, web server,
+    on a port other than 80.
 Dave mostly followed http://www.xmlareas.com/ruby-on-rails-howto .
 Install the fcgi library:
     wget http://www.fastcgi.com/dist/fcgi-2.4.0.tar.gz
@@ -105,10 +111,6 @@ Install the FastCGI module:
 	>   FastCgiConfig -minProcesses 1 -maxProcesses 5 -idle-timeout 100000 -initial-env RAILS_ENV=production
 	>   FastCgiIpcDir /tmp/fcgi_ipc
 	> </IfModule>
-	304c309
-	<     Options Indexes FollowSymLinks
-	---
-	>     Options Indexes FollowSymLinks ExecCGI
 	311c316
 	<     AllowOverride AuthConfig
 	---
