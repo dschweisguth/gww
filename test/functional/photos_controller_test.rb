@@ -79,7 +79,7 @@ class PhotosControllerTest < Test::Unit::TestCase
 
     post :destroy, :id => 1
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :action => 'unverified'
 
     assert_raise(ActiveRecord::RecordNotFound) {
       Photo.find(1)
