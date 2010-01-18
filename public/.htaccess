@@ -1,7 +1,9 @@
 # General Apache options
+AuthType Basic
+AuthName "What do you think you're doing?"
+AuthUserFile /etc/httpd/passwords
+Require user CHANGE-TO-USER
 AddHandler fastcgi-script .fcgi
-AddHandler cgi-script .cgi
-Options +FollowSymLinks +ExecCGI
 
 # If you don't want Rails to look in certain directories,
 # use the following rewrite rules so that Apache won't rewrite certain requests
