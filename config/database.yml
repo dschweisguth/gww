@@ -18,7 +18,7 @@ defaults: &defaults
     host:     localhost
 
 development:
-  database: gww_imported
+  database: gww_dev
   <<: *defaults
 
 test:
@@ -28,8 +28,3 @@ test:
 production:
   database: gww_production
   <<: *defaults
-
-staging:
-  database: gww_staging
-  <<: *defaults
-
