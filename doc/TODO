@@ -1,0 +1,13 @@
+Put notes and TODO in git
+Mail GWSF admins about github
+Make tests pass
+Remove dead code
+Move credentials to configuration
+Run update in cron
+Dump current schema and junk migrations
+Add indexes to database
+Open database to others
+Back up database
+New server
+Reduce distance between gww's ruby dependencies and current stable versions
+Replace mod_fastcgi with mod_fcgid or mod_rails
