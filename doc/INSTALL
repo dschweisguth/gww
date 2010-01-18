@@ -105,6 +105,7 @@ Install the FastCGI module:
     mkdir /tmp/fcgi_ipc
     chmod 777 /tmp/fcgi_ipc
     Edit httpd.conf (note that this diff includes the change made by apxs):
+        [root lonnrot:/etc/httpd/conf] diff httpd.conf{.bak,}
 	189a190,194
 	> LoadModule fastcgi_module     /usr/lib/httpd/modules/mod_fastcgi.so
 	> <IfModule mod_fastcgi.c> 
@@ -115,7 +116,6 @@ Install the FastCGI module:
 	<     AllowOverride AuthConfig
 	---
 	>     AllowOverride All
-        TODO tighten up those last couple of settings
     apachectl restart
 
 Get and configure GWW
