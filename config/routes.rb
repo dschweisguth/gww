@@ -8,12 +8,9 @@ ActionController::Routing::Routes.draw do |map|
   # Sample of named route:
   # map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
   # This route can be invoked with purchase_url(:id => product.id)
-  UJS::routes
 
   # You can have the root of your site routed by hooking up '' 
   # -- just remember to delete public/index.html.
-  # map.connect '', :controller => "welcome"
-  # index page
   map.connect '', :controller => 'update'
 
   # Allow downloading Web Service WSDL as a file with an extension
@@ -22,7 +19,5 @@ ActionController::Routing::Routes.draw do |map|
 
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
-
-
 
 end
