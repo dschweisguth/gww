@@ -3,6 +3,7 @@
 
 <%= @new_guesses.length %> new guesses from <% @new_guesses.each_with_index do |details, details_index| -%>&lt;a href="http://www.flickr.com/photos/<%= details[:owner][:flickrid] %>/<%= details[:photo][:flickrid] %>/in/pool-guesswheresf/"><%= details[:person][:username] %>&lt;/a&gt;<% if details_index < @new_guesses.length - 1 -%>, <% end -%><% end -%>
 
+
 <%= @new_photos_count %> photos have been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
 
 <%= @total_correct_guessers %> people have made correct guesses. <%= @total_posters_only %> people have put at least one photo in the pool but not guessed any photos correctly. That means that at least <%= @total_participants %> of our <%= @member_count %> members have participated in the game.
