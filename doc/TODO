@@ -1,5 +1,5 @@
 Run update in cron x
-Remove tomopodaca.org references from guess HTML etc.
+Drop flickr_updates_copy from lonnrot gww_production
 Make tests pass
 Dump current schema and junk migrations
 Add indexes to database correctly
