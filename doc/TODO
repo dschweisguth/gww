@@ -1,10 +1,10 @@
-Mail GWSF admins about github
+Run update in cron x
+Remove tomopodaca.org references from guess HTML etc.
 Make tests pass
+Dump current schema and junk migrations
+Add indexes to database correctly
 Remove dead code
 Move credentials to configuration
-Run update in cron
-Dump current schema and junk migrations
-Add indexes to database
 Open database to others
 Back up database
 New server
