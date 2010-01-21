@@ -1,4 +1,3 @@
-Fix update to save local time instead of GMT, or whatever it is
 Make tests pass
 Dump current schema and junk migrations
 Add indexes to database correctly
@@ -10,3 +9,5 @@ Back up database automatically
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
+Remove hardcoded timezone difference from people_controller.rb
+Fix treasures

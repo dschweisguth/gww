@@ -26,11 +26,16 @@ class PeopleController < ApplicationController
 
   def report
     # to skip an update...
+    # For some reason FlickrUpdate[:updated_at] is GMT and Guess[:added_at] is
+    # local time (without a time zone). The following code reduces pentime and
+    # lasttime by a hardcoded subtrahend to allow comparison. The subtrahend
+    # should be 28800 for PST and 25200 for PDT, which means editing the source
+    # twice a year. TODO fix
     updates = FlickrUpdate.find(:all)
     penupdate = updates[updates.length - 2]
-    pentime = penupdate[:updated_at] - 25200 #28800;
+    pentime = penupdate[:updated_at] - 28800
     lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 25200 #28800
+    lasttime = lastupdate[:updated_at] - 28800
     guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime])
     @new_guesses = []
     guesses.each do |guess|
