@@ -26,16 +26,11 @@ class PeopleController < ApplicationController
 
   def report
     # to skip an update...
-    # For some reason FlickrUpdate[:updated_at] is GMT and Guess[:added_at] is
-    # local time (without a time zone). The following code reduces pentime and
-    # lasttime by a hardcoded subtrahend to allow comparison. The subtrahend
-    # should be 28800 for PST and 25200 for PDT, which means editing the source
-    # twice a year. TODO fix
     updates = FlickrUpdate.find(:all)
     penupdate = updates[updates.length - 2]
-    pentime = penupdate[:updated_at] - 28800;
+    pentime = penupdate[:updated_at] - 25200 #28800;
     lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 28800
+    lasttime = lastupdate[:updated_at] - 25200 #28800
     guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime])
     @new_guesses = []
     guesses.each do |guess|
@@ -96,9 +91,9 @@ class PeopleController < ApplicationController
     # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
     flickr_method = 'flickr.groups.getInfo'
-    secret = '42d0daa1b4adb267' # :NOTE: replace with your API secret
-    api_key = 'b1fd8d4adec005c4e726a722c38f6eb7' # :NOTE: replace with your API key
-    auth_token = '72157622482440033-d0784bf1bee49e58' # :NOTE: replace with your auth token
+    secret = 'xxxxx' # :NOTE: replace with your API secret
+    api_key = 'xxxxx' # :NOTE: replace with your API key
+    auth_token = 'xxxxx' # :NOTE: replace with your auth token
     gwsf_id = '32053327@N00'
     # generate the api signature
     sig_raw = secret + 'api_key' + api_key + 'auth_token' + auth_token + 'group_id' + gwsf_id + 'method' + flickr_method
