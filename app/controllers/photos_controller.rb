@@ -1,18 +1,9 @@
 class PhotosController < ApplicationController
   auto_complete_for :person, :username
 
-  def index
-    list
-    render :action => 'list'
-  end
-
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
          :redirect_to => { :action => :list }
-
-  def list
-    @photo_pages, @photos = paginate :photos, :per_page => 100
-  end
 
   def recently_updated
     cutoff = Time.now - 1.week
@@ -453,16 +444,6 @@ class PhotosController < ApplicationController
 
   def new
     @photo = Photo.new
-  end
-
-  def create
-    @photo = Photo.new(params[:photo])
-    if @photo.save
-      flash[:notice] = 'Photo was successfully created.'
-      redirect_to :action => 'list'
-    else
-      render :action => 'new'
-    end
   end
 
   def edit

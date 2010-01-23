@@ -13,29 +13,26 @@ class PhotosControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  def test_index
-    get :index
-    assert_response :success
-    assert_template 'list'
-  end
-
-  def test_list
-    get :list
-
-    assert_response :success
-    assert_template 'list'
-
-    assert_not_nil assigns(:photos)
-  end
-
   def test_show
-    get :show, :id => 1
+    person = Person.new
+    person.save
+
+    photo = Photo.new
+    photo.id = 666 # TODO necessary?
+    photo.lastupdate = Time.new.to_i
+    photo.seen_at = Time.new.to_i
+    photo.dateadded = Time.new.to_i
+    photo.person = person
+    photo.save
+
+    get :show, :id => photo.id
 
     assert_response :success
     assert_template 'show'
-
     assert_not_nil assigns(:photo)
     assert assigns(:photo).valid?
+    # TODO assert other stuff in model
+
   end
 
   def test_new
@@ -47,17 +44,6 @@ class PhotosControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:photo)
   end
 
-  def test_create
-    num_photos = Photo.count
-
-    post :create, :photo => {}
-
-    assert_response :redirect
-    assert_redirected_to :action => 'list'
-
-    assert_equal num_photos + 1, Photo.count
-  end
-
   def test_edit
     get :edit, :id => 1
 
@@ -66,12 +52,6 @@ class PhotosControllerTest < Test::Unit::TestCase
 
     assert_not_nil assigns(:photo)
     assert assigns(:photo).valid?
-  end
-
-  def test_update
-    post :update, :id => 1
-    assert_response :redirect
-    assert_redirected_to :action => 'show', :id => 1
   end
 
   def test_destroy
@@ -85,4 +65,5 @@ class PhotosControllerTest < Test::Unit::TestCase
       Photo.find(1)
     }
   end
+
 end

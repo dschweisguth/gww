@@ -1,6 +1,5 @@
 Right away:
 
-Make tests pass
 Dump current schema and junk migrations
 Add indexes to database correctly
 Move credentials to configuration
@@ -25,6 +24,7 @@ The unverified photos list is intended to list those photos not seen during the
 Attempt to speed up unverified photos by looking up each person only once.
     Multiple lookups of each people.id appear in the development log. But look
     in to Rails caching first to see if it's a non-issue in production.
+Review test coverage and add TODOs to write more tests and assertions
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
