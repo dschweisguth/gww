@@ -15,7 +15,16 @@ Add note about automatic update to index page
 Soon:
 
 Add source code and backup information to home page
+Add more info to unfound list to make it easier to find a specific photo
 Rewrite treasures HTML to be postable
+Attempt to speed up treasures by using ActiveRecord's join support
+The unverified photos list is intended to list those photos not seen during the
+    last update, so that unfound ones can be removed from the pool. (Found ones
+    stay in the pool to preserve scores.) Right now it shows all photos. Fix
+    it.
+Attempt to speed up unverified photos by looking up each person only once.
+    Multiple lookups of each people.id appear in the development log. But look
+    in to Rails caching first to see if it's a non-issue in production.
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
@@ -26,13 +35,20 @@ Is photos.dateadded really date uploaded? If so, can we also track date added
 
 Later:
 
+Put the score reporting range under admin control? See ongoing email
+    discussion.
+Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
+Automatically publish the score report to the group's scoring thread instead
+    of making the scorer copy and paste
+Add a search feature
 Open appropriate parts of GWW to players
     Move GWW to guesswheresf.com
 Provide page for players which lists scoring actions (guesses and revelations),
     and possibly score publication times, newest to oldest. Consider whether
-    scoring in batches is an important part of game fun.
+    scoring in batches is an important part of game fun and if so how not to
+    compromise that.
 Add to player page
 - link to Flickr account
 - youngest and oldest guesses (treasures)
 - youngests and oldest guesses by others (inverse treasures)
-- emphasis on nemeses
+- emphasize nemeses
