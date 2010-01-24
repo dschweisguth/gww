@@ -32,6 +32,8 @@ Remove hardcoded timezone difference from people_controller.rb
 Why is http://www.flickr.com/photos/inarges/385184385/ not in treasures?
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
+Why does anythreewords.com not match the unfound XML, and why does that not
+    match the database?
 
 Later:
 
@@ -52,3 +54,4 @@ Add to player page
 - youngest and oldest guesses (treasures)
 - youngests and oldest guesses by others (inverse treasures)
 - emphasize nemeses
+- unconfirmeds
