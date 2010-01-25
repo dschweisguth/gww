@@ -198,16 +198,15 @@ class PhotosController < ApplicationController
       flickr_id = params[:photo][:flickrid];
       flickr_url = 'http://api.flickr.com/services/rest/'
       flickr_method = 'flickr.photos.getInfo'
-      secret = 'xxxxx' # :NOTE: replace with your API secret
-      api_key = 'xxxxx' # :NOTE: replace with your API key
-      auth_token = 'xxxxx' # :NOTE: replace with your auth token
+      flickr_credentials = FlickrCredentials.new
     
       # get information about this photo from flickr
       # generate the api signature
-      sig_raw = secret + 'api_key' + api_key + 'auth_token' + auth_token + 'method' + flickr_method + 'photo_id' + flickr_id
+      sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + flickr_method + 'photo_id' + flickr_id
       api_sig = MD5.hexdigest(sig_raw)
       page_url =  flickr_url + '?method=' + flickr_method +
-                  '&api_key=' + api_key + '&auth_token=' + auth_token +
+                  '&api_key=' + flickr_credentials.api_key +
+		  '&auth_token=' + flickr_credentials.auth_token +
                   '&api_sig=' + api_sig + '&photo_id=' + flickr_id
       # get the data and parse it
       page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
@@ -285,14 +284,13 @@ class PhotosController < ApplicationController
       # set the particulars
       flickr_url = 'http://api.flickr.com/services/rest/'
       person_method = 'flickr.people.getInfo'
-      secret = 'xxxxx' # :NOTE: replace with your API secret
-      api_key = 'xxxxx' # :NOTE: replace with your API key
-      auth_token = 'xxxxx' # :NOTE: replace with your auth token
+      flickr_credentials = FlickrCredentials.new
       # generate the api signature
-      sig_raw = secret + 'api_key' + api_key + 'auth_token' + auth_token + 'method' + person_method + 'user_id' + flickr_id
+      sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + person_method + 'user_id' + flickr_id
       api_sig = MD5.hexdigest(sig_raw)
       page_url =  flickr_url + '?method=' + person_method +
-                  '&api_key=' + api_key + '&auth_token=' + auth_token +
+                  '&api_key=' + flickr_credentials.api_key +
+		  '&auth_token=' + flickr_credentials.auth_token +
                   '&api_sig=' + api_sig + '&user_id=' + flickr_id
       page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
       flickr_page = XmlSimple.xml_in(page_xml)['person'][0]
@@ -401,15 +399,14 @@ class PhotosController < ApplicationController
     # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
     flickr_method = 'flickr.photos.comments.getList'
-    secret = 'xxxxx' # :NOTE: replace with your API secret
-    api_key = 'xxxxx' # :NOTE: replace with your API key
-    auth_token = 'xxxxx' # :NOTE: replace with your auth token
+    flickr_credentials = FlickrCredentials.new
     # generate the api signature
-    sig_raw = secret + 'api_key' + api_key + 'auth_token' + auth_token + 'method' + flickr_method + 'photo_id' + photo[:flickrid]
+    sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + flickr_method + 'photo_id' + photo[:flickrid]
     api_sig = MD5.hexdigest(sig_raw)
     # grab the comments
     page_url =  flickr_url + '?method=' + flickr_method +
-                '&api_key=' + api_key + '&auth_token=' + auth_token +
+                '&api_key=' + flickr_credentials.api_key +
+		'&auth_token=' + flickr_credentials.auth_token +
                 '&api_sig=' + api_sig + '&photo_id=' + photo[:flickrid]
     page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
     full_page = XmlSimple.xml_in(page_xml)

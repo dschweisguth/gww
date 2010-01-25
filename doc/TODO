@@ -1,8 +1,8 @@
 Right away:
 
+Look for and fix time zone corrections
 Dump current schema and junk migrations
 Add indexes to database correctly
-Move credentials to configuration
 Back up database automatically
 Open database to others if they're interested
 Remove dead code

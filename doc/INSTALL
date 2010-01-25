@@ -130,25 +130,20 @@ For production Linux httpd,
     Create a username and password per
         http://httpd.apache.org/docs/2.0/howto/auth.html
     ln -s /.../gww/public /var/www/html/gww
-Change configuration in the source: Either
-
-    Manually
-
-	Edit config/database.yml and change defaults: username and password to
-            the username and password
-	Configure Flickr credentials:
-	    Construct a Flickr API secret, key and auth token manually per the
-                API documentation.
-	    find . | xargs grep :NOTE:, edit each of the files found, and fill
-		in your secret, api_key and auth_token.
-	Edit public/.htaccess and change CHANGE-TO-USER to the userid that you
-            want to use for basic HTTP authentication. For running under httpd,
-            change the path to the password file if necessary.
-
-    Using patch (if you're Dave, who has credentials.diff):
-
-        cd gww
-        patch -p1 < ../credentials.diff
+Configure:
+    Configure database credentials:
+	cp config/database{_template,}.yml
+	Edit and fill in your database username and password
+    Configure Flickr credentials:
+	cp config/flickr_credentials{_template,}.yml
+	Construct a Flickr API secret, key and auth token manually per the
+	    API documentation
+	Edit and fill in your secret, api_key and auth_token
+    Configure basic HTTP authentication:
+        cp public/.htaccess{_template,}
+	Edit and fill in the userid that you want to use for basic HTTP
+	    authentication. For running under httpd,
+	    change the path to the password file if necessary.
 
 Create databases
 ----------------

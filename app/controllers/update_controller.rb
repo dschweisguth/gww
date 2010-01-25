@@ -38,9 +38,7 @@ class UpdateController < ApplicationController
     # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
     flickr_method = 'flickr.groups.pools.getPhotos'
-    secret = 'xxxxx' # :NOTE: replace with your API secret
-    api_key = 'xxxxx' # :NOTE: replace with your API key
-    auth_token = 'xxxxx' # :NOTE: replace with your auth token
+    flickr_credentials = FlickrCredentials.new
     gwsf_id = '32053327@N00'
     extras = 'geo,last_update'
     per_page = 500
@@ -58,14 +56,17 @@ class UpdateController < ApplicationController
     
     while !reached_end && !found_existing
       # generate the api signature
-      sig_raw = secret + 'api_key' + api_key + 'auth_token' + auth_token +
-                'extras' + extras + 'group_id' + gwsf_id + 'method' +
-                flickr_method + 'page' + get_page.to_s + 'per_page' + per_page.to_s
+      sig_raw = flickr_credentials.secret +
+	  'api_key' + flickr_credentials.api_key +
+          'auth_token' + flickr_credentials.auth_token +
+          'extras' + extras + 'group_id' + gwsf_id + 'method' + flickr_method +
+          'page' + get_page.to_s + 'per_page' + per_page.to_s
       api_sig = MD5.hexdigest(sig_raw)
       # grab the next page of photos in the pool
       #page_url =  'http://localhost:3001/flickr_groups_pools_getPhotos.xml'
       page_url =  flickr_url + '?method=' + flickr_method +
-                  '&api_key=' + api_key + '&auth_token=' + auth_token +
+                  '&api_key=' + flickr_credentials.api_key +
+		  '&auth_token=' + flickr_credentials.auth_token +
                   '&api_sig=' + api_sig + '&group_id=' + gwsf_id +
                   '&per_page=' + per_page.to_s + '&page=' + get_page.to_s +
                   '&extras=' + extras
