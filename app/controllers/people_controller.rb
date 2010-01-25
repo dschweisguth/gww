@@ -96,15 +96,14 @@ class PeopleController < ApplicationController
     # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
     flickr_method = 'flickr.groups.getInfo'
-    secret = 'xxxxx' # :NOTE: replace with your API secret
-    api_key = 'xxxxx' # :NOTE: replace with your API key
-    auth_token = 'xxxxx' # :NOTE: replace with your auth token
     gwsf_id = '32053327@N00'
+    flickr_credentials = FlickrCredentials.new
     # generate the api signature
-    sig_raw = secret + 'api_key' + api_key + 'auth_token' + auth_token + 'group_id' + gwsf_id + 'method' + flickr_method
+    sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'group_id' + gwsf_id + 'method' + flickr_method
     api_sig = MD5.hexdigest(sig_raw)
     page_url =  flickr_url + '?method=' + flickr_method +
-                '&api_key=' + api_key + '&auth_token=' + auth_token +
+                '&api_key=' + flickr_credentials.api_key +
+		'&auth_token=' + flickr_credentials.auth_token +
                 '&api_sig=' + api_sig + '&group_id=' + gwsf_id
     # get the page
     page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
