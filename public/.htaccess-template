@@ -1,8 +1,10 @@
+# Copy this to .htaccess in the same directory, and
+
 # General Apache options
 AuthType Basic
 AuthName "What do you think you're doing?"
 AuthUserFile /etc/httpd/passwords
-Require user CHANGE-TO-USER
+Require user  # <-- put your basic HTTP auth user here
 Options +ExecCGI
 AddHandler fastcgi-script .fcgi
 
