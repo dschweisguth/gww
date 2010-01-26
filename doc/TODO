@@ -25,12 +25,9 @@ Review test coverage and add TODOs to write more tests and assertions
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
-Remove hardcoded timezone difference from people_controller.rb
-Why is http://www.flickr.com/photos/inarges/385184385/ not in treasures?
+Remove hardcoded timezone difference from {people,photos}_controller.rb
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
-Why does anythreewords.com not match the unfound XML, and why does that not
-    match the database?
 Look in to auto_complete_for usage. Did it ever work? Did I break it?
 
 Later:
