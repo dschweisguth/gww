@@ -1,6 +1,5 @@
 Right away:
 
-Dump current schema and junk migrations
 Back up database automatically
 Open database to others if they're interested
 Remove dead code

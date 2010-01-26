@@ -125,11 +125,6 @@ Get the source: Either
     Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
         format, download it and unpack it, or
     git clone git@github.com:dschweisguth/gww.git
-    chmod -R apache:apache git
-For production Linux httpd,
-    Create a username and password per
-        http://httpd.apache.org/docs/2.0/howto/auth.html
-    ln -s /.../gww/public /var/www/html/gww
 Configure:
     Configure database credentials:
 	cp config/database{_template,}.yml
@@ -139,25 +134,35 @@ Configure:
 	Construct a Flickr API secret, key and auth token manually per the
 	    API documentation
 	Edit and fill in your secret, api_key and auth_token
+For production Linux httpd,
+    chmod -R apache:apache gww
+    ln -s /.../gww/public /var/www/html/gww
+    Create a username and password per
+        http://httpd.apache.org/docs/2.0/howto/auth.html
     Configure basic HTTP authentication:
         cp public/.htaccess{_template,}
 	Edit and fill in the userid that you want to use for basic HTTP
-	    authentication. For running under httpd,
-	    change the path to the password file if necessary.
+	    authentication
+	Change the path to the password file if necessary
 
 Create databases
 ----------------
 
 grant usage on *.* to gww@localhost identified by '(the password)';
 Create dev database:
-    create database gww_dev default charset utf8;
+    create database gww_dev default charset latin1;
     grant all privileges on gww_dev.* to gww@localhost;
-    bzcat watcher.mysql.bz2 | mysql -ugww -p gww_dev
+    gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
 Create production database:
     Do all steps as above, but for gww_production
 Create test database:
     Create database and grant privileges as above, but for gww_test
-    rake db:migrate # takes 30' on my old Mac
+    rake environment RAILS_ENV=test db:schema:load
+
+Test GWW
+--------
+
+rake test
 
 Start GWW
 ---------
