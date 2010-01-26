@@ -1,6 +1,5 @@
 Right away:
 
-Look for and fix time zone corrections
 Dump current schema and junk migrations
 Add indexes to database correctly
 Back up database automatically
@@ -32,6 +31,7 @@ Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
 Why does anythreewords.com not match the unfound XML, and why does that not
     match the database?
+Look in to auto_complete_for usage. Did it ever work? Did I break it?
 
 Later:
 

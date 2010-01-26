@@ -156,9 +156,7 @@ class PeopleController < ApplicationController
 
   def guesses
     lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 25200 #28800;
-    # get the guesses after each time
-    #@overall = get_scores_from_date(nil, nil)
+    lasttime = lastupdate[:updated_at] - 28800;
     
     @last_days = []
     (1..7).each do |num|

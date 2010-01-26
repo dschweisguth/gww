@@ -25,8 +25,7 @@ class PhotosController < ApplicationController
     @photos.concat(@photos_unconfirmed)
     @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
     lastupdate = FlickrUpdate.find(:all).last
-    @lasttime = lastupdate[:updated_at] - 25200 #28800;
-    
+    @lasttime = lastupdate[:updated_at] - 28800;
     render :layout => false
   end
 
@@ -35,7 +34,7 @@ class PhotosController < ApplicationController
     @photos.concat(Photo.find_all_by_game_status('unconfirmed'))
     @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
     lastupdate = FlickrUpdate.find(:all).last
-    @lasttime = lastupdate[:updated_at] - 25200 #28800;
+    @lasttime = lastupdate[:updated_at] - 28800;
   end
 
   def found
@@ -166,7 +165,7 @@ class PhotosController < ApplicationController
   
   def unverified
     lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 25200 #28800;
+    lasttime = lastupdate[:updated_at] - 28800;
     @photos = Photo.find(:all, :conditions => ["seen_at < ?", lasttime])
   end
 
