@@ -153,7 +153,6 @@ Create dev database:
     create database gww_dev default charset utf8;
     grant all privileges on gww_dev.* to gww@localhost;
     bzcat watcher.mysql.bz2 | mysql -ugww -p gww_dev
-    source doc/index.sql
 Create production database:
     Do all steps as above, but for gww_production
 Create test database:

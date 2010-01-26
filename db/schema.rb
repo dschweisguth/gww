@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 10) do
+ActiveRecord::Schema.define(:version => 11) do
 
   create_table "comments", :force => true do |t|
     t.column "username", :string, :default => "", :null => false
@@ -24,6 +24,9 @@ ActiveRecord::Schema.define(:version => 10) do
     t.column "added_at", :datetime, :null => false
   end
 
+  add_index "guesses", ["person_id"], :name => "guesses_person_id_index"
+  add_index "guesses", ["photo_id"], :name => "guesses_photo_id_index"
+
   create_table "nudges", :force => true do |t|
     t.column "kind", :string, :default => "", :null => false
     t.column "ip_address", :string, :default => "", :null => false
@@ -39,6 +42,8 @@ ActiveRecord::Schema.define(:version => 10) do
     t.column "flickr_status", :string, :default => "", :null => false
   end
 
+  add_index "people", ["flickrid"], :name => "people_flickrid_index"
+
   create_table "photos", :force => true do |t|
     t.column "flickrid", :string, :default => "", :null => false
     t.column "secret", :string, :default => "", :null => false
@@ -52,6 +57,9 @@ ActiveRecord::Schema.define(:version => 10) do
     t.column "person_id", :integer, :default => 0, :null => false
     t.column "farm", :string, :default => "", :null => false
   end
+
+  add_index "photos", ["person_id"], :name => "photos_person_id_index"
+  add_index "photos", ["flickrid"], :name => "photos_flickrid_index"
 
   create_table "revelations", :force => true do |t|
     t.column "revelation_text", :string, :default => "", :null => false

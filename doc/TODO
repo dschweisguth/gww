@@ -1,7 +1,6 @@
 Right away:
 
 Dump current schema and junk migrations
-Add indexes to database correctly
 Back up database automatically
 Open database to others if they're interested
 Remove dead code
@@ -29,6 +28,8 @@ Remove hardcoded timezone difference from {people,photos}_controller.rb
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
 Look in to auto_complete_for usage. Did it ever work? Did I break it?
+photos and guesses have people_ids which don't correspond to people. Fix.
+    Look for other unenforced foreign keys and fix those too.
 
 Later:
 
