@@ -16,6 +16,10 @@ ActiveRecord::Schema.define(:version => 11) do
     t.column "updated_at", :datetime, :null => false
   end
 
+  create_table "flickr_updates_copy", :force => true do |t|
+    t.column "updated_at", :datetime, :null => false
+  end
+
   create_table "guesses", :force => true do |t|
     t.column "guessed_at", :datetime, :null => false
     t.column "photo_id", :integer, :default => 0, :null => false
