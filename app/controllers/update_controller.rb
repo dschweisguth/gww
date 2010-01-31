@@ -5,31 +5,6 @@ require 'md5'
 
 class UpdateController < ApplicationController
 
-  def mark_guessed_photos_as_found
-    guesses = Guess.find_all
-    guesses.each do |guess|
-      photo = Photo.find(guess[:photo_id])
-      photo[:game_status] = 'found'
-      photo.save
-    end
-    # let them know we're done
-    flash[:notice] =  'marked photos for ' + guesses.length.to_s + ' guesses'
-    redirect_to :controller => 'index', :action => 'index'
-  end
-  
-  # give guesses with nil added_at a date
-  def set_guesses_added
-    guesses = Guess.find(:all, :conditions => ["added_at = ?", 0])
-    guesses.each do |guess|
-      guess[:added_at] = guess[:guessed_at]
-      guess.save
-    end
-    # let them know we're done
-    flash[:notice] =  'updated ' + guesses.length.to_s + ' guesses total.'
-    redirect_to :controller => 'index', :action => 'index'
-  end
-  
-  # update the photo database
   def update_photos
     # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
