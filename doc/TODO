@@ -15,12 +15,12 @@ The unverified photos list is intended to list those photos not seen during the
     stay in the pool to preserve scores.) Right now it shows all photos. Fix
     it.
 Attempt to speed up unverified photos by looking up each person only once.
-    Multiple lookups of each people.id appear in the development log. But look
-    in to Rails caching first to see if it's a non-issue in production.
+    Multiple lookups of each people.id appear in the development log.
 Review test coverage and add TODOs to write more tests and assertions
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
+Revisit effect of Rails query caching
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
