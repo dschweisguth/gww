@@ -5,10 +5,6 @@ require 'md5'
 
 class UpdateController < ApplicationController
 
-  def index
-  end
-  
-  # mark guessed photos as found
   def mark_guessed_photos_as_found
     guesses = Guess.find_all
     guesses.each do |guess|
@@ -18,7 +14,7 @@ class UpdateController < ApplicationController
     end
     # let them know we're done
     flash[:notice] =  'marked photos for ' + guesses.length.to_s + ' guesses'
-    redirect_to :action => 'index'
+    redirect_to :controller => 'index', :action => 'index'
   end
   
   # give guesses with nil added_at a date
@@ -30,7 +26,7 @@ class UpdateController < ApplicationController
     end
     # let them know we're done
     flash[:notice] =  'updated ' + guesses.length.to_s + ' guesses total.'
-    redirect_to :action => 'index'
+    redirect_to :controller => 'index', :action => 'index'
   end
   
   # update the photo database
@@ -127,7 +123,7 @@ class UpdateController < ApplicationController
     flash[:notice] =  'created ' + photo_count.to_s + ' new photos and ' +
                       user_count.to_s + ' new users. Got ' + (get_page - 1).to_s +
                       ' pages out of ' + flickr_page['pages'] + '.</br>'
-    redirect_to :action => 'index'
+    redirect_to :controller => 'index', :action => 'index'
   end
     
 end
