@@ -1,14 +1,14 @@
 class PhotosController < ApplicationController
-  auto_complete_for :person, :username
-
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
   verify :method => :post, :only => [ :destroy, :create, :update ],
          :redirect_to => { :action => :list }
 
-  def recently_updated
-    cutoff = Time.now - 1.week
-    @photos = Photo.find(:all, :conditions => ["lastupdate > ?", cutoff])
-    @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
+  auto_complete_for :person, :username
+
+  def unverified
+    lastupdate = FlickrUpdate.find(:all).last
+    lasttime = lastupdate[:updated_at] - 28800;
+    @photos = Photo.find(:all, :conditions => ["seen_at < ?", lasttime])
   end
 
   def unfound
@@ -17,55 +17,6 @@ class PhotosController < ApplicationController
     @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
   end
 
-  def unfound_data
-    @photos = Photo.find_all_by_game_status('unfound')
-    @num_unfound = @photos.length
-    @photos_unconfirmed = Photo.find_all_by_game_status('unconfirmed')
-    @num_unconfirmed = @photos_unconfirmed.length
-    @photos.concat(@photos_unconfirmed)
-    @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
-    lastupdate = FlickrUpdate.find(:all).last
-    @lasttime = lastupdate[:updated_at] - 28800;
-    render :layout => false
-  end
-
-  def unfound_pretty
-    @photos = Photo.find_all_by_game_status('unfound')
-    @photos.concat(Photo.find_all_by_game_status('unconfirmed'))
-    @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
-    lastupdate = FlickrUpdate.find(:all).last
-    @lasttime = lastupdate[:updated_at] - 28800;
-  end
-
-  def found
-    zerotime = Time.at(1000);
-    @guesses = Guess.find(:all, :conditions => ["guessed_at < ?", zerotime])
-  end
-
-  def force_dates
-    # {"commit"=>"Submit", "date"=>{"month"=>"11", "day"=>"20", "year"=>"2006"}, "id"=>"4019"}
-    # get the photo object
-    photo = Photo.find(params[:id])
-    # and the guess object
-    guess = Guess.find_by_photo_id(photo[:id])
-    # set a zerotime
-    zerotime = Time.at(1000);
-    # if the photo dates are zeroed, reset them to the passed date
-    if photo[:dateadded] < zerotime then
-      photo[:dateadded] = params[:date][:year] + "-" + params[:date][:month] + "-" + params[:date][:day]
-    end
-    if photo[:lastupdate] < zerotime then
-      photo[:lastupdate] = params[:date][:year] + "-" + params[:date][:month] + "-" + params[:date][:day]
-    end
-    # save the photo
-    photo.save
-    # set the guess date to the passed date and save it
-    guess[:guessed_at] = params[:date][:year] + "-" + params[:date][:month] + "-" + params[:date][:day]
-    guess.save
-    # redirect to the found list
-    redirect_to :action => 'found'
-  end
-  
   def treasures
     @guesses = Guess.find_all
     eligible_photo_details = []
@@ -147,26 +98,24 @@ class PhotosController < ApplicationController
     desc.join(", ")
   end
 
-  def revealed
-    @photos = Photo.find_all_by_game_status('revealed')
+  def unfound_pretty
+    @photos = Photo.find_all_by_game_status('unfound')
+    @photos.concat(Photo.find_all_by_game_status('unconfirmed'))
     @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
+    lastupdate = FlickrUpdate.find(:all).last
+    @lasttime = lastupdate[:updated_at] - 28800;
   end
 
-  def misattributed
-    @guesses = Guess.find_all
-    @photos = []
-    @guesses.each do |guess|
-      photo = Photo.find(guess[:photo_id])
-      if guess[:person_id] == photo[:person_id]
-        @photos.push(photo)
-      end
-    end
-  end
-  
-  def unverified
+  def unfound_data
+    @photos = Photo.find_all_by_game_status('unfound')
+    @num_unfound = @photos.length
+    @photos_unconfirmed = Photo.find_all_by_game_status('unconfirmed')
+    @num_unconfirmed = @photos_unconfirmed.length
+    @photos.concat(@photos_unconfirmed)
+    @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
     lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 28800;
-    @photos = Photo.find(:all, :conditions => ["seen_at < ?", lasttime])
+    @lasttime = lastupdate[:updated_at] - 28800;
+    render :layout => false
   end
 
   def show
@@ -187,79 +136,71 @@ class PhotosController < ApplicationController
     if @comments == nil then @comments = [] end
   end
 
-  # add a photo to the db
-  def add_photo
-    if !params[:photo]
-      @show_form = true;
-    else
-      @show_form = false;
-      # set the particulars
-      flickr_id = params[:photo][:flickrid];
-      flickr_url = 'http://api.flickr.com/services/rest/'
-      flickr_method = 'flickr.photos.getInfo'
-      flickr_credentials = FlickrCredentials.new
-    
-      # get information about this photo from flickr
-      # generate the api signature
-      sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + flickr_method + 'photo_id' + flickr_id
-      api_sig = MD5.hexdigest(sig_raw)
-      page_url =  flickr_url + '?method=' + flickr_method +
-                  '&api_key=' + flickr_credentials.api_key +
-		  '&auth_token=' + flickr_credentials.auth_token +
-                  '&api_sig=' + api_sig + '&photo_id=' + flickr_id
-      # get the data and parse it
-      page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
-      full_flickr_page = XmlSimple.xml_in(page_xml)
-      # if we didn't get an error from flickr...
-      if full_flickr_page['stat'] == 'ok'
-        flickr_page = full_flickr_page['photo'][0]
-        # create the new photo object and fill it up
-        photo = Photo.new
-        photo.flickrid = flickr_id
-        photo.farm = flickr_page['farm']
-        photo.secret = flickr_page['secret']
-        photo.server = flickr_page['server']
-        photo.dateadded = Time.at(flickr_page['dateuploaded'].to_i)
-        photo.lastupdate = Time.at(flickr_page['dates'][0]['lastupdate'].to_i)
-        photo.seen_at = Time.now
-        photo.flickr_status = "not in pool"
-        photo.mapped = (!flickr_page['location']) ? 'false' : 'true'
-    
-        # now try and get a record for the owner of this photo
-        owner = Person.find_by_flickrid(flickr_page['owner'][0]['nsid'])
-        # if the owner doesn't exist, create it
-        if !owner
-          owner = Person.new
+  def load_comments(params)
+    # get the photo object
+    photo = Photo.find(params[:id])
+    # delete all the previous comments associated with the photo
+    Comment.delete_all('photo_id = ' + photo[:id].to_s)
+    # set the particulars
+    flickr_url = 'http://api.flickr.com/services/rest/'
+    flickr_method = 'flickr.photos.comments.getList'
+    flickr_credentials = FlickrCredentials.new
+    # generate the api signature
+    sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + flickr_method + 'photo_id' + photo[:flickrid]
+    api_sig = MD5.hexdigest(sig_raw)
+    # grab the comments
+    page_url =  flickr_url + '?method=' + flickr_method +
+                '&api_key=' + flickr_credentials.api_key +
+		'&auth_token=' + flickr_credentials.auth_token +
+                '&api_sig=' + api_sig + '&photo_id=' + photo[:flickrid]
+    page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
+    full_page = XmlSimple.xml_in(page_xml)
+    photo_comments = []
+    # if comments were returned...
+    if full_page['comments']
+      flickr_page = full_page['comments'][0]
+      # step through the returned comments
+      if flickr_page['comment']
+        flickr_page['comment'].each do |new_comment|
+          # create a comment object
+          this_comment = Comment.new
+          this_comment[:comment_text] = new_comment['content']
+          this_comment[:commented_at] = Time.at(new_comment['datecreate'].to_i)
+          this_comment[:username] = new_comment['authorname']
+          this_comment[:userid] = new_comment['author']
+          this_comment[:photo_id] = photo[:id]
+          # save it
+          this_comment.save
+          # add it to the array
+          photo_comments.push(this_comment)
         end
-        # set the details
-        owner.flickrid = flickr_page['owner'][0]['nsid']
-        owner.username = flickr_page['owner'][0]['username']
-        owner.flickr_status = "active"
-    
-        # save the owner
-        owner.save
-        # attach the owner to the photo
-        photo.person = owner
-    
-      # we got an error from flickr
-      else
-        photo = Photo.new
-        photo.flickrid = flickr_id
-        photo.dateadded = Time.at(0)
-        photo.lastupdate = Time.at(0)
-        photo.seen_at = Time.now
-        photo.flickr_status = "missing"
       end
-
-      # save the photo
-      photo.save
-      
-      # redirect to the photo's show page
-      redirect_to :action => 'show', :id => photo
     end
+    photo_comments
   end
 
-  # add a guess to the passed photo
+  def change_game_status
+    # get photo record
+    photo = Photo.find(params[:id])
+    # change the status
+    photo[:game_status] = params[:photo][:game_status]
+    # if the new status is unfound or unconfirmed...
+    if photo[:game_status] == 'unfound' || photo[:game_status] == 'unconfirmed'
+      # delete any guesses for this photo
+      guesses = Guess.find_all_by_photo_id(params[:id])
+      guesses.each do |guess|
+        Guess.delete(guess[:id])
+      end
+      # delete any revelations for this photo
+      revelation = Revelation.find_by_photo_id(photo.id)
+      Revelation.delete(revelation[:id]) if revelation
+    end
+    # save the photo
+    photo.save
+    # redirect to show
+    redirect_to :action => 'show', :id => photo, :nocomment => :true
+  end
+
   def add_guess
     # get photo and comment records
     photo = Photo.find(params[:id])
@@ -368,82 +309,9 @@ class PhotosController < ApplicationController
     redirect_to :action => 'show', :id => photo, :nocomment => :true
   end
 
-  def change_game_status
-    # get photo record
-    photo = Photo.find(params[:id])
-    # change the status
-    photo[:game_status] = params[:photo][:game_status]
-    # if the new status is unfound or unconfirmed...
-    if photo[:game_status] == 'unfound' || photo[:game_status] == 'unconfirmed'
-      # delete any guesses for this photo
-      guesses = Guess.find_all_by_photo_id(params[:id])
-      guesses.each do |guess|
-        Guess.delete(guess[:id])
-      end
-      # delete any revelations for this photo
-      revelation = Revelation.find_by_photo_id(photo.id)
-      Revelation.delete(revelation[:id]) if revelation
-    end
-    # save the photo
-    photo.save
-    # redirect to show
-    redirect_to :action => 'show', :id => photo, :nocomment => :true
-  end
-
-  def load_comments(params)
-    # get the photo object
-    photo = Photo.find(params[:id])
-    # delete all the previous comments associated with the photo
-    Comment.delete_all('photo_id = ' + photo[:id].to_s)
-    # set the particulars
-    flickr_url = 'http://api.flickr.com/services/rest/'
-    flickr_method = 'flickr.photos.comments.getList'
-    flickr_credentials = FlickrCredentials.new
-    # generate the api signature
-    sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + flickr_method + 'photo_id' + photo[:flickrid]
-    api_sig = MD5.hexdigest(sig_raw)
-    # grab the comments
-    page_url =  flickr_url + '?method=' + flickr_method +
-                '&api_key=' + flickr_credentials.api_key +
-		'&auth_token=' + flickr_credentials.auth_token +
-                '&api_sig=' + api_sig + '&photo_id=' + photo[:flickrid]
-    page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
-    full_page = XmlSimple.xml_in(page_xml)
-    photo_comments = []
-    # if comments were returned...
-    if full_page['comments']
-      flickr_page = full_page['comments'][0]
-      # step through the returned comments
-      if flickr_page['comment']
-        flickr_page['comment'].each do |new_comment|
-          # create a comment object
-          this_comment = Comment.new
-          this_comment[:comment_text] = new_comment['content']
-          this_comment[:commented_at] = Time.at(new_comment['datecreate'].to_i)
-          this_comment[:username] = new_comment['authorname']
-          this_comment[:userid] = new_comment['author']
-          this_comment[:photo_id] = photo[:id]
-          # save it
-          this_comment.save
-          # add it to the array
-          photo_comments.push(this_comment)
-        end
-      end
-    end
-    photo_comments
-  end
-
   # reload and render the comments for the specified photo
   def reload_comments
     redirect_to :action => 'show', :id => params[:id]
-  end
-
-  def new
-    @photo = Photo.new
-  end
-
-  def edit
-    @photo = Photo.find(params[:id])
   end
 
   def destroy
@@ -471,4 +339,5 @@ class PhotosController < ApplicationController
     Photo.find(params[:id]).destroy
     redirect_to :action => 'unverified'
   end
+
 end
