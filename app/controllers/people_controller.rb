@@ -1,7 +1,4 @@
 class PeopleController < ApplicationController
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [], :redirect_to => { :action => :list }
-
   def list
     raw_people = Person.find(:all)
     @people = []

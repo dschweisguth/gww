@@ -1,8 +1,4 @@
 class PhotosController < ApplicationController
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy ],
-         :redirect_to => { :action => :unverified }
-
   auto_complete_for :person, :username
 
   def unverified
