@@ -1,3 +1,6 @@
+<%= javascript_include_tag 'prototype' %>
+<%= javascript_include_tag 'effects' %>
+<%= javascript_include_tag 'controls' %>
 <% if @photo[:flickr_status] == 'in pool' -%>
 <a href="http://www.flickr.com/photos/<%= @owner[:flickrid] %>/<%= @photo[:flickrid] %>/in/pool-guesswheresf/"><img src="http://static.flickr.com/<%= @photo[:server] %>/<%= @photo[:flickrid] %>_<%= @photo[:secret] %>_m.jpg" border="0"/></a>
 <% elsif @photo[:flickr_status] == 'not in pool' -%>

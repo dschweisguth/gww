@@ -24,7 +24,6 @@ Revisit effect of Rails query caching
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
-Look in to auto_complete_for usage. Did it ever work? Did I break it?
 photos and guesses have people_ids which don't correspond to people. Fix.
     Look for other unenforced foreign keys and fix those too.
 
