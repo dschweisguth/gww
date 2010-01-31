@@ -35,25 +35,6 @@ class PhotosControllerTest < Test::Unit::TestCase
 
   end
 
-  def test_new
-    get :new
-
-    assert_response :success
-    assert_template 'new'
-
-    assert_not_nil assigns(:photo)
-  end
-
-  def test_edit
-    get :edit, :id => 1
-
-    assert_response :success
-    assert_template 'edit'
-
-    assert_not_nil assigns(:photo)
-    assert assigns(:photo).valid?
-  end
-
   def test_destroy
     assert_not_nil Photo.find(1)
 

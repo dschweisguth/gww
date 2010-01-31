@@ -13,12 +13,6 @@ class PeopleControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  def test_index
-    get :index
-    assert_response :success
-    assert_template 'list'
-  end
-
   def test_list
     get :list
 
@@ -38,51 +32,4 @@ class PeopleControllerTest < Test::Unit::TestCase
     assert assigns(:person).valid?
   end
 
-  def test_new
-    get :new
-
-    assert_response :success
-    assert_template 'new'
-
-    assert_not_nil assigns(:person)
-  end
-
-  def test_create
-    num_people = Person.count
-
-    post :create, :person => {}
-
-    assert_response :redirect
-    assert_redirected_to :action => 'list'
-
-    assert_equal num_people + 1, Person.count
-  end
-
-  def test_edit
-    get :edit, :id => 1
-
-    assert_response :success
-    assert_template 'edit'
-
-    assert_not_nil assigns(:person)
-    assert assigns(:person).valid?
-  end
-
-  def test_update
-    post :update, :id => 1
-    assert_response :redirect
-    assert_redirected_to :action => 'show', :id => 1
-  end
-
-  def test_destroy
-    assert_not_nil Person.find(1)
-
-    post :destroy, :id => 1
-    assert_response :redirect
-    assert_redirected_to :action => 'list'
-
-    assert_raise(ActiveRecord::RecordNotFound) {
-      Person.find(1)
-    }
-  end
 end
