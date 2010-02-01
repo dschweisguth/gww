@@ -1,15 +1,14 @@
-Right away:
-
-Fix autocomplete problem and put production back on head
-
 Soon:
 
-Add note about automatic update to index page
-Add last scored time to home page
-Add source code and backup information to home page
+Update home page
+- Note about automatice update
+- Last update time
+- Last score time
+- Source code and backup information
+- Organize into admin and player sections
 Add more info to unfound list to make it easier to find a specific photo
-Rewrite treasures HTML to be postable
-Attempt to speed up treasures by using ActiveRecord's join support
+Attempt to speed up treasures and other pages by using ActiveRecord's join
+    support
 The unverified photos list is intended to list those photos not seen during the
     last update, so that unfound ones can be removed from the pool. (Found ones
     stay in the pool to preserve scores.) Right now it shows all photos. Fix
@@ -29,6 +28,8 @@ photos and guesses have people_ids which don't correspond to people. Fix.
 
 Later:
 
+Add thumbnails to score report
+Rewrite treasures HTML to be postable
 Put the score reporting range under admin control? See ongoing email
     discussion.
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
