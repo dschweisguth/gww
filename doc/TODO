@@ -1,10 +1,7 @@
 Soon:
 
 Update home page
-- Note about automatice update
-- Last update time
 - Last score time
-- Source code and backup information
 - Organize into admin and player sections
 Add more info to unfound list to make it easier to find a specific photo
 Attempt to speed up treasures and other pages by using ActiveRecord's join

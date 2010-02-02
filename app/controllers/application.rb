@@ -1,4 +1,13 @@
-# Filters added to this controller will be run for all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
+
+  def last_update_time
+    lastupdate = FlickrUpdate.find(:all).last
+    lastupdate[:updated_at];
+  end
+
+  # TODO use as little as possible
+  def adj_last_update_time
+    last_update_time - 28800;
+  end
+
 end

@@ -1,4 +1,5 @@
 class IndexController < ApplicationController
-    def index
-    end
+  def index
+    @last_update_time = last_update_time
+  end
 end

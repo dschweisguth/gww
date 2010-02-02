@@ -96,8 +96,7 @@ class PeopleController < ApplicationController
   end
   
   def guesses
-    lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 28800;
+    lasttime = adj_last_update_time
     
     @last_days = []
     (1..7).each do |num|
@@ -197,10 +196,8 @@ class PeopleController < ApplicationController
     # should be 28800 for PST and 25200 for PDT, which means editing the source
     # twice a year. TODO fix
     updates = FlickrUpdate.find(:all)
-    penupdate = updates[updates.length - 2]
-    pentime = penupdate[:updated_at] - 28800
-    lastupdate = FlickrUpdate.find(:all).last
-    lasttime = lastupdate[:updated_at] - 28800
+    pentime = updates[updates.length - 2][:updated_at] - 28800
+    lasttime = updates.last[:updated_at] - 28800
     guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime])
     @new_guesses = []
     guesses.each do |guess|

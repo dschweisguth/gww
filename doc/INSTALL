@@ -134,6 +134,10 @@ Configure:
 	Construct a Flickr API secret, key and auth token manually per the
 	    API documentation
 	Edit and fill in your secret, api_key and auth_token
+    Correct time zone calculations: Search the source for 25200 (the difference
+	in seconds between UTC and PDT) and 28800 (the difference in seconds
+	between UTC and PST) and replace them with the appropriate values for
+	your time zone. Don't forget to do this every six months.
 For production Linux httpd,
     chmod -R apache:apache gww
     ln -s /.../gww/public /var/www/html/gww

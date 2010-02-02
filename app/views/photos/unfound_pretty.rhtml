@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <td class="cellspace">&nbsp;</td>
-    <td colspan="5" class="dheader"><%= @photos.length %> unfound photos as of <%= @lasttime.strftime '%A, %B %d, %I%p' %></td>
+    <td colspan="5" class="dheader"><%= @photos.length %> unfound photos as of <%= @lasttime.localtime.strftime '%A, %B %d, %I %p' %></td>
   </tr>
   <tr>
     <td class="cellspace">&nbsp;</td>
