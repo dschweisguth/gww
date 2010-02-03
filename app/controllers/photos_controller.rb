@@ -103,7 +103,7 @@ class PhotosController < ApplicationController
   end
     
   def unverified
-    @photos = Photo.find(:all, :conditions => ["seen_at < ?", adj_last_update_time])
+    @photos = Photo.find(:all, :conditions => ["seen_at < ? AND game_status in ('unfound', 'unconfirmed')", adj_last_update_time])
   end
 
   def unfound

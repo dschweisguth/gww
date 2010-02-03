@@ -5,8 +5,8 @@ The most recent photo update began <%= @last_update_time.localtime.strftime("%A,
 Scoring and publishing, for administrators
 <ul>
 <li><%= link_to 'Update photos now', :controller => 'photos', :action => 'update' %> (click only once, then wait until this page refreshes)</li>
-<li><%= link_to 'Unverified Photos', :controller => 'photos', :action => 'unverified' %></li>
 <li><%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound' %></li>
+<li><%= link_to 'Inaccessible and Unfound or Unconfirmed Photos', :controller => 'photos', :action => 'unverified' %>, for possible manual removal</li>
 <li><%= link_to 'Score Report', :controller => 'people', :action => 'report' %>, for publication</li>
 <li><%= link_to 'Unfound Photos XML', :controller => 'photos', :action => 'unfound_data' %>, for consumption by other tools</li>
 </ul>

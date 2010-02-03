@@ -5,10 +5,6 @@ Add last score time to home page
 Add more info to unfound list to make it easier to find a specific photo
 Attempt to speed up treasures and other pages by using ActiveRecord's join
     support
-The unverified photos list is intended to list those photos not seen during the
-    last update, so that unfound ones can be removed from the pool. (Found ones
-    stay in the pool to preserve scores.) Right now it shows all photos. Fix
-    it.
 Attempt to speed up unverified photos by looking up each person only once.
     Multiple lookups of each people.id appear in the development log.
 Review test coverage and add TODOs to write more tests and assertions
