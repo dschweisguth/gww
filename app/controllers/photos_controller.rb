@@ -96,14 +96,17 @@ class PhotosController < ApplicationController
 
     end
     # let them know we're done
-    flash[:notice] =  'created ' + photo_count.to_s + ' new photos and ' +
-                      user_count.to_s + ' new users. Got ' + (get_page - 1).to_s +
-                      ' pages out of ' + flickr_page['pages'] + '.</br>'
+    flash[:notice] =
+      'created ' + photo_count.to_s + ' new photos and ' + user_count.to_s +
+      ' new users. Got ' + (get_page - 1).to_s + ' pages out of ' +
+      flickr_page['pages'] + '.</br>'
     redirect_to :controller => 'index', :action => 'index'
   end
     
   def unverified
-    @photos = Photo.find(:all, :conditions => ["seen_at < ? AND game_status in ('unfound', 'unconfirmed')", adj_last_update_time])
+    @photos = Photo.find(:all, :conditions =>
+      ["seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
+        adj_last_update_time])
   end
 
   def unfound
@@ -215,7 +218,8 @@ class PhotosController < ApplicationController
     @owner = Person.find(@photo[:person_id])
     @guesses = Guess.find(:all, :conditions => ["photo_id = ?", @photo[:id]])
     @guess_people = []
-    @unconfirmed = Photo.find(:all, :conditions => ["person_id = ? and game_status = ?", @photo[:person_id], "unconfirmed"])
+    @unconfirmed = Photo.find(:all, :conditions =>
+      ["person_id = ? and game_status = ?", @photo[:person_id], "unconfirmed"])
     @guesses.each do |guess|
       @guess_people.push(Person.find(guess[:person_id]))
     end
