@@ -1,7 +1,6 @@
 xml.instruct! :xml, :version=>"1.0", :encoding=>"utf-8" 
 xml.photos "updated_at" => @lasttime.localtime.to_i,
-           "total" => @photos.length,
-           "total_unconfirmed" => @num_unconfirmed do
+           "total" => @photos.length do
   @photos.each do |photo|
     photographer = Person.find(photo[:person_id])
     xml.photo "posted_by" => photographer.username,
