@@ -1,5 +1,5 @@
 <%= flash[:notice] %><br/>
-The most recent photo update began <%= @last_update_time.localtime.strftime("%A, %b %d, %H:%M:%S %Z") %> and completed about half an hour later.<br/>
+The most recent photo update began <%= @last_update_time.localtime.strftime("%A, %b %d, %H:%M:%S %Z") %>. Photo updates take about half an hour.<br/>
 <%= link_to 'Update photos now', :controller => 'photos', :action => 'update' %> <b>(click only once, then wait until this page refreshes)</b><br/>
 <br/>
 
@@ -17,4 +17,4 @@ For publication:<br/>
 <%= link_to 'Guesses HTML', :controller => 'people', :action => 'guesses' %><br/>
 <%= link_to 'Score Report', :controller => 'people', :action => 'report' %>
 <hr/>
-<a href="http://github.com/dschweisguth/gww/commits/">Recent changes</a> - <a href="http://github.com/dschweisguth/gww/">Source code</a> - <a href="http://schweisguth.org/gww-backups/">Backups</a>
+<a href="http://github.com/dschweisguth/gww/commits/">Recent software changes</a> - <a href="http://github.com/dschweisguth/gww/">Source code</a> - <a href="http://schweisguth.org/gww-backups/">Backups</a>
