@@ -1,28 +1,21 @@
-Soon:
-
 Bug: "Add this guess" fails with a manually entered person
-Add update completion time to home page
-Add last score time to home page
-Add more info to unfound list to make it easier to find a specific photo
-Attempt to speed up treasures and other pages by using ActiveRecord's join
-    support
-Attempt to speed up unverified photos by looking up each person only once.
-    Multiple lookups of each people.id appear in the development log.
-Review test coverage and add TODOs to write more tests and assertions
+Attempt to speed up treasures and other pages by improving ActiveRecord usage
+Attempt to speed up pages which access Flickr by using newer APIs
 New server
+photos and guesses have people_ids which don't correspond to people. Fix.
+    Look for other unenforced foreign keys and fix those too.
+Review test coverage and add TODOs to write more tests and assertions
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
 Revisit effect of Rails query caching
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group?
-photos and guesses have people_ids which don't correspond to people. Fix.
-    Look for other unenforced foreign keys and fix those too.
-
-Later:
-
+Add more info to unfound list to make it easier to find a specific photo
+Add update completion time to home page
 Add thumbnails to score report
-Rewrite treasures HTML to be postable
+Post scores to Flickr group automatically. Record scoring time and add to home
+    page.
 Put the score reporting range under admin control? See ongoing email
     discussion.
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
