@@ -1,8 +1,7 @@
 Soon:
 
-Update home page
-- Last score time
-- Organize into admin and player sections
+Add update completion time to home page
+Add last score time to home page
 Add more info to unfound list to make it easier to find a specific photo
 Attempt to speed up treasures and other pages by using ActiveRecord's join
     support
