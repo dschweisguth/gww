@@ -194,10 +194,10 @@ class PhotosController < ApplicationController
   end
 
   def unfound_pretty
-    @photos = Photo.find_all_by_game_status('unfound')
-    @photos.concat(Photo.find_all_by_game_status('unconfirmed'))
-    @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
     @lasttime = last_update_time
+    @photos = Photo.find(:all,
+      :conditions => "game_status in ('unfound', 'unconfirmed')",
+      :order => "lastupdate desc")
   end
 
   def unfound_data
