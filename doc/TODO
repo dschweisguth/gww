@@ -16,8 +16,6 @@ Add update completion time to home page
 Add thumbnails to score report
 Post scores to Flickr group automatically. Record scoring time and add to home
     page.
-Put the score reporting range under admin control? See ongoing email
-    discussion.
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
 Automatically publish the score report to the group's scoring thread instead
     of making the scorer copy and paste
@@ -34,3 +32,6 @@ Add to player page
 - youngests and oldest guesses by others (inverse treasures)
 - emphasize nemeses
 - unconfirmeds
+Add last-updated dates to photos which
+- reflect only things relevant to scoring
+- reflect only things relevant to players
