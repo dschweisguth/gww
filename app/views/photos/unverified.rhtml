@@ -13,7 +13,7 @@
 <% for photo in @photos -%>
 <% if photo[:person_id] != 0 -%>
   <tr>
-    <td><%=h Person.find(photo[:person_id])[:username] %></td>
+    <td><%= photo.person.username %></td>
     <td><%= photo[:dateadded].strftime  '%Y/%m/%d' %></td>
     <td><%= photo[:lastupdate].strftime  '%Y/%m/%d' %></td>
     <td><%= photo[:mapped] %></td>
