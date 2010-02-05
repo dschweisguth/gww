@@ -16,6 +16,7 @@ Add report of photos for which more than one point was awarded, as some seem to
     where p.id = g.photo_id and p.person_id = pe.id
     group by p.flickrid having count(*) > 1 order by p.id;
 Remove hardcoded timezone difference from {people,photos}_controller.rb
+Paginate or limit pages that currently take forever, e.g. commented_on
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group, to support the shortest/longest time-to-guess report?
 Add more info to unfound list to make it easier to find a specific photo

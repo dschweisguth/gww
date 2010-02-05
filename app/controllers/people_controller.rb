@@ -73,24 +73,23 @@ class PeopleController < ApplicationController
 
   def latest_guesses
     @person = Person.find(params[:id])
-    @guesses = Guess.find(:all, :conditions => ["person_id = ?", params[:id]])
-    @guesses = Guess.find_all_by_person_id(params[:id])
-    @guesses.sort! {|x,y| y[:guessed_at] <=> x[:guessed_at]}
+    @guesses = Guess.find_all_by_person_id(params[:id],
+      :order => "guessed_at desc", :include => { :photo => :person })
   end
 
   def latest_posts
     @person = Person.find(params[:id])
-    @photos = Photo.find_all_by_person_id(params[:id])
-    @photos.sort! {|x,y| y[:dateadded] <=> x[:dateadded]}
+    @photos = Photo.find_all_by_person_id(params[:id],
+      :order => "dateadded desc", :include => :person)
   end
   
   def commented_on
     @person = Person.find(params[:id])
-    @comments = Comment.find_all_by_userid(@person[:flickrid])
+    @comments = Comment.find_all_by_userid(@person[:flickrid],
+      :include => { :photo => [:person, { :guesses => :person }] })
     @photos = []
     @comments.each do |comment|
-      photo = Photo.find(comment[:photo_id])
-      @photos.push(photo) if !@photos.include?(photo)
+      @photos.push(comment.photo) if !@photos.include?(comment.photo)
     end
     @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
   end

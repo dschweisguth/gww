@@ -11,12 +11,12 @@
     <td class="dheader">photo flickr id</td>
   </tr>  
 <% @guesses.each_with_index do |guess, guess_index| %>
-<% photo = Photo.find(guess[:photo_id]) -%>
+<% photo = guess.photo -%>
   <tr>
     <td class="dnum"><%= guess_index + 1 %>.</td>
     <% if photo[:person_id] != 0 -%>
-    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= Person.find(photo[:person_id])[:flickrid] %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
-    <td class="dvalue"><%=h Person.find(photo[:person_id])[:username] %></td>
+    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= photo.person.flickrid %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
+    <td class="dvalue"><%= photo.person.username %></td>
     <% else -%>
     <td class="dvalue"><b>unknown</b></td>
     <td class="dvalue"><b>unknown</b></td>
