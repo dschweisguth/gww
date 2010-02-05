@@ -1,4 +1,4 @@
-Bug: "Add this guess" fails with a manually entered person
+x Bug: "Add this guess" fails with a manually entered person
 Attempt to speed up treasures and other pages by improving ActiveRecord usage
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs
@@ -9,9 +9,15 @@ Review test coverage and add TODOs to write more tests and assertions
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
 Revisit effect of Rails query caching
+Add report of photos for which more than one point was awarded, as some seem to
+    be incorrect.
+    select p.id, pe.username, pe.flickrid, p.flickrid, count(*)
+    from photos p, guesses g, people pe
+    where p.id = g.photo_id and p.person_id = pe.id
+    group by p.flickrid having count(*) > 1 order by p.id;
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 Is photos.dateadded really date uploaded? If so, can we also track date added
-    to group?
+    to group, to support the shortest/longest time-to-guess report?
 Add more info to unfound list to make it easier to find a specific photo
 Add update completion time to home page
 Add thumbnails to score report
