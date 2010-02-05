@@ -1,14 +1,16 @@
 class PeopleController < ApplicationController
   def list
+    photo_counts = Photo.count(:all, :group => 'person_id')
+    guess_counts = Guess.count(:all, :group => 'person_id')
     raw_people = Person.find(:all)
     @people = []
     raw_people.each do |person|
-      all_photos = Photo.find_all_by_person_id(person.id)
-      all_guesses = Guess.find_all_by_person_id(person.id)
       add_person = {
         :person => person,
-        :photocount => all_photos.length,
-        :guesscount => all_guesses.length
+        :photocount =>
+          photo_counts[person.id].nil? ? 0 : photo_counts[person.id],
+        :guesscount => 
+          guess_counts[person.id].nil? ? 0 : guess_counts[person.id],
       }
       @people.push(add_person)
     end
