@@ -243,24 +243,13 @@ class PhotosController < ApplicationController
   end
 
   def change_game_status
-    # get photo record
-    photo = Photo.find(params[:id])
-    # change the status
-    photo[:game_status] = params[:photo][:game_status]
-    # if the new status is unfound or unconfirmed...
-    if photo[:game_status] == 'unfound' || photo[:game_status] == 'unconfirmed'
-      # delete any guesses for this photo
-      guesses = Guess.find_all_by_photo_id(params[:id])
-      guesses.each do |guess|
-        Guess.delete(guess[:id])
-      end
-      # delete any revelations for this photo
-      revelation = Revelation.find_by_photo_id(photo.id)
-      Revelation.delete(revelation[:id]) if revelation
+    photo = Photo.find(params[:id], :include => :revelation)
+    photo.game_status = params[:photo][:game_status]
+    if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
+      Guess.delete_all(["photo_id = ?", photo.id])
+      Revelation.delete(photo.revelation.id) if photo.revelation
     end
-    # save the photo
     photo.save
-    # redirect to show
     redirect_to :action => 'show', :id => photo, :nocomment => :true
   end
 
