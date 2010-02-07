@@ -18,19 +18,20 @@
 <% end -%>
 )<br/>
 
-<% @photo_lookup.each do |posted_set| %>
-<%= posted_set[:count] %> guessed by <%= link_to posted_set[:username], :action => 'show', :id => posted_set[:person_id] %> (
-<% posted_set[:photos].each_with_index do |photo, photo_index| -%>
-<%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo.id %>
-<% end -%>
+<% @guessers.each do |guesser| %>
+<%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, :action => 'show', :id => guesser[:person].id %> (
+<%   guesser[:photos].each_with_index do |photo, photo_index| -%>
+<%=    link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo.id %>
+<%   end -%>
 )<br/>
 <% end %>
 <br/>
 
-<b><%=h @person[:username] %> has correctly guessed <%=h @guessed_count %> photos</b><br/>
-<% @guess_lookup.each do |guess_set| %>
-<%=  guess_set[:count] %> posted by <%= link_to guess_set[:username], :action => 'show', :id => guess_set[:person_id] %> (
-<%   guess_set[:photos].each_with_index do |photo, photo_index| -%>
+<b><%=h @person.username %> has correctly guessed <%=h @guessed_count %> photos</b><br/>
+
+<% @posters.each do |poster| %>
+<%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, :action => 'show', :id => poster[:person].id %> (
+<%   poster[:photos].each_with_index do |photo, photo_index| -%>
 <%     if photo.person_id == 0 -%>
 <b>x</b>
 <%     else -%>

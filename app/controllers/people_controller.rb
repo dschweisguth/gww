@@ -26,6 +26,9 @@ class PeopleController < ApplicationController
     @revealed_photos = Photo.find_all_by_person_id_and_game_status(@person.id,
       'revealed')
     
+    missing_person = Person.new
+    missing_person.username = 'unknown'
+
     # Map of guessers to this person's posts
     raw_photos = Photo.find_all_by_person_id(@person.id,
       :include => { :guesses => :person })
@@ -33,6 +36,9 @@ class PeopleController < ApplicationController
     photos_by_guesser = {}
     raw_photos.each do |photo|
       photo.guesses.each do |guess|
+	if guess.person.nil?
+          guess.person = missing_person
+	end
         this_persons_guesses = photos_by_guesser[guess.person]
         if ! this_persons_guesses
           this_persons_guesses = []
@@ -41,17 +47,13 @@ class PeopleController < ApplicationController
         this_persons_guesses.push photo
       end
     end
-    @photo_lookup = []
+    @guessers = []
     photos_by_guesser.each do |person, photos|
-      @photo_lookup.push({ :username => person.username,
-        :person_id => person.id, :photos => photos,
-        :count => photos.length })
+      @guessers.push({ :person => person, :photos => photos })
     end
-    @photo_lookup.sort! { |x,y| y[:count] <=> x[:count] }
+    @guessers.sort! { |x,y| y[:photos].length <=> x[:photos].length }
     
     # Map of posters to this person's guesses
-    missing_person = Person.new
-    missing_person[:username] = 'unknown'
     raw_guesses = Guess.find_all_by_person_id(@person.id, :include => :photo)
     @guessed_count = raw_guesses.length
     guessed_photos_by_poster = {}
@@ -68,12 +70,11 @@ class PeopleController < ApplicationController
       end
       this_posters_photos.push(guess.photo)
     end
-    @guess_lookup = []
+    @posters = []
     guessed_photos_by_poster.each do |person, photos|
-      @guess_lookup.push({ :username => person.username,
-        :person_id => person.id, :photos => photos, :count => photos.length })
+      @posters.push({ :person => person, :photos => photos })
     end
-    @guess_lookup.sort! { |x,y| y[:count] <=> x[:count] }
+    @posters.sort! { |x,y| y[:photos].count <=> x[:photos].count }
 
   end
 
