@@ -142,35 +142,31 @@ class PeopleController < ApplicationController
     @report_date = lasttime
   end
   
-  def get_scores_from_date(begin_date,end_date)
+  def get_scores_from_date(begin_date, end_date)
     if begin_date && end_date
       guesses = Guess.find(:all, :conditions =>
-        [ "guessed_at > ? and guessed_at < ?", begin_date, end_date ])
+        [ "guessed_at > ? and guessed_at < ?", begin_date, end_date ],
+        :include => :person)
     elsif begin_date
       guesses = Guess.find(:all,
-        :conditions => [ "guessed_at > ?", begin_date ])
+        :conditions => [ "guessed_at > ?", begin_date ], :include => :person)
     else
-      guesses = Guess.find(:all)
+      guesses = Guess.find(:all,
+        :include => :person)
     end
-    good_guesses = []
+
     guessers = {}
     guesses.each do |guess|
-      guessers[guess[:person_id]] ||= []
-      guessers[guess[:person_id]].push(guess)
+      guessers[guess.person] ||= []
+      guessers[guess.person].push(guess)
     end
 
     return_people = []
-    guessers.each do |person_id, guesses|
-      # create an object descriptive of this person
-      add_person = {
-        :person => Person.find(person_id),
-        :guesscount => guesses.length
-      }
+    guessers.each do |person, guesses|
+      add_person = { :person => person, :guesscount => guesses.length }
       found = nil
       return_people.each do |person_list|
-        # if we find an item in the array with the same guess count
         if person_list[:guesscount] == add_person[:guesscount]
-          # add this person to the list
           person_list[:people].push(add_person)
           found = :true
           break
