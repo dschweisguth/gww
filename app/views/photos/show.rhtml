@@ -3,7 +3,8 @@
 <%= javascript_include_tag 'controls' %>
 
 <% if !flash[:notice].nil? -%>
-  <%= flash[:notice] %><br/><br/>
+  <%= flash[:notice] %><br/>
+  <br/>
 <% end -%>
 
 <% if @photo.flickr_status == 'in pool' -%>
@@ -13,34 +14,40 @@
 <% else -%>
 <b>photo no longer on flickr</b>
 <% end -%>
-<br />
-<b>Posted by</b> <%= link_to @photo.person.username, :controller => 'people', :action => 'show', :id => @photo.person.id %>.
+<br/>
+
+<b>Posted by</b> <%= link_to @photo.person.username, :controller => 'people', :action => 'show', :id => @photo.person.id %>.<br/>
+
 <% if @unconfirmed.length > 0 -%>
-  <br/>
   <%= @photo.person.username %> has <%= @unconfirmed.length %> unconfirmed photos:
   <% @unconfirmed.each_with_index do |photo, photo_index| -%>
     <%= link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo.id %>
   <% end -%>
+  <br/><br/>
 <% end -%>
+
+I think
 <% if @photo[:game_status] == 'found' -%>
-I think this photo was correctly guessed by
+this photo was correctly guessed by
 <% person_links = [] -%>
 <% @photo.guesses.each do |guess| -%>
 <%   person_links.push(link_to(guess.person.username, :controller => 'people', :action => 'show', :id => guess.person.id)) -%>
 <% end -%>
 <%= person_links.join(', ') %>.
 <% elsif @photo.game_status == 'revealed' -%>
-I think this photo's location was revealed by the person who posted it.
+this photo's location was revealed by the person who posted it.
 <% elsif @photo.game_status == 'unfound' -%>
-I think this photo is unfound.
+this photo is unfound.
 <% elsif @photo.game_status == 'unconfirmed' -%>
-I think this photo is unconfirmed.
+this photo is unconfirmed.
 <% end -%>
+
 <%= start_form_tag :action => 'change_game_status', :id => @photo %>
 <%= radio_button(:photo, :game_status, 'unfound') %> unfound 
 <%= radio_button(:photo, :game_status, 'unconfirmed') %> unconfirmed 
 <%= submit_tag("Change status") %>
 <%= end_form_tag %>
+
 <span id="guess_list">
 <% if ! @photo.guesses.empty? then -%>
 <br/>
@@ -76,45 +83,39 @@ I think this photo is unconfirmed.
 &nbsp;
 <% end -%>
 </span>
+
 <%= start_form_tag :action => 'add_guess', :id => @photo %>
-<% if @comments.length > 0 -%>
-<table class="indented">
-    <tr>
-      <td class="dheader">Choose the correct guess from the comments below:</td>
-    </tr>
+<% if ! @comments.empty? -%>
+  <table class="indented">
+    <tr><td class="dheader">Choose the correct guess from the comments below:</td></tr>
     <tr>
       <td>
-          <% @comments.each do |comment| -%>
-            <% uline = false -%>
-            <% hilite = false -%>
-            <% if comment.username == @photo.person.username then hilight = true end -%>
-            <% @photo.guesses.each do |guess| -%>
-              <% if comment.username == guess.person.username then uline = true end -%>
-            <% end -%>
-            <%= radio_button(:comment, :id, comment.id) %> <b><%= comment.username %>:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br />
-          <% end -%>
+	<% @comments.each do |comment| -%>
+	  <% uline = false -%>
+	  <% hilite = false -%>
+	  <% if comment.username == @photo.person.username then hilight = true end -%>
+	  <% @photo.guesses.each do |guess| -%>
+	    <% if comment.username == guess.person.username then uline = true end -%>
+	  <% end -%>
+	  <%= radio_button(:comment, :id, comment.id) %> <b><%= comment.username %>:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br/>
+	<% end -%>
       </td>
     </tr>
   </table>
   <table>
-    <tr>
-      <td class="dheader">Person (if different than commenter)</td>
-    </tr>
-    <tr>
-      <td>
-          <%= text_field_with_auto_complete :person, :username %>
-      </td>
-    </tr>
-</table>
-<br/>
-<%= submit_tag("Add this guess") %>
+    <tr><td class="dheader">Person (if different than commenter)</td></tr>
+    <tr><td><%= text_field_with_auto_complete :person, :username %></td></tr>
+  </table>
+  <%= submit_tag("Add this guess") %>
 <% else -%>
-No comments available.
+  No comments available.
 <% end -%>
 <%= end_form_tag %>
+<br/>
+
 <%= start_form_tag :action => 'reload_comments', :id => @photo %>
-<br/><br/>
 <%= submit_tag("Reload Comments") %>
 <%= end_form_tag %>
-<br/><br/>
+<br/>
+
 <%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?', :post => true %>
