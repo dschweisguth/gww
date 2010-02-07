@@ -21,11 +21,11 @@
 <% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
     <td class="dnum"><%= photo_index + 1 %>.</td>
-    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= Person.find(photo[:person_id])[:flickrid] %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
-    <td class="dvalue"><%=h Person.find(photo[:person_id])[:username] %></td>
-    <td class="dvalue"><%= photo[:dateadded].strftime  '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= photo[:lastupdate].strftime  '%Y/%m/%d' %></td>
-<% if photo[:game_status] == 'unfound' -%>
+    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= photo.person.flickrid %>/<%= photo.flickrid %>/in/pool-guesswheresf/">Link</a></td>
+    <td class="dvalue"><%=h photo.person.username %></td>
+    <td class="dvalue"><%= photo.dateadded.strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= photo.lastupdate.strftime  '%Y/%m/%d' %></td>
+<% if photo.game_status == 'unfound' -%>
     <td class="dvalue">&nbsp;</td>
 <% else -%>
     <td class="dvalue">X</td>

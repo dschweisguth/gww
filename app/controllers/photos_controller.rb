@@ -200,6 +200,7 @@ class PhotosController < ApplicationController
     @lasttime = last_update_time
     @photos = Photo.find(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')",
+      :include => :person,
       :order => "lastupdate desc")
   end
 
