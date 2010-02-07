@@ -20,19 +20,23 @@ class PeopleController < ApplicationController
     @new_photos_count = photos.length;
     
     raw_people = Person.find(:all)
+    posts_per_person = Photo.count(:all, :group => :person_id)
+    guesses_per_person = Guess.count(:all, :group => :person_id)
     @people = []
     raw_people.each do |person|
-      # create an object descriptive of this person
-      photo_count =
-        Photo.count(:all, :conditions => [ 'person_id = ?', person.id ]);
-      guess_count =
-        Guess.count(:all, :conditions => [ 'person_id = ?', person.id ]);
+      photocount = posts_per_person[person.id]
+      if photocount.nil?
+        photocount = 0
+      end
+      guesscount = guesses_per_person[person.id]
+      if guesscount.nil?
+        guesscount = 0
+      end
       add_person = {
         :person => person,
-        :photocount => photo_count,
-        :guesscount => guess_count
+        :photocount => photocount,
+        :guesscount => guesscount
       }
-      # step through existing entries in @people
       found = nil
       @people.each do |person_list|
         # if we find an item in the array with the same guess count
