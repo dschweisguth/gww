@@ -16,7 +16,6 @@
       </td>
     </tr>
   </table>
-  <br /><br />
   <table>
     <tr>
       <td class="dheader">Person (if different than commenter)</td>
@@ -26,9 +25,6 @@
           <%= text_field_with_auto_complete :person, :username %>
       </td>
     </tr>
-    <tr>
-        <td colspan="3">
-            <%= submit_tag("Add this guess") %>
-        </td>
-    </tr>
 </table>
+<br/>
+<%= submit_tag("Add this guess") %>
