@@ -50,24 +50,30 @@ class PeopleController < ApplicationController
       # if it wasn't found
       if !found
         # create a new entry
-        @people.push({:guesscount => add_person[:guesscount], :people => [add_person]})
+        @people.push({ :guesscount => add_person[:guesscount],
+          :people => [add_person]})
       end
     end
-    # sort people lists
     @people.sort! {|x,y| y[:guesscount] <=> x[:guesscount]}
-    # get the counts...
+
+    # Get counts
     @total_participants = raw_people.length
     @total_posters_only = 0
     @total_single_guessers = 0
     @people.each do |person_list|
-      if person_list[:guesscount] == 1 then @total_single_guessers = person_list[:people].length end
-      if person_list[:guesscount] == 0 then @total_posters_only = person_list[:people].length end
+      if person_list[:guesscount] == 1
+        @total_single_guessers = person_list[:people].length
+      end
+      if person_list[:guesscount] == 0
+        @total_posters_only = person_list[:people].length
+      end
     end
     @total_correct_guessers = @total_participants - @total_posters_only
     @report_date = Time.now
     @member_count = get_gwsf_member_count()
     @unfound_count = Photo.count(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')");
+
   end
 
   # get the group member count for the report
