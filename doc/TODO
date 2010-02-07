@@ -8,6 +8,7 @@ Review test coverage and add TODOs to write more tests and assertions
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
 Revisit effect of Rails query caching
+Add report counts to home page
 Add report of photos for which more than one point was awarded, as some seem to
     be incorrect.
     select p.id, pe.username, pe.flickrid, p.flickrid, count(*)
