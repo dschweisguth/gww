@@ -190,7 +190,8 @@ class PhotosController < ApplicationController
 
   def show
     @photo = Photo.find(params[:id],
-      :include => [:person, { :revelation => :person }, { :guesses => :person }])
+      :include => [:person, { :revelation => :person }])
+    @guesses = Guess.find_all_by_photo_id @photo.id, :include => :person
     @unconfirmed = Photo.find(:all, :conditions =>
       ["person_id = ? and game_status = ?", @photo.person_id, "unconfirmed"])
     if params[:nocomment]
