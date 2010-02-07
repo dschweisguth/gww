@@ -20,33 +20,34 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find(params[:id])
     
-    # put together a lookup of who has guessed the photos this person posted
-    raw_photos = Photo.find_all_by_person_id(params[:id])
+    # Map of guessers to this person's posts
+    raw_photos = Photo.find_all_by_person_id(@person.id,
+      :include => { :guesses => :person })
     @posted_count = raw_photos.length
     photos_by_guesser = {}
-    # step through the photos
     raw_photos.each do |photo|
-      # find all the guesses on this photo
-      photo_guesses = Guess.find_all_by_photo_id(photo[:id])
-      # step through the guesses (usually just one)
-      photo_guesses.each do |guess|
-        guess_person = Person.find(guess[:person_id])
-        if !photos_by_guesser[guess_person]
-          photos_by_guesser[guess_person] = []
+      photo.guesses.each do |guess|
+        this_persons_guesses = photos_by_guesser[guess.person]
+        if ! this_persons_guesses
+          this_persons_guesses = []
+          photos_by_guesser[guess.person] = this_persons_guesses
         end
-        photos_by_guesser[guess_person].push(photo)
+        this_persons_guesses.push photo
       end
     end
     @photo_lookup = []
     photos_by_guesser.each do |person, photos|
-      @photo_lookup.push({:username => person[:username], :person_id => person[:id], :photos => photos, :count => photos.length})
+      @photo_lookup.push({ :username => person[:username],
+        :person_id => person[:id], :photos => photos,
+        :count => photos.length })
     end
-    @photo_lookup.sort! {|x,y| y[:count] <=> x[:count]}
+    @photo_lookup.sort! { |x,y| y[:count] <=> x[:count] }
     
-    # get unfound & revealed lists
-    @unfound_photos = Photo.find_all_by_person_id_and_game_status(params[:id], 'unfound')
-    @unfound_photos.concat(Photo.find_all_by_person_id_and_game_status(params[:id], 'unconfirmed'))
-    @revealed_photos = Photo.find_all_by_person_id_and_game_status(params[:id], 'revealed')
+    @unfound_photos = Photo.find(:all, :conditions =>
+      [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
+        @person.id ])
+    @revealed_photos = Photo.find_all_by_person_id_and_game_status(@person.id,
+      'revealed')
     
     missing_person = Person.new
     missing_person[:username] = 'unknown'
