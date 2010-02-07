@@ -196,14 +196,12 @@ class PhotosController < ApplicationController
     if params[:nocomment]
       @comments = Comment.find_all_by_photo_id(@photo.id)
     else
-      @comments = load_comments(params)
+      @comments = load_comments(params, @photo)
       if @comments == nil then @comments = [] end
     end
   end
 
-  def load_comments(params)
-    # get the photo object
-    photo = Photo.find(params[:id])
+  def load_comments(params, photo)
     # delete all the previous comments associated with the photo
     Comment.delete_all('photo_id = ' + photo[:id].to_s)
     # set the particulars
