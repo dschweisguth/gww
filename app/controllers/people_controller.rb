@@ -9,13 +9,12 @@ class PeopleController < ApplicationController
     updates = FlickrUpdate.find(:all)
     pentime = updates[updates.length - 2][:updated_at] - 28800
     lasttime = updates.last[:updated_at] - 28800
-    guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime])
+    guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime],
+      :include => [ { :photo => :person }, :person ])
     @new_guesses = []
     guesses.each do |guess|
-      photo = Photo.find(guess[:photo_id])
-      person = Person.find(guess[:person_id])
-      owner = Person.find(photo[:person_id])
-      @new_guesses.push({:guess => guess, :photo => photo, :person => person, :owner => owner})
+      @new_guesses.push({ :guess => guess, :photo => guess.photo,
+        :person => guess.person, :owner => guess.photo.person })
     end
     photos = Photo.find(:all, :conditions => ["dateadded > ?", pentime])
     @new_photos_count = photos.length;
@@ -24,12 +23,14 @@ class PeopleController < ApplicationController
     @people = []
     raw_people.each do |person|
       # create an object descriptive of this person
-      all_photos = Photo.find_all_by_person_id(person.id)
-      all_guesses = Guess.find_all_by_person_id(person.id)
+      photo_count =
+        Photo.count(:all, :conditions => [ 'person_id = ?', person.id ]);
+      guess_count =
+        Guess.count(:all, :conditions => [ 'person_id = ?', person.id ]);
       add_person = {
         :person => person,
-        :photocount => all_photos.length,
-        :guesscount => all_guesses.length
+        :photocount => photo_count,
+        :guesscount => guess_count
       }
       # step through existing entries in @people
       found = nil
