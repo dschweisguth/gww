@@ -7,18 +7,18 @@ The most recent photo update began <%= @last_update_time.localtime.strftime("%A,
 Scoring and publishing, for administrators
 <ul>
 <li><%= link_to 'Update photos now', :controller => 'photos', :action => 'update' %> (click only once, then wait until this page refreshes)</li>
-<li><%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound' %></li>
-<li><%= link_to 'Inaccessible and Unfound or Unconfirmed Photos', :controller => 'photos', :action => 'unverified' %>, for possible manual removal</li>
+<li><%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound' %> (<%= @unfound_photos_count %>)</li>
+<li><%= link_to 'Inaccessible and Unfound or Unconfirmed Photos', :controller => 'photos', :action => 'unverified' %> (<%= @unverified_photos_count %>), for possible manual removal</li>
 <li><%= link_to 'Score Report', :controller => 'people', :action => 'report' %>, for publication</li>
 </ul>
 
 Reports, for everyone
 <ul>
-<li><%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound_pretty' %></li>
-<li><%= link_to 'Unfound Photos XML', :controller => 'photos', :action => 'unfound_data' %>, for consumption by other programs</li>
+<li><%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound_pretty' %> (<%= @unfound_photos_count %>)</li>
+<li><%= link_to 'Unfound Photos XML', :controller => 'photos', :action => 'unfound_data' %> (<%= @unfound_photos_count %>), for consumption by other programs</li>
 <li><%= link_to 'Longest and Shortest-Lived Posts', :controller => 'photos', :action => 'treasures' %></li>
-<li><%= link_to 'Guesses', :controller => 'people', :action => 'guesses' %></li>
-<li><%= link_to 'People', :controller => 'people', :action => 'list' %></li>
+<li><%= link_to 'Guesses', :controller => 'people', :action => 'guesses' %> (<%= @guesses_count %>)</li>
+<li><%= link_to 'People', :controller => 'people', :action => 'list' %> (<%= @people_count %>)</li>
 </ul>
 
 <hr/>
