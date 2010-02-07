@@ -103,16 +103,33 @@ class PhotosController < ApplicationController
     redirect_to :controller => 'index', :action => 'index'
   end
     
-  def unverified
-    @photos = Photo.find(:all, :conditions =>
-      ["seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
-        adj_last_update_time], :include => :person)
+  def unfound
+    @photos = unfound_or_unconfirmed_photos
   end
 
-  def unfound
+  def unverified
     @photos = Photo.find(:all,
+      :conditions =>
+        ["seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
+          adj_last_update_time],
+      :include => :person, :order => "lastupdate desc")
+  end
+
+  def unfound_pretty
+    @lasttime = last_update_time
+    @photos = unfound_or_unconfirmed_photos
+  end
+
+  def unfound_data
+    @lasttime = last_update_time
+    @photos = unfound_or_unconfirmed_photos
+    render :layout => false
+  end
+
+  def unfound_or_unconfirmed_photos
+    Photo.find(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')",
-      :order => "lastupdate desc", :include => :person)
+      :include => :person, :order => "lastupdate desc")
   end
 
   def treasures
@@ -170,22 +187,6 @@ class PhotosController < ApplicationController
     if (minutes > 0) then desc.push("#{minutes} minutes") end
     if (seconds > 0) then desc.push("#{seconds} seconds") end
     desc.join(", ")
-  end
-
-  def unfound_pretty
-    @lasttime = last_update_time
-    @photos = Photo.find(:all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')",
-      :include => :person,
-      :order => "lastupdate desc")
-  end
-
-  def unfound_data
-    @lasttime = last_update_time
-    @photos = Photo.find(:all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')",
-      :order => "lastupdate desc", :include => :person)
-    render :layout => false
   end
 
   def show
