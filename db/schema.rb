@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 13) do
+ActiveRecord::Schema.define(:version => 14) do
 
   create_table "comments", :force => true do |t|
     t.column "username", :string, :default => "", :null => false
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 13) do
 
   add_index "photos", ["person_id"], :name => "photos_person_id_index"
   add_index "photos", ["flickrid"], :name => "photos_flickrid_index"
+  add_index "photos", ["game_status"], :name => "photos_game_status_index"
 
   create_table "revelations", :force => true do |t|
     t.column "revelation_text", :string, :default => "", :null => false
