@@ -66,7 +66,8 @@ class PeopleController < ApplicationController
     @total_correct_guessers = @total_participants - @total_posters_only
     @report_date = Time.now
     @member_count = get_gwsf_member_count()
-    @unfound_count = Photo.find_all_by_game_status('unfound').length + Photo.find_all_by_game_status('unconfirmed').length
+    @unfound_count = Photo.count(:all,
+      :conditions => "game_status in ('unfound', 'unconfirmed')");
   end
 
   # get the group member count for the report
