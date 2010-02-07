@@ -9,6 +9,7 @@ Scoring and publishing, for administrators
 <li><%= link_to 'Update photos now', :controller => 'photos', :action => 'update' %> (click only once, then wait until this page refreshes)</li>
 <li><%= link_to 'Unfound Photos', :controller => 'photos', :action => 'unfound' %> (<%= @unfound_photos_count %>)</li>
 <li><%= link_to 'Inaccessible and Unfound or Unconfirmed Photos', :controller => 'photos', :action => 'unverified' %> (<%= @unverified_photos_count %>), for possible manual removal</li>
+<li><%= link_to 'Photos worth more than one point', :controller => 'photos', :action => 'multipoint' %> (<%= @multipoint_photos_count %>), for possible rescoring</li>
 <li><%= link_to 'Score Report', :controller => 'people', :action => 'report' %>, for publication</li>
 </ul>
 

@@ -115,6 +115,19 @@ class PhotosController < ApplicationController
       :include => :person, :order => "lastupdate desc")
   end
 
+  def multipoint
+    guesses_per_post = Guess.count(:all, :group => :photo_id)
+    photo_ids = []
+    guesses_per_post.each do |photo_id, count|
+      if count > 1 then
+        photo_ids.push photo_id
+      end
+    end
+    @photos = Photo.find(:all,
+      :conditions => "photos.id in (" + photo_ids.join(', ')+ ")",
+      :include => :person, :order => "lastupdate desc")
+  end
+
   def unfound_pretty
     @lasttime = last_update_time
     @photos = unfound_or_unconfirmed_photos
