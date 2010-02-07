@@ -1,3 +1,5 @@
+photos and guesses have people_ids which don't correspond to people. Fix.
+    Look for other unenforced foreign keys and fix those too.
 Fix unknown links from people/show. potato potato, ID 13, is a test case.
 If possible, fix guesses' invalid person IDs, remove missing-person check from
   person/show and use eager loading
@@ -6,19 +8,10 @@ Attempt to speed up photos/update by improving ActiveRecord usage
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs
 New server
-photos and guesses have people_ids which don't correspond to people. Fix.
-    Look for other unenforced foreign keys and fix those too.
 Review test coverage and add TODOs to write more tests and assertions
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
 Revisit effect of Rails query caching
-Add report counts to home page
-Add report of photos for which more than one point was awarded, as some seem to
-    be incorrect.
-    select p.id, pe.username, pe.flickrid, p.flickrid, count(*)
-    from photos p, guesses g, people pe
-    where p.id = g.photo_id and p.person_id = pe.id
-    group by p.flickrid having count(*) > 1 order by p.id;
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 Paginate or limit pages that currently take forever, e.g. commented_on
 Is photos.dateadded really date uploaded? If so, can we also track date added
