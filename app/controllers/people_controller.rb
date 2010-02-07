@@ -97,6 +97,8 @@ class PeopleController < ApplicationController
   end
 
   def guesses
+    @guesses_count = Guess.count();
+
     lasttime = adj_last_update_time
     
     @last_days = []
