@@ -116,37 +116,26 @@ class PhotosController < ApplicationController
   end
 
   def treasures
-    @guesses = Guess.find_all
-    eligible_photo_details = []
+    @guesses = Guess.find(:all, :include => :photo)
+    eligible_guesses = []
     @guesses.each do |guess|
-      guessed_at = guess[:guessed_at]
-      photo = Photo.find(guess[:photo_id])
-      dateadded = photo[:dateadded]
-      if guessed_at > dateadded
-        details = {:guess_span => guessed_at - dateadded, :photo_id => photo[:id]}
-        eligible_photo_details.push(details)
+      elapsed = guess.guessed_at - guess.photo.dateadded
+      if elapsed > 0
+        eligible_guesses.push({ :guess => guess, :elapsed => elapsed })
       end
     end
-    # sort the details
-    eligible_photo_details.sort! {|x,y| y[:guess_span] <=> x[:guess_span]}
-    # fill the photo array
+    eligible_guesses.sort! { |x,y| y[:elapsed] <=> x[:elapsed] }
     longest = []
-    eligible_photo_details.each do |details|
-      if details[:photo_id] != 0
-        photo = Photo.find(details[:photo_id])
-        guess = Guess.find_by_photo_id(details[:photo_id])
-        elapsed = guess[:guessed_at] - photo[:dateadded]
-        longest.push({:photo => photo, :guess => guess, :elapsed => elapsed, :begin_date => photo[:dateadded], :end_date => guess[:guessed_at]})
+    eligible_guesses.each do |guess|
+      if !guess[:guess].photo.nil? # TODO Dave necessary?
+        longest.push({:photo => guess[:guess].photo, :guess => guess[:guess], :elapsed => guess[:elapsed], :begin_date => guess[:guess].photo.dateadded, :end_date => guess[:guess].guessed_at})
       end
     end
-    eligible_photo_details.sort! {|x,y| x[:guess_span] <=> y[:guess_span]}
+    eligible_guesses.sort! { |x, y| x[:elapsed] <=> y[:elapsed] }
     shortest = []
-    eligible_photo_details.each do |details|
-      if details[:photo_id] != 0
-        photo = Photo.find(details[:photo_id])
-        guess = Guess.find_by_photo_id(details[:photo_id])
-        elapsed = guess[:guessed_at] - photo[:dateadded]
-        shortest.push({:photo => photo, :guess => guess, :elapsed => elapsed, :begin_date => photo[:dateadded], :end_date => guess[:guessed_at]})
+    eligible_guesses.each do |guess|
+      if !guess[:guess].photo.nil? # TODO Dave necessary?
+        shortest.push({:photo => guess[:guess].photo, :guess => guess[:guess], :elapsed => guess[:elapsed], :begin_date => guess[:guess].photo.dateadded, :end_date => guess[:guess].guessed_at})
       end
     end
     @photos_longest = longest[0, 10]
