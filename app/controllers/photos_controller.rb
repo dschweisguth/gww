@@ -127,16 +127,12 @@ class PhotosController < ApplicationController
     eligible_guesses.sort! { |x,y| y[:elapsed] <=> x[:elapsed] }
     longest = []
     eligible_guesses.each do |guess|
-      if !guess[:guess].photo.nil? # TODO Dave necessary?
         longest.push({ :guess => guess[:guess], :elapsed => guess[:elapsed] })
-      end
     end
     eligible_guesses.sort! { |x, y| x[:elapsed] <=> y[:elapsed] }
     shortest = []
     eligible_guesses.each do |guess|
-      if !guess[:guess].photo.nil? # TODO Dave necessary?
         shortest.push({ :guess => guess[:guess], :elapsed => guess[:elapsed] })
-      end
     end
     @photos_longest = longest[0, 10]
     @photos_shortest = shortest[0, 10]
