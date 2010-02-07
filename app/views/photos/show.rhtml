@@ -27,7 +27,7 @@
 <% end -%>
 
 I think
-<% if @photo[:game_status] == 'found' -%>
+<% if @photo.game_status == 'found' -%>
 this photo was correctly guessed by
 <% person_links = [] -%>
 <% @photo.guesses.each do |guess| -%>
