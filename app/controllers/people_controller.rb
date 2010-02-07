@@ -101,56 +101,54 @@ class PeopleController < ApplicationController
     
     @last_days = []
     (1..7).each do |num|
-      dates = {:begin => (lasttime - num.day).beginning_of_day, :end => (lasttime - (num - 1).day).beginning_of_day}
+      dates = { :begin => (lasttime - num.day).beginning_of_day,
+        :end => (lasttime - (num - 1).day).beginning_of_day }
       scores = get_scores_from_date(dates[:begin], dates[:end])
-      @last_days.push({:dates => dates, :scores => scores})
+      @last_days.push({ :dates => dates, :scores => scores })
     end
     
-    thisweek_dates = {:begin => lasttime.beginning_of_week - 1.day, :end => lasttime}
+    thisweek_dates = { :begin => lasttime.beginning_of_week - 1.day,
+      :end => lasttime }
     thisweek_scores = get_scores_from_date(thisweek_dates[:begin], nil)
-    @last_weeks = [{:dates => thisweek_dates, :scores => thisweek_scores}]
+    @last_weeks = [{ :dates => thisweek_dates, :scores => thisweek_scores }]
     (1..5).each do |num|
-      dates = {
-        :begin => (lasttime - num.week).beginning_of_week - 1.day,
-        :end => (lasttime - (num - 1).week).beginning_of_week - 1.day
-      }
+      dates = { :begin => (lasttime - num.week).beginning_of_week - 1.day,
+        :end => (lasttime - (num - 1).week).beginning_of_week - 1.day }
       scores = get_scores_from_date(dates[:begin], dates[:end])
-      @last_weeks.push({:dates => dates, :scores => scores})
+      @last_weeks.push({ :dates => dates, :scores => scores })
     end
     
-    thismonth_dates = {:begin => lasttime.beginning_of_month, :end => lasttime}
+    thismonth_dates = { :begin => lasttime.beginning_of_month,
+      :end => lasttime }
     thismonth_scores = get_scores_from_date(thismonth_dates[:begin], nil)
-    @last_months = [{:dates => thismonth_dates, :scores => thismonth_scores}]
+    @last_months = [{ :dates => thismonth_dates, :scores => thismonth_scores }]
     (1..5).each do |num|
-      dates = {
-        :begin => (lasttime - num.month).beginning_of_month,
-        :end => (lasttime - (num - 1).month).beginning_of_month
-      }
+      dates = { :begin => (lasttime - num.month).beginning_of_month,
+        :end => (lasttime - (num - 1).month).beginning_of_month }
       scores = get_scores_from_date(dates[:begin], dates[:end])
-      @last_months.push({:dates => dates, :scores => scores})
+      @last_months.push({ :dates => dates, :scores => scores })
     end
     
-    thisyear_dates = {:begin => lasttime.beginning_of_year, :end => lasttime}
+    thisyear_dates = { :begin => lasttime.beginning_of_year, :end => lasttime }
     thisyear_scores = get_scores_from_date(thisyear_dates[:begin], nil)
     @last_years = [{:dates => thisyear_dates, :scores => thisyear_scores}]
     (1..2).each do |num|
-      dates = {
-        :begin => (lasttime - num.year).beginning_of_year,
-        :end => (lasttime - (num - 1).year).beginning_of_year
-      }
+      dates = { :begin => (lasttime - num.year).beginning_of_year,
+        :end => (lasttime - (num - 1).year).beginning_of_year }
       scores = get_scores_from_date(dates[:begin], dates[:end])
-      @last_years.push({:dates => dates, :scores => scores})
+      @last_years.push({ :dates => dates, :scores => scores })
     end
     
-    # get the date
     @report_date = lasttime
   end
   
   def get_scores_from_date(begin_date,end_date)
     if begin_date && end_date
-      guesses = Guess.find(:all, :conditions => ["guessed_at > ? and guessed_at < ?", begin_date, end_date])
+      guesses = Guess.find(:all, :conditions =>
+        [ "guessed_at > ? and guessed_at < ?", begin_date, end_date ])
     elsif begin_date
-      guesses = Guess.find(:all, :conditions => ["guessed_at > ?", begin_date])
+      guesses = Guess.find(:all,
+        :conditions => [ "guessed_at > ?", begin_date ])
     else
       guesses = Guess.find(:all)
     end
@@ -168,7 +166,6 @@ class PeopleController < ApplicationController
         :person => Person.find(person_id),
         :guesscount => guesses.length
       }
-      # step through existing entries in return_people
       found = nil
       return_people.each do |person_list|
         # if we find an item in the array with the same guess count
@@ -179,13 +176,12 @@ class PeopleController < ApplicationController
           break
         end
       end
-      # if it wasn't found
       if !found
         # create a new entry
-        return_people.push({:guesscount => add_person[:guesscount], :people => [add_person]})
+        return_people.push({ :guesscount => add_person[:guesscount],
+          :people => [add_person] })
       end
     end
-    # sort & return people lists
     return_people.sort! {|x,y| y[:guesscount] <=> x[:guesscount]}
   end
 
