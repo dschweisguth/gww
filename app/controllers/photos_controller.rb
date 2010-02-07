@@ -190,7 +190,7 @@ class PhotosController < ApplicationController
 
   def show
     @photo = Photo.find(params[:id],
-      :include => [:person, :revelation, { :guesses => :person }])
+      :include => [:person, { :revelation => :person }, { :guesses => :person }])
     @unconfirmed = Photo.find(:all, :conditions =>
       ["person_id = ? and game_status = ?", @photo[:person_id], "unconfirmed"])
     if params[:nocomment]
@@ -202,7 +202,6 @@ class PhotosController < ApplicationController
   end
 
   def load_comments(params, photo)
-    # delete all the previous comments associated with the photo
     Comment.delete_all('photo_id = ' + photo[:id].to_s)
     # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
@@ -232,9 +231,7 @@ class PhotosController < ApplicationController
           this_comment[:username] = new_comment['authorname']
           this_comment[:userid] = new_comment['author']
           this_comment[:photo_id] = photo[:id]
-          # save it
           this_comment.save
-          # add it to the array
           photo_comments.push(this_comment)
         end
       end
