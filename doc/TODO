@@ -1,4 +1,3 @@
-x Bug: "Add this guess" fails with a manually entered person
 Attempt to speed up treasures and other pages by improving ActiveRecord usage
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs

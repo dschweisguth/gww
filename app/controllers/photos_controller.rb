@@ -296,6 +296,12 @@ class PhotosController < ApplicationController
   end
 
   def add_guess
+    if params[:comment].nil?
+      flash[:notice] = 'Please select a comment before adding a guess.'
+      redirect_to(:action => 'show', :id => params[:id], :nocomment => :true)
+      return
+    end
+
     # get photo and comment records
     photo = Photo.find(params[:id])
     owner = Person.find(photo[:person_id])
