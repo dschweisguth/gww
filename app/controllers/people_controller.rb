@@ -144,16 +144,14 @@ class PeopleController < ApplicationController
   
   def get_scores_from_date(begin_date, end_date)
     if begin_date && end_date
-      guesses = Guess.find(:all, :conditions =>
-        [ "guessed_at > ? and guessed_at < ?", begin_date, end_date ],
-        :include => :person)
+      conditions =
+        [ "guessed_at > ? and guessed_at < ?", begin_date, end_date ]
     elsif begin_date
-      guesses = Guess.find(:all,
-        :conditions => [ "guessed_at > ?", begin_date ], :include => :person)
+      conditions = [ "guessed_at > ?", begin_date ]
     else
-      guesses = Guess.find(:all,
-        :include => :person)
+      conditions = []
     end
+    guesses = Guess.find(:all, :conditions => conditions,:include => :person)
 
     guessers = {}
     guesses.each do |guess|
