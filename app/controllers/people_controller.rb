@@ -37,8 +37,8 @@ class PeopleController < ApplicationController
     end
     @photo_lookup = []
     photos_by_guesser.each do |person, photos|
-      @photo_lookup.push({ :username => person[:username],
-        :person_id => person[:id], :photos => photos,
+      @photo_lookup.push({ :username => person.username,
+        :person_id => person.id, :photos => photos,
         :count => photos.length })
     end
     @photo_lookup.sort! { |x,y| y[:count] <=> x[:count] }
@@ -51,27 +51,29 @@ class PeopleController < ApplicationController
     
     missing_person = Person.new
     missing_person[:username] = 'unknown'
-    # and one of who has posted the photos this person guessed
-    raw_guesses = Guess.find_all_by_person_id(params[:id])
+    raw_guesses = Guess.find_all_by_person_id(@person.id, :include => :photo)
     @guessed_count = raw_guesses.length
     guessed_photos_by_poster = {}
     raw_guesses.each do |guess|
-      guess_photo = Photo.find(guess[:photo_id])
-      if guess_photo[:person_id] == 0
+      if guess.photo.person_id == 0
         poster = missing_person
       else
-        poster = Person.find(guess_photo[:person_id])
+        poster = Person.find(guess.photo.person_id)
       end
-      if !guessed_photos_by_poster[poster]
-        guessed_photos_by_poster[poster] = []
+      this_posters_photos = guessed_photos_by_poster[poster]
+      if ! this_posters_photos
+        this_posters_photos = []
+        guessed_photos_by_poster[poster] = this_posters_photos
       end
-      guessed_photos_by_poster[poster].push(guess_photo)
+      this_posters_photos.push(guess.photo)
     end
     @guess_lookup = []
     guessed_photos_by_poster.each do |person, photos|
-      @guess_lookup.push({:username => person[:username], :person_id => person[:id], :photos => photos, :count => photos.length})
+      @guess_lookup.push({ :username => person.username,
+        :person_id => person.id, :photos => photos, :count => photos.length })
     end
-    @guess_lookup.sort! {|x,y| y[:count] <=> x[:count]}
+    @guess_lookup.sort! { |x,y| y[:count] <=> x[:count] }
+
   end
 
   def latest_guesses
