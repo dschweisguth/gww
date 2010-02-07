@@ -2,9 +2,9 @@ class PeopleController < ApplicationController
   def list
     photo_counts = Photo.count(:all, :group => 'person_id')
     guess_counts = Guess.count(:all, :group => 'person_id')
-    raw_people = Person.find(:all)
+    people = Person.find(:all)
     @people = []
-    raw_people.each do |person|
+    people.each do |person|
       add_person = {
         :person => person,
         :photocount =>
@@ -30,50 +30,44 @@ class PeopleController < ApplicationController
     missing_person.username = 'unknown'
 
     # Map of guessers to this person's posts
-    raw_photos = Photo.find_all_by_person_id(@person.id,
+    posts = Photo.find_all_by_person_id(@person.id,
       :include => { :guesses => :person })
-    @posted_count = raw_photos.length
-    photos_by_guesser = {}
-    raw_photos.each do |photo|
+    @posted_count = posts.length
+    guessers = {}
+    posts.each do |photo|
       photo.guesses.each do |guess|
 	if guess.person.nil?
           guess.person = missing_person
 	end
-        this_persons_guesses = photos_by_guesser[guess.person]
-        if ! this_persons_guesses
-          this_persons_guesses = []
-          photos_by_guesser[guess.person] = this_persons_guesses
+        guesser = guessers[guess.person]
+        if ! guesser
+          guesser = { :person => guess.person, :photos => [] }
+          guessers[guess.person] = guesser
         end
-        this_persons_guesses.push photo
+        guesser[:photos].push photo
       end
     end
-    @guessers = []
-    photos_by_guesser.each do |person, photos|
-      @guessers.push({ :person => person, :photos => photos })
-    end
+    @guessers = guessers.values
     @guessers.sort! { |x,y| y[:photos].length <=> x[:photos].length }
     
     # Map of posters to this person's guesses
-    raw_guesses = Guess.find_all_by_person_id(@person.id, :include => :photo)
-    @guessed_count = raw_guesses.length
-    guessed_photos_by_poster = {}
-    raw_guesses.each do |guess|
+    guesses = Guess.find_all_by_person_id(@person.id, :include => :photo)
+    @guessed_count = guesses.length
+    posters = {}
+    guesses.each do |guess|
       if guess.photo.person_id == 0
-        poster = missing_person
+        person = missing_person
       else
-        poster = Person.find(guess.photo.person_id)
+        person = Person.find(guess.photo.person_id)
       end
-      this_posters_photos = guessed_photos_by_poster[poster]
-      if ! this_posters_photos
-        this_posters_photos = []
-        guessed_photos_by_poster[poster] = this_posters_photos
+      poster = posters[person]
+      if ! poster
+        poster = { :person => person, :photos => [] }
+        posters[person] = poster
       end
-      this_posters_photos.push(guess.photo)
+      poster[:photos].push(guess.photo)
     end
-    @posters = []
-    guessed_photos_by_poster.each do |person, photos|
-      @posters.push({ :person => person, :photos => photos })
-    end
+    @posters = posters.values
     @posters.sort! { |x,y| y[:photos].count <=> x[:photos].count }
 
   end
