@@ -20,6 +20,12 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find(params[:id])
     
+    @unfound_photos = Photo.find(:all, :conditions =>
+      [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
+        @person.id ])
+    @revealed_photos = Photo.find_all_by_person_id_and_game_status(@person.id,
+      'revealed')
+    
     # Map of guessers to this person's posts
     raw_photos = Photo.find_all_by_person_id(@person.id,
       :include => { :guesses => :person })
@@ -43,12 +49,7 @@ class PeopleController < ApplicationController
     end
     @photo_lookup.sort! { |x,y| y[:count] <=> x[:count] }
     
-    @unfound_photos = Photo.find(:all, :conditions =>
-      [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
-        @person.id ])
-    @revealed_photos = Photo.find_all_by_person_id_and_game_status(@person.id,
-      'revealed')
-    
+    # Map of posters to this person's guesses
     missing_person = Person.new
     missing_person[:username] = 'unknown'
     raw_guesses = Guess.find_all_by_person_id(@person.id, :include => :photo)
