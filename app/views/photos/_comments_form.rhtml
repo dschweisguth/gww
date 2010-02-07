@@ -4,14 +4,14 @@
     </tr>
     <tr>
       <td>
-          <% comments.each do |comment| -%>
-          <% uline = false -%>
-          <% hilite = false -%>
-          <% if comment[:username] == Person.find(@photo[:person_id])[:username] then hilight = true end -%>
-          <% guesses.each do |guess| -%>
-          <% if comment[:username] == Person.find(guess[:person_id])[:username] then uline = true end -%>
-          <% end -%>
-          <%= radio_button(:comment, :id, comment[:id]) %> <b><%= comment[:username] %>:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment[:comment_text] %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br />
+          <% @comments.each do |comment| -%>
+            <% uline = false -%>
+            <% hilite = false -%>
+            <% if comment.username == @photo.person.username then hilight = true end -%>
+            <% @photo.guesses.each do |guess| -%>
+              <% if comment.username == guess.person.username then uline = true end -%>
+            <% end -%>
+            <%= radio_button(:comment, :id, comment.id) %> <b><%= comment.username %>:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br />
           <% end -%>
       </td>
     </tr>

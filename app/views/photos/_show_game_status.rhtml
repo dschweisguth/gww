@@ -1,15 +1,15 @@
 <% if @photo[:game_status] == 'found' -%>
 I think this photo was correctly guessed by
 <% person_links = [] -%>
-<% @guess_people.each do |person| -%>
-<% person_links.push(link_to(person[:username], :controller => 'people', :action => 'show', :id => person[:id])) -%>
+<% @photo.guesses.each do |guess| -%>
+<%   person_links.push(link_to(guess.person.username, :controller => 'people', :action => 'show', :id => guess.person.id)) -%>
 <% end -%>
 <%= person_links.join(', ') %>.
-<% elsif @photo[:game_status] == 'revealed' -%>
+<% elsif @photo.game_status == 'revealed' -%>
 I think this photo's location was revealed by the person who posted it.
-<% elsif @photo[:game_status] == 'unfound' -%>
+<% elsif @photo.game_status == 'unfound' -%>
 I think this photo is unfound.
-<% elsif @photo[:game_status] == 'unconfirmed' -%>
+<% elsif @photo.game_status == 'unconfirmed' -%>
 I think this photo is unconfirmed.
 <% end -%>
 

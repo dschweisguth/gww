@@ -212,22 +212,16 @@ class PhotosController < ApplicationController
   end
 
   def show
-    @photo = Photo.find(params[:id])
-    @owner = Person.find(@photo[:person_id])
-    @guesses = Guess.find(:all, :conditions => ["photo_id = ?", @photo[:id]])
-    @guess_people = []
+    @photo = Photo.find(params[:id],
+      :include => [:person, :revelation, { :guesses => :person }])
     @unconfirmed = Photo.find(:all, :conditions =>
       ["person_id = ? and game_status = ?", @photo[:person_id], "unconfirmed"])
-    @guesses.each do |guess|
-      @guess_people.push(Person.find(guess[:person_id]))
-    end
-    @revelation = Revelation.find_by_photo_id(@photo[:id])
     if params[:nocomment]
-      @comments = Comment.find_all_by_photo_id(@photo[:id])
+      @comments = Comment.find_all_by_photo_id(@photo.id)
     else
       @comments = load_comments(params)
+      if @comments == nil then @comments = [] end
     end
-    if @comments == nil then @comments = [] end
   end
 
   def load_comments(params)

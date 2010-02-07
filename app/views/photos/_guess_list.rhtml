@@ -1,39 +1,31 @@
-<% if guesses && guesses.length > 0 then -%>
+<% if @photo.guesses.length > 0 then -%>
+<br/>
 <table>
-    <tr>
-        <td colspan="3">
-            &nbsp;
-        </td>
-    </tr>
     <tr>
         <td class="dheader">Person</td>
         <td class="dheader">Date</td>
         <td class="dheader">Text</td>
     </tr>
-    <% guesses.each_with_index do |guess, item_index| -%>
+    <% @photo.guesses.each_with_index do |guess, item_index| -%>
     <tr>
-        <td class="dvalue"><%=h Person.find(guess[:person_id])[:username] %></td>
-        <td class="dvalue"><%= guess[:guessed_at].strftime  '%Y/%m/%d'  %></td>
-        <td class="dvalue"><%=h guess[:guess_text] %></td>
+        <td class="dvalue"><%= guess.person.username %></td>
+        <td class="dvalue"><%= guess.guessed_at.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%=h guess.guess_text %></td>
     </tr>
     <% end -%>
 </table>
-<% elsif revelation then -%>
+<% elsif @photo.revelation then -%>
+<br/>
 <table>
-    <tr>
-        <td colspan="3">
-            &nbsp;
-        </td>
-    </tr>
     <tr>
         <td class="dheader">Person</td>
         <td class="dheader">Date</td>
         <td class="dheader">Text</td>
     </tr>
     <tr>
-        <td class="dvalue"><%=h Person.find(revelation[:person_id])[:username] %></td>
-        <td class="dvalue"><%= revelation[:revealed_at].strftime  '%Y/%m/%d'  %></td>
-        <td class="dvalue"><%=h revelation[:revelation_text] %></td>
+        <td class="dvalue"><%=h @photo.revelation.person.username %></td>
+        <td class="dvalue"><%= @photo.revelation.revealed_at.strftime  '%Y/%m/%d'  %></td>
+        <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
     </tr>
 </table>
 <% else -%>

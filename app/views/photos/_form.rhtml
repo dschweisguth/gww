@@ -1,5 +1,5 @@
 <%= render :partial => "show_game_status" %>
-<%= render :partial => "guesses", :locals => {:photo => @photo, :comments => @comments, :guesses => @guesses, :revelation => @revelation} %>
+<%= render :partial => "guesses" %>
 <%= start_form_tag :action => 'reload_comments', :id => @photo %>
 <br/><br/>
 <%= submit_tag("Reload Comments") %>
