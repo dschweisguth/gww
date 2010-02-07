@@ -345,35 +345,27 @@ class PhotosController < ApplicationController
     redirect_to :action => 'show', :id => photo, :nocomment => :true
   end
 
-  # reload and render the comments for the specified photo
   def reload_comments
     redirect_to :action => 'show', :id => params[:id]
   end
 
   def destroy
-    # get the photo object
-    photo = Photo.find(params[:id])
+    photo = Photo.find(params[:id], :include => [ :revelation, :person ])
+    photo.revelation.destroy if photo.revelation
+    Guess.delete_all(['photo_id = ?', photo.id])
+    Comment.delete_all(['photo_id = ?', photo.id])
+    photo.destroy
 
-    # delete any comments for this photo
-    Comment.delete_all('photo_id = ' + params[:id].to_s)
-
-    # delete any revelations for this photo
-    revelation = Revelation.find_by_photo_id(params[:id])
-    Revelation.delete(revelation[:id]) if revelation
-
-    # delete any guesses for this photo
-    Guess.delete_all('photo_id = ' + params[:id].to_s)
-    
-    # if the owner of the photo doesn't have any other photos...
-    all_photos = Photo.find_all_by_person_id(photo[:person_id])
-    if all_photos.length == 1
-      # delete the person
-      Person.find(photo[:person_id]).destroy
+    # If the photo's owner has no guesses or other photos, delete them too
+    if Photo.count(:all,
+        :conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
+      Guess.count(:all,
+        :conditions => [ 'person_id = ?', photo.person_id ]) == 0
+      photo.person.destroy
     end
 
-    # delete the photo
-    Photo.find(params[:id]).destroy
     redirect_to :action => 'unverified'
+
   end
 
 end
