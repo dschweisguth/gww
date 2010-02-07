@@ -1,4 +1,7 @@
 Attempt to speed up treasures and other pages by improving ActiveRecord usage
+If possible, fix guesses' invalid person IDs, remove missing-person check from
+  person/show and use eager loading
+Attempt to speed up treasures with a better algorithm
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs
 New server
