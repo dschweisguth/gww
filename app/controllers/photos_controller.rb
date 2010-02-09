@@ -146,23 +146,22 @@ class PhotosController < ApplicationController
   end
 
   def treasures
-    guesses = Guess.find(:all, :include => [{ :photo => :person }, :person])
-    eligible_guesses = []
+    @longest_guesses = add_date_distances(
+      Guess.find(:all, :include => [ :photo ],
+        :order => "guesses.guessed_at - photos.dateadded desc", :limit => 10))
+    @shortest_guesses = add_date_distances(
+      Guess.find(:all, :include => [ :photo ],
+        :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
+        :limit => 10))
+  end
+
+  def add_date_distances(guesses)
+    annotated_guesses = []
     guesses.each do |guess|
-      elapsed = guess.guessed_at - guess.photo.dateadded
-      if elapsed > 0
-        eligible_guesses.push({ :guess => guess, :elapsed => elapsed })
-      end
+      annotated_guesses.push({ :guess => guess, :elapsed_pretty =>
+        get_date_distance(guess.photo.dateadded, guess.guessed_at)})
     end
-    eligible_guesses.sort! { |x,y| y[:elapsed] <=> x[:elapsed] }
-    @longest_guesses = eligible_guesses[0, 10]
-    @longest_guesses.each do |guess|
-      guess[:elapsed_pretty] = get_date_distance(guess[:guess].photo.dateadded, guess[:guess].guessed_at)
-    end
-    @shortest_guesses = eligible_guesses[-10, 10].reverse
-    @shortest_guesses.each do |guess|
-      guess[:elapsed_pretty] = get_date_distance(guess[:guess].photo.dateadded, guess[:guess].guessed_at)
-    end
+    annotated_guesses
   end
 
   def get_date_distance(begin_date, end_date)
