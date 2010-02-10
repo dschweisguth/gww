@@ -146,13 +146,8 @@ class PhotosController < ApplicationController
   end
 
   def treasures
-    @longest_guesses = add_date_distances(
-      Guess.find(:all, :include => [ :photo ],
-        :order => "guesses.guessed_at - photos.dateadded desc", :limit => 10))
-    @shortest_guesses = add_date_distances(
-      Guess.find(:all, :include => [ :photo ],
-        :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
-        :limit => 10))
+    @longest_guesses = add_date_distances(Guess.longest)
+    @shortest_guesses = add_date_distances(Guess.shortest)
   end
 
   def add_date_distances(guesses)
