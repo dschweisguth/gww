@@ -18,7 +18,7 @@ Reports, for everyone
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound_pretty' %> (<%= @unfound_photos_count %>)</li>
 <li><%= link_to 'Unfound photos XML', :controller => 'photos', :action => 'unfound_data' %> (<%= @unfound_photos_count %>), for consumption by other programs</li>
 <li><%= link_to 'Longest and shortest-lived unfounds', :controller => 'guesses', :action => 'treasures' %></li>
-<li><%= link_to 'Correct guesses', :controller => 'guesses', :action => 'guesses' %> (<%= @guesses_count %>)</li>
+<li><%= link_to 'Correct guesses', :controller => 'guesses', :action => 'correct' %> (<%= @guesses_count %>)</li>
 <li><%= link_to 'Active members', :controller => 'people', :action => 'list' %> (<%= @people_count %>)</li>
 </ul>
 

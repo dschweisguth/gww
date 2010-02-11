@@ -147,7 +147,7 @@ class GuessesController < ApplicationController
     desc.join(", ")
   end
 
-  def guesses
+  def correct
     @guesses_count = Guess.count();
 
     lasttime = adj_last_update_time
