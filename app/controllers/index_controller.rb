@@ -8,8 +8,6 @@ class IndexController < ApplicationController
         ["seen_at < ? and game_status in ('unfound', 'unconfirmed')",
           adj_last_update_time])
     @multipoint_photos_count = multipoint_photos_count
-    @guesses_count = Guess.count();
-    @people_count = Person.count();
   end
 
   def multipoint_photos_count
