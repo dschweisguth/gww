@@ -1,32 +1,31 @@
 Move last-update stuff to FlickrUpdate. Use limit 1 or 2.
+Remove hardcoded timezone difference from {people,photos}_controller.rb
 photos and guesses have people_ids which don't correspond to people. Fix.
     Look for other unenforced foreign keys and fix those too.
 Fix unknown links from people/show. potato potato, ID 13, is a test case.
 If possible, fix guesses' invalid person IDs, remove missing-person check from
   person/show and use eager loading
-Attempt to speed up photos/update by improving ActiveRecord usage
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs
+Add more info to unfound list to make it easier to find a specific photo
+Add thumbnails to score report
 New server
-Review test coverage and add TODOs to write more tests and assertions
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
-Revisit effect of Rails query caching
-Remove hardcoded timezone difference from {people,photos}_controller.rb
+Revisit attempt to speed up photos/update by improving ActiveRecord usage
 Paginate or limit pages that currently take forever, e.g. commented_on
+Open appropriate parts of GWW to players
+    Move GWW to guesswheresf.com
+Review test coverage and add TODOs to write more tests and assertions
+Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
 Is photos.dateadded really date uploaded? If so, can we also track date added
     to group, to support the shortest/longest time-to-guess report?
-Add more info to unfound list to make it easier to find a specific photo
 Add update completion time to home page
-Add thumbnails to score report
 Post scores to Flickr group automatically. Record scoring time and add to home
     page.
-Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
 Automatically publish the score report to the group's scoring thread instead
     of making the scorer copy and paste
 Add a search feature
-Open appropriate parts of GWW to players
-    Move GWW to guesswheresf.com
 Provide page for players which lists scoring actions (guesses and revelations),
     and possibly score publication times, newest to oldest. Consider whether
     scoring in batches is an important part of game fun and if so how not to
