@@ -1,3 +1,4 @@
+Extract duplication from different versions of score report controller and view
 Move last-update stuff to FlickrUpdate. Use limit 1 or 2.
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 photos and guesses have people_ids which don't correspond to people. Fix.
@@ -8,7 +9,6 @@ If possible, fix guesses' invalid person IDs, remove missing-person check from
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs
 Add more info to unfound list to make it easier to find a specific photo
-Add thumbnails to score report
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
