@@ -10,7 +10,7 @@ Scoring and publishing, for administrators
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %> (<%= @unfound_photos_count %>)</li>
 <li><%= link_to 'Inaccessible and unfound or unconfirmed photos', :controller => 'photos', :action => 'unverified' %> (<%= @unverified_photos_count %>), for possible manual removal</li>
 <li><%= link_to 'Photos worth more than one point', :controller => 'photos', :action => 'multipoint' %> (<%= @multipoint_photos_count %>), for possible rescoring</li>
-<li><%= link_to 'Classic score report', :controller => 'guesses', :action => 'report_with_images' %> or <%= link_to 'score report with images', :controller => 'guesses', :action => 'report' %>, for publication</li>
+<li><%= link_to 'Classic score report', :controller => 'guesses', :action => 'report' %> or <%= link_to 'score report with images', :controller => 'guesses', :action => 'report_with_images' %>, for publication</li>
 </ul>
 
 Reports, for everyone
