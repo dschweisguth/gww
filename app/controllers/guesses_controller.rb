@@ -128,7 +128,24 @@ class GuessesController < ApplicationController
 	  { :guess_count => guess_count, :people => [person] })
       end
     end
-    @people_by_guess_count.sort! { |x,y| y[:guess_count] <=> x[:guess_count] }
+    @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
+
+    @revelations = Revelation.find(:all,
+      :conditions => [ "revealed_at > ?", lasttime ], 
+      :include => [ :person, :photo ])
+    @revelations_by_person = []
+    @revelations.each do |revelation|
+      revelations_with_person =
+        @revelations_by_person.find { |x| x[:person] == revelation.person }
+      if revelations_with_person
+        revelations_with_person[:revelations].push revelation
+      elsif
+        @revelations_by_person.push(
+          { :person => revelation.person, :revelations => [revelation] })
+      end
+    end
+    @revelations_by_person.sort! {|x, y|
+      x[:person].username.downcase <=> y[:person].username.downcase }
 
     @total_participants = people.length
     @total_posters_only = people_with @people_by_guess_count, 0
