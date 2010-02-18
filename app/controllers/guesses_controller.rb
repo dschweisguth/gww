@@ -131,22 +131,17 @@ class GuessesController < ApplicationController
     @people_by_guess_count.sort! { |x,y| y[:guess_count] <=> x[:guess_count] }
 
     @total_participants = people.length
-    @total_posters_only = 0
-    @people_by_guess_count.each do |people_with_guess_count|
-      if people_with_guess_count[:guess_count] == 0
-        @total_posters_only = people_with_guess_count[:people].length
-      end
-    end
+    @total_posters_only = people_with @people_by_guess_count, 0
     @total_correct_guessers = @total_participants - @total_posters_only
-    @member_count = get_gwsf_member_count()
+    @member_count = get_gwsf_member_count
+    @total_single_guessers = people_with @people_by_guess_count, 1
 
-    @total_single_guessers = 0
-    @people_by_guess_count.each do |people_with_guess_count|
-      if people_with_guess_count[:guess_count] == 1
-        @total_single_guessers = people_with_guess_count[:people].length
-      end
-    end
+  end
 
+  def people_with(people_by_guess_count, guess_count)
+    people_with_guess_count =
+      people_by_guess_count.find { |x| x[:guess_count] == guess_count }
+    people_with_guess_count ? people_with_guess_count[:people].length : 0
   end
 
   def get_gwsf_member_count
