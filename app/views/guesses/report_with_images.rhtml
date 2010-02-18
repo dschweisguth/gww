@@ -3,7 +3,8 @@
 
 <%= @guesses.length %> new guesses by ...
 <% @guessers.each_with_index do |guesser, guesser_index| -%>
-<%= guesser.username %> <% @guesses_by_guesser[guesser].each_with_index do |guess, guess_index| -%>&lt;a href="http://www.flickr.com/photos/<%= guess.photo.person.flickrid %>/<%= guess.photo.flickrid %>/in/pool-guesswheresf/">&lt;img height="50" width="50" src="http://static.flickr.com/<%= guess.photo.server %>/<%= guess.photo.flickrid %>_<%= guess.photo.secret %>_s.jpg"&gt;&lt;/a&gt; <% end %>
+&lt;b&gt;<%= guesser.username %>&lt;/b&gt;
+<% @guesses_by_guesser[guesser].each_with_index do |guess, guess_index| -%>&lt;a href="http://www.flickr.com/photos/<%= guess.photo.person.flickrid %>/<%= guess.photo.flickrid %>/in/pool-guesswheresf/">&lt;img height="50" width="50" src="http://static.flickr.com/<%= guess.photo.server %>/<%= guess.photo.flickrid %>_<%= guess.photo.secret %>_s.jpg"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
 <%= @new_photos_count %> photos have been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
