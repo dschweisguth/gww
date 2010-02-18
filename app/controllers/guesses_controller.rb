@@ -106,8 +106,8 @@ class GuessesController < ApplicationController
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
     pentime = updates[updates.length - 2][:updated_at] - 28800
-    photos = Photo.find(:all, :conditions => ["dateadded > ?", pentime])
-    @new_photos_count = photos.length;
+    @new_photos_count =
+      Photo.count(:all, :conditions => ["dateadded > ?", pentime])
     
     raw_people = Person.find(:all)
     posts_per_person = Photo.count(:all, :group => :person_id)
