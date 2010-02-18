@@ -116,38 +116,38 @@ class GuessesController < ApplicationController
     people = Person.find(:all)
     @posts_per_person = Photo.count(:all, :group => :person_id)
     guesses_per_person = Guess.count(:all, :group => :person_id)
-    @people_by_guesscount = []
+    @people_by_guess_count = []
     people.each do |person|
-      guesscount = guesses_per_person[person.id] || 0
+      guess_count = guesses_per_person[person.id] || 0
       found = nil
-      @people_by_guesscount.each do |people_with_guesscount|
-        if people_with_guesscount[:guesscount] == guesscount
-          people_with_guesscount[:people].push person
+      @people_by_guess_count.each do |people_with_guess_count|
+        if people_with_guess_count[:guess_count] == guess_count
+          people_with_guess_count[:people].push person
           found = :true
           break
         end
       end
       if !found
-        @people_by_guesscount.push(
-	  { :guesscount => guesscount, :people => [person] })
+        @people_by_guess_count.push(
+	  { :guess_count => guess_count, :people => [person] })
       end
     end
-    @people_by_guesscount.sort! { |x,y| y[:guesscount] <=> x[:guesscount] }
+    @people_by_guess_count.sort! { |x,y| y[:guess_count] <=> x[:guess_count] }
 
     @total_participants = people.length
     @total_posters_only = 0
-    @people_by_guesscount.each do |people_with_guesscount|
-      if people_with_guesscount[:guesscount] == 0
-        @total_posters_only = people_with_guesscount[:people].length
+    @people_by_guess_count.each do |people_with_guess_count|
+      if people_with_guess_count[:guess_count] == 0
+        @total_posters_only = people_with_guess_count[:people].length
       end
     end
     @total_correct_guessers = @total_participants - @total_posters_only
     @member_count = get_gwsf_member_count()
 
     @total_single_guessers = 0
-    @people_by_guesscount.each do |people_with_guesscount|
-      if people_with_guesscount[:guesscount] == 1
-        @total_single_guessers = people_with_guesscount[:people].length
+    @people_by_guess_count.each do |people_with_guess_count|
+      if people_with_guess_count[:guess_count] == 1
+        @total_single_guessers = people_with_guess_count[:people].length
       end
     end
 
