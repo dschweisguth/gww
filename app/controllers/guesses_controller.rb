@@ -86,26 +86,23 @@ class GuessesController < ApplicationController
     updates = FlickrUpdate.find(:all)
 
     lasttime = updates.last[:updated_at] - 28800
-    guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime],
+    @guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime],
       :include => [ { :photo => :person }, :person ])
-    @new_guesses = []
     @guessers = []
-    @guesses_by_person = {}
-    guesses.each do |guess|
-      @new_guesses.push({ :guess => guess, :photo => guess.photo,
-        :person => guess.person, :owner => guess.photo.person })
+    @guesses_by_guesser = {}
+    @guesses.each do |guess|
       if ! @guessers.include? guess.person
         @guessers.push guess.person
       end
-      persons_guesses = @guesses_by_person[guess.person]
-      if ! persons_guesses
-        persons_guesses = []
-        @guesses_by_person[guess.person] = persons_guesses
+      guessers_guesses = @guesses_by_guesser[guess.person]
+      if ! guessers_guesses
+        guessers_guesses = []
+        @guesses_by_guesser[guess.person] = guessers_guesses
       end
-      persons_guesses.push guess
+      guessers_guesses.push guess
     end
     @guessers.sort! { |x,y|
-      c = @guesses_by_person[y].length <=> @guesses_by_person[x].length
+      c = @guesses_by_guesser[y].length <=> @guesses_by_guesser[x].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
     pentime = updates[updates.length - 2][:updated_at] - 28800
