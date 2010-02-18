@@ -119,15 +119,11 @@ class GuessesController < ApplicationController
     @people_by_guess_count = []
     people.each do |person|
       guess_count = guesses_per_person[person.id] || 0
-      found = nil
-      @people_by_guess_count.each do |people_with_guess_count|
-        if people_with_guess_count[:guess_count] == guess_count
-          people_with_guess_count[:people].push person
-          found = :true
-          break
-        end
-      end
-      if !found
+      people_with_guess_count =
+        @people_by_guess_count.find { |x| x[:guess_count] == guess_count }
+      if people_with_guess_count
+        people_with_guess_count[:people].push person
+      elsif
         @people_by_guess_count.push(
 	  { :guess_count => guess_count, :people => [person] })
       end
