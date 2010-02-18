@@ -77,6 +77,8 @@ class GuessesController < ApplicationController
   end
 
   def report_with_images
+    @report_date = Time.now
+
     # to skip an update...
     # For some reason FlickrUpdate[:updated_at] is GMT and Guess[:added_at] is
     # local time (without a time zone). The following code reduces pentime and
@@ -108,20 +110,16 @@ class GuessesController < ApplicationController
     pentime = updates[updates.length - 2][:updated_at] - 28800
     @new_photos_count =
       Photo.count(:all, :conditions => ["dateadded > ?", pentime])
+    @unfound_count = Photo.count(:all,
+      :conditions => "game_status in ('unfound', 'unconfirmed')");
     
-    raw_people = Person.find(:all)
+    people = Person.find(:all)
     posts_per_person = Photo.count(:all, :group => :person_id)
     guesses_per_person = Guess.count(:all, :group => :person_id)
     @people = []
-    raw_people.each do |person|
-      photocount = posts_per_person[person.id]
-      if photocount.nil?
-        photocount = 0
-      end
-      guesscount = guesses_per_person[person.id]
-      if guesscount.nil?
-        guesscount = 0
-      end
+    people.each do |person|
+      photocount = posts_per_person[person.id] || 0
+      guesscount = guesses_per_person[person.id] || 0
       add_person = {
         :person => person,
         :photocount => photocount,
@@ -129,40 +127,35 @@ class GuessesController < ApplicationController
       }
       found = nil
       @people.each do |person_list|
-        # if we find an item in the array with the same guess count
         if person_list[:guesscount] == add_person[:guesscount]
-          # add this person to the list
           person_list[:people].push(add_person)
           found = :true
           break
         end
       end
-      # if it wasn't found
       if !found
-        # create a new entry
         @people.push({ :guesscount => add_person[:guesscount],
-          :people => [add_person]})
+          :people => [add_person] })
       end
     end
-    @people.sort! {|x,y| y[:guesscount] <=> x[:guesscount]}
+    @people.sort! { |x,y| y[:guesscount] <=> x[:guesscount] }
 
-    # Get counts
-    @total_participants = raw_people.length
+    @total_participants = people.length
     @total_posters_only = 0
+    @people.each do |person|
+      if person[:guesscount] == 0
+        @total_posters_only = person[:people].length
+      end
+    end
+    @total_correct_guessers = @total_participants - @total_posters_only
+    @member_count = get_gwsf_member_count()
+
     @total_single_guessers = 0
     @people.each do |person_list|
       if person_list[:guesscount] == 1
         @total_single_guessers = person_list[:people].length
       end
-      if person_list[:guesscount] == 0
-        @total_posters_only = person_list[:people].length
-      end
     end
-    @total_correct_guessers = @total_participants - @total_posters_only
-    @report_date = Time.now
-    @member_count = get_gwsf_member_count()
-    @unfound_count = Photo.count(:all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')");
 
   end
 
