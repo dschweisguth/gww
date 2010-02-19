@@ -4,7 +4,7 @@
 <%= @guesses.length %> new guesses by ...
 
 <% @guessers.each do |guesser| -%>
-<% if @guesses_per_person[guesser.id] > 1 %>&lt;a href="#<%= @guesses_per_person[guesser.id] || 0 %><% end -%>"&gt;&lt;b&gt;<%=h guesser.username %>:&lt;/b&gt;<% if @guesses_per_person[guesser.id] > 1 %>&lt;/a&gt;<% end %>
+<% if @guesses_per_person[guesser.id] > 1 %>&lt;a href="#<%= @guesses_per_person[guesser.id] || 0 %><% end -%>"&gt;&lt;b&gt;<%=h guesser.username %>&lt;/b&gt;<% if @guesses_per_person[guesser.id] > 1 %>&lt;/a&gt; (now <%= @standings[guesser][:tied] ? 'tied for' : 'in' %> <%= @standings[guesser][:place].ordinalize %> place with <%= @standings[guesser][:guess_count] %> points):<% end %>
 <% @guesses_by_guesser[guesser].each_with_index do |guess, guess_index| -%>&lt;a href="http://www.flickr.com/photos/<%= guess.photo.person.flickrid %>/<%= guess.photo.flickrid %>/in/pool-guesswheresf/">&lt;img height="50" width="50" src="http://static.flickr.com/<%= guess.photo.server %>/<%= guess.photo.flickrid %>_<%= guess.photo.secret %>_s.jpg"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
