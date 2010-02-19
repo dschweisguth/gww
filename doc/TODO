@@ -1,7 +1,5 @@
 Bug: Revealing a photo sometimes stores the wrong revealed_at date. See my
   trash cans and raccoon post.
-Put score and place after username in score report
-Extract duplication from different versions of score report controller and view
 Move last-update stuff to FlickrUpdate. Use limit 1 or 2.
 Remove hardcoded timezone difference from {people,photos}_controller.rb
 photos and guesses have people_ids which don't correspond to people. Fix.
