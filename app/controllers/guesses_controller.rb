@@ -55,7 +55,7 @@ class GuessesController < ApplicationController
     @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
 
     @revelations = Revelation.find(:all,
-      :conditions => [ "revealed_at > ?", lasttime ], 
+      :conditions => [ "added_at > ?", lasttime ], 
       :include => [ :person, :photo ])
     @revelations_by_person = []
     @revelations.each do |revelation|

@@ -291,6 +291,7 @@ class PhotosController < ApplicationController
         revelation = Revelation.new
         revelation[:photo_id] = photo[:id]
         revelation[:person_id] = guesser[:id]
+        revelation.added_at = Time.now
       end
       revelation[:revealed_at] = Time.at(comment[:commented_at].to_i)
       revelation[:revelation_text] = comment[:comment_text]
