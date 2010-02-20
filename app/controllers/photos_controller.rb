@@ -110,8 +110,8 @@ class PhotosController < ApplicationController
   def unverified
     @photos = Photo.find(:all,
       :conditions =>
-        ["seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
-          adj_last_update_time],
+        [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
+          FlickrUpdate.local_latest_update_times(1)[0] ],
       :include => :person, :order => "lastupdate desc")
   end
 
