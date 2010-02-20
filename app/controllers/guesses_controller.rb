@@ -154,49 +154,50 @@ class GuessesController < ApplicationController
   def correct
     @guesses_count = Guess.count();
 
-    lasttime = adj_last_update_time
+    @latest_update = adj_last_update_time
     
     @last_days = []
     (1..7).each do |num|
-      dates = { :begin => (lasttime - num.day).beginning_of_day,
-        :end => (lasttime - (num - 1).day).beginning_of_day }
+      dates = { :begin => (@latest_update - num.day).beginning_of_day,
+        :end => (@latest_update - (num - 1).day).beginning_of_day }
       scores = get_scores_from_date(dates[:begin], dates[:end])
       @last_days.push({ :dates => dates, :scores => scores })
     end
     
-    thisweek_dates = { :begin => lasttime.beginning_of_week - 1.day,
-      :end => lasttime }
+    thisweek_dates = { :begin => @latest_update.beginning_of_week - 1.day,
+      :end => @latest_update }
     thisweek_scores = get_scores_from_date(thisweek_dates[:begin], nil)
     @last_weeks = [{ :dates => thisweek_dates, :scores => thisweek_scores }]
     (1..5).each do |num|
-      dates = { :begin => (lasttime - num.week).beginning_of_week - 1.day,
-        :end => (lasttime - (num - 1).week).beginning_of_week - 1.day }
+      dates = {
+        :begin => (@latest_update - num.week).beginning_of_week - 1.day,
+        :end => (@latest_update - (num - 1).week).beginning_of_week - 1.day }
       scores = get_scores_from_date(dates[:begin], dates[:end])
       @last_weeks.push({ :dates => dates, :scores => scores })
     end
     
-    thismonth_dates = { :begin => lasttime.beginning_of_month,
-      :end => lasttime }
+    thismonth_dates = { :begin => @latest_update.beginning_of_month,
+      :end => @latest_update }
     thismonth_scores = get_scores_from_date(thismonth_dates[:begin], nil)
     @last_months = [{ :dates => thismonth_dates, :scores => thismonth_scores }]
     (1..5).each do |num|
-      dates = { :begin => (lasttime - num.month).beginning_of_month,
-        :end => (lasttime - (num - 1).month).beginning_of_month }
+      dates = { :begin => (@latest_update - num.month).beginning_of_month,
+        :end => (@latest_update - (num - 1).month).beginning_of_month }
       scores = get_scores_from_date(dates[:begin], dates[:end])
       @last_months.push({ :dates => dates, :scores => scores })
     end
     
-    thisyear_dates = { :begin => lasttime.beginning_of_year, :end => lasttime }
+    thisyear_dates = { :begin => @latest_update.beginning_of_year,
+      :end => @latest_update }
     thisyear_scores = get_scores_from_date(thisyear_dates[:begin], nil)
     @last_years = [{:dates => thisyear_dates, :scores => thisyear_scores}]
     (1..2).each do |num|
-      dates = { :begin => (lasttime - num.year).beginning_of_year,
-        :end => (lasttime - (num - 1).year).beginning_of_year }
+      dates = { :begin => (@latest_update - num.year).beginning_of_year,
+        :end => (@latest_update - (num - 1).year).beginning_of_year }
       scores = get_scores_from_date(dates[:begin], dates[:end])
       @last_years.push({ :dates => dates, :scores => scores })
     end
     
-    @report_date = lasttime
   end
   
   def get_scores_from_date(begin_date, end_date)
