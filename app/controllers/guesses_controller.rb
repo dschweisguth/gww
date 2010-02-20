@@ -3,16 +3,10 @@ class GuessesController < ApplicationController
   def report
     @report_date = Time.now
 
-    # to skip an update...
-    # For some reason FlickrUpdate[:updated_at] is GMT and Guess[:added_at] is
-    # local time (without a time zone). The following code reduces pentime and
-    # lasttime by a hardcoded subtrahend to allow comparison. The subtrahend
-    # should be 28800 for PST and 25200 for PDT, which means editing the source
-    # twice a year. TODO fix
-    updates = FlickrUpdate.find(:all)
+    update_times = FlickrUpdate.local_latest_update_times(2)
 
-    lasttime = updates.last[:updated_at] - 28800
-    @guesses = Guess.find(:all, :conditions => ["added_at > ?", lasttime],
+    @guesses = Guess.find(:all,
+      :conditions => [ "added_at > ?", update_times[0] ],
       :include => [ { :photo => :person }, :person ])
     @guessers = []
     @guesses_by_guesser = {}
@@ -31,9 +25,8 @@ class GuessesController < ApplicationController
       c = @guesses_by_guesser[y].length <=> @guesses_by_guesser[x].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
-    pentime = updates[updates.length - 2][:updated_at] - 28800
     @new_photos_count =
-      Photo.count(:all, :conditions => ["dateadded > ?", pentime])
+      Photo.count(:all, :conditions => [ "dateadded > ?", update_times[1] ])
     @unfound_count = Photo.count(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')");
     
@@ -55,7 +48,7 @@ class GuessesController < ApplicationController
     @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
 
     @revelations = Revelation.find(:all,
-      :conditions => [ "added_at > ?", lasttime ], 
+      :conditions => [ "added_at > ?", update_times[0] ], 
       :include => [ :person, :photo ])
     @revelations_by_person = []
     @revelations.each do |revelation|
