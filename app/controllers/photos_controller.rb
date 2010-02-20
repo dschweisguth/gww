@@ -23,7 +23,7 @@ class PhotosController < ApplicationController
     
     # record the time of this update
     this_update = FlickrUpdate.new
-    this_update.updated_at = Time.now
+    this_update.updated_at = Time.now # TODO remove!
     this_update.save
     
     while !reached_end && !found_existing
