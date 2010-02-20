@@ -4,14 +4,15 @@ class FlickrUpdate < ActiveRecord::Base
      FlickrUpdate.maximum(:updated_at)
   end
 
-  # For some reason FlickrUpdate[:updated_at] is GMT and Guess[:added_at] is
-  # local time (without a time zone). The following code reduces pentime and
-  # lasttime by a hardcoded subtrahend to allow comparison. The subtrahend
-  # should be 28800 for PST and 25200 for PDT, which means editing the source
-  # twice a year. TODO fix
+  # Guess.added_at seems to come from Flickr as though it were local time but
+  # is stored as though it were UTC. This method returns update times adjusted
+  # so that they can be compared directly with Guess.added_at. TODO address
+  # this need on the Guess side.
   def self.local_latest_update_times(limit)
     updates = find(:all, :order => "id desc", :limit => limit);
-    updates.map { |x| x[:updated_at] - 28800 }
+    updates.map { |x| x.updated_at + Time.local(x.updated_at.year,
+      x.updated_at.month, x.updated_at.day, x.updated_at.hour,
+      x.updated_at.min, x.updated_at.sec).gmt_offset }
   end
 
 end
