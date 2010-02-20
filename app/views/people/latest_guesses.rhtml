@@ -15,15 +15,15 @@
   <tr>
     <td class="dnum"><%= guess_index + 1 %>.</td>
     <% if photo[:person_id] != 0 -%>
-    <td class="dvalue"><a href="http://www.flickr.com/photos/<%= photo.person.flickrid %>/<%= photo[:flickrid] %>/in/pool-guesswheresf/">Link</a></td>
+    <td class="dvalue"><a href="<%= photo.page_url %>">Link</a></td>
     <td class="dvalue"><%= photo.person.username %></td>
     <% else -%>
     <td class="dvalue"><b>unknown</b></td>
     <td class="dvalue"><b>unknown</b></td>
     <% end -%>
-    <td class="dvalue"><%= guess[:guessed_at].strftime  '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= guess[:added_at].strftime  '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= photo[:flickrid] %></td>
+    <td class="dvalue"><%= guess.guessed_at.strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= guess.added_at.strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= photo.flickrid %></td>
   </tr>
 <% end %>
 </table>
