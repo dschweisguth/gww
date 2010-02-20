@@ -77,19 +77,6 @@ class GuessesController < ApplicationController
     @member_count = get_gwsf_member_count
     @total_single_guessers = people_with @people_by_guess_count, 1
 
-    @standings = {}
-    place = 1
-    @people_by_guess_count.each do |people_with_guess_count|
-      people_with_guess_count[:people].each do |person|
-        @standings[person] = {
-          :tied => (people_with_guess_count[:people].length > 1),
-          :place => place,
-          :guess_count => people_with_guess_count[:guess_count]
-        }
-      end
-      place += people_with_guess_count[:people].length
-    end
-
   end
 
   def people_with(people_by_guess_count, guess_count)
