@@ -1,6 +1,18 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class FlickrUpdateTest < Test::Unit::TestCase
+  def test_latest_update_time
+    FlickrUpdate.new.save
+    # Times from the database don't have usec. Sleep so that the following
+    # update is at least one second later than the previous.
+    sleep 1
+    FlickrUpdate.new.save
+    latest_update_time = FlickrUpdate.latest_update_time
+
+    updates = FlickrUpdate.find(:all, :order => :updated_at);
+    assert_equal updates[1].updated_at, latest_update_time
+    
+  end
 
   def test_local_latest_update_times_1
     start = Time.now

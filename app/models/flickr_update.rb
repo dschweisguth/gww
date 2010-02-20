@@ -1,6 +1,6 @@
 class FlickrUpdate < ActiveRecord::Base
 
-  def latest_update_time
+  def self.latest_update_time
      FlickrUpdate.maximum(:updated_at)
   end
 
