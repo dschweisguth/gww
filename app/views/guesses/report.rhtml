@@ -5,7 +5,7 @@
 
 <% @guessers.each do |guesser| -%>
 <% if @guesses_per_person[guesser.id] > 1 %>&lt;a href="#<%= @guesses_per_person[guesser.id] || 0 %><% end -%>"&gt;&lt;b&gt;<%=h guesser.username %>&lt;/b&gt;<% if @guesses_per_person[guesser.id] > 1 %>&lt;/a&gt<% end %>
-<% @guesses_by_guesser[guesser].each_with_index do |guess, guess_index| -%>&lt;a href="http://www.flickr.com/photos/<%= guess.photo.person.flickrid %>/<%= guess.photo.flickrid %>/in/pool-guesswheresf/">&lt;img height="50" width="50" src="http://static.flickr.com/<%= guess.photo.server %>/<%= guess.photo.flickrid %>_<%= guess.photo.secret %>_s.jpg"&gt;&lt;/a&gt; <% end %>
+<% @guesses_by_guesser[guesser].each do |guess| -%>&lt;a href="<%= guess.photo.page_url %>">&lt;img height="50" width="50" src="<%= guess.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
 <% if ! @revelations_by_person.empty? -%>
@@ -14,7 +14,7 @@
 <% end -%>
 <% @revelations_by_person.each do |revelations| -%>
 &lt;b&gt;<%=h revelations[:person].username %>:&lt;/b&gt;
-<% revelations[:revelations].each do |revelation| -%>&lt;a href="http://www.flickr.com/photos/<%= revelation.person.flickrid %>/<%= revelation.photo.flickrid %>/in/pool-guesswheresf/">&lt;img height="50" width="50" src="http://static.flickr.com/<%= revelation.photo.server %>/<%= revelation.photo.flickrid %>_<%= revelation.photo.secret %>_s.jpg"&gt;&lt;/a&gt; <% end %>
+<% revelations[:revelations].each do |revelation| -%>&lt;a href="<%= revelation.photo.page_url %>">&lt;img height="50" width="50" src="<%= revelation.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
 <%= @new_photos_count %> photos have been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
