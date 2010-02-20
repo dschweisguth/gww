@@ -1,6 +1,6 @@
 class IndexController < ApplicationController
   def index
-    @last_update_time = FlickrUpdate.latest_update_time
+    @latest_update_time = FlickrUpdate.latest_update_time
     @unfound_photos_count = Photo.count(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')")
     @unverified_photos_count = Photo.count(:all,
