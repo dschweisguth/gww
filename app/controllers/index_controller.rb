@@ -5,8 +5,8 @@ class IndexController < ApplicationController
       :conditions => "game_status in ('unfound', 'unconfirmed')")
     @unverified_photos_count = Photo.count(:all,
       :conditions =>
-        ["seen_at < ? and game_status in ('unfound', 'unconfirmed')",
-          adj_last_update_time])
+        [ "seen_at < ? and game_status in ('unfound', 'unconfirmed')",
+          FlickrUpdate.local_latest_update_times(1)[0] ])
     @multipoint_photos_count = multipoint_photos_count
   end
 
