@@ -154,7 +154,7 @@ class GuessesController < ApplicationController
   def correct
     @guesses_count = Guess.count();
 
-    @latest_update = adj_last_update_time
+    @latest_update = FlickrUpdate.local_latest_update_times(1)[0]
     
     @last_days = []
     (1..7).each do |num|
