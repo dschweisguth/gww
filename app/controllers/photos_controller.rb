@@ -7,6 +7,8 @@ class PhotosController < ApplicationController
   auto_complete_for :person, :username
 
   def update
+    FlickrUpdate.new.save
+    
     flickr_url = 'http://api.flickr.com/services/rest/'
     flickr_method = 'flickr.groups.pools.getPhotos'
     flickr_credentials = FlickrCredentials.new
@@ -17,13 +19,9 @@ class PhotosController < ApplicationController
     photo_count = 0
     user_count = 0    
     reached_end = false
-    found_existing = false
     
-    this_update = FlickrUpdate.new
-    this_update.updated_at = Time.now # TODO remove!
-    this_update.save
-    
-    while !reached_end && !found_existing
+    while !reached_end
+      logger.info "Getting page #{get_page} ..."
       sig_raw = flickr_credentials.secret +
 	  'api_key' + flickr_credentials.api_key +
           'auth_token' + flickr_credentials.auth_token +
@@ -39,6 +37,7 @@ class PhotosController < ApplicationController
       page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
       flickr_page = XmlSimple.xml_in(page_xml)['photos'][0]
 
+      logger.info "Updating database from page #{get_page} ..."
       flickr_page['photo'].each do |new_photo|
         photo = Photo.find_by_flickrid(new_photo['id'])
         if !photo
@@ -79,11 +78,13 @@ class PhotosController < ApplicationController
       get_page = get_page + 1
 
     end
+
     flash[:notice] =
       'created ' + photo_count.to_s + ' new photos and ' + user_count.to_s +
       ' new users. Got ' + (get_page - 1).to_s + ' pages out of ' +
       flickr_page['pages'] + '.</br>'
     redirect_to :controller => 'index', :action => 'index'
+
   end
     
   def unfound
