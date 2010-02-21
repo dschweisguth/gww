@@ -1,4 +1,5 @@
-Was farm ever used?
+Test update before next git push
+Add farm IDs to image URLs
 Resolve invalid IDs
   photos.person_id = 0 (all 'missing')
   If possible, remove missing-person check from people/show controller and view

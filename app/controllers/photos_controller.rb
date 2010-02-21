@@ -34,17 +34,34 @@ class PhotosController < ApplicationController
                   '&api_sig=' + api_sig + '&group_id=' + gwsf_id +
                   '&per_page=' + per_page.to_s + '&page=' + get_page.to_s +
                   '&extras=' + extras
-      page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
-      flickr_page = XmlSimple.xml_in(page_xml)['photos'][0]
+      failure_count = 0
+      begin
+        response = Net::HTTP.get_response URI.parse page_url
+      rescue StandardError, Timeout::Error => e
+        failure_count += 1
+        sleep_time = 30 * (2 ** failure_count)
+        warning = e.message
+        if failure_count <= 3
+          warning += "; sleeping #{sleep_time} seconds and retrying ..."
+        end
+        logger.warn warning
+        if failure_count <= 3
+          sleep sleep_time
+          retry
+        elsif
+          raise
+        end
+      end
+      flickr_page = XmlSimple.xml_in(response.body)['photos'][0]
 
       logger.info "Updating database from page #{get_page} ..."
       flickr_page['photo'].each do |new_photo|
         photo = Photo.find_by_flickrid(new_photo['id'])
         if !photo
-          photo_count = photo_count + 1
           photo = Photo.new
           photo.flickrid = new_photo['id']
           photo.game_status = "unfound"
+          photo_count += 1
         end
         photo.farm = new_photo['farm']
         photo.server = new_photo['server']
@@ -56,15 +73,23 @@ class PhotosController < ApplicationController
         photo.flickr_status = "in pool"
 
         person = Person.find_by_flickrid(new_photo['owner'])
+        person_changed = :false
         if !person
-          user_count = user_count + 1
           person = Person.new
+          person.flickrid = new_photo['owner']
+          person.flickr_status = "active"
+          person_changed = :true
+          user_count += 1
         end
-        person.flickrid = new_photo['owner']
-        person.username = new_photo['ownername']
-        person.flickr_status = "active"
+        ownername = new_photo['ownername']
+        if person.username != ownername
+          person.username = ownername
+          person_changed = :true
+        end
 
-        person.save
+        if person_changed
+          person.save
+        end
         photo.person = person
         photo.save
       end
