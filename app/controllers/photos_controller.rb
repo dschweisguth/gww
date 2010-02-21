@@ -7,7 +7,6 @@ class PhotosController < ApplicationController
   auto_complete_for :person, :username
 
   def update
-    # set the particulars
     flickr_url = 'http://api.flickr.com/services/rest/'
     flickr_method = 'flickr.groups.pools.getPhotos'
     flickr_credentials = FlickrCredentials.new
@@ -17,25 +16,20 @@ class PhotosController < ApplicationController
     get_page = 1
     photo_count = 0
     user_count = 0    
-    # booleans
     reached_end = false
     found_existing = false
     
-    # record the time of this update
     this_update = FlickrUpdate.new
     this_update.updated_at = Time.now # TODO remove!
     this_update.save
     
     while !reached_end && !found_existing
-      # generate the api signature
       sig_raw = flickr_credentials.secret +
 	  'api_key' + flickr_credentials.api_key +
           'auth_token' + flickr_credentials.auth_token +
           'extras' + extras + 'group_id' + gwsf_id + 'method' + flickr_method +
           'page' + get_page.to_s + 'per_page' + per_page.to_s
       api_sig = MD5.hexdigest(sig_raw)
-      # grab the next page of photos in the pool
-      #page_url =  'http://localhost:3001/flickr_groups_pools_getPhotos.xml'
       page_url =  flickr_url + '?method=' + flickr_method +
                   '&api_key=' + flickr_credentials.api_key +
 		  '&auth_token=' + flickr_credentials.auth_token +
@@ -45,17 +39,14 @@ class PhotosController < ApplicationController
       page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
       flickr_page = XmlSimple.xml_in(page_xml)['photos'][0]
 
-      # step through the returned photos
       flickr_page['photo'].each do |new_photo|
-        # try to get a record for this photo
         photo = Photo.find_by_flickrid(new_photo['id'])
-        # if it doesn't exist, create it
         if !photo
           photo_count = photo_count + 1
           photo = Photo.new
           photo.game_status = "unfound"
         else
-          # check for a guess on this photo
+          # TODO remove?
           guess = Guess.find_by_photo_id(photo[:id])
           if guess then photo.game_status = "found" end
         end
@@ -69,9 +60,7 @@ class PhotosController < ApplicationController
         photo.flickr_status = "in pool"
         photo.mapped = (new_photo['latitude'] == '0') ? 'false' : 'true'
 
-        # try and get a record for the owner of this photo
         person = Person.find_by_flickrid(new_photo['owner'])
-        # if the person doesn't exist, create it
         if !person
           user_count = user_count + 1
           person = Person.new
@@ -80,22 +69,16 @@ class PhotosController < ApplicationController
         person.username = new_photo['ownername']
         person.flickr_status = "active"
 
-        # save the person
         person.save
-        # attach the person to the photo
         photo.person = person
-        # save the photo
         photo.save
       end
-      # check to see if we've reached the end
       if get_page >= flickr_page['pages'].to_i
         reached_end = :true
       end
-      # up the page
       get_page = get_page + 1
 
     end
-    # let them know we're done
     flash[:notice] =
       'created ' + photo_count.to_s + ' new photos and ' + user_count.to_s +
       ' new users. Got ' + (get_page - 1).to_s + ' pages out of ' +
