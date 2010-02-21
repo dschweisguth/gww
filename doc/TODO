@@ -1,9 +1,11 @@
+Was farm ever used?
 Resolve invalid IDs
   photos.person_id = 0 (all 'missing')
   If possible, remove missing-person check from people/show controller and view
   If not, fix link to missing person on people/show, e.g. people/show.17
   Remove orphaned photos page when resolved
 Drop people.iconserver, people.photosurl, people.flickr_status
+Drop photos.flickr_status
 Drop invalid column defaults
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs

@@ -43,21 +43,17 @@ class PhotosController < ApplicationController
         if !photo
           photo_count = photo_count + 1
           photo = Photo.new
+          photo.flickrid = new_photo['id']
           photo.game_status = "unfound"
-        else
-          # TODO remove?
-          guess = Guess.find_by_photo_id(photo[:id])
-          if guess then photo.game_status = "found" end
         end
-        photo.flickrid = new_photo['id']
-        photo.secret = new_photo['secret']
-        photo.server = new_photo['server']
         photo.farm = new_photo['farm']
+        photo.server = new_photo['server']
+        photo.secret = new_photo['secret']
+        photo.mapped = (new_photo['latitude'] == '0') ? 'false' : 'true'
         photo.dateadded = Time.at(new_photo['dateadded'].to_i)
         photo.lastupdate = Time.at(new_photo['lastupdate'].to_i)
         photo.seen_at = Time.now
         photo.flickr_status = "in pool"
-        photo.mapped = (new_photo['latitude'] == '0') ? 'false' : 'true'
 
         person = Person.find_by_flickrid(new_photo['owner'])
         if !person
