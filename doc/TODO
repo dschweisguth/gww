@@ -1,9 +1,9 @@
 Resolve invalid IDs
   photos.person_id = 0 (all 'missing')
-  Are they in the group?
   If possible, remove missing-person check from people/show controller and view
   If not, fix link to missing person on people/show, e.g. people/show.17
   Remove orphaned photos page when resolved
+Find photos whose game_status doesn't match their guesses
 Figure out people.iconserver, people.photosurl, people.flickr_status
 Drop invalid column defaults
 Attempt to speed up reports by page caching
