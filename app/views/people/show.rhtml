@@ -32,10 +32,10 @@
 <% @posters.each do |poster| %>
 <%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, :action => 'show', :id => poster[:person].id %> (
 <%   poster[:photos].each_with_index do |photo, photo_index| -%>
-<%     if photo.person_id == 0 -%>
-<b>x</b>
-<%     else -%>
+<%     if photo.person -%>
 <%=      link_to photo_index + 1, :controller => 'photos', :action => 'show', :id => photo.id %>
+<%     else -%>
+<b>x</b>
 <%     end -%>
 <%   end -%>
 )<br/>

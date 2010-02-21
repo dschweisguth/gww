@@ -1,8 +1,8 @@
-photos and guesses have people_ids which don't correspond to people. Fix.
-    Look for other unenforced foreign keys and fix those too.
-Fix unknown links from people/show. potato potato, ID 13, is a test case.
-If possible, fix guesses' invalid person IDs, remove missing-person check from
-  person/show and use eager loading
+Resolve invalid IDs
+  photos.person_id = 0 (all 'missing')
+  If possible, remove missing-person check from people/show controller and view
+  Remove orphaned photos page when resolved
+Figure out people.iconserver, people.photosurl, people.flickr_status
 Drop invalid column defaults
 Attempt to speed up reports by page caching
 Attempt to speed up pages which access Flickr by using newer APIs

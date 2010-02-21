@@ -26,9 +26,6 @@ class PeopleController < ApplicationController
     @revealed_photos = Photo.find_all_by_person_id_and_game_status(@person.id,
       'revealed')
     
-    missing_person = Person.new
-    missing_person.username = 'unknown'
-
     # Map of guessers to this person's posts
     posts = Photo.find_all_by_person_id(@person.id,
       :include => { :guesses => :person })
@@ -36,9 +33,6 @@ class PeopleController < ApplicationController
     guessers = {}
     posts.each do |photo|
       photo.guesses.each do |guess|
-	if guess.person.nil?
-          guess.person = missing_person
-	end
         guesser = guessers[guess.person]
         if ! guesser
           guesser = { :person => guess.person, :photos => [] }
@@ -51,15 +45,14 @@ class PeopleController < ApplicationController
     @guessers.sort! { |x,y| y[:photos].length <=> x[:photos].length }
     
     # Map of posters to this person's guesses
-    guesses = Guess.find_all_by_person_id(@person.id, :include => :photo)
+    guesses = Guess.find_all_by_person_id(@person.id,
+      :include => { :photo => :person })
     @guessed_count = guesses.length
+    missing_person = Person.new
+    missing_person.username = 'unknown'
     posters = {}
     guesses.each do |guess|
-      if guess.photo.person_id == 0
-        person = missing_person
-      else
-        person = Person.find(guess.photo.person_id)
-      end
+      person = guess.photo.person || missing_person
       poster = posters[person]
       if ! poster
         poster = { :person => person, :photos => [] }

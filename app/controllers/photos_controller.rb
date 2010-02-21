@@ -145,6 +145,10 @@ class PhotosController < ApplicationController
       :include => :person, :order => "lastupdate desc")
   end
 
+  def orphaned
+    @photos = Photo.find_all_by_person_id 0
+  end
+
   def show
     @photo = Photo.find(params[:id],
       :include => [:person, { :revelation => :person }])
