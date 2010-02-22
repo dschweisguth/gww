@@ -1,5 +1,4 @@
-Test update before next git push
-Fix broken link in score report
+Attempt to speed up update by not loading or saving things that don't change
 Add farm IDs to image URLs
 Resolve invalid IDs
   photos.person_id = 0 (all 'missing')
