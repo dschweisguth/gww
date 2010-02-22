@@ -1,7 +1,6 @@
-require 'net/http'
-require 'rubygems'
-require 'xmlsimple'
 require 'md5'
+require 'net/http'
+require 'xmlsimple'
 
 class PhotosController < ApplicationController
   auto_complete_for :person, :username
@@ -18,11 +17,37 @@ class PhotosController < ApplicationController
       parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
 
       logger.info "Updating database from page #{page} ..."
+      people = {}
       parsed_photos['photo'].each do |parsed_photo|
-        photo = Photo.find_by_flickrid(parsed_photo['id'])
+        person_flickrid = parsed_photo['owner']
+        person = people[person_flickrid]
+        if ! person
+          person = Person.find_by_flickrid(person_flickrid)
+          people[person_flickrid] = person
+        end
+        person_changed = false
+        if ! person
+          person = Person.new
+          person.flickrid = person_flickrid
+          person.flickr_status = "active"
+          people[person_flickrid] = person
+          person_changed = true
+          new_user_count += 1
+        end
+        ownername = parsed_photo['ownername']
+        if person.username != ownername
+          person.username = ownername
+          person_changed = true
+        end
+        if person_changed
+          person.save
+        end
+
+        photo_flickrid = parsed_photo['id']
+        photo = Photo.find_by_flickrid(photo_flickrid)
         if !photo
           photo = Photo.new
-          photo.flickrid = parsed_photo['id']
+          photo.flickrid = photo_flickrid
           photo.game_status = "unfound"
           new_photo_count += 1
         end
@@ -34,25 +59,6 @@ class PhotosController < ApplicationController
         photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
         photo.seen_at = Time.now
         photo.flickr_status = "in pool"
-
-        person = Person.find_by_flickrid(parsed_photo['owner'])
-        person_changed = :false
-        if !person
-          person = Person.new
-          person.flickrid = parsed_photo['owner']
-          person.flickr_status = "active"
-          person_changed = :true
-          new_user_count += 1
-        end
-        ownername = parsed_photo['ownername']
-        if person.username != ownername
-          person.username = ownername
-          person_changed = :true
-        end
-
-        if person_changed
-          person.save
-        end
         photo.person = person
         photo.save
 
