@@ -9,79 +9,42 @@ class PhotosController < ApplicationController
   def update
     FlickrUpdate.new.save
     
-    flickr_url = 'http://api.flickr.com/services/rest/'
-    flickr_method = 'flickr.groups.pools.getPhotos'
-    flickr_credentials = FlickrCredentials.new
-    gwsf_id = '32053327@N00'
-    extras = 'geo,last_update'
-    per_page = 500
-    get_page = 1
-    photo_count = 0
-    user_count = 0    
-    reached_end = false
-    
-    while !reached_end
-      logger.info "Getting page #{get_page} ..."
-      sig_raw = flickr_credentials.secret +
-	  'api_key' + flickr_credentials.api_key +
-          'auth_token' + flickr_credentials.auth_token +
-          'extras' + extras + 'group_id' + gwsf_id + 'method' + flickr_method +
-          'page' + get_page.to_s + 'per_page' + per_page.to_s
-      api_sig = MD5.hexdigest(sig_raw)
-      page_url =  flickr_url + '?method=' + flickr_method +
-                  '&api_key=' + flickr_credentials.api_key +
-		  '&auth_token=' + flickr_credentials.auth_token +
-                  '&api_sig=' + api_sig + '&group_id=' + gwsf_id +
-                  '&per_page=' + per_page.to_s + '&page=' + get_page.to_s +
-                  '&extras=' + extras
-      failure_count = 0
-      begin
-        response = Net::HTTP.get_response URI.parse page_url
-      rescue StandardError, Timeout::Error => e
-        failure_count += 1
-        sleep_time = 30 * (2 ** failure_count)
-        warning = e.message
-        if failure_count <= 3
-          warning += "; sleeping #{sleep_time} seconds and retrying ..."
-        end
-        logger.warn warning
-        if failure_count <= 3
-          sleep sleep_time
-          retry
-        elsif
-          raise
-        end
-      end
-      flickr_page = XmlSimple.xml_in(response.body)['photos'][0]
+    page = 1
+    parsed_photos = nil
+    new_photo_count = 0
+    new_user_count = 0    
+    while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
+      photos_xml = photos_xml page
+      parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
 
-      logger.info "Updating database from page #{get_page} ..."
-      flickr_page['photo'].each do |new_photo|
-        photo = Photo.find_by_flickrid(new_photo['id'])
+      logger.info "Updating database from page #{page} ..."
+      parsed_photos['photo'].each do |parsed_photo|
+        photo = Photo.find_by_flickrid(parsed_photo['id'])
         if !photo
           photo = Photo.new
-          photo.flickrid = new_photo['id']
+          photo.flickrid = parsed_photo['id']
           photo.game_status = "unfound"
-          photo_count += 1
+          new_photo_count += 1
         end
-        photo.farm = new_photo['farm']
-        photo.server = new_photo['server']
-        photo.secret = new_photo['secret']
-        photo.mapped = (new_photo['latitude'] == '0') ? 'false' : 'true'
-        photo.dateadded = Time.at(new_photo['dateadded'].to_i)
-        photo.lastupdate = Time.at(new_photo['lastupdate'].to_i)
+        photo.farm = parsed_photo['farm']
+        photo.server = parsed_photo['server']
+        photo.secret = parsed_photo['secret']
+        photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
+        photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
+        photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
         photo.seen_at = Time.now
         photo.flickr_status = "in pool"
 
-        person = Person.find_by_flickrid(new_photo['owner'])
+        person = Person.find_by_flickrid(parsed_photo['owner'])
         person_changed = :false
         if !person
           person = Person.new
-          person.flickrid = new_photo['owner']
+          person.flickrid = parsed_photo['owner']
           person.flickr_status = "active"
           person_changed = :true
-          user_count += 1
+          new_user_count += 1
         end
-        ownername = new_photo['ownername']
+        ownername = parsed_photo['ownername']
         if person.username != ownername
           person.username = ownername
           person_changed = :true
@@ -92,22 +55,59 @@ class PhotosController < ApplicationController
         end
         photo.person = person
         photo.save
-      end
-      if get_page >= flickr_page['pages'].to_i
-        reached_end = :true
-      end
-      get_page = get_page + 1
 
+      end
+
+      page += 1
     end
 
-    flash[:notice] =
-      'created ' + photo_count.to_s + ' new photos and ' + user_count.to_s +
-      ' new users. Got ' + (get_page - 1).to_s + ' pages out of ' +
-      flickr_page['pages'] + '.</br>'
+    flash[:notice] = "Created #{new_photo_count} new photos and " +
+      "#{new_user_count} new users. Got #{page - 1} pages out of " +
+      "#{parsed_photos['pages']}.</br>"
     redirect_to :controller => 'index', :action => 'index'
 
   end
     
+  def photos_xml(page)
+    logger.info "Getting page #{page} ..."
+    base_url = 'http://api.flickr.com/services/rest/'
+    flickr_method = 'flickr.groups.pools.getPhotos'
+    flickr_credentials = FlickrCredentials.new
+    gwsf_id = '32053327@N00'
+    extras = 'geo,last_update'
+    per_page = 500
+    sig_raw = flickr_credentials.secret +
+      'api_key' + flickr_credentials.api_key +
+      'auth_token' + flickr_credentials.auth_token +
+      'extras' + extras + 'group_id' + gwsf_id + 'method' + flickr_method +
+      'page' + page.to_s + 'per_page' + per_page.to_s
+    api_sig = MD5.hexdigest(sig_raw)
+    page_url = base_url + '?method=' + flickr_method +
+      '&api_key=' + flickr_credentials.api_key +
+      '&auth_token=' + flickr_credentials.auth_token +
+      '&api_sig=' + api_sig + '&group_id=' + gwsf_id +
+      '&per_page=' + per_page.to_s + '&page=' + page.to_s + '&extras=' + extras
+    failure_count = 0
+    begin
+      response = Net::HTTP.get_response URI.parse page_url
+    rescue StandardError, Timeout::Error => e
+      failure_count += 1
+      sleep_time = 30 * (2 ** failure_count)
+      warning = e.message
+      if failure_count <= 3
+	warning += "; sleeping #{sleep_time} seconds and retrying ..."
+      end
+      logger.warn warning
+      if failure_count <= 3
+	sleep sleep_time
+	retry
+      elsif
+	raise
+      end
+    end
+    response.body
+  end
+
   def unfound
     @photos = unfound_or_unconfirmed_photos
   end

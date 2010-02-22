@@ -1,4 +1,5 @@
 Test update before next git push
+Fix broken link in score report
 Add farm IDs to image URLs
 Resolve invalid IDs
   photos.person_id = 0 (all 'missing')
