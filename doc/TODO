@@ -1,4 +1,8 @@
-Attempt to speed up update by not loading or saving things that don't change
+Attempt to speed up update by
+- loading photos for a page all at once
+- including person in photo
+Review need for photos.seen_at and, if not needed, change update to save photos
+  selectively
 Add farm IDs to image URLs
 Resolve invalid IDs
   photos.person_id = 0 (all 'missing')
@@ -20,8 +24,6 @@ Open appropriate parts of GWW to players
     Move GWW to guesswheresf.com
 Review test coverage and add TODOs to write more tests and assertions
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
-Is photos.dateadded really date uploaded? If so, can we also track date added
-    to group, to support the shortest/longest time-to-guess report?
 Add update completion time to home page
 Post scores to Flickr group automatically. Record scoring time and add to home
     page.
