@@ -16,6 +16,12 @@ class PhotosController < ApplicationController
       photos_xml = photos_xml page
       parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
 
+      photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
+      existing_photos = {}
+      Photo.find_all_by_flickrid(photo_flickrids).each do |photo|
+        existing_photos[photo.flickrid] = photo
+      end
+
       logger.info "Updating database from page #{page} ..."
       people = {}
       parsed_photos['photo'].each do |parsed_photo|
@@ -44,7 +50,7 @@ class PhotosController < ApplicationController
         end
 
         photo_flickrid = parsed_photo['id']
-        photo = Photo.find_by_flickrid(photo_flickrid)
+        photo = existing_photos[photo_flickrid]
         if !photo
           photo = Photo.new
           photo.flickrid = photo_flickrid
