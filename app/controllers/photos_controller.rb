@@ -1,6 +1,7 @@
 require 'md5'
 require 'net/http'
 require 'xmlsimple'
+require 'set'
 
 class PhotosController < ApplicationController
   auto_complete_for :person, :username
@@ -18,22 +19,24 @@ class PhotosController < ApplicationController
       parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
       
+      logger.info "Updating database from page #{page} ..."
+
       now = Time.now
       Photo.update_seen_at photo_flickrids, now
       
+      people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
+      people_flickrids = people_flickrids - people.keys
+      Person.find_all_by_flickrid(people_flickrids.to_a).each do |person|
+        people[person.flickrid] = person
+      end
       existing_photos = {}
       Photo.find_all_by_flickrid(photo_flickrids).each do |photo|
         existing_photos[photo.flickrid] = photo
       end
 
-      logger.info "Updating database from page #{page} ..."
       parsed_photos['photo'].each do |parsed_photo|
         person_flickrid = parsed_photo['owner']
         person = people[person_flickrid]
-        if ! person
-          person = Person.find_by_flickrid(person_flickrid)
-          people[person_flickrid] = person
-        end
         if ! person
           person = Person.new
           person.flickrid = person_flickrid
