@@ -1,7 +1,3 @@
-Attempt to speed up update by
-- setting seen_at all at once
-- updating photos selectively
-- including person in photo?
 Add update completion time to home page
 Add farm IDs to image URLs
 Resolve invalid IDs

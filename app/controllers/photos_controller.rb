@@ -11,83 +11,86 @@ class PhotosController < ApplicationController
     
     page = 1
     parsed_photos = nil
-    people = {}
+    existing_people = {}
     new_photo_count = 0
     new_person_count = 0    
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       photos_xml = photos_xml page
       parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
-      
+
       logger.info "Updating database from page #{page} ..."
+      Photo.transaction do
+        now = Time.now
+        Photo.update_seen_at photo_flickrids, now
 
-      now = Time.now
-      Photo.update_seen_at photo_flickrids, now
-      
-      people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
-      people_flickrids = people_flickrids - people.keys
-      Person.find_all_by_flickrid(people_flickrids.to_a).each do |person|
-        people[person.flickrid] = person
+        people_flickrids =
+          Set.new parsed_photos['photo'].map { |p| p['owner'] }
+        existing_people_flickrids = people_flickrids - existing_people.keys
+        Person.find_all_by_flickrid(people_flickrids.to_a).each do |person|
+          existing_people[person.flickrid] = person
+        end
+
+        existing_photos = {}
+        Photo.find_all_by_flickrid(photo_flickrids).each do |photo|
+          existing_photos[photo.flickrid] = photo
+        end
+
+        parsed_photos['photo'].each do |parsed_photo|
+          person_flickrid = parsed_photo['owner']
+          person = existing_people[person_flickrid]
+          if ! person
+            person = Person.new
+            person.flickrid = person_flickrid
+            person.flickr_status = "active"
+            existing_people[person_flickrid] = person
+            new_person_count += 1
+          end
+          old_person_username = person.username
+          person.username = parsed_photo['ownername']
+          if person.id.nil? || person.username != old_person_username
+            person.save
+          end
+
+          photo_flickrid = parsed_photo['id']
+          photo = existing_photos[photo_flickrid]
+          if ! photo
+            photo = Photo.new
+            photo.flickrid = photo_flickrid
+            photo.game_status = "unfound"
+            photo.seen_at = now
+            new_photo_count += 1
+          end
+          old_photo_farm = photo.farm
+          photo.farm = parsed_photo['farm']
+          old_photo_server = photo.server
+          photo.server = parsed_photo['server']
+          old_photo_secret = photo.secret
+          photo.secret = parsed_photo['secret']
+          old_photo_mapped = photo.mapped
+          photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
+          old_photo_dateadded = photo.dateadded
+          photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
+          old_photo_lastupdate = photo.lastupdate
+          photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
+          old_photo_flickr_status = photo.flickr_status
+          photo.flickr_status = "in pool"
+          photo.person = person
+          if photo.id.nil? ||
+            old_photo_farm != photo.farm ||
+            old_photo_server != photo.server ||
+            old_photo_secret != photo.secret ||
+            old_photo_mapped != photo.mapped ||
+            old_photo_dateadded != adjust(photo.dateadded) ||
+            old_photo_lastupdate != adjust(photo.lastupdate) ||
+            old_photo_flickr_status != photo.flickr_status
+            photo.save
+          end
+
+        end
+
+        page += 1
       end
-      existing_photos = {}
-      Photo.find_all_by_flickrid(photo_flickrids).each do |photo|
-        existing_photos[photo.flickrid] = photo
-      end
-
-      parsed_photos['photo'].each do |parsed_photo|
-        person_flickrid = parsed_photo['owner']
-        person = people[person_flickrid]
-        if ! person
-          person = Person.new
-          person.flickrid = person_flickrid
-          person.flickr_status = "active"
-          people[person_flickrid] = person
-          new_person_count += 1
-        end
-        old_person_username = person.username
-        person.username = parsed_photo['ownername']
-        if person.id.nil? || person.username != old_person_username
-          person.save
-        end
-
-        photo_flickrid = parsed_photo['id']
-        photo = existing_photos[photo_flickrid]
-        if ! photo
-          photo = Photo.new
-          photo.flickrid = photo_flickrid
-          photo.game_status = "unfound"
-          photo.seen_at = now
-          new_photo_count += 1
-        end
-        old_photo_farm = photo.farm
-        photo.farm = parsed_photo['farm']
-	old_photo_server = photo.server
-        photo.server = parsed_photo['server']
-        old_photo_secret = photo.secret
-        photo.secret = parsed_photo['secret']
-        old_photo_mapped = photo.mapped
-        photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
-        old_photo_dateadded = photo.dateadded
-        photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
-        old_photo_lastupdate = photo.lastupdate
-        photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
-        old_photo_flickr_status = photo.flickr_status
-        photo.flickr_status = "in pool"
-        photo.person = person
-        if photo.id.nil? ||
-          old_photo_farm != photo.farm ||
-          old_photo_server != photo.server ||
-          old_photo_secret != photo.secret ||
-          old_photo_mapped != photo.mapped ||
-          old_photo_dateadded != adjust(photo.dateadded) ||
-          old_photo_lastupdate != adjust(photo.lastupdate) ||
-          old_photo_flickr_status != photo.flickr_status
-          photo.save
-        end
-
-      end
-
-      page += 1
     end
 
     flash[:notice] = "Created #{new_photo_count} new photos and " +
@@ -124,14 +127,14 @@ class PhotosController < ApplicationController
       sleep_time = 30 * (2 ** failure_count)
       warning = e.message
       if failure_count <= 3
-	warning += "; sleeping #{sleep_time} seconds and retrying ..."
+        warning += "; sleeping #{sleep_time} seconds and retrying ..."
       end
       logger.warn warning
       if failure_count <= 3
-	sleep sleep_time
-	retry
+        sleep sleep_time
+        retry
       elsif
-	raise
+        raise
       end
     end
     response.body
@@ -220,7 +223,7 @@ class PhotosController < ApplicationController
     # grab the comments
     page_url =  flickr_url + '?method=' + flickr_method +
                 '&api_key=' + flickr_credentials.api_key +
-		'&auth_token=' + flickr_credentials.auth_token +
+                '&auth_token=' + flickr_credentials.auth_token +
                 '&api_sig=' + api_sig + '&photo_id=' + photo[:flickrid]
     page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
     full_page = XmlSimple.xml_in(page_xml)
@@ -290,7 +293,7 @@ class PhotosController < ApplicationController
       api_sig = MD5.hexdigest(sig_raw)
       page_url =  flickr_url + '?method=' + person_method +
                   '&api_key=' + flickr_credentials.api_key +
-		  '&auth_token=' + flickr_credentials.auth_token +
+                  '&auth_token=' + flickr_credentials.auth_token +
                   '&api_sig=' + api_sig + '&user_id=' + flickr_id
       page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
       flickr_page = XmlSimple.xml_in(page_xml)['person'][0]
