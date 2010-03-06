@@ -39,6 +39,7 @@ Rails::Initializer.run do |config|
   config.active_record.default_timezone = :utc
   
   # See Rails::Configuration for more options
+  config.active_record.colorize_logging = false
 end
 
 # Add new inflection rules using the following format 
