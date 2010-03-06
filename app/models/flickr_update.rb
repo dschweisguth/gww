@@ -1,7 +1,7 @@
 class FlickrUpdate < ActiveRecord::Base
 
-  def self.latest_update_time
-     FlickrUpdate.maximum(:updated_at)
+  def self.latest
+    find(:first, :order => "id desc")
   end
 
   # Guess.added_at seems to come from Flickr as though it were local time but

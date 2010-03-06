@@ -173,12 +173,12 @@ class PhotosController < ApplicationController
   end
 
   def unfound_pretty
-    @lasttime = FlickrUpdate.latest_update_time
+    @lasttime = FlickrUpdate.latest.updated_at
     @photos = unfound_or_unconfirmed_photos
   end
 
   def unfound_data
-    @lasttime = FlickrUpdate.latest_update_time
+    @lasttime = FlickrUpdate.latest.updated_at
     @photos = unfound_or_unconfirmed_photos
     render :layout => false
   end
