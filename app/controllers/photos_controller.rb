@@ -15,8 +15,11 @@ class PhotosController < ApplicationController
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       photos_xml = photos_xml page
       parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
-
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
+      
+      now = Time.now
+      Photo.update_seen_at photo_flickrids, now
+      
       existing_photos = {}
       Photo.find_all_by_flickrid(photo_flickrids).each do |photo|
         existing_photos[photo.flickrid] = photo
@@ -51,22 +54,29 @@ class PhotosController < ApplicationController
 
         photo_flickrid = parsed_photo['id']
         photo = existing_photos[photo_flickrid]
+        photo_changed = false
         if !photo
           photo = Photo.new
           photo.flickrid = photo_flickrid
           photo.game_status = "unfound"
+          photo.seen_at = now
           new_photo_count += 1
+          photo_changed = true
         end
-        photo.farm = parsed_photo['farm']
-        photo.server = parsed_photo['server']
-        photo.secret = parsed_photo['secret']
-        photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
-        photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
-        photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
-        photo.seen_at = Time.now
-        photo.flickr_status = "in pool"
-        photo.person = person
-        photo.save
+        photo_changed |= prop_changed photo, :farm, parsed_photo['farm']
+        photo_changed |= prop_changed photo, :server, parsed_photo['server']
+        photo_changed |= prop_changed photo, :secret, parsed_photo['secret']
+        photo_changed |= prop_changed photo, :mapped,
+	  (parsed_photo['latitude'] == '0') ? 'false' : 'true'
+        photo_changed |= prop_changed photo, :dateadded,
+	  Time.at(parsed_photo['dateadded'].to_i)
+        photo_changed |= prop_changed photo, :lastupdate,
+          Time.at(parsed_photo['lastupdate'].to_i)
+        photo_changed |= prop_changed photo, :flickr_status, "in pool"
+        photo_changed |= prop_changed photo, :person_id, person.id
+        if photo_changed
+          photo.save
+        end
 
       end
 
@@ -79,7 +89,7 @@ class PhotosController < ApplicationController
     redirect_to :controller => 'index', :action => 'index'
 
   end
-    
+
   def photos_xml(page)
     logger.info "Getting page #{page} ..."
     base_url = 'http://api.flickr.com/services/rest/'
@@ -118,6 +128,22 @@ class PhotosController < ApplicationController
       end
     end
     response.body
+  end
+
+  def prop_changed(photo, prop, value)
+    adjusted_value = (value.is_a? Time) ? adjust(value) : value
+    changed = photo[prop] != adjusted_value
+    if changed
+      photo[prop] = value
+    end
+    changed
+  end
+
+  # Compensates for the fact that time comes from Flickr in UTC but is somehow
+  # converted to local time when saved
+  def adjust(time)
+    time + Time.local(time.year, time.month, time.day, time.hour, time.min,
+      time.sec).gmt_offset
   end
 
   def unfound

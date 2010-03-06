@@ -4,6 +4,12 @@ class Photo < ActiveRecord::Base
   has_many :comments
   has_one :revelation
 
+  def self.update_seen_at(flickrids, time)
+    joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
+    Photo.update_all("seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
+      "flickrid in (#{joined_flickrids})")
+  end
+
   def page_url
     "http://www.flickr.com/photos/" + person.flickrid + "/" + flickrid +
       "/in/pool-guesswheresf/";
