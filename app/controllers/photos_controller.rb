@@ -11,7 +11,7 @@ class PhotosController < ApplicationController
     page = 1
     parsed_photos = nil
     new_photo_count = 0
-    new_user_count = 0    
+    new_person_count = 0    
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       photos_xml = photos_xml page
       parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
@@ -34,47 +34,51 @@ class PhotosController < ApplicationController
           person = Person.find_by_flickrid(person_flickrid)
           people[person_flickrid] = person
         end
-        person_changed = false
         if ! person
           person = Person.new
           person.flickrid = person_flickrid
           person.flickr_status = "active"
           people[person_flickrid] = person
-          person_changed = true
-          new_user_count += 1
+          new_person_count += 1
         end
-        ownername = parsed_photo['ownername']
-        if person.username != ownername
-          person.username = ownername
-          person_changed = true
-        end
-        if person_changed
+        old_person_username = person.username
+        person.username = parsed_photo['ownername']
+        if person.id.nil? || person.username != old_person_username
           person.save
         end
 
         photo_flickrid = parsed_photo['id']
         photo = existing_photos[photo_flickrid]
-        photo_changed = false
-        if !photo
+        if ! photo
           photo = Photo.new
           photo.flickrid = photo_flickrid
           photo.game_status = "unfound"
           photo.seen_at = now
           new_photo_count += 1
-          photo_changed = true
         end
-        photo_changed |= prop_changed photo, :farm, parsed_photo['farm']
-        photo_changed |= prop_changed photo, :server, parsed_photo['server']
-        photo_changed |= prop_changed photo, :secret, parsed_photo['secret']
-        photo_changed |= prop_changed photo, :mapped,
-	  (parsed_photo['latitude'] == '0') ? 'false' : 'true'
-        photo_changed |= prop_changed photo, :dateadded,
-	  Time.at(parsed_photo['dateadded'].to_i)
-        photo_changed |= prop_changed photo, :lastupdate,
-          Time.at(parsed_photo['lastupdate'].to_i)
-        photo_changed |= prop_changed photo, :flickr_status, "in pool"
-        photo_changed |= prop_changed photo, :person_id, person.id
-        if photo_changed
+        old_photo_farm = photo.farm
+        photo.farm = parsed_photo['farm']
+	old_photo_server = photo.server
+        photo.server = parsed_photo['server']
+        old_photo_secret = photo.secret
+        photo.secret = parsed_photo['secret']
+        old_photo_mapped = photo.mapped
+        photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
+        old_photo_dateadded = photo.dateadded
+        photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
+        old_photo_lastupdate = photo.lastupdate
+        photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
+        old_photo_flickr_status = photo.flickr_status
+        photo.flickr_status = "in pool"
+        photo.person = person
+        if photo.id.nil? ||
+          old_photo_farm != photo.farm ||
+          old_photo_server != photo.server ||
+          old_photo_secret != photo.secret ||
+          old_photo_mapped != photo.mapped ||
+          old_photo_dateadded != adjust(photo.dateadded) ||
+          old_photo_lastupdate != adjust(photo.lastupdate) ||
+          old_photo_flickr_status != photo.flickr_status
           photo.save
         end
 
@@ -84,7 +88,7 @@ class PhotosController < ApplicationController
     end
 
     flash[:notice] = "Created #{new_photo_count} new photos and " +
-      "#{new_user_count} new users. Got #{page - 1} pages out of " +
+      "#{new_person_count} new users. Got #{page - 1} pages out of " +
       "#{parsed_photos['pages']}.</br>"
     redirect_to :controller => 'index', :action => 'index'
 
@@ -130,17 +134,8 @@ class PhotosController < ApplicationController
     response.body
   end
 
-  def prop_changed(photo, prop, value)
-    adjusted_value = (value.is_a? Time) ? adjust(value) : value
-    changed = photo[prop] != adjusted_value
-    if changed
-      photo[prop] = value
-    end
-    changed
-  end
-
   # Compensates for the fact that time comes from Flickr in UTC but is somehow
-  # converted to local time when saved
+  # converted to local time when set on the photo (even before it's saved)
   def adjust(time)
     time + Time.local(time.year, time.month, time.day, time.hour, time.min,
       time.sec).gmt_offset
