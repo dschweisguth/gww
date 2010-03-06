@@ -10,6 +10,7 @@ class PhotosController < ApplicationController
     
     page = 1
     parsed_photos = nil
+    people = {}
     new_photo_count = 0
     new_person_count = 0    
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
@@ -26,7 +27,6 @@ class PhotosController < ApplicationController
       end
 
       logger.info "Updating database from page #{page} ..."
-      people = {}
       parsed_photos['photo'].each do |parsed_photo|
         person_flickrid = parsed_photo['owner']
         person = people[person_flickrid]
