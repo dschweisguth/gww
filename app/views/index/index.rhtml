@@ -1,7 +1,7 @@
 <h1>Guess Where Watcher</h1>
 
 <%= flash[:notice] %><br/>
-The most recent photo update began <%= @latest.created_at.localtime.strftime("%A, %B %d, %H:%M %Z") %> <%= @latest.completed_at.nil? ? "and is still running. A photo update takes about ten minutes." : "and completed at #{@latest.completed_at.localtime.strftime("%A, %B %d, %H:%M %Z")}." %><br/>
+The most recent photo update began <%= @latest.created_at.localtime.strftime("%A, %B %d, %H:%M %Z") %> <%= @latest.completed_at.nil? ? "and is still running. A photo update takes about five minutes." : "and completed at #{@latest.completed_at.localtime.strftime("%A, %B %d, %H:%M %Z")}." %><br/>
 <br/>
 
 Scoring and publishing, for administrators
