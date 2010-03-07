@@ -11,13 +11,11 @@ class Photo < ActiveRecord::Base
   end
 
   def page_url
-    "http://www.flickr.com/photos/" + person.flickrid + "/" + flickrid +
-      "/in/pool-guesswheresf/";
+    "http://www.flickr.com/photos/#{person.flickrid}/#{flickrid}/in/pool-guesswheresf/";
   end
 
   def image_url(size)
-    "http://static.flickr.com/" + server + "/" + flickrid + "_" + secret +
-      "_" + size + ".jpg"
+    "http://#{farm.nil? ? "" : "farm#{farm}."}static.flickr.com/#{server}/#{flickrid}_#{secret}_#{size}.jpg"
   end
 
 end
