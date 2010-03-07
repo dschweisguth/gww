@@ -7,8 +7,9 @@ class PhotosController < ApplicationController
   auto_complete_for :person, :username
 
   def update
-    FlickrUpdate.new.save
-    
+    update = FlickrUpdate.new
+    update.save
+
     page = 1
     parsed_photos = nil
     existing_people = {}
@@ -93,6 +94,9 @@ class PhotosController < ApplicationController
       end
     end
 
+    update.completed_at = Time.now.getutc
+    update.save
+
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{page - 1} pages out of " +
       "#{parsed_photos['pages']}.</br>"
@@ -173,12 +177,12 @@ class PhotosController < ApplicationController
   end
 
   def unfound_pretty
-    @lasttime = FlickrUpdate.latest.updated_at
+    @lasttime = FlickrUpdate.latest.created_at
     @photos = unfound_or_unconfirmed_photos
   end
 
   def unfound_data
-    @lasttime = FlickrUpdate.latest.updated_at
+    @lasttime = FlickrUpdate.latest.created_at
     @photos = unfound_or_unconfirmed_photos
     render :layout => false
   end

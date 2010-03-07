@@ -10,9 +10,9 @@ class FlickrUpdate < ActiveRecord::Base
   # this need on the Guess side.
   def self.local_latest_update_times(limit)
     updates = find(:all, :order => "id desc", :limit => limit);
-    updates.map { |x| x.updated_at + Time.local(x.updated_at.year,
-      x.updated_at.month, x.updated_at.day, x.updated_at.hour,
-      x.updated_at.min, x.updated_at.sec).gmt_offset }
+    updates.map { |x| x.created_at + Time.local(x.created_at.year,
+      x.created_at.month, x.created_at.day, x.created_at.hour,
+      x.created_at.min, x.created_at.sec).gmt_offset }
   end
 
 end

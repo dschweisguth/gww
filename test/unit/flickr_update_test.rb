@@ -9,8 +9,8 @@ class FlickrUpdateTest < Test::Unit::TestCase
     FlickrUpdate.new.save
     latest = FlickrUpdate.latest
 
-    updates = FlickrUpdate.find(:all, :order => :updated_at);
-    assert_equal updates[1].updated_at, latest.updated_at
+    updates = FlickrUpdate.find(:all, :order => :created_at);
+    assert_equal updates[1].created_at, latest.created_at
     
   end
 
