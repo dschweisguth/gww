@@ -11,7 +11,7 @@ CREATE TABLE `comments` (
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL auto_increment,
-  `created_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
   `completed_at` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=843 DEFAULT CHARSET=latin1;
@@ -70,4 +70,4 @@ CREATE TABLE `schema_info` (
   `version` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (18)
+INSERT INTO schema_info (version) VALUES (19)
