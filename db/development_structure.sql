@@ -14,15 +14,15 @@ CREATE TABLE `flickr_updates` (
   `created_at` datetime NOT NULL,
   `completed_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=843 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=844 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL auto_increment,
-  `guessed_at` datetime NOT NULL default '0000-00-00 00:00:00',
-  `photo_id` int(11) NOT NULL default '0',
-  `person_id` int(11) NOT NULL default '0',
+  `guessed_at` datetime NOT NULL,
+  `photo_id` int(11) NOT NULL,
+  `person_id` int(11) NOT NULL,
   `guess_text` text,
-  `added_at` datetime NOT NULL default '0000-00-00 00:00:00',
+  `added_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `guesses_person_id_index` (`person_id`),
   KEY `guesses_photo_id_index` (`photo_id`)
@@ -54,7 +54,7 @@ CREATE TABLE `photos` (
   KEY `photos_flickrid_index` (`flickrid`),
   KEY `photos_person_id_dateadded` (`person_id`,`dateadded`),
   KEY `photos_game_status_index` (`game_status`)
-) ENGINE=InnoDB AUTO_INCREMENT=25212 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25220 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL auto_increment,
@@ -70,4 +70,4 @@ CREATE TABLE `schema_info` (
   `version` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (19)
+INSERT INTO schema_info (version) VALUES (20)
