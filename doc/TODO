@@ -3,11 +3,9 @@ Resolve invalid IDs
   If possible, remove missing-person check from people/show controller and view
   If not, fix link to missing person on people/show, e.g. people/show.17
   Remove orphaned photos page when resolved
-Drop people.iconserver, people.photosurl, people.flickr_status
-Drop photos.flickr_status
+  Drop photos.flickr_status?
 Drop invalid column defaults
 Attempt to speed up reports by page caching
-Attempt to speed up pages which access Flickr by using newer APIs
 Add more info to unfound list to make it easier to find a specific photo
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
@@ -36,3 +34,4 @@ Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
 Link to photos using player's photosurl rather than by ID
+Rotate production server log

@@ -43,7 +43,6 @@ class PhotosController < ApplicationController
           if ! person
             person = Person.new
             person.flickrid = person_flickrid
-            person.flickr_status = "active"
             existing_people[person_flickrid] = person
             new_person_count += 1
           end
@@ -305,9 +304,6 @@ class PhotosController < ApplicationController
       guesser = Person.new
       guesser[:flickrid] = flickr_id
       guesser[:username] = flickr_page['username'][0]
-      guesser[:iconserver] = flickr_page['iconserver']
-      guesser[:photosurl] = flickr_page['photosurl'][0]
-      guesser[:flickr_status] = "active"
       # and save it
       guesser.save
     end
