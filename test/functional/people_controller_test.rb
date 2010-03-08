@@ -5,8 +5,6 @@ require 'people_controller'
 class PeopleController; def rescue_action(e) raise e end; end
 
 class PeopleControllerTest < Test::Unit::TestCase
-  fixtures :people
-
   def setup
     @controller = PeopleController.new
     @request    = ActionController::TestRequest.new
@@ -23,7 +21,12 @@ class PeopleControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    get :show, :id => 1
+    person = Person.new
+    person.flickrid = 'flickrid'
+    person.username = 'username'
+    person.save
+
+    get :show, :id => person.id
 
     assert_response :success
     assert_template 'show'
