@@ -72,7 +72,7 @@ this photo is unconfirmed.
         <td class="dheader">Text</td>
     </tr>
     <tr>
-        <td class="dvalue"><%=h @photo.revelation.person.username %></td>
+        <td class="dvalue"><%=h @photo.person.username %></td>
         <td class="dvalue"><%= @photo.revelation.revealed_at.strftime '%Y/%m/%d' %></td>
         <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
     </tr>

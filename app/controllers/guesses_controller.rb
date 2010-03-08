@@ -49,16 +49,17 @@ class GuessesController < ApplicationController
 
     @revelations = Revelation.find(:all,
       :conditions => [ "added_at > ?", update_times[0] ], 
-      :include => [ :person, :photo ])
+      :include => { :photo => :person })
     @revelations_by_person = []
     @revelations.each do |revelation|
       revelations_with_person =
-        @revelations_by_person.find { |x| x[:person] == revelation.person }
+        @revelations_by_person.find { |x|
+          x[:person] == revelation.photo.person }
       if revelations_with_person
         revelations_with_person[:revelations].push revelation
       elsif
         @revelations_by_person.push(
-          { :person => revelation.person, :revelations => [revelation] })
+          { :person => revelation.photo.person, :revelations => [revelation] })
       end
     end
     @revelations_by_person.sort! {|x, y|

@@ -197,8 +197,7 @@ class PhotosController < ApplicationController
   end
 
   def show
-    @photo = Photo.find(params[:id],
-      :include => [:person, { :revelation => :person }])
+    @photo = Photo.find params[:id], :include => [ :person, :revelation ]
     # Loading guesses eagerly with the photo doesn't eliminate the query, so
     # load them manually. TODO why is this necessary (and why is it not
     # necessary in people/commented_on)? Revisit after upgrading to current
@@ -270,7 +269,7 @@ class PhotosController < ApplicationController
       return
     end
 
-    photo = Photo.find(params[:id], :include => [:person, :revelation])
+    photo = Photo.find params[:id], :include => [ :person, :revelation ]
     comment = Comment.find(params[:comment][:id])
 
     # try and get a record for the guesser
@@ -338,7 +337,6 @@ class PhotosController < ApplicationController
       if !revelation
         revelation = Revelation.new
         revelation[:photo_id] = photo[:id]
-        revelation[:person_id] = guesser[:id]
         revelation.added_at = Time.now
       end
       revelation[:revealed_at] = Time.at(comment[:commented_at].to_i)
