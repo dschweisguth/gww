@@ -4,8 +4,6 @@ Resolve invalid IDs
   If not, fix link to missing person on people/show, e.g. people/show.17
   Remove orphaned photos page when resolved
   Drop photos.flickr_status?
-Add unique and maybe other constraints
-Drop default from revelations.added_at
 Attempt to speed up reports by page caching
 Add more info to unfound list to make it easier to find a specific photo
 New server
