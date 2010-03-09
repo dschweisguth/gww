@@ -73,8 +73,6 @@ class PhotosController < ApplicationController
           photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
           old_photo_lastupdate = photo.lastupdate
           photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
-          old_photo_flickr_status = photo.flickr_status
-          photo.flickr_status = "in pool"
           photo.person = person
           if photo.id.nil? ||
             old_photo_farm != photo.farm ||
@@ -82,8 +80,7 @@ class PhotosController < ApplicationController
             old_photo_secret != photo.secret ||
             old_photo_mapped != photo.mapped ||
             old_photo_dateadded != adjust(photo.dateadded) ||
-            old_photo_lastupdate != adjust(photo.lastupdate) ||
-            old_photo_flickr_status != photo.flickr_status
+            old_photo_lastupdate != adjust(photo.lastupdate)
             photo.save
           end
 
@@ -190,10 +187,6 @@ class PhotosController < ApplicationController
     Photo.find(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')",
       :include => :person, :order => "lastupdate desc")
-  end
-
-  def orphaned
-    @photos = Photo.find_all_by_person_id 0
   end
 
   def show

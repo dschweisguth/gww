@@ -22,7 +22,6 @@ class GuessTest < Test::Unit::TestCase
     photo1.lastupdate = now
     photo1.seen_at = now
     photo1.game_status = "unfound"
-    photo1.flickr_status = "in pool"
     photo1.mapped = "false"
     photo1.person = person1
     photo1.farm = "farm1"
@@ -36,7 +35,6 @@ class GuessTest < Test::Unit::TestCase
     photo2.lastupdate = now
     photo2.seen_at = now
     photo2.game_status = "unfound"
-    photo2.flickr_status = "in pool"
     photo2.mapped = "false"
     photo2.person = person2
     photo2.farm = "farm2"

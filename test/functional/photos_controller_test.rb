@@ -23,7 +23,6 @@ class PhotosControllerTest < Test::Unit::TestCase
     @photo.lastupdate = Time.new.to_i
     @photo.seen_at = Time.new.to_i
     @photo.game_status = "unfound"
-    @photo.flickr_status = "in pool"
     @photo.mapped = "false"
     @photo.person = person
     @photo.farm = "farm"

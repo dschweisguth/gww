@@ -15,7 +15,7 @@ CREATE TABLE `flickr_updates` (
   `created_at` datetime NOT NULL,
   `completed_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=861 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=860 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL auto_increment,
@@ -39,7 +39,7 @@ CREATE TABLE `people` (
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`),
   KEY `people_flickrid_index` (`flickrid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1091 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1087 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL auto_increment,
@@ -50,7 +50,6 @@ CREATE TABLE `photos` (
   `lastupdate` datetime NOT NULL,
   `seen_at` datetime NOT NULL,
   `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL,
-  `flickr_status` enum('in pool','not in pool','missing') NOT NULL,
   `mapped` enum('true','false') NOT NULL,
   `person_id` int(11) NOT NULL,
   `farm` varchar(255) NOT NULL,
@@ -59,14 +58,14 @@ CREATE TABLE `photos` (
   KEY `photos_person_id_index` (`person_id`),
   KEY `photos_flickrid_index` (`flickrid`),
   KEY `photos_game_status_index` (`game_status`)
-) ENGINE=InnoDB AUTO_INCREMENT=25239 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25030 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL auto_increment,
   `revelation_text` varchar(255) NOT NULL,
   `revealed_at` datetime NOT NULL,
   `photo_id` int(11) NOT NULL,
-  `added_at` datetime NOT NULL default '0000-00-00 00:00:00',
+  `added_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
@@ -76,4 +75,4 @@ CREATE TABLE `schema_info` (
   `version` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (24)
+INSERT INTO schema_info (version) VALUES (26)
