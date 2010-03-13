@@ -1,4 +1,3 @@
-Sort people/list by score, posted, username
 Reorder columns
 Drop FKs and keys and re-add FKs
 Attempt to speed up reports by page caching

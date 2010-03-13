@@ -7,6 +7,7 @@ class PeopleController < ApplicationController
     people.each do |person|
       add_person = {
         :person => person,
+        :username => person.username.downcase,
         :photocount =>
           photo_counts[person.id].nil? ? 0 : photo_counts[person.id],
         :guesscount => 
@@ -14,7 +15,11 @@ class PeopleController < ApplicationController
       }
       @people.push(add_person)
     end
-    @people.sort! {|x,y| y[:guesscount] <=> x[:guesscount]}
+    @people.sort! do |x, y|
+      c = y[:guesscount] <=> x[:guesscount]
+      c = c != 0 ? c : y[:photocount] <=> x[:photocount]
+      c != 0 ? c : x[:username] <=> y[:username]
+    end
   end
 
   def show
