@@ -1,14 +1,14 @@
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL,
-  `flickrid` varchar(255) default NULL,
+  `flickrid` varchar(255) NOT NULL,
   `commented_at` datetime NOT NULL,
   `photo_id` int(11) NOT NULL,
-  `comment_text` text,
+  `comment_text` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `comments_photo_id_index` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=321641 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=321663 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL auto_increment,
@@ -76,4 +76,4 @@ CREATE TABLE `schema_info` (
   `version` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (29)
+INSERT INTO schema_info (version) VALUES (30)
