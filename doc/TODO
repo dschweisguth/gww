@@ -1,3 +1,4 @@
+comments.userid -> flickrid
 Reorder columns
 Drop FKs and keys and re-add FKs
 Attempt to speed up reports by page caching
