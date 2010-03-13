@@ -234,7 +234,7 @@ class PhotosController < ApplicationController
           this_comment[:comment_text] = new_comment['content']
           this_comment[:commented_at] = Time.at(new_comment['datecreate'].to_i)
           this_comment[:username] = new_comment['authorname']
-          this_comment[:userid] = new_comment['author']
+          this_comment[:flickrid] = new_comment['author']
           this_comment[:photo_id] = photo[:id]
           this_comment.save
           photo_comments.push(this_comment)
@@ -269,11 +269,12 @@ class PhotosController < ApplicationController
     # check for a submitted username first
     if params[:person][:username] != ''
       guesser = Person.find_by_username(params[:person][:username])
-      flickr_id = Comment.find_by_username(params[:person][:username])[:userid]
+      guesser_flickrid =
+        Comment.find_by_username(params[:person][:username])[:flickrid]
     # otherwise, use the user attached to the comment
     else
-      guesser = Person.find_by_flickrid(comment[:userid])
-      flickr_id = comment[:userid]
+      guesser = Person.find_by_flickrid(comment[:flickrid])
+      guesser_flickrid = comment[:flickrid]
     end
     
     # if the guesser doesn't exist in the database...
@@ -284,17 +285,17 @@ class PhotosController < ApplicationController
       person_method = 'flickr.people.getInfo'
       flickr_credentials = FlickrCredentials.new
       # generate the api signature
-      sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + person_method + 'user_id' + flickr_id
+      sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + person_method + 'user_id' + guesser_flickrid
       api_sig = MD5.hexdigest(sig_raw)
       page_url =  flickr_url + '?method=' + person_method +
                   '&api_key=' + flickr_credentials.api_key +
                   '&auth_token=' + flickr_credentials.auth_token +
-                  '&api_sig=' + api_sig + '&user_id=' + flickr_id
+                  '&api_sig=' + api_sig + '&user_id=' + guesser_flickrid
       page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
       flickr_page = XmlSimple.xml_in(page_xml)['person'][0]
       # set the guesser's details
       guesser = Person.new
-      guesser[:flickrid] = flickr_id
+      guesser[:flickrid] = guesser_flickrid
       guesser[:username] = flickr_page['username'][0]
       # and save it
       guesser.save

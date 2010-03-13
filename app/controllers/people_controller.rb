@@ -82,7 +82,7 @@ class PeopleController < ApplicationController
   
   def commented_on
     @person = Person.find(params[:id])
-    @comments = Comment.find_all_by_userid(@person[:flickrid],
+    @comments = Comment.find_all_by_flickrid(@person[:flickrid],
       :include => { :photo => [:person, { :guesses => :person }] })
     @photos = []
     @comments.each do |comment|
