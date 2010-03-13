@@ -1,7 +1,6 @@
-Resolve invalid IDs
-  photos.person_id = 0 (all 'missing')
-  If possible, remove missing-person check from people/show controller and view
-  If not, fix link to missing person on people/show, e.g. people/show/17
+Sort people/list by score, posted, username
+Reorder columns
+Drop FKs and keys and re-add FKs
 Attempt to speed up reports by page caching
 Add more info to unfound list to make it easier to find a specific photo
 New server

@@ -48,11 +48,9 @@ class PeopleController < ApplicationController
     guesses = Guess.find_all_by_person_id(@person.id,
       :include => { :photo => :person })
     @guessed_count = guesses.length
-    missing_person = Person.new
-    missing_person.username = 'unknown'
     posters = {}
     guesses.each do |guess|
-      person = guess.photo.person || missing_person
+      person = guess.photo.person
       poster = posters[person]
       if ! poster
         poster = { :person => person, :photos => [] }
