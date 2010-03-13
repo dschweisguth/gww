@@ -1,4 +1,4 @@
-Reorder columns
+Make guesses.guess_text not null
 Drop FKs and keys and re-add FKs
 Attempt to speed up reports by page caching
 Add more info to unfound list to make it easier to find a specific photo
