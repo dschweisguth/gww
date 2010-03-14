@@ -20,7 +20,10 @@ class FlickrUpdateTest < Test::Unit::TestCase
     local_latest_update_times = FlickrUpdate.local_latest_update_times(1)
 
     assert_equal 1, local_latest_update_times.length
-    assert local_latest_update_times[0].to_i - start.to_i + 28800 <= 5
+    assert(
+      start.to_i + Time.local(start.year, start.month, start.day, start.hour,
+        start.min, start.sec).gmt_offset -
+      local_latest_update_times[0].to_i <= 5)
 
   end
 

@@ -41,15 +41,17 @@ class GuessTest < Test::Unit::TestCase
     photo2.save
 
     @guess1 = Guess.new
-    @guess1.person = person1
     @guess1.photo = photo2
+    @guess1.person = person1
+    @guess1.guess_text = "guess text 1"
     @guess1.guessed_at = now
     @guess1.added_at = now
     @guess1.save
 
     @guess2 = Guess.new
-    @guess2.person = person2
     @guess2.photo = photo1
+    @guess2.person = person2
+    @guess2.guess_text = "guess text 2"
     @guess2.guessed_at = now
     @guess2.added_at = now
     @guess2.save
