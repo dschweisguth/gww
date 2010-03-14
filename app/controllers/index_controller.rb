@@ -1,4 +1,6 @@
 class IndexController < ApplicationController
+  caches_page :index
+
   def index
     @latest = FlickrUpdate.latest
     @unfound_photos_count = Photo.count(:all,

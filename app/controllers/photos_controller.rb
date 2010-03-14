@@ -7,6 +7,8 @@ class PhotosController < ApplicationController
   auto_complete_for :person, :username
 
   def update
+    expire_cached_pages
+
     update = FlickrUpdate.new
     update.save
 
@@ -245,6 +247,7 @@ class PhotosController < ApplicationController
   end
 
   def change_game_status
+    expire_cached_pages
     photo = Photo.find(params[:id], :include => :revelation)
     photo.game_status = params[:photo][:game_status]
     if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
@@ -256,6 +259,7 @@ class PhotosController < ApplicationController
   end
 
   def add_guess
+    expire_cached_pages
     if params[:comment].nil?
       flash[:notice] = 'Please select a comment before adding a guess.'
       redirect_to(:action => 'show', :id => params[:id], :nocomment => :true)
@@ -347,6 +351,7 @@ class PhotosController < ApplicationController
   end
 
   def destroy
+    expire_cached_pages
     photo = Photo.find(params[:id], :include => [ :revelation, :person ])
     photo.revelation.destroy if photo.revelation
     Guess.delete_all(['photo_id = ?', photo.id])
