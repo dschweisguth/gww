@@ -1,15 +1,16 @@
-Add more info to unfound list to make it easier to find a specific photo
 New server
+Move GWW to guesswheresf.com
 Reduce distance between gww's ruby dependencies and current stable versions
 Replace mod_fastcgi with mod_fcgid or mod_rails
 Paginate or limit pages that currently take forever, e.g. commented_on
+Rotate production server log
 Open appropriate parts of GWW to players
-    Move GWW to guesswheresf.com
 Review test coverage and add TODOs to write more tests and assertions
+Add more info to unfound list to make it easier to find a specific photo
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
 Post scores to Flickr group automatically. Record scoring time and add to home
     page.
-  Add x-passed-y indicators to score report
+    Add x-passed-y indicators to score report
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
     and possibly score publication times, newest to oldest. Consider whether
@@ -25,7 +26,6 @@ Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
 Link to photos using player's photosurl rather than by ID
-Rotate production server log
 Bug: When a daylight savings time change (at least from winter to spring)
   has occurred since the most recent update, the unverified list contains all
   unfounds. Solution: fix the times in the database instead of after the fact
