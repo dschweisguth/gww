@@ -149,10 +149,12 @@ class PhotosController < ApplicationController
       time.sec).gmt_offset
   end
 
+  caches_page :unfound
   def unfound
     @photos = unfound_or_unconfirmed_photos
   end
 
+  caches_page :unverified
   def unverified
     @photos = Photo.find(:all,
       :conditions =>
@@ -161,6 +163,7 @@ class PhotosController < ApplicationController
       :include => :person, :order => "lastupdate desc")
   end
 
+  caches_page :multipoint
   def multipoint
     guesses_per_post = Guess.count(:all, :group => :photo_id)
     photo_ids = []
@@ -174,17 +177,20 @@ class PhotosController < ApplicationController
       :include => :person, :order => "lastupdate desc")
   end
 
+  caches_page :unfound_pretty
   def unfound_pretty
     @lasttime = FlickrUpdate.latest.created_at
     @photos = unfound_or_unconfirmed_photos
   end
 
+  # Not cached since the cached copy would have an incorrect .html extension
   def unfound_data
     @lasttime = FlickrUpdate.latest.created_at
     @photos = unfound_or_unconfirmed_photos
     render :layout => false
   end
 
+  caches_page :unfound_or_unconfirmed_photos
   def unfound_or_unconfirmed_photos
     Photo.find(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')",

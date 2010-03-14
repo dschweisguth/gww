@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+
+  caches_page :list
   def list
     photo_counts = Photo.count(:all, :group => 'person_id')
     guess_counts = Guess.count(:all, :group => 'person_id')
@@ -22,6 +24,7 @@ class PeopleController < ApplicationController
     end
   end
 
+  caches_page :show
   def show
     @person = Person.find(params[:id])
     
@@ -68,18 +71,21 @@ class PeopleController < ApplicationController
 
   end
 
+  caches_page :latest_guesses
   def latest_guesses
     @person = Person.find(params[:id])
     @guesses = Guess.find_all_by_person_id(params[:id],
       :order => "guessed_at desc", :include => { :photo => :person })
   end
 
+  caches_page :latest_posts
   def latest_posts
     @person = Person.find(params[:id])
     @photos = Photo.find_all_by_person_id(params[:id],
       :order => "dateadded desc", :include => :person)
   end
   
+  caches_page :commented_on
   def commented_on
     @person = Person.find(params[:id])
     @comments = Comment.find_all_by_flickrid(@person[:flickrid],

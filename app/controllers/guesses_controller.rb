@@ -1,5 +1,6 @@
 class GuessesController < ApplicationController
 
+  caches_page :report
   def report
     @report_date = Time.now
 
@@ -94,6 +95,7 @@ class GuessesController < ApplicationController
     XmlSimple.xml_in(page_xml)['group'][0]['members'][0]
   end
 
+  caches_page :treasures
   def treasures
     @longest_guesses = add_date_distances(Guess.longest)
     @shortest_guesses = add_date_distances(Guess.shortest)
@@ -145,6 +147,7 @@ class GuessesController < ApplicationController
     desc.join(", ")
   end
 
+  caches_page :correct
   def correct
     @guesses_count = Guess.count();
 
