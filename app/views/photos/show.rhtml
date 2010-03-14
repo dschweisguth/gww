@@ -7,11 +7,7 @@
   <br/>
 <% end -%>
 
-<% if @photo.person_id == 0 -%>
-<b>photo no longer on flickr</b>
-<% else -%>
 <a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url "m" %>" border="0"/></a>
-<% end -%>
 <br/>
 
 <b>Posted by</b> <%= link_to @photo.person.username, :controller => 'people', :action => 'show', :id => @photo.person.id %>.<br/>

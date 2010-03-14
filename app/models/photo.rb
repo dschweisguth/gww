@@ -15,7 +15,7 @@ class Photo < ActiveRecord::Base
   end
 
   def image_url(size)
-    "http://#{farm.nil? ? "" : "farm#{farm}."}static.flickr.com/#{server}/#{flickrid}_#{secret}_#{size}.jpg"
+    "http://#{farm.empty? ? "" : "farm#{farm}."}static.flickr.com/#{server}/#{flickrid}_#{secret}_#{size}.jpg"
   end
 
 end
