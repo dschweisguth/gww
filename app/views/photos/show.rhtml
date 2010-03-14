@@ -40,7 +40,7 @@ this photo is unconfirmed.
 <%= start_form_tag :action => 'change_game_status', :id => @photo %>
 <%= radio_button(:photo, :game_status, 'unfound') %> unfound 
 <%= radio_button(:photo, :game_status, 'unconfirmed') %> unconfirmed 
-<%= submit_tag("Change status") %>
+<%= submit_tag("Change status") %> (removes any guesses or revelation)
 <%= end_form_tag %>
 
 <span id="guess_list">
@@ -82,7 +82,7 @@ this photo is unconfirmed.
 <%= start_form_tag :action => 'add_guess', :id => @photo %>
 <% if ! @comments.empty? -%>
   <table class="indented">
-    <tr><td class="dheader">Choose the correct guess from the comments below:</td></tr>
+    <tr><td class="dheader">Choose the correct guess or revelation from the comments below:</td></tr>
     <tr>
       <td>
 	<% @comments.each do |comment| -%>
@@ -101,7 +101,9 @@ this photo is unconfirmed.
     <tr><td class="dheader">Person (if different than commenter)</td></tr>
     <tr><td><%= text_field_with_auto_complete :person, :username %></td></tr>
   </table>
-  <%= submit_tag("Add this guess") %>
+  <%= submit_tag("Add this guess or revelation") %>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <%= submit_tag("Remove this guess or revelation") %>
 <% else -%>
   No comments available.
 <% end -%>

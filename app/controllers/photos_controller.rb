@@ -266,8 +266,10 @@ class PhotosController < ApplicationController
 
   def add_guess
     expire_cached_pages
+
     if params[:comment].nil?
-      flash[:notice] = 'Please select a comment before adding a guess.'
+      flash[:notice] =
+        'Please select a comment before adding or removing a guess.'
       redirect_to(:action => 'show', :id => params[:id], :nocomment => :true)
       return
     end
@@ -275,80 +277,115 @@ class PhotosController < ApplicationController
     photo = Photo.find params[:id], :include => [ :person, :revelation ]
     comment = Comment.find(params[:comment][:id])
 
-    # try and get a record for the guesser
-    # check for a submitted username first
-    if params[:person][:username] != ''
-      guesser = Person.find_by_username(params[:person][:username])
-      guesser_flickrid =
-        Comment.find_by_username(params[:person][:username])[:flickrid]
-    # otherwise, use the user attached to the comment
-    else
-      guesser = Person.find_by_flickrid(comment[:flickrid])
-      guesser_flickrid = comment[:flickrid]
-    end
-    
-    # if the guesser doesn't exist in the database...
-    if !guesser
-      # get information about this guesser from flickr
-      # set the particulars
-      flickr_url = 'http://api.flickr.com/services/rest/'
-      person_method = 'flickr.people.getInfo'
-      flickr_credentials = FlickrCredentials.new
-      # generate the api signature
-      sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + person_method + 'user_id' + guesser_flickrid
-      api_sig = MD5.hexdigest(sig_raw)
-      page_url =  flickr_url + '?method=' + person_method +
-                  '&api_key=' + flickr_credentials.api_key +
-                  '&auth_token=' + flickr_credentials.auth_token +
-                  '&api_sig=' + api_sig + '&user_id=' + guesser_flickrid
-      page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
-      flickr_page = XmlSimple.xml_in(page_xml)['person'][0]
-      # set the guesser's details
-      guesser = Person.new
-      guesser[:flickrid] = guesser_flickrid
-      guesser[:username] = flickr_page['username'][0]
-      # and save it
-      guesser.save
-    end
-    
-    if guesser != photo.person
-      photo[:game_status] = "found"
-      photo.save
-    
-      # try and find a record for this guess
-      guess = Guess.find_by_photo_id_and_person_id(photo[:id], guesser[:id])
-      # if this guess hasn't already been recorded...
-      if !guess
-        guess = Guess.new
-        guess[:photo_id] = photo[:id]
-        guess[:person_id] = guesser[:id]
-        guess[:added_at] = Time.now
+    if params[:commit] == 'Add this guess or revelation'
+
+      # try and get a record for the guesser
+      # check for a submitted username first
+      if params[:person][:username] != ''
+	guesser = Person.find_by_username(params[:person][:username])
+	guesser_flickrid =
+	  Comment.find_by_username(params[:person][:username])[:flickrid]
+      # otherwise, use the user attached to the comment
+      else
+	guesser = Person.find_by_flickrid(comment[:flickrid])
+	guesser_flickrid = comment[:flickrid]
       end
-      comment_date = Time.at(comment[:commented_at].to_i)
-      guess[:guessed_at] = comment_date
-      guess[:added_at] = comment_date if !guess.added_at
-      guess[:guess_text] = comment[:comment_text]
-      guess.save
-      
-      # delete any revelations for this photo
-      Revelation.delete(photo.revelation[:id]) if photo.revelation
-    else
-      photo[:game_status] = "revealed"
-      photo.save
-    
-      # try and find a record for this revelation
-      revelation = photo.revelation
-      if !revelation
-        revelation = Revelation.new
-        revelation[:photo_id] = photo[:id]
-        revelation.added_at = Time.now
+
+      # if the guesser doesn't exist in the database...
+      if !guesser
+	# get information about this guesser from flickr
+	# set the particulars
+	flickr_url = 'http://api.flickr.com/services/rest/'
+	person_method = 'flickr.people.getInfo'
+	flickr_credentials = FlickrCredentials.new
+	# generate the api signature
+	sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + person_method + 'user_id' + guesser_flickrid
+	api_sig = MD5.hexdigest(sig_raw)
+	page_url =  flickr_url + '?method=' + person_method +
+		    '&api_key=' + flickr_credentials.api_key +
+		    '&auth_token=' + flickr_credentials.auth_token +
+		    '&api_sig=' + api_sig + '&user_id=' + guesser_flickrid
+	page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
+	flickr_page = XmlSimple.xml_in(page_xml)['person'][0]
+	# set the guesser's details
+	guesser = Person.new
+	guesser[:flickrid] = guesser_flickrid
+	guesser[:username] = flickr_page['username'][0]
+	# and save it
+	guesser.save
       end
-      revelation[:revealed_at] = Time.at(comment[:commented_at].to_i)
-      revelation[:revelation_text] = comment[:comment_text]
-      revelation.save
-        
-      Guess.delete_all(["photo_id = ?", photo.id])
+
+      if guesser != photo.person
+	photo[:game_status] = "found"
+	photo.save
+
+	# try and find a record for this guess
+	guess = Guess.find_by_photo_id_and_person_id(photo[:id], guesser[:id])
+	# if this guess hasn't already been recorded...
+	if !guess
+	  guess = Guess.new
+	  guess[:photo_id] = photo[:id]
+	  guess[:person_id] = guesser[:id]
+	  guess[:added_at] = Time.now
+	end
+	comment_date = Time.at(comment[:commented_at].to_i)
+	guess[:guessed_at] = comment_date
+	guess[:added_at] = comment_date if !guess.added_at
+	guess[:guess_text] = comment[:comment_text]
+	guess.save
+
+	# delete any revelations for this photo
+	Revelation.delete(photo.revelation[:id]) if photo.revelation
+      else
+	photo[:game_status] = "revealed"
+	photo.save
+
+	# try and find a record for this revelation
+	revelation = photo.revelation
+	if !revelation
+	  revelation = Revelation.new
+	  revelation[:photo_id] = photo[:id]
+	  revelation.added_at = Time.now
+	end
+	revelation[:revealed_at] = Time.at(comment[:commented_at].to_i)
+	revelation[:revelation_text] = comment[:comment_text]
+	revelation.save
+
+	Guess.delete_all(["photo_id = ?", photo.id])
+      end
+    else
+      guesser = Person.find_by_flickrid comment[:flickrid]
+      if guesser
+        if guesser.id == photo.person_id
+          if photo.revelation
+            photo.game_status = 'unfound'
+            photo.save
+            photo.revelation.destroy
+          else
+	    flash[:notice] =
+              'That comment has not been recorded as a revelation.'
+          end
+        else
+	  guess = Guess.find_by_person_id_and_guess_text guesser.id,
+	    comment.comment_text
+	  if guess
+            guess_count =
+              Guess.count :conditions => [ "photo_id = ?", photo.id ]
+            if guess_count == 1
+	      photo.game_status = 'unfound'
+	      photo.save
+            end
+	    guess.destroy
+	  else
+	    flash[:notice] = 'That comment has not been recorded as a guess.'
+	  end
+        end
+      else
+        flash[:notice] =
+          'That comment has not been recorded as a guess or revelation.'
+      end
     end
+
     redirect_to :action => 'show', :id => photo, :nocomment => :true
   end
 

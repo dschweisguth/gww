@@ -1,3 +1,4 @@
+Look for photos with a status inconsistent with guesses or revelations
 Add more info to unfound list to make it easier to find a specific photo
 New server
 Reduce distance between gww's ruby dependencies and current stable versions
@@ -26,8 +27,6 @@ Add last-updated dates to photos which
 - reflect only things relevant to players
 Link to photos using player's photosurl rather than by ID
 Rotate production server log
-Provide a way to delete an incorrect guess instead of deleting all and
-    rescoring
 Bug: When a daylight savings time change (at least from winter to spring)
   has occurred since the most recent update, the unverified list contains all
   unfounds. Solution: fix the times in the database instead of after the fact
