@@ -37,8 +37,7 @@ CREATE TABLE `people` (
   `username` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
-  UNIQUE KEY `people_username_unique` (`username`),
-  KEY `people_flickrid_index` (`flickrid`)
+  UNIQUE KEY `people_username_unique` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1093 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `photos` (
@@ -55,7 +54,6 @@ CREATE TABLE `photos` (
   `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `photos_flickrid_unique` (`flickrid`),
-  KEY `photos_flickrid_index` (`flickrid`),
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
@@ -76,4 +74,4 @@ CREATE TABLE `schema_info` (
   `version` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (33)
+INSERT INTO schema_info (version) VALUES (34)
