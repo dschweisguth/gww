@@ -1,6 +1,4 @@
 class FlickrCredentials
-  require 'yaml'
-
   FILE = YAML.load_file("#{RAILS_ROOT}/config/flickr_credentials.yml")
   CREDENTIALS = FILE['flickr_credentials']
   SECRET = CREDENTIALS['secret']

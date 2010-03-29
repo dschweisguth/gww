@@ -1,8 +1,3 @@
-require 'md5'
-require 'net/http'
-require 'xmlsimple'
-require 'set'
-
 class PhotosController < ApplicationController
   auto_complete_for :person, :username
 
