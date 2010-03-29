@@ -18,8 +18,10 @@ class PhotosController < ApplicationController
     new_photo_count = 0
     new_person_count = 0    
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
-      photos_xml = photos_xml page
-      parsed_photos = XmlSimple.xml_in(photos_xml)['photos'][0]
+      logger.info "Getting page #{page} ..."
+      photos_xml = FlickrCredentials.request 'flickr.groups.pools.getPhotos',
+        'per_page' => '500', 'page' => page.to_s, 'extras' => 'geo,last_update'
+      parsed_photos = photos_xml['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
       logger.info "Updating database from page #{page} ..."
@@ -102,46 +104,6 @@ class PhotosController < ApplicationController
 
   end
 
-  def photos_xml(page)
-    logger.info "Getting page #{page} ..."
-    base_url = 'http://api.flickr.com/services/rest/'
-    flickr_method = 'flickr.groups.pools.getPhotos'
-    flickr_credentials = FlickrCredentials.new
-    gwsf_id = '32053327@N00'
-    extras = 'geo,last_update'
-    per_page = 500
-    sig_raw = flickr_credentials.secret +
-      'api_key' + flickr_credentials.api_key +
-      'auth_token' + flickr_credentials.auth_token +
-      'extras' + extras + 'group_id' + gwsf_id + 'method' + flickr_method +
-      'page' + page.to_s + 'per_page' + per_page.to_s
-    api_sig = MD5.hexdigest(sig_raw)
-    page_url = base_url + '?method=' + flickr_method +
-      '&api_key=' + flickr_credentials.api_key +
-      '&auth_token=' + flickr_credentials.auth_token +
-      '&api_sig=' + api_sig + '&group_id=' + gwsf_id +
-      '&per_page=' + per_page.to_s + '&page=' + page.to_s + '&extras=' + extras
-    failure_count = 0
-    begin
-      response = Net::HTTP.get_response URI.parse page_url
-    rescue StandardError, Timeout::Error => e
-      failure_count += 1
-      sleep_time = 30 * (2 ** failure_count)
-      warning = e.message
-      if failure_count <= 3
-        warning += "; sleeping #{sleep_time} seconds and retrying ..."
-      end
-      logger.warn warning
-      if failure_count <= 3
-        sleep sleep_time
-        retry
-      elsif
-        raise
-      end
-    end
-    response.body
-  end
-
   # Compensates for the fact that time comes from Flickr in UTC but is somehow
   # converted to local time when set on the photo (even before it's saved)
   def adjust(time)
@@ -216,28 +178,13 @@ class PhotosController < ApplicationController
 
   def load_comments(params, photo)
     Comment.delete_all('photo_id = ' + photo[:id].to_s)
-    # set the particulars
-    flickr_url = 'http://api.flickr.com/services/rest/'
-    flickr_method = 'flickr.photos.comments.getList'
-    flickr_credentials = FlickrCredentials.new
-    # generate the api signature
-    sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + flickr_method + 'photo_id' + photo[:flickrid]
-    api_sig = MD5.hexdigest(sig_raw)
-    # grab the comments
-    page_url =  flickr_url + '?method=' + flickr_method +
-                '&api_key=' + flickr_credentials.api_key +
-                '&auth_token=' + flickr_credentials.auth_token +
-                '&api_sig=' + api_sig + '&photo_id=' + photo[:flickrid]
-    page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
-    full_page = XmlSimple.xml_in(page_xml)
+    full_page = FlickrCredentials.request 'flickr.photos.comments.getList',
+      'photo_id' => photo[:flickrid]
     photo_comments = []
-    # if comments were returned...
     if full_page['comments']
       flickr_page = full_page['comments'][0]
-      # step through the returned comments
       if flickr_page['comment']
         flickr_page['comment'].each do |new_comment|
-          # create a comment object
           this_comment = Comment.new
           this_comment[:comment_text] = new_comment['content']
           this_comment[:commented_at] = Time.at(new_comment['datecreate'].to_i)
