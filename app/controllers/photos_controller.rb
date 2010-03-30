@@ -155,12 +155,8 @@ class PhotosController < ApplicationController
   end
 
   def show
-    @photo = Photo.find params[:id], :include => [ :person, :revelation ]
-    # Loading guesses eagerly with the photo doesn't eliminate the query, so
-    # load them manually. TODO why is this necessary (and why is it not
-    # necessary in people/commented_on)? Revisit after upgrading to current
-    # ActiveRecord.
-    @guesses = Guess.find_all_by_photo_id @photo.id, :include => :person
+    @photo = Photo.find params[:id],
+      :include => [ :person, :revelation, { :guesses => :person } ]
     @unconfirmed = Photo.find(:all, :conditions =>
       ["person_id = ? and game_status = ?", @photo.person_id, "unconfirmed"])
     if params[:nocomment]

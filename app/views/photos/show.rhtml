@@ -25,7 +25,7 @@ I think
 <% if @photo.game_status == 'found' -%>
 this photo was correctly guessed by
 <% person_links = [] -%>
-<% @guesses.each do |guess| -%>
+<% @photo.guesses.each do |guess| -%>
 <%   person_links.push(link_to(guess.person.username, :controller => 'people', :action => 'show', :id => guess.person.id)) -%>
 <% end -%>
 <%= person_links.join(', ') %>.
@@ -44,7 +44,7 @@ this photo is unconfirmed.
 <%= end_form_tag %>
 
 <span id="guess_list">
-<% if ! @guesses.empty? then -%>
+<% if ! @photo.guesses.empty? then -%>
 <br/>
 <table>
     <tr>
@@ -52,7 +52,7 @@ this photo is unconfirmed.
         <td class="dheader">Date</td>
         <td class="dheader">Text</td>
     </tr>
-    <% @guesses.each_with_index do |guess, item_index| -%>
+    <% @photo.guesses.each_with_index do |guess, item_index| -%>
     <tr>
         <td class="dvalue"><%= guess.person.username %></td>
         <td class="dvalue"><%= guess.guessed_at.strftime '%Y/%m/%d' %></td>
@@ -89,7 +89,7 @@ this photo is unconfirmed.
 	  <% uline = false -%>
 	  <% hilite = false -%>
 	  <% if comment.username == @photo.person.username then hilight = true end -%>
-	  <% @guesses.each do |guess| -%>
+	  <% @photo.guesses.each do |guess| -%>
 	    <% if comment.username == guess.person.username then uline = true end -%>
 	  <% end -%>
 	  <%= radio_button(:comment, :id, comment.id) %> <b><%= comment.username %>:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br/>
