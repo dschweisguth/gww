@@ -211,27 +211,23 @@ class PhotosController < ApplicationController
     if params[:comment].nil?
       flash[:notice] =
         'Please select a comment before adding or removing a guess.'
-      redirect_to(:action => 'show', :id => params[:id], :nocomment => :true)
+      redirect_to :action => 'show', :id => params[:id], :nocomment => :true
       return
     end
 
     photo = Photo.find params[:id], :include => [ :person, :revelation ]
-    comment = Comment.find(params[:comment][:id])
+    comment = Comment.find params[:comment][:id]
 
     if params[:commit] == 'Add this guess or revelation'
 
-      # try and get a record for the guesser
-      # check for a submitted username first
       if params[:person][:username] != ''
-	guesser = Person.find_by_username(params[:person][:username])
+	guesser = Person.find_by_username params[:person][:username]
 	guesser_flickrid =
-	  Comment.find_by_username(params[:person][:username])[:flickrid]
-      # otherwise, use the user attached to the comment
+	  Comment.find_by_username(params[:person][:username]).flickrid
       else
-	guesser = Person.find_by_flickrid(comment[:flickrid])
-	guesser_flickrid = comment[:flickrid]
+	guesser = Person.find_by_flickrid comment[:flickrid]
+	guesser_flickrid = comment.flickrid
       end
-
       if !guesser
 	result = FlickrCredentials.request 'flickr.people.getInfo',
           'user_id' => guesser_flickrid
@@ -242,44 +238,43 @@ class PhotosController < ApplicationController
       end
 
       if guesser != photo.person
-	photo[:game_status] = "found"
+	photo.game_status = 'found'
 	photo.save
 
-	# try and find a record for this guess
-	guess = Guess.find_by_photo_id_and_person_id(photo[:id], guesser[:id])
-	# if this guess hasn't already been recorded...
-	if !guess
+	guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
+	if ! guess
 	  guess = Guess.new
-	  guess[:photo_id] = photo[:id]
-	  guess[:person_id] = guesser[:id]
-	  guess[:added_at] = Time.now
+	  guess.photo_id = photo.id
+	  guess.person_id = guesser.id
+	  guess.added_at = Time.now
 	end
-	comment_date = Time.at(comment[:commented_at].to_i)
-	guess[:guessed_at] = comment_date
-	guess[:added_at] = comment_date if !guess.added_at
-	guess[:guess_text] = comment[:comment_text]
+	comment_date = Time.at comment.commented_at.to_i
+	guess.guessed_at = comment_date
+	guess.added_at = comment_date if ! guess.added_at
+	guess.guess_text = comment.comment_text
 	guess.save
 
-	# delete any revelations for this photo
-	Revelation.delete(photo.revelation[:id]) if photo.revelation
+	Revelation.delete photo.revelation.id if photo.revelation
+
       else
-	photo[:game_status] = "revealed"
+	photo.game_status = 'revealed'
 	photo.save
 
-	# try and find a record for this revelation
 	revelation = photo.revelation
-	if !revelation
+	if ! revelation
 	  revelation = Revelation.new
-	  revelation[:photo_id] = photo[:id]
+	  revelation.photo_id = photo.id
 	  revelation.added_at = Time.now
 	end
-	revelation[:revealed_at] = Time.at(comment[:commented_at].to_i)
-	revelation[:revelation_text] = comment[:comment_text]
+	revelation.revealed_at = Time.at comment.commented_at.to_i
+	revelation.revelation_text = comment.comment_text
 	revelation.save
 
-	Guess.delete_all(["photo_id = ?", photo.id])
+	Guess.delete_all [ "photo_id = ?", photo.id ]
+
       end
-    else
+
+    else # Remove this guess or revelation
       guesser = Person.find_by_flickrid comment[:flickrid]
       if guesser
         if guesser.id == photo.person_id
