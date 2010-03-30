@@ -233,27 +233,12 @@ class PhotosController < ApplicationController
 	guesser_flickrid = comment[:flickrid]
       end
 
-      # if the guesser doesn't exist in the database...
       if !guesser
-	# get information about this guesser from flickr
-	# set the particulars
-	flickr_url = 'http://api.flickr.com/services/rest/'
-	person_method = 'flickr.people.getInfo'
-	flickr_credentials = FlickrCredentials.new
-	# generate the api signature
-	sig_raw = flickr_credentials.secret + 'api_key' + flickr_credentials.api_key + 'auth_token' + flickr_credentials.auth_token + 'method' + person_method + 'user_id' + guesser_flickrid
-	api_sig = MD5.hexdigest(sig_raw)
-	page_url =  flickr_url + '?method=' + person_method +
-		    '&api_key=' + flickr_credentials.api_key +
-		    '&auth_token=' + flickr_credentials.auth_token +
-		    '&api_sig=' + api_sig + '&user_id=' + guesser_flickrid
-	page_xml = Net::HTTP.get_response(URI.parse(page_url)).body
-	flickr_page = XmlSimple.xml_in(page_xml)['person'][0]
-	# set the guesser's details
+	result = FlickrCredentials.request 'flickr.people.getInfo',
+          'user_id' => guesser_flickrid
 	guesser = Person.new
-	guesser[:flickrid] = guesser_flickrid
-	guesser[:username] = flickr_page['username'][0]
-	# and save it
+	guesser.flickrid = guesser_flickrid
+	guesser.username = result['person'][0]['username'][0]
 	guesser.save
       end
 
