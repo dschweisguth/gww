@@ -164,34 +164,35 @@ class PhotosController < ApplicationController
     @unconfirmed = Photo.find(:all, :conditions =>
       ["person_id = ? and game_status = ?", @photo.person_id, "unconfirmed"])
     if params[:nocomment]
-      @comments = Comment.find_all_by_photo_id(@photo.id)
+      @comments = Comment.find_all_by_photo_id @photo.id
     else
-      @comments = load_comments(params, @photo)
-      if @comments == nil then @comments = [] end
+      @comments = load_comments params, @photo
     end
   end
 
   def load_comments(params, photo)
-    Comment.delete_all('photo_id = ' + photo[:id].to_s)
-    full_page = FlickrCredentials.request 'flickr.photos.comments.getList',
-      'photo_id' => photo[:flickrid]
-    photo_comments = []
-    if full_page['comments']
-      flickr_page = full_page['comments'][0]
-      if flickr_page['comment']
-        flickr_page['comment'].each do |new_comment|
-          this_comment = Comment.new
-          this_comment[:comment_text] = new_comment['content']
-          this_comment[:commented_at] = Time.at(new_comment['datecreate'].to_i)
-          this_comment[:username] = new_comment['authorname']
-          this_comment[:flickrid] = new_comment['author']
-          this_comment[:photo_id] = photo[:id]
-          this_comment.save
-          photo_comments.push(this_comment)
-        end
+    comments = []
+    Photo.transaction do
+      Comment.delete_all('photo_id = ' + photo.id.to_s)
+      parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
+	'photo_id' => photo.flickrid
+      if parsed_xml['comments']
+	comments_xml = parsed_xml['comments'][0]
+	if comments_xml['comment']
+	  comments_xml['comment'].each do |comment_xml|
+	    comment = Comment.new
+	    comment.comment_text = comment_xml['content']
+	    comment.commented_at = Time.at comment_xml['datecreate'].to_i
+	    comment.username = comment_xml['authorname']
+	    comment.flickrid = comment_xml['author']
+	    comment.photo_id = photo.id
+	    comment.save
+	    comments.push comment
+	  end
+	end
       end
     end
-    photo_comments
+    comments
   end
 
   def change_game_status
