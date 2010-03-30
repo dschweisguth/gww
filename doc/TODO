@@ -1,4 +1,3 @@
-Enclose all saves in appropriate transactions
 Determine and save number of members at scrape time
 Actually fix timezone problem
 New server

@@ -318,22 +318,25 @@ class PhotosController < ApplicationController
 
   def destroy
     expire_cached_pages
-    photo = Photo.find(params[:id], :include => [ :revelation, :person ])
-    photo.revelation.destroy if photo.revelation
-    Guess.delete_all(['photo_id = ?', photo.id])
-    Comment.delete_all(['photo_id = ?', photo.id])
-    photo.destroy
 
-    # If the photo's owner has no guesses or other photos, delete them too
-    if Photo.count(:all,
-        :conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
-      Guess.count(:all,
-        :conditions => [ 'person_id = ?', photo.person_id ]) == 0
-      photo.person.destroy
+    Photo.transaction do
+      photo = Photo.find params[:id], :include => [ :revelation, :person ]
+      photo.revelation.destroy if photo.revelation
+      Guess.delete_all [ 'photo_id = ?', photo.id ]
+      Comment.delete_all [ 'photo_id = ?', photo.id ]
+      photo.destroy
+
+      # Delete the photo's owner if they have no other photos or guesses
+      if Photo.count(:all,
+	  :conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
+	Guess.count(:all,
+	  :conditions => [ 'person_id = ?', photo.person_id ]) == 0
+	photo.person.destroy
+      end
+
     end
 
     redirect_to :action => 'unverified'
-
   end
 
 end
