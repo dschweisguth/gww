@@ -1,3 +1,7 @@
+Review instructional text on /photos/show and correct if necessary
+Enclose all saves in appropriate transactions
+Determine and save number of members at scrape time
+Actually fix timezone problem
 New server
 Move GWW to guesswheresf.com
 Reduce distance between gww's ruby dependencies and current stable versions
