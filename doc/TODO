@@ -1,5 +1,7 @@
 Determine and save number of members at scrape time
 Actually fix timezone problem
+  guesses.guessed_at should equal comments.commented_at, but usually differs by
+  7 or 8 hours and sometimes differs by some other amount
 New server
 Move GWW to guesswheresf.com
 Reduce distance between gww's ruby dependencies and current stable versions
