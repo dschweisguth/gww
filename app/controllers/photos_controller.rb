@@ -78,8 +78,8 @@ class PhotosController < ApplicationController
             old_photo_server != photo.server ||
             old_photo_secret != photo.secret ||
             old_photo_mapped != photo.mapped ||
-            old_photo_dateadded != adjust(photo.dateadded) ||
-            old_photo_lastupdate != adjust(photo.lastupdate)
+            old_photo_dateadded != photo.dateadded ||
+            old_photo_lastupdate != photo.lastupdate
             photo.save
           end
 
@@ -97,13 +97,6 @@ class PhotosController < ApplicationController
       "#{parsed_photos['pages']}.</br>"
     redirect_to :controller => 'index', :action => 'index'
 
-  end
-
-  # Compensates for the fact that time comes from Flickr in UTC but is somehow
-  # converted to local time when set on the photo (even before it's saved)
-  def adjust(time)
-    time + Time.local(time.year, time.month, time.day, time.hour, time.min,
-      time.sec).gmt_offset
   end
 
   caches_page :unfound
