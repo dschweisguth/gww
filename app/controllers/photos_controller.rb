@@ -147,7 +147,6 @@ class PhotosController < ApplicationController
     render :layout => false
   end
 
-  caches_page :unfound_or_unconfirmed_photos
   def unfound_or_unconfirmed_photos
     Photo.find :all,
       :conditions => "game_status in ('unfound', 'unconfirmed')",
