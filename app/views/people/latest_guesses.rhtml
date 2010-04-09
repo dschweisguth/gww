@@ -21,8 +21,8 @@
     <td class="dvalue"><b>unknown</b></td>
     <td class="dvalue"><b>unknown</b></td>
     <% end -%>
-    <td class="dvalue"><%= guess.guessed_at.strftime  '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= guess.added_at.strftime  '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= guess.added_at.getlocal.strftime '%Y/%m/%d' %></td>
     <td class="dvalue"><%= photo.flickrid %></td>
   </tr>
 <% end %>

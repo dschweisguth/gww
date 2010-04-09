@@ -55,12 +55,12 @@ this photo is unconfirmed.
     <% @photo.guesses.each_with_index do |guess, item_index| -%>
     <tr>
         <td class="dvalue"><%= guess.person.username %></td>
-        <td class="dvalue"><%= guess.guessed_at.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
         <td class="dvalue"><%=h guess.guess_text %></td>
     </tr>
     <% end -%>
 </table>
-<% elsif @photo[:revelation] then -%>
+<% elsif @photo.revelation then -%>
 <br/>
 <table>
     <tr>
@@ -70,7 +70,7 @@ this photo is unconfirmed.
     </tr>
     <tr>
         <td class="dvalue"><%=h @photo.person.username %></td>
-        <td class="dvalue"><%= @photo.revelation.revealed_at.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
         <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
     </tr>
 </table>

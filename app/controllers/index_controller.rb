@@ -8,7 +8,7 @@ class IndexController < ApplicationController
     @unverified_photos_count = Photo.count(:all,
       :conditions =>
         [ "seen_at < ? and game_status in ('unfound', 'unconfirmed')",
-          FlickrUpdate.local_latest_update_times(1)[0] ])
+          @latest.created_at ])
     @multipoint_photos_count = Guess.count(:all, :group => :photo_id).
       find_all { |photo_id, count| count > 1 }.length
   end

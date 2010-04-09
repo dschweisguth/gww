@@ -4,10 +4,10 @@ class GuessesController < ApplicationController
   def report
     @report_date = Time.now
 
-    update_times = FlickrUpdate.local_latest_update_times(2)
+    updates = FlickrUpdate.find :all, :order => "id desc", :limit => 2
 
     @guesses = Guess.find(:all,
-      :conditions => [ "added_at > ?", update_times[0] ],
+      :conditions => [ "added_at > ?", updates[0].created_at ],
       :include => [ { :photo => :person }, :person ])
     @guessers = []
     @guesses_by_guesser = {}
@@ -27,7 +27,8 @@ class GuessesController < ApplicationController
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
     @new_photos_count =
-      Photo.count(:all, :conditions => [ "dateadded > ?", update_times[1] ])
+      Photo.count(:all,
+        :conditions => [ "dateadded > ?", updates[1].created_at ])
     @unfound_count = Photo.count(:all,
       :conditions => "game_status in ('unfound', 'unconfirmed')");
     
@@ -49,7 +50,7 @@ class GuessesController < ApplicationController
     @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
 
     @revelations = Revelation.find(:all,
-      :conditions => [ "added_at > ?", update_times[0] ], 
+      :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person })
     @revelations_by_person = []
     @revelations.each do |revelation|
@@ -141,7 +142,7 @@ class GuessesController < ApplicationController
   def correct
     @guesses_count = Guess.count();
 
-    @latest_update = FlickrUpdate.local_latest_update_times(1)[0]
+    @latest_update = FlickrUpdate.latest.created_at.getlocal
     
     @last_days = []
     (1..7).each do |num|
@@ -189,10 +190,10 @@ class GuessesController < ApplicationController
   
   def get_scores_from_date(begin_date, end_date)
     if begin_date && end_date
-      conditions =
-        [ "guessed_at > ? and guessed_at < ?", begin_date, end_date ]
+      conditions = [ "guessed_at > ? and guessed_at < ?",
+        begin_date.getutc, end_date.getutc ]
     elsif begin_date
-      conditions = [ "guessed_at > ?", begin_date ]
+      conditions = [ "guessed_at > ?", begin_date.getutc ]
     else
       conditions = []
     end

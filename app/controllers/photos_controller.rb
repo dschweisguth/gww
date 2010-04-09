@@ -21,7 +21,7 @@ class PhotosController < ApplicationController
 
       logger.info "Updating database from page #{page} ..."
       Photo.transaction do
-        now = Time.now
+        now = Time.now.getutc
         Photo.update_seen_at photo_flickrids, now
 
         people_flickrids =
@@ -69,9 +69,9 @@ class PhotosController < ApplicationController
           old_photo_mapped = photo.mapped
           photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
           old_photo_dateadded = photo.dateadded
-          photo.dateadded = Time.at(parsed_photo['dateadded'].to_i)
+          photo.dateadded = Time.at(parsed_photo['dateadded'].to_i).getutc
           old_photo_lastupdate = photo.lastupdate
-          photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i)
+          photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
           photo.person = person
           if photo.id.nil? ||
             old_photo_farm != photo.farm ||
@@ -116,7 +116,7 @@ class PhotosController < ApplicationController
     @photos = Photo.find(:all,
       :conditions =>
         [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
-          FlickrUpdate.local_latest_update_times(1)[0] ],
+          FlickrUpdate.latest.created_at ],
       :include => :person, :order => "lastupdate desc")
   end
 
@@ -178,7 +178,8 @@ class PhotosController < ApplicationController
 	  comments_xml['comment'].each do |comment_xml|
 	    comment = Comment.new
 	    comment.comment_text = comment_xml['content']
-	    comment.commented_at = Time.at comment_xml['datecreate'].to_i
+	    comment.commented_at =
+              Time.at(comment_xml['datecreate'].to_i).getutc
 	    comment.username = comment_xml['authorname']
 	    comment.flickrid = comment_xml['author']
 	    comment.photo_id = photo.id
@@ -247,9 +248,9 @@ class PhotosController < ApplicationController
 	    guess = Guess.new
 	    guess.photo_id = photo.id
 	    guess.person_id = guesser.id
-	    guess.added_at = Time.now
+	    guess.added_at = Time.now.getutc
 	  end
-	  comment_date = Time.at comment.commented_at.to_i
+	  comment_date = comment.commented_at
 	  guess.guessed_at = comment_date
 	  guess.added_at = comment_date if ! guess.added_at
 	  guess.guess_text = comment.comment_text
@@ -265,9 +266,9 @@ class PhotosController < ApplicationController
 	  if ! revelation
 	    revelation = Revelation.new
 	    revelation.photo_id = photo.id
-	    revelation.added_at = Time.now
+	    revelation.added_at = Time.now.getutc
 	  end
-	  revelation.revealed_at = Time.at comment.commented_at.to_i
+	  revelation.revealed_at = comment.commented_at
 	  revelation.revelation_text = comment.comment_text
 	  revelation.save
 

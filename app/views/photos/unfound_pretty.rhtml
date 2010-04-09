@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <td class="cellspace">&nbsp;</td>
-    <td colspan="5" class="dheader"><%= @photos.length %> unfound photos as of <%= @lasttime.localtime.strftime '%A, %B %d, %I %p' %></td>
+    <td colspan="5" class="dheader"><%= @photos.length %> unfound photos as of <%= @lasttime.getlocal.strftime '%A, %B %d, %I %p' %></td>
   </tr>
   <tr>
     <td class="cellspace">&nbsp;</td>
@@ -23,8 +23,8 @@
     <td class="dnum"><%= photo_index + 1 %>.</td>
     <td class="dvalue"><a href="<%= photo.page_url %>">Link</a></td>
     <td class="dvalue"><%=h photo.person.username %></td>
-    <td class="dvalue"><%= photo.dateadded.strftime '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= photo.lastupdate.strftime '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
+    <td class="dvalue"><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
     <td class="dvalue"><%= photo.game_status == 'unconfirmed' ? 'X': '&nbsp;' %></td>
   </tr>
 <% end %>

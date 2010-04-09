@@ -12,13 +12,13 @@ class GuessTest < Test::Unit::TestCase
     person2.username = "username2"
     person2.save
 
-    now = Time.now
+    now = Time.now.getutc
 
     photo1 = Photo.new
     photo1.flickrid = "flickrid1"
     photo1.secret = "secret1"
     photo1.server = "server1"
-    photo1.dateadded = 10.seconds.ago
+    photo1.dateadded = 10.seconds.ago.getutc
     photo1.lastupdate = now
     photo1.seen_at = now
     photo1.game_status = "unfound"
@@ -31,7 +31,7 @@ class GuessTest < Test::Unit::TestCase
     photo2.flickrid = "flickrid2"
     photo2.secret = "secret2"
     photo2.server = "server2"
-    photo2.dateadded = 5.seconds.ago
+    photo2.dateadded = 5.seconds.ago.getutc
     photo2.lastupdate = now
     photo2.seen_at = now
     photo2.game_status = "unfound"

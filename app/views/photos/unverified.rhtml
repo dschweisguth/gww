@@ -12,8 +12,8 @@
 <% for photo in @photos -%>
   <tr>
     <td><%= photo.person ? photo.person.username : 'unknown' %></td>
-    <td><%= photo.dateadded.strftime '%Y/%m/%d' %></td>
-    <td><%= photo.lastupdate.strftime '%Y/%m/%d' %></td>
+    <td><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
+    <td><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.mapped %></td>
     <td><b><%= photo.game_status %></b></td>
     <td><%= link_to 'Show', :action => 'show', :id => photo %></td>
