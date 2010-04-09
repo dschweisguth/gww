@@ -250,9 +250,7 @@ class PhotosController < ApplicationController
 	    guess.person_id = guesser.id
 	    guess.added_at = Time.now.getutc
 	  end
-	  comment_date = comment.commented_at
-	  guess.guessed_at = comment_date
-	  guess.added_at = comment_date if ! guess.added_at
+	  guess.guessed_at = comment.commented_at
 	  guess.guess_text = comment.comment_text
 	  guess.save
 
