@@ -60,11 +60,11 @@ class GuessesController < ApplicationController
       if revelations_with_person
         revelations_with_person[:revelations].push revelation
       elsif
-        @revelations_by_person.push(
-          { :person => revelation.photo.person, :revelations => [revelation] })
+        @revelations_by_person.push({ :person => revelation.photo.person,
+          :revelations => [ revelation ] })
       end
     end
-    @revelations_by_person.sort! {|x, y|
+    @revelations_by_person.sort! { |x, y|
       x[:person].username.downcase <=> y[:person].username.downcase }
 
     @total_participants = people.length
@@ -88,15 +88,15 @@ class GuessesController < ApplicationController
 
   caches_page :treasures
   def treasures
-    @longest_guesses = add_date_distances(Guess.longest)
-    @shortest_guesses = add_date_distances(Guess.shortest)
+    @longest_guesses = add_date_distances Guess.longest
+    @shortest_guesses = add_date_distances Guess.shortest
   end
 
   def add_date_distances(guesses)
     annotated_guesses = []
     guesses.each do |guess|
       annotated_guesses.push({ :guess => guess, :elapsed_pretty =>
-        get_date_distance(guess.photo.dateadded, guess.guessed_at)})
+        get_date_distance(guess.photo.dateadded, guess.guessed_at) })
     end
     annotated_guesses
   end
@@ -148,41 +148,42 @@ class GuessesController < ApplicationController
     (1..7).each do |num|
       dates = { :begin => (@latest_update - num.day).beginning_of_day,
         :end => (@latest_update - (num - 1).day).beginning_of_day }
-      scores = get_scores_from_date(dates[:begin], dates[:end])
+      scores = get_scores_from_date dates[:begin], dates[:end]
       @last_days.push({ :dates => dates, :scores => scores })
     end
     
     thisweek_dates = { :begin => @latest_update.beginning_of_week - 1.day,
       :end => @latest_update }
-    thisweek_scores = get_scores_from_date(thisweek_dates[:begin], nil)
-    @last_weeks = [{ :dates => thisweek_dates, :scores => thisweek_scores }]
+    thisweek_scores = get_scores_from_date thisweek_dates[:begin], nil
+    @last_weeks = [ { :dates => thisweek_dates, :scores => thisweek_scores } ]
     (1..5).each do |num|
       dates = {
         :begin => (@latest_update - num.week).beginning_of_week - 1.day,
         :end => (@latest_update - (num - 1).week).beginning_of_week - 1.day }
-      scores = get_scores_from_date(dates[:begin], dates[:end])
+      scores = get_scores_from_date dates[:begin], dates[:end]
       @last_weeks.push({ :dates => dates, :scores => scores })
     end
     
     thismonth_dates = { :begin => @latest_update.beginning_of_month,
       :end => @latest_update }
-    thismonth_scores = get_scores_from_date(thismonth_dates[:begin], nil)
-    @last_months = [{ :dates => thismonth_dates, :scores => thismonth_scores }]
+    thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
+    @last_months =
+      [ { :dates => thismonth_dates, :scores => thismonth_scores } ]
     (1..5).each do |num|
       dates = { :begin => (@latest_update - num.month).beginning_of_month,
         :end => (@latest_update - (num - 1).month).beginning_of_month }
-      scores = get_scores_from_date(dates[:begin], dates[:end])
+      scores = get_scores_from_date dates[:begin], dates[:end]
       @last_months.push({ :dates => dates, :scores => scores })
     end
     
     thisyear_dates = { :begin => @latest_update.beginning_of_year,
       :end => @latest_update }
-    thisyear_scores = get_scores_from_date(thisyear_dates[:begin], nil)
-    @last_years = [{:dates => thisyear_dates, :scores => thisyear_scores}]
+    thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
+    @last_years = [ {:dates => thisyear_dates, :scores => thisyear_scores} ]
     (1..2).each do |num|
       dates = { :begin => (@latest_update - num.year).beginning_of_year,
         :end => (@latest_update - (num - 1).year).beginning_of_year }
-      scores = get_scores_from_date(dates[:begin], dates[:end])
+      scores = get_scores_from_date dates[:begin], dates[:end]
       @last_years.push({ :dates => dates, :scores => scores })
     end
     
@@ -222,7 +223,7 @@ class GuessesController < ApplicationController
           :people => [add_person] })
       end
     end
-    return_people.sort! {|x,y| y[:guesscount] <=> x[:guesscount]}
+    return_people.sort! { |x,y| y[:guesscount] <=> x[:guesscount] }
   end
 
 end

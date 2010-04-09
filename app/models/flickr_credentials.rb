@@ -1,5 +1,5 @@
 class FlickrCredentials
-  FILE = YAML.load_file("#{RAILS_ROOT}/config/flickr_credentials.yml")
+  FILE = YAML.load_file "#{RAILS_ROOT}/config/flickr_credentials.yml"
   CREDENTIALS = FILE['flickr_credentials']
   SECRET = CREDENTIALS['secret']
   API_KEY = CREDENTIALS['api_key']
@@ -8,7 +8,7 @@ class FlickrCredentials
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
     xml = submit url
-    XmlSimple.xml_in(xml)
+    XmlSimple.xml_in xml
   end
 
   def self.api_url(api_method, extra_params = {})
@@ -33,7 +33,7 @@ class FlickrCredentials
   def self.signature(params)
     signature = SECRET
     params.keys.sort.each { |name| signature += name + params[name] }
-    MD5.hexdigest(signature)
+    MD5.hexdigest signature
   end
 
   def self.submit(url)

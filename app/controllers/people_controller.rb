@@ -2,9 +2,9 @@ class PeopleController < ApplicationController
 
   caches_page :list
   def list
-    photo_counts = Photo.count(:all, :group => 'person_id')
-    guess_counts = Guess.count(:all, :group => 'person_id')
-    people = Person.find(:all)
+    photo_counts = Photo.count :all, :group => 'person_id'
+    guess_counts = Guess.count :all, :group => 'person_id'
+    people = Person.find :all
     @people = []
     people.each do |person|
       add_person = {
@@ -15,7 +15,7 @@ class PeopleController < ApplicationController
         :guesscount => 
           guess_counts[person.id].nil? ? 0 : guess_counts[person.id],
       }
-      @people.push(add_person)
+      @people.push add_person
     end
     @people.sort! do |x, y|
       c = y[:guesscount] <=> x[:guesscount]
@@ -26,17 +26,17 @@ class PeopleController < ApplicationController
 
   caches_page :show
   def show
-    @person = Person.find(params[:id])
+    @person = Person.find params[:id]
     
-    @unfound_photos = Photo.find(:all, :conditions =>
+    @unfound_photos = Photo.find :all, :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
-        @person.id ])
-    @revealed_photos = Photo.find_all_by_person_id_and_game_status(@person.id,
-      'revealed')
+        @person.id ]
+    @revealed_photos = Photo.find_all_by_person_id_and_game_status @person.id,
+      'revealed'
     
     # Map of guessers to this person's posts
-    posts = Photo.find_all_by_person_id(@person.id,
-      :include => { :guesses => :person })
+    posts = Photo.find_all_by_person_id @person.id,
+      :include => { :guesses => :person }
     @posted_count = posts.length
     guessers = {}
     posts.each do |photo|
@@ -53,8 +53,8 @@ class PeopleController < ApplicationController
     @guessers.sort! { |x,y| y[:photos].length <=> x[:photos].length }
     
     # Map of posters to this person's guesses
-    guesses = Guess.find_all_by_person_id(@person.id,
-      :include => { :photo => :person })
+    guesses = Guess.find_all_by_person_id @person.id,
+      :include => { :photo => :person }
     @guessed_count = guesses.length
     posters = {}
     guesses.each do |guess|
@@ -64,7 +64,7 @@ class PeopleController < ApplicationController
         poster = { :person => person, :photos => [] }
         posters[person] = poster
       end
-      poster[:photos].push(guess.photo)
+      poster[:photos].push guess.photo
     end
     @posters = posters.values
     @posters.sort! { |x,y| y[:photos].count <=> x[:photos].count }
@@ -73,28 +73,28 @@ class PeopleController < ApplicationController
 
   caches_page :latest_guesses
   def latest_guesses
-    @person = Person.find(params[:id])
-    @guesses = Guess.find_all_by_person_id(params[:id],
-      :order => "guessed_at desc", :include => { :photo => :person })
+    @person = Person.find params[:id]
+    @guesses = Guess.find_all_by_person_id params[:id],
+      :order => "guessed_at desc", :include => { :photo => :person }
   end
 
   caches_page :latest_posts
   def latest_posts
-    @person = Person.find(params[:id])
-    @photos = Photo.find_all_by_person_id(params[:id],
-      :order => "dateadded desc", :include => :person)
+    @person = Person.find params[:id]
+    @photos = Photo.find_all_by_person_id params[:id],
+      :order => "dateadded desc", :include => :person
   end
   
   caches_page :commented_on
   def commented_on
-    @person = Person.find(params[:id])
-    @comments = Comment.find_all_by_flickrid(@person[:flickrid],
-      :include => { :photo => [:person, { :guesses => :person }] })
+    @person = Person.find params[:id]
+    @comments = Comment.find_all_by_flickrid @person[:flickrid],
+      :include => { :photo => [ :person, { :guesses => :person } ] }
     @photos = []
     @comments.each do |comment|
-      @photos.push(comment.photo) if !@photos.include?(comment.photo)
+      @photos.push comment.photo if ! @photos.include? comment.photo
     end
-    @photos.sort! {|x,y| y[:lastupdate] <=> x[:lastupdate]}
+    @photos.sort! { |x,y| y[:lastupdate] <=> x[:lastupdate] }
   end
   
 end

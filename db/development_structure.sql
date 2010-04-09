@@ -8,14 +8,14 @@ CREATE TABLE `comments` (
   PRIMARY KEY  (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=329217 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=329205 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL auto_increment,
   `created_at` datetime NOT NULL default '0000-00-00 00:00:00',
   `completed_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=904 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=905 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL auto_increment,
@@ -57,7 +57,7 @@ CREATE TABLE `photos` (
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25700 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25736 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL auto_increment,
@@ -68,10 +68,10 @@ CREATE TABLE `revelations` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=378 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=379 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `schema_info` (
   `version` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (34)
+INSERT INTO schema_info (version) VALUES (35)

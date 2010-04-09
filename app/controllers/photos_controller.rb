@@ -113,25 +113,25 @@ class PhotosController < ApplicationController
 
   caches_page :unverified
   def unverified
-    @photos = Photo.find(:all,
+    @photos = Photo.find :all,
       :conditions =>
         [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
           FlickrUpdate.latest.created_at ],
-      :include => :person, :order => "lastupdate desc")
+      :include => :person, :order => "lastupdate desc"
   end
 
   caches_page :multipoint
   def multipoint
-    guesses_per_post = Guess.count(:all, :group => :photo_id)
+    guesses_per_post = Guess.count :all, :group => :photo_id
     photo_ids = []
     guesses_per_post.each do |photo_id, count|
       if count > 1 then
         photo_ids.push photo_id
       end
     end
-    @photos = Photo.find(:all,
+    @photos = Photo.find :all,
       :conditions => "photos.id in (" + photo_ids.join(', ')+ ")",
-      :include => :person, :order => "lastupdate desc")
+      :include => :person, :order => "lastupdate desc"
   end
 
   caches_page :unfound_pretty
@@ -149,9 +149,9 @@ class PhotosController < ApplicationController
 
   caches_page :unfound_or_unconfirmed_photos
   def unfound_or_unconfirmed_photos
-    Photo.find(:all,
+    Photo.find :all,
       :conditions => "game_status in ('unfound', 'unconfirmed')",
-      :include => :person, :order => "lastupdate desc")
+      :include => :person, :order => "lastupdate desc"
   end
 
   def show
@@ -169,7 +169,7 @@ class PhotosController < ApplicationController
   def load_comments(params, photo)
     comments = []
     Photo.transaction do
-      Comment.delete_all('photo_id = ' + photo.id.to_s)
+      Comment.delete_all 'photo_id = ' + photo.id.to_s
       parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
 	'photo_id' => photo.flickrid
       if parsed_xml['comments']

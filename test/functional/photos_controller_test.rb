@@ -35,21 +35,21 @@ class PhotosControllerTest < Test::Unit::TestCase
 
     assert_response :success
     assert_template 'show'
-    assert_not_nil assigns(:photo)
+    assert_not_nil assigns :photo
     assert assigns(:photo).valid?
     # TODO assert other stuff in model
 
   end
 
   def test_destroy
-    assert_not_nil Photo.find(@photo.id)
+    assert_not_nil Photo.find @photo.id
 
     post :destroy, :id => @photo.id
     assert_response :redirect
     assert_redirected_to :action => 'unverified'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Photo.find(@photo.id)
+      Photo.find @photo.id
     }
   end
 

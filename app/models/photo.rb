@@ -6,8 +6,8 @@ class Photo < ActiveRecord::Base
 
   def self.update_seen_at(flickrids, time)
     joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
-    Photo.update_all("seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
-      "flickrid in (#{joined_flickrids})")
+    Photo.update_all "seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
+      "flickrid in (#{joined_flickrids})"
   end
 
   def page_url
