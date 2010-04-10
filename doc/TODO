@@ -10,13 +10,13 @@ Review test coverage and add TODOs to write more tests and assertions
 Add more info to unfound list to make it easier to find a specific photo
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
 Post scores to Flickr group automatically. Record scoring time and add to home
-    page.
-    Add x-passed-y indicators to score report
+  page.
+  Add x-passed-y indicators to score report
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
-    and possibly score publication times, newest to oldest. Consider whether
-    scoring in batches is an important part of game fun and if so how not to
-    compromise that.
+  and possibly score publication times, newest to oldest. Consider whether
+  scoring in batches is an important part of game fun and if so how not to
+  compromise that.
 Add to player page
 - link to Flickr account
 - youngest and oldest guesses (treasures)
@@ -27,3 +27,9 @@ Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
 Link to photos using player's photosurl rather than by ID
+Determine photo locations from correct guess comments
+  Determine most-posted locations
+Determine neighborhoods from locations and geocodes
+  Identify mayors and scourges of neighborhoods
+In the list of unfounds, highlight photos which if guessed would enter the
+  longest-to-find list
