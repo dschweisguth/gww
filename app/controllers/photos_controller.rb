@@ -160,13 +160,13 @@ class PhotosController < ApplicationController
 
   def load_comments(params, photo)
     comments = []
-    Photo.transaction do
-      Comment.delete_all 'photo_id = ' + photo.id.to_s
-      parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
-	'photo_id' => photo.flickrid
-      if parsed_xml['comments']
-	comments_xml = parsed_xml['comments'][0]
-	if comments_xml['comment']
+    parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
+      'photo_id' => photo.flickrid
+    if parsed_xml['comments']
+      comments_xml = parsed_xml['comments'][0]
+      if comments_xml['comment'] && ! comments_xml['comment'].empty?
+        Photo.transaction do
+          Comment.delete_all 'photo_id = ' + photo.id.to_s
 	  comments_xml['comment'].each do |comment_xml|
 	    comment = Comment.new
 	    comment.comment_text = comment_xml['content']
