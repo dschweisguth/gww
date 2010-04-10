@@ -157,7 +157,7 @@ Create production database:
     Do all steps as above, but for gww_production
 Create test database:
     Create database and grant privileges as above, but for gww_test
-    rake environment RAILS_ENV=test db:schema:load
+    rake environment RAILS_ENV=test db:test:clone_structure
 
 Test GWW
 --------
