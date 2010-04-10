@@ -1,0 +1,14 @@
+To help protect the GWW database from programmer error and other potential
+damage, the GWW schema and its migrations use SQL features which are not
+natively supported by Active Record, such as foreign key constraints and the
+enum column type. Therefore,
+
+- The GWW schema and its migrations will probably not work with databases other
+  than mysql without some work.
+- config.active_record.schema_format = :sql. When manipulating the schema with
+  rake, use the tasks which use SQL, not those which use Active Record's Ruby
+  schema format.
+
+Note that some of the indexes which support the GWW schema's foreign keys are
+essential for performance, although non-foreign key indexes would serve that
+purpose equally well.
