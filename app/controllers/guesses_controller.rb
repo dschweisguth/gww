@@ -86,8 +86,8 @@ class GuessesController < ApplicationController
     result['group'][0]['members'][0]
   end
 
-  caches_page :treasures
-  def treasures
+  caches_page :longest_and_shortest
+  def longest_and_shortest
     @longest_guesses = add_date_distances Guess.longest
     @shortest_guesses = add_date_distances Guess.shortest
   end
