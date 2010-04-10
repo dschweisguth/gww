@@ -5,6 +5,8 @@ class PhotosController < ApplicationController
     expire_cached_pages
 
     update = FlickrUpdate.new
+    group_info = FlickrCredentials.request 'flickr.groups.getInfo'
+    update.member_count = group_info['group'][0]['members'][0]
     update.save
 
     page = 1

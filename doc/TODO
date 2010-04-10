@@ -1,4 +1,3 @@
-Determine and save number of members at scrape time
 New server
 Move GWW to guesswheresf.com
 Reduce distance between gww's ruby dependencies and current stable versions
@@ -33,3 +32,6 @@ Determine neighborhoods from locations and geocodes
   Identify mayors and scourges of neighborhoods
 In the list of unfounds, highlight photos which if guessed would enter the
   longest-to-find list
+Track old usernames
+  Put on user page
+  Correct guessed_at+revealed_at from comments made under those usernames
