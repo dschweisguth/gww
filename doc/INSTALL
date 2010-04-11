@@ -1,7 +1,7 @@
 This document describes how to install GWW on a Mac (for development, using
-webrick) or Linux server (for production, using Apache httpd and FastCGI). It
-covers only what Dave thinks is not obvious; please fill gaps as you encounter
-them.
+webrick) or Linux server (for production, using Apache httpd and Phusion
+Passenger). It covers only what Dave thinks is not obvious; please fill gaps as
+you encounter them.
 
 Install and start mysql
 -----------------------
@@ -18,105 +18,48 @@ Install ruby and friends
 ------------------------
 
 GWW currently requires ruby 1.8.something (the current version of 1.9 is too
-new), rubygems 1.3.1 (the current version, 1.3.5, is too new) and the gems
-listed below. Some of the detail below probably isn't required, but that's what
-I have.
+new), rubygems and the gems listed below. Some of the detail below probably
+isn't required, but that's what I have.
 
 Install ruby
     Mac: Use MacPorts.
     Linux: Get source from http://www.ruby-lang.org/en/ and follow instructions
 	> ruby --version
-	ruby 1.8.7 (2010-01-10 patchlevel 249) [i686-linux]
+	ruby 1.8.7 (2010-01-10 patchlevel 249) [x86_64-linux]
 
 Install gem
     Mac: Use MacPorts.
     Linux: Get source from http://gems.rubyforge.org/ and follow instructions.
 	> gem --version
-	1.3.1
+	1.3.6
 
 Install gems
 
-    gem install rails --version 1.1.6
-    gem install actionpack --version 1.13.6
-    gem install actionwebservice --version 1.2.6
+    gem install rails
     gem install mysql
     gem install xml-simple
     > gem list
-    actionmailer (1.2.5)
-    actionpack (1.13.6, 1.12.5)
-    actionwebservice (1.2.6, 1.1.6)
-    activerecord (1.15.6, 1.14.4)
-    activesupport (1.4.4, 1.3.1)
+    actionmailer (2.3.5)
+    actionpack (2.3.5)
+    activerecord (2.3.5)
+    activeresource (2.3.5)
+    activesupport (2.3.5)
+    fastthread (1.0.7)
     mysql (2.8.1)
-    rails (1.1.6)
+    passenger (2.2.11)
+    rack (1.0.1)
+    rails (2.3.5)
     rake (0.8.7)
     xml-simple (1.0.12)
 
-    When using gem, beware version conflicts between executables and libraries
-    in installed gems. Always use the -x option with uninstall. If a gem
-    doesn't work, try uninstalling it and reinstalling it.
+Install Phusion Passenger (for Linux production)
+------------------------------------------------
 
-On Linux, with the above set of software, loading any GWW page results in the
-following error when attempting to load /stylesheets/screen.css:
-
-ERROR NoMethodError: private method `gsub!' called for #<Class:0xb7cfbc84>
-
-To fix, make the following change:
-
-[root lonnrot:/usr/local/lib/ruby/1.8/webrick] diff htmlutils.rb{.old,}
-15c15
-<       str = string ? string.dup : ""
----
->       str = string ? string.dup.to_s : ""
-
-A newer webrick or an older ruby would probably solve the problem more cleanly.
-
-Install FastCGI (for Linux production)
---------------------------------------
-
-Background: Dave runs GWW under Apache so that Apache can provide HTTP basic
-    authentication. mod_rails wouldn't build on Dave's old server, so Dave used
-    FastCGI. The situation could be simplified either by moving to a newer
-    server that handled mod_rails or adding basic HTTP authentication to GWW
-    itself and running it under some other, possibly Ruby-centric, web server,
-    on a port other than 80.
-Dave mostly followed http://www.xmlareas.com/ruby-on-rails-howto .
-Install the fcgi library:
-    wget http://www.fastcgi.com/dist/fcgi-2.4.0.tar.gz
-    configure, make, make install
-Install the FastCGI module:
-    wget http://www.fastcgi.com/dist/mod_fastcgi-2.4.6.tar.gz (referenced on
-	"FastCGI servers", http://www.fastcgi.com/drupal/node/3)
-    Compile per the documentation in the distribution, but instead of
-
-        apxs -i -a -n fastcgi mod_fastcgi.so
-
-    do
-
-        apxs -i -a -n fastcgi mod_fastcgi.la
-
-    apxs makes the following change:
-	[root lonnrot:/etc/httpd/conf] diff httpd.conf.bak httpd.conf
-	189a190
-	> LoadModule fastcgi_module     /usr/lib/httpd/modules/mod_fastcgi.so
-    gem install fcgi
-	[root lonnrot:~] gem list | grep fcgi
-	fcgi (0.8.8)
-    mkdir /tmp/fcgi_ipc
-    chmod 777 /tmp/fcgi_ipc
-    Edit httpd.conf (note that this diff includes the change made by apxs):
-        [root lonnrot:/etc/httpd/conf] diff httpd.conf{.bak,}
-	189a190,194
-	> LoadModule fastcgi_module     /usr/lib/httpd/modules/mod_fastcgi.so
-	> <IfModule mod_fastcgi.c> 
-	>   FastCgiConfig -minProcesses 1 -maxProcesses 5 -idle-timeout 100000 -initial-env RAILS_ENV=production
-	>   FastCgiIpcDir /tmp/fcgi_ipc
-	> </IfModule>
-	311c316
-	<     AllowOverride AuthConfig
-	---
-	>     AllowOverride All
-    apachectl restart
+gem install passenger
+passenger-install-apache2-module # and follow instructions
+In addition to editing httpd.conf as instructed by passenger, add the following
+option to the appropriate place in your httpd configuration to enable GWW's
+.htaccess: AllowOverride AuthConfig FileInfo
 
 Get and configure GWW
 ---------------------
@@ -134,24 +77,22 @@ Configure:
 	Construct a Flickr API secret, key and auth token manually per the
 	    API documentation
 	Edit and fill in your secret, api_key and auth_token
-For production Linux httpd,
-    chmod -R apache:apache gww
-    ln -s /.../gww/public /var/www/html/gww
+For production Linux httpd, configure basic HTTP authentication:
     Create a username and password per
-        http://httpd.apache.org/docs/2.0/howto/auth.html
-    Configure basic HTTP authentication:
-        cp public/.htaccess{_template,}
-	Edit and fill in the userid that you want to use for basic HTTP
-	    authentication
-	Change the path to the password file if necessary
+        http://httpd.apache.org/docs/2.2/howto/auth.html
+    cp public/.htaccess{_template,}
+    Edit and fill in
+    - the full path to the htpasswd file that you just created. Note that
+      it should not be in or below GWW's public directory.
+    - the userid that you want to use for basic HTTP authentication
 
 Create databases
 ----------------
 
-grant usage on *.* to gww@localhost identified by '(the password)';
+mysql> grant usage on *.* to gww@localhost identified by '(the password)';
 Create dev database:
-    create database gww_dev default charset latin1;
-    grant all privileges on gww_dev.* to gww@localhost;
+    mysql> create database gww_dev default charset latin1;
+    mysql> grant all privileges on gww_dev.* to gww@localhost;
     gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
 Create production database:
     Do all steps as above, but for gww_production
@@ -167,8 +108,9 @@ rake test
 Start GWW
 ---------
 
-Development (Mac):
+Development:
     script/server
     Browse localhost:3000
 Production (Linux):
-    Browse http://schweisguth.org/gww/
+    Start or restart httpd
+    Browse http://your-production-server/

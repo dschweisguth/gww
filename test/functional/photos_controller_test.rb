@@ -1,10 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
-require 'photos_controller'
+require 'test_helper'
 
-# Re-raise errors caught by the controller.
-class PhotosController; def rescue_action(e) raise e end; end
-
-class PhotosControllerTest < Test::Unit::TestCase
+class PhotosControllerTest < ActionController::TestCase
   def setup
     @controller = PhotosController.new
     @request    = ActionController::TestRequest.new
@@ -19,9 +15,9 @@ class PhotosControllerTest < Test::Unit::TestCase
     @photo.flickrid = "flickrid"
     @photo.secret = "secret"
     @photo.server = "server"
-    @photo.dateadded = Time.new.to_i
-    @photo.lastupdate = Time.new.to_i
-    @photo.seen_at = Time.new.to_i
+    @photo.dateadded = Time.new
+    @photo.lastupdate = Time.new
+    @photo.seen_at = Time.new
     @photo.game_status = "unfound"
     @photo.mapped = "false"
     @photo.person = person
@@ -35,22 +31,23 @@ class PhotosControllerTest < Test::Unit::TestCase
 
     assert_response :success
     assert_template 'show'
-    assert_not_nil assigns :photo
+    assert_not_nil assigns(:photo)
     assert assigns(:photo).valid?
     # TODO assert other stuff in model
 
   end
 
   def test_destroy
-    assert_not_nil Photo.find @photo.id
+    assert_not_nil Photo.find(@photo.id)
 
     post :destroy, :id => @photo.id
     assert_response :redirect
     assert_redirected_to :action => 'unverified'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Photo.find @photo.id
+      Photo.find(@photo.id)
     }
+
   end
 
 end

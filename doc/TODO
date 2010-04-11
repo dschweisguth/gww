@@ -1,7 +1,3 @@
-New server
-Move GWW to guesswheresf.com
-Reduce distance between gww's ruby dependencies and current stable versions
-Replace mod_fastcgi with mod_fcgid or mod_rails
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
 Open appropriate parts of GWW to players

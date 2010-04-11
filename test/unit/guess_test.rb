@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class GuessTest < Test::Unit::TestCase
+class GuessTest < ActiveSupport::TestCase
   def setup
     person1 = Person.new
     person1.flickrid = "flickrid1"

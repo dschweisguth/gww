@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
-class FlickrUpdateTest < Test::Unit::TestCase
+class FlickrUpdateTest < ActiveSupport::TestCase
   def test_latest
     update1 = FlickrUpdate.new
     update1.member_count = 1

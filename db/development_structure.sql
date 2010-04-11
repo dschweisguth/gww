@@ -8,7 +8,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY  (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=330229 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=329189 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL auto_increment,
@@ -16,7 +16,7 @@ CREATE TABLE `flickr_updates` (
   `member_count` int(11) NOT NULL,
   `completed_at` datetime default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=908 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=904 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL auto_increment,
@@ -30,7 +30,7 @@ CREATE TABLE `guesses` (
   KEY `guesses_person_id_fk` (`person_id`),
   CONSTRAINT `guesses_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
   CONSTRAINT `guesses_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22856 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22806 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `people` (
   `id` int(11) NOT NULL auto_increment,
@@ -39,7 +39,7 @@ CREATE TABLE `people` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=1099 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1098 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL auto_increment,
@@ -58,7 +58,7 @@ CREATE TABLE `photos` (
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25750 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25700 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL auto_increment,
@@ -69,10 +69,63 @@ CREATE TABLE `revelations` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=379 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=378 DEFAULT CHARSET=latin1;
 
-CREATE TABLE `schema_info` (
-  `version` int(11) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE `schema_migrations` (
+  `version` varchar(255) NOT NULL,
+  UNIQUE KEY `unique_schema_migrations` (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO schema_info (version) VALUES (38)
+INSERT INTO schema_migrations (version) VALUES ('12');
+
+INSERT INTO schema_migrations (version) VALUES ('13');
+
+INSERT INTO schema_migrations (version) VALUES ('14');
+
+INSERT INTO schema_migrations (version) VALUES ('15');
+
+INSERT INTO schema_migrations (version) VALUES ('16');
+
+INSERT INTO schema_migrations (version) VALUES ('17');
+
+INSERT INTO schema_migrations (version) VALUES ('18');
+
+INSERT INTO schema_migrations (version) VALUES ('19');
+
+INSERT INTO schema_migrations (version) VALUES ('20');
+
+INSERT INTO schema_migrations (version) VALUES ('21');
+
+INSERT INTO schema_migrations (version) VALUES ('22');
+
+INSERT INTO schema_migrations (version) VALUES ('23');
+
+INSERT INTO schema_migrations (version) VALUES ('24');
+
+INSERT INTO schema_migrations (version) VALUES ('25');
+
+INSERT INTO schema_migrations (version) VALUES ('26');
+
+INSERT INTO schema_migrations (version) VALUES ('27');
+
+INSERT INTO schema_migrations (version) VALUES ('28');
+
+INSERT INTO schema_migrations (version) VALUES ('29');
+
+INSERT INTO schema_migrations (version) VALUES ('30');
+
+INSERT INTO schema_migrations (version) VALUES ('31');
+
+INSERT INTO schema_migrations (version) VALUES ('32');
+
+INSERT INTO schema_migrations (version) VALUES ('33');
+
+INSERT INTO schema_migrations (version) VALUES ('34');
+
+INSERT INTO schema_migrations (version) VALUES ('35');
+
+INSERT INTO schema_migrations (version) VALUES ('36');
+
+INSERT INTO schema_migrations (version) VALUES ('37');
+
+INSERT INTO schema_migrations (version) VALUES ('38');

@@ -37,11 +37,11 @@ this photo is unfound.
 this photo is unconfirmed.
 <% end -%>
 
-<%= start_form_tag :action => 'change_game_status', :id => @photo %>
+<% form_tag :action => 'change_game_status', :id => @photo do %>
 <%= radio_button(:photo, :game_status, 'unfound') %> unfound 
 <%= radio_button(:photo, :game_status, 'unconfirmed') %> unconfirmed 
 <%= submit_tag("Change status") %> (removes any guesses or revelation)
-<%= end_form_tag %>
+<% end %>
 
 <span id="guess_list">
 <% if ! @photo.guesses.empty? then -%>
@@ -79,7 +79,7 @@ this photo is unconfirmed.
 <% end -%>
 </span>
 
-<%= start_form_tag :action => 'add_guess', :id => @photo %>
+<% form_tag :action => 'add_guess', :id => @photo do %>
 <% if ! @comments.empty? -%>
   <table class="indented">
     <tr><td class="dheader">Choose the correct guess or revelation from the comments below:</td></tr>
@@ -107,15 +107,15 @@ this photo is unconfirmed.
 <% else -%>
   No comments available.
 <% end -%>
-<%= end_form_tag %>
+<% end %>
 <br/>
 
 <table>
   <tr>
     <td>
-      <%= start_form_tag :action => 'reload_comments', :id => @photo %>
+      <% form_tag :action => 'reload_comments', :id => @photo do %>
       <%= submit_tag("Reload comments") %>
-      <%= end_form_tag %>
+      <% end %>
     </td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td>

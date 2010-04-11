@@ -2,16 +2,16 @@
 
 AuthType Basic
 AuthName "What do you think you're doing?"
-AuthUserFile /etc/httpd/passwords
-Require user  # <-- put your basic HTTP auth user here
-
-Options +ExecCGI
-AddHandler fastcgi-script .fcgi
+# Add the full path to your auth user file (not in or below this dir) to the
+# following line 
+AuthUserFile 
+# Add the username to the following line
+Require user 
 
 RewriteEngine On
-RewriteRule ^$ cache/index.html [QSA]
-RewriteRule ^([^.]+)$ cache/$1.html [QSA]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
 
-ErrorDocument 500 "<h2>Application error</h2>Rails application failed to start properly"
+RewriteCond %{DOCUMENT_ROOT}/cache/index.html -f
+RewriteRule ^$ cache/index.html [L]
+
+RewriteCond %{DOCUMENT_ROOT}/cache%{REQUEST_URI}.html -f
+RewriteRule ^(.+)$ cache/$1.html [L]

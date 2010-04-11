@@ -1,3 +1,5 @@
+require 'xmlsimple'
+
 class FlickrCredentials
   FILE = YAML.load_file "#{RAILS_ROOT}/config/flickr_credentials.yml"
   CREDENTIALS = FILE['flickr_credentials']
@@ -33,7 +35,7 @@ class FlickrCredentials
   def self.signature(params)
     signature = SECRET
     params.keys.sort.each { |name| signature += name + params[name] }
-    MD5.hexdigest signature
+    Digest::MD5.hexdigest signature
   end
 
   def self.submit(url)
