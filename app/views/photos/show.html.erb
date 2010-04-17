@@ -1,8 +1,6 @@
 <br/>
-<a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url nil %>" border="0"/></a>
-<br/>
-
-<b>Posted by</b> <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/><br/>
+<a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url nil %>" border="0"/></a><br/>
+Added to the group on <%= @photo.dateadded.getlocal.strftime '%B %d, %Y' %> by <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/><br/>
 
 <% if @photo.game_status == 'found' -%>
 This photo was correctly guessed by
@@ -39,9 +37,9 @@ This photo is <%= @photo.game_status %>.
 <% end -%>
 </table>
 <% end -%>
-<br/>
 
 <% if ! @comments.empty? -%>
+<h2>Comments</h2>
 <% @comments.each do |comment| -%>
   <% @photo.guesses.each do |guess| -%>
   <% end -%>
