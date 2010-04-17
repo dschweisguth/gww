@@ -26,11 +26,11 @@ class PhotosControllerTest < ActionController::TestCase
 
   end
 
-  def test_show
-    get :show, :id => @photo.id
+  def test_edit
+    get :edit, :id => @photo.id
 
     assert_response :success
-    assert_template 'show'
+    assert_template 'edit'
     assert_not_nil assigns(:photo)
     assert assigns(:photo).valid?
     # TODO assert other stuff in model
