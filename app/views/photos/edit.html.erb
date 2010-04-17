@@ -18,20 +18,20 @@
   <% @unconfirmed.each_with_index do |photo, photo_index| -%>
     <%= link_to photo_index + 1, edit_photo_url(photo) %>
   <% end -%>
-  <br/><br/>
+  <br/>
 <% end -%>
+<br/>
 
-I think
 <% if @photo.game_status == 'found' -%>
-this photo was correctly guessed by
+This photo was correctly guessed by
 <%= @photo.guesses.map { |guess|
   link_to guess.person.username, show_person_url(guess.person) }.join ', ' -%>.
 <% elsif @photo.game_status == 'revealed' -%>
-this photo's location was revealed by the person who posted it.
+This photo's location was revealed by the person who posted it.
 <% elsif @photo.game_status == 'unfound' -%>
-this photo is unfound.
+This photo is unfound.
 <% elsif @photo.game_status == 'unconfirmed' -%>
-this photo is unconfirmed.
+This photo is unconfirmed.
 <% end -%>
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>
@@ -40,16 +40,15 @@ this photo is unconfirmed.
 <%= submit_tag("Change status") %> (removes any guesses or revelation)
 <% end %>
 
-<span id="guess_list">
-<% if ! @photo.guesses.empty? then -%>
-<br/>
+<% if ! @photo.guesses.empty? || @photo.revelation -%>
 <table>
     <tr>
         <td class="dheader">Person</td>
         <td class="dheader">Date</td>
         <td class="dheader">Text</td>
     </tr>
-    <% @photo.guesses.each_with_index do |guess, item_index| -%>
+<% if ! @photo.guesses.empty? -%>
+    <% @photo.guesses.each do |guess| -%>
     <tr>
         <td class="dvalue"><%= guess.person.username %></td>
         <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
@@ -57,24 +56,16 @@ this photo is unconfirmed.
     </tr>
     <% end -%>
 </table>
-<% elsif @photo.revelation then -%>
-<br/>
-<table>
-    <tr>
-        <td class="dheader">Person</td>
-        <td class="dheader">Date</td>
-        <td class="dheader">Text</td>
-    </tr>
+<% elsif @photo.revelation -%>
     <tr>
         <td class="dvalue"><%=h @photo.person.username %></td>
         <td class="dvalue"><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
         <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
     </tr>
-</table>
-<% else -%>
-&nbsp;
 <% end -%>
-</span>
+</table>
+<% end -%>
+<br/>
 
 <% form_tag :action => 'add_guess', :id => @photo do %>
 <% if ! @comments.empty? -%>
