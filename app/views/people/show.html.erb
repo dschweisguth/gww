@@ -1,7 +1,7 @@
 <br/>
-<%= link_to 'All Guesses', :action => 'latest_guesses', :id => @person %> /
-<%= link_to 'All Posts', :action => 'latest_posts', :id => @person %> /
-<%= link_to 'All Comments', :action => 'commented_on', :id => @person %><br/>
+<%= link_to 'All Guesses', :action => 'guesses', :id => @person %> /
+<%= link_to 'All Posts', :action => 'posts', :id => @person %> /
+<%= link_to 'All Comments', :action => 'comments', :id => @person %><br/>
 <br/>
 
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>

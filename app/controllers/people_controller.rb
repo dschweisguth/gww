@@ -71,22 +71,22 @@ class PeopleController < ApplicationController
 
   end
 
-  caches_page :latest_guesses
-  def latest_guesses
+  caches_page :guesses
+  def guesses
     @person = Person.find params[:id]
     @guesses = Guess.find_all_by_person_id params[:id],
       :order => "guessed_at desc", :include => { :photo => :person }
   end
 
-  caches_page :latest_posts
-  def latest_posts
+  caches_page :posts
+  def posts
     @person = Person.find params[:id]
     @photos = Photo.find_all_by_person_id params[:id],
       :order => "dateadded desc", :include => :person
   end
   
-  caches_page :commented_on
-  def commented_on
+  caches_page :comments
+  def comments
     @person = Person.find params[:id]
     @comments = Comment.find_all_by_flickrid @person[:flickrid],
       :include => { :photo => [ :person, { :guesses => :person } ] }
