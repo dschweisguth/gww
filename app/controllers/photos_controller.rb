@@ -148,7 +148,7 @@ class PhotosController < ApplicationController
       :include => :person, :order => "lastupdate desc"
   end
 
-  def show
+  def edit
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
     @unconfirmed = Photo.find(:all, :conditions =>
@@ -197,7 +197,7 @@ class PhotosController < ApplicationController
       end
       photo.save
     end
-    redirect_to :action => 'show', :id => photo, :nocomment => :true
+    redirect_to :action => 'edit', :id => photo, :nocomment => :true
   end
 
   def add_guess
@@ -206,7 +206,7 @@ class PhotosController < ApplicationController
     if params[:comment].nil?
       flash[:notice] =
         'Please select a comment before adding or removing a guess.'
-      redirect_to :action => 'show', :id => params[:id], :nocomment => :true
+      redirect_to :action => 'edit', :id => params[:id], :nocomment => :true
       return
     end
 
@@ -302,11 +302,11 @@ class PhotosController < ApplicationController
       end
     end
 
-    redirect_to :action => 'show', :id => photo, :nocomment => :true
+    redirect_to :action => 'edit', :id => photo, :nocomment => :true
   end
 
   def reload_comments
-    redirect_to :action => 'show', :id => params[:id]
+    redirect_to :action => 'edit', :id => params[:id]
   end
 
   def destroy
@@ -338,7 +338,7 @@ class PhotosController < ApplicationController
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if ! photo.nil?
-        redirect_to :action => 'show', :id => photo.id
+        redirect_to :action => 'edit', :id => photo.id
         return
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +

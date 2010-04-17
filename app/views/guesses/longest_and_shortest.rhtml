@@ -19,7 +19,7 @@
         </tr>  
         <% @longest_guesses.each do |guess| %>
           <tr>
-            <td class="dvalue"><%= link_to guess[:guess].photo.id, :controller => 'photos', :action => 'show', :id => guess[:guess].photo.id %></td>
+            <td class="dvalue"><%= link_to guess[:guess].photo.id, :controller => 'photos', :action => 'edit', :id => guess[:guess].photo.id %></td>
             <td class="dvalue"><%=h guess[:guess].photo.person.username %></td>
             <td class="dvalue"><%=h guess[:guess].person.username %></td>
             <td class="dvalue"><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
@@ -47,7 +47,7 @@
         </tr>  
       <% @shortest_guesses.each do |guess| %>
         <tr>
-          <td class="dvalue"><%= link_to guess[:guess].photo.id, :controller => 'photos', :action => 'show', :id => guess[:guess].photo.id %></td>
+          <td class="dvalue"><%= link_to guess[:guess].photo.id, :controller => 'photos', :action => 'edit', :id => guess[:guess].photo.id %></td>
           <td class="dvalue"><%=h guess[:guess].photo.person.username %></td>
           <td class="dvalue"><%=h guess[:guess].person.username %></td>
           <td class="dvalue"><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>

@@ -16,7 +16,7 @@
     <td><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.mapped %></td>
     <td><b><%= photo.game_status %></b></td>
-    <td><%= link_to 'Show', :action => 'show', :id => photo %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => photo %></td>
   </tr>
 <% end %>
 </table>
