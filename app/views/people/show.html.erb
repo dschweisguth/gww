@@ -6,33 +6,37 @@
 
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
 
-<%=h @unfound_photos.length %> remain unfound. (
-<% @unfound_photos.each_with_index do |photo, photo_index| -%>
+<%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<%= @unfound_photos.empty? ? '.' : ':' %>
+<% if ! @unfound_photos.empty? %>
+<%   @unfound_photos.each_with_index do |photo, photo_index| -%>
 <%= link_to photo_index + 1, edit_photo_url(photo) %>
+<%   end -%>
 <% end -%>
-)<br/>
+<br/>
 
-<%=h @revealed_photos.length %> were revealed. (
-<% @revealed_photos.each_with_index do |photo, photo_index| -%>
+<%= @revealed_photos.length %> <%= singularize 'were', @revealed_photos.length %> revealed<%= @revealed_photos.empty? ? '.' : ':' %>
+<% if ! @unfound_photos.empty? %>
+<%   @revealed_photos.each_with_index do |photo, photo_index| -%>
 <%= link_to photo_index + 1, edit_photo_url(photo) %>
+<%   end -%>
 <% end -%>
-)<br/>
+<br/>
 
 <% @guessers.each do |guesser| %>
-<%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, show_person_url(guesser[:person]) %> (
+<%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, show_person_url(guesser[:person]) %>:
 <%   guesser[:photos].each_with_index do |photo, photo_index| %>
 <%=    link_to photo_index + 1, edit_photo_url(photo) %>
 <%   end -%>
-)<br/>
+<br/>
 <% end %>
 <br/>
 
 <b><%=h @person.username %> has correctly guessed <%=h @guessed_count %> photos</b><br/>
 
 <% @posters.each do |poster| %>
-<%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, show_person_url(poster[:person]) %> (
+<%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, show_person_url(poster[:person]) %>
 <%   poster[:photos].each_with_index do |photo, photo_index| -%>
 <%=    link_to photo_index + 1, edit_photo_url(photo) %>
 <%   end -%>
-)<br/>
+<br/>
 <% end %>
