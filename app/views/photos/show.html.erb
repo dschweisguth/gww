@@ -1,6 +1,5 @@
+<%= render :partial => 'image_and_caption', :locals => { :size => nil } %>
 <br/>
-<a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url nil %>" border="0"/></a><br/>
-Added to the group on <%= @photo.dateadded.getlocal.strftime '%B %d, %Y' %> by <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/><br/>
 
 <% if @photo.game_status == 'found' -%>
 This photo was correctly guessed by

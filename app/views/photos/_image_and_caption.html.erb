@@ -1,0 +1,3 @@
+<br/>
+<a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url size %>" border="0"/></a><br/>
+Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %Y' %> by <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/>

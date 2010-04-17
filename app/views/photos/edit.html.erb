@@ -2,14 +2,12 @@
 <%= javascript_include_tag 'effects' %>
 <%= javascript_include_tag 'controls' %>
 
-<br/>
 <% if !flash[:notice].nil? -%>
-  <%= flash[:notice] %><br/>
   <br/>
+  <%= flash[:notice] %><br/>
 <% end -%>
 
-<a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url "m" %>" border="0"/></a><br/>
-Added to the group on <%= @photo.dateadded.getlocal.strftime '%B %d, %Y' %> by <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/>
+<%= render :partial => 'image_and_caption', :locals => { :size => "m" } %>
 
 <% if @unconfirmed.length > 0 -%>
   <%= @photo.person.username %> has <%= @unconfirmed.length %> unconfirmed photos:
