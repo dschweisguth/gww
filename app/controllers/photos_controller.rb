@@ -139,7 +139,7 @@ class PhotosController < ApplicationController
   def unfound_data
     @lasttime = FlickrUpdate.latest.created_at
     @photos = unfound_or_unconfirmed_photos
-    render :layout => false
+    render :action => 'unfound_data.xml.builder', :layout => false
   end
 
   def unfound_or_unconfirmed_photos
