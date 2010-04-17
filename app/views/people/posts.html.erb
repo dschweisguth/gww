@@ -2,7 +2,6 @@
 
 <table>
   <tr>
-    <td>posted by</td>
     <td>added on</td>
     <td>last update</td>
     <td>mapped</td>
@@ -10,7 +9,6 @@
   </tr>  
 <% for photo in @photos %>
   <tr>
-    <td><%= photo.person.username %></td>
     <td><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.mapped %></td>
