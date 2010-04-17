@@ -1,4 +1,5 @@
 #!/bin/sh
+cd `dirname $0`/..
 git pull
 touch tmp/restart.txt
-rm -r `dirname $0`/../public/cache
+rm -r public/cache
