@@ -1,0 +1,4 @@
+#!/bin/sh
+git pull
+touch tmp/restart.txt
+rm -r `dirname $0`/../public/cache
