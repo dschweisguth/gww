@@ -1,0 +1,52 @@
+<br/>
+<a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url nil %>" border="0"/></a>
+<br/>
+
+<b>Posted by</b> <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/><br/>
+
+<% if @photo.game_status == 'found' -%>
+This photo was correctly guessed by
+<%= @photo.guesses.map { |guess|
+  link_to guess.person.username, show_person_url(guess.person) }.join ', ' -%>.
+<% elsif @photo.game_status == 'revealed' -%>
+This photo's location was revealed by the person who posted it.
+<% else -%>
+This photo is <%= @photo.game_status %>.
+<% end -%>
+<br/>
+
+<% if ! @photo.guesses.empty? || @photo.revelation then -%>
+<table>
+    <tr>
+        <td class="dheader">Person</td>
+        <td class="dheader">Date</td>
+        <td class="dheader">Text</td>
+    </tr>
+<% if ! @photo.guesses.empty? then -%>
+    <% @photo.guesses.each_with_index do |guess, item_index| -%>
+    <tr>
+        <td class="dvalue"><%= guess.person.username %></td>
+        <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%=h guess.guess_text %></td>
+    </tr>
+    <% end -%>
+<% elsif @photo.revelation then -%>
+    <tr>
+        <td class="dvalue"><%=h @photo.person.username %></td>
+        <td class="dvalue"><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
+    </tr>
+<% end -%>
+</table>
+<br/>
+<% end -%>
+
+<% if ! @comments.empty? -%>
+<% @comments.each do |comment| -%>
+  <% @photo.guesses.each do |guess| -%>
+  <% end -%>
+  <b><%=h comment.username %> says:</b> <%= comment.comment_text %><br/>
+<% end -%>
+<% else -%>
+No comments available.
+<% end -%>
