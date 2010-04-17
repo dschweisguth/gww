@@ -24,11 +24,8 @@
 I think
 <% if @photo.game_status == 'found' -%>
 this photo was correctly guessed by
-<% person_links = [] -%>
-<% @photo.guesses.each do |guess| -%>
-<%   person_links.push link_to guess.person.username, show_person_url(guess.person) -%>
-<% end -%>
-<%= person_links.join(', ') %>.
+<%= @photo.guesses.map { |guess|
+  link_to guess.person.username, show_person_url(guess.person) }.join ', ' -%>.
 <% elsif @photo.game_status == 'revealed' -%>
 this photo's location was revealed by the person who posted it.
 <% elsif @photo.game_status == 'unfound' -%>
