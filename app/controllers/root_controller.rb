@@ -1,4 +1,4 @@
-class IndexController < ApplicationController
+class RootController < ApplicationController
   caches_page :index
 
   def index
