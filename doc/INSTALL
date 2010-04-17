@@ -101,7 +101,7 @@ Create production database:
 Create test database:
     mysql> grant all privileges on gww_test.* to gww@localhost;
     rake RAILS_ENV=test db:create
-    rake environment RAILS_ENV=test db:test:clone_structure
+    rake db:test:clone_structure
 
 Test GWW
 --------
