@@ -91,13 +91,16 @@ Create databases
 
 mysql> grant usage on *.* to gww@localhost identified by '(the password)';
 Create dev database:
-    mysql> create database gww_dev default charset latin1;
     mysql> grant all privileges on gww_dev.* to gww@localhost;
+    rake db:create
     gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
 Create production database:
-    Do all steps as above, but for gww_production
+    mysql> grant all privileges on gww_production.* to gww@localhost;
+    rake RAILS_ENV=production db:create
+    gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
 Create test database:
-    Create database and grant privileges as above, but for gww_test
+    mysql> grant all privileges on gww_test.* to gww@localhost;
+    rake RAILS_ENV=test db:create
     rake environment RAILS_ENV=test db:test:clone_structure
 
 Test GWW

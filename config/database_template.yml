@@ -1,10 +1,12 @@
 # Copy this file to database.yml in the same directory, and
 
 defaults: &defaults
-    adapter:  mysql
-    username:  # <-- put your database username here
-    password:  # <-- put your database password here
-    host:     localhost
+  adapter:   mysql
+  username:   # <-- put your database username here
+  password:   # <-- put your database password here
+  host:      localhost
+  charset:   latin1
+  collation: latin1_swedish_ci
 
 development:
   database: gww_dev
