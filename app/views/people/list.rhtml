@@ -4,7 +4,7 @@
 <% @people.each do |person| %>
 <tr>
   <td><%= person[:guesscount] %></td>
-  <td><%= link_to person[:person][:username], :action => 'show', :id => person[:person][:id] %> (<%= person[:photocount] %>)</td>
+  <td><%= link_to person[:person].username, show_person_url(person[:person]) %> (<%= person[:photocount] %>)</td>
 </tr>
 <% end %>
 </table>

@@ -1,7 +1,7 @@
 <br/>
-<%= link_to 'All Guesses', :action => 'latest_guesses', :id => @person.id %> /
-<%= link_to 'All Posts', :action => 'latest_posts', :id => @person.id %> /
-<%= link_to 'All Comments', :action => 'commented_on', :id => @person.id %><br/>
+<%= link_to 'All Guesses', :action => 'latest_guesses', :id => @person %> /
+<%= link_to 'All Posts', :action => 'latest_posts', :id => @person %> /
+<%= link_to 'All Comments', :action => 'commented_on', :id => @person %><br/>
 <br/>
 
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
@@ -19,7 +19,7 @@
 )<br/>
 
 <% @guessers.each do |guesser| %>
-<%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, :action => 'show', :id => guesser[:person].id %> (
+<%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, show_person_url(guesser[:person]) %> (
 <%   guesser[:photos].each_with_index do |photo, photo_index| %>
 <%=    link_to photo_index + 1, edit_photo_url(photo) %>
 <%   end -%>
@@ -30,7 +30,7 @@
 <b><%=h @person.username %> has correctly guessed <%=h @guessed_count %> photos</b><br/>
 
 <% @posters.each do |poster| %>
-<%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, :action => 'show', :id => poster[:person].id %> (
+<%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, show_person_url(poster[:person]) %> (
 <%   poster[:photos].each_with_index do |photo, photo_index| -%>
 <%=    link_to photo_index + 1, edit_photo_url(photo) %>
 <%   end -%>

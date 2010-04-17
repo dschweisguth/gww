@@ -11,7 +11,7 @@
 <a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url "m" %>" border="0"/></a>
 <br/>
 
-<b>Posted by</b> <%= link_to @photo.person.username, :controller => 'people', :action => 'show', :id => @photo.person.id %>.<br/>
+<b>Posted by</b> <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/>
 
 <% if @unconfirmed.length > 0 -%>
   <%= @photo.person.username %> has <%= @unconfirmed.length %> unconfirmed photos:
@@ -26,7 +26,7 @@ I think
 this photo was correctly guessed by
 <% person_links = [] -%>
 <% @photo.guesses.each do |guess| -%>
-<%   person_links.push(link_to(guess.person.username, :controller => 'people', :action => 'show', :id => guess.person.id)) -%>
+<%   person_links.push link_to guess.person.username, show_person_url(guess.person) -%>
 <% end -%>
 <%= person_links.join(', ') %>.
 <% elsif @photo.game_status == 'revealed' -%>
