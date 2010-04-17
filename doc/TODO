@@ -1,4 +1,3 @@
-Remove special case from unverified.rhtml
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
 Open appropriate parts of GWW to players

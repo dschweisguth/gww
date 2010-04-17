@@ -11,7 +11,7 @@
   </tr>  
 <% for photo in @photos -%>
   <tr>
-    <td><%= photo.person ? photo.person.username : 'unknown' %></td>
+    <td><%= photo.person.username %></td>
     <td><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.mapped %></td>
