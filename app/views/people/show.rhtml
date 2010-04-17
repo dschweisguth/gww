@@ -8,20 +8,20 @@
 
 <%=h @unfound_photos.length %> remain unfound. (
 <% @unfound_photos.each_with_index do |photo, photo_index| -%>
-<%= link_to photo_index + 1, :controller => 'photos', :action => 'edit', :id => photo.id %>
+<%= link_to photo_index + 1, edit_photo_url(photo) %>
 <% end -%>
 )<br/>
 
 <%=h @revealed_photos.length %> were revealed. (
 <% @revealed_photos.each_with_index do |photo, photo_index| -%>
-<%= link_to photo_index + 1, :controller => 'photos', :action => 'edit', :id => photo.id %>
+<%= link_to photo_index + 1, edit_photo_url(photo) %>
 <% end -%>
 )<br/>
 
 <% @guessers.each do |guesser| %>
 <%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, :action => 'show', :id => guesser[:person].id %> (
-<%   guesser[:photos].each_with_index do |photo, photo_index| -%>
-<%=    link_to photo_index + 1, :controller => 'photos', :action => 'edit', :id => photo.id %>
+<%   guesser[:photos].each_with_index do |photo, photo_index| %>
+<%=    link_to photo_index + 1, edit_photo_url(photo) %>
 <%   end -%>
 )<br/>
 <% end %>
@@ -32,7 +32,7 @@
 <% @posters.each do |poster| %>
 <%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, :action => 'show', :id => poster[:person].id %> (
 <%   poster[:photos].each_with_index do |photo, photo_index| -%>
-<%=    link_to photo_index + 1, :controller => 'photos', :action => 'edit', :id => photo.id %>
+<%=    link_to photo_index + 1, edit_photo_url(photo) %>
 <%   end -%>
 )<br/>
 <% end %>

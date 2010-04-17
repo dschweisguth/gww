@@ -16,7 +16,7 @@
 <% if @unconfirmed.length > 0 -%>
   <%= @photo.person.username %> has <%= @unconfirmed.length %> unconfirmed photos:
   <% @unconfirmed.each_with_index do |photo, photo_index| -%>
-    <%= link_to photo_index + 1, :controller => 'photos', :action => 'edit', :id => photo.id %>
+    <%= link_to photo_index + 1, edit_photo_url(photo) %>
   <% end -%>
   <br/><br/>
 <% end -%>

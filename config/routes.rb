@@ -30,7 +30,9 @@ ActionController::Routing::Routes.draw do |map|
   #     admin.resources :products
   #   end
 
-  map.root :controller => :root
+  map.root :controller => 'root'
+
+  map.edit_photo 'photos/edit/:id', :controller => 'photos', :action => 'edit'
 
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
