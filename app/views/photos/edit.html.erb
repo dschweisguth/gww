@@ -11,9 +11,14 @@
 <br/>
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>
-<%= radio_button(:photo, :game_status, 'unfound') %> unfound 
-<%= radio_button(:photo, :game_status, 'unconfirmed') %> unconfirmed 
-<%= submit_tag("Change status") %> (removes any guesses or revelation)
+Change this photo's status from <%= @photo.game_status %> to
+<% if @photo.game_status != 'unfound' %>
+  <%= submit_tag 'unfound' %>
+<% end %>
+<% if @photo.game_status != 'unconfirmed' %>
+  <%= submit_tag 'unconfirmed' %>
+<% end %>
+(removes any guesses or revelation)
 <% end %>
 
 <% form_tag :action => 'add_guess', :id => @photo do %>

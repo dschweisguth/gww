@@ -193,12 +193,10 @@ class PhotosController < ApplicationController
   def change_game_status
     expire_cached_pages
     photo = Photo.find params[:id], :include => :revelation
-    photo.game_status = params[:photo][:game_status]
+    photo.game_status = params[:commit]
     Photo.transaction do
-      if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
-	Guess.delete_all [ "photo_id = ?", photo.id ]
-	Revelation.delete photo.revelation.id if photo.revelation
-      end
+      Guess.delete_all [ "photo_id = ?", photo.id ]
+      Revelation.delete photo.revelation.id if photo.revelation
       photo.save
     end
     redirect_to :action => 'edit', :id => photo, :nocomment => :true
