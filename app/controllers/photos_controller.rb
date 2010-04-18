@@ -355,8 +355,8 @@ class PhotosController < ApplicationController
         redirect_to :action => action, :id => photo
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +
-	  "that photo. Perhaps it hasn't been posted to Guess Where SF, " +
-          "or perhaps GWW hasn't updated since it was posted."
+	  "that photo. Perhaps it hasn't been added to Guess Where SF, " +
+          "or perhaps GWW hasn't updated since it was added."
       end
     else
       @message = "Hmmm, that's strange. #{@from} isn't a Flickr photo page. " +
