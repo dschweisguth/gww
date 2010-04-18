@@ -1,9 +1,4 @@
-<%= render :partial => 'image_and_caption', :locals => { :size => nil } %>
-<br/>
-
-<%= render :partial => 'status' %>
-
-<%= render :partial => 'guesses' %>
+<%= render :partial => 'image_and_status', :locals => { :size => nil } %>
 
 <% if ! @comments.empty? -%>
 <h2>Comments</h2>

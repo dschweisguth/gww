@@ -7,27 +7,14 @@
   <%= flash[:notice] %><br/>
 <% end -%>
 
-<%= render :partial => 'image_and_caption', :locals => { :size => "m" } %>
-
-<% if @unconfirmed.length > 0 -%>
-  <%= @photo.person.username %> has <%= @unconfirmed.length %> unconfirmed photos:
-  <% @unconfirmed.each_with_index do |photo, photo_index| -%>
-    <%= link_to photo_index + 1, edit_photo_url(photo) %>
-  <% end -%>
-  <br/>
-<% end -%>
+<%= render :partial => 'image_and_status', :locals => { :size => "m" } %>
 <br/>
-
-<%= render :partial => 'status' %>
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>
 <%= radio_button(:photo, :game_status, 'unfound') %> unfound 
 <%= radio_button(:photo, :game_status, 'unconfirmed') %> unconfirmed 
 <%= submit_tag("Change status") %> (removes any guesses or revelation)
 <% end %>
-
-<%= render :partial => 'guesses' %>
-<br/>
 
 <% form_tag :action => 'add_guess', :id => @photo do %>
 <% if ! @comments.empty? -%>

@@ -151,16 +151,14 @@ class PhotosController < ApplicationController
   def show
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
-    @comments = Comment.find_all_by_photo_id @photo.id
+    @comments = Comment.find_all_by_photo_id @photo
   end
 
   def edit
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
-    @unconfirmed = Photo.find(:all, :conditions =>
-      ["person_id = ? and game_status = ?", @photo.person_id, "unconfirmed"])
     if params[:nocomment]
-      @comments = Comment.find_all_by_photo_id @photo.id
+      @comments = Comment.find_all_by_photo_id @photo
     else
       @comments = load_comments params, @photo
     end

@@ -1,9 +1,0 @@
-<% if @photo.game_status == 'found' -%>
-This photo was correctly guessed by
-<%= @photo.guesses.map { |guess|
-  link_to guess.person.username, show_person_url(guess.person) }.join ', ' -%>.
-<% elsif @photo.game_status == 'revealed' -%>
-This photo's location was revealed by the person who posted it.
-<% else -%>
-This photo is <%= @photo.game_status %>.
-<% end -%>
