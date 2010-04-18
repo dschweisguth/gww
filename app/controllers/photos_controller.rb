@@ -338,14 +338,21 @@ class PhotosController < ApplicationController
     redirect_to :action => 'unverified'
   end
 
+  def view_in_gww
+    in_gww 'show'
+  end
+
   def edit_in_gww
+    in_gww 'edit'
+  end
+
+  def in_gww(action)
     @from = params[:from]
     if @from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if ! photo.nil?
-        redirect_to :action => 'edit', :id => photo.id
-        return
+        redirect_to :action => action, :id => photo
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +
 	  "that photo. Perhaps it hasn't been posted to Guess Where SF, " +

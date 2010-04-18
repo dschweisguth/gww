@@ -23,9 +23,23 @@ Reports, for everyone
 </ul>
 
 <hr/>
-<h2>Edit in GWW bookmarklet</h2>
+<h2>View in GWW bookmarklet</h2>
 
 <p>Don't follow the link below; add it to your bookmarks. It lets you jump from a Flickr photo page to that photo's page in Guess Where Watcher.</p>
+
+<a id="viewInGWW" href="">View in GWW</a>
+<script type="text/javascript">
+function loadViewInGWW() {
+  var script = document.createElement("script");
+  script.src =
+    "http://guesswheresf.org/javascripts/bookmarklets/viewInGWW.js";
+  script.type = "text/javascript";
+  document.body.appendChild(script);
+};
+document.getElementById("viewInGWW").href =
+  "javascript:(" + loadViewInGWW.toString() + ")();"
+</script>
+<br/><br/>
 
 <a id="editInGWW" href="">Edit in GWW</a>
 <script type="text/javascript">
@@ -40,7 +54,7 @@ document.getElementById("editInGWW").href =
   "javascript:(" + loadEditInGWW.toString() + ")();"
 </script>
 
-<p>To add "Edit in GWW" to your bookmarks,</p>
+<p>To add "View in GWW" to your bookmarks,</p>
 
 <h3>Firefox</h3>
 Either
@@ -52,13 +66,13 @@ Either
 <ul>
 <li>Right-click on the link</li>
 <li>Choose Add to Favorites</li>
-<li>If you see Security Alert, tell IE that yes, you want to continue. "Edit in GWW" does nothing unsafe; IE is just being cautious.</li>
+<li>If you see Security Alert, tell IE that yes, you want to continue. "View in GWW" does nothing unsafe; IE is just being cautious.</li>
 <li>Change 'Create in' to Links, so the link goes to your Links toolbar</li>
 <li>Choose Add</li>
 </ul>
 
-<p>To use "Edit in GWW", go to a Flickr photo page and click on or select "Edit
-in GWW". You'll be taken to the GWW photo editing form.</p>
+<p>To use "View in GWW", go to a Flickr photo page and click on or select "View
+in GWW". You'll be taken to the photo's page in GWW.</p>
 
 <hr/>
 <a href="http://github.com/dschweisguth/gww/commits/">Recent software changes</a> - <a href="http://github.com/dschweisguth/gww/">Source code</a> - <a href="/backups/">Backups</a><br/>
