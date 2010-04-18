@@ -362,6 +362,7 @@ class PhotosController < ApplicationController
       @message = "Hmmm, that's strange. #{@from} isn't a Flickr photo page. " +
         "How did we get here?"
     end
+    render :action => 'in_gww'
   end
 
 end
