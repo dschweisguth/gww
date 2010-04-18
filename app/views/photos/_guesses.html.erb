@@ -1,0 +1,24 @@
+<% if ! @photo.guesses.empty? || @photo.revelation -%>
+<table>
+    <tr>
+        <td class="dheader">Person</td>
+        <td class="dheader">Date</td>
+        <td class="dheader">Text</td>
+    </tr>
+<% if ! @photo.guesses.empty? -%>
+    <% @photo.guesses.each do |guess| -%>
+    <tr>
+        <td class="dvalue"><%= guess.person.username %></td>
+        <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%=h guess.guess_text %></td>
+    </tr>
+    <% end -%>
+<% elsif @photo.revelation -%>
+    <tr>
+        <td class="dvalue"><%=h @photo.person.username %></td>
+        <td class="dvalue"><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
+        <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
+    </tr>
+<% end -%>
+</table>
+<% end -%>

@@ -18,17 +18,7 @@
 <% end -%>
 <br/>
 
-<% if @photo.game_status == 'found' -%>
-This photo was correctly guessed by
-<%= @photo.guesses.map { |guess|
-  link_to guess.person.username, show_person_url(guess.person) }.join ', ' -%>.
-<% elsif @photo.game_status == 'revealed' -%>
-This photo's location was revealed by the person who posted it.
-<% elsif @photo.game_status == 'unfound' -%>
-This photo is unfound.
-<% elsif @photo.game_status == 'unconfirmed' -%>
-This photo is unconfirmed.
-<% end -%>
+<%= render :partial => 'status' %>
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>
 <%= radio_button(:photo, :game_status, 'unfound') %> unfound 
@@ -36,31 +26,7 @@ This photo is unconfirmed.
 <%= submit_tag("Change status") %> (removes any guesses or revelation)
 <% end %>
 
-<% if ! @photo.guesses.empty? || @photo.revelation -%>
-<table>
-    <tr>
-        <td class="dheader">Person</td>
-        <td class="dheader">Date</td>
-        <td class="dheader">Text</td>
-    </tr>
-<% if ! @photo.guesses.empty? -%>
-    <% @photo.guesses.each do |guess| -%>
-    <tr>
-        <td class="dvalue"><%= guess.person.username %></td>
-        <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
-        <td class="dvalue"><%=h guess.guess_text %></td>
-    </tr>
-    <% end -%>
-</table>
-<% elsif @photo.revelation -%>
-    <tr>
-        <td class="dvalue"><%=h @photo.person.username %></td>
-        <td class="dvalue"><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
-        <td class="dvalue"><%=h @photo.revelation.revelation_text %></td>
-    </tr>
-<% end -%>
-</table>
-<% end -%>
+<%= render :partial => 'guesses' %>
 <br/>
 
 <% form_tag :action => 'add_guess', :id => @photo do %>
