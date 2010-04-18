@@ -8,7 +8,7 @@ function editInGWW() {
     if (match != null) {
       window.location = match[1] + 'edit' + match[2];
     } else {
-      alert('Try it on a Flickr photo page.');
+      alert('Try it on a Flickr or GWW photo page.');
     }
   }
   return false;
