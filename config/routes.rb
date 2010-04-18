@@ -33,6 +33,8 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'root'
 
   map.show_person 'people/show/:id', :controller => 'people', :action => 'show'
+
+  map.show_photo 'photos/show/:id', :controller => 'photos', :action => 'show'
   map.edit_photo 'photos/edit/:id', :controller => 'photos', :action => 'edit'
 
   # Install the default routes as the lowest priority.
