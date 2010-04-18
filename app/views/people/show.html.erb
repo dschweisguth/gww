@@ -1,8 +1,13 @@
-<br/>
-<%= link_to 'All Guesses', :action => 'guesses', :id => @person %> /
-<%= link_to 'All Posts', :action => 'posts', :id => @person %> /
-<%= link_to 'All Comments', :action => 'comments', :id => @person %><br/>
-<br/>
+<h1><%=h @person.username %></h1>
+
+On Flickr: <a href="http://www.flickr.com/people/<%= @person.flickrid %>/">Profile</a> -
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/">Photostream</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+In Guess Where SF:
+<%= link_to 'All Guesses', :action => 'guesses', :id => @person %> -
+<%= link_to 'All Posts', :action => 'posts', :id => @person %> -
+<%= link_to 'All Comments', :action => 'comments', :id => @person %>
+<br/><br/>
 
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
 
