@@ -97,7 +97,7 @@ class PhotosController < ApplicationController
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{page - 1} pages out of " +
       "#{parsed_photos['pages']}.</br>"
-    redirect_to root_url
+    redirect_to :controller => 'admin/root'
 
   end
 

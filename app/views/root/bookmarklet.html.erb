@@ -1,0 +1,39 @@
+<h1>"View in GWW" bookmarklet</h1>
+
+<p>Don't follow the link below; add it to your bookmarks. It lets you jump from a Flickr photo page to that photo's page in Guess Where Watcher, so you can see whether and how the photo has been scored.</p>
+
+<a id="viewInGWW" href="">View in GWW</a>
+<script type="text/javascript">
+function loadViewInGWW() {
+  var script = document.createElement("script");
+  script.src =
+    "http://guesswheresf.org/javascripts/bookmarklets/viewInGWW.js";
+  script.type = "text/javascript";
+  document.body.appendChild(script);
+};
+document.getElementById("viewInGWW").href =
+  "javascript:(" + loadViewInGWW.toString() + ")();"
+</script>
+
+<p>To add "View in GWW" to your bookmarks,</p>
+
+<h3>Firefox</h3>
+<p>Either</p>
+<ul>
+  <li>drag the link to your bookmarks toolbar, or</li>
+  <li>right-click (Windows) or control-click (Mac) on it and choose Bookmark This Link.</li>
+</ul>
+<h3>Internet Explorer</h3>
+<ul>
+<li>Right-click on the link</li>
+<li>Choose Add to Favorites</li>
+<li>If you see Security Alert, tell IE that yes, you want to continue. "View in GWW" does nothing unsafe; IE is just being cautious.</li>
+<li>Change 'Create in' to Links, so the link goes to your Links toolbar</li>
+<li>Choose Add</li>
+</ul>
+
+<p>To use "View in GWW", go to a Flickr photo page and click on or select "View
+in GWW". You'll be taken to the photo's page in GWW.</p>
+
+<hr/>
+<a href="/">GWW home</a>
