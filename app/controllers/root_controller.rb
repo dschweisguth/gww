@@ -5,4 +5,6 @@ class RootController < ApplicationController
     @latest = FlickrUpdate.latest
   end
 
+  caches_page :about, :bookmarklet
+
 end

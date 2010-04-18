@@ -7,19 +7,19 @@
 
 <h2>Update</h2>
 <ul>
-<li><%= link_to 'Update photos now', :controller => '/photos', :action => 'update' %> (click only once, then wait until this page refreshes)</li>
+<li><%= link_to 'Update photos now', :controller => 'photos', :action => 'update' %> (click only once, then wait until this page refreshes)</li>
 </ul>
 
 <h2>Score</h2>
 <ul>
-<li><%= link_to 'Unfound or unconfirmed photos', :controller => '/photos', :action => 'unfound' %> (<%= @unfound_photos_count %>)</li>
-<li><%= link_to 'Inaccessible and unfound or unconfirmed photos', :controller => '/photos', :action => 'unverified' %> (<%= @unverified_photos_count %>), for possible manual removal</li>
-<li><%= link_to 'Photos worth more than one point', :controller => '/photos', :action => 'multipoint' %> (<%= @multipoint_photos_count %>), for possible rescoring</li>
+<li><%= link_to 'Unfound or unconfirmed photos', :controller => 'photos', :action => 'unfound' %> (<%= @unfound_photos_count %>)</li>
+<li><%= link_to 'Inaccessible and unfound or unconfirmed photos', :controller => 'photos', :action => 'unverified' %> (<%= @unverified_photos_count %>), for possible manual removal</li>
+<li><%= link_to 'Photos worth more than one point', :controller => 'photos', :action => 'multipoint' %> (<%= @multipoint_photos_count %>), for possible rescoring</li>
 </ul>
 
 <h2>Publish</h2>
 <ul>
-<li><%= link_to 'Score report', :controller => '/guesses', :action => 'report' %></li>
+<li><%= link_to 'Score report', :controller => 'guesses', :action => 'report' %></li>
 </ul>
 
 <br/>
@@ -27,4 +27,4 @@
 <%= link_to 'Get the "Edit in GWW" bookmarklet', :action => 'bookmarklet' %><br/><br/>
 
 <hr/>
-<a href="/">GWW home</a>
+<%= link_to 'GWW home', root_url %>

@@ -1,6 +1,8 @@
+Remove duplication from photos controllers
+Open appropriate parts of GWW to players
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
-Open appropriate parts of GWW to players
+Prevent direct access to cache
 Review test coverage and add TODOs to write more tests and assertions
 Add more info to unfound list to make it easier to find a specific photo
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
@@ -31,3 +33,4 @@ In the list of unfounds, highlight photos which if guessed would enter the
 Track old usernames
   Put on user page
   Correct guessed_at+revealed_at from comments made under those usernames
+Fix admin index page caching
