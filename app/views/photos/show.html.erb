@@ -1,3 +1,6 @@
+<%= render :partial => 'shared/breadcrumbs' %>
+<hr/>
+
 <%= render :partial => 'image_and_status', :locals => { :size => nil } %>
 
 <% if ! @comments.empty? -%>
@@ -10,3 +13,7 @@
 <% else -%>
 No comments available.
 <% end -%>
+
+<br/>
+<hr/>
+<%= render :partial => 'shared/breadcrumbs' %>
