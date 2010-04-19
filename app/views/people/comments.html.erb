@@ -1,27 +1,28 @@
+<%= render :partial => 'person_breadcrumbs' %>
+<hr/>
+<h1><%= @photos.length %> photos commented on by <%=h @person.username %></h1>
+
 <table>
   <tr>
     <td class="cellspace">&nbsp;</td>
-    <td colspan="3" class="dheader">I think <%= @person[:username] %> commented on <%= @photos.length %> photos</td>
-  <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td class="dheader">link</td>
+    <td class="dheader" colspan="2">links</td>
     <td class="dheader">posted by</td>
     <td class="dheader">found by</td>
   </tr>  
 <% @photos.each_with_index do |photo, photo_index| %>
   <tr>
     <td class="dnum"><%= photo_index + 1 %>.</td>
-    <td class="dvalue"><a href="<%= photo.page_url %>">Link</a></td>
-    <td class="dvalue"><%= photo.person.username %></td>
-    <% if photo[:game_status] == 'found' -%>
-    <% person_names = [] -%>
-    <% photo.guesses.each do |guess| -%>
-    <% person_names.push(guess.person.username) -%>
-    <% end -%>
-    <td class="dvalue"><%= person_names.join(', ') %></td>
+    <td class="dvalue"><a href="<%= photo.page_url %>">Flickr</a></td>
+    <td class="dvalue"><%= link_to 'GWW', show_photo_url(photo) %></td>
+    <td class="dvalue"><%= link_to photo.person.username, show_person_url(photo.person) %></td>
+    <% if photo.game_status == 'found' -%>
+    <td class="dvalue"><%= photo.guesses.map { |guess| link_to guess.person.username, show_person_url(guess.person) }.join ', ' %></td>
     <% else -%>
     <td class="dvalue"><b><%= photo.game_status %></b></td>
     <% end -%>
   </tr>
 <% end %>
 </table>
+
+<hr/>
+<%= render :partial => 'person_breadcrumbs' %>

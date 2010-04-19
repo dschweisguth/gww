@@ -1,6 +1,8 @@
 Add navigation to player subpages, admin pages
+Replace loops with map in reports
 Clean up CSS
 Open appropriate parts of GWW to players
+Revisit people/comments performance
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
 Prevent direct access to cache

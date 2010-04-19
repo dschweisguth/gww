@@ -1,19 +1,26 @@
+<%= render :partial => 'person_breadcrumbs' %>
+<hr/>
 <h1><%= @photos.length %> photos posted by <%= @person[:username] %></h1>
 
 <table>
   <tr>
-    <td>added on</td>
-    <td>last update</td>
-    <td>mapped</td>
-    <td>game status</td>
+    <th colspan="2">links</th>
+    <th>date added</th>
+    <th>last update</th>
+    <th>mapped</th>
+    <th>game status</th>
   </tr>  
 <% for photo in @photos %>
   <tr>
+    <td><a href="<%= photo.page_url %>">Flickr</a></td>
+    <td><%= link_to 'GWW', show_photo_url(photo) %></td>
     <td><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
     <td><%= photo.mapped %></td>
     <td><b><%= photo.game_status %></b></td>
-    <td><%= link_to 'Show', show_photo_url(photo) %></td>
   </tr>
 <% end %>
 </table>
+
+<hr/>
+<%= render :partial => 'person_breadcrumbs' %>

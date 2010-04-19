@@ -1,29 +1,32 @@
+<%= render :partial => 'person_breadcrumbs' %>
+<hr/>
+<h1><%= @guesses.length %> guesses by <%=h @person.username %></h1>
+
 <table>
   <tr>
     <td class="cellspace">&nbsp;</td>
-    <td colspan="5" class="dheader"><%= @guesses.length %> guesses from <%= @person[:username] %></td>
-  <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td class="dheader">link</td>
+    <td class="dheader" colspan="2">links</td>
     <td class="dheader">posted by</td>
-    <td class="dheader">date guessed</td>
     <td class="dheader">date added</td>
-    <td class="dheader">photo flickr id</td>
+    <td class="dheader">date guessed</td>
   </tr>  
 <% @guesses.each_with_index do |guess, guess_index| %>
-<% photo = guess.photo -%>
   <tr>
     <td class="dnum"><%= guess_index + 1 %>.</td>
-    <% if photo[:person_id] != 0 -%>
-    <td class="dvalue"><a href="<%= photo.page_url %>">Link</a></td>
-    <td class="dvalue"><%= photo.person.username %></td>
+    <% if guess.photo.person_id != 0 -%>
+    <td class="dvalue"><a href="<%= guess.photo.page_url %>">Flickr</a></td>
+    <td class="dvalue"><%= link_to 'GWW', show_photo_url(guess.photo) %></td>
+    <td class="dvalue"><%= link_to guess.photo.person.username, show_person_url(guess.photo.person) %></td>
     <% else -%>
     <td class="dvalue"><b>unknown</b></td>
     <td class="dvalue"><b>unknown</b></td>
+    <td class="dvalue"><b>unknown</b></td>
     <% end -%>
+    <td class="dvalue"><%= guess.photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
     <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= guess.added_at.getlocal.strftime '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= photo.flickrid %></td>
   </tr>
 <% end %>
 </table>
+
+<hr/>
+<%= render :partial => 'person_breadcrumbs' %>

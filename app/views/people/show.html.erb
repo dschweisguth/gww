@@ -1,12 +1,14 @@
+<%= render :partial => 'breadcrumbs' %>
+<hr/>
+
 <h1><%=h @person.username %></h1>
 
-On Flickr: <a href="http://www.flickr.com/people/<%= @person.flickrid %>/">Profile</a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/">Photostream</a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+On Flickr: <a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%=h @person.username %>'s profile</a> -
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/"><%=h @person.username %>'s photostream</a><br/>
 In Guess Where SF:
-<%= link_to 'All Guesses', :action => 'guesses', :id => @person %> -
-<%= link_to 'All Posts', :action => 'posts', :id => @person %> -
-<%= link_to 'All Comments', :action => 'comments', :id => @person %>
+<%= link_to "#{@person.username}'s posts", :action => 'posts', :id => @person %> -
+<%= link_to "#{@person.username}'s guesses", :action => 'guesses', :id => @person %> -
+<%= link_to "#{@person.username}'s comments", :action => 'comments', :id => @person %>
 <br/><br/>
 
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
@@ -20,7 +22,7 @@ In Guess Where SF:
 <br/>
 
 <%= @revealed_photos.length %> <%= singularize 'were', @revealed_photos.length %> revealed<%= @revealed_photos.empty? ? '.' : ':' %>
-<% if ! @unfound_photos.empty? %>
+<% if ! @revealed_photos.empty? %>
 <%   @revealed_photos.each_with_index do |photo, photo_index| -%>
 <%= link_to photo_index + 1, show_photo_url(photo) %>
 <%   end -%>
@@ -28,7 +30,7 @@ In Guess Where SF:
 <br/>
 
 <% @guessers.each do |guesser| %>
-<%=  guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, show_person_url(guesser[:person]) %>:
+<%=  guesser[:photos].length %> <%= singularize 'were', guesser[:photos].length %> guessed by <%= link_to guesser[:person].username, show_person_url(guesser[:person]) %>:
 <%   guesser[:photos].each_with_index do |photo, photo_index| %>
 <%=    link_to photo_index + 1, show_photo_url(photo) %>
 <%   end -%>
@@ -39,9 +41,12 @@ In Guess Where SF:
 <b><%=h @person.username %> has correctly guessed <%=h @guessed_count %> photos</b><br/>
 
 <% @posters.each do |poster| %>
-<%=  poster[:photos].length %> posted by <%= link_to poster[:person].username, show_person_url(poster[:person]) %>
+<%=  poster[:photos].length %> <%= singularize 'were', poster[:photos].length %> posted by <%= link_to poster[:person].username, show_person_url(poster[:person]) %>
 <%   poster[:photos].each_with_index do |photo, photo_index| -%>
 <%=    link_to photo_index + 1, show_photo_url(photo) %>
 <%   end -%>
 <br/>
 <% end %>
+
+<hr/>
+<%= render :partial => 'breadcrumbs' %>
