@@ -1,9 +1,6 @@
 <%= render :partial => 'shared/breadcrumbs' %>
 <hr/>
-<h1>Unfound photos</h1>
-
-<p>As of <%= @lasttime.getlocal.strftime '%A, %B %d, %I:%M %p' %>, there were
-<%= @photos.length %> unfound photos in GWSF.</p>
+<h1><%= @photos.length %> unfound photos</h1>
 
 <table>
   <tr>
