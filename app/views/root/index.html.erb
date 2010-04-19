@@ -1,5 +1,14 @@
 <h1>Guess Where Watcher</h1>
 
+<p>Welcome to Guess Where Watcher, the <a
+href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
+application! As well as allowing administrators to score guesses, GWW lets
+players see all of its data. Don't forget, though, that there are other tools
+that are usually even more useful for GWSF players than GWW: David Gallagher's
+<a href="http://anythreewords.com/gwsf/">list of unfounds with thumbnails</a>
+and Jef Poskanzer's <a href="http://www.acme.com/flickr/searchr/">Flickr
+Comment Searchr</a>.</p>
+
 <%= render :partial => 'shared/most_recent_update' %>
 
 <h2>Reports</h2>
@@ -11,6 +20,7 @@
 </ul>
 
 <h2>API</h2>
+<p>The following page is in XML format, intended to be used by other programs and analytically minded humans.</p>
 <ul>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound_data' %></li>
 </ul>
