@@ -1,3 +1,6 @@
+<%= render :partial => 'shared/breadcrumbs' %>
+<hr/>
+
 <table width="1600">
   <tr>
     <td colspan="4" class="dheader"><%= @guesses_count %> correct guesses as of <%= @latest_update.getlocal.strftime '%A, %B %d, %I%p' %></td>
@@ -89,3 +92,6 @@
     </td>
   </tr>
 </table>
+
+<hr/>
+<%= render :partial => 'shared/breadcrumbs' %>

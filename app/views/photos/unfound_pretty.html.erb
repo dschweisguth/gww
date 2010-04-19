@@ -1,15 +1,11 @@
+<%= render :partial => 'shared/breadcrumbs' %>
+<hr/>
+<h1>Unfound photos</h1>
+
+<p>As of <%= @lasttime.getlocal.strftime '%A, %B %d, %I:%M %p' %>, there were
+<%= @photos.length %> unfound photos in GWSF.</p>
+
 <table>
-  <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td colspan="5" class="cellspace"><a href="http://anythreewords.com/gwsf/">A version of this list with thumbnails</a> by <a href="http://www.flickr.com/photos/anythreewords/">David Gallagher</a></td>
-  </tr>
-  <tr>
-    <td colspan="6" class="cellspace">&nbsp;</td>
-  </tr>
-  <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td colspan="5" class="dheader"><%= @photos.length %> unfound photos as of <%= @lasttime.getlocal.strftime '%A, %B %d, %I %p' %></td>
-  </tr>
   <tr>
     <td class="cellspace">&nbsp;</td>
     <td class="dheader">link</td>
@@ -25,7 +21,10 @@
     <td class="dvalue"><%=h photo.person.username %></td>
     <td class="dvalue"><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
     <td class="dvalue"><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
-    <td class="dvalue"><%= photo.game_status == 'unconfirmed' ? 'X': '&nbsp;' %></td>
+    <td class="dvalue"><%= photo.game_status == 'unconfirmed' ? 'X' : '&nbsp;' %></td>
   </tr>
 <% end %>
 </table>
+
+<hr/>
+<%= render :partial => 'shared/breadcrumbs' %>
