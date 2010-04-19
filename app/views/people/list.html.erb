@@ -3,10 +3,16 @@
 <h1><%= @people.length %> active members</h1>
 
 <table>
+<tr>
+  <th>Score</th>
+  <th>Player</th>
+  <th>Photos posted</th>
+</tr>
 <% @people.each do |person| %>
 <tr>
   <td><%= person[:guesscount] %></td>
-  <td><%= link_to person[:person].username, show_person_url(person[:person]) %> (<%= person[:photocount] %>)</td>
+  <td><%= link_to person[:person].username, show_person_url(person[:person]) %></td>
+  <td><%= person[:photocount] %></td>
 </tr>
 <% end %>
 </table>
