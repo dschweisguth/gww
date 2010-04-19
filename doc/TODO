@@ -1,4 +1,5 @@
-Add navigation to admin pages
+Add navigation to player subpages, admin pages
+Clean up CSS
 Open appropriate parts of GWW to players
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
