@@ -10,6 +10,12 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
+  def self.unfound_or_unconfirmed
+    Photo.find :all,
+      :conditions => "game_status in ('unfound', 'unconfirmed')",
+      :include => :person, :order => "lastupdate desc"
+  end
+
   def page_url
     "http://www.flickr.com/photos/#{person.flickrid}/#{flickrid}/in/pool-guesswheresf/";
   end

@@ -103,13 +103,7 @@ class Admin::PhotosController < ApplicationController
 
   caches_page :unfound
   def unfound
-    @photos = unfound_or_unconfirmed_photos
-  end
-
-  def unfound_or_unconfirmed_photos
-    Photo.find :all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')",
-      :include => :person, :order => "lastupdate desc"
+    @photos = Photo.unfound_or_unconfirmed
   end
 
   caches_page :unverified
