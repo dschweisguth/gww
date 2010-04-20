@@ -1,11 +1,12 @@
-Add navigation to player subpages, admin pages
-Replace loops with map in reports
-Clean up CSS
-Open appropriate parts of GWW to players
 Revisit people/comments performance
+Replace loops with map in reports
+Add navigation to admin pages
+Clean up CSS
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
 Prevent direct access to cache
+Fix admin index page caching
+Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
 Add more info to unfound list to make it easier to find a specific photo
 Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
@@ -36,4 +37,3 @@ In the list of unfounds, highlight photos which if guessed would enter the
 Track old usernames
   Put on user page
   Correct guessed_at+revealed_at from comments made under those usernames
-Fix admin index page caching
