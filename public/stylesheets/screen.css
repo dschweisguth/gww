@@ -11,28 +11,18 @@ body {
     text-align: left;
     background-color: #ffffff;
 }
+
 a {
-    text-decoration: underline;
     font-weight: bold;
-    color: #0000ff;
 }
-a:hover {
-    text-decoration: underline;
-    font-weight: bold;
-    color: #0000ff;
-}
-a:visited {
-    text-decoration: none;
-    font-weight: bold;
-    color: #333333;
-    background-color: #cccccc;
-}
+
 span.section {
     padding: 3px 5px 3px 5px;
     text-decoration: none;
     color: #000000;
     background-color: #cccccc;
 }
+
 span.notice {
     padding: 4px 8px 4px 8px;
     font-weight: bold;
@@ -50,6 +40,7 @@ span.notice {
 }
 
 /* table styling */
+
 table {
     padding: 0px;
     margin: 6px 0px 0px 0px;
@@ -60,17 +51,21 @@ table {
     color: #000000;
     text-align: left;
 }
+
 td.header {
     padding: 4px 0px 2px 0px;
 }
+
 td.cellspace {
     padding: 0px 10px 0px 10px;
 }
+
 td.address {
     padding: 3px 5px 3px 5px;
     color: #333333;
     background-color:  #eeeeee;
 }
+
 td.dheader {
     padding: 3px 5px 3px 5px;
     font-size: 11px;
@@ -80,6 +75,7 @@ td.dheader {
     border-bottom:  1px solid #ffffff;
     background-color: #dddddd;
 }
+
 td.dvalue {
     padding: 3px 5px 3px 5px;
     vertical-align: top;
@@ -87,6 +83,7 @@ td.dvalue {
     border-bottom:  1px solid #ffffff;
     background-color: #eeeeee;
 }
+
 td.dcurrency {
     padding: 3px 5px 3px 5px;
     font-weight: bold;
@@ -96,6 +93,7 @@ td.dcurrency {
     border-bottom:  1px solid #ffffff;
     background-color: #eeeeee;
 }
+
 td.dnum {
     padding: 3px 3px 3px 0px;
     font-size: 11px;
@@ -104,6 +102,7 @@ td.dnum {
     vertical-align: top;
     background-color: #ffffff;
 }
+
 td.doptions {
     padding: 1px 5px 1px 5px;
     font-size: 11px;
@@ -112,17 +111,20 @@ td.doptions {
     border-bottom:  1px solid #ffffff;
     background-color: #ffffff;
 }
+
 td.dholder {
   padding: 0px;
   text-align: left;
   vertical-align: top;
 }
+
 td.dmark {
   padding: 0px;
   text-align: left;
   vertical-align: top;
   background-color: #33ffff;
 }
+
 table.indented {
     padding: 0px;
     font-family: arial, helvetica, sans-serif;
@@ -134,6 +136,7 @@ table.indented {
 }
 
 /* for admin */
+
 span.hilight {
   background-color: #cccccc;
 }
@@ -145,11 +148,13 @@ span.hilight {
     margin: 0px 10px 0px 10px;
     background-color: #ffffff;
 }   
+
 #topbar img.logo {
     float: right;
     padding: 0px;
     margin: 5px 0px 0px 0px;
 }
+
 #topbar h1.pagetitle {
     float: left;
     padding: 0px;
@@ -158,10 +163,12 @@ span.hilight {
     line-height: 26px;
     font-weight: bold;
 }
+
 #topbar a {
     text-decoration: none;
     color: #000000;
 }
+
 #topbar a:hover {
     text-decoration: none;
     color: #7f7f7f;
@@ -182,18 +189,21 @@ span.hilight {
     margin: 0px;
     clear: both;
 }
+
 #spacer {
     padding: 0px;
     margin: 0px;
     height: 15px;
     clear: both;
 }
+
 #pageline {
     padding: 10px 0px 0px 0px;
     margin: 0px 0px 1px 0px;
     width: 830px;
     border-bottom: 1px solid #7f7f7f;
 }
+
 #columnline {
     padding: 0px;
     margin: 0px 35px 1px 15px;
@@ -208,6 +218,7 @@ span.hilight {
     padding: 0px;
     margin: 15px 15px 5px 15px;
 }
+
 #pageheader h1 {
     padding: 0px;
     margin: 0px;
@@ -226,12 +237,14 @@ span.hilight {
     color: #000000;
     background-color: #ffffff;
 }
+
 #rightcolumn {
     padding: 0px 0px 0px 15px;
     margin: -1px 0px 0px 135px;
     color: #000000;
     background-color: #ffffff;
 }
+
 #leftcolumn h1, #rightcolumn h1 {
     padding: 0px;
     margin: 15px 15px 15px 15px;
@@ -239,6 +252,7 @@ span.hilight {
     font-weight: bold;
     color: #000000;
 }
+
 #leftcolumn h2, #rightcolumn h2 {
     padding: 0px;
     margin: 0px 35px 15px 0px;
@@ -247,6 +261,7 @@ span.hilight {
     font-weight: bold;
     color: #000000;
 }
+
 #leftcolumn h2.topheavy, #rightcolumn h2.topheavy {
     padding: 0px;
     margin: 25px 35px 15px 15px;
@@ -255,6 +270,7 @@ span.hilight {
     font-weight: bold;
     color: #000000;
 }
+
 #leftcolumn h3, #rightcolumn h3 {
     padding: 0px;
     margin: 15px 35px 15px 15px;
@@ -262,6 +278,7 @@ span.hilight {
     font-weight: bold;
     color: #000000;
 }
+
 #leftcolumn h4, #rightcolumn h4 {
     padding: 0px;
     margin: 15px 35px 15px 15px;
@@ -269,6 +286,7 @@ span.hilight {
     font-weight: bold;
     color: #000000;
 }
+
 #leftcolumn p.question, #rightcolumn p.question {
     padding: 0px;
     margin: 15px 35px 15px 15px;
@@ -276,11 +294,13 @@ span.hilight {
     font-weight: bold;
     color: #000000;
 }
+
 #leftcolumn img, #rightcolumn img {
     padding: 0px;
     margin: 0px 10px 0px 15px;
     border: 1px solid #000000;
 }
+
 #leftcolumn img.detect, #rightcolumn img.detect {
     padding: 0px;
     margin: 0px;
@@ -397,4 +417,8 @@ span.hilight {
     text-decoration: none;
     color: #0000ff;
     background-color: #dddddd;
+}
+
+span.unconfirmed {
+  background-color: #ffcc33;
 }

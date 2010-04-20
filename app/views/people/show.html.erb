@@ -13,10 +13,10 @@ In Guess Where SF:
 
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
 
-<%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<%= @unfound_photos.empty? ? '.' : ':' %>
+<%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<% if ! @unfound_photos.find_all { |p| p.game_status == 'unconfirmed' }.empty? %> or <span class="unconfirmed">unconfirmed</span><% end %><%= @unfound_photos.empty? ? '.' : ':' %>
 <% if ! @unfound_photos.empty? %>
 <%   @unfound_photos.each_with_index do |photo, photo_index| -%>
-<%= link_to photo_index + 1, show_photo_url(photo) %>
+<% if photo.game_status == 'unconfirmed' %><span class="unconfirmed"><% end %><%= link_to photo_index + 1, show_photo_url(photo) %><% if photo.game_status == 'unconfirmed' %></span><% end %>
 <%   end -%>
 <% end -%>
 <br/>
