@@ -12,12 +12,8 @@
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>
 Change this photo's status from <%= @photo.game_status %> to
-<% if @photo.game_status != 'unfound' %>
-  <%= submit_tag 'unfound' %>
-<% end %>
-<% if @photo.game_status != 'unconfirmed' %>
-  <%= submit_tag 'unconfirmed' %>
-<% end %>
+<% if @photo.game_status != 'unfound' %><%= submit_tag 'unfound' %><% end %>
+<% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
 (removes any guesses or revelation)
 <% end %>
 
@@ -28,13 +24,9 @@ Change this photo's status from <%= @photo.game_status %> to
     <tr>
       <td>
 	<% @comments.each do |comment| -%>
-	  <% uline = false -%>
-	  <% hilite = false -%>
-	  <% if comment.username == @photo.person.username then hilight = true end -%>
-	  <% @photo.guesses.each do |guess| -%>
-	    <% if comment.username == guess.person.username then uline = true end -%>
-	  <% end -%>
-	  <%= radio_button(:comment, :id, comment.id) %> <b><%= comment.username %> says:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br/>
+	  <% hilight = comment.username == @photo.person.username -%>
+          <% uline = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
+	  <%= radio_button(:comment, :id, comment.id) %> <b><%=h comment.username %> says:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br/>
 	<% end -%>
       </td>
     </tr>
