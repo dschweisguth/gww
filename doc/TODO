@@ -1,5 +1,4 @@
 Add navigation to admin pages
-Clean up CSS
 Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
 Prevent direct access to cache
