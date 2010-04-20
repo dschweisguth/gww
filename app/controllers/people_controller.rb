@@ -88,13 +88,13 @@ class PeopleController < ApplicationController
   caches_page :comments
   def comments
     @person = Person.find params[:id]
-    @comments = Comment.find_all_by_flickrid @person[:flickrid],
-      :include => { :photo => [ :person, { :guesses => :person } ] }
-    @photos = []
-    @comments.each do |comment|
-      @photos.push comment.photo if ! @photos.include? comment.photo
-    end
-    @photos.sort! { |x,y| y[:lastupdate] <=> x[:lastupdate] }
+    photos = Comment.find_by_sql [
+      'select distinct photo_id id from comments where flickrid = ?',
+      @person.flickrid ]
+    photo_ids = photos.map { |p| p.id }
+    @photos = Photo.find photo_ids,
+      :include => [ :person, { :guesses => :person } ],
+      :order => 'lastupdate desc'
   end
   
 end
