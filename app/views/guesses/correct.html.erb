@@ -29,11 +29,7 @@
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-<% if week_index > 0 -%>
-          <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %></td>
-<% else -%>
-          <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %> so far ...</td>
-<% end -%>
+          <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></td>
         </tr>
 <% week[:scores].each do |person_list| -%>
         <tr>
@@ -51,11 +47,7 @@
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-<% if month_index > 0 -%>
-          <td colspan="2" class="dheader">for <%= month[:dates][:begin].strftime '%B, %Y' %></td>
-<% else -%>
-          <td colspan="2" class="dheader">for <%= month[:dates][:begin].strftime '%B, %Y' %> so far...</td>
-<% end -%>
+          <td colspan="2" class="dheader">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></td>
         </tr>
 <% month[:scores].each do |person_list| -%>
         <tr>
@@ -73,11 +65,7 @@
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-<% if year_index > 0 -%>
-          <td colspan="2" class="dheader">for <%= year[:dates][:begin].strftime '%Y' %></td>
-<% else -%>
-          <td colspan="2" class="dheader">for <%= year[:dates][:begin].strftime '%Y' %> so far...</td>
-<% end -%>
+          <td colspan="2" class="dheader">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></td>
         </tr>
 <% year[:scores].each do |person_list| -%>
         <tr>
