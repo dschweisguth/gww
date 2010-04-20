@@ -6,8 +6,6 @@
 <% if ! @comments.empty? -%>
 <h2>Comments</h2>
 <% @comments.each do |comment| -%>
-  <% @photo.guesses.each do |guess| -%>
-  <% end -%>
   <b><%=h comment.username %> says:</b> <%= comment.comment_text %><br/>
 <% end -%>
 <% else -%>
