@@ -16,7 +16,7 @@
 <% day[:scores].each do |person_list| -%>
         <tr>
           <td class="dcurrency"><%= person_list[:guesscount] %></td>
-          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+          <td class="dvalue"><%=h person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
         </tr>
 <% end -%>
 <% end -%>
@@ -32,13 +32,13 @@
 <% if week_index > 0 -%>
           <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %></td>
 <% else -%>
-          <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %> so far...</td>
+          <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %> so far ...</td>
 <% end -%>
         </tr>
 <% week[:scores].each do |person_list| -%>
         <tr>
           <td class="dcurrency"><%= person_list[:guesscount] %></td>
-          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+          <td class="dvalue"><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
         </tr>
 <% end -%>
 <% end -%>
@@ -60,7 +60,7 @@
 <% month[:scores].each do |person_list| -%>
         <tr>
           <td class="dcurrency"><%= person_list[:guesscount] %></td>
-          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+          <td class="dvalue"><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
         </tr>
 <% end -%>
 <% end -%>
@@ -82,7 +82,7 @@
 <% year[:scores].each do |person_list| -%>
         <tr>
           <td class="dcurrency"><%= person_list[:guesscount] %></td>
-          <td class="dvalue"><% person_list[:people].each_with_index do |person, person_index| -%><%= person[:person][:username] %><% if person_index < person_list[:people].length - 1 -%>, <% end -%><% end -%></td>
+          <td class="dvalue"><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
         </tr>
 <% end -%>
 <% end -%>
