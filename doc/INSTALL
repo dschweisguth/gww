@@ -38,6 +38,7 @@ Install gems
     gem install rails
     gem install mysql
     gem install xml-simple
+    rake gems:install # to install will_paginate
     > gem list
     actionmailer (2.3.5)
     actionpack (2.3.5)
@@ -50,6 +51,7 @@ Install gems
     rack (1.0.1)
     rails (2.3.5)
     rake (0.8.7)
+    will_paginate (2.3.12)
     xml-simple (1.0.12)
 
 Install Phusion Passenger (for Linux production)

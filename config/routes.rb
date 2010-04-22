@@ -9,6 +9,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':action', :controller => 'root'
 
   map.show_person 'people/show/:id', :controller => 'people', :action => 'show'
+  map.connect 'people/comments/:id/page/:page', :controller => 'people',
+    :action => 'comments'
 
   map.show_photo 'photos/show/:id', :controller => 'photos', :action => 'show'
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'

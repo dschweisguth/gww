@@ -1,4 +1,3 @@
-Paginate or limit pages that currently take forever, e.g. commented_on
 Rotate production server log
 Prevent direct access to cache
 Fix admin index page caching
