@@ -2,6 +2,9 @@
 <%= javascript_include_tag 'effects' %>
 <%= javascript_include_tag 'controls' %>
 
+<%= render :partial => 'admin/breadcrumbs' %>
+<hr/>
+
 <% if !flash[:notice].nil? -%>
   <br/>
   <%= flash[:notice] %><br/>
@@ -57,3 +60,6 @@ Change this photo's status from <%= @photo.game_status %> to
     </td>
   </tr>
 </table>
+
+<hr/>
+<%= render :partial => 'admin/breadcrumbs' %>

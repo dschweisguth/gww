@@ -18,5 +18,4 @@ document.getElementById("editInGWW").href =
 <p>Install it <%= link_to 'the same way as the "View in GWW" bookmarklet', :controller => '/root', :action => 'bookmarklet' %>.</p>
 
 <hr/>
-<%= link_to 'GWW home', root_url %> -
-<%= link_to 'GWW administration', :controller => 'root' %>
+<%= render :partial => 'admin/breadcrumbs' %>
