@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.connect 'admin', :controller => 'admin/root'
+  map.admin_root 'admin', :controller => 'admin/root'
   map.connect 'admin/:action', :controller => 'admin/root'
   map.connect 'admin/photos/:action/:id', :controller => 'admin/photos'
   map.connect 'admin/guesses/:action', :controller => 'admin/guesses'
