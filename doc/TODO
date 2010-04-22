@@ -5,22 +5,23 @@ Prevent direct access to cache
 Fix admin index page caching
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
-Add more info to unfound list to make it easier to find a specific photo
-Show photo's tags as well as comments. Highlight foundinSF/unfoundinSF.
-Post scores to Flickr group automatically. Record scoring time and add to home
-  page.
+Include tags in update
+  Highlight foundinSF/unfoundinSF in unfound list
+Include comments in update
+  Order unfound list by most recent comment
+Require admin to indicate when they've published scores
+  Add to home page
   Add x-passed-y indicators to score report
+Post scores to Flickr group automatically
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
   and possibly score publication times, newest to oldest. Consider whether
   scoring in batches is an important part of game fun and if so how not to
   compromise that.
 Add to player page
-- link to Flickr account
 - youngest and oldest guesses (treasures)
 - youngests and oldest guesses by others (inverse treasures)
 - emphasize nemeses
-- unconfirmeds
 Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
