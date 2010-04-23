@@ -1,5 +1,4 @@
 Prevent direct access to cache
-Fix admin index page caching
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
 Include tags in update
