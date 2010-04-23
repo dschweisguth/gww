@@ -10,6 +10,13 @@ Require user
 
 RewriteEngine On
 
+# If REDIRECT_STATUS is empty (not set), this request comes directly from a
+# client, not from an internal redirect following one of the rewrites below.
+# In that case, forbid URIs which begin with "cache" so clients can't request
+# cached pages directly from the cache directory.
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule ^cache - [F,L]
+
 RewriteCond %{DOCUMENT_ROOT}/cache/index.html -f
 RewriteRule ^$ cache/index.html [L]
 
