@@ -1,4 +1,3 @@
-Rotate production server log
 Prevent direct access to cache
 Fix admin index page caching
 Restrict HTTP basic auth to /admin
