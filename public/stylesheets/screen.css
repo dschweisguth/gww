@@ -51,12 +51,12 @@ th {
   vertical-align: top;
 }
 
-.dark th, .edit th, .indented th, .dnum {
+.dark th, .edit th, .indented th, .row-number {
   font-size: 11px;
   font-weight: bold;
 }
 
-.dnum {
+.row-number {
   background-color: #ffffff;
   padding: 3px 3px 3px 0px;
   text-align: right;

@@ -12,7 +12,7 @@
   </tr>  
 <% @guesses.each_with_index do |guess, guess_index| %>
   <tr>
-    <td class="dnum"><%= guess_index + 1 %>.</td>
+    <td class="row-number"><%= guess_index + 1 %>.</td>
     <% if guess.photo.person_id != 0 -%>
     <td class="dvalue"><a href="<%= guess.photo.page_url %>">Flickr</a></td>
     <td class="dvalue"><%= link_to 'GWW', show_photo_url(guess.photo) %></td>
