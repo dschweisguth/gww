@@ -32,7 +32,7 @@ th {
 
 /* Dark table style */
 
-.dark .cellspace, .cellspace {
+.dark .cellspace {
   padding: 0px 10px 0px 10px;
   background-color: #ffffff;
 }
