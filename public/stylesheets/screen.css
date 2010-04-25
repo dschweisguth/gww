@@ -42,8 +42,7 @@ th {
   background-color: #ffffff;
 }
 
-
-.dark th, .edit th, .indented th, .dvalue, .dcurrency {
+.dark th, .edit th, .indented th, .dvalue, .guess-count {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
   background-color: #eeeeee;
@@ -62,7 +61,7 @@ th {
   text-align: right;
 }
 
-.dcurrency {
+.guess-count {
   font-weight: bold;
   text-align: right;
 }
