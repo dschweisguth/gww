@@ -47,12 +47,11 @@ th {
   font-weight: bold;
 }
 
-.dark th, .edit th, .indented th, .dvalue, .guess-count {
+.dark th, .edit th, .indented th, .guess-count, .dvalue  {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
   background-color: #eeeeee;
   padding: 3px 5px 3px 5px;
-  vertical-align: top;
 }
 
 .row-number {
@@ -64,6 +63,10 @@ th {
 .guess-count {
   font-weight: bold;
   text-align: right;
+}
+
+.guess_count, .dvalue {
+  vertical-align: top;
 }
 
 /* people/show */
