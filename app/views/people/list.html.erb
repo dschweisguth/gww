@@ -17,8 +17,8 @@
   <td><%= person[:guess_count] %></td>
   <td><%= person[:photo_count] %></td>
   <td><%= sprintf "%.4f", person[:guesses_per_day] %></td>
-  <td><%= person[:photo_count] == 0 ? '&#8734' : sprintf("%.4f", person[:guesses_per_post]) %></td>
-  <td><%= person[:guess_count] == 0 ? '&#8734' : sprintf("%.4f", person[:posts_per_guess]) %></td>
+  <td><%= person[:guesses_per_post].infinite? ? '&#8734' : sprintf("%.4f", person[:guesses_per_post]) %></td>
+  <td><%= person[:posts_per_guess].infinite? ? '&#8734' : sprintf("%.4f", person[:posts_per_guess]) %></td>
 </tr>
 <% end %>
 </table>
