@@ -16,6 +16,16 @@ table {
   margin: 6px 0px 0px 0px;
 }
 
+th {
+  text-align: left
+}
+
+td.number {
+  text-align: right
+}
+
+/* Heavy table style */
+
 td.cellspace {
   padding: 0px 10px 0px 10px;
 }
@@ -60,6 +70,12 @@ td.dnum {
 td.dholder {
   padding: 0px;
   vertical-align: top;
+}
+
+/* people/list */
+
+th.number, td.number {
+  text-align: right
 }
 
 /* people/show */

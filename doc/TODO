@@ -1,6 +1,6 @@
-Remove .0000 from 0?
-Uniform list style
 Try to use descendant selectors
+Uniform list style
+gzip
 Top three guessers in last week and month
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
