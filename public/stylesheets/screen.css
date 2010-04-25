@@ -71,7 +71,7 @@ th {
 
 /* people/show */
 
-span.unconfirmed {
+.unconfirmed {
   background-color: #ffcc33;
 }
 
