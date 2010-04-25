@@ -8,14 +8,9 @@ class PeopleController < ApplicationController
 
     guess_rates_list = Person.find_by_sql(
       'select ' +
-        'p.id, ' +
-        '(select count(*) from guesses g where g.person_id = p.id) / ' +
-          'datediff(now(), ' +
-            '(select min(guessed_at) from guesses g ' +
-              'where g.person_id = p.id)) rate ' +
-      'from people p where exists ' +
-        '(select 0 from guesses g where g.person_id = p.id) ' +
-      'order by rate desc');
+        'person_id id, ' +
+        'count(*) / datediff(now(), min(guessed_at)) rate ' +
+      'from guesses group by person_id')
     guess_rates = {}
     guess_rates_list.each do |rate|
       guess_rates[rate.id] = rate.rate.to_f
