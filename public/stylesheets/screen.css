@@ -17,24 +17,27 @@ table {
 }
 
 th {
-  text-align: left
+  text-align: left;
 }
 
-tr.odd td {
-  background-color: #eeffee
+/* Light table style */
+
+.number {
+  text-align: right;
 }
 
-td.number {
-  text-align: right
+.odd td {
+  background-color: #eeffee;
 }
 
-/* Heavy table style */
+/* Dark table style */
 
-td.cellspace {
+.dark .cellspace, .cellspace {
   padding: 0px 10px 0px 10px;
+  background-color: #ffffff;
 }
 
-td.dheader {
+.dark th, .edit th, .indented th {
   padding: 3px 5px 3px 5px;
   font-size: 11px;
   font-weight: bold;
@@ -44,7 +47,7 @@ td.dheader {
   background-color: #dddddd;
 }
 
-td.dvalue {
+.dvalue {
   padding: 3px 5px 3px 5px;
   vertical-align: top;
   border-left:  1px solid #ffffff;
@@ -52,7 +55,7 @@ td.dvalue {
   background-color: #eeeeee;
 }
 
-td.dcurrency {
+.dcurrency {
   padding: 3px 5px 3px 5px;
   font-weight: bold;
   text-align: right;
@@ -62,7 +65,7 @@ td.dcurrency {
   background-color: #eeeeee;
 }
 
-td.dnum {
+.dnum {
   padding: 3px 3px 3px 0px;
   font-size: 11px;
   font-weight: bold;
@@ -71,15 +74,9 @@ td.dnum {
   background-color: #ffffff;
 }
 
-td.dholder {
+.dholder {
   padding: 0px;
   vertical-align: top;
-}
-
-/* people/list */
-
-th.number, td.number {
-  text-align: right
 }
 
 /* people/show */
@@ -90,7 +87,7 @@ span.unconfirmed {
 
 /* photos/edit */
 
-table.indented {
+.indented {
   font-size: 11px;
 }
 

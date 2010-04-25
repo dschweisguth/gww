@@ -2,12 +2,12 @@
 <hr/>
 <h1><%= @photo_ids.length %> photos commented on by <%=h @person.username %></h1>
 
-<table>
+<table class="dark">
   <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td class="dheader" colspan="2">links</td>
-    <td class="dheader">posted by</td>
-    <td class="dheader">found by</td>
+    <th class="cellspace"></th>
+    <th colspan="2">links</th>
+    <th>posted by</th>
+    <th>found by</th>
   </tr>  
 <% @photos.each_with_index do |photo, photo_index| %>
   <tr>

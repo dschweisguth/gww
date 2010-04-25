@@ -23,7 +23,7 @@ Change this photo's status from <%= @photo.game_status %> to
 <% form_tag :action => 'add_guess', :id => @photo do %>
 <% if ! @comments.empty? -%>
   <table class="indented">
-    <tr><td class="dheader">Choose the correct guess or revelation from the comments below:</td></tr>
+    <tr><th>Choose the correct guess or revelation from the comments below:</th></tr>
     <tr>
       <td>
 	<% @comments.each do |comment| -%>
@@ -34,8 +34,8 @@ Change this photo's status from <%= @photo.game_status %> to
       </td>
     </tr>
   </table>
-  <table>
-    <tr><td class="dheader">Person (if different than commenter)</td></tr>
+  <table class="edit">
+    <tr><th>Person (if different than commenter)</th></tr>
     <tr><td><%= text_field_with_auto_complete :person, :username %></td></tr>
   </table>
   <%= submit_tag("Add this guess or revelation") %>

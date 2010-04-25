@@ -2,13 +2,13 @@
 <hr/>
 <h1><%= @guesses.length %> guesses by <%=h @person.username %></h1>
 
-<table>
+<table class="dark">
   <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td class="dheader" colspan="2">links</td>
-    <td class="dheader">posted by</td>
-    <td class="dheader">date added</td>
-    <td class="dheader">date guessed</td>
+    <th class="cellspace"></th>
+    <th colspan="2">links</th>
+    <th>posted by</th>
+    <th>date added</th>
+    <th>date guessed</th>
   </tr>  
 <% @guesses.each_with_index do |guess, guess_index| %>
   <tr>

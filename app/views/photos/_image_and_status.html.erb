@@ -1,4 +1,3 @@
-<br/>
 <a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url size %>" border="0"/></a><br/>
 Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %Y' %> by <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/><br/>
 
@@ -14,18 +13,18 @@ This photo is <%= @photo.game_status %>.
 <br/>
 
 <% if ! @photo.guesses.empty? || @photo.revelation -%>
-<table>
+<table class="dark">
     <tr>
-        <td class="dheader">Person</td>
-        <td class="dheader">Date</td>
-        <td class="dheader">Text</td>
+        <th>Person</th>
+        <th>Date</th>
+        <th>Text</th>
     </tr>
 <% if ! @photo.guesses.empty? -%>
     <% @photo.guesses.each do |guess| -%>
     <tr>
         <td class="dvalue"><%= guess.person.username %></td>
         <td class="dvalue"><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
-        <td class="dvalue"><%=h guess.guess_text %></td>
+        <td class="dvalue"><%= guess.guess_text %></td>
     </tr>
     <% end -%>
 <% else -%>

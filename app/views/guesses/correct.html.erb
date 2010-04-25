@@ -5,13 +5,13 @@
 <table width="1600">
   <tr>
     <td class="dholder">
-      <table width="400">
+      <table class="dark" width="400">
 <% @last_days.each do |day| -%>
         <tr>
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan="2" class="dheader">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></td>
+          <th colspan="2">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></th>
         </tr>
 <% day[:scores].each do |person_list| -%>
         <tr>
@@ -23,13 +23,13 @@
       </table>
     </td>
     <td class="dholder">
-      <table width="400">
+      <table class="dark" width="400">
 <% @last_weeks.each_with_index do |week, week_index| -%>
         <tr>
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan="2" class="dheader">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></td>
+          <th colspan="2">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></th>
         </tr>
 <% week[:scores].each do |person_list| -%>
         <tr>
@@ -41,13 +41,13 @@
       </table>
     </td>
     <td class="dholder">
-      <table width="400">
+      <table class="dark" width="400">
 <% @last_months.each_with_index do |month, month_index| -%>
         <tr>
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan="2" class="dheader">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></td>
+          <th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th>
         </tr>
 <% month[:scores].each do |person_list| -%>
         <tr>
@@ -59,13 +59,13 @@
       </table>
     </td>
     <td class="dholder">
-      <table width="400">
+      <table class="dark" width="400">
 <% @last_years.each_with_index do |year, year_index| -%>
         <tr>
           <td colspan="2" class="cellspace">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan="2" class="dheader">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></td>
+          <th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th>
         </tr>
 <% year[:scores].each do |person_list| -%>
         <tr>

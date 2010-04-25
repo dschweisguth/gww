@@ -2,14 +2,14 @@
 <hr/>
 <h1><%= @photos.length %> unfound photos</h1>
 
-<table>
+<table class="dark">
   <tr>
-    <td class="cellspace">&nbsp;</td>
-    <td class="dheader" colspan="2">links</td>
-    <td class="dheader">posted by</td>
-    <td class="dheader">date added</td>
-    <td class="dheader">last updated</td>
-    <td class="dheader">unconfirmed</td>
+    <th class="cellspace">&nbsp;</th>
+    <th colspan="2">links</th>
+    <th>posted by</th>
+    <th>date added</th>
+    <th>last updated</th>
+    <th>unconfirmed</th>
   </tr>  
 <% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
