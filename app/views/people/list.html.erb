@@ -4,15 +4,17 @@
 
 <table>
 <tr>
-  <th>Score</th>
   <th>Player</th>
+  <th>Score</th>
   <th>Photos posted</th>
+  <th>Guesses per day</th>
 </tr>
 <% @people.each do |person| %>
 <tr>
-  <td><%= person[:guesscount] %></td>
   <td><%= link_to person[:person].username, show_person_url(person[:person]) %></td>
+  <td><%= person[:guesscount] %></td>
   <td><%= person[:photocount] %></td>
+  <td><%= if !person[:guessrate].nil? then sprintf "%.4f", person[:guessrate] end %></td>
 </tr>
 <% end %>
 </table>

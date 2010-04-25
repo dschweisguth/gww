@@ -3,7 +3,24 @@ class PeopleController < ApplicationController
   caches_page :list
   def list
     photo_counts = Photo.count :all, :group => 'person_id'
+
     guess_counts = Guess.count :all, :group => 'person_id'
+
+    guess_rates_list = Person.find_by_sql(
+      'select ' +
+        'p.id, ' +
+        '(select count(*) from guesses g where g.person_id = p.id) / ' +
+          'datediff(now(), ' +
+            '(select min(guessed_at) from guesses g ' +
+              'where g.person_id = p.id)) rate ' +
+      'from people p where exists ' +
+        '(select 0 from guesses g where g.person_id = p.id) ' +
+      'order by rate desc');
+    guess_rates = {}
+    guess_rates_list.each do |rate|
+      guess_rates[rate.id] = rate.rate.to_f
+    end
+
     people = Person.find :all
     @people = []
     people.each do |person|
@@ -14,14 +31,17 @@ class PeopleController < ApplicationController
           photo_counts[person.id].nil? ? 0 : photo_counts[person.id],
         :guesscount => 
           guess_counts[person.id].nil? ? 0 : guess_counts[person.id],
+        :guessrate => guess_rates[person.id]
       }
       @people.push add_person
     end
+
     @people.sort! do |x, y|
       c = y[:guesscount] <=> x[:guesscount]
       c = c != 0 ? c : y[:photocount] <=> x[:photocount]
       c != 0 ? c : x[:username] <=> y[:username]
     end
+
   end
 
   caches_page :show

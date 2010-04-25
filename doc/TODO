@@ -1,3 +1,8 @@
+Rate of guesses
+Sort player list by clicking on columns
+Uniform list style
+Try to use descendant selectors
+Top three guessers in last week and month
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
 Include tags in update
