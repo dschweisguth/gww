@@ -20,11 +20,9 @@ class PeopleController < ApplicationController
       {
         :person => person,
         :username => person.username.downcase,
-        :photo_count =>
-          photo_counts[person.id].nil? ? 0 : photo_counts[person.id],
-        :guess_count => 
-          guess_counts[person.id].nil? ? 0 : guess_counts[person.id],
-        :guess_rate => guess_rates[person.id]
+        :photo_count => photo_counts[person.id] || 0,
+        :guess_count => guess_counts[person.id] || 0,
+        :guess_rate => guess_rates[person.id] || 0
       }
     end
 

@@ -14,7 +14,7 @@
   <td><%= link_to person[:person].username, show_person_url(person[:person]) %></td>
   <td><%= person[:guess_count] %></td>
   <td><%= person[:photo_count] %></td>
-  <td><%= if !person[:guess_rate].nil? then sprintf "%.4f", person[:guess_rate] end %></td>
+  <td><%= sprintf "%.4f", person[:guess_rate] %></td>
 </tr>
 <% end %>
 </table>
