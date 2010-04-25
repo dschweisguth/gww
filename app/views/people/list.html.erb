@@ -12,9 +12,9 @@
 <% @people.each do |person| %>
 <tr>
   <td><%= link_to person[:person].username, show_person_url(person[:person]) %></td>
-  <td><%= person[:guesscount] %></td>
-  <td><%= person[:photocount] %></td>
-  <td><%= if !person[:guessrate].nil? then sprintf "%.4f", person[:guessrate] end %></td>
+  <td><%= person[:guess_count] %></td>
+  <td><%= person[:photo_count] %></td>
+  <td><%= if !person[:guess_rate].nil? then sprintf "%.4f", person[:guess_rate] end %></td>
 </tr>
 <% end %>
 </table>
