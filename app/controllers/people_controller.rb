@@ -2,7 +2,7 @@ class PeopleController < ApplicationController
 
   caches_page :list
   def list
-    photo_counts = Photo.count :all, :group => 'person_id'
+    post_counts = Photo.count :all, :group => 'person_id'
 
     guess_counts = Guess.count :all, :group => 'person_id'
 
@@ -17,22 +17,22 @@ class PeopleController < ApplicationController
     end
 
     @people = Person.find(:all).map do |person|
-      photo_count = photo_counts[person.id] || 0
+      post_count = post_counts[person.id] || 0
       guess_count = guess_counts[person.id] || 0
       {
         :person => person,
         :username => person.username.downcase,
-        :photo_count => photo_count,
+        :post_count => post_count,
         :guess_count => guess_count,
         :guesses_per_day => rates[person.id] || 0,
-        :guesses_per_post => guess_count.to_f / photo_count,
-        :posts_per_guess => photo_count.to_f / guess_count
+        :guesses_per_post => guess_count.to_f / post_count,
+        :posts_per_guess => post_count.to_f / guess_count
       }
     end
 
     @people.sort! do |x, y|
       c = y[:guess_count] <=> x[:guess_count]
-      c = c != 0 ? c : y[:photo_count] <=> x[:photo_count]
+      c = c != 0 ? c : y[:post_count] <=> x[:post_count]
       c != 0 ? c : x[:username] <=> y[:username]
     end
 
