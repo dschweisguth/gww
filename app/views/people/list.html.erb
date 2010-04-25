@@ -11,7 +11,7 @@
   <th><%= link_to 'Posts per guess', list_people_url(:sorted_by => 'posts-per-guess') %></th>
 </tr>
 <% @people.each do |person| %>
-<tr>
+<tr class="<%= cycle 'odd', 'even' %>">
   <td><%= link_to person.username, show_person_url(person) %></td>
   <td class="number"><%= person[:guess_count] %></td>
   <td class="number"><%= person[:post_count] %></td>

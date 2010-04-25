@@ -20,6 +20,10 @@ th {
   text-align: left
 }
 
+tr.odd td {
+  background-color: #eeffee
+}
+
 td.number {
   text-align: right
 }
