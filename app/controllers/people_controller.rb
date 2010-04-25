@@ -16,24 +16,22 @@ class PeopleController < ApplicationController
       rates[rate.id] = rate.rate.to_f
     end
 
-    @people = Person.find(:all).map do |person|
-      post_count = post_counts[person.id] || 0
-      guess_count = guess_counts[person.id] || 0
-      {
-        :person => person,
-        :username => person.username.downcase,
-        :post_count => post_count,
-        :guess_count => guess_count,
-        :guesses_per_day => rates[person.id] || 0,
-        :guesses_per_post => guess_count.to_f / post_count,
-        :posts_per_guess => post_count.to_f / guess_count
-      }
+    @people = Person.find :all
+    @people.each do |person|
+      person[:downcased_username] = person.username.downcase
+      person[:post_count] = post_counts[person.id] || 0
+      person[:guess_count] = guess_counts[person.id] || 0
+      person[:guesses_per_day] = rates[person.id] || 0
+      person[:guesses_per_post] =
+        person[:guess_count].to_f / person[:post_count]
+      person[:posts_per_guess] =
+        person[:post_count].to_f / person[:guess_count]
     end
 
     @people.sort! do |x, y|
       c = y[:guess_count] <=> x[:guess_count]
       c = c != 0 ? c : y[:post_count] <=> x[:post_count]
-      c != 0 ? c : x[:username] <=> y[:username]
+      c != 0 ? c : x[:downcased_username] <=> y[:downcased_username]
     end
 
   end

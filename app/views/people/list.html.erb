@@ -13,7 +13,7 @@
 </tr>
 <% @people.each do |person| %>
 <tr>
-  <td><%= link_to person[:person].username, show_person_url(person[:person]) %></td>
+  <td><%= link_to person.username, show_person_url(person) %></td>
   <td><%= person[:guess_count] %></td>
   <td><%= person[:post_count] %></td>
   <td><%= sprintf "%.4f", person[:guesses_per_day] %></td>
