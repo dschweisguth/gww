@@ -12,18 +12,42 @@ class PeopleController < ApplicationController
       person[:post_count] = post_counts[person.id] || 0
       person[:guess_count] = guess_counts[person.id] || 0
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
-      person[:guesses_per_post] =
-        person[:guess_count].to_f / person[:post_count]
       person[:posts_per_guess] =
         person[:post_count].to_f / person[:guess_count]
     end
 
+    sorted_by = params[:sorted_by]
     @people.sort! do |x, y|
-      c = y[:guess_count] <=> x[:guess_count]
-      c = c != 0 ? c : y[:post_count] <=> x[:post_count]
-      c != 0 ? c : x[:downcased_username] <=> y[:downcased_username]
+      username = -criterion(x, y, :username)
+      case sorted_by
+      when 'username'
+        first_applicable username
+      when 'score'
+        first_applicable criterion(x, y, :guess_count),
+          criterion(x, y, :post_count), username
+      when 'posts'
+        first_applicable criterion(x, y, :post_count), username
+      when 'guesses-per-day'
+        first_applicable criterion(x, y, :guesses_per_day),
+          criterion(x, y, :guess_count), username
+      when 'posts-per-guess'
+        first_applicable criterion(x, y, :posts_per_guess),
+          criterion(x, y, :post_count), -criterion(x, y, :guess_count),
+          username
+      else
+        first_applicable criterion(x, y, :guess_count),
+          criterion(x, y, :post_count), username
+      end
     end
 
+  end
+
+  def criterion(element1, element2, property)
+    element2[property] <=> element1[property]
+  end
+
+  def first_applicable(*criteria)
+    criteria.find(lambda { 0 }) { |criterion| criterion != 0 }
   end
 
   caches_page :show

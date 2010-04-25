@@ -4,12 +4,11 @@
 
 <table>
 <tr>
-  <th>Player</th>
-  <th>Score</th>
-  <th>Photos posted</th>
-  <th>Guesses per day</th>
-  <th>Guesses per post</th>
-  <th>Posts per guess</th>
+  <th><%= link_to 'Member', list_people_url(:sorted_by => 'username') %></th>
+  <th><%= link_to 'Score', list_people_url(:sorted_by => 'score') %></th>
+  <th><%= link_to 'Posts', list_people_url(:sorted_by => 'posts') %></th>
+  <th><%= link_to 'Guesses per day', list_people_url(:sorted_by => 'guesses-per-day') %></th>
+  <th><%= link_to 'Posts per guess', list_people_url(:sorted_by => 'posts-per-guess') %></th>
 </tr>
 <% @people.each do |person| %>
 <tr>
@@ -17,7 +16,6 @@
   <td><%= person[:guess_count] %></td>
   <td><%= person[:post_count] %></td>
   <td><%= sprintf "%.4f", person[:guesses_per_day] %></td>
-  <td><%= person[:guesses_per_post].infinite? ? '&#8734' : sprintf("%.4f", person[:guesses_per_post]) %></td>
   <td><%= person[:posts_per_guess].infinite? ? '&#8734' : sprintf("%.4f", person[:posts_per_guess]) %></td>
 </tr>
 <% end %>
