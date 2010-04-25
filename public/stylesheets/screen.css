@@ -32,6 +32,11 @@ th {
 
 /* Dark table style */
 
+.dholder {
+  padding: 0px;
+  vertical-align: top;
+}
+
 .dark .cellspace {
   padding: 0px 10px 0px 10px;
   background-color: #ffffff;
@@ -45,6 +50,15 @@ th {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
   background-color: #dddddd;
+}
+
+.dnum {
+  padding: 3px 3px 3px 0px;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: right;
+  vertical-align: top;
+  background-color: #ffffff;
 }
 
 .dvalue {
@@ -63,20 +77,6 @@ th {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
   background-color: #eeeeee;
-}
-
-.dnum {
-  padding: 3px 3px 3px 0px;
-  font-size: 11px;
-  font-weight: bold;
-  text-align: right;
-  vertical-align: top;
-  background-color: #ffffff;
-}
-
-.dholder {
-  padding: 0px;
-  vertical-align: top;
 }
 
 /* people/show */
