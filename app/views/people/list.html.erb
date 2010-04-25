@@ -8,13 +8,17 @@
   <th>Score</th>
   <th>Photos posted</th>
   <th>Guesses per day</th>
+  <th>Guesses per post</th>
+  <th>Posts per guess</th>
 </tr>
 <% @people.each do |person| %>
 <tr>
   <td><%= link_to person[:person].username, show_person_url(person[:person]) %></td>
   <td><%= person[:guess_count] %></td>
   <td><%= person[:photo_count] %></td>
-  <td><%= sprintf "%.4f", person[:guess_rate] %></td>
+  <td><%= sprintf "%.4f", person[:guesses_per_day] %></td>
+  <td><%= person[:photo_count] == 0 ? '&#8734' : sprintf("%.4f", person[:guesses_per_post]) %></td>
+  <td><%= person[:guess_count] == 0 ? '&#8734' : sprintf("%.4f", person[:posts_per_guess]) %></td>
 </tr>
 <% end %>
 </table>

@@ -6,23 +6,27 @@ class PeopleController < ApplicationController
 
     guess_counts = Guess.count :all, :group => 'person_id'
 
-    guess_rates_list = Person.find_by_sql(
+    rates_list = Person.find_by_sql(
       'select ' +
         'person_id id, ' +
         'count(*) / datediff(now(), min(guessed_at)) rate ' +
       'from guesses group by person_id')
-    guess_rates = {}
-    guess_rates_list.each do |rate|
-      guess_rates[rate.id] = rate.rate.to_f
+    rates = {}
+    rates_list.each do |rate|
+      rates[rate.id] = rate.rate.to_f
     end
 
     @people = Person.find(:all).map do |person|
+      photo_count = photo_counts[person.id] || 0
+      guess_count = guess_counts[person.id] || 0
       {
         :person => person,
         :username => person.username.downcase,
-        :photo_count => photo_counts[person.id] || 0,
-        :guess_count => guess_counts[person.id] || 0,
-        :guess_rate => guess_rates[person.id] || 0
+        :photo_count => photo_count,
+        :guess_count => guess_count,
+        :guesses_per_day => rates[person.id] || 0,
+        :guesses_per_post => guess_count.to_f / photo_count,
+        :posts_per_guess => photo_count.to_f / guess_count
       }
     end
 
