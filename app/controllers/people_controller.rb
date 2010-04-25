@@ -3,25 +3,15 @@ class PeopleController < ApplicationController
   caches_page :list
   def list
     post_counts = Photo.count :all, :group => 'person_id'
-
     guess_counts = Guess.count :all, :group => 'person_id'
-
-    rates_list = Person.find_by_sql(
-      'select ' +
-        'person_id id, ' +
-        'count(*) / datediff(now(), min(guessed_at)) rate ' +
-      'from guesses group by person_id')
-    rates = {}
-    rates_list.each do |rate|
-      rates[rate.id] = rate.rate.to_f
-    end
+    guesses_per_days = Guess.count_by_person_per_day
 
     @people = Person.find :all
     @people.each do |person|
       person[:downcased_username] = person.username.downcase
       person[:post_count] = post_counts[person.id] || 0
       person[:guess_count] = guess_counts[person.id] || 0
-      person[:guesses_per_day] = rates[person.id] || 0
+      person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:guesses_per_post] =
         person[:guess_count].to_f / person[:post_count]
       person[:posts_per_guess] =
