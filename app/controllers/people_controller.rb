@@ -21,10 +21,8 @@ class PeopleController < ApplicationController
       guess_rates[rate.id] = rate.rate.to_f
     end
 
-    people = Person.find :all
-    @people = []
-    people.each do |person|
-      add_person = {
+    @people = Person.find(:all).map do |person|
+      {
         :person => person,
         :username => person.username.downcase,
         :photocount =>
@@ -33,7 +31,6 @@ class PeopleController < ApplicationController
           guess_counts[person.id].nil? ? 0 : guess_counts[person.id],
         :guessrate => guess_rates[person.id]
       }
-      @people.push add_person
     end
 
     @people.sort! do |x, y|
