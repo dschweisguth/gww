@@ -42,41 +42,30 @@ th {
   background-color: #ffffff;
 }
 
-.dark th, .edit th, .indented th {
-  padding: 3px 5px 3px 5px;
-  font-size: 11px;
-  font-weight: bold;
-  vertical-align: top;
+
+.dark th, .edit th, .indented th, .dvalue, .dcurrency {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
-  background-color: #dddddd;
+  background-color: #eeeeee;
+  padding: 3px 5px 3px 5px;
+  vertical-align: top;
+}
+
+.dark th, .edit th, .indented th, .dnum {
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .dnum {
-  padding: 3px 3px 3px 0px;
-  font-size: 11px;
-  font-weight: bold;
-  text-align: right;
-  vertical-align: top;
   background-color: #ffffff;
-}
-
-.dvalue {
-  padding: 3px 5px 3px 5px;
+  padding: 3px 3px 3px 0px;
   vertical-align: top;
-  border-left: 1px solid #ffffff;
-  border-bottom: 1px solid #ffffff;
-  background-color: #eeeeee;
+  text-align: right;
 }
 
 .dcurrency {
-  padding: 3px 5px 3px 5px;
   font-weight: bold;
   text-align: right;
-  vertical-align: top;
-  border-left: 1px solid #ffffff;
-  border-bottom: 1px solid #ffffff;
-  background-color: #eeeeee;
 }
 
 /* people/show */
