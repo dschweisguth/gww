@@ -94,7 +94,8 @@ class GuessesController < ApplicationController
       :end => @latest_update }
     thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
     @last_years = [ {:dates => thisyear_dates, :scores => thisyear_scores} ]
-    (1..2).each do |num|
+    years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
+    (1..years_of_guessing).each do |num|
       dates = { :begin => (@latest_update - num.year).beginning_of_year,
         :end => (@latest_update - (num - 1).year).beginning_of_year }
       scores = get_scores_from_date dates[:begin], dates[:end]
