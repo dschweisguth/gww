@@ -22,19 +22,19 @@ Change this photo's status from <%= @photo.game_status %> to
 
 <% form_tag :action => 'add_guess', :id => @photo do %>
 <% if ! @comments.empty? -%>
-  <table class="indented">
+  <table class="comments">
     <tr><th>Choose the correct guess or revelation from the comments below:</th></tr>
     <tr>
       <td>
 	<% @comments.each do |comment| -%>
-	  <% hilight = comment.username == @photo.person.username -%>
+	  <% highlight = comment.username == @photo.person.username -%>
           <% uline = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
-	  <%= radio_button(:comment, :id, comment.id) %> <b><%=h comment.username %> says:</b> <% if hilight -%><span class="hilight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if hilight -%></span><% end -%><br/>
+	  <%= radio_button(:comment, :id, comment.id) %> <b><%=h comment.username %> says:</b> <% if highlight -%><span class="highlight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if highlight -%></span><% end -%><br/>
 	<% end -%>
       </td>
     </tr>
   </table>
-  <table class="edit">
+  <table class="dark">
     <tr><th>Person (if different than commenter)</th></tr>
     <tr><td><%= text_field_with_auto_complete :person, :username %></td></tr>
   </table>

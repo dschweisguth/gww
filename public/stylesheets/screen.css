@@ -42,12 +42,12 @@ th {
   background-color: #ffffff;
 }
 
-.dark th, .edit th, .indented th, .row-number {
+.dark th, .comments th, .row-number {
   font-size: 11px;
   font-weight: bold;
 }
 
-.dark th, .edit th, .indented th, .guess-count, .dvalue  {
+.dark th, .comments th, .guess-count, .dvalue  {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
   background-color: #eeeeee;
@@ -77,10 +77,10 @@ span.unconfirmed {
 
 /* photos/edit */
 
-.indented {
+.comments {
   font-size: 11px;
 }
 
-span.hilight {
+.highlight {
   background-color: #cccccc;
 }
