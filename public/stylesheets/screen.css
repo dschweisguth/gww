@@ -60,13 +60,15 @@ th {
   text-align: right;
 }
 
+.guess-count, .dvalue {
+  vertical-align: top;
+}
+
+/* guesses/correct */
+
 .guess-count {
   font-weight: bold;
   text-align: right;
-}
-
-.guess_count, .dvalue {
-  vertical-align: top;
 }
 
 /* people/show */
