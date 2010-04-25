@@ -37,9 +37,14 @@ th {
   vertical-align: top;
 }
 
-.dark .cellspace {
+.dark .empty {
   padding: 0px 10px 0px 10px;
   background-color: #ffffff;
+}
+
+.dark th, .edit th, .indented th, .row-number {
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .dark th, .edit th, .indented th, .dvalue, .guess-count {
@@ -48,11 +53,6 @@ th {
   background-color: #eeeeee;
   padding: 3px 5px 3px 5px;
   vertical-align: top;
-}
-
-.dark th, .edit th, .indented th, .row-number {
-  font-size: 11px;
-  font-weight: bold;
 }
 
 .row-number {
