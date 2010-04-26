@@ -2,16 +2,18 @@
 <hr/>
 <h1><%= @photos.length %> photos posted by <%= @person[:username] %></h1>
 
-<table>
+<table class="dark">
   <tr>
-    <td colspan="2">links</td>
-    <td>date added</td>
-    <td>last update</td>
-    <td>mapped</td>
-    <td>game status</td>
+    <td class="empty"></td>
+    <th colspan="2">links</th>
+    <th>date added</th>
+    <th>last update</th>
+    <th>mapped</th>
+    <th>game status</th>
   </tr>  
-<% for photo in @photos %>
+<% @photos.each_with_index do |photo, photo_index| %>
   <tr>
+    <td class="row-number"><%= photo_index + 1 %>.</td>
     <td><a href="<%= photo.page_url %>">Flickr</a></td>
     <td><%= link_to 'GWW', show_photo_url(photo) %></td>
     <td><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
