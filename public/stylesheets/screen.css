@@ -20,18 +20,6 @@ th {
   text-align: left;
 }
 
-/* Light table style */
-
-.number {
-  text-align: right;
-}
-
-.odd td {
-  background-color: #eeffee;
-}
-
-/* Dark table style */
-
 .dholder {
   padding: 0;
   vertical-align: top;
@@ -70,9 +58,13 @@ th {
   background-color: #eeeeee;
 }
 
+.number {
+  text-align: right;
+}
+
 /* guesses/correct */
 
-.guess-count {
+.dark .guess-count {
   font-weight: bold;
   text-align: right;
 }

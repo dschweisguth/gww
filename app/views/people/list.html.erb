@@ -2,16 +2,18 @@
 <hr/>
 <h1><%= @people.length %> active members</h1>
 
-<table>
+<table class="dark">
 <tr>
+  <th class="empty"></th>
   <th><%= link_to 'Member', list_people_url(:sorted_by => 'username') %></th>
   <th><%= link_to 'Score', list_people_url(:sorted_by => 'score') %></th>
   <th><%= link_to 'Posts', list_people_url(:sorted_by => 'posts') %></th>
   <th><%= link_to 'Guesses per day', list_people_url(:sorted_by => 'guesses-per-day') %></th>
   <th><%= link_to 'Posts per guess', list_people_url(:sorted_by => 'posts-per-guess') %></th>
 </tr>
-<% @people.each do |person| %>
-<tr class="<%= cycle 'odd', 'even' %>">
+<% @people.each_with_index do |person, person_index| %>
+<tr>
+  <td class="row-number"><%= person_index + 1 %>.</td>
   <td><%= link_to person.username, show_person_url(person) %></td>
   <td class="number"><%= person[:guess_count] %></td>
   <td class="number"><%= person[:post_count] %></td>
