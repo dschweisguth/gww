@@ -10,21 +10,21 @@
           <th colspan="6">longest</th>
         </tr>
         <tr>
-          <td>photo</td>
-          <td>posted by</td>
-          <td>guessed by</td>
-          <td>added on</td>
-          <td>guessed on</td>
-          <td>time elapsed</td>
+          <th>photo</th>
+          <th>posted by</th>
+          <th>guessed by</th>
+          <th>added on</th>
+          <th>guessed on</th>
+          <th>time elapsed</th>
         </tr>  
         <% @longest_guesses.each do |guess| %>
           <tr>
-            <td class="dvalue"><%= link_to guess[:guess].photo.id, show_photo_url(guess[:guess].photo) %></td>
-            <td class="dvalue"><%=h guess[:guess].photo.person.username %></td>
-            <td class="dvalue"><%=h guess[:guess].person.username %></td>
-            <td class="dvalue"><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
-            <td class="dvalue"><%= guess[:guess].guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
-            <td class="dvalue"><%= guess[:elapsed_pretty] %></td>
+            <td><%= link_to guess[:guess].photo.id, show_photo_url(guess[:guess].photo) %></td>
+            <td><%=h guess[:guess].photo.person.username %></td>
+            <td><%=h guess[:guess].person.username %></td>
+            <td><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+            <td><%= guess[:guess].guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+            <td><%= guess[:elapsed_pretty] %></td>
           </tr>
         <% end %>
       </table>
@@ -35,21 +35,21 @@
           <th colspan="6">shortest</th>
         </tr>
         <tr>
-          <td>photo</td>
-          <td>posted by</td>
-          <td>guessed by</td>
-          <td>added on</td>
-          <td>guessed on</td>
-          <td>time elapsed</td>
+          <th>photo</th>
+          <th>posted by</th>
+          <th>guessed by</th>
+          <th>added on</th>
+          <th>guessed on</th>
+          <th>time elapsed</th>
         </tr>  
       <% @shortest_guesses.each do |guess| %>
         <tr>
-          <td class="dvalue"><%= link_to guess[:guess].photo.id, show_photo_url(guess[:guess].photo) %></td>
-          <td class="dvalue"><%=h guess[:guess].photo.person.username %></td>
-          <td class="dvalue"><%=h guess[:guess].person.username %></td>
-          <td class="dvalue"><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
-          <td class="dvalue"><%= guess[:guess].guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
-          <td class="dvalue"><%= guess[:elapsed_pretty] %></td>
+          <td><%= link_to guess[:guess].photo.id, show_photo_url(guess[:guess].photo) %></td>
+          <td><%=h guess[:guess].photo.person.username %></td>
+          <td><%=h guess[:guess].person.username %></td>
+          <td><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+          <td><%= guess[:guess].guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S %p' %></td>
+          <td><%= guess[:elapsed_pretty] %></td>
         </tr>
       <% end %>
       </table>

@@ -36,7 +36,7 @@ Change this photo's status from <%= @photo.game_status %> to
   </table>
   <table class="dark">
     <tr><th>Person (if different than commenter)</th></tr>
-    <tr><td><%= text_field_with_auto_complete :person, :username %></td></tr>
+    <tr><td class="input"><%= text_field_with_auto_complete :person, :username %></td></tr>
   </table>
   <%= submit_tag("Add this guess or revelation") %>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

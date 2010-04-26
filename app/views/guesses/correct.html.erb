@@ -13,7 +13,7 @@
 	  <% day[:scores].each do |person_list| -%>
 	    <tr>
 	      <td class="guess-count"><%= person_list[:guesscount] %></td>
-	      <td class="dvalue"><%=h person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
+	      <td><%=h person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
 	    </tr>
 	  <% end -%>
 	  <tr>
@@ -31,7 +31,7 @@
 	  <% week[:scores].each do |person_list| -%>
 	    <tr>
 	      <td class="guess-count"><%= person_list[:guesscount] %></td>
-	      <td class="dvalue"><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
+	      <td><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
 	    </tr>
 	  <% end -%>
 	  <tr>
@@ -49,7 +49,7 @@
 	  <% month[:scores].each do |person_list| -%>
 	    <tr>
 	      <td class="guess-count"><%= person_list[:guesscount] %></td>
-	      <td class="dvalue"><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
+	      <td><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
 	    </tr>
 	  <% end -%>
 	  <tr>
@@ -67,7 +67,7 @@
 	  <% year[:scores].each do |person_list| -%>
 	    <tr>
 	      <td class="guess-count"><%= person_list[:guesscount] %></td>
-	      <td class="dvalue"><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
+	      <td><%= person_list[:people].map { |p| p[:person].username }.join ', ' %></td>
 	    </tr>
 	  <% end -%>
 	  <tr>

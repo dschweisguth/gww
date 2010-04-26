@@ -12,8 +12,8 @@ a {
 /* Tables */
 
 table {
-  padding: 0px;
-  margin: 6px 0px 0px 0px;
+  padding: 0;
+  margin: 6px 0 0 0;
 }
 
 th {
@@ -33,13 +33,14 @@ th {
 /* Dark table style */
 
 .dholder {
-  padding: 0px;
+  padding: 0;
   vertical-align: top;
 }
 
 .dark .empty {
-  padding: 0px 10px 0px 10px;
+  border: 0;
   background-color: #ffffff;
+  padding: 0 10px 0 10px;
 }
 
 .dark th, .comments th, .row-number {
@@ -47,21 +48,26 @@ th {
   font-weight: bold;
 }
 
-.dark th, .comments th, .guess-count, .dvalue  {
+.dark th, .comments th, .dark td {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
-  background-color: #eeeeee;
   padding: 3px 5px 3px 5px;
-}
-
-.row-number {
-  background-color: #ffffff;
-  padding: 3px 3px 3px 0px;
-  text-align: right;
-}
-
-.guess-count, .dvalue {
   vertical-align: top;
+}
+
+.dark th, .comments th {
+  background-color: #dddddd;
+}
+
+.dark .row-number {
+  background-color: #ffffff;
+  padding: 3px 3px 3px 0;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.dark td {
+  background-color: #eeeeee;
 }
 
 /* guesses/correct */
@@ -85,4 +91,9 @@ th {
 
 .highlight {
   background-color: #cccccc;
+}
+
+.dark .input {
+  background-color: #ffffff;
+  padding: 1px 0;
 }
