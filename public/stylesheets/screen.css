@@ -62,9 +62,9 @@ th {
   text-align: right;
 }
 
-/* guesses/correct */
+/* guesses/correct, guesses/longest_and_shortest */
 
-.dark .guess-count {
+.opening-number {
   font-weight: bold;
   text-align: right;
 }
