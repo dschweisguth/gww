@@ -43,12 +43,12 @@ class GuessesController < ApplicationController
       years -= 1
     end
     desc = []
-    if (years > 0) then desc.push("#{years} years") end
-    if (months > 0) then desc.push("#{months} months") end
-    if (days > 0) then desc.push("#{days} days") end
-    if (hours > 0) then desc.push("#{hours} hours") end
-    if (minutes > 0) then desc.push("#{minutes} minutes") end
-    if (seconds > 0) then desc.push("#{seconds} seconds") end
+    if (years > 0) then desc.push("#{years}&nbsp;years") end
+    if (months > 0) then desc.push("#{months}&nbsp;months") end
+    if (days > 0) then desc.push("#{days}&nbsp;days") end
+    if (hours > 0) then desc.push("#{hours}&nbsp;hours") end
+    if (minutes > 0) then desc.push("#{minutes}&nbsp;minutes") end
+    if (seconds > 0) then desc.push("#{seconds}&nbsp;seconds") end
     desc.join(", ")
   end
 
