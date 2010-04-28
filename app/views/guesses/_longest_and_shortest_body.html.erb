@@ -1,10 +1,10 @@
 <% guesses.each do |guess| %>
   <tr>
-    <td class="guess_count"><%= link_to guess[:guess].photo.id, show_photo_url(guess[:guess].photo) %></td>
-    <td><%=h guess[:guess].photo.person.username %></td>
-    <td><%=h guess[:guess].person.username %></td>
-    <td><%= guess[:guess].photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
-    <td><%= guess[:guess].guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
-    <td><%= guess[:elapsed_pretty] %></td>
+    <td class="guess_count"><%= link_to guess.photo.id, show_photo_url(guess.photo) %></td>
+    <td><%=h guess.photo.person.username %></td>
+    <td><%=h guess.person.username %></td>
+    <td><%= guess.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+    <td><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+    <td><%= guess[:time_elapsed] %></td>
   </tr>
 <% end %>

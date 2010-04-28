@@ -2,20 +2,19 @@ class GuessesController < ApplicationController
 
   caches_page :longest_and_shortest
   def longest_and_shortest
-    @longest_guesses = add_date_distances Guess.longest
-    @shortest_guesses = add_date_distances Guess.shortest
+    @longest_guesses = add_time_elapsed Guess.longest
+    @shortest_guesses = add_time_elapsed Guess.shortest
   end
 
-  def add_date_distances(guesses)
-    annotated_guesses = []
+  def add_time_elapsed(guesses)
     guesses.each do |guess|
-      annotated_guesses.push({ :guess => guess, :elapsed_pretty =>
-        get_date_distance(guess.photo.dateadded, guess.guessed_at) })
+      guess[:time_elapsed] =
+        get_time_elapsed guess.photo.dateadded, guess.guessed_at
     end
-    annotated_guesses
+    guesses
   end
 
-  def get_date_distance(begin_date, end_date)
+  def get_time_elapsed(begin_date, end_date)
     years = end_date.year - begin_date.year
     months = end_date.month - begin_date.month
     days = end_date.day - begin_date.day
