@@ -16,8 +16,8 @@
     <td class="row-number"><%= photo_index + 1 %>.</td>
     <td><a href="<%= photo.page_url %>">Flickr</a></td>
     <td><%= link_to 'GWW', show_photo_url(photo) %></td>
-    <td><%= photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
-    <td><%= photo.lastupdate.getlocal.strftime '%Y/%m/%d' %></td>
+    <td><%= local_date photo.dateadded %></td>
+    <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.mapped %></td>
     <td><b><%= photo.game_status %></b></td>
   </tr>

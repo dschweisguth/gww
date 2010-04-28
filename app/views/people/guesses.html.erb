@@ -22,8 +22,8 @@
     <td><b>unknown</b></td>
     <td><b>unknown</b></td>
     <% end -%>
-    <td><%= guess.photo.dateadded.getlocal.strftime '%Y/%m/%d' %></td>
-    <td><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
+    <td><%= local_date guess.photo.dateadded %></td>
+    <td><%= local_date guess.guessed_at %></td>
   </tr>
 <% end %>
 </table>

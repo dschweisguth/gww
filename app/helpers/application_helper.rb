@@ -13,4 +13,8 @@ module ApplicationHelper
     verb + 's'
   end
 
+  def local_date(datetime)
+    datetime.getlocal.strftime '%Y/%m/%d'
+  end
+
 end
