@@ -52,8 +52,8 @@ class GuessesController < ApplicationController
     desc.join(", ")
   end
 
-  caches_page :correct
-  def correct
+  caches_page :by_day_week_month_and_year
+  def by_day_week_month_and_year
     @guesses_count = Guess.count();
 
     @latest_update = FlickrUpdate.latest.created_at.getlocal
