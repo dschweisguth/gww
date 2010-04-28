@@ -9,12 +9,12 @@ class GuessesController < ApplicationController
   def add_time_elapsed(guesses)
     guesses.each do |guess|
       guess[:time_elapsed] =
-        get_time_elapsed guess.photo.dateadded, guess.guessed_at
+        time_elapsed guess.photo.dateadded, guess.guessed_at
     end
     guesses
   end
 
-  def get_time_elapsed(begin_date, end_date)
+  def time_elapsed(begin_date, end_date)
     years = end_date.year - begin_date.year
     months = end_date.month - begin_date.month
     days = end_date.day - begin_date.day
@@ -41,14 +41,14 @@ class GuessesController < ApplicationController
       months += 12
       years -= 1
     end
-    desc = []
-    if (years > 0) then desc.push("#{years}&nbsp;years") end
-    if (months > 0) then desc.push("#{months}&nbsp;months") end
-    if (days > 0) then desc.push("#{days}&nbsp;days") end
-    if (hours > 0) then desc.push("#{hours}&nbsp;hours") end
-    if (minutes > 0) then desc.push("#{minutes}&nbsp;minutes") end
-    if (seconds > 0) then desc.push("#{seconds}&nbsp;seconds") end
-    desc.join(", ")
+    time_elapsed = []
+    time_elapsed.push "#{years}&nbsp;years" if years > 0
+    time_elapsed.push "#{months}&nbsp;months" if months > 0
+    time_elapsed.push "#{days}&nbsp;days" if days > 0
+    time_elapsed.push "#{hours}&nbsp;hours" if hours > 0
+    time_elapsed.push "#{minutes}&nbsp;minutes" if minutes > 0
+    time_elapsed.push "#{seconds}&nbsp;seconds" if seconds > 0
+    time_elapsed.join ", "
   end
 
   caches_page :by_day_week_month_and_year
