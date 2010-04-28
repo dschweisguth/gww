@@ -1,7 +1,8 @@
+Sort usernames in by_day_week_month_and_year
+Break by_day_week_month_and_year into tags
 gzip
 Review list style in admin reports
 Add thumbnails to longest-and-shortest
-Break by_day_week_month_and_year into tags
 Top three guessers in last week and month
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
