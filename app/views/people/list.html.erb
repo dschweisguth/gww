@@ -5,11 +5,19 @@
 <table class="dark">
 <tr>
   <th class="empty"></th>
-  <th><%= link_to 'Member', list_people_url(:sorted_by => 'username') %></th>
-  <th><%= link_to 'Score', list_people_url(:sorted_by => 'score') %></th>
-  <th><%= link_to 'Posts', list_people_url(:sorted_by => 'posts') %></th>
-  <th><%= link_to 'Guesses per day', list_people_url(:sorted_by => 'guesses-per-day') %></th>
-  <th><%= link_to 'Posts per guess', list_people_url(:sorted_by => 'posts-per-guess') %></th>
+  <th><%= link_to_unless params[:sorted_by] == 'username', 'Member',
+            list_people_url(:sorted_by => 'username') %></th>
+  <th><%= link_to_unless(
+            params[:sorted_by].nil? || params[:sorted_by] == 'score', 'Score',
+            list_people_url(:sorted_by => 'score')) %></th>
+  <th><%= link_to_unless params[:sorted_by] == 'posts', 'Posts',
+            list_people_url(:sorted_by => 'posts') %></th>
+  <th><%= link_to_unless params[:sorted_by] == 'guesses-per-day',
+            'Guesses per day',
+            list_people_url(:sorted_by => 'guesses-per-day') %></th>
+  <th><%= link_to_unless params[:sorted_by] == 'posts-per-guess',
+            'Posts per guess',
+            list_people_url(:sorted_by => 'posts-per-guess') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
 <tr>
