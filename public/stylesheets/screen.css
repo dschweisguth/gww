@@ -20,9 +20,8 @@ th {
   text-align: left;
 }
 
-.dholder {
-  padding: 0;
-  vertical-align: top;
+.dark .darker {
+  background-color: #cccccc;
 }
 
 .dark .empty {
