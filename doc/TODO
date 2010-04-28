@@ -1,4 +1,3 @@
-Use TextHelper.highlight, .pluralize
 Extract helper method for date+time
 Remove link from people/list header when option is current
 gzip
