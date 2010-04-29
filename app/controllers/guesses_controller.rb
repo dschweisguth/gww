@@ -118,29 +118,28 @@ class GuessesController < ApplicationController
     guesses.each do |guess|
       guesser = guessers[guess.person.id]
       if guesser
-        guesser[:guess_count] += 1
+        guesser[:score] += 1
       else
-        guess.person[:guess_count] = 1
+        guess.person[:score] = 1
         guessers[guess.person.id] = guess.person
       end
     end
 
-    return_people = []
-    guessers.values.each do |person|
+    scores = []
+    guessers.values.each do |guesser|
       found = nil
-      return_people.each do |person_list|
-        if person_list[:guess_count] == person[:guess_count]
-          person_list[:people].push person
+      scores.each do |score|
+        if score[:score] == guesser[:score]
+          score[:guessers].push guesser
           found = :true
           break
         end
       end
-      if !found
-        return_people.push(
-          { :guess_count => person[:guess_count], :people => [ person ] })
+      if ! found
+        scores.push({ :score => guesser[:score], :guessers => [ guesser ] })
       end
     end
-    return_people.sort! { |x,y| y[:guess_count] <=> x[:guess_count] }
+    scores.sort! { |x,y| y[:score] <=> x[:score] }
   end
 
 end
