@@ -116,9 +116,9 @@ class GuessesController < ApplicationController
 
     guessers = {}
     guesses.each do |guess|
-      person = guessers[guess.person.id]
-      if person
-        person[:guess_count] += 1
+      guesser = guessers[guess.person.id]
+      if guesser
+        guesser[:guess_count] += 1
       else
         guess.person[:guess_count] = 1
         guessers[guess.person.id] = guess.person
