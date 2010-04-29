@@ -8,10 +8,10 @@
 
   <% @last_days.each do |day| -%>
     <tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></th></tr>
-    <% day[:scores].each do |person_list| -%>
+    <% day[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
-	<td class="opening-number"><%= person_list[:score] %></td>
-	<td><%=h person_list[:guessers].map { |p| p.username }.join ', ' %></td>
+	<td class="opening-number"><%= score %></td>
+	<td><%=h day[:scores][score].map { |p| p.username }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
@@ -22,10 +22,10 @@
 
   <% @last_weeks.each_with_index do |week, week_index| -%>
     <tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
-    <% week[:scores].each do |person_list| -%>
+    <% week[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
-	<td class="opening-number"><%= person_list[:score] %></td>
-	<td><%= person_list[:guessers].map { |p| p.username }.join ', ' %></td>
+	<td class="opening-number"><%= score %></td>
+	<td><%= week[:scores][score].map { |p| p.username }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
@@ -36,10 +36,10 @@
 
   <% @last_months.each_with_index do |month, month_index| -%>
     <tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th></tr>
-    <% month[:scores].each do |person_list| -%>
+    <% month[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
-	<td class="opening-number"><%= person_list[:score] %></td>
-	<td><%= person_list[:guessers].map { |p| p.username }.join ', ' %></td>
+	<td class="opening-number"><%= score %></td>
+	<td><%= month[:scores][score].map { |p| p.username }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
@@ -50,10 +50,10 @@
 
   <% @last_years.each_with_index do |year, year_index| -%>
     <tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th></tr>
-    <% year[:scores].each do |person_list| -%>
+    <% year[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
-	<td class="opening-number"><%= person_list[:score] %></td>
-	<td><%= person_list[:guessers].map { |p| p.username }.join ', ' %></td>
+	<td class="opening-number"><%= score %></td>
+	<td><%= year[:scores][score].map { |p| p.username }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>

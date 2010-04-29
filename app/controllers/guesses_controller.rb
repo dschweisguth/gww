@@ -125,21 +125,16 @@ class GuessesController < ApplicationController
       end
     end
 
-    scores = []
+    scores = {}
     guessers.values.each do |guesser|
-      found = nil
-      scores.each do |score|
-        if score[:score] == guesser[:score]
-          score[:guessers].push guesser
-          found = :true
-          break
-        end
-      end
-      if ! found
-        scores.push({ :score => guesser[:score], :guessers => [ guesser ] })
-      end
+      score = scores[guesser[:score]]
+      if score
+        score.push guesser
+      else
+        scores[guesser[:score]] = [ guesser ]
+      end        
     end
-    scores.sort! { |x,y| y[:score] <=> x[:score] }
+    scores
   end
 
 end
