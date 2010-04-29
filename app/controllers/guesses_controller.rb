@@ -112,7 +112,7 @@ class GuessesController < ApplicationController
     else
       conditions = []
     end
-    guesses = Guess.find(:all, :conditions => conditions,:include => :person)
+    guesses = Guess.find :all, :conditions => conditions, :include => :person
 
     guessers = {}
     guesses.each do |guess|
