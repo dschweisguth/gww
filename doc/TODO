@@ -1,4 +1,3 @@
-Sort usernames in by_day_week_month_and_year
 Break by_day_week_month_and_year into tags
 gzip
 Review list style in admin reports

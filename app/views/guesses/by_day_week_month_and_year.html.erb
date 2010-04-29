@@ -11,7 +11,7 @@
     <% day[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
 	<td class="opening-number"><%= score %></td>
-	<td><%=h day[:scores][score].map { |p| p.username }.join ', ' %></td>
+	<td><%=h day[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
@@ -25,7 +25,7 @@
     <% week[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
 	<td class="opening-number"><%= score %></td>
-	<td><%= week[:scores][score].map { |p| p.username }.join ', ' %></td>
+	<td><%= week[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
@@ -39,7 +39,7 @@
     <% month[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
 	<td class="opening-number"><%= score %></td>
-	<td><%= month[:scores][score].map { |p| p.username }.join ', ' %></td>
+	<td><%= month[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
@@ -53,7 +53,7 @@
     <% year[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
 	<td class="opening-number"><%= score %></td>
-	<td><%= year[:scores][score].map { |p| p.username }.join ', ' %></td>
+	<td><%= year[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
       </tr>
     <% end -%>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
