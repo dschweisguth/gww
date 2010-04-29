@@ -117,7 +117,7 @@ class GuessesController < ApplicationController
     guessers = {}
     guesses.each do |guess|
       guessers[guess.person] ||= []
-      guessers[guess.person].push(guess)
+      guessers[guess.person].push guess
     end
 
     return_people = []
@@ -126,13 +126,12 @@ class GuessesController < ApplicationController
       found = nil
       return_people.each do |person_list|
         if person_list[:guesscount] == add_person[:guesscount]
-          person_list[:people].push(add_person)
+          person_list[:people].push add_person
           found = :true
           break
         end
       end
       if !found
-        # create a new entry
         return_people.push({ :guesscount => add_person[:guesscount],
           :people => [add_person] })
       end
