@@ -13,7 +13,7 @@ a {
 
 table {
   padding: 0;
-  margin: 6px 0 0 0;
+  margin-top: 6px;
 }
 
 th {
@@ -66,6 +66,20 @@ th {
 .opening-number {
   font-weight: bold;
   text-align: right;
+}
+
+/* guesses/correct */
+
+.container {
+  margin: 0;
+}
+
+.container td {
+  vertical-align: top;
+}
+
+.container table {
+  width: 300px;
 }
 
 /* people/show */
