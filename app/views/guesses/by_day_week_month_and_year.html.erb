@@ -10,13 +10,8 @@
 
       <% @days.each do |day| -%>
 	<tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></th></tr>
-	<% day[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
-	  <tr>
-	    <td class="opening-number"><%= score %></td>
-	    <td><%=h day[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
-	  </tr>
-	<% end -%>
-	<tr><td colspan="2" class="empty">&nbsp;</td></tr>
+        <%= render :partial => 'by_day_week_month_and_year_scores',
+          :locals => { :scores => day[:scores] }  %>
       <% end -%>
       <tr><td colspan="2" class="empty">&nbsp;</td></tr>
 
@@ -25,13 +20,8 @@
 
       <% @weeks.each_with_index do |week, week_index| -%>
 	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
-	<% week[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
-	  <tr>
-	    <td class="opening-number"><%= score %></td>
-	    <td><%= week[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
-	  </tr>
-	<% end -%>
-	<tr><td colspan="2" class="empty">&nbsp;</td></tr>
+        <%= render :partial => 'by_day_week_month_and_year_scores',
+          :locals => { :scores => week[:scores] }  %>
       <% end -%>
 
     </table>
@@ -43,13 +33,8 @@
 
       <% @months.each_with_index do |month, month_index| -%>
 	<tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th></tr>
-	<% month[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
-	  <tr>
-	    <td class="opening-number"><%= score %></td>
-	    <td><%= month[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
-	  </tr>
-	<% end -%>
-	<tr><td colspan="2" class="empty">&nbsp;</td></tr>
+        <%= render :partial => 'by_day_week_month_and_year_scores',
+          :locals => { :scores => month[:scores] }  %>
       <% end -%>
 
     </table>
@@ -61,13 +46,8 @@
 
       <% @years.each_with_index do |year, year_index| -%>
 	<tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th></tr>
-	<% year[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
-	  <tr>
-	    <td class="opening-number"><%= score %></td>
-	    <td><%= year[:scores][score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
-	  </tr>
-	<% end -%>
-	<tr><td colspan="2" class="empty">&nbsp;</td></tr>
+        <%= render :partial => 'by_day_week_month_and_year_scores',
+          :locals => { :scores => year[:scores] }  %>
       <% end -%>
 
     </table>

@@ -1,0 +1,7 @@
+<% scores.keys.sort { |x, y| y <=> x }.each do |score| -%>
+  <tr>
+    <td class="opening-number"><%= score %></td>
+    <td><%=h scores[score].map { |p| p.username }.sort_by { |u| u.downcase }.join ', ' %></td>
+  </tr>
+<% end -%>
+<tr><td colspan="2" class="empty">&nbsp;</td></tr>
