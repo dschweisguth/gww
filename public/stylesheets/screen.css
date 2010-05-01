@@ -76,11 +76,12 @@ th {
 
 .container table {
   width: 300px;
+  margin: 0 0 18px 0;
 }
 
 .darker {
   background-color: #cccccc;
-  margin: 0 0 12px 2px;
+  margin: 0 0 18px 2px;
   width: 285px;
 }
 
