@@ -32,10 +32,13 @@ th {
 }
 
 .dark th, .comments th, .dark td, .darker {
-  border-left: 1px solid #ffffff;
-  border-bottom: 1px solid #ffffff;
   padding: 3px 5px 3px 5px;
   vertical-align: top;
+}
+
+.dark th, .comments th, .dark td {
+  border-left: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
 
 .dark th, .comments th {
@@ -81,7 +84,7 @@ th {
 
 .darker {
   background-color: #cccccc;
-  margin: 0 0 18px 2px;
+  margin: 0 0 18px 3px;
   width: 285px;
 }
 
