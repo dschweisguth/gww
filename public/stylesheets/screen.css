@@ -20,10 +20,6 @@ th {
   text-align: left;
 }
 
-.dark .darker {
-  background-color: #cccccc;
-}
-
 .dark .empty {
   border: 0;
   background-color: #ffffff;
@@ -61,14 +57,14 @@ th {
   text-align: right;
 }
 
-/* guesses/correct, guesses/longest_and_shortest */
+/* guesses/by_day_week_month_and_year, guesses/longest_and_shortest */
 
 .opening-number {
   font-weight: bold;
   text-align: right;
 }
 
-/* guesses/correct */
+/* guesses/by_day_week_month_and_year */
 
 .container {
   margin: 0;
@@ -80,6 +76,10 @@ th {
 
 .container table {
   width: 300px;
+}
+
+.dark .darker {
+  background-color: #cccccc;
 }
 
 /* people/show */
