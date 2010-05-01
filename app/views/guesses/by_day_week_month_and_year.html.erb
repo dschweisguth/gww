@@ -6,7 +6,7 @@
   <tr><th colspan="2" class="darker">by day for the past week</th></tr>
   <tr><td colspan="2" class="empty">&nbsp;</td></tr>
 
-  <% @last_days.each do |day| -%>
+  <% @days.each do |day| -%>
     <tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></th></tr>
     <% day[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
@@ -20,7 +20,7 @@
   <tr><th colspan="2" class="darker">by week for the past month</th></tr>
   <tr><td colspan="2" class="empty">&nbsp;</td></tr>
 
-  <% @last_weeks.each_with_index do |week, week_index| -%>
+  <% @weeks.each_with_index do |week, week_index| -%>
     <tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
     <% week[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
@@ -34,7 +34,7 @@
   <tr><th colspan="2" class="darker">by month for the past year</th></tr>
   <tr><td colspan="2" class="empty">&nbsp;</td></tr>
 
-  <% @last_months.each_with_index do |month, month_index| -%>
+  <% @months.each_with_index do |month, month_index| -%>
     <tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th></tr>
     <% month[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>
@@ -48,7 +48,7 @@
   <tr><th colspan="2" class="darker">by year</th></tr>
   <tr><td colspan="2" class="empty">&nbsp;</td></tr>
 
-  <% @last_years.each_with_index do |year, year_index| -%>
+  <% @years.each_with_index do |year, year_index| -%>
     <tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th></tr>
     <% year[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
       <tr>

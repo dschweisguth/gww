@@ -57,48 +57,48 @@ class GuessesController < ApplicationController
 
     @latest_update = FlickrUpdate.latest.created_at.getlocal
     
-    @last_days = []
+    @days = []
     (1..7).each do |num|
       dates = { :begin => (@latest_update - num.day).beginning_of_day,
         :end => (@latest_update - (num - 1).day).beginning_of_day }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      @last_days.push({ :dates => dates, :scores => scores })
+      @days.push({ :dates => dates, :scores => scores })
     end
     
     thisweek_dates = { :begin => @latest_update.beginning_of_week - 1.day,
       :end => @latest_update }
     thisweek_scores = get_scores_from_date thisweek_dates[:begin], nil
-    @last_weeks = [ { :dates => thisweek_dates, :scores => thisweek_scores } ]
+    @weeks = [ { :dates => thisweek_dates, :scores => thisweek_scores } ]
     (1..5).each do |num|
       dates = {
         :begin => (@latest_update - num.week).beginning_of_week - 1.day,
         :end => (@latest_update - (num - 1).week).beginning_of_week - 1.day }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      @last_weeks.push({ :dates => dates, :scores => scores })
+      @weeks.push({ :dates => dates, :scores => scores })
     end
     
     thismonth_dates = { :begin => @latest_update.beginning_of_month,
       :end => @latest_update }
     thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
-    @last_months =
+    @months =
       [ { :dates => thismonth_dates, :scores => thismonth_scores } ]
     (1..5).each do |num|
       dates = { :begin => (@latest_update - num.month).beginning_of_month,
         :end => (@latest_update - (num - 1).month).beginning_of_month }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      @last_months.push({ :dates => dates, :scores => scores })
+      @months.push({ :dates => dates, :scores => scores })
     end
     
     thisyear_dates = { :begin => @latest_update.beginning_of_year,
       :end => @latest_update }
     thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
-    @last_years = [ {:dates => thisyear_dates, :scores => thisyear_scores} ]
+    @years = [ {:dates => thisyear_dates, :scores => thisyear_scores} ]
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
     (1..years_of_guessing).each do |num|
       dates = { :begin => (@latest_update - num.year).beginning_of_year,
         :end => (@latest_update - (num - 1).year).beginning_of_year }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      @last_years.push({ :dates => dates, :scores => scores })
+      @years.push({ :dates => dates, :scores => scores })
     end
     
   end
