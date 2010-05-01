@@ -26,12 +26,12 @@ th {
   padding: 0 10px 0 10px;
 }
 
-.dark th, .comments th, .row-number {
+.dark th, .comments th, .row-number, .darker {
   font-size: 11px;
   font-weight: bold;
 }
 
-.dark th, .comments th, .dark td {
+.dark th, .comments th, .dark td, .darker {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
   padding: 3px 5px 3px 5px;
@@ -78,8 +78,10 @@ th {
   width: 300px;
 }
 
-.dark .darker {
+.darker {
   background-color: #cccccc;
+  margin: 0 0 12px 2px;
+  width: 285px;
 }
 
 /* people/show */

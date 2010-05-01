@@ -4,53 +4,51 @@
 
 <table class="container"><tr>
   <td>
-    <table class="dark">
-      <tr><th colspan="2" class="darker">by day for the past week</th></tr>
-      <tr><td colspan="2" class="empty">&nbsp;</td></tr>
+    <div class="darker">by day for the past week</div>
 
+    <table class="dark">
       <% @days.each do |day| -%>
 	<tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></th></tr>
         <%= render :partial => 'by_day_week_month_and_year_scores',
           :locals => { :scores => day[:scores] }  %>
       <% end -%>
       <tr><td colspan="2" class="empty">&nbsp;</td></tr>
+    </table>
 
-      <tr><th colspan="2" class="darker">by week for the past month</th></tr>
-      <tr><td colspan="2" class="empty">&nbsp;</td></tr>
+    <div class="darker">by week for the past month</div>
 
+    <table class="dark">
       <% @weeks.each_with_index do |week, week_index| -%>
 	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'by_day_week_month_and_year_scores',
           :locals => { :scores => week[:scores] }  %>
       <% end -%>
-
     </table>
+
   </td>
   <td>
-    <table class="dark">
-      <tr><th colspan="2" class="darker">by month for the past year</th></tr>
-      <tr><td colspan="2" class="empty">&nbsp;</td></tr>
+    <div class="darker">by month for the past year</div>
 
+    <table class="dark">
       <% @months.each_with_index do |month, month_index| -%>
 	<tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'by_day_week_month_and_year_scores',
           :locals => { :scores => month[:scores] }  %>
       <% end -%>
-
     </table>
+
   </td>
   <td>
-    <table class="dark">
-      <tr><th colspan="2" class="darker">by year</th></tr>
-      <tr><td colspan="2" class="empty">&nbsp;</td></tr>
+    <div class="darker">by year</div>
 
+    <table class="dark">
       <% @years.each_with_index do |year, year_index| -%>
 	<tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'by_day_week_month_and_year_scores',
           :locals => { :scores => year[:scores] }  %>
       <% end -%>
-
     </table>
+
   </td>
 </tr></table>
 
