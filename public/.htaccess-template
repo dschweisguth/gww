@@ -22,3 +22,5 @@ RewriteRule ^$ cache/index.html [L]
 
 RewriteCond %{DOCUMENT_ROOT}/cache%{REQUEST_URI}.html -f
 RewriteRule ^(.+)$ cache/$1.html [L]
+
+AddOutputFilterByType DEFLATE text/html
