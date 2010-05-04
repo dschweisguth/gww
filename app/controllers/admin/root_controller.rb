@@ -5,7 +5,7 @@ class Admin::RootController < ApplicationController
     @latest = FlickrUpdate.latest
     @unfound_photos_count = Photo.count :all,
       :conditions => "game_status in ('unfound', 'unconfirmed')"
-    @unverified_photos_count = Photo.count :all,
+    @inaccessible_photos_count = Photo.count :all,
       :conditions =>
         [ "seen_at < ? and game_status in ('unfound', 'unconfirmed')",
           @latest.created_at ]

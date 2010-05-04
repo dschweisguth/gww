@@ -106,8 +106,8 @@ class Admin::PhotosController < ApplicationController
     @photos = Photo.unfound_or_unconfirmed
   end
 
-  caches_page :unverified
-  def unverified
+  caches_page :inaccessible
+  def inaccessible
     @photos = Photo.find :all,
       :conditions =>
         [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
