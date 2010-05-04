@@ -1,6 +1,6 @@
 <%= render :partial => 'admin/breadcrumbs' %>
 <hr/>
-<h1><%= @photos.length %> photos worth more than one point</h1>
+<h1><%= @photos.length %> <%= @title %></h1>
 
 <table>
   <tr>
@@ -11,7 +11,7 @@
     <th>game status</th>
     <th></th>
   </tr>  
-<% for photo in @photos %>
+<% for photo in @photos -%>
   <tr>
     <td><%= link_to photo.person.username, show_person_url(photo.person) %></td>
     <td><%= local_date photo.dateadded %></td>
@@ -20,7 +20,7 @@
     <td><%= photo.game_status %></td>
     <td><%= link_to 'Edit', edit_photo_url(photo) %></td>
   </tr>
-<% end %>
+<% end -%>
 </table>
 
 <hr/>

@@ -103,20 +103,26 @@ class Admin::PhotosController < ApplicationController
 
   caches_page :unfound
   def unfound
+    @title = 'unfound or unconfirmed photos'
     @photos = Photo.unfound_or_unconfirmed
+    render :template => 'admin/photos/list'
   end
 
   caches_page :inaccessible
   def inaccessible
+    @title = 'inaccessible and unfound or unconfirmed photos'
     @photos = Photo.find :all,
       :conditions =>
         [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
           FlickrUpdate.latest.created_at ],
       :include => :person, :order => "lastupdate desc"
+    render :template => 'admin/photos/list'
   end
 
   caches_page :multipoint
   def multipoint
+    @title = 'photos worth more than one point'
+
     guesses_per_post = Guess.count :all, :group => :photo_id
     photo_ids = []
     guesses_per_post.each do |photo_id, count|
@@ -127,6 +133,8 @@ class Admin::PhotosController < ApplicationController
     @photos = Photo.find :all,
       :conditions => "photos.id in (" + photo_ids.join(', ')+ ")",
       :include => :person, :order => "lastupdate desc"
+
+    render :template => 'admin/photos/list'
   end
 
   def show
