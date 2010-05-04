@@ -1,3 +1,10 @@
+<%= render :partial => 'admin/breadcrumbs' %>
+<hr/>
+<h1>Score report</h1>
+
+<a href="http://www.flickr.com/groups/guesswheresf/discus\
+s/72157613300758288/">GWSF Scores discussion topic</a><br/><br/>
+
 <textarea name="textfield" onFocus="this.select();" rows="50" style="width: 800px;" wrap="virtual">
 &lt;b&gt;updated <%= @report_date.strftime '%A, %B %d, %I %p' %>&lt;/b&gt;
 
@@ -28,3 +35,6 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 &lt;a name="<%= people_with_guess_count[:guess_count] %>"&gt;&lt;b&gt;<%= people_with_guess_count[:guess_count] %>&lt;/b&gt;&lt;/a&gt; - <% people_with_guess_count[:people].each_with_index do |person, i| -%><%=h person.username %> (<%= @posts_per_person[person.id] || 0 %>)<% if i < people_with_guess_count[:people].length - 1 -%>, <% end -%><% end %>
 <% end -%>
 </textarea>
+
+<hr/>
+<%= render :partial => 'admin/breadcrumbs' %>
