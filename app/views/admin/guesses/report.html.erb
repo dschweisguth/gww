@@ -1,7 +1,7 @@
 <textarea name="textfield" onFocus="this.select();" rows="50" style="width: 800px;" wrap="virtual">
 &lt;b&gt;updated <%= @report_date.strftime '%A, %B %d, %I %p' %>&lt;/b&gt;
 
-<%= @guesses.length %> new guesses by ...
+<%= pluralize @guesses.length, 'new guess' %> by ...
 
 <% @guessers.each do |guesser| -%>
 <% if @guesses_per_person[guesser.id] > 1 %>&lt;a href="#<%= @guesses_per_person[guesser.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h guesser.username %>&lt;/b&gt;<% if @guesses_per_person[guesser.id] > 1 %>&lt;/a&gt<% end %>
@@ -9,7 +9,7 @@
 <% end -%>
 
 <% if ! @revelations_by_person.empty? -%>
-<%= @revelations.length %> photos revealed by ...
+<%= pluralize @revelations.length, 'photo' %> revealed by ...
 
 <% end -%>
 <% @revelations_by_person.each do |revelations| -%>
@@ -17,9 +17,9 @@
 <% revelations[:revelations].each do |revelation| -%>&lt;a href="<%= revelation.photo.page_url %>">&lt;img height="50" width="50" src="<%= revelation.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
-<%= @new_photos_count %> photos have been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
+<%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
 
-<%= @total_correct_guessers %> people have made correct guesses. <%= @total_posters_only %> people have put at least one photo in the pool but not guessed any photos correctly. That means that at least <%= @total_participants %> of our <%= @member_count %> members have participated in the game.
+<%= @total_correct_guessers %> people have made correct guesses. <%= @total_posters_only %> people have put at least one photo in the pool but not guessed any photos correctly. That means that at least <%= @total_participants %> of our <%= pluralize @member_count, 'member' %> have participated in the game.
 
 Since the beginning of the game, <%= @total_single_guessers %> people have guessed one photo correctly. Here are the <%= @total_correct_guessers - @total_single_guessers %> people who've correctly guessed two or more photos. In parentheses following each name is the number of photos that person has put in the pool.
 
