@@ -5,20 +5,20 @@
 
 <table>
   <tr>
-    <td>posted by</td>
-    <td>added on</td>
-    <td>last update</td>
-    <td>mapped</td>
-    <td>game status</td>
-    <td>&nbsp;</td>
+    <th>posted by</th>
+    <th>added on</th>
+    <th>last update</th>
+    <th>mapped</th>
+    <th>game status</th>
+    <th></th>
   </tr>  
 <% for photo in @photos %>
   <tr>
-    <td><%=h photo.person.username %></td>
+    <td><%= link_to photo.person.username, show_person_url(photo.person) %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.mapped %></td>
-    <td><b><%= photo.game_status %></b></td>
+    <td><%= photo.game_status %></td>
     <td><%= link_to 'Edit', edit_photo_url(photo) %></td>
   </tr>
 <% end %>
