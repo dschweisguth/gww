@@ -1,8 +1,8 @@
 <% guesses.each do |guess| %>
   <tr>
     <td class="guess_count"><%= link_to guess.photo.id, show_photo_url(guess.photo) %></td>
-    <td><%=h guess.photo.person.username %></td>
-    <td><%=h guess.person.username %></td>
+    <td><%= link_to guess.photo.person.username, show_person_url(guess.photo.person.username) %></td>
+    <td><%= link_to guess.person.username, show_person_url(guess.person.username) %></td>
     <td><%= guess.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
     <td><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
     <td><%= guess[:time_elapsed] %></td>
