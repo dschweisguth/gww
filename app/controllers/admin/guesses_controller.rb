@@ -6,9 +6,9 @@ class Admin::GuessesController < ApplicationController
 
     updates = FlickrUpdate.find :all, :order => "id desc", :limit => 2
 
-    @guesses = Guess.find(:all,
+    @guesses = Guess.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ],
-      :include => [ { :photo => :person }, :person ])
+      :include => [ { :photo => :person }, :person ]
     @guessers = []
     @guesses_by_guesser = {}
     @guesses.each do |guess|
@@ -27,14 +27,14 @@ class Admin::GuessesController < ApplicationController
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
     @new_photos_count =
-      Photo.count(:all,
-        :conditions => [ "dateadded > ?", updates[1].created_at ])
-    @unfound_count = Photo.count(:all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')");
+      Photo.count :all,
+        :conditions => [ "dateadded > ?", updates[1].created_at ]
+    @unfound_count = Photo.count :all,
+      :conditions => "game_status in ('unfound', 'unconfirmed')";
     
     people = Person.find(:all)
-    @posts_per_person = Photo.count(:all, :group => :person_id)
-    @guesses_per_person = Guess.count(:all, :group => :person_id)
+    @posts_per_person = Photo.count :all, :group => :person_id
+    @guesses_per_person = Guess.count :all, :group => :person_id
     @people_by_guess_count = []
     people.each do |person|
       guess_count = @guesses_per_person[person.id] || 0
@@ -49,9 +49,9 @@ class Admin::GuessesController < ApplicationController
     end
     @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
 
-    @revelations = Revelation.find(:all,
+    @revelations = Revelation.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ], 
-      :include => { :photo => :person })
+      :include => { :photo => :person }
     @revelations_by_person = []
     @revelations.each do |revelation|
       revelations_with_person =
