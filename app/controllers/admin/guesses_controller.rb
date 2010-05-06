@@ -32,7 +32,7 @@ class Admin::GuessesController < ApplicationController
     @unfound_count = Photo.count :all,
       :conditions => "game_status in ('unfound', 'unconfirmed')";
     
-    people = Person.find(:all)
+    people = Person.find :all
     @posts_per_person = Photo.count :all, :group => :person_id
     @guesses_per_person = Guess.count :all, :group => :person_id
     @people_by_guess_count = []
