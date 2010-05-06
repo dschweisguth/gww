@@ -1,6 +1,6 @@
 <% guesses.each do |guess| %>
   <tr>
-    <td class="guess_count"><%= link_to guess.photo.id, show_photo_url(guess.photo) %></td>
+    <td class="thumbnail"><a href="<%= url_for show_photo_url(guess.photo) %>"><img src="<%= guess.photo.image_url 't' %>"/></a></td>
     <td><%= link_to guess.photo.person.username, show_person_url(guess.photo.person.username) %></td>
     <td><%= link_to guess.person.username, show_person_url(guess.person.username) %></td>
     <td><%= guess.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
