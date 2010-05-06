@@ -9,6 +9,10 @@ a {
   font-weight: bold;
 }
 
+img {
+  border: 0;
+}
+
 /* Tables */
 
 table {
