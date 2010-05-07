@@ -49,8 +49,8 @@ class Admin::GuessesController < ApplicationController
     end
     @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
 
-    @weekly_scores = recent_scores people, 7
-    @monthly_scores = recent_scores people, 30
+    @weekly_high_scorers = high_scorers 7
+    @monthly_high_scorers = high_scorers 30
 
     @revelations = Revelation.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ], 
@@ -78,39 +78,22 @@ class Admin::GuessesController < ApplicationController
 
   end
 
-  def recent_scores(people, days)
-    scores_by_id = Guess.count :all, :group => :person_id,
-      :conditions => "datediff(now(), guessed_at) < #{days}"
-
-    people_by_score = {}
+  def high_scorers(days)
+    people = Person.find_by_sql [
+      'select p.*, count(*) score from people p, guesses g ' +
+        'where p.id = g.person_id and datediff(now(), g.guessed_at) < ? ' +
+        'group by p.id having score > 1 order by score desc',
+      days
+    ]
+    high_scorers = []
+    current_score = nil
     people.each do |person|
-      score = scores_by_id[person.id]
-      if score && score > 1
-        people_with_score = people_by_score[score]
-        if ! people_with_score
-          people_with_score = []
-          people_by_score[score] = people_with_score
-        end
-        people_with_score.push person
-      end
+      break if high_scorers.length >= 3 &&
+        person[:score] < current_score
+      high_scorers.push person
+      current_score = person[:score]
     end
-
-    scores = people_by_score.keys.sort! { |x, y| y <=> x }
-    people_count = 0
-    scores_to_keep = {}
-    scores.each do |score|
-      people_with_score = people_by_score[score]
-      scores_to_keep[score] = people_with_score
-      people_count += people_with_score.length
-      break if people_count >= 3
-    end
-    people_by_score = scores_to_keep
-
-    people_by_score.each do |count, people|
-      people.sort!
-    end
-
-    people_by_score
+    high_scorers
   end
 
   def people_with(people_by_guess_count, guess_count)

@@ -1,3 +1,5 @@
+Remove now() from high_scorers to enable caching
+Mark high_scorers on people/show
 Remove unnecessary condition (|| 0) in report.html.erb list of guesses link
 Use object as hash in score report
 Fix test schema character set
