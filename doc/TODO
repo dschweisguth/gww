@@ -1,4 +1,6 @@
-Top three guessers in last week and month
+Remove unnecessary condition (|| 0) in report.html.erb list of guesses link
+Use object as hash in score report
+Fix test schema character set
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
 Include tags in update

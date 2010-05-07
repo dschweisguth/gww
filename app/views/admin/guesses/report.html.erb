@@ -16,12 +16,28 @@
 
 <% if ! @revelations_by_person.empty? -%>
 <%= pluralize @revelations.length, 'photo' %> revealed by ...
-
-<% end -%>
 <% @revelations_by_person.each do |revelations| -%>
 &lt;b&gt;<%=h revelations[:person].username %>:&lt;/b&gt;
 <% revelations[:revelations].each do |revelation| -%>&lt;a href="<%= revelation.photo.page_url %>">&lt;img height="50" width="50" src="<%= revelation.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
+<% end -%>
+
+<% if ! @weekly_scores.empty? -%>
+Top guessers in the last week: <% -%>
+<% @weekly_scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
+<% @weekly_scores[score].each_with_index do |person, person_index| -%>
+<% if score_index > 0 || person_index > 0 -%>, <% end -%><%= link_to person.username, show_person_url(person) %> (<%= score %>)<% -%>
+<% end -%>
+<% end -%>
+<% end %>
+<% if ! @monthly_scores.empty? -%>
+Top guessers in the last month: <% -%>
+<% @monthly_scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
+<% @monthly_scores[score].each_with_index do |person, person_index| -%>
+<% if score_index > 0 || person_index > 0 -%>, <% end -%><%= link_to person.username, show_person_url(person) %> (<%= score %>)<% -%>
+<% end -%>
+<% end -%>
+<% end %>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
 
@@ -33,6 +49,7 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 <% next if people_with_guess_count[:guess_count] <= 1 -%>
 &lt;a name="<%= people_with_guess_count[:guess_count] %>"&gt;&lt;b&gt;<%= people_with_guess_count[:guess_count] %>&lt;/b&gt;&lt;/a&gt; - <% people_with_guess_count[:people].each_with_index do |person, i| -%><%=h person.username %> (<%= @posts_per_person[person.id] || 0 %>)<% if i < people_with_guess_count[:people].length - 1 -%>, <% end -%><% end %>
 <% end -%>
+
 </textarea>
 
 <hr/>

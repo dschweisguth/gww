@@ -49,6 +49,9 @@ class Admin::GuessesController < ApplicationController
     end
     @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
 
+    @weekly_scores = recent_scores people, 7
+    @monthly_scores = recent_scores people, 30
+
     @revelations = Revelation.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person }
@@ -73,6 +76,41 @@ class Admin::GuessesController < ApplicationController
     @member_count = updates[0].member_count
     @total_single_guessers = people_with @people_by_guess_count, 1
 
+  end
+
+  def recent_scores(people, days)
+    scores_by_id = Guess.count :all, :group => :person_id,
+      :conditions => "datediff(now(), guessed_at) < #{days}"
+
+    people_by_score = {}
+    people.each do |person|
+      score = scores_by_id[person.id]
+      if score && score > 1
+        people_with_score = people_by_score[score]
+        if ! people_with_score
+          people_with_score = []
+          people_by_score[score] = people_with_score
+        end
+        people_with_score.push person
+      end
+    end
+
+    scores = people_by_score.keys.sort! { |x, y| y <=> x }
+    people_count = 0
+    scores_to_keep = {}
+    scores.each do |score|
+      people_with_score = people_by_score[score]
+      scores_to_keep[score] = people_with_score
+      people_count += people_with_score.length
+      break if people_count >= 3
+    end
+    people_by_score = scores_to_keep
+
+    people_by_score.each do |count, people|
+      people.sort!
+    end
+
+    people_by_score
   end
 
   def people_with(people_by_guess_count, guess_count)
