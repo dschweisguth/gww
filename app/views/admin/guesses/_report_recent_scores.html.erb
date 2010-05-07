@@ -1,0 +1,8 @@
+<% if ! scores.empty? -%>
+Top guessers in the last <%= period %>: <% -%>
+<% scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
+<% scores[score].each_with_index do |person, person_index| -%>
+<% if score_index > 0 || person_index > 0 -%>, <% end -%><% if @guesses_per_person[person.id] > 1 %>&lt;a href="#<%= @guesses_per_person[person.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @guesses_per_person[person.id] > 1 %>&lt;/a&gt<% end -%> (<%= score %>)<% -%>
+<% end -%>
+<% end -%>
+<% end -%>

@@ -22,22 +22,10 @@
 <% end -%>
 <% end -%>
 
-<% if ! @weekly_scores.empty? -%>
-Top guessers in the last week: <% -%>
-<% @weekly_scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
-<% @weekly_scores[score].each_with_index do |person, person_index| -%>
-<% if score_index > 0 || person_index > 0 -%>, <% end -%><% if @guesses_per_person[person.id] > 1 %>&lt;a href="#<%= @guesses_per_person[person.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @guesses_per_person[person.id] > 1 %>&lt;/a&gt<% end -%> (<%= score %>)<% -%>
-<% end -%>
-<% end -%>
-<% end %>
-<% if ! @monthly_scores.empty? -%>
-Top guessers in the last month: <% -%>
-<% @monthly_scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
-<% @monthly_scores[score].each_with_index do |person, person_index| -%>
-<% if score_index > 0 || person_index > 0 -%>, <% end -%><% if @guesses_per_person[person.id] > 1 %>&lt;a href="#<%= @guesses_per_person[person.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @guesses_per_person[person.id] > 1 %>&lt;/a&gt<% end -%> (<%= score %>)<% -%>
-<% end -%>
-<% end -%>
-<% end %>
+<%= render :partial => 'report_recent_scores',
+  :locals => { :period => 'week', :scores => @weekly_scores } %>
+<%= render :partial => 'report_recent_scores',
+  :locals => { :period => 'month', :scores => @monthly_scores } %>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
 
