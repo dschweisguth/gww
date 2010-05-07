@@ -26,7 +26,7 @@
 Top guessers in the last week: <% -%>
 <% @weekly_scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
 <% @weekly_scores[score].each_with_index do |person, person_index| -%>
-<% if score_index > 0 || person_index > 0 -%>, <% end -%><%= link_to person.username, show_person_url(person) %> (<%= score %>)<% -%>
+<% if score_index > 0 || person_index > 0 -%>, <% end -%><% if @guesses_per_person[person.id] > 1 %>&lt;a href="#<%= @guesses_per_person[person.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @guesses_per_person[person.id] > 1 %>&lt;/a&gt<% end -%> (<%= score %>)<% -%>
 <% end -%>
 <% end -%>
 <% end %>
@@ -34,7 +34,7 @@ Top guessers in the last week: <% -%>
 Top guessers in the last month: <% -%>
 <% @monthly_scores.keys.sort { |x, y| y <=> x }.each_with_index do |score, score_index| -%>
 <% @monthly_scores[score].each_with_index do |person, person_index| -%>
-<% if score_index > 0 || person_index > 0 -%>, <% end -%><%= link_to person.username, show_person_url(person) %> (<%= score %>)<% -%>
+<% if score_index > 0 || person_index > 0 -%>, <% end -%><% if @guesses_per_person[person.id] > 1 %>&lt;a href="#<%= @guesses_per_person[person.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @guesses_per_person[person.id] > 1 %>&lt;/a&gt<% end -%> (<%= score %>)<% -%>
 <% end -%>
 <% end -%>
 <% end %>
