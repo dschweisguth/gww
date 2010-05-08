@@ -25,9 +25,8 @@ class Admin::GuessesController < ApplicationController
         (x[:guesses].nil? ? 0 : x[:guesses].length)
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
-    @new_photos_count =
-      Photo.count :all,
-        :conditions => [ "dateadded > ?", updates[1].created_at ]
+    @new_photos_count = Photo.count :all,
+      :conditions => [ "dateadded > ?", updates[1].created_at ]
     @unfound_count = Photo.count :all,
       :conditions => "game_status in ('unfound', 'unconfirmed')";
     
