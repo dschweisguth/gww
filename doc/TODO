@@ -1,5 +1,3 @@
-Review people/show and other complex reports for opportunities to use
-  ActiveRecord objects as hashes
 Fix test schema character set
 Make View in GWW go from profile or photostream to people/show
 Restrict HTTP basic auth to /admin
