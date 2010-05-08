@@ -11,6 +11,12 @@ In Guess Where SF:
 <%= link_to "#{@person.username}'s comments", :action => 'comments', :id => @person %>
 <br/><br/>
 
+<%= render :partial => 'show_high_scorers',
+  :locals => { :high_scorers => @weekly_high_scorers, :period => 'week' } %>
+<%= render :partial => 'show_high_scorers',
+  :locals => { :high_scorers => @monthly_high_scorers, :period => 'month' } %>
+<% if @weekly_high_scorers || @monthly_high_scorers-%><br/><% end %>
+
 <b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
 
 <%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<% if ! @unfound_photos.find_all { |p| p.game_status == 'unconfirmed' }.empty? %> or <span class="unconfirmed">unconfirmed</span><% end %><%= @unfound_photos.empty? ? '.' : ':' %>

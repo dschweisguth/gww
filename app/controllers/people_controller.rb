@@ -53,6 +53,15 @@ class PeopleController < ApplicationController
   caches_page :show
   def show
     @person = Person.find params[:id]
+
+    weekly_high_scorers = Person.high_scorers 7
+    if weekly_high_scorers.include? @person
+      @weekly_high_scorers = weekly_high_scorers
+    end
+    monthly_high_scorers = Person.high_scorers 30
+    if monthly_high_scorers.include? @person
+      @monthly_high_scorers = monthly_high_scorers
+    end
     
     @unfound_photos = Photo.find :all, :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",

@@ -1,4 +1,6 @@
-Mark high_scorers on people/show
+Helper for username linked to person
+Review people/show and other complex reports for opportunities to use
+  ActiveRecord objects as hashes
 Fix test schema character set
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
