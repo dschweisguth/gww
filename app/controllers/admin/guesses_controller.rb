@@ -42,8 +42,8 @@ class Admin::GuessesController < ApplicationController
     end
     @people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
 
-    @weekly_high_scorers = high_scorers 7
-    @monthly_high_scorers = high_scorers 30
+    @weekly_high_scorers = Person.high_scorers 7
+    @monthly_high_scorers = Person.high_scorers 30
 
     @revelations = Revelation.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ], 
@@ -65,24 +65,6 @@ class Admin::GuessesController < ApplicationController
     @member_count = updates[0].member_count
     @total_single_guessers = people_with @people_by_score, 1
 
-  end
-
-  def high_scorers(days)
-    people = Person.find_by_sql [
-      'select p.*, count(*) score from people p, guesses g ' +
-        'where p.id = g.person_id and datediff(?, g.guessed_at) < ? ' +
-        'group by p.id having score > 1 order by score desc',
-      Time.now.getutc.strftime('%Y-%m-%d'), days
-    ]
-    high_scorers = []
-    current_score = nil
-    people.each do |person|
-      break if high_scorers.length >= 3 &&
-        person[:score] < current_score
-      high_scorers.push person
-      current_score = person[:score]
-    end
-    high_scorers
   end
 
   def people_with(people_by_score, score)
