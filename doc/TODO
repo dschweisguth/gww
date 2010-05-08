@@ -1,6 +1,5 @@
-Mark high_scorers on people/show
-Remove unnecessary condition (|| 0) in report.html.erb list of guesses link
 Use object as hash in score report
+Mark high_scorers on people/show
 Fix test schema character set
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
