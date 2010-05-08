@@ -52,20 +52,18 @@ class Admin::GuessesController < ApplicationController
     @revelations = Revelation.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person }
-    @revelations_by_person = []
+    @revealers = []
     @revelations.each do |revelation|
-      revelations_with_person =
-        @revelations_by_person.find { |x|
-          x[:person] == revelation.photo.person }
-      if revelations_with_person
-        revelations_with_person[:revelations].push revelation
-      elsif
-        @revelations_by_person.push({ :person => revelation.photo.person,
-          :revelations => [ revelation ] })
+      revealer = revelation.photo.person
+      if ! @revealers.include? revealer
+        @revealers.push revealer
       end
+      if ! revealer[:revelations]
+        revealer[:revelations] = []
+      end
+      revealer[:revelations].push revelation
     end
-    @revelations_by_person.sort! { |x, y|
-      x[:person].username.downcase <=> y[:person].username.downcase }
+    @revealers.sort! { |x, y| x.username.downcase <=> y.username.downcase }
 
     @total_participants = people.length
     @total_posters_only = people_with @people_by_score, 0

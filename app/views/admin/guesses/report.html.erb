@@ -15,11 +15,11 @@
 <% guesser[:guesses].each do |guess| -%>&lt;a href="<%= guess.photo.page_url %>">&lt;img height="50" width="50" src="<%= guess.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
-<% if ! @revelations_by_person.empty? -%>
+<% if ! @revealers.empty? -%>
 <%= pluralize @revelations.length, 'photo' %> revealed by ...
-<% @revelations_by_person.each do |revelations| -%>
-&lt;b&gt;<%=h revelations[:person].username %>:&lt;/b&gt;
-<% revelations[:revelations].each do |revelation| -%>&lt;a href="<%= revelation.photo.page_url %>">&lt;img height="50" width="50" src="<%= revelation.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
+<% @revealers.each do |revealer| -%>
+&lt;b&gt;<%=h revealer.username %>:&lt;/b&gt;
+<% revealer[:revelations].each do |revelation| -%>&lt;a href="<%= revelation.photo.page_url %>">&lt;img height="50" width="50" src="<%= revelation.photo.image_url "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
 <% end -%>
