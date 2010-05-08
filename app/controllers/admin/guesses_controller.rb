@@ -41,7 +41,7 @@ class Admin::GuessesController < ApplicationController
       if people_with_score
         people_with_score[:people].push person
       elsif
-        @people_by_score.push({ :score => score, :people => [person] })
+        @people_by_score.push({ :score => score, :people => [ person ] })
       end
     end
     @people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
