@@ -6,6 +6,7 @@
 On Flickr: <a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%=h @person.username %>'s profile</a> -
 <a href="http://www.flickr.com/photos/<%= @person.flickrid %>/"><%=h @person.username %>'s photostream</a><br/>
 In Guess Where SF:
+<a href="http://anythreewords.com/gwsf/index.php?pos=<%=h @person.username %>"><%= @person.username %>'s unfounds</a> -
 <%= link_to "#{@person.username}'s posts", :action => 'posts', :id => @person %> -
 <%= link_to "#{@person.username}'s guesses", :action => 'guesses', :id => @person %> -
 <%= link_to "#{@person.username}'s comments", :action => 'comments', :id => @person %>
