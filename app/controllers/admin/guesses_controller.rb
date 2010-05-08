@@ -33,19 +33,18 @@ class Admin::GuessesController < ApplicationController
     people = Person.find :all
     @posts_per_person = Photo.count :all, :group => :person_id
     @guesses_per_person = Guess.count :all, :group => :person_id
-    @people_by_guess_count = []
+    @people_by_score = []
     people.each do |person|
-      guess_count = @guesses_per_person[person.id] || 0
-      people_with_guess_count =
-        @people_by_guess_count.find { |x| x[:guess_count] == guess_count }
-      if people_with_guess_count
-        people_with_guess_count[:people].push person
+      score = @guesses_per_person[person.id] || 0
+      people_with_score =
+        @people_by_score.find { |x| x[:score] == score }
+      if people_with_score
+        people_with_score[:people].push person
       elsif
-        @people_by_guess_count.push(
-	  { :guess_count => guess_count, :people => [person] })
+        @people_by_score.push({ :score => score, :people => [person] })
       end
     end
-    @people_by_guess_count.sort! { |x, y| y[:guess_count] <=> x[:guess_count] }
+    @people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
 
     @weekly_high_scorers = high_scorers 7
     @monthly_high_scorers = high_scorers 30
@@ -69,10 +68,10 @@ class Admin::GuessesController < ApplicationController
       x[:person].username.downcase <=> y[:person].username.downcase }
 
     @total_participants = people.length
-    @total_posters_only = people_with @people_by_guess_count, 0
+    @total_posters_only = people_with @people_by_score, 0
     @total_correct_guessers = @total_participants - @total_posters_only
     @member_count = updates[0].member_count
-    @total_single_guessers = people_with @people_by_guess_count, 1
+    @total_single_guessers = people_with @people_by_score, 1
 
   end
 
@@ -94,10 +93,9 @@ class Admin::GuessesController < ApplicationController
     high_scorers
   end
 
-  def people_with(people_by_guess_count, guess_count)
-    people_with_guess_count =
-      people_by_guess_count.find { |x| x[:guess_count] == guess_count }
-    people_with_guess_count ? people_with_guess_count[:people].length : 0
+  def people_with(people_by_score, score)
+    people_with_score = people_by_score.find { |x| x[:score] == score }
+    people_with_score ? people_with_score[:people].length : 0
   end
 
 end
