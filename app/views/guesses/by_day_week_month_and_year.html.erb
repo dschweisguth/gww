@@ -8,7 +8,7 @@
 
     <table class="dark">
       <% @days.each do |day| -%>
-	<tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %b. %d' %></th></tr>
+	<tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %B %d' %></th></tr>
         <%= render :partial => 'by_day_week_month_and_year_scores',
           :locals => { :scores => day[:scores] }  %>
       <% end -%>
@@ -18,7 +18,7 @@
 
     <table class="dark">
       <% @weeks.each_with_index do |week, week_index| -%>
-	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%b. %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
+	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%B %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'by_day_week_month_and_year_scores',
           :locals => { :scores => week[:scores] }  %>
       <% end -%>
