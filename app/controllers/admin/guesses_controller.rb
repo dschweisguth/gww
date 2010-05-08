@@ -14,8 +14,6 @@ class Admin::GuessesController < ApplicationController
       guesser = guess.person
       if ! @guessers.include? guesser
         @guessers.push guesser
-      end
-      if ! guesser[:guesses]
         guesser[:guesses] = []
       end
       guesser[:guesses].push guess
