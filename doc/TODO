@@ -1,4 +1,4 @@
-Helper for username linked to person
+Move model URL methods to helper methods
 Review people/show and other complex reports for opportunities to use
   ActiveRecord objects as hashes
 Fix test schema character set

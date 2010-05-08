@@ -1,10 +1,9 @@
 <a href="<%= @photo.page_url %>"><img src="<%= @photo.image_url size %>" border="0"/></a><br/>
-Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %Y' %> by <%= link_to @photo.person.username, show_person_url(@photo.person) %>.<br/><br/>
+Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %Y' %> by <%= link_to_person @photo.person %>.<br/><br/>
 
 <% if @photo.game_status == 'found' -%>
 This photo was correctly guessed by
-<%= @photo.guesses.map { |guess|
-  link_to guess.person.username, show_person_url(guess.person) }.join ', ' -%>.
+<%= @photo.guesses.map { |guess| link_to_person guess.person }.join ', ' -%>.
 <% elsif @photo.game_status == 'revealed' -%>
 This photo's location was revealed by the person who posted it.
 <% else -%>

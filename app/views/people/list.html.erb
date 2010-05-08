@@ -22,7 +22,7 @@
 <% @people.each_with_index do |person, person_index| %>
 <tr>
   <td class="row-number"><%= person_index + 1 %>.</td>
-  <td><%= link_to person.username, show_person_url(person) %></td>
+  <td><%= link_to_person person %></td>
   <td class="number"><%= person[:guess_count] %></td>
   <td class="number"><%= person[:post_count] %></td>
   <td class="number"><%= sprintf "%.4f", person[:guesses_per_day] %></td>

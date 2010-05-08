@@ -17,4 +17,8 @@ module ApplicationHelper
     datetime.getlocal.strftime '%Y/%m/%d'
   end
 
+  def link_to_person(person)
+    link_to person.username, show_person_url(person)
+  end
+
 end

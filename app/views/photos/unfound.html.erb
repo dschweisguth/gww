@@ -16,7 +16,7 @@
     <td class="row-number"><%= photo_index + 1 %>.</td>
     <td><a href="<%= photo.page_url %>">Flickr</a></td>
     <td><%= link_to 'GWW', show_photo_url(photo) %></td>
-    <td><%= link_to photo.person.username, show_person_url(photo.person) %></td>
+    <td><%= link_to_person photo.person %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.game_status == 'unconfirmed' ? 'X' : '&nbsp;' %></td>

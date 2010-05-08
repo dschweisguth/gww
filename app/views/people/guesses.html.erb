@@ -16,7 +16,7 @@
     <% if guess.photo.person_id != 0 -%>
     <td><a href="<%= guess.photo.page_url %>">Flickr</a></td>
     <td><%= link_to 'GWW', show_photo_url(guess.photo) %></td>
-    <td><%= link_to guess.photo.person.username, show_person_url(guess.photo.person) %></td>
+    <td><%= link_to_person guess.photo.person %></td>
     <% else -%>
     <td><b>unknown</b></td>
     <td><b>unknown</b></td>
