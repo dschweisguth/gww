@@ -93,18 +93,19 @@ class PeopleController < ApplicationController
     guesses = Guess.find_all_by_person_id @person.id,
       :include => { :photo => :person }
     @guessed_count = guesses.length
-    posters = {}
+    @posters = []
     guesses.each do |guess|
-      person = guess.photo.person
-      poster = posters[person]
-      if ! poster
-        poster = { :person => person, :photos => [] }
-        posters[person] = poster
+      poster = guess.photo.person
+      if ! @posters.include? poster
+        @posters.push poster
+        poster[:photos] = []
       end
       poster[:photos].push guess.photo
     end
-    @posters = posters.values
-    @posters.sort! { |x,y| y[:photos].count <=> x[:photos].count }
+    @posters.sort! do |x,y|
+      c = y[:photos].length <=> x[:photos].length
+      c != 0 ? c : x.username.downcase <=> y.username.downcase
+    end
 
   end
 
