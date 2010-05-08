@@ -57,8 +57,6 @@ class Admin::GuessesController < ApplicationController
       revealer = revelation.photo.person
       if ! @revealers.include? revealer
         @revealers.push revealer
-      end
-      if ! revealer[:revelations]
         revealer[:revelations] = []
       end
       revealer[:revelations].push revelation
