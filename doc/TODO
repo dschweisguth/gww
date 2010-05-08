@@ -1,4 +1,3 @@
-Fix test schema character set
 Make View in GWW go from profile or photostream to people/show
 Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
