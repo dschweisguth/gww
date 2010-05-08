@@ -19,8 +19,7 @@ class Admin::GuessesController < ApplicationController
       guesser[:guesses].push guess
     end
     @guessers.sort! { |x, y|
-      c = (y[:guesses].nil? ? 0 : y[:guesses].length) <=>
-        (x[:guesses].nil? ? 0 : x[:guesses].length)
+      c = y[:guesses].length <=> x[:guesses].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
     @new_photos_count = Photo.count :all,
