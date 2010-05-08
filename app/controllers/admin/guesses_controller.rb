@@ -10,20 +10,19 @@ class Admin::GuessesController < ApplicationController
       :conditions => [ "added_at > ?", updates[0].created_at ],
       :include => [ { :photo => :person }, :person ]
     @guessers = []
-    @guesses_by_guesser = {}
     @guesses.each do |guess|
-      if ! @guessers.include? guess.person
-        @guessers.push guess.person
+      guesser = guess.person
+      if ! @guessers.include? guesser
+        @guessers.push guesser
       end
-      guessers_guesses = @guesses_by_guesser[guess.person]
-      if ! guessers_guesses
-        guessers_guesses = []
-        @guesses_by_guesser[guess.person] = guessers_guesses
+      if ! guesser[:guesses]
+        guesser[:guesses] = []
       end
-      guessers_guesses.push guess
+      guesser[:guesses].push guess
     end
-    @guessers.sort! { |x,y|
-      c = @guesses_by_guesser[y].length <=> @guesses_by_guesser[x].length
+    @guessers.sort! { |x, y|
+      c = (y[:guesses].nil? ? 0 : y[:guesses].length) <=>
+        (x[:guesses].nil? ? 0 : x[:guesses].length)
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
     @new_photos_count =
