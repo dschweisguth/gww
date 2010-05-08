@@ -23,9 +23,9 @@
 <% end -%>
 
 <% end -%>
-<%= render :partial => 'report_recent_scores',
+<%= render :partial => 'report_high_scorers',
   :locals => { :period => 'week', :high_scorers => @weekly_high_scorers } %>
-<%= render :partial => 'report_recent_scores',
+<%= render :partial => 'report_high_scorers',
   :locals => { :period => 'month', :high_scorers => @monthly_high_scorers } %>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
