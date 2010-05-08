@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class PhotosControllerTest < ActionController::TestCase
+class Admin::PhotosControllerTest < ActionController::TestCase
   def setup
-    @controller = PhotosController.new
+    @controller = Admin::PhotosController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
 
