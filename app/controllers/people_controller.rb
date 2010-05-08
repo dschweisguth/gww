@@ -73,19 +73,21 @@ class PeopleController < ApplicationController
     posts = Photo.find_all_by_person_id @person.id,
       :include => { :guesses => :person }
     @posted_count = posts.length
-    guessers = {}
+    @guessers = []
     posts.each do |photo|
       photo.guesses.each do |guess|
-        guesser = guessers[guess.person]
-        if ! guesser
-          guesser = { :person => guess.person, :photos => [] }
-          guessers[guess.person] = guesser
+        guesser = guess.person
+        if ! @guessers.include? guesser
+          @guessers.push guesser
+          guesser[:photos] = []
         end
         guesser[:photos].push photo
       end
     end
-    @guessers = guessers.values
-    @guessers.sort! { |x,y| y[:photos].length <=> x[:photos].length }
+    @guessers.sort! do |x,y|
+      c = y[:photos].length <=> x[:photos].length
+      c != 0 ? c : x.username.downcase <=> y.username.downcase
+    end
     
     # Map of posters to this person's guesses
     guesses = Guess.find_all_by_person_id @person.id,
