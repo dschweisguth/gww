@@ -1,4 +1,3 @@
-Use object as hash in score report
 Mark high_scorers on people/show
 Fix test schema character set
 Restrict HTTP basic auth to /admin
