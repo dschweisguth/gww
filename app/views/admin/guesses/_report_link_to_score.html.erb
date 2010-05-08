@@ -1,0 +1,1 @@
+<% if @guesses_per_person[guesser.id] > 1 %>&lt;a href="#<%= @guesses_per_person[guesser.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h guesser.username %>&lt;/b&gt;<% if @guesses_per_person[guesser.id] > 1 %>&lt;/a&gt<% end -%>

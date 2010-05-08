@@ -1,6 +1,6 @@
 <% if ! high_scorers.empty? -%>
 Top guessers in the last <%= period %>: <% -%>
 <% high_scorers.each_with_index do |person, person_index| -%>
-<% if person_index > 0 -%>, <% end -%><% if @guesses_per_person[person.id] > 1 %>&lt;a href="#<%= @guesses_per_person[person.id] || 0 %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @guesses_per_person[person.id] > 1 %>&lt;/a&gt<% end -%> (<%= person[:score] %>)<% -%>
+<% if person_index > 0 -%>, <% end -%><%= render :partial => 'report_link_to_score', :locals => { :guesser => person } %> (<%= person[:score] %>)<% -%>
 <% end -%>
 <% end -%>
