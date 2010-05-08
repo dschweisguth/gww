@@ -12,8 +12,8 @@
 <% @photos.each_with_index do |photo, photo_index| %>
   <tr>
     <td class="row-number"><%= @photos.offset + photo_index + 1 %>.</td>
-    <td><a href="<%= photo.page_url %>">Flickr</a></td>
-    <td><%= link_to 'GWW', show_photo_url(photo) %></td>
+    <td><%= link_to_flickr_photo photo %></td>
+    <td><%= link_to_photo photo %></td>
     <td><%= link_to_person photo.person %></td>
     <% if photo.game_status == 'found' -%>
     <td><%= photo.guesses.map { |guess| link_to_person guess.person }.join ', ' %></td>

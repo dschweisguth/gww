@@ -21,4 +21,20 @@ module ApplicationHelper
     link_to person.username, show_person_url(person)
   end
 
+  def link_to_photo(photo)
+    link_to 'GWW', show_photo_url(photo)
+  end
+
+  def url_for_flickr_photo(photo)
+    "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/";
+  end
+
+  def link_to_flickr_photo(photo)
+    link_to 'Flickr', url_for_flickr_photo(photo)
+  end
+
+  def url_for_flickr_image(photo, size)
+    "http://#{ "farm#{photo.farm}." if ! photo.farm.empty? }static.flickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}#{ '_' + size if ! size.nil? }.jpg"
+  end
+
 end

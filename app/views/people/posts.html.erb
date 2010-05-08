@@ -1,6 +1,6 @@
 <%= render :partial => 'person_breadcrumbs' %>
 <hr/>
-<h1><%= @photos.length %> photos posted by <%= @person[:username] %></h1>
+<h1><%= @photos.length %> photos posted by <%=h @person.username %></h1>
 
 <table class="dark">
   <tr>
@@ -14,8 +14,8 @@
 <% @photos.each_with_index do |photo, photo_index| %>
   <tr>
     <td class="row-number"><%= photo_index + 1 %>.</td>
-    <td><a href="<%= photo.page_url %>">Flickr</a></td>
-    <td><%= link_to 'GWW', show_photo_url(photo) %></td>
+    <td><%= link_to_flickr_photo photo %></td>
+    <td><%= link_to_photo photo %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.mapped %></td>

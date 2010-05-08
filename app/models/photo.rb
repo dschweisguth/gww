@@ -16,12 +16,4 @@ class Photo < ActiveRecord::Base
       :include => :person, :order => "lastupdate desc"
   end
 
-  def page_url
-    "http://www.flickr.com/photos/#{person.flickrid}/#{flickrid}/in/pool-guesswheresf/";
-  end
-
-  def image_url(size)
-    "http://#{ "farm#{farm}." if ! farm.empty? }static.flickr.com/#{server}/#{flickrid}_#{secret}#{ '_' + size if ! size.nil? }.jpg"
-  end
-
 end
