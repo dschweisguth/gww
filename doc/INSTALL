@@ -82,11 +82,11 @@ Configure:
 For production Linux httpd, configure basic HTTP authentication:
     Create a username and password per
         http://httpd.apache.org/docs/2.2/howto/auth.html
-    cp public/.htaccess{_template,}
+    cp public/admin/.htaccess{_template,}
     Edit and fill in
     - the full path to the htpasswd file that you just created. Note that
       it should not be in or below GWW's public directory.
-    - the userid that you want to use for basic HTTP authentication
+    - the username
 
 Create databases
 ----------------

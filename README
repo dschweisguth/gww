@@ -2,9 +2,7 @@ Guess Where Watcher (GWW) is the scoring application for the Guess Where SF
 Flickr group. It was written by Tomas Apodaca and is currently maintained by
 Dave Schweisguth.
 
-GWW is currently used only by Guess Where SF administrators, so there is no
-running instance available to the general public. This will change in the near
-future; stay tuned.
+The production instance of GWW is at http://guesswheresf.org/.
 
 This software may be copied and modified for non-commercial purposes. This
 software may not be used for commercial purposes without permission from the

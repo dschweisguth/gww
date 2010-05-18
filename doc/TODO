@@ -1,5 +1,5 @@
-Restrict HTTP basic auth to /admin
 Review test coverage and add TODOs to write more tests and assertions
+Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
   Highlight foundinSF/unfoundinSF in unfound list
 Include comments in update
@@ -10,16 +10,16 @@ Require admin to indicate when they've published scores
 Post scores to Flickr group automatically
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
-  and possibly score publication times, newest to oldest. Consider whether
-  scoring in batches is an important part of game fun and if so how not to
-  compromise that.
+  and possibly score publication times, newest to oldest.
 Add to player page
-- youngest and oldest guesses (treasures)
-- youngests and oldest guesses by others (inverse treasures)
-- emphasize nemeses
+- longest- and shortest-lived guesses of others' photos by player
+- longest- and shortest-lived guesses of player's photos by others
+- other players whom player prefers to guess
+- other players who prefer to guess player
 Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
+and use in unfound list
 Link to photos using player's photosurl rather than by ID
 Determine photo locations from correct guess comments
   Determine most-posted locations
@@ -30,4 +30,3 @@ In the list of unfounds, highlight photos which if guessed would enter the
 Track old usernames
   Put on user page
   Correct guessed_at+revealed_at from comments made under those usernames
-Reduce the number of clicks it takes to add or remove a guess or revelation

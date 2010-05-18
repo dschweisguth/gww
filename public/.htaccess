@@ -1,13 +1,3 @@
-# Copy this to .htaccess in the same directory, and
-
-AuthType Basic
-AuthName "What do you think you're doing?"
-# Add the full path to your auth user file (not in or below this dir) to the
-# following line 
-AuthUserFile 
-# Add the username to the following line
-Require user 
-
 RewriteEngine On
 
 # If REDIRECT_STATUS is empty (not set), this request comes directly from a
