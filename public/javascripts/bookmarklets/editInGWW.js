@@ -4,9 +4,9 @@ function editInGWW() {
     window.location = "http://guesswheresf.org/admin/photos/edit_in_gww?from=" +
       encodeURIComponent(window.location);
   } else {
-    match = /^(http:\/\/[^/]+\/photos\/)show(\/\d+)/.exec(window.location);
+    match = /^(http:\/\/[^/]+\/)photos\/show(\/\d+)/.exec(window.location);
     if (match != null) {
-      window.location = match[1] + 'edit' + match[2];
+      window.location = match[1] + 'admin/photos/edit' + match[2];
     } else {
       alert('Try it on a Flickr or GWW photo page.');
     }
