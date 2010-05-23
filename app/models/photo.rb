@@ -16,4 +16,31 @@ class Photo < ActiveRecord::Base
       :include => :person, :order => "lastupdate desc"
   end
 
+  def self.most_commented_on(page, per_page)
+    Photo.paginate_by_sql(
+      'select ph.*, count(*) comment_count ' +
+	'from photos ph, people pe, comments c ' +
+	'where ' +
+	  'ph.person_id = pe.id and ' +
+	  'ph.id = c.photo_id and ' +
+	  'pe.username != c.username ' +
+	'group by ph.id ' +
+	'order by count(*) desc, ph.dateadded',
+      :page => page, :per_page => per_page)
+  end
+
+  def self.most_questioned(page, per_page)
+    Photo.paginate_by_sql(
+      'select ph.*, count(*) comment_count ' +
+        'from photos ph, people pe, comments c ' +
+	'where ' +
+	  'ph.person_id = pe.id and ' +
+	  'ph.id = c.photo_id and ' +
+	  'pe.username != c.username and ' +
+	  'c.comment_text like \'%?%\' ' +
+	'group by ph.id ' +
+	'order by count(*) desc, ph.dateadded',
+      :page => page, :per_page => per_page)
+  end
+
 end
