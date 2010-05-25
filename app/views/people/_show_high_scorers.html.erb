@@ -1,5 +1,5 @@
 <% if high_scorers -%>
-<%=h @person.username %> scored the <%= case high_scorers.index @person when 1 then 'second-' when 2 then 'third-' end %>most points in the last <%= period %>:
+<%=h @person.username %> scored the <%= position high_scorers, @person %>most points in the last <%= period %>:
 <% high_scorers.each_with_index do |person, person_index| -%>
 <% if person_index > 0 -%>, <% end -%><% if person == @person -%><b><%=h person.username %></b><% else -%><%= link_to_person person %><% end -%> (<%= person[:score] %>)
 <% end %>. Go <%=h @person.username %>!<br/>

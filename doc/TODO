@@ -1,4 +1,5 @@
-Bug: kelleyjeanne scored the most points in the last week: glennbphoto (8) , kewlio (5) , sf eyes (4) , kelleyjeanne (4) , dschweisguth (4) . Go kelleyjeanne!
+Swap posts and guesses on people/show
+Run helper tests automatically
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
