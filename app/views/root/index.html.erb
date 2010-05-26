@@ -18,7 +18,7 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Guesses by day, week, month and year', :controller => 'guesses', :action => 'by_day_week_month_and_year' %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', :controller => 'guesses', :action => 'longest_and_shortest' %></li>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
-<li>Photos with <%= link_to 'the most comments', :controller => 'photos', :action => 'most_commented_on' %> and <%= link_to 'the most comments with question marks', :controller => 'photos', :action => 'most_questioned' %></li>
+<li>The closest we can get to the photos that took the most guesses to find: found photos with <%= link_to 'the most comments by members while unfound', :controller => 'photos', :action => 'most_commented_on' %> and <%= link_to 'the most comments with question marks by members while unfound', :controller => 'photos', :action => 'most_questioned' %></li>
 </ul>
 
 <h2>API</h2>

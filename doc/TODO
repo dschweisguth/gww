@@ -1,4 +1,3 @@
-Use comments.flickrid to filter comment counts
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
@@ -38,4 +37,3 @@ In the list of unfounds, highlight photos which if guessed would enter the
 Track old usernames
   Put on user page
   Correct guessed_at+revealed_at from comments made under those usernames
-  Exclude non-members from comment counts

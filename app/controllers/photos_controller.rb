@@ -8,15 +8,15 @@ class PhotosController < ApplicationController
 
   caches_page :most_commented_on
   def most_commented_on
-    @title = 'Photos with the most comments by others'
-    @column_heading = '# of comments by others'
+    @title = 'Found photos with the most comments by members while unfound'
+    @column_heading = '# of comments by members while unfound'
     @photos = Photo.most_commented_on params[:page], 30
   end
 
   caches_page :most_questioned
   def most_questioned
-    @title = 'Photos with the most comments by others with question marks'
-    @column_heading = '# of comments by others with ?'
+    @title = 'Found photos with the most comments with question marks by members while unfound'
+    @column_heading = '# of comments with ? by members while unfound'
     @photos = Photo.most_questioned params[:page], 30
     render :template => 'photos/most_commented_on'
   end

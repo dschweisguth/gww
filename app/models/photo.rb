@@ -19,11 +19,15 @@ class Photo < ActiveRecord::Base
   def self.most_commented_on(page, per_page)
     Photo.paginate_by_sql(
       'select ph.*, count(*) comment_count ' +
-	'from photos ph, people pe, comments c ' +
+	'from photos ph, people poster, comments c, people commenter, ' +
+          'guesses g ' +
 	'where ' +
-	  'ph.person_id = pe.id and ' +
+	  'ph.person_id = poster.id and ' +
 	  'ph.id = c.photo_id and ' +
-	  'pe.username != c.username ' +
+	  'poster.flickrid != c.flickrid and ' +
+          'c.flickrid = commenter.flickrid and ' + # count only member comments
+          'ph.id = g.photo_id and ' +
+          'c.commented_at <= g.guessed_at ' +
 	'group by ph.id ' +
 	'order by count(*) desc, ph.dateadded',
       :page => page, :per_page => per_page)
@@ -32,11 +36,15 @@ class Photo < ActiveRecord::Base
   def self.most_questioned(page, per_page)
     Photo.paginate_by_sql(
       'select ph.*, count(*) comment_count ' +
-        'from photos ph, people pe, comments c ' +
+        'from photos ph, people poster, comments c, people commenter, ' +
+          'guesses g ' +
 	'where ' +
-	  'ph.person_id = pe.id and ' +
+	  'ph.person_id = poster.id and ' +
 	  'ph.id = c.photo_id and ' +
-	  'pe.username != c.username and ' +
+	  'poster.flickrid != c.flickrid and ' +
+          'c.flickrid = commenter.flickrid and ' + # count only member comments
+          'ph.id = g.photo_id and ' +
+          'c.commented_at <= g.guessed_at and ' +
 	  'c.comment_text like \'%?%\' ' +
 	'group by ph.id ' +
 	'order by count(*) desc, ph.dateadded',
