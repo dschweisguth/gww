@@ -1,7 +1,6 @@
 require 'test_helper'
 
-class PeopleHelperTest < Test::Unit::TestCase
-  include PeopleHelper
+class PeopleHelperTest < ActionView::TestCase
 
   def test_position_first
     first_place = person 1
