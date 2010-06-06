@@ -30,19 +30,8 @@ class PhotosController < ApplicationController
       'group by g.person_id ' +
       'order by score desc')
 
-    first_guesses = Photo.find_by_sql(
-      'select p.*, g.person_id guesser ' +
-      'from ' +
-        'guesses g, ' +
-        '(select person_id, min(guessed_at) guessed_at ' +
-          'from guesses group by person_id) m, ' +
-        'photos p ' +
-        'where ' +
-          'g.person_id = m.person_id and ' +
-          'g.guessed_at = m.guessed_at and ' +
-          'g.photo_id = p.id')
     first_guesses_by_guesser = {}
-    first_guesses.each do
+    Photo.first_guesses.each do
       |photo| first_guesses_by_guesser[photo['guesser'].to_i] = photo
     end
 

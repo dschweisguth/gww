@@ -51,4 +51,18 @@ class Photo < ActiveRecord::Base
       :page => page, :per_page => per_page)
   end
 
+  def self.first_guesses
+    Photo.find_by_sql(
+      'select p.*, g.person_id guesser ' +
+      'from ' +
+        'guesses g, ' +
+        '(select person_id, min(guessed_at) guessed_at ' +
+          'from guesses group by person_id) m, ' +
+        'photos p ' +
+        'where ' +
+          'g.person_id = m.person_id and ' +
+          'g.guessed_at = m.guessed_at and ' +
+          'g.photo_id = p.id')
+  end
+
 end
