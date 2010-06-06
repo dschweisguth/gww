@@ -23,12 +23,7 @@ class PhotosController < ApplicationController
 
   caches_page :first_guesses_and_posts
   def first_guesses_and_posts
-    @people = Person.find_by_sql(
-      'select p.*, count(*) score ' +
-      'from people p, guesses g ' +
-      'where p.id = g.person_id ' +
-      'group by g.person_id ' +
-      'order by score desc')
+    @people = Person.find_with_score
 
     first_guesses_by_guesser = {}
     Photo.first_guesses.each do |photo|
