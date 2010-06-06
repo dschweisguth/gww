@@ -23,15 +23,36 @@ class PhotosController < ApplicationController
 
   caches_page :first_guesses_and_posts
   def first_guesses_and_posts
-    @people = Person.find_by_sql 'select p.*, count(*) score from people p, guesses g where p.id = g.person_id group by g.person_id order by score desc'
+    @people = Person.find_by_sql(
+      'select p.*, count(*) score ' +
+      'from people p, guesses g ' +
+      'where p.id = g.person_id ' +
+      'group by g.person_id ' +
+      'order by score desc')
 
-    first_guesses = Photo.find_by_sql 'select p.*, g.person_id guesser from guesses g, (select person_id, min(guessed_at) guessed_at from guesses group by person_id) m, photos p where g.person_id = m.person_id and g.guessed_at = m.guessed_at and g.photo_id = p.id'
+    first_guesses = Photo.find_by_sql(
+      'select p.*, g.person_id guesser ' +
+      'from ' +
+        'guesses g, ' +
+        '(select person_id, min(guessed_at) guessed_at ' +
+          'from guesses group by person_id) m, ' +
+        'photos p ' +
+        'where ' +
+          'g.person_id = m.person_id and ' +
+          'g.guessed_at = m.guessed_at and ' +
+          'g.photo_id = p.id')
     first_guesses_by_guesser = {}
     first_guesses.each do
       |photo| first_guesses_by_guesser[photo['guesser'].to_i] = photo
     end
 
-    first_posts = Photo.find_by_sql 'select p.* from photos p, (select person_id, min(dateadded) dateadded from photos group by person_id) m where p.person_id = m.person_id and p.dateadded = m.dateadded'
+    first_posts = Photo.find_by_sql(
+      'select p.* ' +
+      'from ' +
+        'photos p, ' +
+        '(select person_id, min(dateadded) dateadded ' +
+          'from photos group by person_id) m ' +
+      'where p.person_id = m.person_id and p.dateadded = m.dateadded')
     first_posts_by_poster = {}
     first_posts.each { |photo| first_posts_by_poster[photo.person_id] = photo }
 
