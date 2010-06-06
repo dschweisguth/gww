@@ -31,19 +31,14 @@ class PhotosController < ApplicationController
       'order by score desc')
 
     first_guesses_by_guesser = {}
-    Photo.first_guesses.each do
-      |photo| first_guesses_by_guesser[photo['guesser'].to_i] = photo
+    Photo.first_guesses.each do |photo|
+      first_guesses_by_guesser[photo['guesser'].to_i] = photo
     end
 
-    first_posts = Photo.find_by_sql(
-      'select p.* ' +
-      'from ' +
-        'photos p, ' +
-        '(select person_id, min(dateadded) dateadded ' +
-          'from photos group by person_id) m ' +
-      'where p.person_id = m.person_id and p.dateadded = m.dateadded')
     first_posts_by_poster = {}
-    first_posts.each { |photo| first_posts_by_poster[photo.person_id] = photo }
+    Photo.first_posts.each do |photo|
+      first_posts_by_poster[photo.person_id] = photo
+    end
 
     @people.each do |person|
       person[:first_guess] = first_guesses_by_guesser[person.id]

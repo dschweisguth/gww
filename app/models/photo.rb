@@ -52,7 +52,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.first_guesses
-    Photo.find_by_sql(
+    find_by_sql(
       'select p.*, g.person_id guesser ' +
       'from ' +
         'guesses g, ' +
@@ -63,6 +63,16 @@ class Photo < ActiveRecord::Base
           'g.person_id = m.person_id and ' +
           'g.guessed_at = m.guessed_at and ' +
           'g.photo_id = p.id')
+  end
+
+  def self.first_posts
+    find_by_sql(
+      'select p.* ' +
+      'from ' +
+        'photos p, ' +
+        '(select person_id, min(dateadded) dateadded ' +
+          'from photos group by person_id) m ' +
+      'where p.person_id = m.person_id and p.dateadded = m.dateadded')
   end
 
 end
