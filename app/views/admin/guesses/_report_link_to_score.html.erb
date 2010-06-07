@@ -1,1 +1,1 @@
-<% if @scores[person.id] > 1 %>&lt;a href="#<%= @scores[person.id] %>"&gt;<% end -%>&lt;b&gt;<%=h person.username %>&lt;/b&gt;<% if @scores[person.id] > 1 %>&lt;/a&gt<% end -%>
+&lt;a href="<%= show_person_url person %>"&gt;&lt;b&gt;<%=h person.username %>&lt;/b&gt;&lt;/a&gt<% -%>

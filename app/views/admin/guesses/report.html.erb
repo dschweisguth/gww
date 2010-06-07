@@ -17,16 +17,17 @@
 
 <% if ! @revealers.empty? -%>
 <%= pluralize @revelations.length, 'photo' %> revealed by ...
+
 <% @revealers.each do |revealer| -%>
-&lt;b&gt;<%=h revealer.username %>:&lt;/b&gt;
+&lt;b&gt;&lt;a href="<%= show_person_url revealer %>"&gt;<%=h revealer.username %>&lt;/a&gt;&lt;/b&gt;
 <% revealer[:revelations].each do |revelation| -%>&lt;a href="<%= url_for_flickr_photo revelation.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image revelation.photo, "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
 <% end -%>
 <%= render :partial => 'report_high_scorers',
-  :locals => { :period => 'week', :high_scorers => @weekly_high_scorers } %>
+  :locals => { :period => 'week', :high_scorers => @weekly_high_scorers } -%>
 <%= render :partial => 'report_high_scorers',
-  :locals => { :period => 'month', :high_scorers => @monthly_high_scorers } %>
+  :locals => { :period => 'month', :high_scorers => @monthly_high_scorers } -%>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
 
@@ -36,7 +37,7 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 
 <% @people_by_score.each do |people_with_score| -%>
 <% next if people_with_score[:score] <= 1 -%>
-&lt;a name="<%= people_with_score[:score] %>"&gt;&lt;b&gt;<%= people_with_score[:score] %>&lt;/b&gt;&lt;/a&gt; - <% people_with_score[:people].each_with_index do |person, i| -%>&lt;a href="<%= show_person_url person %>"&gt;<%=h person.username %>&lt;/a&gt; (<%= @posts_per_person[person.id] || 0 %>)<% if i < people_with_score[:people].length - 1 -%>, <% end -%><% end %>
+&lt;b&gt;<%= people_with_score[:score] %>&lt;/b&gt; - <% people_with_score[:people].each_with_index do |person, i| -%>&lt;a href="<%= show_person_url person %>"&gt;<%=h person.username %>&lt;/a&gt; (<%= @posts_per_person[person.id] || 0 %>)<% if i < people_with_score[:people].length - 1 -%>, <% end -%><% end %>
 <% end -%>
 
 </textarea>
