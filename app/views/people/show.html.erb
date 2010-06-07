@@ -12,11 +12,13 @@ In Guess Where SF:
 <%= link_to "#{@person.username}'s comments", :action => 'comments', :id => @person %>
 <br/><br/>
 
+<%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= ordinal @place %> place with a score of <%= @guessed_count %>.<br/>
+
 <%= render :partial => 'show_high_scorers',
   :locals => { :high_scorers => @weekly_high_scorers, :period => 'week' } %>
 <%= render :partial => 'show_high_scorers',
   :locals => { :high_scorers => @monthly_high_scorers, :period => 'month' } %>
-<% if @weekly_high_scorers || @monthly_high_scorers -%><br/><% end %>
+<br/>
 
 <table id="firsts">
 <tr>

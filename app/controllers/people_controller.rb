@@ -54,11 +54,28 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find params[:id]
 
-    @first_guess = Guess.first :conditions => [ 'person_id = ?', @person ],
-      :order => 'guessed_at', :include => :photo
-    @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
-      :order => 'dateadded'
-
+    scores_by_person = Guess.count :all, :group => :person_id
+    people_by_score = {}
+    scores_by_person.each_pair do |person_id, score|
+      people_with_score = people_by_score[score]
+      if ! people_with_score
+        people_with_score = []
+        people_by_score[score] = people_with_score
+      end
+      people_with_score.push person_id
+    end
+    @place = 1
+    scores = people_by_score.keys.sort { |a, b| b <=> a }
+    scores.each do |score|
+      people_with_score = people_by_score[score]
+      if people_with_score.include? @person.id
+        @tied = people_with_score.length > 1
+        break
+      else
+        @place += people_with_score.length
+      end
+    end
+   
     weekly_high_scorers = Person.high_scorers 7
     if weekly_high_scorers.include? @person
       @weekly_high_scorers = weekly_high_scorers
@@ -67,7 +84,12 @@ class PeopleController < ApplicationController
     if monthly_high_scorers.include? @person
       @monthly_high_scorers = monthly_high_scorers
     end
-    
+ 
+    @first_guess = Guess.first :conditions => [ 'person_id = ?', @person ],
+      :order => 'guessed_at', :include => :photo
+    @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
+      :order => 'dateadded'
+
     # Map of posters to this person's guesses
     guesses = Guess.find_all_by_person_id @person.id,
       :include => { :photo => :person }

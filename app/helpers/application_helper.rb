@@ -13,6 +13,22 @@ module ApplicationHelper
     verb + 's'
   end
 
+  def ordinal(number)
+    case number.to_s
+      when /^1.$/
+        suffix = 'th'
+      when /1$/
+        suffix = 'st'
+      when /2$/
+        suffix = 'nd'
+      when /3$/
+        suffix = 'rd'
+      else
+        suffix = 'th'
+    end
+    return number.to_s + suffix
+  end
+
   def local_date(datetime)
     datetime.getlocal.strftime '%Y/%m/%d'
   end
