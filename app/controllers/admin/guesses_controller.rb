@@ -29,10 +29,10 @@ class Admin::GuessesController < ApplicationController
     
     people = Person.find :all
     @posts_per_person = Photo.count :all, :group => :person_id
-    @scores = Guess.count :all, :group => :person_id
+    scores = Guess.count :all, :group => :person_id
     @people_by_score = []
     people.each do |person|
-      score = @scores[person.id] || 0
+      score = scores[person.id] || 0
       people_with_score = @people_by_score.find { |x| x[:score] == score }
       if ! people_with_score
         people_with_score = { :score => score, :people => [] }
