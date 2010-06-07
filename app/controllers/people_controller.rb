@@ -68,6 +68,24 @@ class PeopleController < ApplicationController
       @monthly_high_scorers = monthly_high_scorers
     end
     
+    # Map of posters to this person's guesses
+    guesses = Guess.find_all_by_person_id @person.id,
+      :include => { :photo => :person }
+    @guessed_count = guesses.length
+    @posters = []
+    guesses.each do |guess|
+      poster = guess.photo.person
+      if ! @posters.include? poster
+        @posters.push poster
+        poster[:photos] = []
+      end
+      poster[:photos].push guess.photo
+    end
+    @posters.sort! do |x,y|
+      c = y[:photos].length <=> x[:photos].length
+      c != 0 ? c : x.username.downcase <=> y.username.downcase
+    end
+
     @unfound_photos = Photo.find :all, :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
         @person.id ]
@@ -94,24 +112,6 @@ class PeopleController < ApplicationController
       c != 0 ? c : x.username.downcase <=> y.username.downcase
     end
     
-    # Map of posters to this person's guesses
-    guesses = Guess.find_all_by_person_id @person.id,
-      :include => { :photo => :person }
-    @guessed_count = guesses.length
-    @posters = []
-    guesses.each do |guess|
-      poster = guess.photo.person
-      if ! @posters.include? poster
-        @posters.push poster
-        poster[:photos] = []
-      end
-      poster[:photos].push guess.photo
-    end
-    @posters.sort! do |x,y|
-      c = y[:photos].length <=> x[:photos].length
-      c != 0 ? c : x.username.downcase <=> y.username.downcase
-    end
-
   end
 
   caches_page :guesses
