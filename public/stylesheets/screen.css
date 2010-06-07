@@ -13,6 +13,10 @@ img {
   border: 0;
 }
 
+.clear {
+  clear: both;
+}
+
 /* Tables */
 
 table {
@@ -99,6 +103,14 @@ th {
 }
 
 /* people/show */
+
+#firsts {
+  margin: 0 0 15px 0;
+}
+
+#firsts td {
+  padding-right: 15px;
+}
 
 .unconfirmed {
   background-color: #ffcc33;

@@ -54,6 +54,11 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find params[:id]
 
+    @first_guess = Guess.first :conditions => [ 'person_id = ?', @person ],
+      :order => 'guessed_at', :include => :photo
+    @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
+      :order => 'dateadded'
+
     weekly_high_scorers = Person.high_scorers 7
     if weekly_high_scorers.include? @person
       @weekly_high_scorers = weekly_high_scorers
