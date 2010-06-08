@@ -39,3 +39,5 @@ Track old usernames
 Replace link to update with button (button_to)
 Use automatic iteration of partials over collections
 Use render's :object parameter to copy fields to locals with the same name
+Use Rails Enumerable.group_by
+Use Rails Enumerable.each_with_object
