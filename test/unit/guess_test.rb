@@ -25,6 +25,7 @@ class GuessTest < ActiveSupport::TestCase
     photo1.mapped = "false"
     photo1.person = person1
     photo1.farm = "farm1"
+    photo1.views = 1
     photo1.save
 
     photo2 = Photo.new
@@ -38,6 +39,7 @@ class GuessTest < ActiveSupport::TestCase
     photo2.mapped = "false"
     photo2.person = person2
     photo2.farm = "farm2"
+    photo2.views = 2
     photo2.save
 
     @guess1 = Guess.new

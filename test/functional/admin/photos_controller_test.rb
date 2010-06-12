@@ -22,6 +22,7 @@ class Admin::PhotosControllerTest < ActionController::TestCase
     @photo.mapped = "false"
     @photo.person = person
     @photo.farm = "farm"
+    @photo.views = 0
     @photo.save
 
   end
