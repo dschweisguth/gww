@@ -17,7 +17,8 @@ class Admin::PhotosController < ApplicationController
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       logger.info "Getting page #{page} ..."
       photos_xml = FlickrCredentials.request 'flickr.groups.pools.getPhotos',
-        'per_page' => '500', 'page' => page.to_s, 'extras' => 'geo,last_update'
+        'per_page' => '500', 'page' => page.to_s,
+        'extras' => 'geo,last_update,views'
       parsed_photos = photos_xml['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
@@ -74,6 +75,8 @@ class Admin::PhotosController < ApplicationController
           photo.dateadded = Time.at(parsed_photo['dateadded'].to_i).getutc
           old_photo_lastupdate = photo.lastupdate
           photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
+          old_photo_views = photo.views
+          photo.views = parsed_photo['views'].to_i
           photo.person = person
           if photo.id.nil? ||
             old_photo_farm != photo.farm ||
@@ -81,7 +84,8 @@ class Admin::PhotosController < ApplicationController
             old_photo_secret != photo.secret ||
             old_photo_mapped != photo.mapped ||
             old_photo_dateadded != photo.dateadded ||
-            old_photo_lastupdate != photo.lastupdate
+            old_photo_lastupdate != photo.lastupdate ||
+            old_photo_views != photo.views
             photo.save
           end
 

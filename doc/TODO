@@ -43,3 +43,4 @@ Use automatic iteration of partials over collections
 Use render's :object parameter to copy fields to locals with the same name
 Use Rails Enumerable.group_by
 Use Rails Enumerable.each_with_object
+Add update count to post-update flash
