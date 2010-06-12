@@ -1,0 +1,6 @@
+#!/opt/local/bin/ruby
+
+require File.expand_path(File.dirname(__FILE__) + '/../lib/fclt.rb')
+
+xml = request 'flickr.auth.checkToken', 'auth_token' => AUTH_TOKEN
+puts "perms=#{xml['auth'][0]['perms'][0]} stat=#{xml['stat']}"

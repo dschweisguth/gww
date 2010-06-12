@@ -1,0 +1,11 @@
+#!/opt/local/bin/ruby
+
+require File.expand_path(File.dirname(__FILE__) + '/../lib/fclt.rb')
+
+if ! ARGV[0]
+  $stderr.puts "Usage: #{__FILE__} frob"
+  exit
+end
+auth_token =
+  request('flickr.auth.getToken', 'frob' => ARGV[0])['auth'][0]['token'][0]
+puts "3) Edit config/fclt.yml and add your auth_token: #{auth_token}"

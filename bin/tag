@@ -1,0 +1,18 @@
+#!/opt/local/bin/ruby
+
+require File.expand_path(File.dirname(__FILE__) + '/../lib/fclt.rb')
+
+if ! ARGV[0]
+  warn "Usage: #{__FILE__} tag[,tag ...] < urls"
+  exit
+end
+STDIN.each do |line|
+  flickrid = line[/\/(\d+)\//, 1]
+  print flickrid + " "
+  stat = post('flickr.photos.addTags', 'auth_token' => AUTH_TOKEN,
+    'photo_id' => flickrid, 'tags' => ARGV[0])['stat']
+  if stat != 'ok'
+    warn "Couldn't tag photo #{flickrid}: #{stat}"
+  end
+end
+puts

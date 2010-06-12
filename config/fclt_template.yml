@@ -1,0 +1,5 @@
+# Copy this file to fclt.yml in the same directory, and
+flickr_credentials:
+    api_key:  # <-- put your API key here
+    secret:  # <-- put your secret here
+    auth_token:  # <-- put your auth token here

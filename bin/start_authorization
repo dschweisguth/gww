@@ -1,0 +1,9 @@
+#!/opt/local/bin/ruby
+
+require File.expand_path(File.dirname(__FILE__) + '/../lib/fclt.rb')
+
+frob = request('flickr.auth.getFrob')['frob'][0]
+auth_url = signed_url 'http://flickr.com/services/auth/',
+  'frob' => frob, 'perms' => 'write'
+puts "1) Browse this URL and authorize Flickr Command-Line Tools to write to your Flickr account: #{auth_url}"
+puts "2) Run this command: finish_authorization #{frob}"
