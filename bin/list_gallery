@@ -1,0 +1,6 @@
+#!/opt/local/bin/ruby
+
+require File.expand_path(File.dirname(__FILE__) + '/../lib/fclt.rb')
+
+p request 'flickr.galleries.getPhotos',
+  'auth_token' => AUTH_TOKEN, 'gallery_id' => ARGV[0]
