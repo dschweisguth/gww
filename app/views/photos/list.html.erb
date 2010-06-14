@@ -1,0 +1,46 @@
+<%= render :partial => 'shared/breadcrumbs' %>
+<hr/>
+<h1>Photos</h1>
+
+<p>The counts of comments by members and of comments by members containing question marks are the closest we can easily come to a count of guesses. The most-guessed photos aren't necessarily at the top of those lists, but they're close.</p>
+
+<table class="dark">
+  <tr>
+    <th class="empty"></th>
+    <th>photo</th>
+    <th><%= link_to_unless params[:sorted_by] == 'username',
+      'posted by',
+      list_photos_url(:sorted_by => 'username', :page => 1) %></th>
+    <th><%= link_to_unless params[:sorted_by] == 'date-added',
+      'date added',
+      list_photos_url(:sorted_by => 'date-added', :page => 1) %></th>
+    <th><%= link_to_unless params[:sorted_by] == 'last-updated',
+      'last updated',
+      list_photos_url(:sorted_by => 'last-updated', :page => 1) %></th>
+    <th><%= link_to_unless params[:sorted_by] == 'views',
+      'views',
+      list_photos_url(:sorted_by => 'views', :page => 1) %></th>
+    <th><%= link_to_unless params[:sorted_by] == 'member-comments',
+      '# of comments by members while unfound',
+      list_photos_url(:sorted_by => 'member-comments', :page => 1) %></th>
+    <th><%= link_to_unless params[:sorted_by] == 'member-questions',
+      '# of comments with ? by members while unfound',
+      list_photos_url(:sorted_by => 'member-questions', :page => 1) %></th>
+  </tr>  
+<% @photos.each_with_index do |photo, photo_index| -%>
+  <tr>
+    <td class="row-number"><%= photo_index + 1 %>.</td>
+    <td class="thumbnail"><a href="<%= show_photo_url photo %>"><img src="<%= url_for_flickr_image photo, 't' %>"/></a></td>
+    <td><%= link_to_person photo.person %></td>
+    <td><%= local_date photo.dateadded %></td>
+    <td><%= local_date photo.lastupdate %></td>
+    <td><%= photo.views %></td>
+    <td><%= photo[:member_comments] %></td>
+    <td><%= photo[:member_questions] %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @photos %>
+<hr/>
+<%= render :partial => 'shared/breadcrumbs' %>
