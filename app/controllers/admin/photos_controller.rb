@@ -105,6 +105,13 @@ class Admin::PhotosController < ApplicationController
 
   end
 
+  def update_statistics
+    expire_cached_pages
+    Photo.update_statistics
+    flash[:notice] = "Updated statistics.</br>"
+    redirect_to admin_root_url
+  end
+
   caches_page :unfound
   def unfound
     @title = 'unfound or unconfirmed photos'

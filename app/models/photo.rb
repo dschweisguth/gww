@@ -10,6 +10,39 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
+  def self.update_statistics
+    connection.execute %q{
+      update photos p set
+        member_comments =
+          ifnull(
+            (select count(*)
+              from people poster, comments c, people commenter, guesses g
+              where
+                p.person_id = poster.id and
+                p.id = c.photo_id and
+                poster.flickrid != c.flickrid and
+                c.flickrid = commenter.flickrid and 
+                p.id = g.photo_id and
+                c.commented_at <= g.guessed_at
+              group by c.photo_id),
+            0),
+        member_questions =
+          ifnull(
+            (select count(*)
+              from people poster, comments c, people commenter, guesses g
+              where
+                p.person_id = poster.id and
+                p.id = c.photo_id and
+                poster.flickrid != c.flickrid and
+                c.flickrid = commenter.flickrid and 
+                p.id = g.photo_id and
+                c.commented_at <= g.guessed_at and
+                c.comment_text like '%?%'
+              group by c.photo_id),
+            0)
+    }
+  end
+
   def self.all_with_stats(sorted_by, page, per_page)
     order = (
       case sorted_by
@@ -28,26 +61,7 @@ class Photo < ActiveRecord::Base
       end
     )
     Photo.paginate_by_sql(
-      'select p.*, ' +
-        '(select count(*) ' +
-          'from comments c, people commenter, guesses g ' +
-          'where ' +
-            'p.id = c.photo_id and ' +
-            'poster.flickrid != c.flickrid and ' +
-            'c.flickrid = commenter.flickrid and ' + # count only member comments
-            'p.id = g.photo_id and ' +
-            'c.commented_at <= g.guessed_at ' +
-          'group by c.photo_id) member_comments, ' +
-        '(select count(*) ' +
-          'from comments c, people commenter, guesses g ' +
-          'where ' +
-            'p.id = c.photo_id and ' +
-            'poster.flickrid != c.flickrid and ' +
-            'c.flickrid = commenter.flickrid and ' + # count only member comments
-            'p.id = g.photo_id and ' +
-            'c.commented_at <= g.guessed_at and ' +
-            'c.comment_text like \'%?%\' ' +
-          'group by c.photo_id) member_questions ' +
+      'select p.* ' +
         'from photos p, people poster ' +
         'where p.person_id = poster.id ' +
         'order by ' + order,

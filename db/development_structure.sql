@@ -54,6 +54,8 @@ CREATE TABLE `photos` (
   `seen_at` datetime NOT NULL default '0000-00-00 00:00:00',
   `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL default 'unfound',
   `views` int(11) NOT NULL,
+  `member_comments` int(11) NOT NULL default '0',
+  `member_questions` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `photos_flickrid_unique` (`flickrid`),
   KEY `photos_game_status_index` (`game_status`),
@@ -70,7 +72,7 @@ CREATE TABLE `revelations` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=397 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
@@ -96,6 +98,8 @@ INSERT INTO schema_migrations (version) VALUES ('19');
 INSERT INTO schema_migrations (version) VALUES ('20');
 
 INSERT INTO schema_migrations (version) VALUES ('20100612165811');
+
+INSERT INTO schema_migrations (version) VALUES ('20100615121254');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
