@@ -17,6 +17,7 @@
     <th><%= link_to_unless params[:sorted_by] == 'last-updated',
       'last updated',
       list_photos_url(:sorted_by => 'last-updated', :page => 1) %></th>
+    <th>game status</th>
     <th><%= link_to_unless params[:sorted_by] == 'views',
       'views',
       list_photos_url(:sorted_by => 'views', :page => 1) %></th>
@@ -34,6 +35,7 @@
     <td><%= link_to_person photo.person %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
+    <td><%= photo.game_status %></td>
     <td><%= photo.views %></td>
     <td><%= photo[:member_comments] %></td>
     <td><%= photo[:member_questions] %></td>
