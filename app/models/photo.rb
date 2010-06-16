@@ -43,28 +43,53 @@ class Photo < ActiveRecord::Base
     }
   end
 
-  def self.all_with_stats(sorted_by, page, per_page)
-    order = (
+  ORDER_BY_CLAUSE = {
+    'username' => 
+      { :column => 'lower(poster.username)', :default_order => '+' },
+    'date-added' => 
+      { :column => 'dateadded', :default_order => '-' },
+    'last-updated' => 
+      { :column => 'lastupdate', :default_order => '-' },
+    'views' => 
+      { :column => 'views', :default_order => '-' },
+    'member-comments' => 
+      { :column => 'member_comments', :default_order => '-' },
+    'member-questions' => 
+      { :column => 'member_questions', :default_order => '-' }
+  }
+
+  def self.clause(sorted_by, order)
+    clause = ORDER_BY_CLAUSE[sorted_by][:column]
+    if ORDER_BY_CLAUSE[sorted_by][:default_order] != order
+      clause += ' desc'
+    end
+    clause
+  end
+
+  def self.all_with_stats(sorted_by, order, page, per_page)
+    order_by = (
       case sorted_by
       when 'username'
-        'lower(poster.username), dateadded desc'
+        clause('username', order) + ', ' + clause('date-added', order)
       when 'date-added'
-        'dateadded desc, lower(poster.username)'
+        clause('date-added', order) + ', ' + clause('username', order)
       when 'last-updated'
-        'lastupdate desc, lower(poster.username)'
+        clause('last-updated', order) + ', ' + clause('username', order)
       when 'views'
-        'views desc, dateadded desc, lower(poster.username)'
+	clause('views', order) + ', ' + clause('username', order)
       when 'member-comments'
-	'member_comments desc, dateadded desc, lower(poster.username)'
+	clause('member-comments', order) + ', ' +
+	  clause('date-added', order) + ', ' + clause('username', order)
       when 'member-questions'
-	'member_questions desc, dateadded desc, lower(poster.username)'
+	clause('member-questions', order) + ', ' +
+	  clause('date-added', order) + ', ' + clause('username', order)
       end
     )
     Photo.paginate_by_sql(
       'select p.* ' +
         'from photos p, people poster ' +
         'where p.person_id = poster.id ' +
-        'order by ' + order,
+        'order by ' + order_by,
       :page => page, :per_page => per_page)
   end
 

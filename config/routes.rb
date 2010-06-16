@@ -14,7 +14,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'people/comments/:id/page/:page',
     :controller => 'people', :action => 'comments'
 
-  map.list_photos 'photos/list/sorted-by/:sorted_by/page/:page',
+  map.list_photos 'photos/list/sorted-by/:sorted_by/order/:order/page/:page',
     :controller => 'photos', :action => 'list'
   map.show_photo 'photos/show/:id', :controller => 'photos', :action => 'show'
   map.edit_photo 'admin/photos/edit/:id',

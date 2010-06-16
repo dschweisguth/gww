@@ -8,25 +8,15 @@
   <tr>
     <th class="empty"></th>
     <th>photo</th>
-    <th><%= link_to_unless params[:sorted_by] == 'username',
-      'posted by',
-      list_photos_url(:sorted_by => 'username', :page => 1) %></th>
-    <th><%= link_to_unless params[:sorted_by] == 'date-added',
-      'date added',
-      list_photos_url(:sorted_by => 'date-added', :page => 1) %></th>
-    <th><%= link_to_unless params[:sorted_by] == 'last-updated',
-      'last updated',
-      list_photos_url(:sorted_by => 'last-updated', :page => 1) %></th>
+    <th><%= link_to 'posted by', list_url('username') %></th>
+    <th><%= link_to 'date added', list_url('date-added') %></th>
+    <th><%= link_to 'last updated', list_url('last-updated') %></th>
     <th>game status</th>
-    <th><%= link_to_unless params[:sorted_by] == 'views',
-      'views',
-      list_photos_url(:sorted_by => 'views', :page => 1) %></th>
-    <th><%= link_to_unless params[:sorted_by] == 'member-comments',
-      '# of comments by members while unfound',
-      list_photos_url(:sorted_by => 'member-comments', :page => 1) %></th>
-    <th><%= link_to_unless params[:sorted_by] == 'member-questions',
-      '# of comments with ? by members while unfound',
-      list_photos_url(:sorted_by => 'member-questions', :page => 1) %></th>
+    <th><%= link_to 'views', list_url('views') %></th>
+    <th><%= link_to '# of comments by members while unfound',
+      list_url('member-comments') %></th>
+    <th><%= link_to '# of comments with ? by members while unfound',
+      list_url('member-questions') %></th>
   </tr>  
 <% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
