@@ -2,8 +2,6 @@ class PhotosController < ApplicationController
 
   caches_page :list
   def list
-    @order = params[:order]
-    @sorted_by = params[:sorted_by]
     @photos = Photo.all_with_stats params[:sorted_by], params[:order],
       params[:page], 30
   end

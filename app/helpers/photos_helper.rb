@@ -2,7 +2,8 @@ module PhotosHelper
 
   def list_url(sorted_by)
     list_photos_url :sorted_by => sorted_by,
-      :order => (@sorted_by == sorted_by && @order == '+' ? '-' : '+'),
+      :order =>
+        sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+',
       :page => 1
   end
 
