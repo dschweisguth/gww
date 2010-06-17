@@ -50,6 +50,90 @@ class PeopleController < ApplicationController
     criteria.find(lambda { 0 }) { |criterion| criterion != 0 }
   end
 
+  caches_page :top_guessers
+  def top_guessers
+    @latest_update = FlickrUpdate.latest.created_at.getlocal
+    
+    @days = []
+    (1..7).each do |num|
+      dates = { :begin => (@latest_update - num.day).beginning_of_day,
+        :end => (@latest_update - (num - 1).day).beginning_of_day }
+      scores = get_scores_from_date dates[:begin], dates[:end]
+      @days.push({ :dates => dates, :scores => scores })
+    end
+    
+    thisweek_dates = { :begin => @latest_update.beginning_of_week - 1.day,
+      :end => @latest_update }
+    thisweek_scores = get_scores_from_date thisweek_dates[:begin], nil
+    @weeks = [ { :dates => thisweek_dates, :scores => thisweek_scores } ]
+    (1..5).each do |num|
+      dates = {
+        :begin => (@latest_update - num.week).beginning_of_week - 1.day,
+        :end => (@latest_update - (num - 1).week).beginning_of_week - 1.day }
+      scores = get_scores_from_date dates[:begin], dates[:end]
+      @weeks.push({ :dates => dates, :scores => scores })
+    end
+    
+    thismonth_dates = { :begin => @latest_update.beginning_of_month,
+      :end => @latest_update }
+    thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
+    @months =
+      [ { :dates => thismonth_dates, :scores => thismonth_scores } ]
+    (1..5).each do |num|
+      dates = { :begin => (@latest_update - num.month).beginning_of_month,
+        :end => (@latest_update - (num - 1).month).beginning_of_month }
+      scores = get_scores_from_date dates[:begin], dates[:end]
+      @months.push({ :dates => dates, :scores => scores })
+    end
+    
+    thisyear_dates = { :begin => @latest_update.beginning_of_year,
+      :end => @latest_update }
+    thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
+    @years = [ {:dates => thisyear_dates, :scores => thisyear_scores} ]
+    years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
+    (1..years_of_guessing).each do |num|
+      dates = { :begin => (@latest_update - num.year).beginning_of_year,
+        :end => (@latest_update - (num - 1).year).beginning_of_year }
+      scores = get_scores_from_date dates[:begin], dates[:end]
+      @years.push({ :dates => dates, :scores => scores })
+    end
+    
+  end
+  
+  def get_scores_from_date(begin_date, end_date)
+    if begin_date && end_date
+      conditions = [ "guessed_at > ? and guessed_at < ?",
+        begin_date.getutc, end_date.getutc ]
+    elsif begin_date
+      conditions = [ "guessed_at > ?", begin_date.getutc ]
+    else
+      conditions = []
+    end
+    guesses = Guess.find :all, :conditions => conditions, :include => :person
+
+    guessers = {}
+    guesses.each do |guess|
+      guesser = guessers[guess.person.id]
+      if guesser
+        guesser[:score] += 1
+      else
+        guess.person[:score] = 1
+        guessers[guess.person.id] = guess.person
+      end
+    end
+
+    scores = {}
+    guessers.values.each do |guesser|
+      score = scores[guesser[:score]]
+      if score
+        score.push guesser
+      else
+        scores[guesser[:score]] = [ guesser ]
+      end        
+    end
+    scores
+  end
+
   caches_page :show
   def show
     @person = Person.find params[:id]

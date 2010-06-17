@@ -1,6 +1,6 @@
 <%= render :partial => 'shared/breadcrumbs' %>
 <hr/>
-<h1><%= @guesses_count %> guesses</h1>
+<h1>Top guessers</h1>
 
 <table class="container"><tr>
   <td>
@@ -9,7 +9,7 @@
     <table class="dark">
       <% @days.each do |day| -%>
 	<tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %B %d' %></th></tr>
-        <%= render :partial => 'by_day_week_month_and_year_scores',
+        <%= render :partial => 'top_guessers_scores',
           :locals => { :scores => day[:scores] }  %>
       <% end -%>
     </table>
@@ -19,7 +19,7 @@
     <table class="dark">
       <% @weeks.each_with_index do |week, week_index| -%>
 	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%B %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
-        <%= render :partial => 'by_day_week_month_and_year_scores',
+        <%= render :partial => 'top_guessers_scores',
           :locals => { :scores => week[:scores] }  %>
       <% end -%>
     </table>
@@ -31,7 +31,7 @@
     <table class="dark">
       <% @months.each_with_index do |month, month_index| -%>
 	<tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th></tr>
-        <%= render :partial => 'by_day_week_month_and_year_scores',
+        <%= render :partial => 'top_guessers_scores',
           :locals => { :scores => month[:scores] }  %>
       <% end -%>
     </table>
@@ -43,7 +43,7 @@
     <table class="dark">
       <% @years.each_with_index do |year, year_index| -%>
 	<tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th></tr>
-        <%= render :partial => 'by_day_week_month_and_year_scores',
+        <%= render :partial => 'top_guessers_scores',
           :locals => { :scores => year[:scores] }  %>
       <% end -%>
     </table>
