@@ -30,7 +30,7 @@ In Guess Where SF:
 <% if @first_post -%><td><a href="<%= show_photo_url @first_post %>"><img src="<%= url_for_flickr_image @first_post, 't' %>"/></a><br/></td><% end -%>
 </tr>
 <tr>
-<% if @first_guess -%><td><%= @first_guess.photo.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
+<% if @first_guess -%><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @first_post -%><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 </tr>
 </table>
