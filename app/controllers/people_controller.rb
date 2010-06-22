@@ -18,7 +18,7 @@ class PeopleController < ApplicationController
 
     sorted_by = params[:sorted_by]
     @people.sort! do |x, y|
-      username = -criterion(x, y, :username)
+      username = -criterion(x, y, :downcased_username)
       case sorted_by
       when 'username'
         first_applicable username
