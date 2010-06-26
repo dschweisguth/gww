@@ -68,14 +68,14 @@ th {
   text-align: right;
 }
 
-/* guesses/by_day_week_month_and_year, guesses/longest_and_shortest */
+/* people/top_guessers, guesses/longest_and_shortest */
 
 .opening-number {
   font-weight: bold;
   text-align: right;
 }
 
-/* guesses/by_day_week_month_and_year */
+/* people/top_guessers */
 
 .container {
   margin: 0;
