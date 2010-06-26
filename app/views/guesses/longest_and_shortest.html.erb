@@ -3,15 +3,15 @@
 <h1>Longest and shortest-lived unfounds</h1>
 
 <table class="dark">
-  <%= render :partial => 'longest_and_shortest_header' %>
-  <%= render :partial => 'longest_and_shortest_body',
-    :locals => { :guesses => @longest_guesses } %>
+  <%= render :partial => 'guesses/longest_and_shortest/header' %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess',
+    :collection => @longest_guesses %>
   <tr>
     <th colspan="6">...</th>
   </tr>
-  <%= render :partial => 'longest_and_shortest_body',
-    :locals => { :guesses => @shortest_guesses.reverse } %>
-  <%= render :partial => 'longest_and_shortest_header' %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess',
+    :collection => @shortest_guesses.reverse %>
+  <%= render :partial => 'guesses/longest_and_shortest/header' %>
 </table>
 
 <hr/>
