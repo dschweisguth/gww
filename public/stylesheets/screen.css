@@ -116,6 +116,12 @@ th {
   background-color: #ffcc33;
 }
 
+/* admin/index */
+
+.button-to, .button-to div {
+  display: inline;
+}
+
 /* photos/edit */
 
 .comments {

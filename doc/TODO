@@ -36,7 +36,6 @@ In the list of unfounds, highlight photos which if guessed would enter the
   longest-to-find list
 Track old usernames
   Put on user page
-Replace link to update with button (button_to)
 Use automatic iteration of partials over collections
 Use render's :object parameter to copy fields to locals with the same name
 Use Rails Enumerable.group_by
