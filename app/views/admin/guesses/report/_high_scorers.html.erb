@@ -1,0 +1,6 @@
+<% if ! high_scorers.empty? -%>
+Top guessers in the last <%= period %>: <% -%>
+<% high_scorers.each_with_index do |person, person_index| -%>
+<% if person_index > 0 -%>, <% end -%><%= render :partial => 'admin/guesses/report/link_to_score', :locals => { :person => person } %> (<%= person[:score] %>)<% -%>
+<% end %>
+<% end -%>

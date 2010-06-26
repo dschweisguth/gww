@@ -10,7 +10,7 @@
 <%= pluralize @guesses.length, 'new guess' %> by ...
 
 <% @guessers.each do |guesser| -%>
-<%= render :partial => 'report_link_to_score',
+<%= render :partial => 'admin/guesses/report/link_to_score',
   :locals => { :person => guesser } %>
 <% guesser[:guesses].each do |guess| -%>&lt;a href="<%= url_for_flickr_photo guess.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image guess.photo, "s" %>"&gt;&lt;/a&gt; <% end %>
 <% end -%>
@@ -24,10 +24,10 @@
 <% end -%>
 
 <% end -%>
-<%= render :partial => 'report_high_scorers',
-  :locals => { :period => 'week', :high_scorers => @weekly_high_scorers } -%>
-<%= render :partial => 'report_high_scorers',
-  :locals => { :period => 'month', :high_scorers => @monthly_high_scorers } -%>
+<%= render :partial => 'admin/guesses/report/high_scorers',
+  :object => @weekly_high_scorers, :locals => { :period => 'week' } -%>
+<%= render :partial => 'admin/guesses/report/high_scorers',
+  :object => @monthly_high_scorers, :locals => { :period => 'month' } -%>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
 
