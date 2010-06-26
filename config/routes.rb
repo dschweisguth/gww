@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'root'
   map.connect ':action', :controller => 'root'
 
-  map.list_people 'people/list/sorted-by/:sorted_by',
+  map.list_people 'people/list/sorted-by/:sorted_by/order/:order',
     :controller => 'people', :action => 'list'
   map.show_person 'people/show/:id', :controller => 'people', :action => 'show'
   map.connect 'people/comments/:id/page/:page',

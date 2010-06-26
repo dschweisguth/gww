@@ -16,28 +16,30 @@ class PeopleController < ApplicationController
         person[:post_count].to_f / person[:guess_count]
     end
 
-    sorted_by = params[:sorted_by]
     @people.sort! do |x, y|
       username = -criterion(x, y, :downcased_username)
-      case sorted_by
-      when 'username'
-        first_applicable username
-      when 'score'
-        first_applicable criterion(x, y, :guess_count),
-          criterion(x, y, :post_count), username
-      when 'posts'
-        first_applicable criterion(x, y, :post_count), username
-      when 'guesses-per-day'
-        first_applicable criterion(x, y, :guesses_per_day),
-          criterion(x, y, :guess_count), username
-      when 'posts-per-guess'
-        first_applicable criterion(x, y, :posts_per_guess),
-          criterion(x, y, :post_count), -criterion(x, y, :guess_count),
-          username
-      else
-        first_applicable criterion(x, y, :guess_count),
-          criterion(x, y, :post_count), username
-      end
+      sorted_by = 
+	case params[:sorted_by]
+	when 'username'
+	  first_applicable username
+	when 'score'
+	  first_applicable criterion(x, y, :guess_count),
+	    criterion(x, y, :post_count), username
+	when 'posts'
+	  first_applicable criterion(x, y, :post_count),
+	    criterion(x, y, :guess_count), username
+	when 'guesses-per-day'
+	  first_applicable criterion(x, y, :guesses_per_day),
+	    criterion(x, y, :guess_count), username
+	when 'posts-per-guess'
+	  first_applicable criterion(x, y, :posts_per_guess),
+	    criterion(x, y, :post_count), -criterion(x, y, :guess_count),
+	    username
+	else
+	  first_applicable criterion(x, y, :guess_count),
+	    criterion(x, y, :post_count), username
+	end
+      params[:order] == '+' ? sorted_by : -sorted_by
     end
 
   end

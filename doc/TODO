@@ -1,4 +1,3 @@
-Add descending sorting to people/list
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
@@ -42,7 +41,6 @@ Use automatic iteration of partials over collections
 Use render's :object parameter to copy fields to locals with the same name
 Use Rails Enumerable.group_by
 Use Rails Enumerable.each_with_object
-Add update count to post-update flash
 Highlight oldies in score report
 Consider sorting guessed thumbnails in score report by age
 Add alt & title to score report: "posted by x on y, z days ago"

@@ -1,4 +1,11 @@
 module PeopleHelper
+
+  def list_url(sorted_by)
+    list_people_url :sorted_by => sorted_by,
+      :order =>
+        sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
+  end
+
   def position(high_scorers, person)
     position = 0
     previous_score = nil
@@ -17,4 +24,5 @@ module PeopleHelper
     end
 
   end
+
 end

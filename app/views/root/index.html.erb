@@ -14,7 +14,7 @@ Comment Searchr</a>.</p>
 <h2>Reports</h2>
 <ul>
 <li>Scores are published to the <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></li>
-<li><%= link_to 'Active members', :controller => 'people', :action => 'list' %></li>
+<li><%= link_to 'Active members', :controller => 'people', :action => 'list', :sorted_by => 'score', :order => '+' %></li>
 <li><%= link_to 'Top guessers', :controller => 'people', :action => 'top_guessers' %></li>
 <li><%= link_to 'Photos', :controller => 'photos', :action => 'list', :sorted_by => 'date-added', :order => '+', :page => 1 %></li>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
