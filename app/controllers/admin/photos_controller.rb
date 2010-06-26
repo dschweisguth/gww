@@ -7,7 +7,7 @@ class Admin::PhotosController < ApplicationController
     update = FlickrUpdate.new
     group_info = FlickrCredentials.request 'flickr.groups.getInfo'
     update.member_count = group_info['group'][0]['members'][0]
-    update.save
+    update.save!
 
     page = 1
     parsed_photos = nil
@@ -51,7 +51,7 @@ class Admin::PhotosController < ApplicationController
           old_person_username = person.username
           person.username = parsed_photo['ownername']
           if person.id.nil? || person.username != old_person_username
-            person.save
+            person.save!
           end
 
           photo_flickrid = parsed_photo['id']
@@ -86,7 +86,7 @@ class Admin::PhotosController < ApplicationController
             old_photo_dateadded != photo.dateadded ||
             old_photo_lastupdate != photo.lastupdate ||
             old_photo_views != photo.views
-            photo.save
+            photo.save!
           end
 
         end
@@ -96,7 +96,7 @@ class Admin::PhotosController < ApplicationController
     end
 
     update.completed_at = Time.now.getutc
-    update.save
+    update.save!
 
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{page - 1} pages out of " +
@@ -182,7 +182,7 @@ class Admin::PhotosController < ApplicationController
 	    comment.username = comment_xml['authorname']
 	    comment.flickrid = comment_xml['author']
 	    comment.photo_id = photo.id
-	    comment.save
+	    comment.save!
 	    comments.push comment
 	  end
 	end
@@ -198,7 +198,7 @@ class Admin::PhotosController < ApplicationController
     Photo.transaction do
       Guess.delete_all [ "photo_id = ?", photo.id ]
       Revelation.delete photo.revelation.id if photo.revelation
-      photo.save
+      photo.save!
     end
     redirect_to :action => 'edit', :id => photo, :nocomment => :true
   end
@@ -233,12 +233,12 @@ class Admin::PhotosController < ApplicationController
 	  guesser = Person.new
 	  guesser.flickrid = guesser_flickrid
 	  guesser.username = result['person'][0]['username'][0]
-	  guesser.save
+	  guesser.save!
 	end
 
 	if guesser != photo.person
 	  photo.game_status = 'found'
-	  photo.save
+	  photo.save!
 
 	  guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
 	  if ! guess
@@ -249,13 +249,13 @@ class Admin::PhotosController < ApplicationController
 	  end
 	  guess.guessed_at = comment.commented_at
 	  guess.guess_text = comment.comment_text
-	  guess.save
+	  guess.save!
 
 	  Revelation.delete photo.revelation.id if photo.revelation
 
 	else
 	  photo.game_status = 'revealed'
-	  photo.save
+	  photo.save!
 
 	  revelation = photo.revelation
 	  if ! revelation
@@ -265,7 +265,7 @@ class Admin::PhotosController < ApplicationController
 	  end
 	  revelation.revealed_at = comment.commented_at
 	  revelation.revelation_text = comment.comment_text
-	  revelation.save
+	  revelation.save!
 
 	  Guess.delete_all [ "photo_id = ?", photo.id ]
 
@@ -277,7 +277,7 @@ class Admin::PhotosController < ApplicationController
 	  if guesser.id == photo.person_id
 	    if photo.revelation
 	      photo.game_status = 'unfound'
-	      photo.save
+	      photo.save!
 	      photo.revelation.destroy
 	    else
 	      flash[:notice] =
@@ -291,7 +291,7 @@ class Admin::PhotosController < ApplicationController
 		Guess.count :conditions => [ "photo_id = ?", photo.id ]
 	      if guess_count == 1
 		photo.game_status = 'unfound'
-		photo.save
+		photo.save!
 	      end
 	      guess.destroy
 	    else
