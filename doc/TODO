@@ -41,3 +41,4 @@ Use Rails Enumerable.each_with_object
 Highlight oldies in score report
 Consider sorting guessed thumbnails in score report by age
 Add alt & title to score report: "posted by x on y, z days ago"
+Use _path instead of _url where appropriate
