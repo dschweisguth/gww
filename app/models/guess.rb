@@ -9,8 +9,8 @@ class Guess < ActiveRecord::Base
         'person_id id, ' +
         'count(*) / datediff(now(), min(guessed_at)) rate ' +
       'from guesses group by person_id')
-    people.inject({}) \
-      { |rates, person| rates[person.id] = person[:rate].to_f; rates }
+    people.each_with_object({}) \
+      { |person, rates| rates[person.id] = person[:rate].to_f }
   end
 
   def self.longest
