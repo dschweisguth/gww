@@ -52,20 +52,6 @@ class Admin::GuessesController < ApplicationController
 
   end
 
-  def group_by_owner(items, attr, &owner_of)
-    groups = []
-    items.each do |item|
-      owner = owner_of.call item
-      if ! groups.include? owner
-        groups.push owner
-        owner[attr] = []
-      end
-      owner[attr].push item
-    end
-    groups
-  end
-  private :group_by_owner
-
   def people_with(people_by_score, score)
     people_with_score = people_by_score.find { |x| x[:score] == score }
     people_with_score ? people_with_score[:people].length : 0

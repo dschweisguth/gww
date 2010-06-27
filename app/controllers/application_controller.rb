@@ -7,6 +7,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def group_by_owner(items, attr, &owner_of)
+    groups = []
+    items.each do |item|
+      owner = owner_of.call item
+      if ! groups.include? owner
+        groups.push owner
+        owner[attr] = []
+      end
+      owner[attr].push item
+    end
+    groups
+  end
+  protected :group_by_owner
+
   def in_gww(controller, action)
     @from = params[:from]
     if @from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
