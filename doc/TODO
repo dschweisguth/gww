@@ -38,7 +38,6 @@ In the list of unfounds, highlight photos which if guessed would enter the
   longest-to-find list
 Track old usernames
   Put on user page
-Use Rails Enumerable.group_by
 Use Rails Enumerable.each_with_object
 Highlight oldies in score report
 Consider sorting guessed thumbnails in score report by age
