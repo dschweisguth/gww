@@ -65,10 +65,12 @@ class Admin::GuessesController < ApplicationController
     end
     groups
   end
+  private :group_by_owner
 
   def people_with(people_by_score, score)
     people_with_score = people_by_score.find { |x| x[:score] == score }
     people_with_score ? people_with_score[:people].length : 0
   end
+  private :people_with
 
 end
