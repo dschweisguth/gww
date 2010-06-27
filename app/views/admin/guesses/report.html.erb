@@ -19,7 +19,8 @@
 <%= pluralize @revelations.length, 'photo' %> revealed by ...
 
 <% @revealers.each do |revealer| -%>
-&lt;b&gt;&lt;a href="<%= show_person_url revealer %>"&gt;<%=h escape_username revealer.username %>&lt;/a&gt;&lt;/b&gt;
+<%= render :partial => 'admin/guesses/report/link_to_score',
+  :locals => { :person => revealer } %>
 <% revealer[:revelations].each do |revelation| -%>&lt;a href="<%= url_for_flickr_photo revelation.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image revelation.photo, "s" %>" <%= render :partial => 'admin/guesses/report/alt_and_title', :locals => { :photo => revelation.photo } %>&gt;&lt;/a&gt; <% end %>
 <% end -%>
 
