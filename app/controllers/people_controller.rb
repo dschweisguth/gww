@@ -169,9 +169,10 @@ class PeopleController < ApplicationController
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
-    @posters = group_by_owner(@guesses, :posts) { |guess| guess.photo.person }
+    @posters =
+      group_by_owner(@guesses, :guesses) { |guess| guess.photo.person }
     @posters.sort! do |x,y|
-      c = y[:posts].length <=> x[:posts].length
+      c = y[:guesses].length <=> x[:guesses].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase
     end
 
