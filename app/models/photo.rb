@@ -78,6 +78,7 @@ class Photo < ActiveRecord::Base
     end
     terms.join ', '
   end
+  private_class_method :order_by
 
   def self.unfound_or_unconfirmed
     Photo.find :all,
