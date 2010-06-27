@@ -7,8 +7,8 @@
     <div class="darker">by day for the past week</div>
 
     <table class="dark">
-      <% @days.each do |day| -%>
-	<tr><th colspan="2">on <%= day[:dates][:begin].strftime '%A, %B %d' %></th></tr>
+      <% @days.each_with_index do |day, i| -%>
+	<tr><th colspan="2">for <%= day[:dates][:begin].strftime '%A, %B %d' %><% if i == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'people/top_guessers/scores',
           :locals => { :scores => day[:scores] }  %>
       <% end -%>

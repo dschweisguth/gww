@@ -59,7 +59,7 @@ class PeopleController < ApplicationController
     @latest_update = FlickrUpdate.latest.created_at.getlocal
     
     @days = []
-    (1..7).each do |num|
+    (0..6).each do |num|
       dates = { :begin => (@latest_update - num.day).beginning_of_day,
         :end => (@latest_update - (num - 1).day).beginning_of_day }
       scores = get_scores_from_date dates[:begin], dates[:end]
