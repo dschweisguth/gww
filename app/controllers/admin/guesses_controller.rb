@@ -31,8 +31,8 @@ class Admin::GuessesController < ApplicationController
       :conditions => "game_status in ('unfound', 'unconfirmed')";
     
     people = Person.find :all
-    @posts_per_person = Photo.count :all, :group => :person_id
     scores = Guess.count :all, :group => :person_id
+    posts_per_person = Photo.count :all, :group => :person_id
     @people_by_score = []
     people.each do |person|
       score = scores[person.id] || 0
@@ -42,6 +42,7 @@ class Admin::GuessesController < ApplicationController
         @people_by_score.push people_with_score
       end
       people_with_score[:people].push person
+      person[:posts] = posts_per_person[person.id] || 0
     end
     @people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
 

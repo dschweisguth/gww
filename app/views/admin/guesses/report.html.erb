@@ -37,7 +37,7 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 
 <% @people_by_score.each do |people_with_score| -%>
 <% next if people_with_score[:score] <= 1 -%>
-&lt;b&gt;<%= people_with_score[:score] %>&lt;/b&gt; - <% people_with_score[:people].each_with_index do |person, i| -%>&lt;a href="<%= show_person_url person %>"&gt;<%=h escape_username person.username %>&lt;/a&gt; (<%= @posts_per_person[person.id] || 0 %>)<% if i < people_with_score[:people].length - 1 -%>, <% end -%><% end %>
+&lt;b&gt;<%= people_with_score[:score] %>&lt;/b&gt; - <% people_with_score[:people].each_with_index do |person, i| -%>&lt;a href="<%= show_person_url person %>"&gt;<%=h escape_username person.username %>&lt;/a&gt; (<%= person[:posts] %>)<% if i < people_with_score[:people].length - 1 -%>, <% end -%><% end %>
 <% end -%>
 
 </textarea>
