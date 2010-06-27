@@ -131,18 +131,10 @@ class Admin::PhotosController < ApplicationController
   caches_page :multipoint
   def multipoint
     @title = 'photos worth more than one point'
-
-    guesses_per_post = Guess.count :all, :group => :photo_id
-    photo_ids = []
-    guesses_per_post.each do |photo_id, count|
-      if count > 1 then
-        photo_ids.push photo_id
-      end
-    end
-    @photos = Photo.find :all,
-      :conditions => "photos.id in (" + photo_ids.join(', ')+ ")",
+    photo_ids = Guess.count(:group => :photo_id).
+      to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
+    @photos = Photo.find_all_by_id photo_ids,
       :include => :person, :order => "lastupdate desc"
-
     render :template => 'admin/photos/list'
   end
 
