@@ -7,15 +7,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def group_by_owner(items, attr, &owner_of)
+  def group_by_owner(items, attr, &owners_of)
     groups = []
     items.each do |item|
-      owner = owner_of.call item
-      if ! groups.include? owner
-        groups.push owner
-        owner[attr] = []
+      owners = owners_of.call item
+      if ! owners.is_a? Array
+        owners = [ owners ]
       end
-      owner[attr].push item
+      owners.each do |owner|
+	if ! groups.include? owner
+	  groups.push owner
+	  owner[attr] = []
+	end
+	owner[attr].push item
+      end
     end
     groups
   end

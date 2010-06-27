@@ -173,20 +173,10 @@ class PeopleController < ApplicationController
     @revealed_photos =
       Photo.find_all_by_person_id_and_game_status @person.id, 'revealed'
     
-    # Map of guessers to this person's posts
     @posts = Photo.find_all_by_person_id @person.id,
       :include => { :guesses => :person }
-    @guessers = []
-    @posts.each do |photo|
-      photo.guesses.each do |guess|
-        guesser = guess.person
-        if ! @guessers.include? guesser
-          @guessers.push guesser
-          guesser[:photos] = []
-        end
-        guesser[:photos].push photo
-      end
-    end
+    @guessers = group_by_owner(@posts, :photos) \
+      do |photo| photo.guesses.map { |guess| guess.person } end
     @guessers.sort! do |x,y|
       c = y[:photos].length <=> x[:photos].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase
