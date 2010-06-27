@@ -135,6 +135,14 @@ class PeopleController < ApplicationController
         scores[guesser[:score]] = [ guesser ]
       end        
     end
+
+    scores.values.each do |guessers|
+      guessers.each \
+        { |guesser| guesser[:downcased_username] = guesser.username.downcase }
+      guessers.sort! \
+        { |a, b| a[:downcased_username] <=> b[:downcased_username] }
+    end
+
     scores
   end
   private :get_scores_from_date

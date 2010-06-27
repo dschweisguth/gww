@@ -1,7 +1,7 @@
 <% scores.keys.sort { |x, y| y <=> x }.each do |score| -%>
   <tr>
     <td class="opening-number"><%= score %></td>
-    <td><% scores[score].sort_by { |person| person.username.downcase }.each_with_index do |person, i| -%><% if i > 0 -%>, <% end -%><%= link_to_person person %><% end -%></td>
+    <td><% scores[score].each_with_index do |person, i| -%><% if i > 0 -%>, <% end -%><%= link_to_person person %><% end -%></td>
   </tr>
 <% end -%>
 <tr><td colspan="2" class="empty">&nbsp;</td></tr>
