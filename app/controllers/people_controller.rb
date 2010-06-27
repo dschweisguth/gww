@@ -143,7 +143,7 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find params[:id]
 
-    set_place_and_tied
+    @place, @tied = standing @person
    
     weekly_high_scorers = Person.high_scorers 7
     if weekly_high_scorers.include? @person
@@ -184,23 +184,25 @@ class PeopleController < ApplicationController
     
   end
 
-  def set_place_and_tied
+  def standing(person)
+    place = 1
+    tied = false
     scores_by_person = Guess.count :group => :person_id
     people_by_score = scores_by_person.keys.group_by \
       { |person_id| scores_by_person[person_id] }
-    @place = 1
     scores = people_by_score.keys.sort { |a, b| b <=> a }
     scores.each do |score|
       people_with_score = people_by_score[score]
-      if people_with_score.include? @person.id
-        @tied = people_with_score.length > 1
+      if people_with_score.include? person.id
+        tied = people_with_score.length > 1
         break
       else
-        @place += people_with_score.length
+        place += people_with_score.length
       end
     end
+    return place, tied
   end
-  private :set_place_and_tied
+  private :standing
 
   caches_page :guesses
   def guesses
