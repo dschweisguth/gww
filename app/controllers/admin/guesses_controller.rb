@@ -9,15 +9,7 @@ class Admin::GuessesController < ApplicationController
     @guesses = Guess.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ],
       :include => [ { :photo => :person }, :person ]
-    @guessers = []
-    @guesses.each do |guess|
-      guesser = guess.person
-      if ! @guessers.include? guesser
-        @guessers.push guesser
-        guesser[:guesses] = []
-      end
-      guesser[:guesses].push guess
-    end
+    @guessers = group_by_owner(@guesses, :guesses) { |guess| guess.person } 
     @guessers.sort! { |x, y|
       c = y[:guesses].length <=> x[:guesses].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
@@ -48,14 +40,8 @@ class Admin::GuessesController < ApplicationController
     @revelations = Revelation.find :all,
       :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person }
-    @revealers = []
-    @revelations.each do |revelation|
-      revealer = revelation.photo.person
-      if ! @revealers.include? revealer
-        @revealers.push revealer
-        revealer[:revelations] = []
-      end
-      revealer[:revelations].push revelation
+    @revealers = group_by_owner @revelations, :revelations do |revelation|
+      revelation.photo.person
     end
     @revealers.sort! { |x, y| x.username.downcase <=> y.username.downcase }
 
@@ -65,6 +51,19 @@ class Admin::GuessesController < ApplicationController
     @member_count = updates[0].member_count
     @total_single_guessers = people_with @people_by_score, 1
 
+  end
+
+  def group_by_owner(items, attr, &owner_of)
+    groups = []
+    items.each do |item|
+      owner = owner_of.call item
+      if ! groups.include? owner
+        groups.push owner
+        owner[attr] = []
+      end
+      owner[attr].push item
+    end
+    groups
   end
 
   def people_with(people_by_score, score)
