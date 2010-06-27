@@ -160,9 +160,8 @@ class PeopleController < ApplicationController
       :order => 'dateadded'
 
     # Map of posters to this person's guesses
-    guesses =
+    @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
-    @guessed_count = guesses.length
     @posters = group_by_owner(guesses, :photos) { |guess| guess.photo.person }
     @posters.sort! do |x,y|
       c = y[:photos].length <=> x[:photos].length
@@ -176,11 +175,10 @@ class PeopleController < ApplicationController
       'revealed'
     
     # Map of guessers to this person's posts
-    posts = Photo.find_all_by_person_id @person.id,
+    @posts = Photo.find_all_by_person_id @person.id,
       :include => { :guesses => :person }
-    @posted_count = posts.length
     @guessers = []
-    posts.each do |photo|
+    @posts.each do |photo|
       photo.guesses.each do |guess|
         guesser = guess.person
         if ! @guessers.include? guesser

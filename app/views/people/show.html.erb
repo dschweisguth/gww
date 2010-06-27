@@ -12,7 +12,7 @@ In Guess Where SF:
 <%= link_to "#{@person.username}'s comments", :action => 'comments', :id => @person %>
 <br/><br/>
 
-<%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= ordinal @place %> place with a score of <%= @guessed_count %>.<br/>
+<%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= ordinal @place %> place with a score of <%= @guesses.length %>.<br/>
 
 <%= render :partial => 'show_high_scorers',
   :locals => { :high_scorers => @weekly_high_scorers, :period => 'week' } %>
@@ -35,7 +35,7 @@ In Guess Where SF:
 </tr>
 </table>
 
-<b><%=h @person.username %> has correctly guessed <%=h @guessed_count %> photos</b><br/>
+<b><%=h @person.username %> has correctly guessed <%=h @guesses.length %> photos</b><br/>
 
 <% @posters.each do |poster| %>
 <%=  poster[:photos].length %> <%= singularize 'were', poster[:photos].length %> posted by <%= link_to_person poster %>
@@ -46,7 +46,7 @@ In Guess Where SF:
 <% end %>
 <br/>
 
-<b><%=h @person.username %> has posted <%=h @posted_count %> photos</b><br/>
+<b><%=h @person.username %> has posted <%=h @posts.length %> photos</b><br/>
 
 <%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<% if ! @unfound_photos.find_all { |p| p.game_status == 'unconfirmed' }.empty? %> or <span class="unconfirmed">unconfirmed</span><% end %><%= @unfound_photos.empty? ? '.' : ':' %>
 <% if ! @unfound_photos.empty? %>
