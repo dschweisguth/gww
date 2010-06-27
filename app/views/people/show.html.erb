@@ -38,7 +38,7 @@ In Guess Where SF:
 <b><%=h @person.username %> has correctly guessed <%=h @guesses.length %> photos</b><br/>
 
 <% @posters.each do |poster| %>
-<%=  poster[:photos].length %> <%= singularize 'were', poster[:photos].length %> posted by <%= link_to_person poster %>
+<%=  poster[:photos].length %> <%= singularize 'were', poster[:photos].length %> posted by <%= link_to_person poster %>:
 <%   poster[:photos].each_with_index do |photo, photo_index| -%>
 <%=    link_to photo_index + 1, show_photo_url(photo) %>
 <%   end -%>
