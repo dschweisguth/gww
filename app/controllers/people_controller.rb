@@ -159,10 +159,9 @@ class PeopleController < ApplicationController
     @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
       :order => 'dateadded'
 
-    # Map of posters to this person's guesses
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
-    @posters = group_by_owner(guesses, :photos) { |guess| guess.photo.person }
+    @posters = group_by_owner(@guesses, :photos) { |guess| guess.photo.person }
     @posters.sort! do |x,y|
       c = y[:photos].length <=> x[:photos].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase
