@@ -120,7 +120,7 @@ class Admin::PhotosController < ApplicationController
   caches_page :inaccessible
   def inaccessible
     @title = 'inaccessible and unfound or unconfirmed photos'
-    @photos = Photo.find :all,
+    @photos = Photo.all \
       :conditions =>
         [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
           FlickrUpdate.latest.created_at ],
