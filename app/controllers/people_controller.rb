@@ -2,11 +2,11 @@ class PeopleController < ApplicationController
 
   caches_page :list
   def list
-    post_counts = Photo.count :all, :group => 'person_id'
-    guess_counts = Guess.count :all, :group => 'person_id'
+    post_counts = Photo.count :group => 'person_id'
+    guess_counts = Guess.count :group => 'person_id'
     guesses_per_days = Guess.count_by_person_per_day
 
-    @people = Person.find :all
+    @people = Person.all
     @people.each do |person|
       person[:downcased_username] = person.username.downcase
       person[:post_count] = post_counts[person.id] || 0
@@ -47,10 +47,12 @@ class PeopleController < ApplicationController
   def criterion(element1, element2, property)
     element2[property] <=> element1[property]
   end
+  private :criterion
 
   def first_applicable(*criteria)
     criteria.find(lambda { 0 }) { |criterion| criterion != 0 }
   end
+  private :first_applicable
 
   caches_page :top_guessers
   def top_guessers
