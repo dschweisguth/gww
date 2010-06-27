@@ -27,8 +27,7 @@ class Admin::GuessesController < ApplicationController
 
     @new_photos_count =
       Photo.count :conditions => [ "dateadded > ?", updates[1].created_at ]
-    @unfound_count =
-      Photo.count :conditions => "game_status in ('unfound', 'unconfirmed')";
+    @unfound_count = Photo.unfound_or_unconfirmed_count
     
     people = Person.all
     scores = Guess.count :group => :person_id

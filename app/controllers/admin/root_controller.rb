@@ -3,8 +3,7 @@ class Admin::RootController < ApplicationController
   caches_page :index
   def index
     @latest = FlickrUpdate.latest
-    @unfound_photos_count =
-      Photo.count :conditions => "game_status in ('unfound', 'unconfirmed')"
+    @unfound_photos_count = Photo.unfound_or_unconfirmed_count
     @inaccessible_photos_count = Photo.count :conditions =>
       [ "seen_at < ? and game_status in ('unfound', 'unconfirmed')",
         @latest.created_at ]
