@@ -25,14 +25,14 @@ class Admin::GuessesController < ApplicationController
     @weekly_high_scorers = Person.high_scorers 7
     @monthly_high_scorers = Person.high_scorers 30
 
-    @new_photos_count = Photo.count :all,
-      :conditions => [ "dateadded > ?", updates[1].created_at ]
-    @unfound_count = Photo.count :all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')";
+    @new_photos_count =
+      Photo.count :conditions => [ "dateadded > ?", updates[1].created_at ]
+    @unfound_count =
+      Photo.count :conditions => "game_status in ('unfound', 'unconfirmed')";
     
     people = Person.find :all
-    scores = Guess.count :all, :group => :person_id
-    posts_per_person = Photo.count :all, :group => :person_id
+    scores = Guess.count :group => :person_id
+    posts_per_person = Photo.count :group => :person_id
     @people_by_score = []
     people.each do |person|
       score = scores[person.id] || 0
