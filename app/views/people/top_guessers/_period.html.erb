@@ -1,0 +1,9 @@
+<div class="darker"><%= heading %></div>
+
+<table class="dark">
+  <% periods.each_with_index do |period, i| -%>
+    <tr><th colspan="2">for <%= period[:dates][:begin].strftime format %><% if i == 0 -%> so far ...<% end -%></th></tr>
+    <%= render :partial => 'people/top_guessers/scores',
+      :locals => { :scores => period[:scores] }  %>
+  <% end -%>
+</table>
