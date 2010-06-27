@@ -34,10 +34,8 @@ class Admin::PhotosController < ApplicationController
           existing_people[person.flickrid] = person
         end
 
-        existing_photos = {}
-        Photo.find_all_by_flickrid(photo_flickrids).each do |photo|
-          existing_photos[photo.flickrid] = photo
-        end
+        existing_photos =
+	  Photo.find_all_by_flickrid(photo_flickrids).index_by &:flickrid
 
         parsed_photos['photo'].each do |parsed_photo|
           person_flickrid = parsed_photo['owner']
