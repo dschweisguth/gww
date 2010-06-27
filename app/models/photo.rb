@@ -6,7 +6,7 @@ class Photo < ActiveRecord::Base
 
   def self.update_seen_at(flickrids, time)
     joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
-    Photo.update_all "seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
+    update_all "seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
       "flickrid in (#{joined_flickrids})"
   end
 
@@ -44,7 +44,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.all_with_stats(sorted_by, order, page, per_page)
-    Photo.paginate_by_sql(
+    paginate_by_sql(
       'select p.* ' +
         'from photos p, people poster ' +
         'where p.person_id = poster.id ' +
@@ -85,8 +85,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.unfound_or_unconfirmed
-    Photo.find :all,
-      :conditions => "game_status in ('unfound', 'unconfirmed')",
+    all :conditions => "game_status in ('unfound', 'unconfirmed')",
       :include => :person, :order => "lastupdate desc"
   end
 
