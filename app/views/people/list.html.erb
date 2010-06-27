@@ -5,11 +5,11 @@
 <table class="dark">
 <tr>
   <th class="empty"></th>
-  <th><%= link_to 'Member', list_url('username') %></th>
-  <th><%= link_to 'Score', list_url('score') %></th>
-  <th><%= link_to 'Posts', list_url('posts') %></th>
-  <th><%= link_to 'Guesses per day', list_url('guesses-per-day') %></th>
-  <th><%= link_to 'Posts per guess', list_url('posts-per-guess') %></th>
+  <th><%= link_to 'Member', list_path('username') %></th>
+  <th><%= link_to 'Score', list_path('score') %></th>
+  <th><%= link_to 'Posts', list_path('posts') %></th>
+  <th><%= link_to 'Guesses per day', list_path('guesses-per-day') %></th>
+  <th><%= link_to 'Posts per guess', list_path('posts-per-guess') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
 <tr>

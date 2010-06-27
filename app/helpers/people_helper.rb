@@ -1,7 +1,7 @@
 module PeopleHelper
 
-  def list_url(sorted_by)
-    list_people_url :sorted_by => sorted_by,
+  def list_path(sorted_by)
+    list_people_path :sorted_by => sorted_by,
       :order =>
         sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
   end
