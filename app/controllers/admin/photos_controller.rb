@@ -99,7 +99,7 @@ class Admin::PhotosController < ApplicationController
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{page - 1} pages out of " +
       "#{parsed_photos['pages']}.</br>"
-    redirect_to admin_root_url
+    redirect_to admin_root_path
 
   end
 
@@ -107,7 +107,7 @@ class Admin::PhotosController < ApplicationController
     expire_cached_pages
     Photo.update_statistics
     flash[:notice] = "Updated statistics.</br>"
-    redirect_to admin_root_url
+    redirect_to admin_root_path
   end
 
   caches_page :unfound
