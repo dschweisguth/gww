@@ -17,8 +17,8 @@ class Admin::GuessesController < ApplicationController
     @revelations = Revelation.all \
       :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person }
-    @revealers = group_by_owner @revelations, :revelations \
-      do |revelation| revelation.photo.person end
+    @revealers = group_by_owner(@revelations, :revelations) \
+      { |revelation| revelation.photo.person }
     @revealers.sort! { |x, y| x.username.downcase <=> y.username.downcase }
 
     @weekly_high_scorers = Person.high_scorers 7
