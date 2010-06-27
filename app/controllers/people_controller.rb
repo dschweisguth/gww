@@ -143,7 +143,7 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find params[:id]
 
-    scores_by_person = Guess.count :all, :group => :person_id
+    scores_by_person = Guess.count :group => :person_id
     people_by_score = {}
     scores_by_person.each_pair do |person_id, score|
       people_with_score = people_by_score[score]
