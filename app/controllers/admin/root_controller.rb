@@ -11,4 +11,6 @@ class Admin::RootController < ApplicationController
       find_all { |photo_id, count| count > 1 }.length
   end
 
+  caches_page :bookmarklet
+
 end
