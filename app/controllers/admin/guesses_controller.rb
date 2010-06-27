@@ -8,7 +8,7 @@ class Admin::GuessesController < ApplicationController
 
     @guesses = Guess.all \
       :conditions => [ "added_at > ?", updates[0].created_at ],
-      :include => [ { :photo => :person }, :person ]
+      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
     @guessers = group_by_owner(@guesses, :guesses) { |guess| guess.person } 
     @guessers.sort! { |x, y|
       c = y[:guesses].length <=> x[:guesses].length
