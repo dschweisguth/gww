@@ -113,7 +113,7 @@ class PeopleController < ApplicationController
     else
       conditions = []
     end
-    guesses = Guess.find :all, :conditions => conditions, :include => :person
+    guesses = Guess.all :conditions => conditions, :include => :person
 
     guessers = {}
     guesses.each do |guess|
@@ -137,6 +137,7 @@ class PeopleController < ApplicationController
     end
     scores
   end
+  private :get_scores_from_date
 
   caches_page :show
   def show
