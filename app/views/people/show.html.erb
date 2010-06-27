@@ -14,9 +14,9 @@ In Guess Where SF:
 
 <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= ordinal @place %> place with a score of <%= @guesses.length %>.<br/>
 
-<%= render :partial => 'show_high_scorers',
+<%= render :partial => 'people/show/high_scorers',
   :locals => { :high_scorers => @weekly_high_scorers, :period => 'week' } %>
-<%= render :partial => 'show_high_scorers',
+<%= render :partial => 'people/show/high_scorers',
   :locals => { :high_scorers => @monthly_high_scorers, :period => 'month' } %>
 <br/>
 
