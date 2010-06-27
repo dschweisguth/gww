@@ -14,6 +14,17 @@ class Admin::GuessesController < ApplicationController
       c = y[:guesses].length <=> x[:guesses].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
+    @revelations = Revelation.find :all,
+      :conditions => [ "added_at > ?", updates[0].created_at ], 
+      :include => { :photo => :person }
+    @revealers = group_by_owner @revelations, :revelations do |revelation|
+      revelation.photo.person
+    end
+    @revealers.sort! { |x, y| x.username.downcase <=> y.username.downcase }
+
+    @weekly_high_scorers = Person.high_scorers 7
+    @monthly_high_scorers = Person.high_scorers 30
+
     @new_photos_count = Photo.count :all,
       :conditions => [ "dateadded > ?", updates[1].created_at ]
     @unfound_count = Photo.count :all,
@@ -33,17 +44,6 @@ class Admin::GuessesController < ApplicationController
       people_with_score[:people].push person
     end
     @people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
-
-    @weekly_high_scorers = Person.high_scorers 7
-    @monthly_high_scorers = Person.high_scorers 30
-
-    @revelations = Revelation.find :all,
-      :conditions => [ "added_at > ?", updates[0].created_at ], 
-      :include => { :photo => :person }
-    @revealers = group_by_owner @revelations, :revelations do |revelation|
-      revelation.photo.person
-    end
-    @revealers.sort! { |x, y| x.username.downcase <=> y.username.downcase }
 
     @total_participants = people.length
     @total_posters_only = people_with @people_by_score, 0
