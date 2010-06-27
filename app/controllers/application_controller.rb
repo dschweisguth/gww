@@ -8,8 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   def group_by_owner(items, attr, &owners_of)
-    groups = []
-    items.each do |item|
+    items.each_with_object [] do |item, groups|
       owners = owners_of.call item
       if ! owners.is_a? Array
         owners = [ owners ]
@@ -22,7 +21,6 @@ class ApplicationController < ActionController::Base
 	owner[attr].push item
       end
     end
-    groups
   end
   protected :group_by_owner
 
