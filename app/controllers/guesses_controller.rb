@@ -2,8 +2,10 @@ class GuessesController < ApplicationController
 
   caches_page :longest_and_shortest
   def longest_and_shortest
-    @longest_guesses = add_time_elapsed Guess.longest
-    @shortest_guesses = add_time_elapsed Guess.shortest
+    @longest_guesses = Guess.longest
+    add_time_elapsed @longest_guesses
+    @shortest_guesses = Guess.shortest
+    add_time_elapsed @shortest_guesses
   end
 
   def add_time_elapsed(guesses)
@@ -11,8 +13,8 @@ class GuessesController < ApplicationController
       guess[:time_elapsed] =
         time_elapsed guess.photo.dateadded, guess.guessed_at
     end
-    guesses
   end
+  private :add_time_elapsed
 
   def time_elapsed(begin_date, end_date)
     years = end_date.year - begin_date.year
@@ -50,5 +52,6 @@ class GuessesController < ApplicationController
     time_elapsed.push "#{seconds}&nbsp;seconds" if seconds > 0
     time_elapsed.join ", "
   end
+  private :time_elapsed
 
 end
