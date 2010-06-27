@@ -3,7 +3,12 @@
 <table class="dark">
   <% periods.each_with_index do |period, i| -%>
     <tr><th colspan="2">for <%= period[:dates][:begin].strftime format %><% if i == 0 -%> so far ...<% end -%></th></tr>
-    <%= render :partial => 'people/top_guessers/scores',
-      :locals => { :scores => period[:scores] }  %>
+    <% period[:scores].keys.sort { |x, y| y <=> x }.each do |score| -%>
+      <tr>
+	<td class="opening-number"><%= score %></td>
+	<td><% period[:scores][score].each_with_index do |person, i| -%><% if i > 0 -%>, <% end -%><%= link_to_person person %><% end -%></td>
+      </tr>
+    <% end -%>
+    <tr><td colspan="2" class="empty">&nbsp;</td></tr>
   <% end -%>
 </table>
