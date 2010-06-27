@@ -3,7 +3,7 @@ class Person < ActiveRecord::Base
   has_many :guesses
 
   def self.high_scorers(days)
-    people = Person.find_by_sql [
+    people = find_by_sql [
       'select p.*, count(*) score from people p, guesses g ' +
         'where p.id = g.person_id and datediff(?, g.guessed_at) < ? ' +
         'group by p.id having score > 1 order by score desc',
