@@ -171,8 +171,8 @@ class PeopleController < ApplicationController
     @unfound_photos = Photo.all :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
         @person.id ]
-    @revealed_photos = Photo.find_all_by_person_id_and_game_status @person.id,
-      'revealed'
+    @revealed_photos =
+      Photo.find_all_by_person_id_and_game_status @person.id, 'revealed'
     
     # Map of guessers to this person's posts
     @posts = Photo.find_all_by_person_id @person.id,
