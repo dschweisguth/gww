@@ -66,7 +66,7 @@ In Guess Where SF:
 
 <% @guessers.each do |guesser| %>
 <%=  guesser[:guessed_photos].length %> <%= singularize 'were', guesser[:guessed_photos].length %> guessed by <%= link_to_person guesser %>:
-<%   guesser[:guessed_photos].each_with_index do |photo, photo_index| %>
+<%   guesser[:guessed_photos].each_with_index do |photo, photo_index| -%>
 <%=    link_to photo_index + 1, show_photo_path(photo) %>
 <%   end -%>
 <br/>
