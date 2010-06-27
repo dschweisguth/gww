@@ -17,8 +17,8 @@
     <div class="darker">by week for the past month</div>
 
     <table class="dark">
-      <% @weeks.each_with_index do |week, week_index| -%>
-	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%B %d' %><% if week_index == 0 -%> so far ...<% end -%></th></tr>
+      <% @weeks.each_with_index do |week, i| -%>
+	<tr><th colspan="2">for the week of <%= week[:dates][:begin].strftime '%B %d' %><% if i == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'people/top_guessers/scores',
           :locals => { :scores => week[:scores] }  %>
       <% end -%>
@@ -29,8 +29,8 @@
     <div class="darker">by month for the past year</div>
 
     <table class="dark">
-      <% @months.each_with_index do |month, month_index| -%>
-	<tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if month_index == 0 -%> so far ...<% end -%></th></tr>
+      <% @months.each_with_index do |month, i| -%>
+	<tr><th colspan="2">for <%= month[:dates][:begin].strftime '%B %Y' %><% if i == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'people/top_guessers/scores',
           :locals => { :scores => month[:scores] }  %>
       <% end -%>
@@ -41,8 +41,8 @@
     <div class="darker">by year</div>
 
     <table class="dark">
-      <% @years.each_with_index do |year, year_index| -%>
-	<tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if year_index == 0 -%> so far ...<% end -%></th></tr>
+      <% @years.each_with_index do |year, i| -%>
+	<tr><th colspan="2">for <%= year[:dates][:begin].strftime '%Y' %><% if i == 0 -%> so far ...<% end -%></th></tr>
         <%= render :partial => 'people/top_guessers/scores',
           :locals => { :scores => year[:scores] }  %>
       <% end -%>
