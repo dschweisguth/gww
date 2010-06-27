@@ -1,3 +1,5 @@
+Fix uses of people/list (active members header)
+Make usernames in top guessers links
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update

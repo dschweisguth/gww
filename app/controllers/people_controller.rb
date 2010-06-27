@@ -168,7 +168,7 @@ class PeopleController < ApplicationController
       c != 0 ? c : x.username.downcase <=> y.username.downcase
     end
 
-    @unfound_photos = Photo.find :all, :conditions =>
+    @unfound_photos = Photo.all :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
         @person.id ]
     @revealed_photos = Photo.find_all_by_person_id_and_game_status @person.id,
