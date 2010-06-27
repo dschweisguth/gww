@@ -4,9 +4,9 @@ class Admin::GuessesController < ApplicationController
   def report
     @report_date = Time.now
 
-    updates = FlickrUpdate.find :all, :order => "id desc", :limit => 2
+    updates = FlickrUpdate.all :order => "id desc", :limit => 2
 
-    @guesses = Guess.find :all,
+    @guesses = Guess.all \
       :conditions => [ "added_at > ?", updates[0].created_at ],
       :include => [ { :photo => :person }, :person ]
     @guessers = group_by_owner(@guesses, :guesses) { |guess| guess.person } 
@@ -14,7 +14,7 @@ class Admin::GuessesController < ApplicationController
       c = y[:guesses].length <=> x[:guesses].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase }
 
-    @revelations = Revelation.find :all,
+    @revelations = Revelation.all \
       :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person }
     @revealers = group_by_owner @revelations, :revelations do |revelation|
@@ -30,7 +30,7 @@ class Admin::GuessesController < ApplicationController
     @unfound_count =
       Photo.count :conditions => "game_status in ('unfound', 'unconfirmed')";
     
-    people = Person.find :all
+    people = Person.all
     scores = Guess.count :group => :person_id
     posts_per_person = Photo.count :group => :person_id
     @people_by_score = []
