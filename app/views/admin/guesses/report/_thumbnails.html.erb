@@ -4,7 +4,7 @@
 <% people.each do |person| -%>
 <%= render :partial => 'admin/guesses/report/link_to_person',
   :locals => { :person => person } %>
-<% person[attr].each do |change| -%>&lt;a href="<%= url_for_flickr_photo change.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image change.photo, 's' %>" alt="<%= render :partial => 'admin/guesses/report/alt', :locals => { :photo => change.photo } %>" title="<%= render :partial => 'admin/guesses/report/alt', :locals => { :photo => change.photo } %>"&gt;&lt;/a&gt; <% end %>
+<% person[attr].each do |change| -%>&lt;a href="<%= url_for_flickr_photo change.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image change.photo, 's' %>" alt="<%= render :partial => 'admin/guesses/report/alt', :locals => { :photo => change.photo } %>" title="<%= render :partial => 'admin/guesses/report/alt', :locals => { :photo => change.photo } %>"&gt;&lt;/a&gt;<% if stars && years_old(change) >= 1 -%>&lt;img height="50" width="15" src="<%= star_image change %>" alt="Unfound for <%= pluralize years_old(change), 'year' %>!" title="Unfound for <%= pluralize years_old(change), 'year' %>!"/&gt;<% end -%> <% end %>
 <% end -%>
 
 <% end -%>

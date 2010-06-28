@@ -9,11 +9,12 @@
 
 <%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
   { :change_name => 'new guess', :change_verb => '',
-    :changes => @guesses, :people => @guessers, :attr => :guesses } %><% -%>
+    :changes => @guesses, :people => @guessers, :attr => :guesses,
+    :stars => true } %><% -%>
 <%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
   { :change_name => 'photo', :change_verb => ' revealed',
-    :changes => @revelations, :people => @revealers, :attr => :revelations }
-  %><% -%>
+    :changes => @revelations, :people => @revealers, :attr => :revelations,
+    :stars => false } %><% -%>
 <%= render :partial => 'admin/guesses/report/high_scorers',
   :object => @weekly_high_scorers, :locals => { :period => 'week' } -%>
 <%= render :partial => 'admin/guesses/report/high_scorers',
