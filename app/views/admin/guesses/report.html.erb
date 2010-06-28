@@ -7,24 +7,13 @@
 <textarea name="textfield" onFocus="this.select();" rows="50" style="width: 800px;" wrap="virtual">
 &lt;b&gt;updated <%= @report_date.strftime '%A, %B %d, %I %p' %>&lt;/b&gt;
 
-<%= pluralize @guesses.length, 'new guess' %> by ...
-
-<% @guessers.each do |guesser| -%>
-<%= render :partial => 'admin/guesses/report/link_to_person',
-  :locals => { :person => guesser } %>
-<% guesser[:guesses].each do |guess| -%>&lt;a href="<%= url_for_flickr_photo guess.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image guess.photo, "s" %>" <%= render :partial => 'admin/guesses/report/alt_and_title', :locals => { :photo => guess.photo } %>&gt;&lt;/a&gt; <% end %>
-<% end -%>
-
-<% if ! @revealers.empty? -%>
-<%= pluralize @revelations.length, 'photo' %> revealed by ...
-
-<% @revealers.each do |revealer| -%>
-<%= render :partial => 'admin/guesses/report/link_to_person',
-  :locals => { :person => revealer } %>
-<% revealer[:revelations].each do |revelation| -%>&lt;a href="<%= url_for_flickr_photo revelation.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image revelation.photo, "s" %>" <%= render :partial => 'admin/guesses/report/alt_and_title', :locals => { :photo => revelation.photo } %>&gt;&lt;/a&gt; <% end %>
-<% end -%>
-
-<% end -%>
+<%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
+  { :change_name => 'new guess', :change_verb => '',
+    :changes => @guesses, :people => @guessers, :attr => :guesses } %><% -%>
+<%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
+  { :change_name => 'photo', :change_verb => ' revealed',
+    :changes => @revelations, :people => @revealers, :attr => :revelations }
+  %><% -%>
 <%= render :partial => 'admin/guesses/report/high_scorers',
   :object => @weekly_high_scorers, :locals => { :period => 'week' } -%>
 <%= render :partial => 'admin/guesses/report/high_scorers',
