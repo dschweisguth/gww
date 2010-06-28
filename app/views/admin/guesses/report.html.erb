@@ -10,7 +10,7 @@
 <%= pluralize @guesses.length, 'new guess' %> by ...
 
 <% @guessers.each do |guesser| -%>
-<%= render :partial => 'admin/guesses/report/link_to_score',
+<%= render :partial => 'admin/guesses/report/link_to_person',
   :locals => { :person => guesser } %>
 <% guesser[:guesses].each do |guess| -%>&lt;a href="<%= url_for_flickr_photo guess.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image guess.photo, "s" %>" <%= render :partial => 'admin/guesses/report/alt_and_title', :locals => { :photo => guess.photo } %>&gt;&lt;/a&gt; <% end %>
 <% end -%>
@@ -19,7 +19,7 @@
 <%= pluralize @revelations.length, 'photo' %> revealed by ...
 
 <% @revealers.each do |revealer| -%>
-<%= render :partial => 'admin/guesses/report/link_to_score',
+<%= render :partial => 'admin/guesses/report/link_to_person',
   :locals => { :person => revealer } %>
 <% revealer[:revelations].each do |revelation| -%>&lt;a href="<%= url_for_flickr_photo revelation.photo %>">&lt;img height="50" width="50" src="<%= url_for_flickr_image revelation.photo, "s" %>" <%= render :partial => 'admin/guesses/report/alt_and_title', :locals => { :photo => revelation.photo } %>&gt;&lt;/a&gt; <% end %>
 <% end -%>
