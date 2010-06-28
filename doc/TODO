@@ -31,7 +31,8 @@ Link to photos using player's photosurl rather than by ID
 Determine photo locations from correct guess comments
   Determine most-posted locations
 Determine neighborhoods from locations and geocodes
-  Identify mayors and scourges of neighborhoods
+  Identify mayors (most posts), tycoons (most guesses) and bosses (both) of
+  neighborhoods
 In the list of unfounds, highlight photos which if guessed would enter the
   longest-to-find list
 Track old usernames
