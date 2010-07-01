@@ -34,7 +34,7 @@ In Guess Where SF:
 <tr>
 <% if @first_guess -%><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @first_post -%><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
-<% if @place -%><td><%= ordinal @place %> place<% if @place <= 10 -%>!<% end -%></td><% end -%>
+<% if @oldest_guess -%><td><%= ordinal @oldest_guess_place %> place<% if @oldest_guess_place <= 10 -%>!<% end -%></td><% end -%>
 </tr>
 </table>
 

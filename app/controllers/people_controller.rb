@@ -166,7 +166,8 @@ class PeopleController < ApplicationController
       :order => 'guessed_at', :include => :photo
     @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
       :order => 'dateadded'
-    @oldest_guess, @oldest_guess_place = oldest_guess @person
+    @oldest_guess = Guess.oldest_by @person
+    @oldest_guess_place = Guess.oldest_place_of @person
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
@@ -213,19 +214,6 @@ class PeopleController < ApplicationController
     return place, tied
   end
   private :standing
-
-  def oldest_guess(person)
-    @oldest_guess = nil
-    @place = nil
-    Guess.longest.each_with_index do |guess, i|
-      if guess.person == person
-	@oldest_guess = guess
-        @place = i + 1
-        break
-      end
-    end
-    return @oldest_guess, @place
-  end
 
   caches_page :guesses
   def guesses

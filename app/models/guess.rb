@@ -24,6 +24,19 @@ class Guess < ActiveRecord::Base
       :limit => 10
   end
 
+  def self.oldest_by(person)
+    guess = first :include => [ :person, { :photo => :person } ],
+      :conditions => [ "guesses.person_id = ?", person.id ],
+      :order => "guesses.guessed_at - photos.dateadded desc"
+    guess.years_old >= 1 ? guess : nil
+  end
+
+  def self.oldest_place_of(person)
+    places = count :include => :photo,
+      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]
+    places + 1
+  end
+
   def years_old
     ((guessed_at - photo.dateadded).to_i / (365.24 * 24 * 60 * 60)).truncate
   end
