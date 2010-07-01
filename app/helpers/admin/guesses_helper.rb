@@ -11,14 +11,9 @@ module Admin::GuessesHelper
     end
   end
 
-  def years_old(guess)
-    ((guess.guessed_at - guess.photo.dateadded).to_i /
-      (365.24 * 24 * 60 * 60)).truncate
-  end
-
   def star_image(guess)
     path =
-      case years_old guess
+      case guess.years_old
       when 1
 	'/images/star-padded-bronze.gif'
       when 2

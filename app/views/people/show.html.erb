@@ -24,14 +24,17 @@ In Guess Where SF:
 <tr>
 <% if @first_guess -%><th>First guess</th><% end -%>
 <% if @first_post -%><th>First post</th><% end -%>
+<% if @oldest_guess -%><th>Oldest guess</th><% end -%>
 </tr>
 <tr>
 <% if @first_guess -%><td><a href="<%= show_photo_path @first_guess.photo %>"><img src="<%= url_for_flickr_image @first_guess.photo, 't' %>"/></a><br/></td><% end -%>
 <% if @first_post -%><td><a href="<%= show_photo_path @first_post %>"><img src="<%= url_for_flickr_image @first_post, 't' %>"/></a><br/></td><% end -%>
+<% if @oldest_guess -%><td><a href="<%= show_photo_path @oldest_guess.photo %>"><img src="<%= url_for_flickr_image @oldest_guess.photo, 't' %>"/></a><br/></td><% end -%>
 </tr>
 <tr>
 <% if @first_guess -%><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @first_post -%><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
+<% if @place -%><td><%= ordinal @place %> place<% if @place <= 10 -%>!<% end -%></td><% end -%>
 </tr>
 </table>
 

@@ -24,4 +24,8 @@ class Guess < ActiveRecord::Base
       :limit => 10
   end
 
+  def years_old
+    ((guessed_at - photo.dateadded).to_i / (365.24 * 24 * 60 * 60)).truncate
+  end
+
 end
