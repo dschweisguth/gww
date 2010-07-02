@@ -34,7 +34,11 @@ In Guess Where SF:
 <tr id="firsts-captions">
 <% if @first_guess -%><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @first_post -%><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
-<% if @oldest_guess -%><td>Guessed after<br/><%= @oldest_guess.time_elapsed.sub /(days?,) /, '\1<br/>' %><br/><% if @oldest_guess.years_old >= 1 -%><img height="15" width="15" src="<%= star_image @oldest_guess %>"/> <% end -%><%= ordinal @oldest_guess_place %> place<% if @oldest_guess_place <= 10 -%>!<% end -%></td><% end -%>
+<% if @oldest_guess -%><td>
+  Guessed after<br/>
+  <%= @oldest_guess.time_elapsed %><br/>
+  <% if @oldest_guess.years_old >= 1 -%><img height="15" width="15" src="<%= star_image @oldest_guess %>"/> <% end -%><% if @oldest_guess_place <= 10 -%><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end -%><%= ordinal @oldest_guess_place %> place<% if @oldest_guess_place <= 10 -%>!</a><% end -%>
+</td><% end -%>
 </tr>
 </table>
 
