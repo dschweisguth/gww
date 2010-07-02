@@ -31,10 +31,10 @@ In Guess Where SF:
 <% if @first_post -%><td><a href="<%= show_photo_path @first_post %>"><img src="<%= url_for_flickr_image @first_post, 't' %>"/></a><br/></td><% end -%>
 <% if @oldest_guess -%><td><a href="<%= show_photo_path @oldest_guess.photo %>"><img src="<%= url_for_flickr_image @oldest_guess.photo, 't' %>"/></a><br/></td><% end -%>
 </tr>
-<tr>
+<tr id="firsts-captions">
 <% if @first_guess -%><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @first_post -%><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
-<% if @oldest_guess -%><td><%= ordinal @oldest_guess_place %> place<% if @oldest_guess_place <= 10 -%>!<% end -%></td><% end -%>
+<% if @oldest_guess -%><td>Guessed after<br/><%= @oldest_guess.time_elapsed.sub /days, /, 'days,<br/>' %>;<br/><% if @oldest_guess.years_old >= 1 -%><img height="15" width="15" src="<%= star_image @oldest_guess %>"/> <% end -%><%= ordinal @oldest_guess_place %> place<% if @oldest_guess_place <= 10 -%>!<% end -%></td><% end -%>
 </tr>
 </table>
 

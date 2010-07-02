@@ -112,6 +112,10 @@ th {
   padding-right: 15px;
 }
 
+#firsts-captions td {
+  vertical-align: top;
+}
+
 .unconfirmed {
   background-color: #ffcc33;
 }
