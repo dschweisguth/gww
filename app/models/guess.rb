@@ -71,14 +71,14 @@ class Guess < ActiveRecord::Base
       months += 12
       years -= 1
     end
-    time_elapsed = []
-    time_elapsed.push "#{years}&nbsp;years" if years > 0
-    time_elapsed.push "#{months}&nbsp;months" if months > 0
-    time_elapsed.push "#{days}&nbsp;days" if days > 0
-    time_elapsed.push "#{hours}&nbsp;hours" if hours > 0
-    time_elapsed.push "#{minutes}&nbsp;minutes" if minutes > 0
-    time_elapsed.push "#{seconds}&nbsp;seconds" if seconds > 0
-    time_elapsed.join ", "
+    time_elapsed = %w(years months days hours minutes seconds) \
+      .each_with_object([]) do |name, list|
+        value = eval name
+	if value > 0
+	  list.push "#{value}&nbsp;#{value == 1 ? name.singularize : name}"
+	end
+      end
+    time_elapsed.join ', '
   end
 
 end
