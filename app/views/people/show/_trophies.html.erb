@@ -22,7 +22,7 @@
   <% if fastest_guess %><td>
     Guessed after<br/>
     <%= fastest_guess.seconds_old %> seconds<br/>
-    <img class="star" height="15" width="15" src="/images/star-gold.gif"/> <% if fastest_guess_place <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal fastest_guess_place %> place<% if fastest_guess_place <= 10 %>!</a><% end -%>
+    <img class="star" height="15" width="15" src="<%= fastest_star_image fastest_guess %>"/> <% if fastest_guess_place <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal fastest_guess_place %> place<% if fastest_guess_place <= 10 %>!</a><% end -%>
   </td><% end %>
 </tr>
 </table>

@@ -36,4 +36,13 @@ module PeopleHelper
     end
   end
 
+  def fastest_star_image(guess)
+    seconds_old = guess.seconds_old
+    if seconds_old <= 10
+      '/images/star-gold.gif'
+    elsif seconds_old <= 60
+      '/images/star-silver.gif'
+    end
+  end
+
 end
