@@ -1,6 +1,6 @@
 <%= render :partial => 'person_breadcrumbs' %>
 <hr/>
-<h1><%= @photo_ids.length %> photos commented on by <%=h @person.username %></h1>
+<h1><%= pluralize @photo_ids.length, 'photo' %> commented on by <%=h @person.username %></h1>
 
 <table class="dark">
   <tr>
@@ -9,7 +9,7 @@
     <th>posted by</th>
     <th>found by</th>
   </tr>  
-<% @photos.each_with_index do |photo, photo_index| %>
+<% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
     <td class="row-number"><%= @photos.offset + photo_index + 1 %>.</td>
     <td><%= link_to_flickr_photo photo %></td>
@@ -21,10 +21,10 @@
     <td><b><%= photo.game_status %></b></td>
     <% end -%>
   </tr>
-<% end %>
+<% end -%>
 </table>
-<br/>
 
+<br/>
 <%= will_paginate @photos %>
 <hr/>
 <%= render :partial => 'person_breadcrumbs' %>

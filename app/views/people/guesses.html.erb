@@ -1,6 +1,6 @@
 <%= render :partial => 'person_breadcrumbs' %>
 <hr/>
-<h1><%= @guesses.length %> guesses by <%=h @person.username %></h1>
+<h1><%= pluralize @guesses.length, 'guess' %> by <%=h @person.username %></h1>
 
 <table class="dark">
   <tr>
@@ -10,7 +10,7 @@
     <th>date added</th>
     <th>date guessed</th>
   </tr>  
-<% @guesses.each_with_index do |guess, guess_index| %>
+<% @guesses.each_with_index do |guess, guess_index| -%>
   <tr>
     <td class="row-number"><%= guess_index + 1 %>.</td>
     <% if guess.photo.person_id != 0 -%>
@@ -25,7 +25,7 @@
     <td><%= local_date guess.photo.dateadded %></td>
     <td><%= local_date guess.guessed_at %></td>
   </tr>
-<% end %>
+<% end -%>
 </table>
 
 <hr/>
