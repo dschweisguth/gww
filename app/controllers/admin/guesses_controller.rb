@@ -50,6 +50,9 @@ class Admin::GuessesController < ApplicationController
     @member_count = updates[0].member_count
     @total_single_guessers = people_with @people_by_score, 1
 
+    @html = CGI.escapeHTML \
+      render_to_string :partial => 'admin/guesses/report/html'
+
   end
 
   def people_with(people_by_score, score)

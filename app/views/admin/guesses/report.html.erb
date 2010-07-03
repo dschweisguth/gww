@@ -4,34 +4,7 @@
 
 <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a><br/><br/>
 
-<textarea name="textfield" onFocus="this.select();" rows="50" style="width: 800px;" wrap="virtual">
-&lt;b&gt;updated <%= @report_date.strftime '%A, %B %d, %I %p' %>&lt;/b&gt;
-
-<%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
-  { :change_name => 'new guess', :change_verb => '',
-    :changes => @guesses, :people => @guessers, :attr => :guesses,
-    :stars => true } %><% -%>
-<%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
-  { :change_name => 'photo', :change_verb => ' revealed',
-    :changes => @revelations, :people => @revealers, :attr => :revelations,
-    :stars => false } %><% -%>
-<%= render :partial => 'admin/guesses/report/high_scorers',
-  :object => @weekly_high_scorers, :locals => { :period => 'week' } -%>
-<%= render :partial => 'admin/guesses/report/high_scorers',
-  :object => @monthly_high_scorers, :locals => { :period => 'month' } -%>
-
-<%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still &lt;a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos&lt;/a&gt; in the pool.
-
-<%= @total_correct_guessers %> people have made correct guesses. <%= @total_posters_only %> people have put at least one photo in the pool but not guessed any photos correctly. That means that at least <%= @total_participants %> of our <%= pluralize @member_count, 'member' %> have participated in the game.
-
-Since the beginning of the game, <%= @total_single_guessers %> people have guessed one photo correctly. Here are the <%= @total_correct_guessers - @total_single_guessers %> people who've correctly guessed two or more photos. In parentheses following each name is the number of photos that person has put in the pool.
-
-<% @people_by_score.each do |people_with_score| -%>
-<% next if people_with_score[:score] <= 1 -%>
-&lt;b&gt;<%= people_with_score[:score] %>&lt;/b&gt; - <% people_with_score[:people].each_with_index do |person, i| -%>&lt;a href="<%= show_person_url person %>"&gt;<%=h escape_username person.username %>&lt;/a&gt; (<%= person[:posts] %>)<% if i < people_with_score[:people].length - 1 -%>, <% end -%><% end %>
-<% end -%>
-
-</textarea>
+<textarea name="textfield" onFocus="this.select();" rows="50" style="width: 800px;" wrap="virtual"><%= @html %></textarea>
 
 <hr/>
 <%= render :partial => 'admin/breadcrumbs' %>
