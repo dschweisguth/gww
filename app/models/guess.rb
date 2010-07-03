@@ -28,7 +28,7 @@ class Guess < ActiveRecord::Base
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ "guesses.person_id = ?", person.id ],
       :order => "guesses.guessed_at - photos.dateadded desc"
-    guess.years_old >= 1 ? guess : nil
+    guess && guess.years_old >= 1 ? guess : nil
   end
 
   def self.oldest_place_of(person)
@@ -45,7 +45,7 @@ class Guess < ActiveRecord::Base
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ "guesses.person_id = ?", person.id ],
       :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
-    guess.seconds_old <= 60 ? guess : nil
+    guess && guess.seconds_old <= 60 ? guess : nil
   end
 
   def self.fastest_place_of(person)
