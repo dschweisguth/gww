@@ -20,7 +20,7 @@ In Guess Where SF:
   :locals => { :high_scorers => @monthly_high_scorers, :period => 'month' } %>
 <br/>
 
-<table id="firsts">
+<table id="trophies">
 <tr>
 <% if @first_guess -%><th>First guess</th><% end -%>
 <% if @first_post -%><th>First post</th><% end -%>
@@ -33,7 +33,7 @@ In Guess Where SF:
 <% if @oldest_guess -%><td><a href="<%= show_photo_path @oldest_guess.photo %>"><img src="<%= url_for_flickr_image @oldest_guess.photo, 't' %>"/></a><br/></td><% end -%>
 <% if @fastest_guess -%><td><a href="<%= show_photo_path @fastest_guess.photo %>"><img src="<%= url_for_flickr_image @fastest_guess.photo, 't' %>"/></a><br/></td><% end -%>
 </tr>
-<tr id="firsts-captions">
+<tr id="trophies-captions">
 <% if @first_guess -%><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @first_post -%><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
 <% if @oldest_guess -%><td>
