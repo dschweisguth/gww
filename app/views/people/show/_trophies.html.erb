@@ -4,12 +4,16 @@
   <% if first_post %><th>First post</th><% end %>
   <% if oldest_guess %><th>Oldest guess</th><% end %>
   <% if fastest_guess %><th>Fastest guess</th><% end %>
+  <% if oldest_guess_by_other %><th>Longest-lasting post</th><% end %>
+  <% if fastest_guess_by_other %><th>Fastest-guessed post</th><% end %>
 </tr>
 <tr>
   <% if first_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => first_guess.photo } %></td><% end %>
   <% if first_post %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => first_post } %></td><% end %>
   <% if oldest_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => oldest_guess.photo } %></td><% end %>
   <% if fastest_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => fastest_guess.photo } %></td><% end %>
+  <% if oldest_guess_by_other %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => oldest_guess_by_other.photo } %></td><% end %>
+  <% if fastest_guess_by_other %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => fastest_guess_by_other.photo } %></td><% end %>
 </tr>
 <tr id="trophies-captions">
   <% if first_guess %><td><%= first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
@@ -20,9 +24,19 @@
     <% if oldest_guess.years_old >= 1 %><img class="star" height="15" width="15" src="<%= oldest_star_image oldest_guess %>"/> <% end %><span class="star"><% if oldest_guess_place <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal oldest_guess_place %> place<% if oldest_guess_place <= 10 %>!</a></span><% end -%>
   </td><% end %>
   <% if fastest_guess %><td>
-    Guessed after<br/>
+    Guessed in<br/>
     <%= fastest_guess.seconds_old %> seconds<br/>
     <img class="star" height="15" width="15" src="<%= fastest_star_image fastest_guess %>"/> <% if fastest_guess_place <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal fastest_guess_place %> place<% if fastest_guess_place <= 10 %>!</a><% end -%>
+  </td><% end %>
+  <% if oldest_guess_by_other %><td>
+    Guessed after<br/>
+    <%= oldest_guess_by_other.ymd_elapsed %><br/>
+    <% if oldest_guess_by_other.years_old >= 1 %><img class="star" height="15" width="15" src="<%= oldest_star_image oldest_guess_by_other %>"/> <% end %><span class="star"><% if oldest_guess_by_other_place <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal oldest_guess_by_other_place %> place<% if oldest_guess_by_other_place <= 10 %>!</a></span><% end -%>
+  </td><% end %>
+  <% if fastest_guess_by_other %><td>
+    Guessed in<br/>
+    <%= fastest_guess_by_other.seconds_old %> seconds<br/>
+    <img class="star" height="15" width="15" src="<%= fastest_star_image fastest_guess_by_other %>"/> <% if fastest_guess_by_other_place <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal fastest_guess_by_other_place %> place<% if fastest_guess_by_other_place <= 10 %>!</a><% end -%>
   </td><% end %>
 </tr>
 </table>

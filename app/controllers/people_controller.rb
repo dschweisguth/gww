@@ -166,10 +166,20 @@ class PeopleController < ApplicationController
       :order => 'guessed_at', :include => :photo
     @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
       :order => 'dateadded'
+    # TODO only call place method if there's a guess
+    # TODO fix deprecation warning in log
     @oldest_guess = Guess.oldest_by @person
     @oldest_guess_place = Guess.oldest_place_of @person
     @fastest_guess = Guess.fastest_by @person
     @fastest_guess_place = Guess.fastest_place_of @person
+    @oldest_guess_by_other = Guess.oldest_by_other_of_photo_by @person
+    @oldest_guess_by_other_place =
+      Guess.oldest_by_other_place_of_photo_by @person
+    @fastest_guess_by_other = Guess.fastest_by_other_of_photo_by @person
+    @fastest_guess_by_other_place =
+      Guess.fastest_by_other_place_of_photo_by @person
+logger.info '################################'
+logger.info @oldest_guess_by_other
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }

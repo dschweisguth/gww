@@ -37,6 +37,19 @@ class Guess < ActiveRecord::Base
     places + 1
   end
 
+  def self.oldest_by_other_of_photo_by(person)
+    guess = first :include => [ :person, { :photo => :person } ],
+      :conditions => [ "photos.person_id = ?", person.id ],
+      :order => "guesses.guessed_at - photos.dateadded desc"
+    guess && guess.years_old >= 1 ? guess : nil
+  end
+
+  def self.oldest_by_other_place_of_photo_by(person)
+    places = count :include => :photo,
+      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]
+    places + 1
+  end
+
   def years_old
     (seconds_old / (365.24 * 24 * 60 * 60)).truncate
   end
@@ -53,6 +66,24 @@ class Guess < ActiveRecord::Base
       :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]
     places + 1
   end
+
+  def self.fastest_by_other_of_photo_by(person)
+    guess = first :include => [ :person, { :photo => :person } ],
+      :conditions => [ "photos.person_id = ?", person.id ],
+      :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
+    guess && guess.seconds_old <= 60 ? guess : nil
+  end
+
+  def self.fastest_by_other_place_of_photo_by(person)
+    places = count :include => :photo,
+      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]
+    places + 1
+  end
+
+  # TODO refactor above methods
+  # TODO line up trophy stars
+  # TODO put relevant information in each alt+title
+  # TODO put alt+title in one partial
 
   def seconds_old
     (guessed_at - photo.dateadded).to_i
