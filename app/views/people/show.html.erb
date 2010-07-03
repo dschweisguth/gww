@@ -22,13 +22,9 @@ In Guess Where SF:
 
 <%= render :partial => 'people/show/trophies',
   :locals => { :first_guess => @first_guess, :first_post => @first_post,
-    :oldest_guess => @oldest_guess, :oldest_guess_place => @oldest_guess_place,
-    :fastest_guess => @fastest_guess,
-    :fastest_guess_place => @fastest_guess_place,
+    :oldest_guess => @oldest_guess, :fastest_guess => @fastest_guess,
     :oldest_guess_by_other => @oldest_guess_by_other,
-    :oldest_guess_by_other_place => @oldest_guess_by_other_place,
-    :fastest_guess_by_other => @fastest_guess_by_other,
-    :fastest_guess_by_other_place => @fastest_guess_by_other_place } %>
+    :fastest_guess_by_other => @fastest_guess_by_other } %>
 
 <%= render :partial => 'people/show/guesses',
   :locals => { :person => @person, :posters => @posters } %>

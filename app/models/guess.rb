@@ -28,26 +28,24 @@ class Guess < ActiveRecord::Base
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ "guesses.person_id = ?", person.id ],
       :order => "guesses.guessed_at - photos.dateadded desc"
-    guess && guess.years_old >= 1 ? guess : nil
-  end
-
-  def self.oldest_place_of(person)
-    places = count :include => :photo,
-      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]
-    places + 1
+    if ! guess || guess.years_old < 1
+      return nil
+    end
+    guess[:place] = count(:include => :photo,
+      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]) + 1
+    guess
   end
 
   def self.oldest_by_other_of_photo_by(person)
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ "photos.person_id = ?", person.id ],
       :order => "guesses.guessed_at - photos.dateadded desc"
-    guess && guess.years_old >= 1 ? guess : nil
-  end
-
-  def self.oldest_by_other_place_of_photo_by(person)
-    places = count :include => :photo,
-      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]
-    places + 1
+    if ! guess || guess.years_old < 1
+      return nil
+    end
+    guess[:place] = count(:include => :photo,
+      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]) + 1
+    guess
   end
 
   def years_old
@@ -58,26 +56,24 @@ class Guess < ActiveRecord::Base
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ "guesses.person_id = ?", person.id ],
       :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
-    guess && guess.seconds_old <= 60 ? guess : nil
-  end
-
-  def self.fastest_place_of(person)
-    places = count :include => :photo,
-      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]
-    places + 1
+    if ! guess || guess.seconds_old > 60
+      return nil
+    end
+    guess[:place] = count(:include => :photo,
+      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]) + 1
+    guess
   end
 
   def self.fastest_by_other_of_photo_by(person)
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ "photos.person_id = ?", person.id ],
       :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
-    guess && guess.seconds_old <= 60 ? guess : nil
-  end
-
-  def self.fastest_by_other_place_of_photo_by(person)
-    places = count :include => :photo,
-      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]
-    places + 1
+    if ! guess || guess.seconds_old > 60
+      return nil
+    end
+    guess[:place] = count(:include => :photo,
+      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]) + 1
+    guess
   end
 
   # TODO refactor above methods
