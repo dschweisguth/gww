@@ -1,0 +1,28 @@
+<table id="trophies">
+<tr>
+<% if first_guess -%><th>First guess</th><% end -%>
+<% if first_post -%><th>First post</th><% end -%>
+<% if oldest_guess -%><th>Oldest guess</th><% end -%>
+<% if fastest_guess -%><th>Fastest guess</th><% end -%>
+</tr>
+<tr>
+<% if first_guess -%><td><a href="<%= show_photo_path first_guess.photo %>"><img src="<%= url_for_flickr_image first_guess.photo, 't' %>"/></a><br/></td><% end -%>
+<% if first_post -%><td><a href="<%= show_photo_path first_post %>"><img src="<%= url_for_flickr_image first_post, 't' %>"/></a><br/></td><% end -%>
+<% if oldest_guess -%><td><a href="<%= show_photo_path oldest_guess.photo %>"><img src="<%= url_for_flickr_image oldest_guess.photo, 't' %>"/></a><br/></td><% end -%>
+<% if fastest_guess -%><td><a href="<%= show_photo_path fastest_guess.photo %>"><img src="<%= url_for_flickr_image fastest_guess.photo, 't' %>"/></a><br/></td><% end -%>
+</tr>
+<tr id="trophies-captions">
+<% if first_guess -%><td><%= first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end -%>
+<% if first_post -%><td><%= first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end -%>
+<% if oldest_guess -%><td>
+  Guessed after<br/>
+  <%= oldest_guess.ymd_elapsed %><br/>
+  <% if oldest_guess.years_old >= 1 -%><img class="star" height="15" width="15" src="<%= oldest_star_image oldest_guess %>"/> <% end -%><span class="star"><% if oldest_guess_place <= 10 -%><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end -%><%= ordinal oldest_guess_place %> place<% if oldest_guess_place <= 10 -%>!</a></span><% end -%>
+</td><% end -%>
+<% if fastest_guess -%><td>
+  Guessed after<br/>
+  <%= fastest_guess.seconds_old %> seconds<br/>
+  <img class="star" height="15" width="15" src="/images/star-gold.gif"/> <% if fastest_guess_place <= 10 -%><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end -%><%= ordinal fastest_guess_place %> place<% if fastest_guess_place <= 10 -%>!</a><% end -%>
+</td><% end -%>
+</tr>
+</table>
