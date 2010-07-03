@@ -1,0 +1,10 @@
+<b><%=h person.username %> has correctly guessed <%=h guesses.length %> photos</b><br/>
+
+<% posters.each do |poster| -%>
+<%=  poster[:guesses].length %> <%= singularize 'were', poster[:guesses].length %> posted by <%= link_to_person poster %>:
+<%   poster[:guesses].each_with_index do |guess, i| -%>
+<%=    link_to i + 1, show_photo_path(guess.photo) %>
+<%   end -%>
+<br/>
+<% end -%>
+<br/>

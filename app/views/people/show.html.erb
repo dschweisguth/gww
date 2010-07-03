@@ -26,16 +26,8 @@ In Guess Where SF:
     :fastest_guess => @fastest_guess,
     :fastest_guess_place => @fastest_guess_place } %>
 
-<b><%=h @person.username %> has correctly guessed <%=h @guesses.length %> photos</b><br/>
-
-<% @posters.each do |poster| -%>
-<%=  poster[:guesses].length %> <%= singularize 'were', poster[:guesses].length %> posted by <%= link_to_person poster %>:
-<%   poster[:guesses].each_with_index do |guess, i| -%>
-<%=    link_to i + 1, show_photo_path(guess.photo) %>
-<%   end -%>
-<br/>
-<% end -%>
-<br/>
+<%= render :partial => 'people/show/guesses',
+  :locals => { :person => @person, :posters => @posters } %>
 
 <%= render :partial => 'people/show/posts',
   :locals => { :person => @person, :unfound_photos => @unfound_photos,
