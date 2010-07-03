@@ -168,6 +168,8 @@ class PeopleController < ApplicationController
       :order => 'dateadded'
     @oldest_guess = Guess.oldest_by @person
     @oldest_guess_place = Guess.oldest_place_of @person
+    @fastest_guess = Guess.fastest_by @person
+    @fastest_guess_place = Guess.fastest_place_of @person
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }

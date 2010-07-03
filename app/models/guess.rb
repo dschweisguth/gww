@@ -38,19 +38,42 @@ class Guess < ActiveRecord::Base
   end
 
   def years_old
-    ((guessed_at - photo.dateadded).to_i / (365.24 * 24 * 60 * 60)).truncate
+    (seconds_old / (365.24 * 24 * 60 * 60)).truncate
+  end
+
+  def self.fastest_by(person)
+    guess = first :include => [ :person, { :photo => :person } ],
+      :conditions => [ "guesses.person_id = ?", person.id ],
+      :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
+    guess.seconds_old <= 60 ? guess : nil
+  end
+
+  def self.fastest_place_of(person)
+    places = count :include => :photo,
+      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]
+    places + 1
+  end
+
+  def seconds_old
+    (guessed_at - photo.dateadded).to_i
   end
 
   def time_elapsed
-    begin_date = photo.dateadded
-    end_date = guessed_at
+    formatted_age_by_period %w(years months days hours minutes seconds)
+  end
 
-    years = end_date.year - begin_date.year
-    months = end_date.month - begin_date.month
-    days = end_date.day - begin_date.day
-    hours = end_date.hour - begin_date.hour
-    minutes = end_date.min - begin_date.min
-    seconds = end_date.sec - begin_date.sec
+  def ymd_elapsed
+    formatted_age_by_period %w(years months days)
+  end
+
+  def formatted_age_by_period(periods)
+    photo_dateadded = photo.dateadded
+    years = guessed_at.year - photo_dateadded.year
+    months = guessed_at.month - photo_dateadded.month
+    days = guessed_at.day - photo_dateadded.day
+    hours = guessed_at.hour - photo_dateadded.hour
+    minutes = guessed_at.min - photo_dateadded.min
+    seconds = guessed_at.sec - photo_dateadded.sec
     if seconds < 0
       seconds += 60
       minutes -= 1
@@ -71,8 +94,7 @@ class Guess < ActiveRecord::Base
       months += 12
       years -= 1
     end
-    time_elapsed = %w(years months days hours minutes seconds) \
-      .each_with_object([]) do |name, list|
+    time_elapsed = periods.each_with_object([]) do |name, list|
         value = eval name
 	if value > 0
 	  list.push "#{value}&nbsp;#{value == 1 ? name.singularize : name}"

@@ -25,14 +25,14 @@ module PeopleHelper
 
   end
 
-  def star_image(guess)
+  def oldest_star_image(guess)
     case guess.years_old
     when 1
       '/images/star-bronze.gif'
     when 2
       '/images/star-silver.gif'
     else
-      '/images/star-gold-animated.gif'
+      '/images/star-gold.gif'
     end
   end
 
