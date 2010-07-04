@@ -25,21 +25,19 @@ class Guess < ActiveRecord::Base
   end
 
   def self.oldest(guesser)
-    first_guess_with_place(guesser, "guesses.person_id = ?",
+    first_guess_with_place guesser, "guesses.person_id = ?",
       "guesses.guessed_at - photos.dateadded desc",
       "(guesses.guessed_at - photos.dateadded) > " \
 	"(select max(g.guessed_at - p.dateadded) from guesses g, photos p " \
-	  "where g.person_id = ? and g.photo_id = p.id )") \
-      { |guess| guess.years_old >= 1 }
+	  "where g.person_id = ? and g.photo_id = p.id )"
   end
 
   def self.longest_lasting(poster)
-    first_guess_with_place(poster, "photos.person_id = ?",
+    first_guess_with_place poster, "photos.person_id = ?",
       "guesses.guessed_at - photos.dateadded desc",
       "(guesses.guessed_at - photos.dateadded) > " \
 	"(select max(g.guessed_at - p.dateadded) from guesses g, photos p " \
-	  "where g.photo_id = p.id and p.person_id = ?)") \
-      { |guess| guess.years_old >= 1 }
+	  "where g.photo_id = p.id and p.person_id = ?)"
   end
 
   def years_old
@@ -47,7 +45,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.fastest(guesser)
-    first_guess_with_place(guesser, "guesses.person_id = ?",
+    first_guess_with_place guesser, "guesses.person_id = ?",
       "if(guesses.guessed_at - photos.dateadded > 0, " \
 	"guesses.guessed_at - photos.dateadded, 3600)",
       "if(guesses.guessed_at - photos.dateadded > 0, " \
@@ -55,12 +53,11 @@ class Guess < ActiveRecord::Base
 	  "(select min(if(g.guessed_at - p.dateadded > 0, " \
 	    "g.guessed_at - p.dateadded, 3600)) " \
 	  "from guesses g, photos p " \
-	  "where g.person_id = ? and g.photo_id = p.id)") \
-      { |guess| guess.seconds_old <= 60 }
+	  "where g.person_id = ? and g.photo_id = p.id)"
   end
 
   def self.shortest_lasting(poster)
-    first_guess_with_place(poster, "photos.person_id = ?",
+    first_guess_with_place poster, "photos.person_id = ?",
       "if(guesses.guessed_at - photos.dateadded > 0, " \
 	"guesses.guessed_at - photos.dateadded, 3600)",
       "if(guesses.guessed_at - photos.dateadded > 0, " \
@@ -68,14 +65,13 @@ class Guess < ActiveRecord::Base
 	  "(select min(if(g.guessed_at - p.dateadded > 0, " \
 	    "g.guessed_at - p.dateadded, 3600)) " \
 	  "from guesses g, photos p " \
-	  "where g.photo_id = p.id and p.person_id = ?)") \
-      { |guess| guess.seconds_old <= 60 }
+	  "where g.photo_id = p.id and p.person_id = ?)"
   end
 
   def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions => [ conditions, person.id ], :order => order
-    if ! guess || ! yield(guess)
+    if ! guess
       return nil
     end
     guess[:place] = count(:include => :photo,
