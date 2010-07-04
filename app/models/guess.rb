@@ -133,4 +133,28 @@ class Guess < ActiveRecord::Base
   end
   private :formatted_age_by_period
 
+  def star_for_age
+    age = years_old
+    if age >= 3
+      :gold
+    elsif age >= 2
+      :silver
+    elsif age >= 1
+      :bronze
+    else
+      nil
+    end
+  end
+
+  def star_for_speed
+    age = seconds_old
+    if age <= 10
+      :gold
+    elsif age <= 60
+      :silver
+    else
+      nil
+    end
+  end
+
 end

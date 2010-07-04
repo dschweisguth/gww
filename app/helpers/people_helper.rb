@@ -25,43 +25,34 @@ module PeopleHelper
 
   end
 
-  def oldest_star_image(guess)
-    case guess.years_old
-    when 1
+  def image_for_star(star)
+    case star
+    when :bronze
       '/images/star-bronze.gif'
-    when 2
+    when :silver
       '/images/star-silver.gif'
-    else
+    when :gold
       '/images/star-gold.gif'
     end
   end
 
-  def oldest_star_alt(guess)
-    case guess.years_old
-    when 1
-      'Bronze star'
-    when 2
-      'Silver star'
-    else
-      'Gold star'
+  def alt_for_star_for_age(star)
+    case star
+    when :bronze
+      'Unfound for 1 year or more'
+    when :silver
+      'Unfound for 2 years or more'
+    when :gold
+      'Unfound for 3 years or more'
     end
   end
 
-  def fastest_star_image(guess)
-    seconds_old = guess.seconds_old
-    if seconds_old <= 10
-      '/images/star-gold.gif'
-    elsif seconds_old <= 60
-      '/images/star-silver.gif'
-    end
-  end
-
-  def fastest_star_alt(guess)
-    seconds_old = guess.seconds_old
-    if seconds_old <= 10
-      'Gold star'
-    elsif seconds_old <= 60
-      'Silver star'
+  def alt_for_star_for_speed(star)
+    case star
+    when :silver
+      'Guessed in less than a minute'
+    when :gold
+      'Guessed in less than 10 seconds'
     end
   end
 

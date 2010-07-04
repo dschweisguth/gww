@@ -15,17 +15,16 @@ module Admin::GuessesHelper
     link_to escape_username(person.username), show_person_url(person)
   end
 
-  def star_image(guess)
-    path =
-      case guess.years_old
-      when 1
+  def image_for_star(star)
+    path_to_url \
+      case star
+      when :bronze
 	'/images/star-padded-bronze.gif'
-      when 2
+      when :silver
 	'/images/star-padded-silver.gif'
-      else
+      when :gold
 	'/images/star-padded-gold-animated.gif'
       end
-    path_to_url path
   end
 
   def path_to_url(path)

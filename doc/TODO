@@ -5,6 +5,7 @@ Consider using resources, per for example
   http://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#M002142
 Update Rakefile?
 Use rake gems:install
+Star fast guesses in score report
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
