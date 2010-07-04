@@ -52,6 +52,9 @@ class Admin::GuessesController < ApplicationController
 
     @html = CGI.escapeHTML \
       render_to_string :partial => 'admin/guesses/report/topic_content'
+    @topic_content =
+      render_to_string(:partial => 'admin/guesses/report/topic_content') \
+        .gsub /$/, '<br/>'
 
   end
 
