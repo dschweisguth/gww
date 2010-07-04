@@ -53,4 +53,8 @@ module ApplicationHelper
     "http://#{ "farm#{photo.farm}." if ! photo.farm.empty? }static.flickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}#{ '_' + size if ! size.nil? }.jpg"
   end
 
+  def alt_and_title(value)
+    "alt=\"#{value}\" title=\"#{value}\""
+  end
+
 end
