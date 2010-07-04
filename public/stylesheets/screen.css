@@ -109,11 +109,11 @@ th {
 }
 
 #trophies td {
-  width: 120px;
-  padding-right: 15px;
+  width: 110px;
+  padding-right: 10px;
 }
 
-#trophies-captions td {
+#trophies-headers, #trophies-captions {
   vertical-align: top;
 }
 
