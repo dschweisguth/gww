@@ -84,7 +84,6 @@ class Guess < ActiveRecord::Base
   end
   private_class_method :first_guess_with_place
 
-  # TODO line up trophy stars
   # TODO put relevant information in each alt+title
   # TODO put alt+title in one partial
 
