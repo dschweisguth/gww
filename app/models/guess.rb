@@ -24,59 +24,50 @@ class Guess < ActiveRecord::Base
       :limit => 10
   end
 
-  def self.oldest_by(person)
-    guess = first :include => [ :person, { :photo => :person } ],
-      :conditions => [ "guesses.person_id = ?", person.id ],
-      :order => "guesses.guessed_at - photos.dateadded desc"
-    if ! guess || guess.years_old < 1
-      return nil
-    end
-    guess[:place] = count(:include => :photo,
-      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]) + 1
-    guess
+  def self.oldest_by(guesser)
+    first_guess_with_place(guesser, "guesses.person_id = ?",
+      "guesses.guessed_at - photos.dateadded desc",
+      "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )") \
+      { |guess| guess.years_old >= 1 }
   end
 
-  def self.oldest_by_other_of_photo_by(person)
-    guess = first :include => [ :person, { :photo => :person } ],
-      :conditions => [ "photos.person_id = ?", person.id ],
-      :order => "guesses.guessed_at - photos.dateadded desc"
-    if ! guess || guess.years_old < 1
-      return nil
-    end
-    guess[:place] = count(:include => :photo,
-      :conditions => [ "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]) + 1
-    guess
+  def self.oldest_by_other_of_photo_by(poster)
+    first_guess_with_place(poster, "photos.person_id = ?",
+      "guesses.guessed_at - photos.dateadded desc",
+      "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)") \
+      { |guess| guess.years_old >= 1 }
   end
 
   def years_old
     (seconds_old / (365.24 * 24 * 60 * 60)).truncate
   end
 
-  def self.fastest_by(person)
+  def self.fastest_by(guesser)
+    first_guess_with_place(guesser, "guesses.person_id = ?",
+      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
+      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id)") \
+      { |guess| guess.seconds_old <= 60 }
+  end
+
+  def self.fastest_by_other_of_photo_by(poster)
+    first_guess_with_place(poster, "photos.person_id = ?",
+      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
+      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)") \
+      { |guess| guess.seconds_old <= 60 }
+  end
+
+  def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = first :include => [ :person, { :photo => :person } ],
-      :conditions => [ "guesses.person_id = ?", person.id ],
-      :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
-    if ! guess || guess.seconds_old > 60
+      :conditions => [ conditions, person.id ], :order => order
+    if ! guess || ! yield(guess)
       return nil
     end
     guess[:place] = count(:include => :photo,
-      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )", person.id ]) + 1
+      :conditions => [ place_conditions, person.id ]) + 1
     guess
   end
+  private_class_method :first_guess_with_place
 
-  def self.fastest_by_other_of_photo_by(person)
-    guess = first :include => [ :person, { :photo => :person } ],
-      :conditions => [ "photos.person_id = ?", person.id ],
-      :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)"
-    if ! guess || guess.seconds_old > 60
-      return nil
-    end
-    guess[:place] = count(:include => :photo,
-      :conditions => [ "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)", person.id ]) + 1
-    guess
-  end
-
-  # TODO refactor above methods
   # TODO line up trophy stars
   # TODO put relevant information in each alt+title
   # TODO put alt+title in one partial
