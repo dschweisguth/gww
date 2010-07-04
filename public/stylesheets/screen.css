@@ -117,7 +117,7 @@ th {
   vertical-align: top;
 }
 
-#trophies .star {
+#trophies-places img, #trophies-places span {
   vertical-align: middle;
 }
 
