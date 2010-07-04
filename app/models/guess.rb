@@ -135,5 +135,6 @@ class Guess < ActiveRecord::Base
       end
     time_elapsed.join ', '
   end
+  private :formatted_age_by_period
 
 end
