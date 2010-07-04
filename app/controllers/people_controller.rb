@@ -166,7 +166,6 @@ class PeopleController < ApplicationController
       :order => 'guessed_at', :include => :photo
     @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
       :order => 'dateadded'
-    # TODO fix deprecation warning in log
     @oldest_guess = Guess.oldest @person
     @fastest_guess = Guess.fastest @person
     @longest_lasting_guess = Guess.longest_lasting @person
