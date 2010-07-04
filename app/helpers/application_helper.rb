@@ -53,10 +53,6 @@ module ApplicationHelper
     "http://#{ "farm#{photo.farm}." if ! photo.farm.empty? }static.flickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}#{ '_' + size if ! size.nil? }.jpg"
   end
 
-  def alt_and_title(value)
-    "alt=\"#{value}\" title=\"#{value}\""
-  end
-
   def titled_image_tag(src, alt_and_title, options = {})
     image_tag src,
       { :alt => alt_and_title, :title => alt_and_title }.merge(options)
