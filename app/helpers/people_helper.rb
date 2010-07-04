@@ -36,12 +36,32 @@ module PeopleHelper
     end
   end
 
+  def oldest_star_alt(guess)
+    case guess.years_old
+    when 1
+      'Bronze star'
+    when 2
+      'Silver star'
+    else
+      'Gold star'
+    end
+  end
+
   def fastest_star_image(guess)
     seconds_old = guess.seconds_old
     if seconds_old <= 10
       '/images/star-gold.gif'
     elsif seconds_old <= 60
       '/images/star-silver.gif'
+    end
+  end
+
+  def fastest_star_alt(guess)
+    seconds_old = guess.seconds_old
+    if seconds_old <= 10
+      'Gold star'
+    elsif seconds_old <= 60
+      'Silver star'
     end
   end
 

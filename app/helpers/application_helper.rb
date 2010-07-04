@@ -34,7 +34,7 @@ module ApplicationHelper
   end
 
   def link_to_person(person)
-    link_to person.username, show_person_path(person)
+    link_to h(person.username), show_person_path(person)
   end
 
   def link_to_photo(photo)
