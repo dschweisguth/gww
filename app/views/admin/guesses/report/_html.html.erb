@@ -21,5 +21,5 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 
 <% @people_by_score.each do |people_with_score| -%>
 <% next if people_with_score[:score] <= 1 -%>
-<b><%= people_with_score[:score] %></b> - <% people_with_score[:people].each_with_index do |person, i| -%><a href="<%= show_person_url person %>"><%=h escape_username person.username %></a> (<%= person[:posts] %>)<% if i < people_with_score[:people].length - 1 -%>, <% end -%><% end %>
+<b><%= people_with_score[:score] %></b> - <% people_with_score[:people].each_with_index do |person, i| %><%= link_to_person person %> (<%= person[:posts] %>)<% if i < people_with_score[:people].length - 1 %>, <% end %><% end %>
 <% end -%>

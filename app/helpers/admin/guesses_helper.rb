@@ -11,6 +11,10 @@ module Admin::GuessesHelper
     end
   end
 
+  def link_to_person(person)
+    link_to escape_username(person.username), show_person_url(person)
+  end
+
   def star_image(guess)
     path =
       case guess.years_old
