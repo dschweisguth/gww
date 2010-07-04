@@ -51,7 +51,7 @@ class Admin::GuessesController < ApplicationController
     @total_single_guessers = people_with @people_by_score, 1
 
     @html = CGI.escapeHTML \
-      render_to_string :partial => 'admin/guesses/report/html'
+      render_to_string :partial => 'admin/guesses/report/topic_content'
 
   end
 
