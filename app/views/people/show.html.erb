@@ -27,11 +27,13 @@ In Guess Where SF:
     :shortest_lasting_guess => @shortest_lasting_guess } %>
 
 <%= render :partial => 'people/show/guesses',
-  :locals => { :person => @person, :posters => @posters } %>
+  :locals => { :person => @person, :guesses => @guesses, :posters => @posters }
+  %>
 
 <%= render :partial => 'people/show/posts',
-  :locals => { :person => @person, :unfound_photos => @unfound_photos,
-    :revealed_photos => @revealed_photos, :guessers => @guessers } %>
+  :locals => { :person => @person, :posts => @posts,
+    :unfound_photos => @unfound_photos, :revealed_photos => @revealed_photos,
+    :guessers => @guessers } %>
 
 <hr/>
 <%= render :partial => 'breadcrumbs' %>
