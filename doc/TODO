@@ -1,3 +1,6 @@
+Review admin/guesses/report
+Use link_to_unless, link_to_unless_current, image_tag
+Use shorter form of link_to, url_for
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
