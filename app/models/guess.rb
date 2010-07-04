@@ -27,14 +27,18 @@ class Guess < ActiveRecord::Base
   def self.oldest_by(guesser)
     first_guess_with_place(guesser, "guesses.person_id = ?",
       "guesses.guessed_at - photos.dateadded desc",
-      "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id )") \
+      "(guesses.guessed_at - photos.dateadded) > " \
+	"(select max(g.guessed_at - p.dateadded) from guesses g, photos p " \
+	  "where g.person_id = ? and g.photo_id = p.id )") \
       { |guess| guess.years_old >= 1 }
   end
 
   def self.oldest_by_other_of_photo_by(poster)
     first_guess_with_place(poster, "photos.person_id = ?",
       "guesses.guessed_at - photos.dateadded desc",
-      "(guesses.guessed_at - photos.dateadded) > (select max(g.guessed_at - p.dateadded) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)") \
+      "(guesses.guessed_at - photos.dateadded) > " \
+	"(select max(g.guessed_at - p.dateadded) from guesses g, photos p " \
+	  "where g.photo_id = p.id and p.person_id = ?)") \
       { |guess| guess.years_old >= 1 }
   end
 
@@ -44,15 +48,27 @@ class Guess < ActiveRecord::Base
 
   def self.fastest_by(guesser)
     first_guess_with_place(guesser, "guesses.person_id = ?",
-      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
-      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id)") \
+      "if(guesses.guessed_at - photos.dateadded > 0, " \
+	"guesses.guessed_at - photos.dateadded, 3600)",
+      "if(guesses.guessed_at - photos.dateadded > 0, " \
+	"guesses.guessed_at - photos.dateadded, 3600) < " \
+	  "(select min(if(g.guessed_at - p.dateadded > 0, " \
+	    "g.guessed_at - p.dateadded, 3600)) " \
+	  "from guesses g, photos p " \
+	  "where g.person_id = ? and g.photo_id = p.id)") \
       { |guess| guess.seconds_old <= 60 }
   end
 
   def self.fastest_by_other_of_photo_by(poster)
     first_guess_with_place(poster, "photos.person_id = ?",
-      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
-      "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600) < (select min(if(g.guessed_at - p.dateadded > 0, g.guessed_at - p.dateadded, 3600)) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)") \
+      "if(guesses.guessed_at - photos.dateadded > 0, " \
+	"guesses.guessed_at - photos.dateadded, 3600)",
+      "if(guesses.guessed_at - photos.dateadded > 0, " \
+	"guesses.guessed_at - photos.dateadded, 3600) < " \
+	  "(select min(if(g.guessed_at - p.dateadded > 0, " \
+	    "g.guessed_at - p.dateadded, 3600)) " \
+	  "from guesses g, photos p " \
+	  "where g.photo_id = p.id and p.person_id = ?)") \
       { |guess| guess.seconds_old <= 60 }
   end
 
