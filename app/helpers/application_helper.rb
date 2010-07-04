@@ -57,4 +57,9 @@ module ApplicationHelper
     "alt=\"#{value}\" title=\"#{value}\""
   end
 
+  def titled_image_tag(src, alt_and_title, options = {})
+    image_tag src,
+      { :alt => alt_and_title, :title => alt_and_title }.merge(options)
+  end
+
 end
