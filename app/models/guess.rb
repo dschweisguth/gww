@@ -24,7 +24,7 @@ class Guess < ActiveRecord::Base
       :limit => 10
   end
 
-  def self.oldest_by(guesser)
+  def self.oldest(guesser)
     first_guess_with_place(guesser, "guesses.person_id = ?",
       "guesses.guessed_at - photos.dateadded desc",
       "(guesses.guessed_at - photos.dateadded) > " \
@@ -33,7 +33,7 @@ class Guess < ActiveRecord::Base
       { |guess| guess.years_old >= 1 }
   end
 
-  def self.oldest_by_other_of_photo_by(poster)
+  def self.longest_lasting(poster)
     first_guess_with_place(poster, "photos.person_id = ?",
       "guesses.guessed_at - photos.dateadded desc",
       "(guesses.guessed_at - photos.dateadded) > " \
@@ -46,7 +46,7 @@ class Guess < ActiveRecord::Base
     (seconds_old / (365.24 * 24 * 60 * 60)).truncate
   end
 
-  def self.fastest_by(guesser)
+  def self.fastest(guesser)
     first_guess_with_place(guesser, "guesses.person_id = ?",
       "if(guesses.guessed_at - photos.dateadded > 0, " \
 	"guesses.guessed_at - photos.dateadded, 3600)",
@@ -59,7 +59,7 @@ class Guess < ActiveRecord::Base
       { |guess| guess.seconds_old <= 60 }
   end
 
-  def self.fastest_by_other_of_photo_by(poster)
+  def self.shortest_lasting(poster)
     first_guess_with_place(poster, "photos.person_id = ?",
       "if(guesses.guessed_at - photos.dateadded > 0, " \
 	"guesses.guessed_at - photos.dateadded, 3600)",

@@ -167,10 +167,10 @@ class PeopleController < ApplicationController
     @first_post = Photo.first :conditions => [ 'person_id = ?', @person ],
       :order => 'dateadded'
     # TODO fix deprecation warning in log
-    @oldest_guess = Guess.oldest_by @person
-    @fastest_guess = Guess.fastest_by @person
-    @oldest_guess_by_other = Guess.oldest_by_other_of_photo_by @person
-    @fastest_guess_by_other = Guess.fastest_by_other_of_photo_by @person
+    @oldest_guess = Guess.oldest @person
+    @fastest_guess = Guess.fastest @person
+    @oldest_guess_by_other = Guess.longest_lasting @person
+    @fastest_guess_by_other = Guess.shortest_lasting @person
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
