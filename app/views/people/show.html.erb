@@ -23,8 +23,8 @@ In Guess Where SF:
 <%= render :partial => 'people/show/trophies',
   :locals => { :first_guess => @first_guess, :first_post => @first_post,
     :oldest_guess => @oldest_guess, :fastest_guess => @fastest_guess,
-    :oldest_guess_by_other => @oldest_guess_by_other,
-    :fastest_guess_by_other => @fastest_guess_by_other } %>
+    :longest_lasting_guess => @longest_lasting_guess,
+    :shortest_lasting_guess => @shortest_lasting_guess } %>
 
 <%= render :partial => 'people/show/guesses',
   :locals => { :person => @person, :posters => @posters } %>

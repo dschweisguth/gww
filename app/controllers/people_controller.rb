@@ -169,8 +169,8 @@ class PeopleController < ApplicationController
     # TODO fix deprecation warning in log
     @oldest_guess = Guess.oldest @person
     @fastest_guess = Guess.fastest @person
-    @oldest_guess_by_other = Guess.longest_lasting @person
-    @fastest_guess_by_other = Guess.shortest_lasting @person
+    @longest_lasting_guess = Guess.longest_lasting @person
+    @shortest_lasting_guess = Guess.shortest_lasting @person
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
