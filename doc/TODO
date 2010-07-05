@@ -1,4 +1,3 @@
-Use shorter form of link_to, url_for for named routes
 Update Rakefile?
 Use rake gems:install
 Star fast guesses in score report

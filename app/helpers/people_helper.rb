@@ -1,9 +1,8 @@
 module PeopleHelper
 
   def list_path(sorted_by)
-    list_people_path :sorted_by => sorted_by,
-      :order =>
-        sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
+    list_people_path sorted_by,
+      sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
   end
 
   def position(high_scorers, person)
