@@ -36,9 +36,7 @@ Install gem
 Install gems
 
     gem install rails
-    gem install mysql
-    gem install xml-simple
-    rake gems:install # to install will_paginate
+    rake gems:install
     > gem list
     actionmailer (2.3.5)
     actionpack (2.3.5)
