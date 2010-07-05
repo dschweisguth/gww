@@ -46,18 +46,26 @@ class Guess < ActiveRecord::Base
   # for consistency. Possibly setting the database timezone to UTC would be a
   # better solution.
 
+  GUESS_AGE =
+    'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)'
+  G_AGE = 'unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)'
+
   def self.oldest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'desc',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) > ' +
-	'(select max(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) from guesses g, photos p ' +
-	  'where g.person_id = ? and g.photo_id = p.id )'
+      "#{GUESS_AGE} > (select max(#{G_AGE}) from guesses g, photos p " +
+	'where g.person_id = ? and g.photo_id = p.id )'
   end
 
   def self.longest_lasting(poster)
     first_guess_with_place poster, 'photos.person_id = ?', 'desc',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) > ' +
-	'(select max(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) from guesses g, photos p ' +
-	  'where g.photo_id = p.id and p.person_id = ?)'
+      "#{GUESS_AGE} > (select max(#{G_AGE}) from guesses g, photos p " +
+	'where g.photo_id = p.id and p.person_id = ?)'
+  end
+
+  def self.fastest(poster)
+    first_guess_with_place poster, 'photos.person_id = ?', 'desc',
+      "#{GUESS_AGE} > (select max(#{G_AGE}) from guesses g, photos p " +
+	'where g.photo_id = p.id and p.person_id = ?)'
   end
 
   def years_old
@@ -66,18 +74,16 @@ class Guess < ActiveRecord::Base
 
   def self.fastest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'asc',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) < ' +
-	'(select min(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) ' +
-	  'from guesses g, photos p ' +
-	  'where g.person_id = ? and g.photo_id = p.id and unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
+      "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
+	'where g.person_id = ? and g.photo_id = p.id and ' +
+	  'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
   end
 
   def self.shortest_lasting(poster)
     first_guess_with_place poster, 'photos.person_id = ?', 'asc',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) < ' +
-	'(select min(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) ' +
-	  'from guesses g, photos p ' +
-	  'where g.photo_id = p.id and p.person_id = ? and unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
+      "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
+	'where g.photo_id = p.id and p.person_id = ? and ' +
+	  'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
   end
 
   def self.first_guess_with_place(person, conditions, order, place_conditions)
