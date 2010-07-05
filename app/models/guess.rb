@@ -37,8 +37,6 @@ class Guess < ActiveRecord::Base
       :order => "guesses.guessed_at - photos.dateadded", :limit => 10
   end
 
-  # TODO move order SQL into method
-
   # GWW saves all times as UTC, but the database time zone is Pacific time.
   # unix_timestamp therefore returns the same value for all datetimes in the
   # spring daylight savings jump. This creates spurious zero-second guesses. It
@@ -49,16 +47,14 @@ class Guess < ActiveRecord::Base
   # better solution.
 
   def self.oldest(guesser)
-    first_guess_with_place guesser, 'guesses.person_id = ?',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) desc',
+    first_guess_with_place guesser, 'guesses.person_id = ?', 'desc',
       'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) > ' +
 	'(select max(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) from guesses g, photos p ' +
 	  'where g.person_id = ? and g.photo_id = p.id )'
   end
 
   def self.longest_lasting(poster)
-    first_guess_with_place poster, 'photos.person_id = ?',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) desc',
+    first_guess_with_place poster, 'photos.person_id = ?', 'desc',
       'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) > ' +
 	'(select max(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) from guesses g, photos p ' +
 	  'where g.photo_id = p.id and p.person_id = ?)'
@@ -69,8 +65,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.fastest(guesser)
-    first_guess_with_place guesser, 'guesses.person_id = ?',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)',
+    first_guess_with_place guesser, 'guesses.person_id = ?', 'asc',
       'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) < ' +
 	'(select min(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) ' +
 	  'from guesses g, photos p ' +
@@ -78,8 +73,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.shortest_lasting(poster)
-    first_guess_with_place poster, 'photos.person_id = ?',
-      'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)',
+    first_guess_with_place poster, 'photos.person_id = ?', 'asc',
       'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) < ' +
 	'(select min(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) ' +
 	  'from guesses g, photos p ' +
@@ -92,7 +86,8 @@ class Guess < ActiveRecord::Base
         [ conditions + ' and unix_timestamp(guesses.guessed_at) > ' +
 	    'unix_timestamp(photos.dateadded)',
 	  person.id ],
-      :order => order
+      :order => 'unix_timestamp(guesses.guessed_at) - ' +
+	'unix_timestamp(photos.dateadded) ' + order
     if ! guess
       return nil
     end
