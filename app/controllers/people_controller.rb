@@ -1,10 +1,13 @@
 class PeopleController < ApplicationController
 
+  INFINITY = 1.0 / 0
+
   caches_page :list
   def list
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
     guesses_per_days = Guess.count_by_person_per_day
+    guess_speeds = Guess.speeds
 
     @people = Person.all
     @people.each do |person|
@@ -14,6 +17,7 @@ class PeopleController < ApplicationController
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:posts_per_guess] =
         person[:post_count].to_f / person[:guess_count]
+      person[:guess_speed] = guess_speeds[person.id] || INFINITY
     end
 
     @people.sort! do |x, y|
@@ -35,6 +39,9 @@ class PeopleController < ApplicationController
 	  first_applicable criterion(x, y, :posts_per_guess),
 	    criterion(x, y, :post_count), -criterion(x, y, :guess_count),
 	    username
+	when 'time-to-guess'
+	  first_applicable criterion(x, y, :guess_speed),
+	    criterion(x, y, :guess_count), username
 	else
 	  first_applicable criterion(x, y, :guess_count),
 	    criterion(x, y, :post_count), username

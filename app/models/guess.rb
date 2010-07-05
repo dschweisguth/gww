@@ -13,6 +13,17 @@ class Guess < ActiveRecord::Base
       { |person, rates| rates[person.id] = person[:rate].to_f }
   end
 
+  def self.speeds
+    people = Person.find_by_sql \
+      'select g.person_id id, avg(unix_timestamp(g.guessed_at) - ' +
+	'unix_timestamp(p.dateadded)) speed ' +
+	'from guesses g, photos p ' +
+	'where g.photo_id = p.id and g.guessed_at > p.dateadded ' +
+	'group by g.person_id'
+    people.each_with_object({}) \
+      { |person, speeds| speeds[person.id] = person[:speed].to_f }
+  end
+
   def self.longest
     all :include => [ :person, { :photo => :person } ],
       :order => "guesses.guessed_at - photos.dateadded desc", :limit => 10
@@ -23,6 +34,8 @@ class Guess < ActiveRecord::Base
       :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
       :limit => 10
   end
+
+  # TODO calculate difference between dates correctly
 
   def self.oldest(guesser)
     first_guess_with_place guesser, "guesses.person_id = ?",
