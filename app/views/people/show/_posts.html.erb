@@ -1,4 +1,4 @@
-<b><%=h person.username %> has posted <%=h posts.length %> photos</b><br/>
+<b><%=h person.username %> has posted <%= pluralize posts.length, 'photo' %></b><br/>
 
 <% if ! unfound_photos.empty? -%>
 <%= unfound_photos.length %> <%= singularize 'remain', unfound_photos.length %> unfound<% if unfound_photos.any? { |p| p.game_status == 'unconfirmed' } %> or <span class="unconfirmed">unconfirmed</span><% end %>:
