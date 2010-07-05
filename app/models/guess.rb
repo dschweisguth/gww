@@ -102,7 +102,8 @@ class Guess < ActiveRecord::Base
   end
 
   def ymd_elapsed
-    formatted_age_by_period %w(years months days)
+    result = formatted_age_by_period %w(years months days)
+    result.empty? ? time_elapsed : result
   end
 
   def formatted_age_by_period(periods)
