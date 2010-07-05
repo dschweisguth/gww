@@ -20,6 +20,9 @@ ActionController::Routing::Routes.draw do |map|
   map.edit_photo 'admin/photos/edit/:id',
     :controller => 'admin/photos', :action => 'edit'
 
+  map.longest_and_shortest 'guesses/longest_and_shortest',
+    :controller => 'guesses', :action => 'longest_and_shortest'
+
   map.connect ':controller/:action/:id'
 
 end
