@@ -36,21 +36,30 @@ class Guess < ActiveRecord::Base
       :order => "guesses.guessed_at - photos.dateadded", :limit => 10
   end
 
-  # TODO calculate difference between dates correctly
+  # TODO move order SQL into method
+
+  # GWW saves all times as UTC, but the database time zone is Pacific time.
+  # unix_timestamp therefore returns the same value for all datetimes in the
+  # spring daylight savings jump. This creates spurious zero-second guesses. It
+  # also means that unix_timestamp(guesses.guessed_at) -
+  # unix_timestamp(photos.dateadded) sometimes != guesses.guessed_at -
+  # photos.dateadded. The current solution is to use unix_timestamp everywhere
+  # for consistency. Possibly setting the database timezone to UTC would be a
+  # better solution.
 
   def self.oldest(guesser)
     first_guess_with_place guesser, "guesses.person_id = ?",
-      "guesses.guessed_at - photos.dateadded desc",
-      "(guesses.guessed_at - photos.dateadded) > " \
-	"(select max(g.guessed_at - p.dateadded) from guesses g, photos p " \
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) desc",
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) > " +
+	"(select max(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) from guesses g, photos p " +
 	  "where g.person_id = ? and g.photo_id = p.id )"
   end
 
   def self.longest_lasting(poster)
     first_guess_with_place poster, "photos.person_id = ?",
-      "guesses.guessed_at - photos.dateadded desc",
-      "(guesses.guessed_at - photos.dateadded) > " \
-	"(select max(g.guessed_at - p.dateadded) from guesses g, photos p " \
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) desc",
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) > " +
+	"(select max(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) from guesses g, photos p " +
 	  "where g.photo_id = p.id and p.person_id = ?)"
   end
 
@@ -60,36 +69,37 @@ class Guess < ActiveRecord::Base
 
   def self.fastest(guesser)
     first_guess_with_place guesser, "guesses.person_id = ?",
-      "if(guesses.guessed_at - photos.dateadded > 0, " \
-	"guesses.guessed_at - photos.dateadded, 3600)",
-      "if(guesses.guessed_at - photos.dateadded > 0, " \
-	"guesses.guessed_at - photos.dateadded, 3600) < " \
-	  "(select min(if(g.guessed_at - p.dateadded > 0, " \
-	    "g.guessed_at - p.dateadded, 3600)) " \
-	  "from guesses g, photos p " \
-	  "where g.person_id = ? and g.photo_id = p.id)"
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)",
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) < " +
+	"(select min(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) " +
+	  "from guesses g, photos p " +
+	  "where g.person_id = ? and g.photo_id = p.id and unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))"
   end
 
   def self.shortest_lasting(poster)
     first_guess_with_place poster, "photos.person_id = ?",
-      "if(guesses.guessed_at - photos.dateadded > 0, " \
-	"guesses.guessed_at - photos.dateadded, 3600)",
-      "if(guesses.guessed_at - photos.dateadded > 0, " \
-	"guesses.guessed_at - photos.dateadded, 3600) < " \
-	  "(select min(if(g.guessed_at - p.dateadded > 0, " \
-	    "g.guessed_at - p.dateadded, 3600)) " \
-	  "from guesses g, photos p " \
-	  "where g.photo_id = p.id and p.person_id = ?)"
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)",
+      "unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded) < " +
+	"(select min(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) " +
+	  "from guesses g, photos p " +
+	  "where g.photo_id = p.id and p.person_id = ? and unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))"
   end
 
   def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = first :include => [ :person, { :photo => :person } ],
-      :conditions => [ conditions, person.id ], :order => order
+      :conditions =>
+        [ conditions + ' and unix_timestamp(guesses.guessed_at) > ' +
+	    'unix_timestamp(photos.dateadded)',
+	  person.id ],
+      :order => order
     if ! guess
       return nil
     end
     guess[:place] = count(:include => :photo,
-      :conditions => [ place_conditions, person.id ]) + 1
+      :conditions =>
+        [ place_conditions + ' and unix_timestamp(guesses.guessed_at) > ' +
+	    'unix_timestamp(photos.dateadded)',
+	  person.id ]) + 1
     guess
   end
   private_class_method :first_guess_with_place
