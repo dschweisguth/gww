@@ -1,4 +1,3 @@
-Update Rakefile?
 Use rake gems:install
 Star fast guesses in score report
 Review test coverage and add TODOs to write more tests and assertions
