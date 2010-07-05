@@ -9,7 +9,7 @@ In Guess Where SF:
 <a href="http://anythreewords.com/gwsf/index.php?pos=<%=h @person.username %>"><%= @person.username %>'s unfounds</a> -
 <%= link_to "#{@person.username}'s posts", :action => 'posts', :id => @person %> -
 <%= link_to "#{@person.username}'s guesses", :action => 'guesses', :id => @person %> -
-<%= link_to "#{@person.username}'s comments", :action => 'comments', :id => @person %>
+<%= link_to "#{@person.username}'s comments", list_comments_path(@person, 1) %>
 <br/><br/>
 
 <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= ordinal @place %> place with a score of <%= @guesses.length %>.<br/>

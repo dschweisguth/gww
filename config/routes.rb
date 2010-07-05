@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
   map.list_people 'people/list/sorted-by/:sorted_by/order/:order',
     :controller => 'people', :action => 'list'
   map.show_person 'people/show/:id', :controller => 'people', :action => 'show'
-  map.connect 'people/comments/:id/page/:page',
+  map.list_comments 'people/comments/:id/page/:page',
     :controller => 'people', :action => 'comments'
 
   map.list_photos 'photos/list/sorted-by/:sorted_by/order/:order/page/:page',
@@ -20,9 +20,6 @@ ActionController::Routing::Routes.draw do |map|
   map.edit_photo 'admin/photos/edit/:id',
     :controller => 'admin/photos', :action => 'edit'
 
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing or commenting them out if you're using named routes and resources.
   map.connect ':controller/:action/:id'
 
 end
