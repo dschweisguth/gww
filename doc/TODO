@@ -13,7 +13,6 @@ Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
   and possibly score publication times, newest to oldest.
 Add to player list
-- average age of others' photos when guessed by player
 - average age of player's photos when guessed by others
 - average number of comments on player's photos before being guessed
 - average number of comments on others' photos guessed by player (before guess)
