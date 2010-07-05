@@ -26,13 +26,14 @@ class Guess < ActiveRecord::Base
 
   def self.longest
     all :include => [ :person, { :photo => :person } ],
+      :conditions => "guesses.guessed_at - photos.dateadded > 0",
       :order => "guesses.guessed_at - photos.dateadded desc", :limit => 10
   end
 
   def self.shortest
     all :include => [ :person, { :photo => :person } ],
-      :order => "if(guesses.guessed_at - photos.dateadded > 0, guesses.guessed_at - photos.dateadded, 3600)",
-      :limit => 10
+      :conditions => "guesses.guessed_at - photos.dateadded > 0",
+      :order => "guesses.guessed_at - photos.dateadded", :limit => 10
   end
 
   # TODO calculate difference between dates correctly
