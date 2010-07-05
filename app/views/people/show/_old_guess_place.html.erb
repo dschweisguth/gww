@@ -1,6 +1,6 @@
 <% if guess -%>
 <td>
   <% star = guess.star_for_age; if star %><%= titled_image_tag image_for_star(star), alt_for_star_for_age(star), :size => '15x15' %><% end %>
-  <span><% if guess[:place] <= 10 %><a href="<%= url_for :controller => :guesses, :action => :longest_and_shortest %>"><% end %><%= ordinal guess[:place] %> place<% if guess[:place] <= 10 %>!</a><% end %></span>
+  <span><%= link_to_if guess[:place] <= 10, "#{ordinal guess[:place]} place#{'!' if guess[:place] <= 10}", url_for(:controller => :guesses, :action => :longest_and_shortest) %></span>
 </td>
 <% end -%>
