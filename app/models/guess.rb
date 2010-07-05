@@ -81,7 +81,6 @@ class Guess < ActiveRecord::Base
   private_class_method :first_guess_with_place
 
   # TODO put relevant information in each alt+title
-  # TODO put alt+title in one partial
 
   def seconds_old
     (guessed_at - photo.dateadded).to_i
