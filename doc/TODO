@@ -1,4 +1,3 @@
-Use link_to_unless, link_to_unless_current
 Use shorter form of link_to, url_for
 Consider using resources, per for example
   http://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#M002142
