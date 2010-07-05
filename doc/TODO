@@ -1,4 +1,3 @@
-Review posters with 1 or more guesses but infinite time-to-guess
 Bug: Oldest and fastest posts might be outside range. See /people/show/756.
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
