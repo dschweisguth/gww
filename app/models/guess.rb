@@ -27,14 +27,20 @@ class Guess < ActiveRecord::Base
 
   def self.longest
     all :include => [ :person, { :photo => :person } ],
-      :conditions => "guesses.guessed_at > photos.dateadded",
-      :order => "guesses.guessed_at - photos.dateadded desc", :limit => 10
+      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
+	'unix_timestamp(photos.dateadded)',
+      :order => 'unix_timestamp(guesses.guessed_at) - ' +
+        'unix_timestamp(photos.dateadded) desc',
+      :limit => 10
   end
 
   def self.shortest
     all :include => [ :person, { :photo => :person } ],
-      :conditions => "guesses.guessed_at > photos.dateadded",
-      :order => "guesses.guessed_at - photos.dateadded", :limit => 10
+      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
+        'unix_timestamp(photos.dateadded)',
+      :order => 'unix_timestamp(guesses.guessed_at) - ' +
+        'unix_timestamp(photos.dateadded)',
+      :limit => 10
   end
 
   # GWW saves all times as UTC, but the database time zone is Pacific time.
