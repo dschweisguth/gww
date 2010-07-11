@@ -25,6 +25,18 @@ class Guess < ActiveRecord::Base
       { |person, speeds| speeds[person.id] = person[:speed].to_f }
   end
 
+  def self.be_guessed_speeds
+    people = Person.find_by_sql \
+      'select p.person_id id, avg(unix_timestamp(g.guessed_at) - ' +
+	'unix_timestamp(p.dateadded)) speed ' +
+	'from guesses g, photos p ' +
+	'where g.photo_id = p.id and ' +
+	'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded) ' +
+	'group by p.person_id'
+    people.each_with_object({}) \
+      { |person, speeds| speeds[person.id] = person[:speed].to_f }
+  end
+
   def self.longest
     all :include => [ :person, { :photo => :person } ],
       :conditions => 'unix_timestamp(guesses.guessed_at) > ' +

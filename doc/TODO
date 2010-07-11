@@ -1,3 +1,4 @@
+Factor out repeated calls to first_applicable
 Review test coverage and add TODOs to write more tests and assertions
 Reduce the number of clicks it takes to add or remove a guess or revelation
 Include tags in update
@@ -12,7 +13,6 @@ Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
   and possibly score publication times, newest to oldest.
 Add to player list
-- average age of player's photos when guessed by others
 - average number of comments on player's photos before being guessed
 - average number of comments on others' photos guessed by player (before guess)
 - ratio of points to comments

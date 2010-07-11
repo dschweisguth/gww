@@ -10,6 +10,7 @@
   <th><%= link_to 'Guesses per day', list_path('guesses-per-day') %></th>
   <th><%= link_to 'Posts per guess', list_path('posts-per-guess') %></th>
   <th><%= link_to 'Average time to guess others\' posts (days)', list_path('time-to-guess') %></th>
+  <th><%= link_to 'Average time for posts to be guessed (days)', list_path('time-to-be-guessed') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
 <tr>
@@ -20,6 +21,7 @@
   <td class="number"><%= sprintf "%.4f", person[:guesses_per_day] %></td>
   <td class="number"><%= person[:posts_per_guess].infinite? ? '&#8734;' : sprintf("%.4f", person[:posts_per_guess]) %></td>
   <td class="number"><%= person[:guess_speed].infinite? ? '&#8734;' : sprintf("%.4f", person[:guess_speed] / 86400) %></td>
+  <td class="number"><%= person[:be_guessed_speed].infinite? ? '&#8734;' : sprintf("%.4f", person[:be_guessed_speed] / 86400) %></td>
 </tr>
 <% end %>
 </table>
