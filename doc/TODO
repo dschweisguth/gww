@@ -14,8 +14,6 @@ Provide page for players which lists scoring actions (guesses and revelations),
   and possibly score publication times, newest to oldest.
 Add to player list
 - average number of comments on player's photos before being guessed
-- average number of comments on others' photos guessed by player (before guess)
-- ratio of points to comments
 Add to player page
 - other players whom player prefers to guess
 - other players who prefer to guess player

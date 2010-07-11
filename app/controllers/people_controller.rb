@@ -9,6 +9,7 @@ class PeopleController < ApplicationController
     guesses_per_days = Guess.count_by_person_per_day
     guess_speeds = Guess.speeds
     be_guessed_speeds = Guess.be_guessed_speeds
+    comments_to_guess = Guess.comments_to_guess
 
     @people = Person.all
     @people.each do |person|
@@ -20,6 +21,7 @@ class PeopleController < ApplicationController
         person[:post_count].to_f / person[:guess_count]
       person[:guess_speed] = guess_speeds[person.id] || INFINITY
       person[:be_guessed_speed] = be_guessed_speeds[person.id] || INFINITY
+      person[:comments_to_guess] = comments_to_guess[person.id] || INFINITY
     end
 
     @people.sort! do |x, y|
@@ -47,6 +49,9 @@ class PeopleController < ApplicationController
 	when 'time-to-be-guessed'
 	  first_applicable criterion(x, y, :be_guessed_speed),
 	    criterion(x, y, :post_count), username
+	when 'comments-to-guess'
+	  first_applicable criterion(x, y, :comments_to_guess),
+	    criterion(x, y, :guess_count), username
 	else
 	  first_applicable criterion(x, y, :guess_count),
 	    criterion(x, y, :post_count), username

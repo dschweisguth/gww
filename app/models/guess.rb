@@ -37,6 +37,13 @@ class Guess < ActiveRecord::Base
       { |person, speeds| speeds[person.id] = person[:speed].to_f }
   end
 
+  def self.comments_to_guess
+    people = Person.find_by_sql \
+      'select id, avg(comment_count) average_comment_count from (select g.person_id id, count(*) comment_count from guesses g, people p, comments c where g.photo_id = c.photo_id and g.person_id = p.id and p.flickrid = c.flickrid and g.guessed_at >= c.commented_at group by g.id) comment_counts group by id'
+    people.each_with_object({}) { |person, counts|
+      counts[person.id] = person[:average_comment_count].to_f }
+  end
+
   def self.longest
     all :include => [ :person, { :photo => :person } ],
       :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
