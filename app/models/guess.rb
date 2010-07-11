@@ -4,42 +4,36 @@ class Guess < ActiveRecord::Base
   belongs_to :person
 
   def self.count_by_person_per_day
-    people = Person.find_by_sql(
+    statistic_by_person \
       'select ' +
         'person_id id, ' +
-        'count(*) / datediff(now(), min(guessed_at)) rate ' +
-      'from guesses group by person_id')
-    people.each_with_object({}) \
-      { |person, rates| rates[person.id] = person[:rate].to_f }
+        'count(*) / datediff(now(), min(guessed_at)) statistic ' +
+      'from guesses group by person_id'
   end
 
   def self.speeds
-    people = Person.find_by_sql \
+    statistic_by_person \
       'select g.person_id id, avg(unix_timestamp(g.guessed_at) - ' +
 	'unix_timestamp(p.dateadded)) speed ' +
 	'from guesses g, photos p ' +
 	'where g.photo_id = p.id and ' +
 	'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded) ' +
 	'group by g.person_id'
-    people.each_with_object({}) \
-      { |person, speeds| speeds[person.id] = person[:speed].to_f }
   end
 
   def self.be_guessed_speeds
-    people = Person.find_by_sql \
+    statistic_by_person \
       'select p.person_id id, avg(unix_timestamp(g.guessed_at) - ' +
 	'unix_timestamp(p.dateadded)) speed ' +
 	'from guesses g, photos p ' +
 	'where g.photo_id = p.id and ' +
 	'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded) ' +
 	'group by p.person_id'
-    people.each_with_object({}) \
-      { |person, speeds| speeds[person.id] = person[:speed].to_f }
   end
 
   def self.comments_to_guess
-    people = Person.find_by_sql \
-      'select id, avg(comment_count) average_comment_count ' +
+    statistic_by_person \
+      'select id, avg(comment_count) statistic ' +
 	'from ' +
 	  '(select g.person_id id, count(*) comment_count ' +
 	    'from guesses g, people p, comments c ' +
@@ -48,9 +42,13 @@ class Guess < ActiveRecord::Base
 	      'p.flickrid = c.flickrid and ' +
 	      'g.guessed_at >= c.commented_at group by g.id) comment_counts ' +
 	'group by id'
-    people.each_with_object({}) { |person, counts|
-      counts[person.id] = person[:average_comment_count].to_f }
   end
+
+  def self.statistic_by_person(sql)
+    Person.find_by_sql(sql).each_with_object({}) \
+      { |person, statistic| statistic[person.id] = person[:statistic].to_f }
+  end
+  private_class_method :statistic_by_person
 
   def self.longest
     all :include => [ :person, { :photo => :person } ],
