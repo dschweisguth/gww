@@ -6,10 +6,10 @@ class PeopleController < ApplicationController
   def list
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
-    guesses_per_days = Guess.count_by_person_per_day
-    guess_speeds = Guess.speeds
-    be_guessed_speeds = Guess.be_guessed_speeds
-    comments_to_guess = Guess.comments_to_guess
+    guesses_per_days = Person.guesses_per_day
+    guess_speeds = Person.guess_speeds
+    be_guessed_speeds = Person.be_guessed_speeds
+    comments_to_guess = Person.comments_to_guess
 
     @people = Person.all
     @people.each do |person|
