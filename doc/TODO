@@ -1,3 +1,4 @@
+Remove duplication from people/list view
 Factor out repeated calls to first_applicable
 Add report of guesses made before photo was added
 Review test coverage and add TODOs to write more tests and assertions
@@ -13,8 +14,6 @@ Post scores to Flickr group automatically
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
   and possibly score publication times, newest to oldest.
-Add to player list
-- average number of comments on player's photos before being guessed
 Add to player page
 - other players whom player prefers to guess
 - other players who prefer to guess player

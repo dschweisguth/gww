@@ -10,6 +10,7 @@ class PeopleController < ApplicationController
     guess_speeds = Person.guess_speeds
     be_guessed_speeds = Person.be_guessed_speeds
     comments_to_guess = Person.comments_to_guess
+    comments_to_be_guessed = Person.comments_to_be_guessed
 
     @people = Person.all
     @people.each do |person|
@@ -22,6 +23,8 @@ class PeopleController < ApplicationController
       person[:guess_speed] = guess_speeds[person.id] || INFINITY
       person[:be_guessed_speed] = be_guessed_speeds[person.id] || INFINITY
       person[:comments_to_guess] = comments_to_guess[person.id] || INFINITY
+      person[:comments_to_be_guessed] =
+	comments_to_be_guessed[person.id] || INFINITY
     end
 
     @people.sort! do |x, y|
@@ -52,6 +55,9 @@ class PeopleController < ApplicationController
 	when 'comments-to-guess'
 	  first_applicable criterion(x, y, :comments_to_guess),
 	    criterion(x, y, :guess_count), username
+	when 'comments-to-be-guessed'
+	  first_applicable criterion(x, y, :comments_to_be_guessed),
+	    criterion(x, y, :post_count), username
 	else
 	  first_applicable criterion(x, y, :guess_count),
 	    criterion(x, y, :post_count), username
