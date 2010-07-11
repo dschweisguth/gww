@@ -8,11 +8,11 @@ Install and start mysql
 
     Mac
 	If you don't already have it, install MacPorts from www.macports.org
-	sudo port install mysql5-server
-	sudo port load mysql5-server # as directed by the previous command
-	sudo -u _mysql mysql_install_db5
-	/opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
-	ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
+	> sudo port install mysql5-server
+	> sudo port load mysql5-server # as directed by the previous command
+	> sudo -u _mysql mysql_install_db5
+	> /opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
+	> ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
     Linux
         TODO
 
@@ -71,7 +71,7 @@ Get and configure GWW
 ---------------------
 
 Get the source: Either
-    git clone git@github.com:dschweisguth/gww.git, or
+    > git clone git@github.com:dschweisguth/gww.git, or
     Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
         format, download it and unpack it
 Install gems:
@@ -94,17 +94,17 @@ On Mac OS 10.6 only,
     > sudo env ARCHFLAGS="-arch x86_64" gem install mysql -- --with-mysql-config=/opt/local/bin/mysql_config5
 Configure:
     Configure database credentials:
-	cp config/database{_template,}.yml
+	> cp config/database{_template,}.yml
 	Edit and fill in your database username and password
     Configure Flickr credentials:
-	cp config/flickr_credentials{_template,}.yml
+	> cp config/flickr_credentials{_template,}.yml
 	Construct a Flickr API secret, key and auth token manually per the
 	    API documentation
 	Edit and fill in your secret, api_key and auth_token
 For production Linux httpd, configure basic HTTP authentication:
     Create a username and password per
         http://httpd.apache.org/docs/2.2/howto/auth.html
-    cp public/admin/.htaccess{_template,}
+    > cp public/admin/.htaccess{_template,}
     Edit and fill in
     - the full path to the htpasswd file that you just created. Note that
       it should not be in or below GWW's public directory.
@@ -116,27 +116,27 @@ Create databases
 mysql> grant usage on *.* to gww@localhost identified by '(the password)';
 Create dev database:
     mysql> grant all privileges on gww_dev.* to gww@localhost;
-    rake db:create
-    gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
+    > rake db:create
+    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
 Create production database:
     mysql> grant all privileges on gww_production.* to gww@localhost;
-    rake RAILS_ENV=production db:create
-    gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
+    > rake RAILS_ENV=production db:create
+    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
 Create test database:
     mysql> grant all privileges on gww_test.* to gww@localhost;
-    rake RAILS_ENV=test db:create
-    rake db:test:clone_structure
+    > rake RAILS_ENV=test db:create
+    > rake db:test:clone_structure
 
 Test GWW
 --------
 
-rake test
+> rake test
 
 Start GWW
 ---------
 
 Development:
-    script/server
+    > script/server
     Browse localhost:3000
 Production (Linux):
     Start or restart httpd
