@@ -9,8 +9,8 @@
   <th><%= link_to 'Posts', list_path('posts') %></th>
   <th><%= link_to 'Guesses per day', list_path('guesses-per-day') %></th>
   <th><%= link_to 'Posts per guess', list_path('posts-per-guess') %></th>
-  <th><%= link_to 'Average time to guess others\' posts (days)', list_path('time-to-guess') %></th>
-  <th><%= link_to 'Average time for posts to be guessed (days)', list_path('time-to-be-guessed') %></th>
+  <th><%= link_to 'Average days to guess others\' posts', list_path('time-to-guess') %></th>
+  <th><%= link_to 'Average days for posts to be guessed', list_path('time-to-be-guessed') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
 <tr>
