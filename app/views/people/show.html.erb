@@ -1,5 +1,4 @@
-<%= render :partial => 'breadcrumbs' %>
-<hr/>
+<% sandwich 'people/breadcrumbs' do %>
 
 <h1><%=h @person.username %></h1>
 
@@ -35,5 +34,4 @@ In Guess Where SF:
     :unfound_photos => @unfound_photos, :revealed_photos => @revealed_photos,
     :guessers => @guessers } %>
 
-<hr/>
-<%= render :partial => 'breadcrumbs' %>
+<% end %>

@@ -1,5 +1,4 @@
-<%= render :partial => 'person_breadcrumbs' %>
-<hr/>
+<% sandwich 'person_breadcrumbs' do %>
 <h1><%= pluralize @guesses.length, 'guess' %> by <%=h @person.username %></h1>
 
 <table class="dark">
@@ -28,5 +27,4 @@
 <% end -%>
 </table>
 
-<hr/>
-<%= render :partial => 'person_breadcrumbs' %>
+<% end %>

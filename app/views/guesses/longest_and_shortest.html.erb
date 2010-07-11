@@ -1,5 +1,4 @@
-<%= render :partial => 'shared/breadcrumbs' %>
-<hr/>
+<% sandwich do %>
 <h1>Longest and shortest-lived unfounds</h1>
 
 <table class="dark">
@@ -14,5 +13,4 @@
   <%= render :partial => 'guesses/longest_and_shortest/header' %>
 </table>
 
-<hr/>
-<%= render :partial => 'shared/breadcrumbs' %>
+<% end %>

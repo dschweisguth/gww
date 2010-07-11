@@ -1,5 +1,4 @@
-<%= render :partial => 'shared/breadcrumbs' %>
-<hr/>
+<% sandwich do %>
 <h1><%= @people.length %> active members</h1>
 
 <table class="dark">
@@ -25,5 +24,4 @@
 <% end %>
 </table>
 
-<hr/>
-<%= render :partial => 'shared/breadcrumbs' %>
+<% end %>

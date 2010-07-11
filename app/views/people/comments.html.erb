@@ -1,5 +1,4 @@
-<%= render :partial => 'person_breadcrumbs' %>
-<hr/>
+<% sandwich 'person_breadcrumbs' do %>
 <h1><%= pluralize @photo_ids.length, 'photo' %> commented on by <%=h @person.username %></h1>
 
 <table class="dark">
@@ -26,5 +25,4 @@
 
 <br/>
 <%= will_paginate @photos %>
-<hr/>
-<%= render :partial => 'person_breadcrumbs' %>
+<% end %>

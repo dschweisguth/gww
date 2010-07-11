@@ -58,4 +58,8 @@ module ApplicationHelper
       { :alt => alt_and_title, :title => alt_and_title }.merge(options)
   end
 
+  def sandwich(breadcrumbs = 'shared/breadcrumbs', &content)
+    render :layout => 'shared/sandwich', :locals => { :breadcrumbs => breadcrumbs }, &content
+  end
+
 end

@@ -1,5 +1,4 @@
-<%= render :partial => 'shared/breadcrumbs' %>
-<hr/>
+<% sandwich do %>
 <h1>Photos</h1>
 
 <p>The counts of comments by members and of comments by members containing question marks are the closest we can easily come to a count of guesses. The most-guessed photos aren't necessarily at the top of those lists, but they're close.</p>
@@ -34,5 +33,4 @@
 </table>
 
 <%= will_paginate @photos %>
-<hr/>
-<%= render :partial => 'shared/breadcrumbs' %>
+<% end %>

@@ -1,5 +1,4 @@
-<%= render :partial => 'shared/breadcrumbs' %>
-<hr/>
+<% sandwich do %>
 <h1><%= @photos.length %> unfound photos</h1>
 
 <table class="dark">
@@ -24,5 +23,4 @@
 <% end %>
 </table>
 
-<hr/>
-<%= render :partial => 'shared/breadcrumbs' %>
+<% end %>

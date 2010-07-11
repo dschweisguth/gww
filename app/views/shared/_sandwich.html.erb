@@ -1,0 +1,6 @@
+<% if ! defined? breadcrumbs then breadcrumbs = 'shared/breadcrumbs' end -%>
+<%= render :partial => breadcrumbs %>
+<hr/>
+<%= yield %>
+<hr/>
+<%= render :partial => breadcrumbs %>

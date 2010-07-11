@@ -1,5 +1,4 @@
-<%= render :partial => 'admin/breadcrumbs' %>
-<hr/>
+<% sandwich 'admin/breadcrumbs' do %>
 <h1>Score report</h1>
 
 <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a> - <a href="#preview">Preview</a><br/><br/>
@@ -10,4 +9,4 @@
 <%= @topic_content %>
 
 <hr/>
-<%= render :partial => 'admin/breadcrumbs' %>
+<% end %>
