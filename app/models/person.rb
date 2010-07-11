@@ -67,14 +67,4 @@ class Person < ActiveRecord::Base
     high_scorers
   end
 
-  # TODO remove
-  def self.find_with_score
-    find_by_sql(
-      'select p.*, count(*) score ' +
-      'from people p, guesses g ' +
-      'where p.id = g.person_id ' +
-      'group by g.person_id ' +
-      'order by score desc')
-  end
-
 end
