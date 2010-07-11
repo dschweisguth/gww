@@ -1,16 +1,18 @@
-This document describes how to install GWW on a Mac (for development, using
-webrick) or Linux server (for production, using Apache httpd and Phusion
-Passenger). It covers only what Dave thinks is not obvious; please fill gaps as
-you encounter them.
+This document describes how to install GWW on a Mac (OS 10.6, for development,
+using webrick) or Linux server (CentOS 5.4, for production, using Apache httpd
+and Phusion Passenger). It covers only what Dave thinks is not obvious; please
+fill gaps as you encounter them.
 
 Install and start mysql
 -----------------------
 
     Mac
-	Install mysql 5 with MacPorts per
-	    http://2tbsp.com/content/install_and_configure_mysql_5_macports
-	Start mysql: sudo /opt/local/share/mysql5/mysql/mysql.server start
-	Stop mysql: /opt/local/bin/mysqladmin5 -uroot -p shutdown
+	If you don't already have it, install MacPorts from www.macports.org
+	sudo port install mysql5-server
+	sudo port load mysql5-server # as directed by the previous command
+	sudo -u _mysql mysql_install_db5
+	/opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
+	ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
     Linux
         TODO
 
@@ -18,45 +20,49 @@ Install ruby and friends
 ------------------------
 
 GWW currently requires ruby 1.8.something (the current version of 1.9 is too
-new), rubygems and the gems listed below. Some of the detail below probably
-isn't required, but that's what I have.
+new), rubygems and the gems listed below. The specific versions are not
+necessarily required, but they're what I have.
 
 Install ruby
-    Mac: Use MacPorts.
-    Linux: Get source from http://www.ruby-lang.org/en/ and follow instructions
+    Mac
+	> sudo port install ruby
+	> ruby --version
+	ruby 1.8.7 (2010-06-23 patchlevel 299) [i686-darwin10]
+    Linux
+	Get source from http://www.ruby-lang.org/en/ and follow instructions
 	> ruby --version
 	ruby 1.8.7 (2010-01-10 patchlevel 249) [x86_64-linux]
 
 Install gem
-    Mac: Use MacPorts.
+    Mac
+	> sudo port install rb-rubygems
+	> sudo gem update --system
+        > gem --version
+        1.3.7
     Linux: Get source from http://gems.rubyforge.org/ and follow instructions.
 	> gem --version
-	1.3.6
+	1.3.7
 
 Install gems
 
-    gem install rails
-    rake gems:install
+    > gem install rails
+    > gem install rake
     > gem list
-    actionmailer (2.3.5)
-    actionpack (2.3.5)
-    activerecord (2.3.5)
-    activeresource (2.3.5)
-    activesupport (2.3.5)
-    fastthread (1.0.7)
-    mysql (2.8.1)
-    passenger (2.2.11)
-    rack (1.0.1)
-    rails (2.3.5)
+    actionmailer (2.3.8)
+    actionpack (2.3.8)
+    activerecord (2.3.8)
+    activeresource (2.3.8)
+    activesupport (2.3.8)
+    rack (1.1.0)
+    rails (2.3.8)
     rake (0.8.7)
-    will_paginate (2.3.12)
-    xml-simple (1.0.12)
+    rubygems-update (1.3.7)
 
 Install Phusion Passenger (for Linux production)
 ------------------------------------------------
 
-gem install passenger
-passenger-install-apache2-module # and follow instructions
+> gem install passenger
+> passenger-install-apache2-module # and follow instructions
 In addition to editing httpd.conf as instructed by passenger, add the following
 option to the appropriate place in your httpd configuration to enable GWW's
 .htaccess: AllowOverride AuthConfig FileInfo
@@ -65,9 +71,27 @@ Get and configure GWW
 ---------------------
 
 Get the source: Either
+    git clone git@github.com:dschweisguth/gww.git, or
     Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
-        format, download it and unpack it, or
-    git clone git@github.com:dschweisguth/gww.git
+        format, download it and unpack it
+Install gems:
+    > rake gems:install
+    > gem list
+    actionmailer (2.3.8)
+    actionpack (2.3.8)
+    activerecord (2.3.8)
+    activeresource (2.3.8)
+    activesupport (2.3.8)
+    mysql (2.8.1)
+    rack (1.1.0)
+    rails (2.3.8)
+    rake (0.8.7)
+    rubygems-update (1.3.7)
+    will_paginate (2.3.14)
+    xml-simple (1.0.12)
+On Mac OS 10.6 only,
+    > sudo gem uninstall mysql
+    > sudo env ARCHFLAGS="-arch x86_64" gem install mysql -- --with-mysql-config=/opt/local/bin/mysql_config5
 Configure:
     Configure database credentials:
 	cp config/database{_template,}.yml
