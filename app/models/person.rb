@@ -13,7 +13,7 @@ class Person < ActiveRecord::Base
   def self.guess_speeds
     statistic_by_person \
       'select g.person_id id, avg(unix_timestamp(g.guessed_at) - ' +
-	'unix_timestamp(p.dateadded)) speed ' +
+	'unix_timestamp(p.dateadded)) statistic ' +
 	'from guesses g, photos p ' +
 	'where g.photo_id = p.id and ' +
 	'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded) ' +
@@ -23,7 +23,7 @@ class Person < ActiveRecord::Base
   def self.be_guessed_speeds
     statistic_by_person \
       'select p.person_id id, avg(unix_timestamp(g.guessed_at) - ' +
-	'unix_timestamp(p.dateadded)) speed ' +
+	'unix_timestamp(p.dateadded)) statistic ' +
 	'from guesses g, photos p ' +
 	'where g.photo_id = p.id and ' +
 	'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded) ' +
