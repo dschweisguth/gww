@@ -1,3 +1,4 @@
+Bug: HTML characters in username get lost in score report, e.g. <<<XXXOOO>>>
 Bug: can't reveal http://www.flickr.com/photos/kewlio/3303015174/
 Remove duplication from people/list view
 Factor out repeated calls to first_applicable
