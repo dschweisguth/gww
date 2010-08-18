@@ -1,5 +1,4 @@
 Bug: can't reveal http://www.flickr.com/photos/kewlio/3303015174/
-Bug: too many photos in the inaccessible list
 Remove duplication from people/list view
 Factor out repeated calls to first_applicable
 Add report of guesses made before photo was added
