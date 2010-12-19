@@ -20,6 +20,8 @@ module PeopleHelper
     when 1 then ''
     when 2 then 'second-'
     when 3 then 'third-'
+    when 4 then 'fourth-'
+    when 5 then 'fifth-'
     end
 
   end

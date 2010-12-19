@@ -1,3 +1,5 @@
+Bug: people/show/725 shows that member was in 4th place in the last month, but
+  only third and above should show
 Bug: can't reveal http://www.flickr.com/photos/kewlio/3303015174/
 Remove duplication from people/list view
 Factor out repeated calls to first_applicable
