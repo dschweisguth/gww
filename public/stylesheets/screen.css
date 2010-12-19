@@ -145,3 +145,10 @@ th {
   background-color: #ffffff;
   padding: 1px 0;
 }
+
+/* wheresies/index */
+
+.float {
+  float: left;
+  padding-right: 30px;
+}

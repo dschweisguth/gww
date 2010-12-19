@@ -13,6 +13,9 @@ Comment Searchr</a>.</p>
 
 <h2>Reports</h2>
 <ul>
+<li>New: <%= link_to 'statistics for the 2010 Wheresies!', :controller => 'wheresies' %></li>
+</ul>
+<ul>
 <li>Scores are published to the <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></li>
 <li><%= link_to 'Active members', list_people_path('score', '+') %></li>
 <li><%= link_to 'Top guessers', :controller => 'people', :action => 'top_guessers' %></li>

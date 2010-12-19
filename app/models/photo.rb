@@ -89,4 +89,21 @@ class Photo < ActiveRecord::Base
       :include => :person, :order => "lastupdate desc"
   end
 
+  def self.most_viewed_in_2010
+    find :all,
+      :conditions =>
+	[ '? < dateadded and dateadded < ?', Time.utc(2010), Time.utc(2011) ],
+      :order => 'views desc',
+      :limit => 10,
+      :include => :person
+  end
+
+  def self.most_commented_in_2010
+    find_by_sql [
+      'select f.*, count(*) comments from photos f, comments c ' +
+        'where ? < f.dateadded and f.dateadded < ? and f.id = c.photo_id ' +
+	'group by f.id order by comments desc limit 10',
+      Time.utc(2010), Time.utc(2011) ]
+  end
+
 end

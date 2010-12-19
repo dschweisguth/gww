@@ -82,4 +82,54 @@ class Person < ActiveRecord::Base
     high_scorers
   end
 
+  def self.most_points_in_2010
+    find_by_sql [
+      'select p.*, count(*) points from people p, guesses g ' +
+        'where p.id = g.person_id and ? < g.guessed_at and g.guessed_at < ? ' +
+	'group by p.id order by points desc limit 10',
+	Time.utc(2010), Time.utc(2011)
+    ]
+  end
+
+  def self.most_posts_in_2010
+    find_by_sql [
+      'select p.*, count(*) posts from people p, photos f ' +
+        'where p.id = f.person_id and ? < f.dateadded and f.dateadded < ? ' +
+	'group by p.id order by posts desc limit 10',
+	Time.utc(2010), Time.utc(2011)
+    ]
+  end
+
+  def self.rookies_with_most_points_in_2010
+    find_by_sql [
+      'select p.*, count(*) points ' +
+	'from people p, ' +
+	  '(select person_id, min(a.acted) joined ' +
+	    'from ' +
+	      '(select person_id, guessed_at acted from guesses union all ' +
+	        'select person_id, dateadded acted from photos) a ' +
+	    'group by person_id having ? < joined and joined < ?) r, ' + 
+	  'guesses g ' +
+        'where p.id = r.person_id and p.id = g.person_id ' +
+	'group by p.id order by points desc limit 10',
+	Time.utc(2010), Time.utc(2011)
+    ]
+  end
+
+  def self.rookies_with_most_posts_in_2010
+    find_by_sql [
+      'select p.*, count(*) posts ' +
+	'from people p, ' +
+	  '(select person_id, min(a.acted) joined ' +
+	    'from ' +
+	      '(select person_id, guessed_at acted from guesses union all ' +
+	        'select person_id, dateadded acted from photos) a ' +
+	    'group by person_id having ? < joined and joined < ?) r, ' + 
+	  'photos f ' +
+        'where p.id = r.person_id and p.id = f.person_id ' +
+	'group by p.id order by posts desc limit 10',
+	Time.utc(2010), Time.utc(2011)
+    ]
+  end
+
 end
