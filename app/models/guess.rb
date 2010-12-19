@@ -165,4 +165,18 @@ class Guess < ActiveRecord::Base
     end
   end
 
+  def self.shortest_in_2010
+    all :include => [ :person, { :photo => :person } ],
+      :conditions =>
+	[
+	  'unix_timestamp(guesses.guessed_at) > ' +
+	    'unix_timestamp(photos.dateadded) and ' +
+	  '? < guesses.guessed_at and guesses.guessed_at < ?',
+	  Time.utc(2010), Time.utc(2011)
+	],
+      :order => 'unix_timestamp(guesses.guessed_at) - ' +
+        'unix_timestamp(photos.dateadded)',
+      :limit => 10
+  end
+
 end

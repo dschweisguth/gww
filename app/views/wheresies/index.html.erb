@@ -114,5 +114,12 @@
   </tr>
 <% end %>
 </table>
+<br/>
+
+<table class="dark">
+  <%= render :partial => 'guesses/longest_and_shortest/header' %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess',
+    :collection => @shortest_in_2010 %>
+</table>
 
 <% end %>
