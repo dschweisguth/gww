@@ -1,121 +1,144 @@
 <% sandwich do %>
 <h1>For your consideration for the 2010 Wheresies ...</h1>
 
-<h2>Rookies (members who first posted or scored in 2010)</h2>
+<div class="float">
+  <h2>Rookies (members who first posted or scored in 2010)</h2>
 
-<table class="dark float">
-<tr>
-  <th class="empty"></th>
-  <th>Rookie</th>
-  <th>Points in 2010</th>
-</tr>
-<% @rookies_with_most_points_in_2010.each_with_index do |person, person_index| %>
-<tr>
-  <td class="row-number"><%= person_index + 1 %>.</td>
-  <td><%= link_to_person person %></td>
-  <td class="number"><%= person[:points] %></td>
-</tr>
-<% end %>
-</table>
+  <div class="float">
+    <h3>Most points in 2010</h3>
+    <table class="dark">
+    <tr>
+      <th class="empty"></th>
+      <th>Rookie</th>
+      <th>Points in 2010</th>
+    </tr>
+    <% @rookies_with_most_points_in_2010.each_with_index do |person, person_index| %>
+    <tr>
+      <td class="row-number"><%= person_index + 1 %>.</td>
+      <td><%= link_to_person person %></td>
+      <td class="number"><%= person[:points] %></td>
+    </tr>
+    <% end %>
+    </table>
+  </div>
 
-<table class="dark">
-<tr>
-  <th class="empty"></th>
-  <th>Rookie</th>
-  <th>Posts in 2010</th>
-</tr>
-<% @rookies_with_most_posts_in_2010.each_with_index do |person, person_index| %>
-<tr>
-  <td class="row-number"><%= person_index + 1 %>.</td>
-  <td><%= link_to_person person %></td>
-  <td class="number"><%= person[:posts] %></td>
-</tr>
-<% end %>
-</table>
-<br/>
+  <div class="float">
+    <h3>Most posts in 2010</h3>
+    <table class="dark">
+    <tr>
+      <th class="empty"></th>
+      <th>Rookie</th>
+      <th>Posts in 2010</th>
+    </tr>
+    <% @rookies_with_most_posts_in_2010.each_with_index do |person, person_index| %>
+    <tr>
+      <td class="row-number"><%= person_index + 1 %>.</td>
+      <td><%= link_to_person person %></td>
+      <td class="number"><%= person[:posts] %></td>
+    </tr>
+    <% end %>
+    </table>
+  </div>
 
-<h2>All GWSF members</h2>
+</div>
 
-<table class="dark float">
-<tr>
-  <th class="empty"></th>
-  <th>Member</th>
-  <th>Points in 2010</th>
-</tr>
-<% @most_points_in_2010.each_with_index do |person, person_index| %>
-<tr>
-  <td class="row-number"><%= person_index + 1 %>.</td>
-  <td><%= link_to_person person %></td>
-  <td class="number"><%= person[:points] %></td>
-</tr>
-<% end %>
-</table>
+<div class="float">
+  <h2>All GWSF members</h2>
 
-<table class="dark">
-<tr>
-  <th class="empty"></th>
-  <th>Member</th>
-  <th>Posts in 2010</th>
-</tr>
-<% @most_posts_in_2010.each_with_index do |person, person_index| %>
-<tr>
-  <td class="row-number"><%= person_index + 1 %>.</td>
-  <td><%= link_to_person person %></td>
-  <td class="number"><%= person[:posts] %></td>
-</tr>
-<% end %>
-</table>
-<br/>
+  <div class="float">
+    <h3>Most points in 2010</h3>
+    <table class="dark">
+    <tr>
+      <th class="empty"></th>
+      <th>Member</th>
+      <th>Points in 2010</th>
+    </tr>
+    <% @most_points_in_2010.each_with_index do |person, person_index| %>
+    <tr>
+      <td class="row-number"><%= person_index + 1 %>.</td>
+      <td><%= link_to_person person %></td>
+      <td class="number"><%= person[:points] %></td>
+    </tr>
+    <% end %>
+    </table>
+  </div>
 
-<h2>Photos</h2>
+  <div class="float">
+    <h3>Most points in 2010</h3>
+    <table class="dark">
+    <tr>
+      <th class="empty"></th>
+      <th>Member</th>
+      <th>Posts in 2010</th>
+    </tr>
+    <% @most_posts_in_2010.each_with_index do |person, person_index| %>
+    <tr>
+      <td class="row-number"><%= person_index + 1 %>.</td>
+      <td><%= link_to_person person %></td>
+      <td class="number"><%= person[:posts] %></td>
+    </tr>
+    <% end %>
+    </table>
+  </div>
 
-<table class="dark float">
-  <tr>
-    <th class="empty"></th>
-    <th>photo</th>
-    <th>posted by</th>
-    <th>date added</th>
-    <th>last updated</th>
-    <th>game status</th>
-    <th>views</th>
-  </tr>  
-<% @most_viewed_in_2010.each_with_index do |photo, photo_index| -%>
-  <tr>
-    <td class="row-number"><%= photo_index + 1 %>.</td>
-    <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(photo, 't'), ""), show_photo_path(photo) %></td>
-    <td><%= link_to_person photo.person %></td>
-    <td><%= local_date photo.dateadded %></td>
-    <td><%= local_date photo.lastupdate %></td>
-    <td><%= photo.game_status %></td>
-    <td><%= photo.views %></td>
-  </tr>
-<% end %>
-</table>
+</div>
+<br class="clear"/>
+<br class="clear"/>
 
-<table class="dark">
-  <tr>
-    <th class="empty"></th>
-    <th>photo</th>
-    <th>posted by</th>
-    <th>date added</th>
-    <th>last updated</th>
-    <th>game status</th>
-    <th>comments</th>
-  </tr>  
-<% @most_commented_in_2010.each_with_index do |photo, photo_index| -%>
-  <tr>
-    <td class="row-number"><%= photo_index + 1 %>.</td>
-    <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(photo, 't'), ""), show_photo_path(photo) %></td>
-    <td><%= link_to_person photo.person %></td>
-    <td><%= local_date photo.dateadded %></td>
-    <td><%= local_date photo.lastupdate %></td>
-    <td><%= photo.game_status %></td>
-    <td><%= photo['comments'] %></td>
-  </tr>
-<% end %>
-</table>
-<br/>
+<div class="float">
+  <h2>Most-viewed photos of 2010</h2>
+  <table class="dark">
+    <tr>
+      <th class="empty"></th>
+      <th>photo</th>
+      <th>posted by</th>
+      <th>date added</th>
+      <th>last updated</th>
+      <th>game status</th>
+      <th>views</th>
+    </tr>  
+  <% @most_viewed_in_2010.each_with_index do |photo, photo_index| -%>
+    <tr>
+      <td class="row-number"><%= photo_index + 1 %>.</td>
+      <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(photo, 't'), ""), show_photo_path(photo) %></td>
+      <td><%= link_to_person photo.person %></td>
+      <td><%= local_date photo.dateadded %></td>
+      <td><%= local_date photo.lastupdate %></td>
+      <td><%= photo.game_status %></td>
+      <td><%= photo.views %></td>
+    </tr>
+  <% end %>
+  </table>
+</div>
 
+<div class="float">
+  <h2>Most-commented photos of 2010</h2>
+  <table class="dark">
+    <tr>
+      <th class="empty"></th>
+      <th>photo</th>
+      <th>posted by</th>
+      <th>date added</th>
+      <th>last updated</th>
+      <th>game status</th>
+      <th>comments</th>
+    </tr>  
+  <% @most_commented_in_2010.each_with_index do |photo, photo_index| -%>
+    <tr>
+      <td class="row-number"><%= photo_index + 1 %>.</td>
+      <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(photo, 't'), ""), show_photo_path(photo) %></td>
+      <td><%= link_to_person photo.person %></td>
+      <td><%= local_date photo.dateadded %></td>
+      <td><%= local_date photo.lastupdate %></td>
+      <td><%= photo.game_status %></td>
+      <td><%= photo['comments'] %></td>
+    </tr>
+  <% end %>
+  </table>
+</div>
+<br class="clear"/>
+
+<h2>Fastest-guessed photos of 2010</h2>
 <table class="dark">
   <%= render :partial => 'guesses/longest_and_shortest/header' %>
   <%= render :partial => 'guesses/longest_and_shortest/guess',
