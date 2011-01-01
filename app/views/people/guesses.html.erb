@@ -4,7 +4,7 @@
 <table class="dark">
   <tr>
     <th class="empty"></th>
-    <th colspan="2">links</th>
+    <th>photo</th>
     <th>posted by</th>
     <th>date added</th>
     <th>date guessed</th>
@@ -13,11 +13,9 @@
   <tr>
     <td class="row-number"><%= guess_index + 1 %>.</td>
     <% if guess.photo.person_id != 0 -%>
-    <td><%= link_to_flickr_photo guess.photo %></td>
-    <td><%= link_to_photo guess.photo %></td>
+    <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(guess.photo, 't'), ""), show_photo_path(guess.photo) %></td>
     <td><%= link_to_person guess.photo.person %></td>
     <% else -%>
-    <td><b>unknown</b></td>
     <td><b>unknown</b></td>
     <td><b>unknown</b></td>
     <% end -%>

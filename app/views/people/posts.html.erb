@@ -4,7 +4,7 @@
 <table class="dark">
   <tr>
     <td class="empty"></td>
-    <th colspan="2">links</th>
+    <th>photo</th>
     <th>date added</th>
     <th>last update</th>
     <th>mapped</th>
@@ -13,8 +13,7 @@
 <% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
     <td class="row-number"><%= photo_index + 1 %>.</td>
-    <td><%= link_to_flickr_photo photo %></td>
-    <td><%= link_to_photo photo %></td>
+    <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(photo, 't'), ""), show_photo_path(photo) %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.mapped %></td>
