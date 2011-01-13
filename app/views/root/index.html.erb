@@ -13,7 +13,7 @@ Comment Searchr</a>.</p>
 
 <h2>Reports</h2>
 <ul>
-<li>New: <%= link_to 'statistics for the 2010 Wheresies!', :controller => 'wheresies' %></li>
+<li><%= link_to 'Statistics for the 2010 Wheresies', :controller => 'wheresies' %> <span class="new">New!</span></li>
 </ul>
 <ul>
 <li>Scores are published to the <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></li>
@@ -22,6 +22,7 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Photos', list_photos_path('date-added', '+', 1) %></li>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_path %></li>
+<li><%= link_to 'Longest-lived revelations', :controller => 'revelations', :action => 'longest' %> <span class="new">New!</span></li>
 </ul>
 
 <h2>API</h2>

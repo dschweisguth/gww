@@ -68,6 +68,14 @@ th {
   text-align: right;
 }
 
+/* root/index */
+
+.new {
+  color: red;
+  display: inline-block;
+  padding-left: 10px;
+}
+
 /* people/top_guessers, guesses/longest_and_shortest */
 
 .opening-number {
