@@ -1,4 +1,5 @@
 class Guess < ActiveRecord::Base
+  include Answer
 
   belongs_to :photo
   belongs_to :person
@@ -95,51 +96,12 @@ class Guess < ActiveRecord::Base
   end
 
   def time_elapsed
-    formatted_age_by_period %w(years months days hours minutes seconds)
+    time_elapsed_between photo.dateadded, guessed_at
   end
 
   def ymd_elapsed
-    result = formatted_age_by_period %w(years months days)
-    result.empty? ? time_elapsed : result
+    ymd_elapsed_between photo.dateadded, guessed_at
   end
-
-  def formatted_age_by_period(periods)
-    photo_dateadded = photo.dateadded
-    years = guessed_at.year - photo_dateadded.year
-    months = guessed_at.month - photo_dateadded.month
-    days = guessed_at.day - photo_dateadded.day
-    hours = guessed_at.hour - photo_dateadded.hour
-    minutes = guessed_at.min - photo_dateadded.min
-    seconds = guessed_at.sec - photo_dateadded.sec
-    if seconds < 0
-      seconds += 60
-      minutes -= 1
-    end
-    if minutes < 0
-      minutes += 60
-      hours -= 1
-    end
-    if hours < 0
-      hours += 24
-      days -= 1
-    end
-    if days < 0
-      days += 30
-      months -= 1
-    end
-    if months < 0
-      months += 12
-      years -= 1
-    end
-    time_elapsed = periods.each_with_object([]) do |name, list|
-        value = eval name
-	if value > 0
-	  list.push "#{value}&nbsp;#{value == 1 ? name.singularize : name}"
-	end
-      end
-    time_elapsed.join ', '
-  end
-  private :formatted_age_by_period
 
   def star_for_age
     age = years_old
