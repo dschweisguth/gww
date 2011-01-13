@@ -1,0 +1,23 @@
+<% sandwich do %>
+<h1>Longest-lived revelations</h1>
+
+<table class="dark">
+  <tr>
+    <th>photo</th>
+    <th>posted by</th>
+    <th>added on</th>
+    <th>revealed on</th>
+    <th>time elapsed</th>
+  </tr>
+  <% @longest.each do |revelation| -%>
+    <tr>
+      <td class="thumbnail"><%= link_to titled_image_tag(url_for_flickr_image(revelation.photo, 't'), ""), show_photo_path(revelation.photo) %></td>
+      <td><%= link_to_person revelation.photo.person %></td>
+      <td><%= revelation.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+      <td><%= revelation.revealed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+      <td><%= guess.time_elapsed %></td>
+    </tr>
+  <% end -%>
+</table>
+
+<% end %>
