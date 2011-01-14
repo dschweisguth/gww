@@ -67,7 +67,7 @@ Get the source: Either
     Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
         format, download it and unpack it
 Install gems:
-    > sudo bundle install
+    > sudo bundle install --without production
     > gem list
     actionmailer (2.3.8)
     actionpack (2.3.8)
