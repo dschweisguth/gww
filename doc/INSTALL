@@ -38,25 +38,17 @@ Install gem
 	> sudo port install rb-rubygems
 	> sudo gem update --system
         > gem --version
-        1.3.7
+        1.4.2
     Linux: Get source from http://gems.rubyforge.org/ and follow instructions.
 	> gem --version
-	1.3.7
+	1.4.2
 
-Install gems
+Install bundler
 
-    > gem install rails
-    > gem install rake
+    > sudo gem install bundler
     > gem list
-    actionmailer (2.3.8)
-    actionpack (2.3.8)
-    activerecord (2.3.8)
-    activeresource (2.3.8)
-    activesupport (2.3.8)
-    rack (1.1.0)
-    rails (2.3.8)
-    rake (0.8.7)
-    rubygems-update (1.3.7)
+    bundler (1.0.7)
+    rubygems-update (1.4.2)
 
 Install Phusion Passenger (for Linux production)
 ------------------------------------------------
@@ -75,7 +67,7 @@ Get the source: Either
     Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
         format, download it and unpack it
 Install gems:
-    > rake gems:install
+    > sudo bundle install
     > gem list
     actionmailer (2.3.8)
     actionpack (2.3.8)
