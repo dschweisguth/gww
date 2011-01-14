@@ -1,3 +1,11 @@
+bundle exec passenger-install-apache2-module
+
+Please edit your Apache configuration file, and add these lines:
+
+   LoadModule passenger_module /home/dave/public_html/gww/vendor/bundle/ruby/1.8/gems/passenger-2.2.15/ext/apache2/mod_passenger.so
+   PassengerRoot /home/dave/public_html/gww/vendor/bundle/ruby/1.8/gems/passenger-2.2.15
+   PassengerRuby /usr/local/bin/ruby
+
 This document describes how to install GWW on a Mac (OS 10.6, for development,
 using webrick) or Linux server (CentOS 5.4, for production, using Apache httpd
 and Phusion Passenger). It covers only what Dave thinks is not obvious; please
@@ -6,22 +14,22 @@ fill gaps as you encounter them.
 Install and start mysql
 -----------------------
 
-    Mac
-	If you don't already have it, install MacPorts from www.macports.org
-	> sudo port install mysql5-server
-	> sudo port load mysql5-server # as directed by the previous command
-	> sudo -u _mysql mysql_install_db5
-	> /opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
-	> ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
-    Linux
-        TODO
+Mac
+    If you don't already have it, install MacPorts from www.macports.org
+    > sudo port install mysql5-server
+    > sudo port load mysql5-server # as directed by the previous command
+    > sudo -u _mysql mysql_install_db5
+    > /opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
+    > ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
+Linux
+    TODO
 
 Install ruby and friends
 ------------------------
 
-GWW currently requires ruby 1.8.something (the current version of 1.9 is too
-new), rubygems and the gems listed below. The specific versions are not
-necessarily required, but they're what I have.
+GWW currently requires ruby 1.8.7 (the current version of 1.9 is too new),
+rubygems and the gems listed below. The specific versions are not necessarily
+required, but they're what I have.
 
 Install ruby
     Mac
@@ -39,25 +47,17 @@ Install gem
 	> sudo gem update --system
         > gem --version
         1.4.2
-    Linux: Get source from http://gems.rubyforge.org/ and follow instructions.
+    Linux
+	Get source from http://gems.rubyforge.org/ and follow instructions.
+	> sudo gem update --system
 	> gem --version
 	1.4.2
 
 Install bundler
-
     > sudo gem install bundler
     > gem list
     bundler (1.0.7)
     rubygems-update (1.4.2)
-
-Install Phusion Passenger (for Linux production)
-------------------------------------------------
-
-> gem install passenger
-> passenger-install-apache2-module # and follow instructions
-In addition to editing httpd.conf as instructed by passenger, add the following
-option to the appropriate place in your httpd configuration to enable GWW's
-.htaccess: AllowOverride AuthConfig FileInfo
 
 Get and configure GWW
 ---------------------
@@ -66,55 +66,67 @@ Get the source: Either
     > git clone git@github.com:dschweisguth/gww.git, or
     Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
         format, download it and unpack it
-Install gems:
-    > sudo bundle install --without production
-    > gem list
-    actionmailer (2.3.8)
-    actionpack (2.3.8)
-    activerecord (2.3.8)
-    activeresource (2.3.8)
-    activesupport (2.3.8)
-    mysql (2.8.1)
-    rack (1.1.0)
-    rails (2.3.8)
-    rake (0.8.7)
-    rubygems-update (1.4.2)
-    will_paginate (2.3.15)
-    xml-simple (1.0.12)
-On Mac OS 10.6 only,
-    > sudo gem uninstall mysql
-    > sudo env ARCHFLAGS="-arch x86_64" gem install mysql -- --with-mysql-config=/opt/local/bin/mysql_config5
-Configure:
-    Configure database credentials:
+Install gems
+    Mac
+	> sudo bundle install --without production
+	> gem list
+	actionmailer (2.3.8)
+	actionpack (2.3.8)
+	activerecord (2.3.8)
+	activeresource (2.3.8)
+	activesupport (2.3.8)
+	mysql (2.8.1)
+	rack (1.1.0)
+	rails (2.3.8)
+	rake (0.8.7)
+	rubygems-update (1.4.2)
+	will_paginate (2.3.15)
+	xml-simple (1.0.12)
+	On Mac OS 10.6 only,
+	    > sudo gem uninstall mysql
+	    > sudo env ARCHFLAGS="-arch x86_64" gem install mysql -- --with-mysql-config=/opt/local/bin/mysql_config5
+    Linux
+	> bundle install --deployment
+	> bundle list
+	Gems included by the bundle:
+	  * actionmailer (2.3.8)
+	  * actionpack (2.3.8)
+	  * activerecord (2.3.8)
+	  * activeresource (2.3.8)
+	  * activesupport (2.3.8)
+	  * bundler (1.0.7)
+	  * fastthread (1.0.7)
+	  * mysql (2.8.1)
+	  * passenger (2.2.15)
+	  * rack (1.1.0)
+	  * rails (2.3.8)
+	  * rake (0.8.7)
+	  * will_paginate (2.3.15)
+	  * xml-simple (1.0.12)
+        (Note that the output of 'gem list' did not change.)
+Configure
+    Configure database credentials
 	> cp config/database{_template,}.yml
 	Edit and fill in your database username and password
-    Configure Flickr credentials:
+    Configure Flickr credentials
 	> cp config/flickr_credentials{_template,}.yml
 	Construct a Flickr API secret, key and auth token manually per the
 	    API documentation
 	Edit and fill in your secret, api_key and auth_token
-For production Linux httpd, configure basic HTTP authentication:
-    Create a username and password per
-        http://httpd.apache.org/docs/2.2/howto/auth.html
-    > cp public/admin/.htaccess{_template,}
-    Edit and fill in
-    - the full path to the htpasswd file that you just created. Note that
-      it should not be in or below GWW's public directory.
-    - the username
 
-Create databases
-----------------
+Create database user and databases
+----------------------------------
 
 mysql> grant usage on *.* to gww@localhost identified by '(the password)';
-Create dev database:
+Create dev database
     mysql> grant all privileges on gww_dev.* to gww@localhost;
     > rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
-Create production database:
+Create production database
     mysql> grant all privileges on gww_production.* to gww@localhost;
     > rake RAILS_ENV=production db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
-Create test database:
+Create test database
     mysql> grant all privileges on gww_test.* to gww@localhost;
     > rake RAILS_ENV=test db:create
     > rake db:test:clone_structure
@@ -124,12 +136,31 @@ Test GWW
 
 > rake test
 
+Install Phusion Passenger and configure httpd (for Linux production only)
+-------------------------------------------------------------------------
+
+Install Phusion Passenger
+    > bundle exec passenger-install-apache2-module # and follow instructions
+    In addition to editing httpd.conf as instructed by passenger, add the
+    following option to the appropriate place in your httpd configuration to
+    enable GWW's .htaccess: AllowOverride AuthConfig FileInfo
+
+Configure basic HTTP authentication
+    Create a username and password per
+        http://httpd.apache.org/docs/2.2/howto/auth.html. Be sure not to put
+	the htpasswd file in a directory from which httpd serves files, such as
+	GWW's public directory.
+    > cp public/admin/.htaccess{_template,}
+    Edit and fill in
+    - the full path to the htpasswd file that you just created
+    - the username
+
 Start GWW
 ---------
 
-Development:
+Mac
     > script/server
-    Browse localhost:3000
-Production (Linux):
-    Start or restart httpd
+    Browse http://localhost:3000/
+Linux
+    > sudo apachectl restart
     Browse http://your-production-server/
