@@ -1,11 +1,3 @@
-bundle exec passenger-install-apache2-module
-
-Please edit your Apache configuration file, and add these lines:
-
-   LoadModule passenger_module /home/dave/public_html/gww/vendor/bundle/ruby/1.8/gems/passenger-2.2.15/ext/apache2/mod_passenger.so
-   PassengerRoot /home/dave/public_html/gww/vendor/bundle/ruby/1.8/gems/passenger-2.2.15
-   PassengerRuby /usr/local/bin/ruby
-
 This document describes how to install GWW on a Mac (OS 10.6, for development,
 using webrick) or Linux server (CentOS 5.4, for production, using Apache httpd
 and Phusion Passenger). It covers only what Dave thinks is not obvious; please
