@@ -1,7 +1,7 @@
 This document describes how to install GWW on a Mac (OS 10.6, for development,
 using webrick) or Linux server (CentOS 5.4, for production, using Apache httpd
-and Phusion Passenger). It covers only what Dave thinks is not obvious; please
-fill gaps as you encounter them.
+and Phusion Passenger). It doesn't cover some things that Dave thinks are
+obvious; please fill gaps as you encounter them.
 
 Install and start mysql
 -----------------------
