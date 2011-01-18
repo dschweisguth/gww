@@ -35,7 +35,7 @@ PLATFORMS
 
 DEPENDENCIES
   mysql (~> 2.8.1)
-  passenger (~> 2.2.11)
+  passenger (~> 2.2.15)
   rails (~> 2.3.8)
   will_paginate (~> 2.3.15)
   xml-simple (~> 1.0.12)
