@@ -1,7 +1,7 @@
 # Copy this file to database.yml in the same directory, and
 
 defaults: &defaults
-  adapter:   mysql
+  adapter:   mysql2
   username:   # <-- put your database username here
   password:   # <-- put your database password here
   host:      localhost

@@ -62,21 +62,19 @@ Install gems
     Mac
 	> sudo bundle install --without production
 	> gem list
-	actionmailer (2.3.8)
-	actionpack (2.3.8)
-	activerecord (2.3.8)
-	activeresource (2.3.8)
-	activesupport (2.3.8)
-	mysql (2.8.1)
-	rack (1.1.0)
-	rails (2.3.8)
-	rake (0.8.7)
-	rubygems-update (1.4.2)
-	will_paginate (2.3.15)
-	xml-simple (1.0.12)
-	On Mac OS 10.6 only,
-	    > sudo gem uninstall mysql
-	    > sudo env ARCHFLAGS="-arch x86_64" gem install mysql -- --with-mysql-config=/opt/local/bin/mysql_config5
+        actionmailer (2.3.10)
+        actionpack (2.3.10)
+        activerecord (2.3.10)
+        activeresource (2.3.10)
+        activesupport (2.3.10)
+        bundler (1.0.7)
+        mysql2 (0.2.6)
+        rack (1.1.0)
+        rails (2.3.10)
+        rake (0.8.7)
+        rubygems-update (1.4.2)
+        will_paginate (2.3.15)
+        xml-simple (1.0.12)
     Linux
 	> bundle install --deployment
 	> bundle list
