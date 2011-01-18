@@ -10,3 +10,7 @@ group :production do
   #noinspection RailsParamDefResolve,GemInspection
   gem 'passenger', '~> 2.2.15'
 end
+
+group :test do
+  gem 'rcov', '~> 0.9.9'
+end

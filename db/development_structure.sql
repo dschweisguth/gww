@@ -16,7 +16,7 @@ CREATE TABLE `flickr_updates` (
   `member_count` int(11) NOT NULL DEFAULT '0',
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1191 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1192 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,7 +39,7 @@ CREATE TABLE `people` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=1180 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1182 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -61,7 +61,7 @@ CREATE TABLE `photos` (
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29271 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29303 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
