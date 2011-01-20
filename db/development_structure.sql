@@ -1,10 +1,10 @@
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `photo_id` int(11) NOT NULL DEFAULT '0',
-  `flickrid` varchar(255) NOT NULL DEFAULT '',
-  `username` varchar(255) NOT NULL DEFAULT '',
+  `photo_id` int(11) NOT NULL,
+  `flickrid` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `comment_text` text NOT NULL,
-  `commented_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `commented_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
@@ -12,7 +12,7 @@ CREATE TABLE `comments` (
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` datetime NOT NULL,
   `member_count` int(11) NOT NULL DEFAULT '0',
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -20,11 +20,11 @@ CREATE TABLE `flickr_updates` (
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `photo_id` int(11) NOT NULL DEFAULT '0',
-  `person_id` int(11) NOT NULL DEFAULT '0',
+  `photo_id` int(11) NOT NULL,
+  `person_id` int(11) NOT NULL,
   `guess_text` text NOT NULL,
-  `guessed_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `added_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `guessed_at` datetime NOT NULL,
+  `added_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `guesses_photo_id_fk` (`photo_id`),
   KEY `guesses_person_id_fk` (`person_id`),
@@ -34,8 +34,8 @@ CREATE TABLE `guesses` (
 
 CREATE TABLE `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `flickrid` varchar(255) NOT NULL DEFAULT '',
-  `username` varchar(255) NOT NULL DEFAULT '',
+  `flickrid` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`)
@@ -43,16 +43,16 @@ CREATE TABLE `people` (
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `person_id` int(11) NOT NULL DEFAULT '0',
-  `flickrid` varchar(255) NOT NULL DEFAULT '',
-  `farm` varchar(255) NOT NULL DEFAULT '',
-  `server` varchar(255) NOT NULL DEFAULT '',
-  `secret` varchar(255) NOT NULL DEFAULT '',
-  `dateadded` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `mapped` enum('false','true') NOT NULL DEFAULT 'false',
-  `lastupdate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `seen_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL DEFAULT 'unfound',
+  `person_id` int(11) NOT NULL,
+  `flickrid` varchar(255) NOT NULL,
+  `farm` varchar(255) NOT NULL,
+  `server` varchar(255) NOT NULL,
+  `secret` varchar(255) NOT NULL,
+  `dateadded` datetime NOT NULL,
+  `mapped` enum('false','true') NOT NULL,
+  `lastupdate` datetime NOT NULL,
+  `seen_at` datetime NOT NULL,
+  `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL,
   `views` int(11) NOT NULL,
   `member_comments` int(11) NOT NULL DEFAULT '0',
   `member_questions` int(11) NOT NULL DEFAULT '0',
@@ -65,10 +65,10 @@ CREATE TABLE `photos` (
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `photo_id` int(11) NOT NULL DEFAULT '0',
-  `revelation_text` varchar(255) NOT NULL DEFAULT '',
-  `revealed_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `added_at` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `photo_id` int(11) NOT NULL,
+  `revelation_text` varchar(255) NOT NULL,
+  `revealed_at` datetime NOT NULL,
+  `added_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
@@ -100,6 +100,8 @@ INSERT INTO schema_migrations (version) VALUES ('20');
 INSERT INTO schema_migrations (version) VALUES ('20100612165811');
 
 INSERT INTO schema_migrations (version) VALUES ('20100615121254');
+
+INSERT INTO schema_migrations (version) VALUES ('20110120174937');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

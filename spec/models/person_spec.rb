@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Person do
   it "should create" do
-    # TODO Dave this should blow up
-    Person.create!
+    Person.create! :flickrid => 'flickrid', :username => 'username'
   end
 end
