@@ -30,7 +30,7 @@ class Admin::PhotosController < ApplicationController
         people_flickrids =
           Set.new parsed_photos['photo'].map { |p| p['owner'] }
         existing_people_flickrids = people_flickrids - existing_people.keys
-        Person.find_all_by_flickrid(people_flickrids.to_a).each do |person|
+        Person.find_all_by_flickrid(existing_people_flickrids.to_a).each do |person|
           existing_people[person.flickrid] = person
         end
 
