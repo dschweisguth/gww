@@ -13,4 +13,5 @@ end
 
 group :test do
   gem 'rcov', '~> 0.9.9'
+  gem 'rspec-rails', '~> 1.3.3'
 end
