@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# This script updates production GWW from github. It's only meant for
+# production; it does things that are only relevant in the production
+# environment.
+
 cd `dirname $0`/..
 git pull
 # I thought Rails would do this on startup, but it doesn't seem to happen when
