@@ -1,5 +1,8 @@
 #!/bin/sh
 cd `dirname $0`/..
 git pull
+# I thought Rails would do this on startup, but it doesn't seem to happen when
+# running this script.
+bundle install --deployment --without test
 touch tmp/restart.txt
 rm -r public/cache
