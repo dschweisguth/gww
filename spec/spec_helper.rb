@@ -52,3 +52,10 @@ Spec::Runner.configure do |config|
   #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
 end
+
+class Hash
+  def except(*keys)
+    #noinspection RubyUnusedLocalVariable
+    reject { |key, value| keys.include?(key) }
+  end
+end
