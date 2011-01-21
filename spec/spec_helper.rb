@@ -54,8 +54,10 @@ Spec::Runner.configure do |config|
 end
 
 class Hash
-  def except(*keys)
+
+  def -(*keys)
     #noinspection RubyUnusedLocalVariable
     reject { |key, value| keys.include?(key) }
   end
+
 end
