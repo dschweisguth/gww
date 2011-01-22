@@ -1,6 +1,7 @@
 class Admin::GuessesController < ApplicationController
 
   caches_page :report
+  #noinspection RailsParamDefResolve
   def report
     @report_date = Time.now
 
