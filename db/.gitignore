@@ -1,2 +1,5 @@
 development_structure.sql
 test_structure.sql
+# RubyMine needs schema.rb. If you use RubyMine, regenerate schema.rb with
+#'rake db:schema:dump' each time the schema changes.
+schema.rb
