@@ -324,7 +324,7 @@ class Admin::PhotosController < ApplicationController
 
     end
 
-    redirect_to :action => 'unverified'
+    redirect_to :action => 'inaccessible'
   end
 
   def edit_in_gww

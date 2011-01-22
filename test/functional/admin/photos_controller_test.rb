@@ -43,7 +43,7 @@ class Admin::PhotosControllerTest < ActionController::TestCase
 
     post :destroy, :id => @photo.id
     assert_response :redirect
-    assert_redirected_to :action => 'unverified'
+    assert_redirected_to :action => 'inaccessible'
 
     assert_raise(ActiveRecord::RecordNotFound) {
       Photo.find(@photo.id)
