@@ -138,12 +138,14 @@ class Admin::PhotosController < ApplicationController
     render :template => 'admin/photos/list'
   end
 
+  #noinspection RailsParamDefResolve
   def show
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
     @comments = Comment.find_all_by_photo_id @photo
   end
 
+  #noinspection RailsParamDefResolve
   def edit
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
