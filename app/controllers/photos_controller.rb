@@ -20,6 +20,7 @@ class PhotosController < ApplicationController
   end
 
   caches_page :show
+  #noinspection RailsParamDefResolve
   def show
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
