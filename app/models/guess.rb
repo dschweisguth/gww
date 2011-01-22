@@ -4,6 +4,7 @@ class Guess < ActiveRecord::Base
   belongs_to :photo
   belongs_to :person
 
+  #noinspection RailsParamDefResolve
   def self.longest
     all :include => [ :person, { :photo => :person } ],
       :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
@@ -13,6 +14,7 @@ class Guess < ActiveRecord::Base
       :limit => 10
   end
 
+  #noinspection RailsParamDefResolve
   def self.shortest
     all :include => [ :person, { :photo => :person } ],
       :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
@@ -71,6 +73,7 @@ class Guess < ActiveRecord::Base
 	  'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
   end
 
+  #noinspection RailsParamDefResolve
   def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = first :include => [ :person, { :photo => :person } ],
       :conditions =>
@@ -127,6 +130,7 @@ class Guess < ActiveRecord::Base
     end
   end
 
+  #noinspection RailsParamDefResolve
   def self.shortest_in_2010
     all :include => [ :person, { :photo => :person } ],
       :conditions =>

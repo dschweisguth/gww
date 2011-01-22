@@ -3,6 +3,7 @@ class Revelation < ActiveRecord::Base
 
   belongs_to :photo
 
+  #noinspection RailsParamDefResolve
   def self.longest
     all :include => { :photo => :person },
       :order => 'unix_timestamp(revelations.revealed_at) - ' +
