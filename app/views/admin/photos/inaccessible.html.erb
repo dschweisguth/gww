@@ -1,2 +1,2 @@
 <%= render :partial => 'admin/photos/list',
-  :locals => { :title => pluralize('photo', @photos.length) + ' worth more than one point' } %>
+  :locals => { :title => pluralize_word_only(@photos.length, 'photo') + ' worth more than one point' } %>
