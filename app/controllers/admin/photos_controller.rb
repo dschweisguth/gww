@@ -143,14 +143,12 @@ class Admin::PhotosController < ApplicationController
   def edit
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
-    if params[:nocomment]
-      @comments = Comment.find_all_by_photo_id @photo
-    else
-      @comments = load_comments params, @photo
-    end
+    @comments = params[:nocomment] \
+      ? Comment.find_all_by_photo_id(@photo) \
+      : load_comments(@photo)
   end
 
-  def load_comments(params, photo)
+  def load_comments(photo)
     comments = []
     parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
       'photo_id' => photo.flickrid
