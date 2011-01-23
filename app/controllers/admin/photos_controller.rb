@@ -308,10 +308,8 @@ class Admin::PhotosController < ApplicationController
       photo.destroy
 
       # Delete the photo's owner if they have no other photos or guesses
-      if Photo.count(:all,
-	  :conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
-	Guess.count(:all,
-	  :conditions => [ 'person_id = ?', photo.person_id ]) == 0
+      if Photo.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
+	Guess.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0
 	photo.person.destroy
       end
 
