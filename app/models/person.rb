@@ -5,11 +5,11 @@ class Person < ActiveRecord::Base
   has_many :guesses
 
   def self.guesses_per_day
-    statistic_by_person \
+    statistic_by_person [
       'select ' +
         'person_id id, ' +
-        'count(*) / datediff(now(), min(guessed_at)) statistic ' +
-      'from guesses group by person_id'
+        'count(*) / datediff(?, min(guessed_at)) statistic ' +
+      'from guesses group by person_id', Time.now.getutc ]
   end
 
   def self.guess_speeds
