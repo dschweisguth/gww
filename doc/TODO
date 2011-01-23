@@ -1,4 +1,4 @@
-Upgrade xml_simple
+Fix unclassified helpers etc.
 rvm
 Upgrade to Rails 3
 Upgrade to Ruby 1.9.2, after the conflict documented here has been fixed:
