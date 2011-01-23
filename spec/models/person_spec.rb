@@ -23,6 +23,7 @@ describe Person do
     Person.new(VALID_ATTRS.merge({ :username => '' })).should_not be_valid
   end
 
+  # TODO Dave this fails some of the time
   it "should calculate guesses per day" do
     now = Time.now.getutc
     poster = Person.create! :flickrid => 'poster_flickrid', :username => 'poster_username'
@@ -32,7 +33,7 @@ describe Person do
       :mapped => 'false', :game_status => 'unfound', :views => 0
     guesser = Person.create! :flickrid => 'guesser_flickrid', :username => 'guesser_username'
     Guess.create! :photo => photo, :person => guesser,
-      :guess_text => "guess text", :guessed_at => 4.days.ago, :added_at => now
+      :guess_text => "guess text", :guessed_at => 4.days.ago.getutc, :added_at => now
     Person.guesses_per_day.should == { guesser.id => 0.25 }
   end
 
