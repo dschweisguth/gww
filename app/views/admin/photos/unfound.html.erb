@@ -1,0 +1,2 @@
+<%= render :partial => 'admin/photos/list',
+  :locals => { :title => 'unfound or unconfirmed ' + pluralize_word_only(@photos.length, 'photo') } %>

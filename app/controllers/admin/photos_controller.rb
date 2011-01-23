@@ -112,30 +112,24 @@ class Admin::PhotosController < ApplicationController
 
   caches_page :unfound
   def unfound
-    @title = 'unfound or unconfirmed photos'
     @photos = Photo.unfound_or_unconfirmed
-    render :template => 'admin/photos/list'
   end
 
   caches_page :inaccessible
   def inaccessible
-    @title = 'inaccessible and unfound or unconfirmed photos'
     @photos = Photo.all \
       :conditions =>
         [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
           FlickrUpdate.latest.created_at ],
       :include => :person, :order => "lastupdate desc"
-    render :template => 'admin/photos/list'
   end
 
   caches_page :multipoint
   def multipoint
-    @title = 'photos worth more than one point'
     photo_ids = Guess.count(:group => :photo_id).
       to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
     @photos = Photo.find_all_by_id photo_ids,
       :include => :person, :order => "lastupdate desc"
-    render :template => 'admin/photos/list'
   end
 
   #noinspection RailsParamDefResolve
