@@ -26,9 +26,9 @@ Change this photo's status from <%= @photo.game_status %> to
     <tr>
       <td>
 	<% @comments.each do |comment| -%>
-	  <% highlight = comment.username == @photo.person.username -%>
-          <% uline = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
-	  <%= radio_button(:comment, :id, comment.id) %> <strong><%=h comment.username %> says:</strong> <% if highlight -%><span class="highlight"><% end -%><% if uline -%><u><% end -%><%= comment.comment_text %><% if uline -%></u><% end -%><% if highlight -%></span><% end -%><br/>
+	  <% commenter_is_poster = comment.username == @photo.person.username -%>
+          <% guess_is_correct = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
+	  <%= radio_button(:comment, :id, comment.id) %> <strong><%=h comment.username %> says:</strong> <% if commenter_is_poster -%><span class="poster"><% end -%><% if guess_is_correct -%><span class="correct"><% end -%><%= comment.comment_text %><% if guess_is_correct -%></span><% end -%><% if commenter_is_poster -%></span><% end -%><br/>
 	<% end -%>
       </td>
     </tr>

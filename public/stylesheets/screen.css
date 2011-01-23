@@ -145,8 +145,12 @@ th {
   font-size: 11px;
 }
 
-.highlight {
+.poster {
   background-color: #cccccc;
+}
+
+.correct {
+  text-decoration: underline;
 }
 
 .dark .input {
