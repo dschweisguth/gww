@@ -1,4 +1,4 @@
-<b>updated <%= @report_date.strftime '%A, %B %d, %I %p' %></b>
+<strong>updated <%= @report_date.strftime '%A, %B %d, %I %p' %></strong>
 
 <%= render :partial => 'admin/guesses/report/thumbnails', :locals =>
   { :change_name => 'new guess', :change_verb => '',
@@ -20,5 +20,5 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 
 <% @people_by_score.each do |people_with_score| -%>
 <% next if people_with_score[:score] <= 1 -%>
-<b><%= people_with_score[:score] %></b> - <% people_with_score[:people].each_with_index do |person, i| %><%= link_to_person person %> (<%= person[:posts] %>)<% if i < people_with_score[:people].length - 1 %>, <% end %><% end %>
+<strong><%= people_with_score[:score] %></strong> - <% people_with_score[:people].each_with_index do |person, i| %><%= link_to_person person %> (<%= person[:posts] %>)<% if i < people_with_score[:people].length - 1 %>, <% end %><% end %>
 <% end -%>
