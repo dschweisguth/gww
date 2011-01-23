@@ -1,4 +1,4 @@
-<b><%=h person.username %> has correctly guessed <%= pluralize guesses.length, 'photo' %></b><br/>
+<strong><%=h person.username %> has correctly guessed <%= pluralize guesses.length, 'photo' %></strong><br/>
 
 <% posters.each do |poster| -%>
 <%=  poster[:guesses].length %> <%= singularize 'were', poster[:guesses].length %> posted by <%= link_to_person poster %>:
