@@ -26,7 +26,7 @@ module ApplicationHelper
       else
         suffix = 'th'
     end
-    return number.to_s + suffix
+    number.to_s + suffix
   end
 
   def local_date(datetime)
