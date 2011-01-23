@@ -174,6 +174,7 @@ class Admin::PhotosController < ApplicationController
     end
     comments
   end
+  private :load_comments
 
   def change_game_status
     expire_cached_pages
