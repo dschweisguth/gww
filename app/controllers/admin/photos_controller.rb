@@ -315,7 +315,7 @@ class Admin::PhotosController < ApplicationController
 
     end
 
-    redirect_to :action => 'inaccessible'
+    redirect_to admin_root_path
   end
 
   def edit_in_gww
