@@ -239,11 +239,11 @@ class PeopleController < ApplicationController
   private :standing
 
   def group_by_guessers(posts)
-    posts.each_with_object [] do |post, groups|
+    posts.each_with_object [] do |post, guessers|
       post.guesses.each do |guess|
         guesser = guess.person
-	if ! groups.include? guesser
-	  groups.push guesser
+	if ! guessers.include? guesser
+	  guessers.push guesser
 	  guesser[:guessed_photos] = []
 	end
 	guesser[:guessed_photos].push post
