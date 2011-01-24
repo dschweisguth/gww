@@ -54,10 +54,39 @@ Spec::Runner.configure do |config|
 end
 
 class Hash
-
   def -(*keys)
     #noinspection RubyUnusedLocalVariable
     reject { |key, value| keys.include?(key) }
   end
+end
 
+class Person
+  def self.create_for_test(prefix)
+    Person.create! :flickrid => prefix + '_flickrid',
+      :username => prefix + '_username'    
+  end
+end
+
+class Photo
+  def self.create_for_test(prefix = '')
+    if prefix == ''
+      prefix += '_'
+    end
+    person = Person.create_for_test(prefix + 'poster')
+    now = Time.now
+    Photo.create! :person => person, :flickrid => prefix + 'photo_flickrid',
+      :farm => 'farm', :server => 'server', :secret => 'secret',
+      :dateadded => now, :lastupdate => now, :seen_at => now,
+      :mapped => 'false', :game_status => 'unfound', :views => 0
+  end
+end
+
+class Guess
+  def self.create_for_test(prefix = '')
+    photo = Photo.create_for_test prefix
+    guesser = Person.create_for_test prefix
+    now = Time.now
+    Guess.create! :photo => photo, :person => guesser,
+      :guess_text => "guess text", :guessed_at => 4.days.ago, :added_at => now
+  end
 end
