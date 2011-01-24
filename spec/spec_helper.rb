@@ -69,26 +69,30 @@ class Person
 end
 
 class Photo
-  def self.create_for_test(options)
-    options, prefix, padded_prefix = process_prefix! options
-    person = Person.create_for_test :prefix => (padded_prefix + 'poster')
+  def self.create_for_test(caller_options)
+    caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
-    Photo.create! :person => person, :flickrid => prefix + 'photo_flickrid',
+    poster = Person.create_for_test :prefix => (padded_prefix + 'poster')
+    options = { :person => poster, :flickrid => prefix + 'photo_flickrid',
       :farm => 'farm', :server => 'server', :secret => 'secret',
       :dateadded => now, :lastupdate => now, :seen_at => now,
-      :mapped => 'false', :game_status => 'unfound', :views => 0
+      :mapped => 'false', :game_status => 'unfound', :views => 0 }
+    options.merge! caller_options
+    Photo.create! options
   end
 end
 
 class Guess
-  def self.create_for_test(options)
-    options, prefix, padded_prefix = process_prefix! options
-    photo = Photo.create_for_test :prefix => prefix
-    guesser = Person.create_for_test :prefix => (padded_prefix + 'guesser')
+  def self.create_for_test(caller_options)
+    caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
-    options = { :photo => photo, :person => guesser,
-      :guess_text => "guess text", :guessed_at => now, :added_at => now } \
-      .merge options
+    guesser = Person.create_for_test :prefix => (padded_prefix + 'guesser')
+    options = { :person => guesser,
+      :guess_text => "guess text", :guessed_at => now, :added_at => now }
+    if ! caller_options[:photo]
+      options[:photo] = Photo.create_for_test :prefix => prefix
+    end
+    options.merge! caller_options
     Guess.create! options
   end
 end

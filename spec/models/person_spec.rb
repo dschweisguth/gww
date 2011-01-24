@@ -28,4 +28,10 @@ describe Person do
     Person.guesses_per_day.should == { guess.person.id => 0.25 }
   end
 
+  it "should calculate guess speeds" do
+    photo = Photo.create_for_test :dateadded => 5.seconds.ago
+    guess = Guess.create_for_test :photo => photo, :guessed_at => 1.seconds.ago
+    Person.guess_speeds.should == { guess.person.id => 4 }
+  end
+
 end
