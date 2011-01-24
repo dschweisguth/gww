@@ -4,7 +4,7 @@
 <% if ! @comments.empty? -%>
 <h2>Comments</h2>
 <% @comments.each do |comment| -%>
-  <b><%=h comment.username %> says:</b> <%= comment.comment_text %><br/>
+  <strong><%=h comment.username %> says:</strong> <%= comment.comment_text %><br/>
 <% end -%>
 <% else -%>
 No comments available.
