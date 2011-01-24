@@ -196,12 +196,11 @@ class PeopleController < ApplicationController
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
-    @posters =
-      group_by_owner(@guesses, :guesses) { |guess| guess.photo.person }
-    @posters.sort! do |x,y|
-      c = y[:guesses].length <=> x[:guesses].length
-      c != 0 ? c : x.username.downcase <=> y.username.downcase
-    end
+    @posters = @guesses.group_by { |guess| guess.photo.person }.sort \
+      do |x,y|
+        c = y[1].length <=> x[1].length
+        c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
+      end
 
     @unfound_photos = Photo.all :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
