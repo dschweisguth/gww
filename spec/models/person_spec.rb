@@ -34,4 +34,10 @@ describe Person do
     Person.guess_speeds.should == { guess.person.id => 4 }
   end
 
+  it "should calculate be-guessed speeds" do
+    photo = Photo.create_for_test :dateadded => 5.seconds.ago
+    Guess.create_for_test :photo => photo, :guessed_at => 1.seconds.ago
+    Person.be_guessed_speeds.should == { photo.person.id => 4 }
+  end
+
 end
