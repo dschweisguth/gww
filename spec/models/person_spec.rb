@@ -24,9 +24,7 @@ describe Person do
   end
 
   it "should calculate guesses per day" do
-    guess = Guess.create_for_test
-    guess.guessed_at = 4.days.ago
-    guess.save!
+    guess = Guess.create_for_test :guessed_at => 4.days.ago
     Person.guesses_per_day.should == { guess.person.id => 0.25 }
   end
 

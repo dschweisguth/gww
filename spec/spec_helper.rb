@@ -82,11 +82,19 @@ class Photo
 end
 
 class Guess
-  def self.create_for_test(prefix = '')
+  def self.create_for_test(options)
+    prefix = options[:prefix]
+    if prefix
+      options.delete :prefix
+    else
+      prefix = ''
+    end
     photo = Photo.create_for_test prefix
     guesser = Person.create_for_test prefix
     now = Time.now
-    Guess.create! :photo => photo, :person => guesser,
-      :guess_text => "guess text", :guessed_at => 4.days.ago, :added_at => now
+    options = { :photo => photo, :person => guesser,
+      :guess_text => "guess text", :guessed_at => now, :added_at => now } \
+      .merge options
+    Guess.create! options
   end
 end
