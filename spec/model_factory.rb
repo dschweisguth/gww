@@ -21,7 +21,7 @@ end
 class Person
   extend ModelFactorySupport
 
-  def self.create_for_test(options)
+  def self.create_for_test!(options)
     #noinspection RubyUnusedLocalVariable
     options, prefix, padded_prefix = process_prefix! options
     Person.create! :flickrid => padded_prefix + 'person_flickrid',
@@ -33,11 +33,11 @@ end
 class Photo
   extend ModelFactorySupport
 
-  def self.create_for_test(caller_options)
+  def self.create_for_test!(caller_options)
     #noinspection RubyUnusedLocalVariable
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
-    poster = Person.create_for_test :prefix => (padded_prefix + 'poster')
+    poster = Person.create_for_test! :prefix => (padded_prefix + 'poster')
     options = { :person => poster,
       :flickrid => padded_prefix + 'photo_flickrid',
       :farm => 'farm', :server => 'server', :secret => 'secret',
@@ -52,14 +52,14 @@ end
 class Guess
   extend ModelFactorySupport
 
-  def self.create_for_test(caller_options)
+  def self.create_for_test!(caller_options)
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
-    guesser = Person.create_for_test :prefix => (padded_prefix + 'guesser')
+    guesser = Person.create_for_test! :prefix => (padded_prefix + 'guesser')
     options = { :person => guesser,
       :guess_text => 'guess text', :guessed_at => now, :added_at => now }
     if ! caller_options[:photo]
-      options[:photo] = Photo.create_for_test :prefix => prefix
+      options[:photo] = Photo.create_for_test! :prefix => prefix
     end
     options.merge! caller_options
     Guess.create! options
@@ -70,13 +70,13 @@ end
 class Comment
   extend ModelFactorySupport
 
-  def self.create_for_test(caller_options)
+  def self.create_for_test!(caller_options)
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     options = { :flickrid => padded_prefix + 'comment_flickrid',
       :username => padded_prefix + 'comment_username',
       :comment_text => 'comment_text', :commented_at => Time.now }
     if ! caller_options[:photo]
-      options[:photo] = Photo.create_for_test :prefix => prefix
+      options[:photo] = Photo.create_for_test! :prefix => prefix
     end
     options.merge! caller_options
     Comment.create! options
