@@ -210,11 +210,7 @@ class PeopleController < ApplicationController
     
     @posts = Photo.find_all_by_person_id @person.id,
       :include => { :guesses => :person }
-    @guessers = group_by_guessers(@posts)
-    @guessers.sort! do |x,y|
-      c = y[:guessed_photos].length <=> x[:guessed_photos].length
-      c != 0 ? c : x.username.downcase <=> y.username.downcase
-    end
+    @guessers = group_by_guessers @posts
     
   end
 
@@ -239,15 +235,21 @@ class PeopleController < ApplicationController
   private :standing
 
   def group_by_guessers(posts)
-    posts.each_with_object [] do |post, guessers|
+    guessers = {}
+    posts.each do |post|
       post.guesses.each do |guess|
         guesser = guess.person
-	if ! guessers.include? guesser
-	  guessers.push guesser
-	  guesser[:guessed_photos] = []
-	end
-	guesser[:guessed_photos].push post
+        guessers_guesses = guessers[guesser]
+        if ! guessers_guesses
+          guessers_guesses = []
+          guessers[guesser] = guessers_guesses
+        end
+	guessers_guesses.push post
       end
+    end
+    guessers.sort do |x,y|
+      c = y[1].length <=> x[1].length
+      c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
     end
   end
   private :group_by_guessers
