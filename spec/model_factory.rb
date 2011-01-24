@@ -22,6 +22,7 @@ class Person
   extend ModelFactorySupport
 
   def self.create_for_test(options)
+    #noinspection RubyUnusedLocalVariable
     options, prefix, padded_prefix = process_prefix! options
     Person.create! :flickrid => padded_prefix + 'person_flickrid',
       :username => padded_prefix + 'username'
@@ -33,6 +34,7 @@ class Photo
   extend ModelFactorySupport
 
   def self.create_for_test(caller_options)
+    #noinspection RubyUnusedLocalVariable
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
     poster = Person.create_for_test :prefix => (padded_prefix + 'poster')
