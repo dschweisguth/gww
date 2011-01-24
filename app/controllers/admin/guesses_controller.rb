@@ -10,17 +10,18 @@ class Admin::GuessesController < ApplicationController
     @guesses = Guess.all \
       :conditions => [ "added_at > ?", updates[0].created_at ],
       :include => [ { :photo => :person }, :person ], :order => "guessed_at"
-    @guessers = group_by_owner(@guesses, :guesses) { |guess| guess.person } 
-    @guessers.sort! { |x, y|
-      c = y[:guesses].length <=> x[:guesses].length
-      c != 0 ? c : x.username.downcase <=> y.username.downcase }
+    @guessers = @guesses.group_by { |guess| guess.person }.sort \
+      do |x, y|
+        c = y[1].length <=> x[1].length
+        c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
+      end
 
     @revelations = Revelation.all \
       :conditions => [ "added_at > ?", updates[0].created_at ], 
       :include => { :photo => :person }
-    @revealers = group_by_owner(@revelations, :revelations) \
-      { |revelation| revelation.photo.person }
-    @revealers.sort! { |x, y| x.username.downcase <=> y.username.downcase }
+    @revealers =
+      @revelations.group_by { | revelation| revelation.photo.person } \
+      .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
 
     @weekly_high_scorers = Person.high_scorers 7
     @monthly_high_scorers = Person.high_scorers 30
