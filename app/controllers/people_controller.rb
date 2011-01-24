@@ -239,6 +239,23 @@ class PeopleController < ApplicationController
   end
   private :standing
 
+  def group_by_owner(items, attr, &owners_of)
+    items.each_with_object [] do |item, groups|
+      owners = owners_of.call item
+      if ! owners.is_a? Array
+        owners = [ owners ]
+      end
+      owners.each do |owner|
+	if ! groups.include? owner
+	  groups.push owner
+	  owner[attr] = []
+	end
+	owner[attr].push item
+      end
+    end
+  end
+  private :group_by_owner
+
   caches_page :guesses
   def guesses
     @person = Person.find params[:id]
