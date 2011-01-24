@@ -60,7 +60,22 @@ class Hash
   end
 end
 
+module ModelFactorySupport
+  def process_prefix!(options)
+    prefix = options[:prefix]
+    if prefix
+      options.delete :prefix
+    else
+      prefix = ''
+    end
+    padded_prefix = prefix == '' ? '' : prefix + '_';
+    return options, prefix, padded_prefix
+  end
+end
+
 class Person
+  extend ModelFactorySupport
+  
   def self.create_for_test(options)
     options, prefix, padded_prefix = process_prefix! options
     Person.create! :flickrid => padded_prefix + 'person_flickrid',
@@ -69,6 +84,7 @@ class Person
 end
 
 class Photo
+  extend ModelFactorySupport
   def self.create_for_test(caller_options)
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
@@ -83,6 +99,7 @@ class Photo
 end
 
 class Guess
+  extend ModelFactorySupport
   def self.create_for_test(caller_options)
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
@@ -95,15 +112,4 @@ class Guess
     options.merge! caller_options
     Guess.create! options
   end
-end
-
-def process_prefix!(options)
-  prefix = options[:prefix]
-  if prefix
-    options.delete :prefix
-  else
-    prefix = ''
-  end
-  padded_prefix = prefix == '' ? '' : prefix + '_';
-  return options, prefix, padded_prefix
 end
