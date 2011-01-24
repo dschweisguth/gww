@@ -1,12 +1,5 @@
 class ApplicationController < ActionController::Base
 
-  def expire_cached_pages
-    cache_dir = RAILS_ROOT + "/public/cache"
-    if File.exist? cache_dir
-      FileUtils.rm_r cache_dir
-    end
-  end
-
   def group_by_owner(items, attr, &owners_of)
     items.each_with_object [] do |item, groups|
       owners = owners_of.call item
@@ -22,7 +15,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  protected :group_by_owner
+  private :group_by_owner
 
   def in_gww(controller, action)
     @from = params[:from]
@@ -43,5 +36,6 @@ class ApplicationController < ActionController::Base
     end
     render :file => 'application/in_gww'
   end
+  private :in_gww
 
 end

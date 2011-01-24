@@ -318,6 +318,14 @@ class Admin::PhotosController < ApplicationController
     redirect_to admin_root_path
   end
 
+  def expire_cached_pages
+    cache_dir = RAILS_ROOT + "/public/cache"
+    if File.exist? cache_dir
+      FileUtils.rm_r cache_dir
+    end
+  end
+  private :expire_cached_pages
+
   def edit_in_gww
     in_gww 'admin/photos', 'edit'
   end
