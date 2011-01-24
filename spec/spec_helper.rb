@@ -61,18 +61,33 @@ class Hash
 end
 
 class Person
-  def self.create_for_test(prefix)
-    Person.create! :flickrid => prefix + '_flickrid',
-      :username => prefix + '_username'    
+  def self.create_for_test(options)
+    prefix = options[:prefix]
+    if prefix
+      options.delete :prefix
+    else
+      prefix = ''
+    end
+    if prefix != ''
+      prefix += '_'
+    end
+    Person.create! :flickrid => prefix + 'person_flickrid',
+      :username => prefix + 'username'
   end
 end
 
 class Photo
-  def self.create_for_test(prefix = '')
-    if prefix == ''
+  def self.create_for_test(options)
+    prefix = options[:prefix]
+    if prefix
+      options.delete :prefix
+    else
+      prefix = ''
+    end
+    if prefix != ''
       prefix += '_'
     end
-    person = Person.create_for_test(prefix + 'poster')
+    person = Person.create_for_test :prefix => (prefix + 'poster')
     now = Time.now
     Photo.create! :person => person, :flickrid => prefix + 'photo_flickrid',
       :farm => 'farm', :server => 'server', :secret => 'secret',
@@ -89,8 +104,8 @@ class Guess
     else
       prefix = ''
     end
-    photo = Photo.create_for_test prefix
-    guesser = Person.create_for_test prefix
+    photo = Photo.create_for_test :prefix => prefix
+    guesser = Person.create_for_test :prefix => prefix
     now = Time.now
     options = { :photo => photo, :person => guesser,
       :guess_text => "guess text", :guessed_at => now, :added_at => now } \
