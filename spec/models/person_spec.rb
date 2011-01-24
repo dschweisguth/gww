@@ -41,4 +41,15 @@ describe Person do
     Person.be_guessed_speeds.should == { photo.person.id => 4 }
   end
 
+  it "should calculate average comments to guess" do
+    guessed_at = 10.seconds.ago
+    guess = Guess.create_for_test :guessed_at => guessed_at
+    Comment.create_for_test :prefix => 'guess', :photo => guess.photo,
+      :flickrid => guess.person.flickrid, :username => guess.person.username,
+      :commented_at => guessed_at
+    Comment.create_for_test :prefix => 'chitchat', :photo => guess.photo,
+      :flickrid => guess.person.flickrid, :username => guess.person.username
+    Person.comments_to_guess.should == { guess.person.id => 1 }
+  end
+
 end
