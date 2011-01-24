@@ -62,32 +62,16 @@ end
 
 class Person
   def self.create_for_test(options)
-    prefix = options[:prefix]
-    if prefix
-      options.delete :prefix
-    else
-      prefix = ''
-    end
-    if prefix != ''
-      prefix += '_'
-    end
-    Person.create! :flickrid => prefix + 'person_flickrid',
-      :username => prefix + 'username'
+    options, prefix, padded_prefix = process_prefix! options
+    Person.create! :flickrid => padded_prefix + 'person_flickrid',
+      :username => padded_prefix + 'username'
   end
 end
 
 class Photo
   def self.create_for_test(options)
-    prefix = options[:prefix]
-    if prefix
-      options.delete :prefix
-    else
-      prefix = ''
-    end
-    if prefix != ''
-      prefix += '_'
-    end
-    person = Person.create_for_test :prefix => (prefix + 'poster')
+    options, prefix, padded_prefix = process_prefix! options
+    person = Person.create_for_test :prefix => (padded_prefix + 'poster')
     now = Time.now
     Photo.create! :person => person, :flickrid => prefix + 'photo_flickrid',
       :farm => 'farm', :server => 'server', :secret => 'secret',
@@ -98,18 +82,24 @@ end
 
 class Guess
   def self.create_for_test(options)
-    prefix = options[:prefix]
-    if prefix
-      options.delete :prefix
-    else
-      prefix = ''
-    end
+    options, prefix, padded_prefix = process_prefix! options
     photo = Photo.create_for_test :prefix => prefix
-    guesser = Person.create_for_test :prefix => prefix
+    guesser = Person.create_for_test :prefix => (padded_prefix + 'guesser')
     now = Time.now
     options = { :photo => photo, :person => guesser,
       :guess_text => "guess text", :guessed_at => now, :added_at => now } \
       .merge options
     Guess.create! options
   end
+end
+
+def process_prefix!(options)
+  prefix = options[:prefix]
+  if prefix
+    options.delete :prefix
+  else
+    prefix = ''
+  end
+  padded_prefix = prefix == '' ? '' : prefix + '_';
+  return options, prefix, padded_prefix
 end
