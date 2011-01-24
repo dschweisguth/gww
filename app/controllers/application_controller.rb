@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
       @message = "Hmmm, that's strange. #{@from} isn't a Flickr photo page. " +
         "How did we get here?"
     end
-    render :file => 'shared/in_gww'
+    render :file => 'application/in_gww'
   end
 
 end
