@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'model_factory'
 
 describe Person do
   VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
