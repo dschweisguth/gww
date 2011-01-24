@@ -210,8 +210,7 @@ class PeopleController < ApplicationController
     
     @posts = Photo.find_all_by_person_id @person.id,
       :include => { :guesses => :person }
-    @guessers = group_by_owner(@posts, :guessed_photos) \
-      { |photo| photo.guesses.map { |guess| guess.person } }
+    @guessers = group_by_guessers(@posts)
     @guessers.sort! do |x,y|
       c = y[:guessed_photos].length <=> x[:guessed_photos].length
       c != 0 ? c : x.username.downcase <=> y.username.downcase
@@ -239,22 +238,19 @@ class PeopleController < ApplicationController
   end
   private :standing
 
-  def group_by_owner(items, attr, &owners_of)
-    items.each_with_object [] do |item, groups|
-      owners = owners_of.call item
-      if ! owners.is_a? Array
-        owners = [ owners ]
-      end
-      owners.each do |owner|
-	if ! groups.include? owner
-	  groups.push owner
-	  owner[attr] = []
+  def group_by_guessers(posts)
+    posts.each_with_object [] do |post, groups|
+      post.guesses.each do |guess|
+        guesser = guess.person
+	if ! groups.include? guesser
+	  groups.push guesser
+	  guesser[:guessed_photos] = []
 	end
-	owner[attr].push item
+	guesser[:guessed_photos].push post
       end
     end
   end
-  private :group_by_owner
+  private :group_by_guessers
 
   caches_page :guesses
   def guesses
