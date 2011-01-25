@@ -52,33 +52,40 @@ describe Person do
   end
 
   describe '.comments_to_guess' do
-    before do
-      guessed_at = 10.seconds.ago
-      @guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => @guess.photo,
-        :flickrid => @guess.person.flickrid, :username => @guess.person.username,
-        :commented_at => guessed_at
+    context 'given a guess' do
+      before do
+        guessed_at = 10.seconds.ago
+        @guess = Guess.create_for_test! :guessed_at => guessed_at
+        Comment.create_for_test! :prefix => 'guess', :photo => @guess.photo,
+          :flickrid => @guess.person.flickrid, :username => @guess.person.username,
+          :commented_at => guessed_at
+      end
+
+      it 'returns a map of person ID to average # of comments/guess' do
+        returns_expected_map
+      end
+
+      it 'ignores comments made after the guess' do
+        Comment.create_for_test! :prefix => 'chitchat', :photo => @guess.photo,
+          :flickrid => @guess.person.flickrid, :username => @guess.person.username
+        returns_expected_map
+      end
+
+      it 'ignores comments made by someone other than the guesser' do
+        Comment.create_for_test! :prefix => "someone else's guess",
+          :photo => @guess.photo, :commented_at => 11.seconds.ago
+        returns_expected_map
+      end
+
+      #noinspection RubyResolve
+      def returns_expected_map
+        Person.comments_to_guess.should == { @guess.person.id => 1 }
+      end
+
     end
 
-    it 'returns a map of person ID to average # of comments/guess' do
-      returns_expected_map
-    end
-
-    it 'ignores comments made after a guess' do
-      Comment.create_for_test! :prefix => 'chitchat', :photo => @guess.photo,
-        :flickrid => @guess.person.flickrid, :username => @guess.person.username
-      returns_expected_map
-    end
-
-    it 'ignores comments made by others' do
-      Comment.create_for_test! :prefix => "someone else's guess",
-        :photo => @guess.photo, :commented_at => 11.seconds.ago
-      returns_expected_map
-    end
-
-    #noinspection RubyResolve
-    def returns_expected_map
-      Person.comments_to_guess.should == { @guess.person.id => 1 }
+    it "returns nothing if there are no guesses" do
+      Person.comments_to_guess.should == {}
     end
 
   end
