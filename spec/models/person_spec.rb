@@ -47,14 +47,29 @@ describe Person do
     Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
       :flickrid => guess.person.flickrid, :username => guess.person.username,
       :commented_at => guessed_at
+    Person.comments_to_guess.should == { guess.person.id => 1 }
+  end
+
+  it "should calculate average comments to guess 2" do
+    guessed_at = 10.seconds.ago
+    guess = Guess.create_for_test! :guessed_at => guessed_at
+    Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
+      :flickrid => guess.person.flickrid, :username => guess.person.username,
+      :commented_at => guessed_at
     Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
       :flickrid => guess.person.flickrid, :username => guess.person.username
+    Person.comments_to_guess.should == { guess.person.id => 1 }
+  end
+
+  it "should calculate average comments to guess 3" do
+    guessed_at = 10.seconds.ago
+    guess = Guess.create_for_test! :guessed_at => guessed_at
+    Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
+      :flickrid => guess.person.flickrid, :username => guess.person.username,
+      :commented_at => guessed_at
     Comment.create_for_test! :prefix => "someone else's guess",
       :photo => guess.photo, :commented_at => 11.seconds.ago
-
-    # Comments made after the guess and/or made by others don't count.
     Person.comments_to_guess.should == { guess.person.id => 1 }
-
   end
 
   it "should calculate average comments to be guessed" do
