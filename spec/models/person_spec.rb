@@ -10,19 +10,19 @@ describe Person do
       Person.new(VALID_ATTRS).should be_valid
     end
 
-    it 'creates a valid object if flickrid is missing' do
+    it 'creates an invalid object if flickrid is missing' do
       Person.new(VALID_ATTRS - :flickrid).should_not be_valid
     end
 
-    it 'creates a valid object if flickrid is blank' do
+    it 'creates an invalid object if flickrid is blank' do
       Person.new(VALID_ATTRS.merge({ :flickrid => '' })).should_not be_valid
     end
 
-    it 'creates a valid object if username is missing' do
+    it 'creates an invalid object if username is missing' do
       Person.new(VALID_ATTRS - :username).should_not be_valid
     end
 
-    it 'creates a valid object if username is blank' do
+    it 'creates an invalid object if username is blank' do
       Person.new(VALID_ATTRS.merge({ :username => '' })).should_not be_valid
     end
 
@@ -52,7 +52,7 @@ describe Person do
   end
 
   describe '#comments_to_guess' do
-    it 'returns a map of person ID to average comments/guess' do
+    it 'returns a map of person ID to average # of comments/guess' do
       guessed_at = 10.seconds.ago
       guess = Guess.create_for_test! :guessed_at => guessed_at
       Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
