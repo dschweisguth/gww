@@ -175,6 +175,7 @@ describe Person do
       single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
       top_scorers = Person.most_points_in_2010
       top_scorers.size.should == 10
+      #noinspection RubyResolve
       top_scorers.should_not include(single_guess.person)
     end
 
@@ -200,14 +201,15 @@ describe Person do
 
     it 'returns only the top 10 posters' do
       10.times do |i|
-        photo = Photo.create_for_test! :prefix => (i.to_s + '_first_post'),
+        post = Photo.create_for_test! :prefix => (i.to_s + '_first_post'),
           :dateadded => Time.utc(2010)
         Photo.create_for_test! :prefix => (i.to_s + '_second_post'),
-          :person => photo.person, :dateadded => Time.utc(2010)
+          :person => post.person, :dateadded => Time.utc(2010)
       end
       single_post = Photo.create_for_test! :dateadded => Time.utc(2010)
       top_posters = Person.most_posts_in_2010
       top_posters.size.should == 10
+      #noinspection RubyResolve
       top_posters.should_not include(single_post.person)
     end
 
@@ -255,6 +257,7 @@ describe Person do
       single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
       top_scorers = Person.rookies_with_most_points_in_2010
       top_scorers.size.should == 10
+      #noinspection RubyResolve
       top_scorers.should_not include(single_guess.person)
     end
 
@@ -292,18 +295,19 @@ describe Person do
       Person.rookies_with_most_posts_in_2010.should == []
     end
 
-#    it 'returns only the top 10 rookie scorers' do
-#      10.times do |i|
-#        guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
-#          :guessed_at => Time.utc(2010)
-#        Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
-#          :person => guess.person, :guessed_at => Time.utc(2010)
-#      end
-#      single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-#      top_scorers = Person.rookies_with_most_points_in_2010
-#      top_scorers.size.should == 10
-#      top_scorers.should_not include(single_guess.person)
-#    end
+    it 'returns only the top 10 rookie posters' do
+      10.times do |i|
+        post = Photo.create_for_test! :prefix => (i.to_s + '_first_post'),
+          :dateadded => Time.utc(2010)
+        Photo.create_for_test! :prefix => (i.to_s + '_second_post'),
+          :person => post.person, :dateadded => Time.utc(2010)
+      end
+      single_post = Photo.create_for_test! :dateadded => Time.utc(2010)
+      top_posters = Person.rookies_with_most_posts_in_2010
+      top_posters.size.should == 10
+      #noinspection RubyResolve
+      top_posters.should_not include(single_post.person)
+    end
 
   end
 
