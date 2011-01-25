@@ -49,7 +49,12 @@ describe Person do
       :commented_at => guessed_at
     Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
       :flickrid => guess.person.flickrid, :username => guess.person.username
+    Comment.create_for_test! :prefix => "someone else's guess",
+      :photo => guess.photo, :commented_at => 11.seconds.ago
+
+    # Comments made after the guess and/or made by others don't count.
     Person.comments_to_guess.should == { guess.person.id => 1 }
+
   end
 
   it "should calculate average comments to be guessed" do
