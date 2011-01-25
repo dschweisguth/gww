@@ -57,7 +57,7 @@ describe Person do
     before do
       guessed_at = 10.seconds.ago
       @guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => @guess.photo,
+      Comment.create_for_test! :label => 'guess', :photo => @guess.photo,
         :flickrid => @guess.person.flickrid, :username => @guess.person.username,
         :commented_at => guessed_at
     end
@@ -67,13 +67,13 @@ describe Person do
     end
 
     it 'ignores comments made after the guess' do
-      Comment.create_for_test! :prefix => 'chitchat', :photo => @guess.photo,
+      Comment.create_for_test! :label => 'chitchat', :photo => @guess.photo,
         :flickrid => @guess.person.flickrid, :username => @guess.person.username
       returns_expected_map
     end
 
     it 'ignores comments made by someone other than the guesser' do
-      Comment.create_for_test! :prefix => "someone else's guess",
+      Comment.create_for_test! :label => "someone else's guess",
         :photo => @guess.photo, :commented_at => 11.seconds.ago
       returns_expected_map
     end
@@ -89,7 +89,7 @@ describe Person do
     before do
       guessed_at = 10.seconds.ago
       @guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => @guess.photo,
+      Comment.create_for_test! :label => 'guess', :photo => @guess.photo,
         :flickrid => @guess.person.flickrid, :username => @guess.person.username,
         :commented_at => guessed_at
     end
@@ -99,13 +99,13 @@ describe Person do
     end
 
     it 'ignores comments made after the guess' do
-      Comment.create_for_test! :prefix => 'chitchat', :photo => @guess.photo,
+      Comment.create_for_test! :label => 'chitchat', :photo => @guess.photo,
         :flickrid => @guess.person.flickrid, :username => @guess.person.username
       returns_expected_map
     end
 
     it 'ignores comments made by the poster' do
-      Comment.create_for_test! :prefix => 'poster', :photo => @guess.photo,
+      Comment.create_for_test! :label => 'poster', :photo => @guess.photo,
         :flickrid => @guess.photo.person.flickrid, :username => @guess.photo.person.username,
         :commented_at => 11.seconds.ago
       returns_expected_map
@@ -121,8 +121,8 @@ describe Person do
   describe '.high_scorers' do
     it 'returns the three highest scorers in the given previous # of days' do
 
-      guess = Guess.create_for_test! :prefix => '1', :guessed_at => 1.days.ago.getutc
-      Guess.create_for_test! :prefix => '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
+      guess = Guess.create_for_test! :label => '1', :guessed_at => 1.days.ago.getutc
+      Guess.create_for_test! :label => '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
 
       high_scorers = Person.high_scorers 2
       high_scorers.should == [ guess.person ]
@@ -131,9 +131,9 @@ describe Person do
     end
 
     it 'ignores guesses made before the reporting period' do
-      guess = Guess.create_for_test! :prefix => '1', :guessed_at => 1.days.ago.getutc
-      Guess.create_for_test! :prefix => '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
-      Guess.create_for_test! :prefix => '3', :person => guess.person, :guessed_at => 3.days.ago.getutc
+      guess = Guess.create_for_test! :label => '1', :guessed_at => 1.days.ago.getutc
+      Guess.create_for_test! :label => '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
+      Guess.create_for_test! :label => '3', :person => guess.person, :guessed_at => 3.days.ago.getutc
 
       high_scorers = Person.high_scorers 2
       high_scorers.should == [ guess.person ]
@@ -168,9 +168,9 @@ describe Person do
 
     it 'returns only the top 10 scorers' do
       10.times do |i|
-        guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
+        guess = Guess.create_for_test! :label => (i.to_s + '_first_point'),
           :guessed_at => Time.utc(2010)
-        Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
+        Guess.create_for_test! :label => (i.to_s + '_second_point'),
           :person => guess.person, :guessed_at => Time.utc(2010)
       end
       single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
@@ -202,9 +202,9 @@ describe Person do
 
     it 'returns only the top 10 posters' do
       10.times do |i|
-        post = Photo.create_for_test! :prefix => (i.to_s + '_first_post'),
+        post = Photo.create_for_test! :label => (i.to_s + '_first_post'),
           :dateadded => Time.utc(2010)
-        Photo.create_for_test! :prefix => (i.to_s + '_second_post'),
+        Photo.create_for_test! :label => (i.to_s + '_second_post'),
           :person => post.person, :dateadded => Time.utc(2010)
       end
       single_post = Photo.create_for_test! :dateadded => Time.utc(2010)
@@ -231,7 +231,7 @@ describe Person do
 
     it 'ignores people who guessed for the first time in 2010 but posted for the first time before 2010' do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-      Photo.create_for_test! :prefix => 'before',
+      Photo.create_for_test! :label => 'before',
         :person => guess.person, :dateadded => Time.utc(2009)
       Person.rookies_with_most_points_in_2010.should == []
     end
@@ -243,16 +243,16 @@ describe Person do
 
     it 'ignores people who posted for the first time in 2010 but guessed for the first time after 2010' do
       post = Photo.create_for_test! :dateadded => Time.utc(2010)
-      Guess.create_for_test! :prefix => 'after',
+      Guess.create_for_test! :label => 'after',
         :person => post.person, :guessed_at => Time.utc(2011)
       Person.rookies_with_most_points_in_2010.should == []
     end
 
     it 'returns only the top 10 rookie scorers' do
       10.times do |i|
-        guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
+        guess = Guess.create_for_test! :label => (i.to_s + '_first_point'),
           :guessed_at => Time.utc(2010)
-        Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
+        Guess.create_for_test! :label => (i.to_s + '_second_point'),
           :person => guess.person, :guessed_at => Time.utc(2010)
       end
       single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
@@ -279,7 +279,7 @@ describe Person do
 
     it 'ignores people who posted for the first time in 2010 but guessed for the first time before 2010' do
       post = Photo.create_for_test! :dateadded => Time.utc(2010)
-      Guess.create_for_test! :prefix => 'before',
+      Guess.create_for_test! :label => 'before',
         :person => post.person, :guessed_at => Time.utc(2009)
       Person.rookies_with_most_posts_in_2010.should == []
     end
@@ -291,16 +291,16 @@ describe Person do
 
     it 'ignores people who guessed for the first time in 2010 but posted for the first time after 2010' do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-      Photo.create_for_test! :prefix => 'after',
+      Photo.create_for_test! :label => 'after',
         :person => guess.person, :dateadded => Time.utc(2011)
       Person.rookies_with_most_posts_in_2010.should == []
     end
 
     it 'returns only the top 10 rookie posters' do
       10.times do |i|
-        post = Photo.create_for_test! :prefix => (i.to_s + '_first_post'),
+        post = Photo.create_for_test! :label => (i.to_s + '_first_post'),
           :dateadded => Time.utc(2010)
-        Photo.create_for_test! :prefix => (i.to_s + '_second_post'),
+        Photo.create_for_test! :label => (i.to_s + '_second_post'),
           :person => post.person, :dateadded => Time.utc(2010)
       end
       single_post = Photo.create_for_test! :dateadded => Time.utc(2010)
