@@ -96,7 +96,7 @@ class Person < ActiveRecord::Base
   def self.most_posts_in_2010
     find_by_sql [
       'select p.*, count(*) posts from people p, photos f ' +
-        'where p.id = f.person_id and ? < f.dateadded and f.dateadded < ? ' +
+        'where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ? ' +
 	'group by p.id order by posts desc limit 10',
 	Time.utc(2010), Time.utc(2011)
     ]
