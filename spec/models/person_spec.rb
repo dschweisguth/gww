@@ -52,35 +52,33 @@ describe Person do
   end
 
   describe '#comments_to_guess' do
-    it 'returns a map of person ID to average # of comments/guess' do
+    before do
       guessed_at = 10.seconds.ago
-      guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
+      @guess = Guess.create_for_test! :guessed_at => guessed_at
+      Comment.create_for_test! :prefix => 'guess', :photo => @guess.photo,
+        :flickrid => @guess.person.flickrid, :username => @guess.person.username,
         :commented_at => guessed_at
-      Person.comments_to_guess.should == { guess.person.id => 1 }
+    end
+
+    it 'returns a map of person ID to average # of comments/guess' do
+      returns_expected_map
     end
 
     it 'ignores comments made after a guess' do
-      guessed_at = 10.seconds.ago
-      guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guessed_at
-      Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username
-      Person.comments_to_guess.should == { guess.person.id => 1 }
+      Comment.create_for_test! :prefix => 'chitchat', :photo => @guess.photo,
+        :flickrid => @guess.person.flickrid, :username => @guess.person.username
+      returns_expected_map
     end
 
     it 'ignores comments made by others' do
-      guessed_at = 10.seconds.ago
-      guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guessed_at
       Comment.create_for_test! :prefix => "someone else's guess",
-        :photo => guess.photo, :commented_at => 11.seconds.ago
-      Person.comments_to_guess.should == { guess.person.id => 1 }
+        :photo => @guess.photo, :commented_at => 11.seconds.ago
+      returns_expected_map
+    end
+
+    #noinspection RubyResolve
+    def returns_expected_map
+      Person.comments_to_guess.should == { @guess.person.id => 1 }
     end
 
   end
