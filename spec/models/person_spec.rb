@@ -63,4 +63,20 @@ describe Person do
     Person.comments_to_be_guessed.should == { guess.photo.person.id => 1 }
   end
 
+  it "should return high scorers" do
+
+    person1guess1 = Guess.create_for_test! :prefix => 'p1g1', :guessed_at => 1.days.ago.getutc
+    Guess.create_for_test! :prefix => 'p1g2', :person => person1guess1.person, :guessed_at => 1.days.ago.getutc
+    Guess.create_for_test! :prefix => 'p1g3', :person => person1guess1.person, :guessed_at => 3.days.ago.getutc
+
+    Guess.create_for_test! :prefix => 'p2g1', :guessed_at => 1.days.ago.getutc
+
+    # Person 1 should have two points in the previous two days.
+    # Person 2 has one point in the previous two days, but we ignore scores of 1.
+    high_scorers = Person.high_scorers(2)
+    high_scorers.should == [ person1guess1.person ]
+    high_scorers[0][:score].should == 2
+
+  end
+
 end

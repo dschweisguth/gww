@@ -16,6 +16,7 @@ module ModelFactorySupport
     padded_prefix = prefix == '' ? '' : prefix + '_'
     return options, prefix, padded_prefix
   end
+  private :process_prefix!
 end
 
 class Person
@@ -55,11 +56,13 @@ class Guess
   def self.create_for_test!(caller_options)
     caller_options, prefix, padded_prefix = process_prefix! caller_options
     now = Time.now
-    guesser = Person.create_for_test! :prefix => (padded_prefix + 'guesser')
-    options = { :person => guesser,
-      :guess_text => 'guess text', :guessed_at => now, :added_at => now }
+    options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
     if ! caller_options[:photo]
       options[:photo] = Photo.create_for_test! :prefix => prefix
+    end
+    if ! caller_options[:person]
+      options[:person] =
+        Person.create_for_test! :prefix => (padded_prefix + 'guesser')
     end
     options.merge! caller_options
     Guess.create! options
