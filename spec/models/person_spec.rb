@@ -181,33 +181,23 @@ describe Person do
   end
 
   describe '.most_posts_in_2010' do
-    context 'given a single poster in 2010' do
-      before do
-        @post = Photo.create_for_test! :dateadded => Time.utc(2010)
-      end
-
-      it 'returns that poster with their number of posts' do
-        returns_single_poster_with_post
-      end
-
-      it 'ignores posts before 2010' do
-        Photo.create_for_test! :prefix => 'before', :dateadded => Time.utc(2009)
-        returns_single_poster_with_post
-      end
-
-      it 'ignores posts after 2010' do
-        Photo.create_for_test! :prefix => 'after', :dateadded => Time.utc(2011)
-        returns_single_poster_with_post
-      end
-
-      #noinspection RubyResolve
-      def returns_single_poster_with_post
-        top_posters = Person.most_posts_in_2010
-        top_posters.should == [ @post.person ]
-        top_posters[0][:posts].should == 1
-      end
-
+    it 'returns that poster with their number of posts' do
+      @post = Photo.create_for_test! :dateadded => Time.utc(2010)
+      top_posters = Person.most_posts_in_2010
+      top_posters.should == [ @post.person ]
+      top_posters[0][:posts].should == 1
     end
+
+    it 'ignores posts before 2010' do
+      Photo.create_for_test! :dateadded => Time.utc(2009)
+      Person.most_posts_in_2010.should == []
+    end
+
+    it 'ignores posts after 2010' do
+      Photo.create_for_test! :dateadded => Time.utc(2011)
+      Person.most_posts_in_2010.should == []
+    end
+
   end
 
   describe '.rookies_with_most_points_in_2010' do
