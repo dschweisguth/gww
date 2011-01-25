@@ -221,8 +221,15 @@ describe Person do
       top_scorers[0][:points].should == 1
     end
 
-    it 'ignores person who guessed before 2010' do
-      Guess.create_for_test! :prefix => 'before', :guessed_at => Time.utc(2009)
+    it 'ignores people who guessed before 2010' do
+      Guess.create_for_test! :guessed_at => Time.utc(2009)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
+    it 'ignores people who guessed for the first time in 2010 but posted before 2010' do
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      Photo.create_for_test! :prefix => 'before',
+        :person => guess.person, :dateadded => Time.utc(2009)
       Person.rookies_with_most_points_in_2010.should == []
     end
 
