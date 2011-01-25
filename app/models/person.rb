@@ -87,7 +87,7 @@ class Person < ActiveRecord::Base
   def self.most_points_in_2010
     find_by_sql [
       'select p.*, count(*) points from people p, guesses g ' +
-        'where p.id = g.person_id and ? < g.guessed_at and g.guessed_at < ? ' +
+        'where p.id = g.person_id and ? <= g.guessed_at and g.guessed_at < ? ' +
 	'group by p.id order by points desc limit 10',
 	Time.utc(2010), Time.utc(2011)
     ]

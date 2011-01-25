@@ -126,4 +126,11 @@ describe Person do
 
   end
 
+  describe '.most_points_in_2010' do
+    it 'returns the top ten scorers in 2010' do
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      Person.most_points_in_2010.should == [ guess.person ]
+    end
+  end
+
 end
