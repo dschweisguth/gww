@@ -3,7 +3,7 @@ require 'model_factory'
 
 describe Person do
 
-  describe '#new' do
+  describe '.new' do
     VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
 
     it 'creates a valid object given all required attributes' do
@@ -28,14 +28,14 @@ describe Person do
 
   end
 
-  describe '#guesses_per_day' do
+  describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = Guess.create_for_test! :guessed_at => 4.days.ago
       Person.guesses_per_day.should == { guess.person.id => 0.25 }
     end
   end
 
-  describe '#guess_speeds' do
+  describe '.guess_speeds' do
     it 'returns a map of person ID to average seconds to guess' do
       photo = Photo.create_for_test! :dateadded => 5.seconds.ago
       guess = Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
@@ -43,7 +43,7 @@ describe Person do
     end
   end
 
-  describe '#be_guessed_speeds' do
+  describe '.be_guessed_speeds' do
     it 'returns a map of person ID to average seconds for their photos to be guessed' do
       photo = Photo.create_for_test! :dateadded => 5.seconds.ago
       Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
@@ -51,7 +51,7 @@ describe Person do
     end
   end
 
-  describe '#comments_to_guess' do
+  describe '.comments_to_guess' do
     before do
       guessed_at = 10.seconds.ago
       @guess = Guess.create_for_test! :guessed_at => guessed_at
@@ -83,7 +83,7 @@ describe Person do
 
   end
 
-  describe '#comments_to_be_guessed' do
+  describe '.comments_to_be_guessed' do
     it 'returns a map of person ID to average # of comments for their photos to be guessed' do
       guessed_at = 10.seconds.ago
       guess = Guess.create_for_test! :guessed_at => guessed_at
@@ -96,7 +96,7 @@ describe Person do
     end
   end
 
-  describe '#high_scorers' do
+  describe '.high_scorers' do
     it 'returns the three highest scorers in the given previous # of days' do
 
       guess = Guess.create_for_test! :prefix => '1', :guessed_at => 1.days.ago.getutc
