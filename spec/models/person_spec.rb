@@ -198,6 +198,19 @@ describe Person do
       Person.most_posts_in_2010.should == []
     end
 
+    it 'returns only the top 10 posters' do
+      10.times do |i|
+        photo = Photo.create_for_test! :prefix => (i.to_s + '_first_post'),
+          :dateadded => Time.utc(2010)
+        Photo.create_for_test! :prefix => (i.to_s + '_second_post'),
+          :person => photo.person, :dateadded => Time.utc(2010)
+      end
+      single_post = Photo.create_for_test! :dateadded => Time.utc(2010)
+      top_posters = Person.most_posts_in_2010
+      top_posters.size.should == 10
+      top_posters.should_not include(single_post.person)
+    end
+
   end
 
   describe '.rookies_with_most_points_in_2010' do
