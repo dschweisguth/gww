@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'model_factory'
 
-# TODO Dave only use ago once per spec to avoid occasional failures
 describe Person do
 
   describe '.new' do
@@ -38,16 +37,18 @@ describe Person do
 
   describe '.guess_speeds' do
     it 'returns a map of person ID to average seconds to guess' do
-      photo = Photo.create_for_test! :dateadded => 5.seconds.ago
-      guess = Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
+      now = Time.now
+      photo = Photo.create_for_test! :dateadded => now - 5
+      guess = Guess.create_for_test! :photo => photo, :guessed_at => now - 1
       Person.guess_speeds.should == { guess.person.id => 4 }
     end
   end
 
   describe '.be_guessed_speeds' do
     it 'returns a map of person ID to average seconds for their photos to be guessed' do
-      photo = Photo.create_for_test! :dateadded => 5.seconds.ago
-      Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
+      now = Time.now
+      photo = Photo.create_for_test! :dateadded => now - 5
+      Guess.create_for_test! :photo => photo, :guessed_at => now - 1
       Person.be_guessed_speeds.should == { photo.person.id => 4 }
     end
   end
