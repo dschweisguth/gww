@@ -181,7 +181,7 @@ describe Person do
   end
 
   describe '.most_posts_in_2010' do
-    it 'returns that poster with their number of posts' do
+    it 'returns a lists of posters with their number of posts' do
       post = Photo.create_for_test! :dateadded => Time.utc(2010)
       top_posters = Person.most_posts_in_2010
       top_posters.should == [ post.person ]
@@ -214,46 +214,34 @@ describe Person do
   end
 
   describe '.rookies_with_most_points_in_2010' do
-    context 'given a single rookie scorer in 2010' do
-      before do
-        @guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-      end
-
-      it 'returns that scorer with their score' do
-        returns_single_scorer_with_score
-      end
-
-      it 'ignores person who guessed before 2010' do
-        Guess.create_for_test! :prefix => 'before', :guessed_at => Time.utc(2009)
-        returns_single_scorer_with_score
-      end
-
-      it 'ignores guesses made after 2010' do
-        Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
-        returns_single_scorer_with_score
-      end
-
-      #noinspection RubyResolve
-      def returns_single_scorer_with_score
-        top_scorers = Person.rookies_with_most_points_in_2010
-        top_scorers.should == [ @guess.person ]
-        top_scorers[0][:points].should == 1
-      end
+    it 'returns a list of rookies with their score' do
+      @guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      top_scorers = Person.rookies_with_most_points_in_2010
+      top_scorers.should == [ @guess.person ]
+      top_scorers[0][:points].should == 1
     end
 
-    context 'given more than 10 rookie scorers in 2010' do
-      it 'returns only the top 10' do
-        10.times do |i|
-          guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
-            :guessed_at => Time.utc(2010)
-          Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
-            :person => guess.person, :guessed_at => Time.utc(2010)
-        end
-        single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-        top_scorers = Person.rookies_with_most_points_in_2010
-        top_scorers.size.should == 10
-        top_scorers.should_not include(single_guess.person)
+    it 'ignores person who guessed before 2010' do
+      Guess.create_for_test! :prefix => 'before', :guessed_at => Time.utc(2009)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
+    it 'ignores guesses made after 2010' do
+      Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
+    it 'returns only the top 10 rookie scorers' do
+      10.times do |i|
+        guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
+          :guessed_at => Time.utc(2010)
+        Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
+          :person => guess.person, :guessed_at => Time.utc(2010)
       end
+      single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      top_scorers = Person.rookies_with_most_points_in_2010
+      top_scorers.size.should == 10
+      top_scorers.should_not include(single_guess.person)
     end
 
   end
