@@ -127,7 +127,7 @@ class Person < ActiveRecord::Base
 	    'from ' +
 	      '(select person_id, guessed_at acted from guesses union all ' +
 	        'select person_id, dateadded acted from photos) a ' +
-	    'group by person_id having ? < joined and joined < ?) r, ' + 
+	    'group by person_id having ? <= joined and joined < ?) r, ' + 
 	  'photos f ' +
         'where p.id = r.person_id and p.id = f.person_id ' +
 	'group by p.id order by posts desc limit 10',
