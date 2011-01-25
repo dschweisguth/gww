@@ -226,7 +226,7 @@ describe Person do
       Person.rookies_with_most_points_in_2010.should == []
     end
 
-    it 'ignores people who guessed for the first time in 2010 but posted before 2010' do
+    it 'ignores people who guessed for the first time in 2010 but posted for the first time before 2010' do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
       Photo.create_for_test! :prefix => 'before',
         :person => guess.person, :dateadded => Time.utc(2009)
@@ -235,6 +235,13 @@ describe Person do
 
     it 'ignores guesses made after 2010' do
       Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
+    it 'ignores people who posted for the first time in 2010 but guessed for the first time after 2010' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
+      Guess.create_for_test! :prefix => 'after',
+        :person => photo.person, :guessed_at => Time.utc(2011)
       Person.rookies_with_most_points_in_2010.should == []
     end
 
