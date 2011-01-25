@@ -165,19 +165,17 @@ describe Person do
       Person.most_points_in_2010.should == []
     end
 
-    context 'given more than 10 scorers in 2010' do
-      it 'returns only the top 10' do
-        10.times do |i|
-          guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
-            :guessed_at => Time.utc(2010)
-          Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
-            :person => guess.person, :guessed_at => Time.utc(2010)
-        end
-        single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-        top_scorers = Person.most_points_in_2010
-        top_scorers.size.should == 10
-        top_scorers.should_not include(single_guess.person)
+    it 'returns only the top 10 scorers' do
+      10.times do |i|
+        guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
+          :guessed_at => Time.utc(2010)
+        Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
+          :person => guess.person, :guessed_at => Time.utc(2010)
       end
+      single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      top_scorers = Person.most_points_in_2010
+      top_scorers.size.should == 10
+      top_scorers.should_not include(single_guess.person)
     end
 
   end
