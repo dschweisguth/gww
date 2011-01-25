@@ -181,6 +181,16 @@ describe Person do
         returns_single_poster_with_post
       end
 
+      it 'ignores posts before 2010' do
+        Photo.create_for_test! :prefix => 'before', :dateadded => Time.utc(2009)
+        returns_single_poster_with_post
+      end
+
+      it 'ignores posts after 2010' do
+        Photo.create_for_test! :prefix => 'after', :dateadded => Time.utc(2011)
+        returns_single_poster_with_post
+      end
+
       #noinspection RubyResolve
       def returns_single_poster_with_post
         top_posters = Person.most_posts_in_2010
