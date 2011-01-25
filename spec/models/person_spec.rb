@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'model_factory'
 
+# TODO Dave only use ago once per spec to avoid occasional failures
 describe Person do
 
   describe '.new' do
@@ -84,16 +85,29 @@ describe Person do
   end
 
   describe '.comments_to_be_guessed' do
-    it 'returns a map of person ID to average # of comments for their photos to be guessed' do
+    before do
       guessed_at = 10.seconds.ago
-      guess = Guess.create_for_test! :guessed_at => guessed_at
-      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
+      @guess = Guess.create_for_test! :guessed_at => guessed_at
+      Comment.create_for_test! :prefix => 'guess', :photo => @guess.photo,
+        :flickrid => @guess.person.flickrid, :username => @guess.person.username,
         :commented_at => guessed_at
-      Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username
-      Person.comments_to_be_guessed.should == { guess.photo.person.id => 1 }
     end
+
+    it 'returns a map of person ID to average # of comments for their photos to be guessed' do
+      returns_expected_map
+    end
+
+    it 'ignores comments made after the guess' do
+      Comment.create_for_test! :prefix => 'chitchat', :photo => @guess.photo,
+        :flickrid => @guess.person.flickrid, :username => @guess.person.username
+      returns_expected_map
+    end
+
+    #noinspection RubyResolve
+    def returns_expected_map
+      Person.comments_to_be_guessed.should == { @guess.photo.person.id => 1 }
+    end
+
   end
 
   describe '.high_scorers' do
