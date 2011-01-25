@@ -234,7 +234,7 @@ describe Person do
     end
 
     it 'ignores guesses made after 2010' do
-      Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
+      Guess.create_for_test! :guessed_at => Time.utc(2011)
       Person.rookies_with_most_points_in_2010.should == []
     end
 
@@ -268,23 +268,23 @@ describe Person do
       top_posters[0][:posts].should == 1
     end
 
-#    it 'ignores people who guessed before 2010' do
-#      Guess.create_for_test! :guessed_at => Time.utc(2009)
-#      Person.rookies_with_most_points_in_2010.should == []
-#    end
-#
-#    it 'ignores people who guessed for the first time in 2010 but posted for the first time before 2010' do
-#      guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-#      Photo.create_for_test! :prefix => 'before',
-#        :person => guess.person, :dateadded => Time.utc(2009)
-#      Person.rookies_with_most_points_in_2010.should == []
-#    end
-#
-#    it 'ignores guesses made after 2010' do
-#      Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
-#      Person.rookies_with_most_points_in_2010.should == []
-#    end
-#
+    it 'ignores people who posted before 2010' do
+      Photo.create_for_test! :dateadded => Time.utc(2009)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
+    it 'ignores people who posted for the first time in 2010 but guessed for the first time before 2010' do
+      post = Photo.create_for_test! :dateadded => Time.utc(2010)
+      Guess.create_for_test! :prefix => 'before',
+        :person => post.person, :guessed_at => Time.utc(2009)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
+    it 'ignores posts made after 2010' do
+      Photo.create_for_test! :dateadded => Time.utc(2011)
+      Person.rookies_with_most_points_in_2010.should == []
+    end
+
 #    it 'ignores people who posted for the first time in 2010 but guessed for the first time after 2010' do
 #      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
 #      Guess.create_for_test! :prefix => 'after',
