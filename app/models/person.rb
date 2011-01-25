@@ -129,9 +129,10 @@ class Person < ActiveRecord::Base
 	        'select person_id, dateadded acted from photos) a ' +
 	    'group by person_id having ? <= joined and joined < ?) r, ' + 
 	  'photos f ' +
-        'where p.id = r.person_id and p.id = f.person_id ' +
+        'where p.id = r.person_id and p.id = f.person_id and ' +
+          '? <= f.dateadded and f.dateadded < ?' +
 	'group by p.id order by posts desc limit 10',
-	Time.utc(2010), Time.utc(2011)
+	Time.utc(2010), Time.utc(2011), Time.utc(2010), Time.utc(2011)
     ]
   end
 

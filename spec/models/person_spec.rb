@@ -239,9 +239,9 @@ describe Person do
     end
 
     it 'ignores people who posted for the first time in 2010 but guessed for the first time after 2010' do
-      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
+      post = Photo.create_for_test! :dateadded => Time.utc(2010)
       Guess.create_for_test! :prefix => 'after',
-        :person => photo.person, :guessed_at => Time.utc(2011)
+        :person => post.person, :guessed_at => Time.utc(2011)
       Person.rookies_with_most_points_in_2010.should == []
     end
 
@@ -270,28 +270,28 @@ describe Person do
 
     it 'ignores people who posted before 2010' do
       Photo.create_for_test! :dateadded => Time.utc(2009)
-      Person.rookies_with_most_points_in_2010.should == []
+      Person.rookies_with_most_posts_in_2010.should == []
     end
 
     it 'ignores people who posted for the first time in 2010 but guessed for the first time before 2010' do
       post = Photo.create_for_test! :dateadded => Time.utc(2010)
       Guess.create_for_test! :prefix => 'before',
         :person => post.person, :guessed_at => Time.utc(2009)
-      Person.rookies_with_most_points_in_2010.should == []
+      Person.rookies_with_most_posts_in_2010.should == []
     end
 
     it 'ignores posts made after 2010' do
       Photo.create_for_test! :dateadded => Time.utc(2011)
-      Person.rookies_with_most_points_in_2010.should == []
+      Person.rookies_with_most_posts_in_2010.should == []
     end
 
-#    it 'ignores people who posted for the first time in 2010 but guessed for the first time after 2010' do
-#      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
-#      Guess.create_for_test! :prefix => 'after',
-#        :person => photo.person, :guessed_at => Time.utc(2011)
-#      Person.rookies_with_most_points_in_2010.should == []
-#    end
-#
+    it 'ignores people who guessed for the first time in 2010 but posted for the first time after 2010' do
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      Photo.create_for_test! :prefix => 'after',
+        :person => guess.person, :dateadded => Time.utc(2011)
+      Person.rookies_with_most_posts_in_2010.should == []
+    end
+
 #    it 'returns only the top 10 rookie scorers' do
 #      10.times do |i|
 #        guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
