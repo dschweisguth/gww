@@ -148,31 +148,21 @@ describe Person do
   end
 
   describe '.most_points_in_2010' do
-    context 'given a single scorer in 2010' do
-      before do
-        @guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-      end
+    it 'returns a list of scorers with their scores' do
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      top_scorers = Person.most_points_in_2010
+      top_scorers.should == [ guess.person ]
+      top_scorers[0][:points].should == 1
+    end
 
-      it 'returns that scorer with their score' do
-        returns_single_scorer_with_score
-      end
+    it 'ignores guesses made before 2010' do
+      Guess.create_for_test! :guessed_at => Time.utc(2009)
+      Person.most_points_in_2010.should == []
+    end
 
-      it 'ignores guesses made before 2010' do
-        Guess.create_for_test! :prefix => 'before', :guessed_at => Time.utc(2009)
-        returns_single_scorer_with_score
-      end
-
-      it 'ignores guesses made after 2010' do
-        Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
-        returns_single_scorer_with_score
-      end
-
-      #noinspection RubyResolve
-      def returns_single_scorer_with_score
-        top_scorers = Person.most_points_in_2010
-        top_scorers.should == [ @guess.person ]
-        top_scorers[0][:points].should == 1
-      end
+    it 'ignores guesses made after 2010' do
+      Guess.create_for_test! :guessed_at => Time.utc(2011)
+      Person.most_points_in_2010.should == []
     end
 
     context 'given more than 10 scorers in 2010' do
