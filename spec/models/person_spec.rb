@@ -127,12 +127,48 @@ describe Person do
   end
 
   describe '.most_points_in_2010' do
-    it 'returns the top ten scorers in 2010' do
-      guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
-      high_scorers = Person.most_points_in_2010
-      high_scorers.should == [ guess.person ]
-      high_scorers[0][:points].should == 1
+    context 'given a single scorer in 2010' do
+      before do
+        @guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+      end
+
+      it 'returns that scorer with their score' do
+        returns_single_scorer_with_score
+      end
+
+      it 'ignores guesses made before 2010' do
+        Guess.create_for_test! :prefix => 'before', :guessed_at => Time.utc(2009)
+        returns_single_scorer_with_score
+      end
+
+      it 'ignores guesses made after 2010' do
+        Guess.create_for_test! :prefix => 'after', :guessed_at => Time.utc(2011)
+        returns_single_scorer_with_score
+      end
+
+      #noinspection RubyResolve
+      def returns_single_scorer_with_score
+        high_scorers = Person.most_points_in_2010
+        high_scorers.should == [ @guess.person ]
+        high_scorers[0][:points].should == 1
+      end
     end
+
+    context 'given more than 10 scorers in 2010' do
+      it 'returns only the top 10' do
+        10.times do |i|
+          guess = Guess.create_for_test! :prefix => (i.to_s + '_first_point'),
+            :guessed_at => Time.utc(2010)
+          Guess.create_for_test! :prefix => (i.to_s + '_second_point'),
+            :person => guess.person, :guessed_at => Time.utc(2010)
+        end
+        single_guess = Guess.create_for_test! :guessed_at => Time.utc(2010)
+        high_scorers = Person.most_points_in_2010
+        high_scorers.size.should == 10
+        high_scorers.should_not include(single_guess.person)
+      end
+    end
+
   end
 
 end
