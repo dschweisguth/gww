@@ -182,9 +182,9 @@ describe Person do
 
   describe '.most_posts_in_2010' do
     it 'returns that poster with their number of posts' do
-      @post = Photo.create_for_test! :dateadded => Time.utc(2010)
+      post = Photo.create_for_test! :dateadded => Time.utc(2010)
       top_posters = Person.most_posts_in_2010
-      top_posters.should == [ @post.person ]
+      top_posters.should == [ post.person ]
       top_posters[0][:posts].should == 1
     end
 
