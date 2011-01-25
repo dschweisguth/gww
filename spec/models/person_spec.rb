@@ -2,100 +2,129 @@ require 'spec_helper'
 require 'model_factory'
 
 describe Person do
-  VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
 
-  it "should be valid if all required attributes are present" do
-    Person.new(VALID_ATTRS).should be_valid
+  describe '#new' do
+    VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
+
+    it 'creates a valid object given all required attributes' do
+      Person.new(VALID_ATTRS).should be_valid
+    end
+
+    it 'creates a valid object if flickrid is missing' do
+      Person.new(VALID_ATTRS - :flickrid).should_not be_valid
+    end
+
+    it 'creates a valid object if flickrid is blank' do
+      Person.new(VALID_ATTRS.merge({ :flickrid => '' })).should_not be_valid
+    end
+
+    it 'creates a valid object if username is missing' do
+      Person.new(VALID_ATTRS - :username).should_not be_valid
+    end
+
+    it 'creates a valid object if username is blank' do
+      Person.new(VALID_ATTRS.merge({ :username => '' })).should_not be_valid
+    end
+
   end
 
-  it "should not be valid if flickrid is missing" do
-    Person.new(VALID_ATTRS - :flickrid).should_not be_valid
+  describe '#guesses_per_day' do
+    it 'returns a map of person ID to average guesses per day' do
+      guess = Guess.create_for_test! :guessed_at => 4.days.ago
+      Person.guesses_per_day.should == { guess.person.id => 0.25 }
+    end
   end
 
-  it "should not be valid if flickrid is blank" do
-    Person.new(VALID_ATTRS.merge({ :flickrid => '' })).should_not be_valid
+  describe '#guess_speeds' do
+    it 'returns a map of person ID to average seconds to guess' do
+      photo = Photo.create_for_test! :dateadded => 5.seconds.ago
+      guess = Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
+      Person.guess_speeds.should == { guess.person.id => 4 }
+    end
   end
 
-  it "should not be valid if username is missing" do
-    Person.new(VALID_ATTRS - :username).should_not be_valid
+  describe '#be_guessed_speeds' do
+    it 'returns a map of person ID to average seconds for their photos to be guessed' do
+      photo = Photo.create_for_test! :dateadded => 5.seconds.ago
+      Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
+      Person.be_guessed_speeds.should == { photo.person.id => 4 }
+    end
   end
 
-  it "should not be valid if username is blank" do
-    Person.new(VALID_ATTRS.merge({ :username => '' })).should_not be_valid
+  describe '#comments_to_guess' do
+    it 'returns a map of person ID to average comments/guess' do
+      guessed_at = 10.seconds.ago
+      guess = Guess.create_for_test! :guessed_at => guessed_at
+      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guessed_at
+      Person.comments_to_guess.should == { guess.person.id => 1 }
+    end
+
+    it 'ignores comments made after a guess' do
+      guessed_at = 10.seconds.ago
+      guess = Guess.create_for_test! :guessed_at => guessed_at
+      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guessed_at
+      Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username
+      Person.comments_to_guess.should == { guess.person.id => 1 }
+    end
+
+    it 'ignores comments made by others' do
+      guessed_at = 10.seconds.ago
+      guess = Guess.create_for_test! :guessed_at => guessed_at
+      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guessed_at
+      Comment.create_for_test! :prefix => "someone else's guess",
+        :photo => guess.photo, :commented_at => 11.seconds.ago
+      Person.comments_to_guess.should == { guess.person.id => 1 }
+    end
+
   end
 
-  it "should calculate guesses per day" do
-    guess = Guess.create_for_test! :guessed_at => 4.days.ago
-    Person.guesses_per_day.should == { guess.person.id => 0.25 }
+  describe '#comments_to_be_guessed' do
+    it 'returns a map of person ID to average # of comments for their photos to be guessed' do
+      guessed_at = 10.seconds.ago
+      guess = Guess.create_for_test! :guessed_at => guessed_at
+      Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guessed_at
+      Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username
+      Person.comments_to_be_guessed.should == { guess.photo.person.id => 1 }
+    end
   end
 
-  it "should calculate guess speeds" do
-    photo = Photo.create_for_test! :dateadded => 5.seconds.ago
-    guess = Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
-    Person.guess_speeds.should == { guess.person.id => 4 }
-  end
+  describe '#high_scorers' do
+    it 'returns the three highest scorers in the given previous # of days' do
 
-  it "should calculate be-guessed speeds" do
-    photo = Photo.create_for_test! :dateadded => 5.seconds.ago
-    Guess.create_for_test! :photo => photo, :guessed_at => 1.seconds.ago
-    Person.be_guessed_speeds.should == { photo.person.id => 4 }
-  end
+      guess = Guess.create_for_test! :prefix => '1', :guessed_at => 1.days.ago.getutc
+      Guess.create_for_test! :prefix => '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
 
-  it "should calculate average comments to guess" do
-    guessed_at = 10.seconds.ago
-    guess = Guess.create_for_test! :guessed_at => guessed_at
-    Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-      :flickrid => guess.person.flickrid, :username => guess.person.username,
-      :commented_at => guessed_at
-    Person.comments_to_guess.should == { guess.person.id => 1 }
-  end
+      high_scorers = Person.high_scorers 2
+      high_scorers.should == [ guess.person ]
+      high_scorers[0][:score].should == 2
 
-  it "should calculate average comments to guess 2" do
-    guessed_at = 10.seconds.ago
-    guess = Guess.create_for_test! :guessed_at => guessed_at
-    Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-      :flickrid => guess.person.flickrid, :username => guess.person.username,
-      :commented_at => guessed_at
-    Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
-      :flickrid => guess.person.flickrid, :username => guess.person.username
-    Person.comments_to_guess.should == { guess.person.id => 1 }
-  end
+    end
 
-  it "should calculate average comments to guess 3" do
-    guessed_at = 10.seconds.ago
-    guess = Guess.create_for_test! :guessed_at => guessed_at
-    Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-      :flickrid => guess.person.flickrid, :username => guess.person.username,
-      :commented_at => guessed_at
-    Comment.create_for_test! :prefix => "someone else's guess",
-      :photo => guess.photo, :commented_at => 11.seconds.ago
-    Person.comments_to_guess.should == { guess.person.id => 1 }
-  end
+    it 'ignores guesses made before the reporting period' do
+      guess = Guess.create_for_test! :prefix => '1', :guessed_at => 1.days.ago.getutc
+      Guess.create_for_test! :prefix => '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
+      Guess.create_for_test! :prefix => '3', :person => guess.person, :guessed_at => 3.days.ago.getutc
 
-  it "should calculate average comments to be guessed" do
-    guessed_at = 10.seconds.ago
-    guess = Guess.create_for_test! :guessed_at => guessed_at
-    Comment.create_for_test! :prefix => 'guess', :photo => guess.photo,
-      :flickrid => guess.person.flickrid, :username => guess.person.username,
-      :commented_at => guessed_at
-    Comment.create_for_test! :prefix => 'chitchat', :photo => guess.photo,
-      :flickrid => guess.person.flickrid, :username => guess.person.username
-    Person.comments_to_be_guessed.should == { guess.photo.person.id => 1 }
-  end
+      high_scorers = Person.high_scorers 2
+      high_scorers.should == [ guess.person ]
+      high_scorers[0][:score].should == 2
 
-  it "should return high scorers" do
+    end
 
-    person1guess1 = Guess.create_for_test! :prefix => 'p1g1', :guessed_at => 1.days.ago.getutc
-    Guess.create_for_test! :prefix => 'p1g2', :person => person1guess1.person, :guessed_at => 1.days.ago.getutc
-    Guess.create_for_test! :prefix => 'p1g3', :person => person1guess1.person, :guessed_at => 3.days.ago.getutc
-
-    Guess.create_for_test! :prefix => 'p2g1', :guessed_at => 1.days.ago.getutc
-
-    # Person 1 should have two points in the previous two days.
-    # Person 2 has one point in the previous two days, but we ignore scores of 1.
-    high_scorers = Person.high_scorers(2)
-    high_scorers.should == [ person1guess1.person ]
-    high_scorers[0][:score].should == 2
+    it 'ignores scores of 1' do
+      Guess.create_for_test! :guessed_at => 1.days.ago.getutc
+      Person.high_scorers(2).should == []
+    end
 
   end
 
