@@ -103,6 +103,13 @@ describe Person do
       returns_expected_map
     end
 
+    it 'ignores comments made by the poster' do
+      Comment.create_for_test! :prefix => 'poster', :photo => @guess.photo,
+        :flickrid => @guess.photo.person.flickrid, :username => @guess.photo.person.username,
+        :commented_at => 11.seconds.ago
+      returns_expected_map
+    end
+
     #noinspection RubyResolve
     def returns_expected_map
       Person.comments_to_be_guessed.should == { @guess.photo.person.id => 1 }
