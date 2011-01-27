@@ -13,6 +13,8 @@ class FlickrCredentials
     XmlSimple.xml_in xml
   end
 
+  private
+
   def self.api_url(api_method, extra_params = {})
     params = {
       'api_key' => API_KEY,
