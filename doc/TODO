@@ -1,4 +1,3 @@
-Get coverage working in TeamCity
 Bug: if you look at an index page while the update is running, the message won't go away when it's done
 rvm
 Upgrade to Rails 3
