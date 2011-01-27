@@ -2,12 +2,11 @@ class Admin::PhotosController < ApplicationController
   auto_complete_for :person, :username
 
   def update
-    expire_cached_pages
-
     update = FlickrUpdate.new
     group_info = FlickrCredentials.request 'flickr.groups.getInfo'
     update.member_count = group_info['group'][0]['members'][0]
     update.save!
+    expire_cached_pages
 
     page = 1
     parsed_photos = nil
@@ -95,6 +94,7 @@ class Admin::PhotosController < ApplicationController
 
     update.completed_at = Time.now.getutc
     update.save!
+    expire_cached_pages
 
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{page - 1} pages out of " +
@@ -104,8 +104,8 @@ class Admin::PhotosController < ApplicationController
   end
 
   def update_statistics
-    expire_cached_pages
     Photo.update_statistics
+    expire_cached_pages
     flash[:notice] = "Updated statistics.</br>"
     redirect_to admin_root_path
   end
@@ -177,7 +177,6 @@ class Admin::PhotosController < ApplicationController
   private :load_comments
 
   def change_game_status
-    expire_cached_pages
     photo = Photo.find params[:id], :include => :revelation
     photo.game_status = params[:commit]
     Photo.transaction do
@@ -185,12 +184,11 @@ class Admin::PhotosController < ApplicationController
       Revelation.delete photo.revelation.id if photo.revelation
       photo.save!
     end
+    expire_cached_pages
     redirect_to :action => 'edit', :id => photo, :nocomment => :true
   end
 
   def add_guess
-    expire_cached_pages
-
     if params[:comment].nil?
       flash[:notice] =
         'Please select a comment before adding or removing a guess.'
@@ -290,6 +288,7 @@ class Admin::PhotosController < ApplicationController
       end
     end
 
+    expire_cached_pages
     redirect_to :action => 'edit', :id => photo, :nocomment => :true
   end
 
@@ -298,8 +297,6 @@ class Admin::PhotosController < ApplicationController
   end
 
   def destroy
-    expire_cached_pages
-
     Photo.transaction do
       photo = Photo.find params[:id], :include => [ :revelation, :person ]
       photo.revelation.destroy if photo.revelation
@@ -314,7 +311,7 @@ class Admin::PhotosController < ApplicationController
       end
 
     end
-
+    expire_cached_pages
     redirect_to admin_root_path
   end
 
