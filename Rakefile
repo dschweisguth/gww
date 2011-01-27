@@ -24,7 +24,7 @@ namespace :test do
         t.libs << "test"
         t.test_files = FileList["test/#{target}/**/*_test.rb"]
         t.output_dir = "test/coverage/#{target}"
-        t.rcov_opts << '--rails --aggregate coverage.data --exclude "gems/*"'
+        t.rcov_opts << '--rails --aggregate coverage.data --exclude "gems/*,plugins/*"'
       end
     end
     task :coverage => "test:coverage:#{target}"
