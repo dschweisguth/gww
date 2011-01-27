@@ -97,7 +97,7 @@ Install gems
 Configure
     Configure database credentials
 	> cp config/database{_template,}.yml
-	Edit and fill in your database username and password
+	Edit, change usernames if you want different ones, and choose passwords
     Configure Flickr credentials
 	> cp config/flickr_credentials{_template,}.yml
 	Construct a Flickr API secret, key and auth token manually per the
@@ -107,24 +107,30 @@ Configure
 Create database user and databases
 ----------------------------------
 
-mysql> grant usage on *.* to gww@localhost identified by '(the password)';
+Create users.
+    mysql> grant usage on gww_dev.* to gww_dev@localhost identified by 'gww_dev';
+    mysql> grant usage on gww_production.* to gww_production@localhost identified by 'gww_production';
+    gww_dev will control the development and test environments and
+    gww_production will control the production environment. Separating the two
+    prevents gww_dev from damaging the production database.
 Create dev database
-    mysql> grant all privileges on gww_dev.* to gww@localhost;
+    mysql> grant all privileges on gww_dev.* to gww_dev@localhost;
     > rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
-Create production database
-    mysql> grant all privileges on gww_production.* to gww@localhost;
-    > rake RAILS_ENV=production db:create
-    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
 Create test database
-    mysql> grant all privileges on gww_test.* to gww@localhost;
+    mysql> grant all privileges on gww_test.* to gww_dev@localhost;
     > rake RAILS_ENV=test db:create
     > rake db:test:clone_structure
+Create production database
+    mysql> grant all privileges on gww_production.* to gww_production@localhost;
+    mysql> grant select on gww_production.* to gww_dev@localhost;
+    > rake RAILS_ENV=production db:create
+    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
 
 Test GWW
 --------
 
-> rake test
+> rake tests_and_specs
 
 Install Phusion Passenger and configure httpd (for Linux production only)
 -------------------------------------------------------------------------

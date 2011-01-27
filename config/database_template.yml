@@ -2,20 +2,24 @@
 
 defaults: &defaults
   adapter:   mysql2
-  username:   # <-- put your database username here
-  password:   # <-- put your database password here
   host:      localhost
   charset:   latin1
   collation: latin1_swedish_ci
 
 development:
   database: gww_dev
+  username: gww_dev
+  password:  # <-- put your development database password here
   <<: *defaults
 
 test:
   database: gww_test
+  username: gww_dev
+  password:  # <-- put your test database password here
   <<: *defaults
 
 production:
   database: gww_production
+  username: gww_production
+  password:  # <-- put your production database password here
   <<: *defaults
