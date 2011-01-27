@@ -6,7 +6,7 @@
 
 cd `dirname $0`/..
 git fetch --tags
-git pull
+git checkout `git tag | sort | tail -1`
 # I thought Rails would do this on startup, but it doesn't seem to happen when
 # running this script.
 bundle install --deployment --without test
