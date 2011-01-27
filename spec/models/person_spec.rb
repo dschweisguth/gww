@@ -7,7 +7,7 @@ describe Person do
     VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
 
     it 'creates a valid object given all required attributes' do
-      Person.new(VALID_ATTRS).should_not be_valid
+      Person.new(VALID_ATTRS).should be_valid
     end
 
     it 'creates an invalid object if flickrid is missing' do
