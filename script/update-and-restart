@@ -5,6 +5,7 @@
 # environment.
 
 cd `dirname $0`/..
+git fetch --tags
 git pull
 # I thought Rails would do this on startup, but it doesn't seem to happen when
 # running this script.
