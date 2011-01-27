@@ -1,4 +1,4 @@
-Label at the end of a TeamCity build and change production script to deploy that label
+Change production script to deploy successful build label
 Get coverage working in TeamCity
 Bug: if you look at an index page while the update is running, the message won't go away when it's done
 rvm
