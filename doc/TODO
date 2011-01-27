@@ -1,9 +1,10 @@
+Label at the end of a TeamCity build and change production script to deploy that label
+Get coverage working in TeamCity
 Bug: if you look at an index page while the update is running, the message won't go away when it's done
 rvm
 Upgrade to Rails 3
 Upgrade to Ruby 1.9.2, after the conflict documented here has been fixed:
   http://blog.zenspider.com/2010/12/rubygems-version-140-has-been.html
-CI: https://continuityapp.com/ or local TeamCity
 Give different pages different titles
 Bug: people/show/725 shows that member was in 4th place in the last month, but
   only third and above should show
