@@ -12,7 +12,6 @@ group :production do
 end
 
 group :test do
-  gem 'rake', '~> 0.8.7'
   gem 'rcov', '~> 0.9.9'
   gem 'rspec-rails', '~> 1.3.3'
 end
