@@ -55,7 +55,7 @@ class FlickrCredentials
       if failure_count <= 3
         warning += "; sleeping #{sleep_time} seconds and retrying ..."
       end
-      RAILS_DEFAULT_LOGGER.warn warning
+      Rails.logger.warn warning
       if failure_count <= 3
         sleep sleep_time
         retry
