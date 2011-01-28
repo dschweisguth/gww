@@ -24,14 +24,8 @@ describe FlickrCredentials do
 
     it 'gives up after four failures' do
       mock_get_fails 4
-      # TODO Dave get should raise_error to work
-      begin
-        FlickrCredentials.request 'flickr.people.findByUsername',
-          'username' => 'dschweisguth'
-        0.should == 1
-      rescue StandardError
-        # expected
-      end
+      lambda { FlickrCredentials.request 'flickr.people.findByUsername',
+        'username' => 'dschweisguth' }.should raise_error StandardError
     end
 
     def mock_get_fails(times)
