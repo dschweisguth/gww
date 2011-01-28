@@ -29,13 +29,13 @@ describe FlickrCredentials do
     end
 
     def mock_get_fails(times)
-      Net::HTTP.should_receive(:get_response).exactly(times).ordered.and_raise(StandardError)
+      mock(Net::HTTP).get_response.with_any_args.times(times) { raise StandardError }
     end
 
     def mock_get_succeeds
-      response = mock("response")
-      response.stub!(:body).and_return('<rsp>\n<user nsid="26686665@N06"/></rsp>')
-      Net::HTTP.should_receive(:get_response).once.ordered.and_return(response)
+      response = Object.new
+      mock(response).body { '<rsp>\n<user nsid="26686665@N06"/></rsp>' }
+      mock(Net::HTTP).get_response.with_any_args { response }
     end
 
     def request_should_succeed

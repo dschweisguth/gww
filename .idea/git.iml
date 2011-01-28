@@ -84,6 +84,18 @@
     </requirement>
     <requirement>
       <requirement>
+        <dependency name="rr" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="rr" version="1.0.2" bound="LATEST_IN_BRANCH" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="rspec" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source manual="true" />
@@ -143,6 +155,7 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] rack (v1.1.0, /Users/dave/.gem/ruby/1.8/gems/rack-1.1.0)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] rspec (v1.3.1, /opt/local/lib/ruby/gems/1.8/gems/rspec-1.3.1)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] xml-simple (v1.0.13, /opt/local/lib/ruby/gems/1.8/gems/xml-simple-1.0.13)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rr (v1.0.2, /opt/local/lib/ruby/gems/1.8/gems/rr-1.0.2)" level="application" />
   </component>
 </module>
 
