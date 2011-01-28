@@ -11,7 +11,6 @@ describe FlickrCredentials do
     it 'retries' do
       FlickrCredentials.retry_quantum = 0.001
       Net::HTTP.should_receive(:get_response).once.ordered.and_raise(StandardError)
-      # TODO Dave try stub_chain here
       response = mock("response")
       response.stub!(:body).and_return('<rsp>\n<user nsid="26686665@N06"/></rsp>')
       Net::HTTP.should_receive(:get_response).once.ordered.and_return(response)
