@@ -7,6 +7,9 @@ class FlickrCredentials
   API_KEY = CREDENTIALS['api_key']
   AUTH_TOKEN = CREDENTIALS['auth_token']
 
+  class << self; attr_accessor :retry_quantum end
+  @retry_quantum = 30
+
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
     xml = submit url
@@ -47,12 +50,12 @@ class FlickrCredentials
       response.body
     rescue StandardError, Timeout::Error => e
       failure_count += 1
-      sleep_time = 30 * (2 ** failure_count)
+      sleep_time = retry_quantum * (2 ** failure_count)
       warning = e.message
       if failure_count <= 3
         warning += "; sleeping #{sleep_time} seconds and retrying ..."
       end
-      logger.warn warning
+      RAILS_DEFAULT_LOGGER.warn warning
       if failure_count <= 3
         sleep sleep_time
         retry
