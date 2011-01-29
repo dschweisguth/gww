@@ -22,11 +22,13 @@ end
 class Person
   extend ModelFactorySupport
 
-  def self.create_for_test!(options = {})
+  def self.create_for_test!(caller_options = {})
     #noinspection RubyUnusedLocalVariable
-    options, label, padded_label = process_label! options
-    Person.create! :flickrid => padded_label + 'person_flickrid',
-      :username => padded_label + 'username'
+    caller_options, label, padded_label = process_label! caller_options
+    options = { :flickrid => padded_label + 'person_flickrid',
+      :username => padded_label + 'username' }
+    options.merge! caller_options
+    Person.create! options
   end
 
 end
@@ -38,12 +40,14 @@ class Photo
     #noinspection RubyUnusedLocalVariable
     caller_options, label, padded_label = process_label! caller_options
     now = Time.now
-    poster = Person.create_for_test! :label => (padded_label + 'poster')
-    options = { :person => poster,
-      :flickrid => padded_label + 'photo_flickrid',
+    options = { :flickrid => padded_label + 'photo_flickrid',
       :farm => 'farm', :server => 'server', :secret => 'secret',
       :dateadded => now, :lastupdate => now, :seen_at => now,
       :mapped => 'false', :game_status => 'unfound', :views => 0 }
+    if ! caller_options[:person]
+      options[:person] =
+        Person.create_for_test! :label => (padded_label + 'poster')
+    end
     options.merge! caller_options
     Photo.create! options
   end
