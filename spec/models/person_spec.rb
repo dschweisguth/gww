@@ -11,6 +11,10 @@ describe Person do
     should have_many :guesses
   end
 
+  it "doesn't allow flickrid to change" do
+    should have_readonly_attribute :flickrid
+  end
+
   describe '.new' do
     VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
 
