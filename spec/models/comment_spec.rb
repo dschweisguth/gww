@@ -6,6 +6,22 @@ describe Comment do
     should belong_to :photo
   end
 
+  it "doesn't allow flickrid to be updated" do
+    should have_readonly_attribute :flickrid
+  end
+
+  it "doesn't allow username to be updated" do
+    should have_readonly_attribute :username
+  end
+
+  it "doesn't allow comment_text to be updated" do
+    should have_readonly_attribute :comment_text
+  end
+
+  it "doesn't allow commented_at to be updated" do
+    should have_readonly_attribute :commented_at
+  end
+
   describe '.new' do
     VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username',
       :comment_text => 'comment text', :commented_at => Time.now }
