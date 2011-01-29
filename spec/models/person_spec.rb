@@ -3,24 +3,44 @@ require 'model_factory'
 
 describe Person do
 
-  it "should have many photos" do
-    should have_many :photos
+  describe '#photos' do
+    it "should have many photos" do
+      should have_many :photos
+    end
   end
 
-  it "should have many guesses" do
-    should have_many :guesses
+  describe '#guesses' do
+    it "should have many guesses" do
+      should have_many :guesses
+    end
   end
 
-  it "requires a flickrid" do
-    should validate_presence_of :flickrid
+  describe '#flickrid' do
+    it "requires a flickrid" do
+      should validate_presence_of :flickrid
+    end
+
+    it "requires flickrid to be unique" do
+      Person.create_for_test!
+      should validate_uniqueness_of :flickrid
+    end
+
+    it "doesn't allow flickrid to change" do
+      should have_readonly_attribute :flickrid
+    end
+
   end
 
-  it "doesn't allow flickrid to change" do
-    should have_readonly_attribute :flickrid
-  end
+  describe '#username' do
+    it "requires a username" do
+      should validate_presence_of :username
+    end
 
-  it "requires a username" do
-    should validate_presence_of :username
+    it "requires username to be unique" do
+      Person.create_for_test!
+      should validate_uniqueness_of :username
+    end
+
   end
 
   describe '.new' do
