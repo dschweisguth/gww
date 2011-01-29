@@ -8,7 +8,7 @@ describe FlickrUpdate do
     end
 
     it 'creates an invalid object if member_count is missing' do
-      FlickrUpdate.new().should_not be_valid
+      FlickrUpdate.new.should_not be_valid
     end
 
   end
