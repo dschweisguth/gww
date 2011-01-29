@@ -15,4 +15,5 @@ group :test do
   gem 'rcov', '~> 0.9.9'
   gem 'rr', '~> 1.0.2'
   gem 'rspec-rails', '~> 1.3.3'
+  gem 'shoulda', '~> 2.11.3'
 end

@@ -3,6 +3,14 @@ require 'model_factory'
 
 describe Person do
 
+  it "should have many photos" do
+    should have_many :photos
+  end
+
+  it "should have many guesses" do
+    should have_many :guesses
+  end
+
   describe '.new' do
     VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
 
