@@ -15,7 +15,7 @@ describe FlickrUpdate do
 
   describe '.latest' do
     it 'returns the most recent update' do
-      update = FlickrUpdate.create_for_test!({})
+      update = FlickrUpdate.create_for_test!
       FlickrUpdate.latest.should == update
     end
   end

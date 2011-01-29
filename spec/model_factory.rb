@@ -22,7 +22,7 @@ end
 class Person
   extend ModelFactorySupport
 
-  def self.create_for_test!(options)
+  def self.create_for_test!(options = {})
     #noinspection RubyUnusedLocalVariable
     options, label, padded_label = process_label! options
     Person.create! :flickrid => padded_label + 'person_flickrid',
@@ -34,7 +34,7 @@ end
 class Photo
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options)
+  def self.create_for_test!(caller_options = {})
     #noinspection RubyUnusedLocalVariable
     caller_options, label, padded_label = process_label! caller_options
     now = Time.now
@@ -53,7 +53,7 @@ end
 class Guess
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options)
+  def self.create_for_test!(caller_options = {})
     caller_options, label, padded_label = process_label! caller_options
     now = Time.now
     options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
@@ -73,7 +73,7 @@ end
 class Comment
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options)
+  def self.create_for_test!(caller_options = {})
     caller_options, label, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'comment_flickrid',
       :username => padded_label + 'comment_username',
@@ -90,7 +90,7 @@ end
 class FlickrUpdate
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options)
+  def self.create_for_test!(caller_options = {})
     #noinspection RubyUnusedLocalVariable
     caller_options, label, padded_label = process_label! caller_options
     options = { :member_count => 0 }
