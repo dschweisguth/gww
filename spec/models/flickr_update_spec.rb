@@ -15,12 +15,10 @@ describe FlickrUpdate do
 
   describe '.latest' do
     it 'returns the most recent update' do
-      FlickrUpdate.create_for_test! :created_at => Time.utc(2010)
-      most_recent_update =
-        FlickrUpdate.create_for_test! :created_at => Time.utc(2011)
+      FlickrUpdate.create_for_test!
+      most_recent_update = FlickrUpdate.create_for_test!
       FlickrUpdate.latest.should == most_recent_update
     end
-
   end
 
 end
