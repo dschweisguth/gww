@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'model_factory'
 
 describe FlickrUpdate do
   describe '.new' do
@@ -10,6 +11,13 @@ describe FlickrUpdate do
       FlickrUpdate.new().should_not be_valid
     end
 
+  end
+
+  describe '.latest' do
+    it 'returns the most recent update' do
+      update = FlickrUpdate.create_for_test!({})
+      FlickrUpdate.latest.should == update
+    end
   end
 
 end

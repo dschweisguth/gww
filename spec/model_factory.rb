@@ -86,3 +86,16 @@ class Comment
   end
 
 end
+
+class FlickrUpdate
+  extend ModelFactorySupport
+
+  def self.create_for_test!(caller_options)
+    #noinspection RubyUnusedLocalVariable
+    caller_options, label, padded_label = process_label! caller_options
+    options = { :member_count => 0 }
+    options.merge! caller_options
+    FlickrUpdate.create! options
+  end
+
+end
