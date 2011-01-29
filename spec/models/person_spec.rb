@@ -11,33 +11,22 @@ describe Person do
     should have_many :guesses
   end
 
+  it "requires a flickrid" do
+    should validate_presence_of :flickrid
+  end
+
   it "doesn't allow flickrid to change" do
     should have_readonly_attribute :flickrid
   end
 
+  it "requires a username" do
+    should validate_presence_of :username
+  end
+
   describe '.new' do
-    VALID_ATTRS = { :flickrid => 'flickrid', :username => 'username' }
-
     it 'creates a valid object given all required attributes' do
-      Person.new(VALID_ATTRS).should be_valid
+      Person.new({ :flickrid => 'flickrid', :username => 'username' }).should be_valid
     end
-
-    it 'creates an invalid object if flickrid is missing' do
-      Person.new(VALID_ATTRS - :flickrid).should_not be_valid
-    end
-
-    it 'creates an invalid object if flickrid is blank' do
-      Person.new(VALID_ATTRS.merge({ :flickrid => '' })).should_not be_valid
-    end
-
-    it 'creates an invalid object if username is missing' do
-      Person.new(VALID_ATTRS - :username).should_not be_valid
-    end
-
-    it 'creates an invalid object if username is blank' do
-      Person.new(VALID_ATTRS.merge({ :username => '' })).should_not be_valid
-    end
-
   end
 
   describe '.guesses_per_day' do
