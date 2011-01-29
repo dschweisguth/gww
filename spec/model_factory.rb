@@ -1,10 +1,3 @@
-class Hash
-  def -(*keys)
-    #noinspection RubyUnusedLocalVariable
-    reject { |key, value| keys.include?(key) }
-  end
-end
-
 module ModelFactorySupport
   def process_label!(options)
     label = options[:label]
