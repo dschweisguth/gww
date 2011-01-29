@@ -2,10 +2,9 @@ class Admin::PhotosController < ApplicationController
   auto_complete_for :person, :username
 
   def update
-    update = FlickrUpdate.new
     group_info = FlickrCredentials.request 'flickr.groups.getInfo'
-    update.member_count = group_info['group'][0]['members'][0]
-    update.save!
+    member_count = group_info['group'][0]['members'][0]
+    update = FlickrUpdate.create! :member_count => member_count
     expire_cached_pages
 
     page = 1
