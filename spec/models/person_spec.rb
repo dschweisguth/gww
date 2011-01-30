@@ -19,12 +19,6 @@ describe Person do
     it { should validate_presence_of :username }
   end
 
-  describe '.new' do
-    it 'creates a valid object given all required attributes' do
-      Person.new({ :flickrid => 'flickrid', :username => 'username' }).should be_valid
-    end
-  end
-
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = Guess.create_for_test! :guessed_at => 4.days.ago

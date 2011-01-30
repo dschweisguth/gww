@@ -25,11 +25,4 @@ describe Comment do
     it { should have_readonly_attribute :commented_at }
   end
 
-  describe '.new' do
-    it 'creates a valid object given all required attributes' do
-      Comment.new({ :flickrid => 'flickrid', :username => 'username',
-      :comment_text => 'comment text', :commented_at => Time.now }).should be_valid
-    end
-  end
-
 end
