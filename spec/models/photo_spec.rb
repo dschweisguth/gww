@@ -138,6 +138,19 @@ describe Photo do
       guess.photo.member_comments.should == 2
     end
 
+    it 'ignores comments after the guess' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at + 5
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_comments.should == 1
+    end
+
   end
 
 end
