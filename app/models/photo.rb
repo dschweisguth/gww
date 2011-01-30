@@ -3,7 +3,7 @@ class Photo < ActiveRecord::Base
   has_many :guesses
   has_many :comments
   has_one :revelation
-  validates_presence_of :person, :flickrid, :farm, :server, :secret,
+  validates_presence_of :flickrid, :farm, :server, :secret,
     :dateadded, :mapped, :lastupdate, :seen_at, :game_status, :views,
     :member_comments, :member_questions
   attr_readonly :person, :flickrid

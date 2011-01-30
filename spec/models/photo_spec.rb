@@ -3,8 +3,6 @@ require 'spec_helper'
 describe Photo do
   describe '#person' do
     it { should belong_to :person }
-    it { should validate_presence_of :person }
-    it { should have_readonly_attribute :person }
   end
   
   it { should have_many :comments }
