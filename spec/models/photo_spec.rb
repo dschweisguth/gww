@@ -352,6 +352,16 @@ describe Photo do
       Photo.most_viewed_in_2010.should == [ photo2, photo1 ]
     end
 
+    it 'ignores photos from before 2010' do
+      Photo.create_for_test! :dateadded => Time.utc(2009)
+      Photo.most_viewed_in_2010.should == []
+    end
+
+    it 'ignores photos from after 2010' do
+      Photo.create_for_test! :dateadded => Time.utc(2011)
+      Photo.most_viewed_in_2010.should == []
+    end
+
   end
 
 end
