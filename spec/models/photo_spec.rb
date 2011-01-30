@@ -153,9 +153,9 @@ describe Photo do
 
   end
 
-  describe '.all_with_stats' do
+  describe '.all_sorted_and_paginated' do
     it 'returns photos sorted by username' do
-      all_with_stats_should_reverse_photos('username',
+      all_sorted_and_paginated_should_reverse_photos('username',
         { :username => 'z' }, { :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :dateadded => Time.utc(2010) })
     end
@@ -164,71 +164,71 @@ describe Photo do
       person = Person.create_for_test!
       photo1 = Photo.create_for_test! :label => 1, :person => person, :dateadded => Time.utc(2010)
       photo2 = Photo.create_for_test! :label => 2, :person => person, :dateadded => Time.utc(2011)
-      Photo.all_with_stats('username', '+', 1, 2).should == [ photo2, photo1 ]
+      Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
     it 'returns photos sorted by dateadded' do
-      all_with_stats_should_reverse_photos('date-added',
+      all_sorted_and_paginated_should_reverse_photos('date-added',
         { :username => 'a' }, { :dateadded => Time.utc(2010) },
         { :username => 'z' }, { :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by dateadded, username' do
-      all_with_stats_should_reverse_photos('date-added',
+      all_sorted_and_paginated_should_reverse_photos('date-added',
         { :username => 'z' }, { :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate' do
-      all_with_stats_should_reverse_photos('last-updated',
+      all_sorted_and_paginated_should_reverse_photos('last-updated',
         { :username => 'a' }, { :lastupdate => Time.utc(2010) },
         { :username => 'z' }, { :lastupdate => Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate, username' do
-      all_with_stats_should_reverse_photos('last-updated',
+      all_sorted_and_paginated_should_reverse_photos('last-updated',
         { :username => 'z' }, { :lastupdate => Time.utc(2011) },
         { :username => 'a' }, { :lastupdate => Time.utc(2011) })
     end
 
     it 'returns photos sorted by views' do
-      all_with_stats_should_reverse_photos('views',
+      all_sorted_and_paginated_should_reverse_photos('views',
         { :username => 'a' }, { :views => 0 },
         { :username => 'z' }, { :views => 1 })
     end
 
     it 'returns photos sorted by views, username' do
-      all_with_stats_should_reverse_photos('views',
+      all_sorted_and_paginated_should_reverse_photos('views',
         { :username => 'z' }, { :views => 0 },
         { :username => 'a' }, { :views => 0 })
     end
 
     it 'returns photos sorted by member_comments' do
-      all_with_stats_should_reverse_photos('member-comments',
+      all_sorted_and_paginated_should_reverse_photos('member-comments',
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
         { :username => 'z' }, { :member_comments => 1, :dateadded => Time.utc(2010) })
     end
 
     it 'returns photos sorted by member_comments, dateadded' do
-      all_with_stats_should_reverse_photos('member-comments',
+      all_sorted_and_paginated_should_reverse_photos('member-comments',
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2010) },
         { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_comments, dateadded, username' do
-      all_with_stats_should_reverse_photos('member-comments',
+      all_sorted_and_paginated_should_reverse_photos('member-comments',
         { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
     end
 
-    def all_with_stats_should_reverse_photos(sorted_by,
+    def all_sorted_and_paginated_should_reverse_photos(sorted_by,
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
       person1 = Person.create_for_test! person_1_options.merge({ :label => 1 })
       photo1 = Photo.create_for_test! photo_1_options.merge({ :label => 1, :person => person1 })
       person2 = Person.create_for_test! person_2_options.merge({ :label => 2 })
       photo2 = Photo.create_for_test! photo_2_options.merge({ :label => 2, :person => person2 })
-      Photo.all_with_stats(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
+      Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
 
     end
 

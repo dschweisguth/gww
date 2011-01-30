@@ -54,7 +54,7 @@ class Photo < ActiveRecord::Base
     }
   end
 
-  def self.all_with_stats(sorted_by, order, page, per_page)
+  def self.all_sorted_and_paginated(sorted_by, order, page, per_page)
     paginate_by_sql(
       'select p.* ' +
         'from photos p, people poster ' +
