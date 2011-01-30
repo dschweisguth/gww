@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe Comment do
   describe '#photo' do
-    # TODO Dave
     it { should belong_to :photo }
-#    it { should validate_presence_of :photo }
-#    it { should have_readonly_attribute :photo }
   end
 
   describe '#flickrid' do
