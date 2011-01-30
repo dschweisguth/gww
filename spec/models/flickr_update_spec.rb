@@ -2,13 +2,9 @@ require 'spec_helper'
 require 'model_factory'
 
 describe FlickrUpdate do
-  it "requires member_count" do
-    should validate_presence_of :member_count
-  end
+  it { should validate_presence_of :member_count }
 
-  it "doesn't allow member_count to change" do
-    should have_readonly_attribute :member_count
-  end
+  it { should have_readonly_attribute :member_count }
 
   describe '.new' do
     it 'creates a valid object given all required attributes' do
