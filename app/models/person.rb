@@ -1,6 +1,5 @@
 class Person < ActiveRecord::Base
   validates_presence_of :flickrid, :username
-  validates_uniqueness_of :flickrid, :username
   attr_readonly :flickrid
 
   has_many :photos

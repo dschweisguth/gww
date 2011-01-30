@@ -6,7 +6,6 @@ class Photo < ActiveRecord::Base
   validates_presence_of :flickrid, :farm, :server, :secret,
     :dateadded, :mapped, :lastupdate, :seen_at, :game_status, :views,
     :member_comments, :member_questions
-  validates_uniqueness_of :flickrid
   attr_readonly :person, :flickrid
   validates_inclusion_of :mapped, :in => %w(false true)
 

@@ -28,10 +28,6 @@ describe Photo do
 
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }
-    it "requires flickrid to be unique" do
-      Photo.create_for_test!
-      should validate_uniqueness_of :flickrid
-    end
     it { should have_readonly_attribute :flickrid }
   end
 

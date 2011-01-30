@@ -12,24 +12,11 @@ describe Person do
 
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }
-
-    it "requires flickrid to be unique" do
-      Person.create_for_test!
-      should validate_uniqueness_of :flickrid
-    end
-
     it { should have_readonly_attribute :flickrid }
-
   end
 
   describe '#username' do
     it { should validate_presence_of :username }
-
-    it "requires username to be unique" do
-      Person.create_for_test!
-      should validate_uniqueness_of :username
-    end
-
   end
 
   describe '.new' do
