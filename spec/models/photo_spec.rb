@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/model_factory'
 
 describe Photo do
   def valid_attrs
@@ -93,6 +94,17 @@ describe Photo do
       Photo.update_seen_at [ photo.flickrid ], Time.utc(2011)
       photo.reload
       photo.seen_at.should == Time.utc(2011)
+    end
+  end
+
+  describe '#update_statistics' do
+    it 'counts comments on guessed photos' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_comments.should == 1
     end
   end
 
