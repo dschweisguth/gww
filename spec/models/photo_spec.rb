@@ -87,4 +87,13 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
+  describe '#update_seen_at' do
+    it 'updates seen_at' do
+      photo = Photo.create_for_test! :seen_at => Time.utc(2010)
+      Photo.update_seen_at [ photo.flickrid ], Time.utc(2011)
+      photo.reload
+      photo.seen_at.should == Time.utc(2011)
+    end
+  end
+
 end
