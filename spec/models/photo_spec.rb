@@ -155,11 +155,9 @@ describe Photo do
 
   describe '.all_with_stats' do
     it 'returns photos sorted by username' do
-      person1 = Person.create_for_test! :label => 1, :username => 'z'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :dateadded => Time.utc(2011)
-      person2 = Person.create_for_test! :label => 2, :username => 'a'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :dateadded => Time.utc(2010)
-      Photo.all_with_stats('username', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('username',
+        { :username => 'z' }, { :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :dateadded => Time.utc(2010) })
     end
 
     it 'returns photos sorted by username, dateadded' do
@@ -170,68 +168,51 @@ describe Photo do
     end
 
     it 'returns photos sorted by dateadded' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :dateadded => Time.utc(2010)
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :dateadded => Time.utc(2011)
-      Photo.all_with_stats('date-added', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('date-added',
+        { :username => 'a' }, { :dateadded => Time.utc(2010) },
+        { :username => 'z' }, { :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by dateadded, username' do
-      person1 = Person.create_for_test! :label => 1, :username => 'z'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :dateadded => Time.utc(2011)
-      person2 = Person.create_for_test! :label => 2, :username => 'a'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :dateadded => Time.utc(2011)
-      Photo.all_with_stats('date-added', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('date-added',
+        { :username => 'z' }, { :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :lastupdate => Time.utc(2010)
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :lastupdate => Time.utc(2011)
-      Photo.all_with_stats('last-updated', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('last-updated',
+        { :username => 'a' }, { :lastupdate => Time.utc(2010) },
+        { :username => 'z' }, { :lastupdate => Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate, username' do
-      person1 = Person.create_for_test! :label => 1, :username => 'z'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :lastupdate => Time.utc(2011)
-      person2 = Person.create_for_test! :label => 2, :username => 'a'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :lastupdate => Time.utc(2011)
-      Photo.all_with_stats('last-updated', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('last-updated',
+        { :username => 'z' }, { :lastupdate => Time.utc(2011) },
+        { :username => 'a' }, { :lastupdate => Time.utc(2011) })
     end
 
     it 'returns photos sorted by views' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :views => 0
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :views => 1
-      Photo.all_with_stats('views', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('views',
+        { :username => 'a' }, { :views => 0 },
+        { :username => 'z' }, { :views => 1 })
     end
 
     it 'returns photos sorted by views, username' do
-      person1 = Person.create_for_test! :label => 1, :username => 'z'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :views => 0
-      person2 = Person.create_for_test! :label => 2, :username => 'a'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :views => 0
-      Photo.all_with_stats('views', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('views',
+        { :username => 'z' }, { :views => 0 },
+        { :username => 'a' }, { :views => 0 })
     end
 
     it 'returns photos sorted by member_comments' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :member_comments => 0, :dateadded => Time.utc(2011)
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 1, :dateadded => Time.utc(2010)
-      Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('member-comments',
+        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
+        { :username => 'z' }, { :member_comments => 1, :dateadded => Time.utc(2010) })
     end
 
     it 'returns photos sorted by member_comments, dateadded' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :member_comments => 0, :dateadded => Time.utc(2010)
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 0, :dateadded => Time.utc(2011)
-      Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
-#      all_with_stats_should_sort_second_photo_first('', {  }, {  }, {  }, {  })
+      all_with_stats_should_sort_second_photo_first('member-comments',
+        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2010) },
+        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_comments, dateadded, username' do
@@ -240,12 +221,15 @@ describe Photo do
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
     end
 
-    def all_with_stats_should_sort_second_photo_first(sorted_by, person_1_options, photo_1_options, person_2_options, photo_2_options)
+    def all_with_stats_should_sort_second_photo_first(sorted_by,
+      person_1_options, photo_1_options, person_2_options, photo_2_options)
+
       person1 = Person.create_for_test! person_1_options.merge({ :label => 1 })
       photo1 = Photo.create_for_test! photo_1_options.merge({ :label => 1, :person => person1 })
       person2 = Person.create_for_test! person_2_options.merge({ :label => 2 })
       photo2 = Photo.create_for_test! photo_2_options.merge({ :label => 2, :person => person2 })
       Photo.all_with_stats(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
+
     end
 
   end
