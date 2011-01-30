@@ -97,8 +97,6 @@ describe Photo do
     end
   end
 
-  # TODO Dave test questions
-
   describe '.update_statistics' do
     it 'counts comments on guessed photos' do
       guess = Guess.create_for_test!
