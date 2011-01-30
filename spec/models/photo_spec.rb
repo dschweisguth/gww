@@ -97,6 +97,8 @@ describe Photo do
     end
   end
 
+  # TODO Dave test questions
+
   describe '.update_statistics' do
     it 'counts comments on guessed photos' do
       guess = Guess.create_for_test!
@@ -219,6 +221,24 @@ describe Photo do
       all_sorted_and_paginated_should_reverse_photos('member-comments',
         { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by member_questions' do
+      all_sorted_and_paginated_should_reverse_photos('member-questions',
+        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
+        { :username => 'z' }, { :member_questions => 1, :dateadded => Time.utc(2010) })
+    end
+
+    it 'returns photos sorted by member_questions, dateadded' do
+      all_sorted_and_paginated_should_reverse_photos('member-questions',
+        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2010) },
+        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by member_questions, dateadded, username' do
+      all_sorted_and_paginated_should_reverse_photos('member-questions',
+        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
     end
 
     def all_sorted_and_paginated_should_reverse_photos(sorted_by,
