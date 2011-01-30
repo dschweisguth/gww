@@ -72,9 +72,18 @@ describe Photo do
 
   describe '#game_status' do
     it { should validate_presence_of :game_status }
-  end
 
-  # TODO Dave game_status must have certain values
+    %w(unfound unconfirmed found revealed).each do |value|
+      it "accepts '#{value}'" do
+        Photo.new(valid_attrs.merge({ :game_status => value })).should be_valid
+      end
+    end
+
+    it "rejects other values" do
+      Photo.new(valid_attrs.merge({ :game_status => 'other' })).should_not be_valid
+    end
+
+  end
 
   describe '#views' do
     it { should validate_presence_of :views }
