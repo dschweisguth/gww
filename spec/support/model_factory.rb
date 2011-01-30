@@ -9,6 +9,19 @@ module ModelFactorySupport
   private :process_label!
 end
 
+class FlickrUpdate
+  extend ModelFactorySupport
+
+  def self.create_for_test!(caller_options = {})
+    #noinspection RubyUnusedLocalVariable
+    caller_options, padded_label = process_label! caller_options
+    options = { :member_count => 0 }
+    options.merge! caller_options
+    FlickrUpdate.create! options
+  end
+
+end
+
 class Person
   extend ModelFactorySupport
 
@@ -42,26 +55,6 @@ class Photo
 
 end
 
-class Guess
-  extend ModelFactorySupport
-
-  def self.create_for_test!(caller_options = {})
-    caller_options, padded_label = process_label! caller_options
-    now = Time.now
-    options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
-    if ! caller_options[:photo]
-      options[:photo] = Photo.create_for_test! :label => (padded_label + 'guess')
-    end
-    if ! caller_options[:person]
-      options[:person] =
-        Person.create_for_test! :label => (padded_label + 'guesser')
-    end
-    options.merge! caller_options
-    Guess.create! options
-  end
-
-end
-
 class Comment
   extend ModelFactorySupport
 
@@ -79,15 +72,22 @@ class Comment
 
 end
 
-class FlickrUpdate
+class Guess
   extend ModelFactorySupport
 
   def self.create_for_test!(caller_options = {})
-    #noinspection RubyUnusedLocalVariable
     caller_options, padded_label = process_label! caller_options
-    options = { :member_count => 0 }
+    now = Time.now
+    options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
+    if ! caller_options[:photo]
+      options[:photo] = Photo.create_for_test! :label => (padded_label + 'guess')
+    end
+    if ! caller_options[:person]
+      options[:person] =
+        Person.create_for_test! :label => (padded_label + 'guesser')
+    end
     options.merge! caller_options
-    FlickrUpdate.create! options
+    Guess.create! options
   end
 
 end
