@@ -231,14 +231,21 @@ describe Photo do
       person2 = Person.create_for_test! :label => 2, :username => 'z'
       photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 0, :dateadded => Time.utc(2011)
       Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
+#      all_with_stats_should_sort_second_photo_first('', {  }, {  }, {  }, {  })
     end
 
     it 'returns photos sorted by member_comments, dateadded, username' do
-      person1 = Person.create_for_test! :label => 1, :username => 'z'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1, :member_comments => 0, :dateadded => Time.utc(2011)
-      person2 = Person.create_for_test! :label => 2, :username => 'a'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 0, :dateadded => Time.utc(2011)
-      Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
+      all_with_stats_should_sort_second_photo_first('member-comments',
+        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
+    end
+
+    def all_with_stats_should_sort_second_photo_first(sorted_by, person_1_options, photo_1_options, person_2_options, photo_2_options)
+      person1 = Person.create_for_test! person_1_options.merge({ :label => 1 })
+      photo1 = Photo.create_for_test! photo_1_options.merge({ :label => 1, :person => person1 })
+      person2 = Person.create_for_test! person_2_options.merge({ :label => 2 })
+      photo2 = Photo.create_for_test! photo_2_options.merge({ :label => 2, :person => person2 })
+      Photo.all_with_stats(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
     end
 
   end
