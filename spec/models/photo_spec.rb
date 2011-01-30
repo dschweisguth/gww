@@ -217,6 +217,30 @@ describe Photo do
       Photo.all_with_stats('views', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
+    it 'returns photos sorted by member_comments' do
+      person1 = Person.create_for_test! :label => 1, :username => 'a'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :member_comments => 0, :dateadded => Time.utc(2011)
+      person2 = Person.create_for_test! :label => 2, :username => 'z'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 1, :dateadded => Time.utc(2010)
+      Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
+    it 'returns photos sorted by member_comments, dateadded' do
+      person1 = Person.create_for_test! :label => 1, :username => 'a'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :member_comments => 0, :dateadded => Time.utc(2010)
+      person2 = Person.create_for_test! :label => 2, :username => 'z'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 0, :dateadded => Time.utc(2011)
+      Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
+    it 'returns photos sorted by member_comments, dateadded, username' do
+      person1 = Person.create_for_test! :label => 1, :username => 'z'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :member_comments => 0, :dateadded => Time.utc(2011)
+      person2 = Person.create_for_test! :label => 2, :username => 'a'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :member_comments => 0, :dateadded => Time.utc(2011)
+      Photo.all_with_stats('member-comments', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
   end
 
 end
