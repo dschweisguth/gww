@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 describe FlickrUpdate do
-  it { should validate_presence_of :member_count }
 
-  it { should have_readonly_attribute :member_count }
+  describe '#member_count' do
+    it { should validate_presence_of :member_count }
+    it { should have_readonly_attribute :member_count }
+  end
 
   describe '.new' do
     it 'creates a valid object given all required attributes' do
