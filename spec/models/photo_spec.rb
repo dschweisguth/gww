@@ -74,14 +74,17 @@ describe Photo do
 
   describe '#views' do
     it { should validate_presence_of :views }
+    it { should validate_non_negative_integer :views }
   end
 
   describe '#member_comments' do
     it { should validate_presence_of :member_comments }
+    it { should validate_non_negative_integer :member_comments }
   end
 
   describe '#member_questions' do
     it { should validate_presence_of :member_questions }
+    it { should validate_non_negative_integer :member_questions }
   end
 
 end

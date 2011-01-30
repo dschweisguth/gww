@@ -8,6 +8,12 @@ class Photo < ActiveRecord::Base
   attr_readonly :person, :flickrid
   validates_inclusion_of :mapped, :in => %w(false true)
   validates_inclusion_of :game_status, :in => %w(unfound unconfirmed found revealed)
+  validates_numericality_of :views, :only_integer => true,
+    :greater_than_or_equal_to => 0
+  validates_numericality_of :member_comments, :only_integer => true,
+    :greater_than_or_equal_to => 0
+  validates_numericality_of :member_questions, :only_integer => true,
+    :greater_than_or_equal_to => 0
 
   def self.update_seen_at(flickrids, time)
     joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
