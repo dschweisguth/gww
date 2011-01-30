@@ -169,6 +169,22 @@ describe Photo do
       Photo.all_with_stats('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
+    it 'returns photos sorted by dateadded' do
+      person1 = Person.create_for_test! :label => 1, :username => 'a'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :dateadded => Time.utc(2010)
+      person2 = Person.create_for_test! :label => 2, :username => 'z'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :dateadded => Time.utc(2011)
+      Photo.all_with_stats('date-added', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
+    it 'returns photos sorted by dateadded, username' do
+      person1 = Person.create_for_test! :label => 1, :username => 'z'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :dateadded => Time.utc(2011)
+      person2 = Person.create_for_test! :label => 2, :username => 'a'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :dateadded => Time.utc(2011)
+      Photo.all_with_stats('date-added', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
   end
 
 end
