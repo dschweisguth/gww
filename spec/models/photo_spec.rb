@@ -106,6 +106,16 @@ describe Photo do
       guess.photo.reload
       guess.photo.member_comments.should == 1
     end
+
+    it 'ignores comments by the poster' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_comments.should == 0
+    end
+
   end
 
 end
