@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'model_factory'
 
 describe FlickrUpdate do
   it { should validate_presence_of :member_count }
