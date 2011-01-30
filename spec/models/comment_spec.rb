@@ -15,7 +15,7 @@ describe Comment do
     it { should have_readonly_attribute :username }
   end
 
-  describe '#username' do
+  describe '#comment_text' do
     it { should validate_presence_of :comment_text }
     it { should have_readonly_attribute :comment_text }
   end
