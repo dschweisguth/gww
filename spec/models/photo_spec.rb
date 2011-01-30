@@ -307,19 +307,35 @@ describe Photo do
   end
 
   describe '#unfound_or_unconfirmed_count' do
-    it 'counts unfound photos' do
-      Photo.create_for_test! :game_status => 'unfound'
-      Photo.unfound_or_unconfirmed_count.should == 1
+    %w(unfound unconfirmed).each do |game_status|
+      it "counts #{game_status} photos" do
+        Photo.create_for_test! :game_status => game_status
+        Photo.unfound_or_unconfirmed_count.should == 1
+      end
     end
 
-    it 'counts unconfirmed photos' do
-      Photo.create_for_test! :game_status => 'unconfirmed'
-      Photo.unfound_or_unconfirmed_count.should == 1
+    %w(found revealed).each do |game_status|
+      it "ignores #{game_status} photos" do
+        Photo.create_for_test! :game_status => game_status
+        Photo.unfound_or_unconfirmed_count.should == 0
+      end
     end
 
-    it 'ignores other statuses' do
-      Photo.create_for_test! :game_status => 'found'
-      Photo.unfound_or_unconfirmed_count.should == 0
+  end
+
+  describe '#unfound_or_unconfirmed' do
+    %w(unfound unconfirmed).each do |game_status|
+      it "returns #{game_status} photos" do
+        photo = Photo.create_for_test! :game_status => game_status
+        Photo.unfound_or_unconfirmed.should == [ photo ]
+      end
+    end
+
+    %w(found revealed).each do |game_status|
+      it "ignores #{game_status} photos" do
+        Photo.create_for_test! :game_status => game_status
+        Photo.unfound_or_unconfirmed.should == []
+      end
     end
 
   end
