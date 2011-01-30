@@ -345,6 +345,13 @@ describe Photo do
       photo = Photo.create_for_test! :dateadded => Time.utc(2010)
       Photo.most_viewed_in_2010.should == [ photo ]
     end
+
+    it 'sorts by views' do
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2010), :views => 0
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2010), :views => 1
+      Photo.most_viewed_in_2010.should == [ photo2, photo1 ]
+    end
+
   end
 
 end
