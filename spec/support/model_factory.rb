@@ -1,13 +1,10 @@
 module ModelFactorySupport
   def process_label!(options)
-    label = options[:label]
-    if label
-      options.delete :label
-    else
-      label = ''
+    padded_label = options.delete(:label) || ''
+    if ! padded_label.empty?
+      padded_label += '_'
     end
-    padded_label = label == '' ? '' : label + '_'
-    return options, label, padded_label
+    return options, padded_label
   end
   private :process_label!
 end
@@ -16,8 +13,7 @@ class Person
   extend ModelFactorySupport
 
   def self.create_for_test!(caller_options = {})
-    #noinspection RubyUnusedLocalVariable
-    caller_options, label, padded_label = process_label! caller_options
+    caller_options, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'person_flickrid',
       :username => padded_label + 'username' }
     options.merge! caller_options
@@ -30,8 +26,7 @@ class Photo
   extend ModelFactorySupport
 
   def self.create_for_test!(caller_options = {})
-    #noinspection RubyUnusedLocalVariable
-    caller_options, label, padded_label = process_label! caller_options
+    caller_options, padded_label = process_label! caller_options
     now = Time.now
     options = { :flickrid => padded_label + 'photo_flickrid',
       :farm => 'farm', :server => 'server', :secret => 'secret',
@@ -51,8 +46,7 @@ class Guess
   extend ModelFactorySupport
 
   def self.create_for_test!(caller_options = {})
-    #noinspection RubyUnusedLocalVariable
-    caller_options, label, padded_label = process_label! caller_options
+    caller_options, padded_label = process_label! caller_options
     now = Time.now
     options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
     if ! caller_options[:photo]
@@ -72,8 +66,7 @@ class Comment
   extend ModelFactorySupport
 
   def self.create_for_test!(caller_options = {})
-    # TODO Dave is label used?
-    caller_options, label, padded_label = process_label! caller_options
+    caller_options, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'comment_flickrid',
       :username => padded_label + 'comment_username',
       :comment_text => 'comment_text', :commented_at => Time.now }
@@ -91,7 +84,7 @@ class FlickrUpdate
 
   def self.create_for_test!(caller_options = {})
     #noinspection RubyUnusedLocalVariable
-    caller_options, label, padded_label = process_label! caller_options
+    caller_options, padded_label = process_label! caller_options
     options = { :member_count => 0 }
     options.merge! caller_options
     FlickrUpdate.create! options
