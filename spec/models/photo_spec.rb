@@ -201,6 +201,22 @@ describe Photo do
       Photo.all_with_stats('last-updated', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
+    it 'returns photos sorted by views' do
+      person1 = Person.create_for_test! :label => 1, :username => 'a'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :views => 0
+      person2 = Person.create_for_test! :label => 2, :username => 'z'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :views => 1
+      Photo.all_with_stats('views', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
+    it 'returns photos sorted by views, username' do
+      person1 = Person.create_for_test! :label => 1, :username => 'z'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :views => 0
+      person2 = Person.create_for_test! :label => 2, :username => 'a'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :views => 0
+      Photo.all_with_stats('views', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
   end
 
 end
