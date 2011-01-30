@@ -3,9 +3,8 @@ class Photo < ActiveRecord::Base
   has_many :guesses
   has_many :comments
   has_one :revelation
-  validates_presence_of :flickrid, :farm, :server, :secret,
-    :dateadded, :mapped, :lastupdate, :seen_at, :game_status, :views,
-    :member_comments, :member_questions
+  validates_presence_of :flickrid, :dateadded, :mapped, :lastupdate, :seen_at,
+    :game_status, :views, :member_comments, :member_questions
   attr_readonly :person, :flickrid
   validates_inclusion_of :mapped, :in => %w(false true)
   validates_inclusion_of :game_status, :in => %w(unfound unconfirmed found revealed)

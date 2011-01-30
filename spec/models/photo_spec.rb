@@ -4,7 +4,6 @@ describe Photo do
   def valid_attrs
     now = Time.now
     { :flickrid => 'flickrid',
-      :farm => 'farm', :server => 'server', :secret => 'secret',
       :dateadded => now, 'mapped' => 'false',
       :lastupdate => now, :seen_at => now, :game_status => 'unfound',
       :views => 0, :member_comments => 0, :member_questions => 0 }
@@ -29,18 +28,6 @@ describe Photo do
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }
     it { should have_readonly_attribute :flickrid }
-  end
-
-  describe '#farm' do
-    it { should validate_presence_of :farm }
-  end
-
-  describe '#server' do
-    it { should validate_presence_of :server }
-  end
-
-  describe '#secret' do
-    it { should validate_presence_of :secret }
   end
 
   describe '#dateadded' do
