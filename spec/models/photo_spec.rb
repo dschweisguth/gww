@@ -364,4 +364,34 @@ describe Photo do
 
   end
 
+  describe '#most_commented_in_2010' do
+    it 'lists photos' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
+      Comment.create_for_test! :photo => photo
+      Photo.most_commented_in_2010.should == [ photo ]
+    end
+
+    it 'sorts by comment count' do
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2010)
+      Comment.create_for_test! :label => 11, :photo => photo1
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2010)
+      Comment.create_for_test! :label => 21, :photo => photo2
+      Comment.create_for_test! :label => 22, :photo => photo2
+      Photo.most_commented_in_2010.should == [ photo2, photo1 ]
+    end
+
+    it 'ignores photos from before 2010' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2009)
+      Comment.create_for_test! :photo => photo
+      Photo.most_commented_in_2010.should == []
+    end
+
+    it 'ignores photos from after 2010' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2011)
+      Comment.create_for_test! :photo => photo
+      Photo.most_commented_in_2010.should == []
+    end
+
+  end
+
 end
