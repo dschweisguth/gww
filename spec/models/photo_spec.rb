@@ -153,6 +153,60 @@ describe Photo do
       guess.photo.member_comments.should == 1
     end
 
+    it 'counts questions on guessed photos' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at, :comment_text => '?'
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_questions.should == 1
+    end
+
+    it 'ignores questions by the poster' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username,
+        :comment_text => '?'
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_questions.should == 0
+    end
+
+    it 'ignores questions by non-members' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo, :comment_text => '?'
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_questions.should == 0
+    end
+
+    it 'counts questions other than the guess' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at - 5, :comment_text => '?'
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at, :comment_text => '?'
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_questions.should == 2
+    end
+
+    it 'ignores questions after the guess' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at, :comment_text => '?'
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at + 5, :comment_text => '?'
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_questions.should == 1
+    end
+
   end
 
   describe '.all_sorted_and_paginated' do
