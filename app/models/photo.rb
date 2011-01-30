@@ -8,6 +8,7 @@ class Photo < ActiveRecord::Base
     :member_comments, :member_questions
   validates_uniqueness_of :flickrid
   attr_readonly :person, :flickrid
+  validates_inclusion_of :mapped, :in => %w(false true)
 
   def self.update_seen_at(flickrids, time)
     joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','

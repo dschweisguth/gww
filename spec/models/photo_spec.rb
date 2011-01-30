@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe Photo do
+  def valid_attrs
+    now = Time.now
+    { :flickrid => 'flickrid',
+      :farm => 'farm', :server => 'server', :secret => 'secret',
+      :dateadded => now, 'mapped' => 'false',
+      :lastupdate => now, :seen_at => now, :game_status => 'unfound',
+      :views => 0, :member_comments => 0, :member_questions => 0 }
+  end
+
   describe '#person' do
     it { should belong_to :person }
   end
@@ -44,9 +53,18 @@ describe Photo do
 
   describe '#mapped' do
     it { should validate_presence_of :mapped }
-  end
 
-  # TODO Dave mapped must be 'true' or 'false'
+    %w(false true).each do |value|
+      it "accepts '#{value}'" do
+        Photo.new(valid_attrs.merge({ :mapped => value })).should be_valid
+      end
+    end
+
+    it "rejects other values" do
+      Photo.new(valid_attrs.merge({ :mapped => 'maybe' })).should_not be_valid
+    end
+
+  end
 
   describe '#lastupdate' do
     it { should validate_presence_of :lastupdate }
