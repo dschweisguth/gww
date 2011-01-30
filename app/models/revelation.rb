@@ -2,6 +2,8 @@ class Revelation < ActiveRecord::Base
   include Answer
 
   belongs_to :photo
+  validates_presence_of :revelation_text, :revealed_at, :added_at
+  attr_readonly :revelation_text, :revealed_at, :added_at
 
   #noinspection RailsParamDefResolve
   def self.longest
