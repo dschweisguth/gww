@@ -88,7 +88,7 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
-  describe '#update_seen_at' do
+  describe '.update_seen_at' do
     it 'updates seen_at' do
       photo = Photo.create_for_test! :seen_at => Time.utc(2010)
       Photo.update_seen_at [ photo.flickrid ], Time.utc(2011)
@@ -97,7 +97,7 @@ describe Photo do
     end
   end
 
-  describe '#update_statistics' do
+  describe '.update_statistics' do
     it 'counts comments on guessed photos' do
       guess = Guess.create_for_test!
       Comment.create_for_test! :photo => guess.photo,
@@ -151,6 +151,16 @@ describe Photo do
       guess.photo.member_comments.should == 1
     end
 
+  end
+
+  describe '.all_with_stats' do
+    it 'returns photos in the given sort order' do
+      person1 = Person.create_for_test! :label => 1, :username => 'z'
+      photo1 = Photo.create_for_test! :label => 1, :person => person1
+      person2 = Person.create_for_test! :label => 2, :username => 'a'
+      photo2 = Photo.create_for_test! :label => 2, :person => person2
+      Photo.all_with_stats('username', '+', 1, 2).should == [ photo2, photo1 ]
+    end
   end
 
 end

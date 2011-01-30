@@ -1,6 +1,6 @@
 module ModelFactorySupport
   def process_label!(options)
-    padded_label = options.delete(:label) || ''
+    padded_label = options.delete(:label).to_s || ''
     if ! padded_label.empty?
       padded_label += '_'
     end
