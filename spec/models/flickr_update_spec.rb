@@ -4,6 +4,7 @@ describe FlickrUpdate do
 
   describe '#member_count' do
     it { should validate_presence_of :member_count }
+    it { should validate_numericality_of :member_count }
     it { should have_readonly_attribute :member_count }
   end
 
