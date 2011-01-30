@@ -91,3 +91,19 @@ class Guess
   end
 
 end
+
+class Revelation
+  extend ModelFactorySupport
+
+  def self.create_for_test!(caller_options = {})
+    caller_options, padded_label = process_label! caller_options
+    now = Time.now
+    options = { :revelation_text => 'revelation text', :revealed_at => now, :added_at => now }
+    if ! caller_options[:photo]
+      options[:photo] = Photo.create_for_test! :label => (padded_label + 'revelation')
+    end
+    options.merge! caller_options
+    Revelation.create! options
+  end
+
+end
