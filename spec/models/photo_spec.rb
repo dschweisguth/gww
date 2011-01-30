@@ -116,6 +116,14 @@ describe Photo do
       guess.photo.member_comments.should == 0
     end
 
+    it 'ignores comments by non-members' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_comments.should == 0
+    end
+
   end
 
 end
