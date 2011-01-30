@@ -101,7 +101,8 @@ describe Photo do
     it 'counts comments on guessed photos' do
       guess = Guess.create_for_test!
       Comment.create_for_test! :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_comments.should == 1
@@ -122,6 +123,19 @@ describe Photo do
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_comments.should == 0
+    end
+
+    it 'counts comments other than the guess' do
+      guess = Guess.create_for_test!
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at - 5
+      Comment.create_for_test! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :commented_at => guess.guessed_at
+      Photo.update_statistics
+      guess.photo.reload
+      guess.photo.member_comments.should == 2
     end
 
   end
