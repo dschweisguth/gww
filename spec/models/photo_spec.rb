@@ -154,13 +154,21 @@ describe Photo do
   end
 
   describe '.all_with_stats' do
-    it 'returns photos in the given sort order' do
+    it 'returns photos sorted by username' do
       person1 = Person.create_for_test! :label => 1, :username => 'z'
-      photo1 = Photo.create_for_test! :label => 1, :person => person1
+      photo1 = Photo.create_for_test! :label => 1, :person => person1, :dateadded => Time.utc(2011)
       person2 = Person.create_for_test! :label => 2, :username => 'a'
-      photo2 = Photo.create_for_test! :label => 2, :person => person2
+      photo2 = Photo.create_for_test! :label => 2, :person => person2, :dateadded => Time.utc(2010)
       Photo.all_with_stats('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
+
+    it 'returns photos sorted by username, dateadded' do
+      person = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :person => person, :dateadded => Time.utc(2010)
+      photo2 = Photo.create_for_test! :label => 2, :person => person, :dateadded => Time.utc(2011)
+      Photo.all_with_stats('username', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
   end
 
 end
