@@ -103,7 +103,7 @@ class Photo < ActiveRecord::Base
   def self.most_viewed_in_2010
     find :all,
       :conditions =>
-	[ '? < dateadded and dateadded < ?', Time.utc(2010), Time.utc(2011) ],
+	[ '? <= dateadded and dateadded < ?', Time.utc(2010), Time.utc(2011) ],
       :order => 'views desc',
       :limit => 10,
       :include => :person

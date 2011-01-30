@@ -340,4 +340,11 @@ describe Photo do
 
   end
 
+  describe '#most_viewed_in_2010' do
+    it 'lists photos' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
+      Photo.most_viewed_in_2010.should == [ photo ]
+    end
+  end
+
 end
