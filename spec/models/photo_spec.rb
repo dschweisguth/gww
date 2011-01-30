@@ -1,84 +1,47 @@
 require 'spec_helper'
 
 describe Photo do
-  it 'belongs to a person' do
-    should belong_to :person
+  describe '#person' do
+    it { should belong_to :person }
+    it { should validate_presence_of :person }
+    it { should have_readonly_attribute :person }
+  end
+  
+  it { should have_many :comments }
+
+  it { should have_many :guesses }
+
+  it { should have_one :revelation }
+
+  describe '#flickrid' do
+    it { should validate_presence_of :flickrid }
+    it { should have_readonly_attribute :flickrid }
   end
 
-  it 'has many comments' do
-    should have_many :comments
-  end
+  it { should validate_presence_of :farm }
 
-  it 'has many guesses' do
-    should have_many :guesses
-  end
+  it { should validate_presence_of :server }
 
-  it 'has one revelation' do
-    should have_one :revelation
-  end
+  it { should validate_presence_of :secret }
 
-  it 'requires a person' do
-    should validate_presence_of :person
-  end
+  it { should validate_presence_of :dateadded }
 
-  it "doesn't allow person to change" do
-    should have_readonly_attribute :person
-  end
-
-  it 'requires a flickrid' do
-    should validate_presence_of :flickrid
-  end
-
-  it "doesn't allow flickrid to change" do
-    should have_readonly_attribute :flickrid
-  end
-
-  it 'requires a farm' do
-    should validate_presence_of :farm
-  end
-
-  it 'requires a server' do
-    should validate_presence_of :server
-  end
-
-  it 'requires a secret' do
-    should validate_presence_of :secret
-  end
-
-  it 'requires a dateadded' do
-    should validate_presence_of :dateadded
-  end
-
-  it 'requires a mapped' do
-    should validate_presence_of :mapped
-  end
+  it { should validate_presence_of :mapped }
 
   # TODO Dave mapped must be 'true' or 'false'
 
-  it 'requires a lastupdate' do
-    should validate_presence_of :lastupdate
-  end
+  it { should validate_presence_of :lastupdate }
 
-  it 'requires a seen_at' do
-    should validate_presence_of :seen_at
-  end
+  it { should validate_presence_of :seen_at }
 
-  it 'requires a game_status' do
-    should validate_presence_of :game_status
-  end
+  it { should validate_presence_of :game_status }
 
   # TODO Dave game_status must have certain values
 
-  it 'requires a count of views' do
-    should validate_presence_of :views
-  end
+  it { should validate_presence_of :views }
 
-  it 'requires a count of member comments' do
-    should validate_presence_of :member_comments
-  end
+  it { should validate_presence_of :member_comments }
 
-  it 'requires a count of member questions' do
-    should validate_presence_of :member_questions
-  end
+  it { should validate_presence_of :member_questions }
 
 end
