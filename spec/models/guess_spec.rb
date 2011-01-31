@@ -48,4 +48,27 @@ describe Guess do
 
   end
 
+  describe '.shortest' do
+    it 'lists the guesses with the shortest time between post and guess' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
+      guess = Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2011)
+      Guess.shortest.should == [ guess ]
+    end
+
+    it 'sorts by time between post and guess' do
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
+      guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2002)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2003)
+      guess2 = Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2004)
+      Guess.shortest.should == [ guess2, guess1 ]
+    end
+
+    it 'ignores a guess made before it was posted' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2011)
+      Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2010)
+      Guess.shortest.should == []
+    end
+
+  end
+
 end
