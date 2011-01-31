@@ -106,6 +106,18 @@ describe Guess do
       longest_lasting.should == guess2
       longest_lasting[:place].should == 1
     end
+
+    it "considers other posters when calculating place" do
+      poster = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :person => poster, :dateadded => Time.utc(2000)
+      guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2001)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
+      Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2004)
+      longest_lasting = Guess.longest_lasting poster
+      longest_lasting.should == guess1
+      longest_lasting[:place].should == 2
+    end
+    
   end
 
 end
