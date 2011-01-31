@@ -51,6 +51,13 @@ describe ApplicationHelper do
       helper.link_to_person(person).should ==
         "<a href=\"/people/show/#{person.id}\">username</a>"
     end
+
+    it 'escapes HTML special characters in the username' do
+      person = Person.create_for_test! :username => 'tom&jerry'
+      helper.link_to_person(person).should ==
+        "<a href=\"/people/show/#{person.id}\">tom&amp;jerry</a>"
+    end
+
   end
 
 end
