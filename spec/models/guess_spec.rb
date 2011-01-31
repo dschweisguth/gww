@@ -163,4 +163,36 @@ describe Guess do
 
   end
 
+  describe '.shortest_lasting' do
+    it "returns the poster's photo which was guessed the soonest" do
+      poster = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :person => poster, :dateadded => Time.utc(2002)
+      Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2004)
+      photo2 = Photo.create_for_test! :label => 2, :person => poster, :dateadded => Time.utc(2000)
+      guess2 = Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2001)
+      shortest_lasting = Guess.shortest_lasting poster
+      shortest_lasting.should == guess2
+      shortest_lasting[:place].should == 1
+    end
+
+    it "considers other posters when calculating place" do
+      poster = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :person => poster, :dateadded => Time.utc(2002)
+      guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2004)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2000)
+      Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2001)
+      shortest_lasting = Guess.shortest_lasting poster
+      shortest_lasting.should == guess1
+      shortest_lasting[:place].should == 2
+    end
+
+    it 'ignores a guess that precedes its post' do
+      poster = Person.create_for_test!
+      photo1 = Photo.create_for_test! :person => poster, :dateadded => Time.utc(2001)
+      Guess.create_for_test! :photo => photo1, :guessed_at => Time.utc(2000)
+      Guess.shortest_lasting(poster).should == nil
+    end
+
+  end
+
 end
