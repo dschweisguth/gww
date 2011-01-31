@@ -68,4 +68,12 @@ describe ApplicationHelper do
     end
   end
 
+  describe '#url_for_flickr_photo' do
+    it "returns the URL to the given photo's Flickr page, in the GWSF pool" do
+      photo = Photo.create_for_test!
+      helper.url_for_flickr_photo(photo).should ==
+        "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/";
+    end
+  end
+
 end
