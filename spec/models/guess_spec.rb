@@ -71,4 +71,17 @@ describe Guess do
 
   end
 
+  describe '.oldest' do
+    it "returns the photo guessed by the guesser which had gone unfound the longest" do
+      guesser = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
+      Guess.create_for_test! :label => 1,
+        :person => guesser, :photo => photo1, :guessed_at => Time.utc(2001)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
+      guess2 = Guess.create_for_test! :label => 2,
+        :person => guesser, :photo => photo2, :guessed_at => Time.utc(2004)
+      Guess.oldest(guesser).should == guess2
+    end
+  end
+
 end
