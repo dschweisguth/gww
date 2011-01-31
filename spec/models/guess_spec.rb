@@ -245,23 +245,23 @@ describe Guess do
   end
 
   describe '#star_for_age' do
-    year_guessed_to_star = { 2000 => nil, 2001 => :bronze, 2002 => :silver, 2003 => :gold }
-    year_guessed_to_star.keys.sort.each do |year_guessed|
-      it "returns a #{year_guessed_to_star[year_guessed]} star for a #{year_guessed - 2000}-year-old guess" do
+    expected = { 2000 => nil, 2001 => :bronze, 2002 => :silver, 2003 => :gold }
+    expected.keys.sort.each do |year_guessed|
+      it "returns a #{expected[year_guessed]} star for a #{year_guessed - 2000}-year-old guess" do
         photo = Photo.new :dateadded => Time.utc(2000)
         guess = Guess.new :photo => photo, :guessed_at => Time.utc(year_guessed)
-        guess.star_for_age.should == year_guessed_to_star[year_guessed]
+        guess.star_for_age.should == expected[year_guessed]
       end
     end
   end
 
   describe '#star_for_speed' do
-    seconds_guessed_to_star = { 10 => :gold, 11 => :silver, 60 => :silver, 61 => nil }
-    seconds_guessed_to_star.keys.sort.each do |seconds_guessed|
-      it "returns a #{seconds_guessed_to_star[seconds_guessed]} star for a #{seconds_guessed}-second-old guess" do
+    expected = { 10 => :gold, 11 => :silver, 60 => :silver, 61 => nil }
+    expected.keys.sort.each do |seconds_guessed|
+      it "returns a #{expected[seconds_guessed]} star for a #{seconds_guessed}-second-old guess" do
         photo = Photo.new :dateadded => Time.utc(2000)
         guess = Guess.new :photo => photo, :guessed_at => Time.utc(2000) + seconds_guessed
-        guess.star_for_speed.should == seconds_guessed_to_star[seconds_guessed]
+        guess.star_for_speed.should == expected[seconds_guessed]
       end
     end
   end
