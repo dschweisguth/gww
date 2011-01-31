@@ -71,4 +71,17 @@ describe PeopleHelper do
 
   end
 
+  describe '#image_for_star' do
+    expected = {
+      :bronze => '/images/star-bronze.gif',
+      :silver => '/images/star-silver.gif',
+      :gold => '/images/star-gold.gif'
+    }
+    expected.keys.each do |star|
+      it "returns the image URI #{expected[star]} given the star :#{star}" do
+        helper.image_for_star(star).should == expected[star]
+      end
+    end
+  end
+
 end
