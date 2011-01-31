@@ -84,4 +84,25 @@ describe ApplicationHelper do
     end
   end
 
+  describe '#url_for_flickr_image' do
+    it 'returns the URL to the given photo' do
+      photo = Photo.create_for_test! :farm => '0'
+      helper.url_for_flickr_image(photo, nil).should ==
+        'http://farm0.static.flickr.com/server/photo_flickrid_secret.jpg';
+    end
+
+    it 'handles missing farm' do
+      photo = Photo.create_for_test! :farm => ''
+      helper.url_for_flickr_image(photo, nil).should ==
+        'http://static.flickr.com/server/photo_flickrid_secret.jpg';
+    end
+
+    it 'provides the requested size' do
+      photo = Photo.create_for_test! :farm => '0'
+      helper.url_for_flickr_image(photo, 't').should ==
+        'http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg';
+    end
+
+  end
+
 end
