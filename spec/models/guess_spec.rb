@@ -68,7 +68,9 @@ describe Guess do
       photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
       guess2 = Guess.create_for_test! :label => 2,
         :person => guesser, :photo => photo2, :guessed_at => Time.utc(2004)
-      Guess.oldest(guesser).should == guess2
+      oldest = Guess.oldest(guesser)
+      oldest.should == guess2
+      oldest[:place].should == 1
     end
   end
 
