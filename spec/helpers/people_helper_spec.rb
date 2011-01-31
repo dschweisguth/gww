@@ -23,44 +23,40 @@ describe PeopleHelper do
   end
 
   describe '#position' do
+    before :all do
+      @person = person_with 0
+    end
+
     it "returns the appropriate prefix for '-most': '', if the person is first" do
-      person = person_with 0
-      helper.position([ person ], person).should == ''
+      helper.position([ @person ], @person).should == ''
     end
 
     it "returns the appropriate prefix for '-most': '', if the person is tied for first" do
-      person = person_with 0
-      helper.position([ person_with(0), person ], person).should == ''
+      helper.position([ person_with(0), @person ], @person).should == ''
     end
 
     it "returns the appropriate prefix for '-most': 'second-', if the person is second" do
-      person = person_with 0
-      helper.position([ person_with(1), person ], person).should == 'second-'
+      helper.position([ person_with(1), @person ], @person).should == 'second-'
     end
 
     it "returns the appropriate prefix for '-most': 'second-', if the person is tied for second" do
-      person = person_with 0
-      helper.position([ person_with(1), person_with(0), person ], person).should == 'second-'
+      helper.position([ person_with(1), person_with(0), @person ], @person).should == 'second-'
     end
 
     it "returns the appropriate prefix for '-most': 'third-', if the person is third" do
-      person = person_with 0
-      helper.position([ person_with(2), person_with(1), person ], person).should == 'third-'
+      helper.position([ person_with(2), person_with(1), @person ], @person).should == 'third-'
     end
 
     it "returns the appropriate prefix for '-most': 'third-', if the person is behind two others tied for first" do
-      person = person_with 0
-      helper.position([ person_with(1), person_with(1), person ], person).should == 'third-'
+      helper.position([ person_with(1), person_with(1), @person ], @person).should == 'third-'
     end
 
     it "returns the appropriate prefix for '-most': 'fourth-', if the person is fourth" do
-      person = person_with 0
-      helper.position([ person_with(1), person_with(1), person_with(1), person ], person).should == 'fourth-'
+      helper.position([ person_with(1), person_with(1), person_with(1), @person ], @person).should == 'fourth-'
     end
 
     it "returns the appropriate prefix for '-most': 'fifth-', if the person is fifth" do
-      person = person_with 0
-      helper.position([ person_with(1), person_with(1), person_with(1), person_with(1), person ], person).should == 'fifth-'
+      helper.position([ person_with(1), person_with(1), person_with(1), person_with(1), @person ], @person).should == 'fifth-'
     end
 
     def person_with(score)
