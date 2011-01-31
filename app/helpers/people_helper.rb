@@ -6,14 +6,12 @@ module PeopleHelper
   end
 
   def position(high_scorers, person)
-    position = 0
-    previous_score = nil
+    position = 1
     high_scorers.each do |high_scorer|
-      if high_scorer[:score] != previous_score
+      if high_scorer[:score] > person[:score]
         position += 1
       end
       break if high_scorer == person
-      previous_score = high_scorer[:score]
     end
 
     case position
