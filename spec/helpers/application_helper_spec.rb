@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/model_factory'
 
 describe ApplicationHelper do
   describe '#singularize' do
@@ -58,6 +59,13 @@ describe ApplicationHelper do
         "<a href=\"/people/show/#{person.id}\">tom&amp;jerry</a>"
     end
 
+  end
+
+  describe '#link_to_photo' do
+    it 'returns a local link to the photo' do
+      photo = Photo.create_for_test!
+      helper.link_to_photo(photo).should == "<a href=\"/photos/show/#{photo.id}\">GWW</a>"
+    end
   end
 
 end
