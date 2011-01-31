@@ -26,6 +26,13 @@ describe Admin::GuessesHelper do
       helper.link_to_person(person).should ==
         "<a href=\"http://test.host/people/show/#{person.id}\">username</a>"
     end
+
+    it "escapes HTML special characters in the person's username" do
+      person = Person.create_for_test! :username => 'try&catch>me'
+      helper.link_to_person(person).should ==
+        "<a href=\"http://test.host/people/show/#{person.id}\">try&amp;catch&gt;me</a>"
+    end
+
   end
 
 end
