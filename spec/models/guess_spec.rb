@@ -127,4 +127,40 @@ describe Guess do
 
   end
 
+  describe '.fastest' do
+    it "returns the guesser's guess made the fastest after the post" do
+      guesser = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2002)
+      Guess.create_for_test! :label => 1,
+        :person => guesser, :photo => photo1, :guessed_at => Time.utc(2004)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2000)
+      guess2 = Guess.create_for_test! :label => 2,
+        :person => guesser, :photo => photo2, :guessed_at => Time.utc(2001)
+      fastest = Guess.fastest guesser
+      fastest.should == guess2
+      fastest[:place].should == 1
+    end
+
+    it "considers other players' guesses when calculating place" do
+      guesser = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2002)
+      guess1 = Guess.create_for_test! :label => 1,
+        :person => guesser, :photo => photo1, :guessed_at => Time.utc(2004)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2000)
+      Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2001)
+      fastest = Guess.fastest guesser
+      fastest.should == guess1
+      fastest[:place].should == 2
+    end
+
+    it "ignores a guess that precedes its post" do
+      guesser = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2001)
+      Guess.create_for_test! :label => 1,
+        :person => guesser, :photo => photo1, :guessed_at => Time.utc(2000)
+      Guess.fastest(guesser).should == nil
+    end
+
+  end
+
 end
