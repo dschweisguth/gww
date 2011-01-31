@@ -11,6 +11,7 @@ module Admin::GuessesHelper
     end
   end
 
+  # This overrides the version in ApplicationHelper
   def link_to_person(person)
     link_to h(escape_username(person.username)), show_person_url(person)
   end
