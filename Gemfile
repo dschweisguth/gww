@@ -4,7 +4,7 @@ source 'http://gemcutter.org'
 gem 'mysql2', '~> 0.2.6'
 gem 'rails', '~> 2.3.10'
 gem 'will_paginate', '~> 2.3.15'
-gem 'xml-simple', '~> 1.0.13'
+gem 'xml-simple', '~> 1.0.14'
 
 group :production do
   #noinspection RailsParamDefResolve,GemInspection
