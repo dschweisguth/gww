@@ -118,4 +118,9 @@ describe ApplicationHelper do
 
   end
 
+  describe '#sandwich' do
+    it "wraps the given content in views/shared/_sandwich " +
+      "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
+  end
+
 end
