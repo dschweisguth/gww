@@ -26,7 +26,7 @@ describe Guess do
   end
 
   describe '.longest' do
-    it 'lists guessed sorted by time between post and guess, descending' do
+    it 'lists guesses sorted by time between post and guess, descending' do
       photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
       guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2001)
       photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
@@ -164,7 +164,7 @@ describe Guess do
   end
 
   describe '.shortest_lasting' do
-    it "returns the poster's photo which was guessed the soonest" do
+    it "returns the guess of the poster's photo which was made the soonest after the post" do
       poster = Person.create_for_test!
       photo1 = Photo.create_for_test! :label => 1, :person => poster, :dateadded => Time.utc(2002)
       Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2004)
@@ -191,6 +191,23 @@ describe Guess do
       photo1 = Photo.create_for_test! :person => poster, :dateadded => Time.utc(2001)
       Guess.create_for_test! :photo => photo1, :guessed_at => Time.utc(2000)
       Guess.shortest_lasting(poster).should == nil
+    end
+
+  end
+
+  describe '.shortest_in_2010' do
+    it 'lists guesses made in 2010 sorted by time between post and guess, ascending' do
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2010)
+      guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2010, 3)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2010)
+      guess2 = Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2010, 2)
+      Guess.shortest_in_2010.should == [ guess2, guess1 ]
+    end
+
+    it 'ignores a guess made before it was posted' do
+      photo = Photo.create_for_test! :dateadded => Time.utc(2010, 2)
+      Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2010)
+      Guess.shortest_in_2010.should == []
     end
 
   end
