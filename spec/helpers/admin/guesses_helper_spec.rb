@@ -35,4 +35,17 @@ describe Admin::GuessesHelper do
 
   end
 
+  describe '#image_for_star' do
+    star_to_image = {
+      :bronze => 'http://test.host/images/star-padded-bronze.gif',
+      :silver => 'http://test.host/images/star-padded-silver.gif',
+      :gold => 'http://test.host/images/star-padded-gold-animated.gif'
+    }
+    star_to_image.keys.each do |star|
+      it "returns #{star_to_image[star]} given a #{star} star" do
+        helper.image_for_star(star).should == star_to_image[star]
+      end
+    end
+  end
+
 end
