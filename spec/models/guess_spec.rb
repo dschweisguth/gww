@@ -26,13 +26,7 @@ describe Guess do
   end
 
   describe '.longest' do
-    it 'lists the guesses with the longest time between post and guess' do
-      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
-      guess = Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2011)
-      Guess.longest.should == [ guess ]
-    end
-
-    it 'sorts by time between post and guess' do
+    it 'lists guessed sorted by time between post and guess, descending' do
       photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
       guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2001)
       photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
@@ -49,13 +43,7 @@ describe Guess do
   end
 
   describe '.shortest' do
-    it 'lists the guesses with the shortest time between post and guess' do
-      photo = Photo.create_for_test! :dateadded => Time.utc(2010)
-      guess = Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2011)
-      Guess.shortest.should == [ guess ]
-    end
-
-    it 'sorts by time between post and guess' do
+    it 'lists guesses sorted by time between post and guess, ascending' do
       photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
       guess1 = Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2002)
       photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2003)
