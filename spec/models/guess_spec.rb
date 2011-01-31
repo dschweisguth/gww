@@ -230,16 +230,16 @@ describe Guess do
 
   describe '#time_elapsed' do
     it 'returns the duration in seconds from post to guess in English' do
-      photo = Photo.create_for_test! :dateadded => Time.utc(2000)
-      guess = Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2001, 2, 2, 1, 1, 1)
+      photo = Photo.new :dateadded => Time.utc(2000)
+      guess = Guess.new :photo => photo, :guessed_at => Time.utc(2001, 2, 2, 1, 1, 1)
       guess.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second';
     end
   end
 
   describe '#ymd_elapsed' do
     it 'returns the duration in days from post to guess in English' do
-      photo = Photo.create_for_test! :dateadded => Time.utc(2000)
-      guess = Guess.create_for_test! :photo => photo, :guessed_at => Time.utc(2001, 2, 2, 1, 1, 1)
+      photo = Photo.new :dateadded => Time.utc(2000)
+      guess = Guess.new :photo => photo, :guessed_at => Time.utc(2001, 2, 2, 1, 1, 1)
       guess.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
     end
   end
