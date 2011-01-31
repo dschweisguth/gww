@@ -85,7 +85,7 @@ class Guess < ActiveRecord::Base
   end
 
   def years_old
-    (seconds_old / (365.24 * 24 * 60 * 60)).truncate
+    (seconds_old / (365 * 24 * 60 * 60)).truncate
   end
 
   def seconds_old
