@@ -17,6 +17,11 @@ describe Answer do
         '2&nbsp;years, 3&nbsp;months, 4&nbsp;days, 5&nbsp;hours, 6&nbsp;minutes, 7&nbsp;seconds';
     end
 
+    it 'handles wraparound' do
+      @answer.time_elapsed_between(Time.utc(2000, 2, 2, 1, 1, 1), Time.utc(2001)).should ==
+        '10&nbsp;months, 28&nbsp;days, 22&nbsp;hours, 58&nbsp;minutes, 59&nbsp;seconds';
+    end
+
   end
 
   describe '#ymd_elapsed_between' do
@@ -28,6 +33,11 @@ describe Answer do
     it 'pluralizes as appropriate' do
       @answer.ymd_elapsed_between(Time.utc(2000), Time.utc(2002, 4, 5)).should ==
         '2&nbsp;years, 3&nbsp;months, 4&nbsp;days';
+    end
+
+    it 'handles wraparound' do
+      @answer.ymd_elapsed_between(Time.utc(2000, 2, 2), Time.utc(2001)).should ==
+        '10&nbsp;months, 29&nbsp;days';
     end
 
   end

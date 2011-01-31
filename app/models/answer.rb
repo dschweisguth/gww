@@ -10,6 +10,7 @@ module Answer
     result.empty? ? time_elapsed_between(from, to) : result
   end
 
+  #noinspection RubyUnusedLocalVariable
   def formatted_age_by_period(from, to, periods)
     years = to.year - from.year
     months = to.month - from.month
