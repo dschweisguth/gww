@@ -39,4 +39,10 @@ describe ApplicationHelper do
     end
   end
 
+  describe '#local_date' do
+    it 'returns the local time as yyyy/mm/dd' do
+      helper.local_date(Time.utc(2011)).should == '2010/12/31'
+    end
+  end
+
 end
