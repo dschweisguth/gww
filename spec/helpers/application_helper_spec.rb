@@ -105,4 +105,17 @@ describe ApplicationHelper do
 
   end
 
+  describe '#titled_image_tag' do
+    it 'returns an image tag with alt and title attributes set to the given value' do
+      helper.titled_image_tag('http://the.url', 'the title').should ==
+        '<img alt="the title" src="http://the.url" title="the title" />'
+    end
+
+    it 'handles additional attributes' do
+      helper.titled_image_tag('http://the.url', 'the title', :additional => 'foo').should ==
+        '<img additional="foo" alt="the title" src="http://the.url" title="the title" />'
+    end
+
+  end
+
 end
