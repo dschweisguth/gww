@@ -10,10 +10,10 @@ describe ApplicationHelper do
       helper.singularize('delete', 0).should == 'delete'
     end
 
-    irregular_plural_verbs = { 'were' => 'was', 'have' => 'has' }
-    irregular_plural_verbs.keys.each do |plural|
-      it "singularizes the irregular plural verb #{plural} to #{irregular_plural_verbs[plural]}" do
-        helper.singularize(plural, 1).should == irregular_plural_verbs[plural]
+    expected = { 'were' => 'was', 'have' => 'has' }
+    expected.keys.each do |plural|
+      it "singularizes the irregular plural verb #{plural} to #{expected[plural]}" do
+        helper.singularize(plural, 1).should == expected[plural]
       end
     end
 
