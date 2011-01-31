@@ -60,7 +60,7 @@ describe Guess do
   end
 
   describe '.oldest' do
-    it "returns the photo guessed by the guesser which had gone unfound the longest" do
+    it "returns the guesser's guess made the longest after the post" do
       guesser = Person.create_for_test!
       photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
       Guess.create_for_test! :label => 1,
@@ -68,7 +68,7 @@ describe Guess do
       photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
       guess2 = Guess.create_for_test! :label => 2,
         :person => guesser, :photo => photo2, :guessed_at => Time.utc(2004)
-      oldest = Guess.oldest(guesser)
+      oldest = Guess.oldest guesser
       oldest.should == guess2
       oldest[:place].should == 1
     end
@@ -80,7 +80,7 @@ describe Guess do
         :person => guesser, :photo => photo1, :guessed_at => Time.utc(2001)
       photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
       Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2004)
-      oldest = Guess.oldest(guesser)
+      oldest = Guess.oldest guesser
       oldest.should == guess1
       oldest[:place].should == 2
     end
@@ -93,6 +93,19 @@ describe Guess do
       Guess.oldest(guesser).should == nil
     end
 
+  end
+
+  describe '.longest_lasting' do
+    it "returns the poster's photo which went unfound the longest" do
+      poster = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :person => poster, :dateadded => Time.utc(2000)
+      Guess.create_for_test! :label => 1, :photo => photo1, :guessed_at => Time.utc(2001)
+      photo2 = Photo.create_for_test! :label => 2, :person => poster, :dateadded => Time.utc(2002)
+      guess2 = Guess.create_for_test! :label => 2, :photo => photo2, :guessed_at => Time.utc(2004)
+      longest_lasting = Guess.longest_lasting poster
+      longest_lasting.should == guess2
+      longest_lasting[:place].should == 1
+    end
   end
 
 end
