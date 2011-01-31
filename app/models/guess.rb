@@ -53,10 +53,6 @@ class Guess < ActiveRecord::Base
 	'where g.photo_id = p.id and p.person_id = ?)'
   end
 
-  def years_old
-    (seconds_old / (365.24 * 24 * 60 * 60)).truncate
-  end
-
   def self.fastest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'asc',
       "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
@@ -92,6 +88,25 @@ class Guess < ActiveRecord::Base
   end
   private_class_method :first_guess_with_place
 
+  #noinspection RailsParamDefResolve
+  def self.shortest_in_2010
+    all :include => [ :person, { :photo => :person } ],
+      :conditions =>
+	[
+	  'unix_timestamp(guesses.guessed_at) > ' +
+	    'unix_timestamp(photos.dateadded) and ' +
+	  '? < guesses.guessed_at and guesses.guessed_at < ?',
+	  Time.utc(2010), Time.utc(2011)
+	],
+      :order => 'unix_timestamp(guesses.guessed_at) - ' +
+        'unix_timestamp(photos.dateadded)',
+      :limit => 10
+  end
+
+  def years_old
+    (seconds_old / (365.24 * 24 * 60 * 60)).truncate
+  end
+
   def seconds_old
     (guessed_at - photo.dateadded).to_i
   end
@@ -126,21 +141,6 @@ class Guess < ActiveRecord::Base
     else
       nil
     end
-  end
-
-  #noinspection RailsParamDefResolve
-  def self.shortest_in_2010
-    all :include => [ :person, { :photo => :person } ],
-      :conditions =>
-	[
-	  'unix_timestamp(guesses.guessed_at) > ' +
-	    'unix_timestamp(photos.dateadded) and ' +
-	  '? < guesses.guessed_at and guesses.guessed_at < ?',
-	  Time.utc(2010), Time.utc(2011)
-	],
-      :order => 'unix_timestamp(guesses.guessed_at) - ' +
-        'unix_timestamp(photos.dateadded)',
-      :limit => 10
   end
 
 end
