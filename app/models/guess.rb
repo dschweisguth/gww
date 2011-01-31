@@ -3,6 +3,8 @@ class Guess < ActiveRecord::Base
 
   belongs_to :photo
   belongs_to :person
+  validates_presence_of :guess_text, :guessed_at, :added_at
+  attr_readonly :guess_text, :guessed_at, :added_at
 
   #noinspection RailsParamDefResolve
   def self.longest
