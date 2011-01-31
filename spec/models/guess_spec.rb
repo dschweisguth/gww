@@ -88,6 +88,14 @@ describe Guess do
       oldest[:place].should == 2
     end
 
+    it "ignores a guess that precedes its post" do
+      guesser = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2001)
+      Guess.create_for_test! :label => 1,
+        :person => guesser, :photo => photo1, :guessed_at => Time.utc(2000)
+      Guess.oldest(guesser).should == nil
+    end
+
   end
 
 end
