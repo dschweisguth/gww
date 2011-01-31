@@ -21,7 +21,7 @@ describe Admin::GuessesHelper do
   end
 
   describe '#link_to_person' do
-    it "returns a link to the person's page" do
+    it "returns a fully qualified link to the person's page" do
       person = Person.create_for_test!
       helper.link_to_person(person).should ==
         "<a href=\"http://test.host/people/show/#{person.id}\">username</a>"

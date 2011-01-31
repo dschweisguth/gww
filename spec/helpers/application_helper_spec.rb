@@ -45,4 +45,12 @@ describe ApplicationHelper do
     end
   end
 
+  describe '#link_to_person' do
+    it 'returns a local link to the person' do
+      person = Person.create_for_test!
+      helper.link_to_person(person).should ==
+        "<a href=\"/people/show/#{person.id}\">username</a>"
+    end
+  end
+
 end
