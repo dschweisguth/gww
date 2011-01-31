@@ -72,6 +72,22 @@ describe Guess do
       oldest.should == guess2
       oldest[:place].should == 1
     end
+
+    it "considers other players' guesses when calculating place" do
+      guesser = Person.create_for_test!
+      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
+      Guess.create_for_test! :label => 1,
+        :person => guesser, :photo => photo1, :guessed_at => Time.utc(2001)
+      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
+      guess2 = Guess.create_for_test! :label => 2,
+        :person => guesser, :photo => photo2, :guessed_at => Time.utc(2004)
+      photo0 = Photo.create_for_test! :label => 0, :dateadded => Time.utc(2005)
+      Guess.create_for_test! :label => 0, :photo => photo0, :guessed_at => Time.utc(2008)
+      oldest = Guess.oldest(guesser)
+      oldest.should == guess2
+      oldest[:place].should == 2
+    end
+
   end
 
 end
