@@ -6,26 +6,6 @@ class Guess < ActiveRecord::Base
   validates_presence_of :guess_text, :guessed_at, :added_at
   attr_readonly :guess_text, :guessed_at, :added_at
 
-  #noinspection RailsParamDefResolve
-  def self.longest
-    all :include => [ :person, { :photo => :person } ],
-      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
-	'unix_timestamp(photos.dateadded)',
-      :order => 'unix_timestamp(guesses.guessed_at) - ' +
-        'unix_timestamp(photos.dateadded) desc',
-      :limit => 10
-  end
-
-  #noinspection RailsParamDefResolve
-  def self.shortest
-    all :include => [ :person, { :photo => :person } ],
-      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
-        'unix_timestamp(photos.dateadded)',
-      :order => 'unix_timestamp(guesses.guessed_at) - ' +
-        'unix_timestamp(photos.dateadded)',
-      :limit => 10
-  end
-
   # GWW saves all times as UTC, but the database time zone is Pacific time.
   # unix_timestamp therefore returns the same value for all datetimes in the
   # spring daylight savings jump. This creates spurious zero-second guesses. It
@@ -38,6 +18,22 @@ class Guess < ActiveRecord::Base
   GUESS_AGE =
     'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)'
   G_AGE = 'unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)'
+
+  #noinspection RailsParamDefResolve
+  def self.longest
+    all :include => [ :person, { :photo => :person } ],
+      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
+	'unix_timestamp(photos.dateadded)',
+      :order => "#{GUESS_AGE} desc", :limit => 10
+  end
+
+  #noinspection RailsParamDefResolve
+  def self.shortest
+    all :include => [ :person, { :photo => :person } ],
+      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
+        'unix_timestamp(photos.dateadded)',
+      :order => GUESS_AGE, :limit => 10
+  end
 
   def self.oldest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'desc',
