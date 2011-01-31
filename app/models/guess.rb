@@ -18,21 +18,21 @@ class Guess < ActiveRecord::Base
   GUESS_AGE =
     'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)'
   G_AGE = 'unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)'
+  GUESS_AGE_IS_VALID =
+    'unix_timestamp(guesses.guessed_at) > unix_timestamp(photos.dateadded)'
+  G_AGE_IS_VALID = 'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded)'
 
   #noinspection RailsParamDefResolve
   def self.longest
     all :include => [ :person, { :photo => :person } ],
-      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
-	'unix_timestamp(photos.dateadded)',
+      :conditions => GUESS_AGE_IS_VALID,
       :order => "#{GUESS_AGE} desc", :limit => 10
   end
 
   #noinspection RailsParamDefResolve
   def self.shortest
     all :include => [ :person, { :photo => :person } ],
-      :conditions => 'unix_timestamp(guesses.guessed_at) > ' +
-        'unix_timestamp(photos.dateadded)',
-      :order => GUESS_AGE, :limit => 10
+      :conditions => GUESS_AGE_IS_VALID, :order => GUESS_AGE, :limit => 10
   end
 
   def self.oldest(guesser)
@@ -50,34 +50,26 @@ class Guess < ActiveRecord::Base
   def self.fastest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'asc',
       "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
-	'where g.person_id = ? and g.photo_id = p.id and ' +
-	  'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
+	"where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})"
   end
 
   def self.shortest_lasting(poster)
     first_guess_with_place poster, 'photos.person_id = ?', 'asc',
       "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
-	'where g.photo_id = p.id and p.person_id = ? and ' +
-	  'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded))'
+	"where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
   end
 
   #noinspection RailsParamDefResolve
   def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = first :include => [ :person, { :photo => :person } ],
-      :conditions =>
-        [ conditions + ' and unix_timestamp(guesses.guessed_at) > ' +
-	    'unix_timestamp(photos.dateadded)',
-	  person.id ],
-      :order => 'unix_timestamp(guesses.guessed_at) - ' +
-	'unix_timestamp(photos.dateadded) ' + order
+      :conditions => [ "#{conditions} and #{GUESS_AGE_IS_VALID}", person.id ],
+      :order => "#{GUESS_AGE} #{order}"
     if ! guess
       return nil
     end
     guess[:place] = count(:include => :photo,
       :conditions =>
-        [ place_conditions + ' and unix_timestamp(guesses.guessed_at) > ' +
-	    'unix_timestamp(photos.dateadded)',
-	  person.id ]) + 1
+        [ "#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id ]) + 1
     guess
   end
   private_class_method :first_guess_with_place
@@ -86,15 +78,9 @@ class Guess < ActiveRecord::Base
   def self.shortest_in_2010
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
-	[
-	  'unix_timestamp(guesses.guessed_at) > ' +
-	    'unix_timestamp(photos.dateadded) and ' +
-	  '? < guesses.guessed_at and guesses.guessed_at < ?',
-	  Time.utc(2010), Time.utc(2011)
-	],
-      :order => 'unix_timestamp(guesses.guessed_at) - ' +
-        'unix_timestamp(photos.dateadded)',
-      :limit => 10
+	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",
+	  Time.utc(2010), Time.utc(2011) ],
+      :order => GUESS_AGE, :limit => 10
   end
 
   def years_old
