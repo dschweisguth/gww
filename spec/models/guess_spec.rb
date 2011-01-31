@@ -117,7 +117,14 @@ describe Guess do
       longest_lasting.should == guess1
       longest_lasting[:place].should == 2
     end
-    
+
+    it 'ignores a guess that precedes its post' do
+      poster = Person.create_for_test!
+      photo1 = Photo.create_for_test! :person => poster, :dateadded => Time.utc(2001)
+      Guess.create_for_test! :photo => photo1, :guessed_at => Time.utc(2000)
+      Guess.longest_lasting(poster).should == nil
+    end
+
   end
 
 end
