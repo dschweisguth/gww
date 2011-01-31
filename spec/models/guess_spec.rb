@@ -213,10 +213,18 @@ describe Guess do
   end
 
   describe '#years_old' do
-    it 'returns the integer number of years from post to guess (ignoring leap years)' do
+    it 'returns the number of full years from post to guess (ignoring leap years)' do
       photo = Photo.new :dateadded => Time.utc(2010)
       guess = Guess.new :photo => photo, :guessed_at => Time.utc(2011)
       guess.years_old.should == 1
+    end
+  end
+
+  describe '#seconds_old' do
+    it 'returns the number of full seconds from post to guess' do
+      photo = Photo.new :dateadded => Time.utc(2010)
+      guess = Guess.new :photo => photo, :guessed_at => Time.utc(2010, 1, 1, 0, 0, 1)
+      guess.seconds_old.should == 1
     end
   end
 
