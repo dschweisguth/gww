@@ -25,21 +25,22 @@ end
 class Person
   extend ModelFactorySupport
 
-  def self.new_for_test(caller_options = {})
-    caller_options, padded_label = process_label! caller_options
-    options = { :flickrid => padded_label + 'person_flickrid',
-      :username => padded_label + 'username' }
-    options.merge! caller_options
-    Person.new options
+  def self.new_for_test(options = {})
+    make_for_test :new, options
   end
 
-  def self.create_for_test!(caller_options = {})
+  def self.create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
+  def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'person_flickrid',
       :username => padded_label + 'username' }
     options.merge! caller_options
-    Person.create! options
+    new_or_create == :new ? Person.new(options) : Person.create!(options)
   end
+  private_class_method :make_for_test
 
 end
 
