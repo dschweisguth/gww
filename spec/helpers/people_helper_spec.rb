@@ -80,9 +80,9 @@ describe PeopleHelper do
       :silver => '/images/star-silver.gif',
       :gold => '/images/star-gold.gif'
     }
-    expected.keys.each do |star|
-      it "returns the image URI #{expected[star]} given the star :#{star}" do
-        helper.image_for_star(star).should == expected[star]
+    expected.each_pair do |star, uri|
+      it "returns the image URI #{uri} given the star :#{star}" do
+        helper.image_for_star(star).should == uri
       end
     end
   end
@@ -93,9 +93,9 @@ describe PeopleHelper do
       :silver => '2 years',
       :gold => '3 years'
     }
-    expected.keys.each do |star|
-      it "returns the alt text 'Unfound for #{expected[star]} or more' given the star :#{star}" do
-        helper.alt_for_star_for_age(star).should == "Unfound for #{expected[star]} or more"
+    expected.each_pair do |star, period|
+      it "returns the alt text 'Unfound for #{period} or more' given the star :#{star}" do
+        helper.alt_for_star_for_age(star).should == "Unfound for #{period} or more"
       end
     end
   end
