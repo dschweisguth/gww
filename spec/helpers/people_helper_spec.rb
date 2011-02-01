@@ -87,4 +87,17 @@ describe PeopleHelper do
     end
   end
 
+  describe '#alt_for_star_for_age' do
+    expected = {
+      :bronze => '1 year',
+      :silver => '2 years',
+      :gold => '3 years'
+    }
+    expected.keys.each do |star|
+      it "returns the alt text 'Unfound for #{expected[star]} or more' given the star :#{star}" do
+        helper.alt_for_star_for_age(star).should == "Unfound for #{expected[star]} or more"
+      end
+    end
+  end
+
 end
