@@ -1,9 +1,87 @@
 class Person < ActiveRecord::Base
+
+  INFINITY = 1.0 / 0
+
   validates_presence_of :flickrid, :username
   attr_readonly :flickrid
 
   has_many :photos
   has_many :guesses
+
+  def self.all_sorted(sorted_by, order)
+    post_counts = Photo.count :group => 'person_id'
+    guess_counts = Guess.count :group => 'person_id'
+    guesses_per_days = Person.guesses_per_day
+    guess_speeds = Person.guess_speeds
+    be_guessed_speeds = Person.be_guessed_speeds
+    comments_to_guess = Person.comments_to_guess
+    comments_to_be_guessed = Person.comments_to_be_guessed
+
+    people = all
+    people.each do |person|
+      person[:downcased_username] = person.username.downcase
+      person[:post_count] = post_counts[person.id] || 0
+      person[:guess_count] = guess_counts[person.id] || 0
+      person[:guesses_per_day] = guesses_per_days[person.id] || 0
+      person[:posts_per_guess] =
+        person[:post_count].to_f / person[:guess_count]
+      person[:guess_speed] = guess_speeds[person.id] || INFINITY
+      person[:be_guessed_speed] = be_guessed_speeds[person.id] || INFINITY
+      person[:comments_to_guess] = comments_to_guess[person.id] || INFINITY
+      person[:comments_to_be_guessed] =
+	comments_to_be_guessed[person.id] || INFINITY
+    end
+
+    people.sort! do |x, y|
+      username = -criterion(x, y, :downcased_username)
+      sorted_by_criterion =
+	case sorted_by
+	when 'username'
+	  first_applicable username
+	when 'score'
+	  first_applicable criterion(x, y, :guess_count),
+	    criterion(x, y, :post_count), username
+	when 'posts'
+	  first_applicable criterion(x, y, :post_count),
+	    criterion(x, y, :guess_count), username
+	when 'guesses-per-day'
+	  first_applicable criterion(x, y, :guesses_per_day),
+	    criterion(x, y, :guess_count), username
+	when 'posts-per-guess'
+	  first_applicable criterion(x, y, :posts_per_guess),
+	    criterion(x, y, :post_count), -criterion(x, y, :guess_count),
+	    username
+	when 'time-to-guess'
+	  first_applicable criterion(x, y, :guess_speed),
+	    criterion(x, y, :guess_count), username
+	when 'time-to-be-guessed'
+	  first_applicable criterion(x, y, :be_guessed_speed),
+	    criterion(x, y, :post_count), username
+	when 'comments-to-guess'
+	  first_applicable criterion(x, y, :comments_to_guess),
+	    criterion(x, y, :guess_count), username
+	when 'comments-to-be-guessed'
+	  first_applicable criterion(x, y, :comments_to_be_guessed),
+	    criterion(x, y, :post_count), username
+	else
+	  first_applicable criterion(x, y, :guess_count),
+	    criterion(x, y, :post_count), username
+	end
+      order == '+' ? sorted_by_criterion : -sorted_by_criterion
+    end
+
+    people
+  end
+
+  def self.criterion(element1, element2, property)
+    element2[property] <=> element1[property]
+  end
+  private_class_method :criterion
+
+  def self.first_applicable(*criteria)
+    criteria.find(lambda { 0 }) { |criterion| criterion != 0 }
+  end
+  private_class_method :first_applicable
 
   def self.guesses_per_day
     statistic_by_person [
