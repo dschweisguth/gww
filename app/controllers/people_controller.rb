@@ -16,8 +16,8 @@ class PeopleController < ApplicationController
     comments_to_guess = Person.comments_to_guess
     comments_to_be_guessed = Person.comments_to_be_guessed
 
-    @people = Person.all
-    @people.each do |person|
+    people = Person.all
+    people.each do |person|
       person[:downcased_username] = person.username.downcase
       person[:post_count] = post_counts[person.id] || 0
       person[:guess_count] = guess_counts[person.id] || 0
@@ -31,7 +31,7 @@ class PeopleController < ApplicationController
 	comments_to_be_guessed[person.id] || INFINITY
     end
 
-    @people.sort! do |x, y|
+    people.sort! do |x, y|
       username = -criterion(x, y, :downcased_username)
       sorted_by_criterion =
 	case sorted_by
@@ -68,6 +68,8 @@ class PeopleController < ApplicationController
 	end
       order == '+' ? sorted_by_criterion : -sorted_by_criterion
     end
+
+    people
   end
   private :all_sorted
 
