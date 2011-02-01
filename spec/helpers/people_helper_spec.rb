@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PeopleHelper do
   describe '#list_path' do
     it 'returns the URI to the list sorted by the given criterion' do
-      list_path_should_return 'date-added', '+', 'username', '/people/list/sorted-by/username/order/+'
+      list_path_should_return 'score', '+', 'username', '/people/list/sorted-by/username/order/+'
     end
 
     it 'reverses the sort order if the list is already sorted by the given criterion' do
