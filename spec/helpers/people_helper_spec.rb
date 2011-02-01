@@ -100,4 +100,17 @@ describe PeopleHelper do
     end
   end
 
+  describe '#alt_for_star_for_speed' do
+    expected = {
+      :bronze => nil,
+      :silver => 'Guessed in less than a minute',
+      :gold => 'Guessed in less than 10 seconds'
+    }
+    expected.each_pair do |star, period|
+      it "returns the alt text '#{period}' given the star :#{star}" do
+        helper.alt_for_star_for_speed(star).should == period
+      end
+    end
+  end
+
 end
