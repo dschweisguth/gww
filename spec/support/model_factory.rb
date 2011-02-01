@@ -46,22 +46,15 @@ end
 class Photo
   extend ModelFactorySupport
 
-  def self.new_for_test(caller_options = {})
-    caller_options, padded_label = process_label! caller_options
-    now = Time.now
-    options = { :flickrid => padded_label + 'photo_flickrid',
-      :farm => 'farm', :server => 'server', :secret => 'secret',
-      :dateadded => now, :lastupdate => now, :seen_at => now,
-      :mapped => 'false', :game_status => 'unfound', :views => 0 }
-    if ! caller_options[:person]
-      options[:person] =
-        Person.new_for_test :label => (padded_label + 'poster')
-    end
-    options.merge! caller_options
-    Photo.new options
+  def self.new_for_test(options = {})
+    make_for_test :new, options
   end
 
-  def self.create_for_test!(caller_options = {})
+  def self.create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
+  def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
     now = Time.now
     options = { :flickrid => padded_label + 'photo_flickrid',
@@ -69,12 +62,14 @@ class Photo
       :dateadded => now, :lastupdate => now, :seen_at => now,
       :mapped => 'false', :game_status => 'unfound', :views => 0 }
     if ! caller_options[:person]
-      options[:person] =
-        Person.create_for_test! :label => (padded_label + 'poster')
+      options[:person] = new_or_create == :new \
+        ? Person.new_for_test(:label => (padded_label + 'poster')) \
+        : Person.create_for_test!(:label => (padded_label + 'poster'))
     end
     options.merge! caller_options
-    Photo.create! options
+    new_or_create == :new ? Photo.new(options) : Photo.create!(options)
   end
+  private_class_method :make_for_test
 
 end
 
