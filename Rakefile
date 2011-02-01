@@ -8,7 +8,9 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
-require 'rcov/rcovtask'
+if RAILS_ENV != 'production'
+  require 'rcov/rcovtask'
+end
 
 # From http://eigenclass.org/hiki/rcov+FAQ
 namespace :test do 
@@ -18,7 +20,7 @@ namespace :test do
   end
   desc 'Aggregate code coverage for unit, functional and integration tests'
   task :coverage => "test:coverage:clean"
-  %w[unit functional integration].each do |target|
+  %w[functional].each do |target|
     namespace :coverage do
       Rcov::RcovTask.new(target) do |t|
         t.libs << "test"
