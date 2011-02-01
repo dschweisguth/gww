@@ -8,6 +8,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
+# TODO Dave there must be a better way to add environment-specific bits to rake
 if RAILS_ENV != 'production'
   require 'rcov/rcovtask'
 
