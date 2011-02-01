@@ -25,6 +25,14 @@ end
 class Person
   extend ModelFactorySupport
 
+  def self.new_for_test(caller_options = {})
+    caller_options, padded_label = process_label! caller_options
+    options = { :flickrid => padded_label + 'person_flickrid',
+      :username => padded_label + 'username' }
+    options.merge! caller_options
+    Person.new options
+  end
+
   def self.create_for_test!(caller_options = {})
     caller_options, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'person_flickrid',
@@ -37,6 +45,21 @@ end
 
 class Photo
   extend ModelFactorySupport
+
+  def self.new_for_test(caller_options = {})
+    caller_options, padded_label = process_label! caller_options
+    now = Time.now
+    options = { :flickrid => padded_label + 'photo_flickrid',
+      :farm => 'farm', :server => 'server', :secret => 'secret',
+      :dateadded => now, :lastupdate => now, :seen_at => now,
+      :mapped => 'false', :game_status => 'unfound', :views => 0 }
+    if ! caller_options[:person]
+      options[:person] =
+        Person.new_for_test :label => (padded_label + 'poster')
+    end
+    options.merge! caller_options
+    Photo.new options
+  end
 
   def self.create_for_test!(caller_options = {})
     caller_options, padded_label = process_label! caller_options
@@ -74,6 +97,21 @@ end
 
 class Guess
   extend ModelFactorySupport
+
+  def self.new_for_test(caller_options = {})
+    caller_options, padded_label = process_label! caller_options
+    now = Time.now
+    options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
+    if ! caller_options[:photo]
+      options[:photo] = Photo.new_for_test :label => (padded_label + 'guess')
+    end
+    if ! caller_options[:person]
+      options[:person] =
+        Person.new_for_test :label => (padded_label + 'guesser')
+    end
+    options.merge! caller_options
+    Guess.new options
+  end
 
   def self.create_for_test!(caller_options = {})
     caller_options, padded_label = process_label! caller_options
