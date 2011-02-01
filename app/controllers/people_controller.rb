@@ -4,6 +4,10 @@ class PeopleController < ApplicationController
 
   caches_page :list
   def list
+    @people = all_sorted params[:sorted_by], params[:order]
+  end
+
+  def all_sorted(sorted_by, order)
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
     guesses_per_days = Person.guesses_per_day
@@ -29,8 +33,8 @@ class PeopleController < ApplicationController
 
     @people.sort! do |x, y|
       username = -criterion(x, y, :downcased_username)
-      sorted_by = 
-	case params[:sorted_by]
+      sorted_by_criterion =
+	case sorted_by
 	when 'username'
 	  first_applicable username
 	when 'score'
@@ -62,10 +66,10 @@ class PeopleController < ApplicationController
 	  first_applicable criterion(x, y, :guess_count),
 	    criterion(x, y, :post_count), username
 	end
-      params[:order] == '+' ? sorted_by : -sorted_by
+      order == '+' ? sorted_by_criterion : -sorted_by_criterion
     end
-
   end
+  private :all_sorted
 
   def criterion(element1, element2, property)
     element2[property] <=> element1[property]
