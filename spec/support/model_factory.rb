@@ -94,35 +94,32 @@ end
 class Guess
   extend ModelFactorySupport
 
-  def self.new_for_test(caller_options = {})
-    caller_options, padded_label = process_label! caller_options
-    now = Time.now
-    options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
-    if ! caller_options[:photo]
-      options[:photo] = Photo.new_for_test :label => (padded_label + 'guess')
-    end
-    if ! caller_options[:person]
-      options[:person] =
-        Person.new_for_test :label => (padded_label + 'guesser')
-    end
-    options.merge! caller_options
-    Guess.new options
+  def self.new_for_test(options = {})
+    make_for_test :new, options
   end
 
-  def self.create_for_test!(caller_options = {})
+  def self.create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
+  def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
     now = Time.now
     options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
     if ! caller_options[:photo]
-      options[:photo] = Photo.create_for_test! :label => (padded_label + 'guess')
+      options[:photo] = new_or_create == :new \
+        ? Photo.new_for_test(:label => (padded_label + 'guess')) \
+        : Photo.create_for_test!(:label => (padded_label + 'guess'))
     end
     if ! caller_options[:person]
-      options[:person] =
-        Person.create_for_test! :label => (padded_label + 'guesser')
+      options[:person] = new_or_create == :new \
+        ? Person.new_for_test(:label => (padded_label + 'guesser')) \
+        : Person.create_for_test!(:label => (padded_label + 'guesser'))
     end
     options.merge! caller_options
-    Guess.create! options
+    new_or_create == :new ? Guess.new(options) : Guess.create!(options)
   end
+  private_class_method :make_for_test
 
 end
 
