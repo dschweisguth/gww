@@ -38,10 +38,8 @@ describe Person do
 
     it 'sorts by post count' do
       person1 = Person.create_for_test! :label => 1, :username => 'a'
-      Photo.create_for_test! :label => 11, :person => person1
       person2 = Person.create_for_test! :label => 2, :username => 'z'
-      Photo.create_for_test! :label => 21, :person => person2
-      Photo.create_for_test! :label => 22, :person => person2
+      stub(Guess).count.with(:group => 'person_id') { { person1.id => 1, person2.id => 2 } }
       Person.all_sorted('posts', '+').should == [ person2, person1 ]
     end
 
