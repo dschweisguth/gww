@@ -160,12 +160,28 @@ describe Person do
     it 'sorts by comments-to-guess' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 2 } }
+      stub_score 2, 1
+      should_put_person2_before_person1 'comments-to-guess'
+    end
+
+    it 'sorts by comments-to-guess, score' do
+      create_people_named 'a', 'z'
+      stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 1 } }
+      stub_score 1, 2
+      should_put_person2_before_person1 'comments-to-guess'
+    end
+
+    it 'sorts by comments-to-guess, score, username' do
+      create_people_named 'z', 'a'
+      stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 1 } }
+      stub_score 1, 1
       should_put_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-be-guessed' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 2 } }
+      stub_score 1, 1
       should_put_person2_before_person1 'comments-to-be-guessed'
     end
 
