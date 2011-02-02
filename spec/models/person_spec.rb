@@ -33,28 +33,43 @@ describe Person do
 
     it 'sorts by score' do
       create_people_named 'a', 'z'
-      stub_post_count 2, 1
       stub_score 1, 2
+      stub_post_count 2, 1
       should_put_person2_before_person1 'score'
     end
 
     it 'sorts by score, post count' do
       create_people_named 'a', 'z'
-      stub_post_count 1, 2
       stub_score 1, 1
+      stub_post_count 1, 2
       should_put_person2_before_person1 'score'
     end
 
     it 'sorts by score, post count, username' do
       create_people_named 'z', 'a'
-      stub_post_count 1, 1
       stub_score 1, 1
+      stub_post_count 1, 1
       should_put_person2_before_person1 'score'
     end
 
     it 'sorts by post count' do
       create_people_named 'a', 'z'
       stub_post_count 1, 2
+      stub_score 2, 1
+      should_put_person2_before_person1 'posts'
+    end
+
+    it 'sorts by post count, score' do
+      create_people_named 'a', 'z'
+      stub_post_count 1, 1
+      stub_score 1, 2
+      should_put_person2_before_person1 'posts'
+    end
+
+    it 'sorts by post count, score, username' do
+      create_people_named 'z', 'a'
+      stub_post_count 1, 1
+      stub_score 1, 1
       should_put_person2_before_person1 'posts'
     end
 
