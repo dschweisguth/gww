@@ -26,6 +26,16 @@ describe Person do
       person2 = Person.create_for_test! :label => 2, :username => 'a'
       Person.all_sorted('username', '+').should == [ person2, person1 ]
     end
+
+    it 'sorts by score' do
+      person1 = Person.create_for_test! :label => 1, :username => 'a'
+      Photo.create_for_test! :label => 11, :person => person1
+      person2 = Person.create_for_test! :label => 2, :username => 'z'
+      Photo.create_for_test! :label => 21, :person => person2
+      Photo.create_for_test! :label => 22, :person => person2
+      Person.all_sorted('score', '+').should == [ person2, person1 ]
+    end
+
   end
 
   describe '.guesses_per_day' do
