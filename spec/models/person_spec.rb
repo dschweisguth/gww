@@ -26,6 +26,11 @@ describe Person do
       should_put_person2_before_person1 'username'
     end
 
+    it 'ignores case' do
+      create_people_named 'Z', 'a'
+      should_put_person2_before_person1 'username'
+    end
+
     it 'sorts by score' do
       create_people_named 'a', 'z'
       stub_post_count 2, 1
