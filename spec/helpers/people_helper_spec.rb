@@ -57,17 +57,15 @@ describe PeopleHelper do
 
     def position_should_return(higher_scores, expected)
       person = Person.create_for_test!
-      high_scorers = higher_scores.map { |score| person_with score }
+      high_scorers = higher_scores.map do |score|
+        higher_scorer = Person.new
+        higher_scorer[:score] = score
+        higher_scorer
+      end
       person_with_score = Person.find person.id
       person_with_score[:score] = 0
       high_scorers.push person_with_score
       helper.position(high_scorers, person).should == expected
-    end
-
-    def person_with(score)
-      person = Person.new
-      person[:score] = score
-      person
     end
 
   end
