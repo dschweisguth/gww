@@ -152,9 +152,7 @@ class Person < ActiveRecord::Base
   end
   private_class_method :statistic_by_person
 
-  def self.top_guessers
-    now = Time.now
-
+  def self.top_guessers(now)
     days = []
     (0..6).each do |num|
       dates = { :begin => (now - num.day).beginning_of_day,

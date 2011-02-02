@@ -234,6 +234,103 @@ describe Person do
 
   end
 
+  describe '.top_guessers' do
+    it 'returns some stuff' do
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2011, 1, 2)
+      periods = Person.top_guessers Time.utc(2011, 1, 3)
+      periods.should == [ 
+        [
+          {
+            :dates => { :begin => Time.utc(2011, 1, 3), :end => Time.utc(2011, 1, 4) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 2) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 31), :end => Time.utc(2011, 1, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 30), :end => Time.utc(2010, 12, 31) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 29), :end => Time.utc(2010, 12, 30) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 28), :end => Time.utc(2010, 12, 29) },
+            :scores => {}
+          }
+        ],
+        [
+          {
+            :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 26), :end => Time.utc(2011, 1, 2) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 19), :end => Time.utc(2010, 12, 26) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 12), :end => Time.utc(2010, 12, 19) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 5), :end => Time.utc(2010, 12, 12) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 11, 28), :end => Time.utc(2010, 12, 5) },
+            :scores => {}
+          }
+        ],
+        [
+          {
+            :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 3) },
+            :scores => { 1 => [ guess.person] }
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 12, 1), :end => Time.utc(2011, 1, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 11, 1), :end => Time.utc(2010, 12, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 10, 1), :end => Time.utc(2010, 11, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 9, 1), :end => Time.utc(2010, 10, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 8, 1), :end => Time.utc(2010, 9, 1) },
+            :scores => {}
+          }
+        ],
+        [
+          {
+            :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 3) },
+            :scores => { 1 => [ guess.person] }
+          }
+        ]
+      ]
+    end
+  end
+
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = Guess.create_for_test! :guessed_at => 4.days.ago

@@ -7,7 +7,7 @@ class PeopleController < ApplicationController
 
   caches_page :top_guessers
   def top_guessers
-    @days, @weeks, @months, @years = Person.top_guessers
+    @days, @weeks, @months, @years = Person.top_guessers Time.now
   end
   
   caches_page :show
