@@ -214,6 +214,12 @@ describe Photo do
         { :username => 'a' }, { :dateadded => Time.utc(2010) })
     end
 
+    it 'ignores case' do
+      all_sorted_and_paginated_should_reverse_photos('username',
+        { :username => 'Z' }, { :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :dateadded => Time.utc(2010) })
+    end
+
     it 'returns photos sorted by username, dateadded' do
       person = Person.create_for_test!
       photo1 = Photo.create_for_test! :label => 1, :person => person, :dateadded => Time.utc(2010)
