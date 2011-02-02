@@ -199,10 +199,10 @@ class Person < ActiveRecord::Base
 
   def self.get_scores_from_date(begin_date, end_date)
     if begin_date && end_date
-      conditions = [ "guessed_at > ? and guessed_at < ?",
+      conditions = [ "? <= guessed_at and guessed_at < ?",
         begin_date.getutc, end_date.getutc ]
     elsif begin_date
-      conditions = [ "guessed_at > ?", begin_date.getutc ]
+      conditions = [ "? <= guessed_at", begin_date.getutc ]
     else
       conditions = []
     end

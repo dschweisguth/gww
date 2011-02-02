@@ -246,7 +246,7 @@ describe Person do
           },
           {
             :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
-            :scores => {}
+            :scores => { 1 => [ guess.person ] }
           },
           {
             :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 2) },
@@ -272,7 +272,7 @@ describe Person do
         [
           {
             :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
-            :scores => {}
+            :scores => { 1 => [ guess.person ] }
           },
           {
             :dates => { :begin => Time.utc(2010, 12, 26), :end => Time.utc(2011, 1, 2) },
