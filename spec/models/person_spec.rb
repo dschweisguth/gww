@@ -28,27 +28,27 @@ describe Person do
 
     it 'sorts by score' do
       create_people_named 'a', 'z'
-      stub(Guess).count.with(:group => 'person_id') { { @person1.id => 1, @person2.id => 2 } }
+      stub_guess_count 1, 2
       should_put_person2_before_person1 'score'
     end
 
     it 'sorts by post count' do
       create_people_named 'a', 'z'
-      stub(Photo).count.with(:group => 'person_id') { { @person1.id => 1, @person2.id => 2 } }
+      stub_photo_count 1, 2
       should_put_person2_before_person1 'posts'
     end
 
     it 'sorts by guesses per day' do
       create_people_named 'a', 'z'
-      stub(Guess).count.with(:group => 'person_id') { { @person1.id => 2, @person2.id => 1 } }
+      stub_guess_count 2, 1
       stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 2 } }
       should_put_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by posts/guess' do
       create_people_named 'a', 'z'
-      stub(Photo).count.with(:group => 'person_id') { { @person1.id => 4, @person2.id => 3 } }
-      stub(Guess).count.with(:group => 'person_id') { { @person1.id => 4, @person2.id => 1 } }
+      stub_photo_count 4, 3
+      stub_guess_count 4, 1
       should_put_person2_before_person1 'posts-per-guess'
     end
 
@@ -60,6 +60,16 @@ describe Person do
     #noinspection RubyResolve
     def should_put_person2_before_person1(sorted_by)
       Person.all_sorted(sorted_by, '+').should == [ @person2, @person1 ]
+    end
+
+    #noinspection RubyResolve
+    def stub_photo_count(count1, count2)
+      stub(Photo).count.with(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
+    end
+
+    #noinspection RubyResolve
+    def stub_guess_count(count1, count2)
+      stub(Guess).count.with(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
     end
 
   end
