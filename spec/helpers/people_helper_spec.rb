@@ -23,10 +23,6 @@ describe PeopleHelper do
   end
 
   describe '#position' do
-    before :all do
-      @person = person_with 0
-    end
-
     it "returns the appropriate prefix for '-most': '', if the person is first" do
       position_should_return [], ''
     end
@@ -60,10 +56,12 @@ describe PeopleHelper do
     end
 
     def position_should_return(higher_scores, expected)
+      person = Person.create_for_test!
       high_scorers = higher_scores.map { |score| person_with score }
-      #noinspection RubyResolve
-      high_scorers.push @person
-      helper.position(high_scorers, @person).should == expected
+      person_with_score = Person.find person.id
+      person_with_score[:score] = 0
+      high_scorers.push person_with_score
+      helper.position(high_scorers, person).should == expected
     end
 
     def person_with(score)
