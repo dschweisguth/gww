@@ -28,7 +28,22 @@ describe Person do
 
     it 'sorts by score' do
       create_people_named 'a', 'z'
+      stub_photo_count 2, 1
       stub_guess_count 1, 2
+      should_put_person2_before_person1 'score'
+    end
+
+    it 'sorts by score, post count' do
+      create_people_named 'a', 'z'
+      stub_photo_count 1, 2
+      stub_guess_count 1, 1
+      should_put_person2_before_person1 'score'
+    end
+
+    it 'sorts by score, post count, username' do
+      create_people_named 'z', 'a'
+      stub_photo_count 1, 1
+      stub_guess_count 1, 1
       should_put_person2_before_person1 'score'
     end
 
