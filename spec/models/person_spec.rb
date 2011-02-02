@@ -101,6 +101,23 @@ describe Person do
       should_put_person2_before_person1 'posts-per-guess'
     end
 
+    it 'sorts by posts/guess, post count' do
+      create_people_named 'a', 'z'
+      stub_post_count 2, 4
+      stub_score 1, 2
+      should_put_person2_before_person1 'posts-per-guess'
+    end
+
+    # TODO Dave fix current bug in sorting by posts/guess
+    # TODO Dave determine whether the score criterion makes any difference
+
+    it 'sorts by posts/guess, post count, username' do
+      create_people_named 'z', 'a'
+      stub_post_count 1, 1
+      stub_score 1, 1
+      should_put_person2_before_person1 'posts-per-guess'
+    end
+
     it 'sorts by time-to-guess' do
       create_people_named 'a', 'z'
       stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 2 } }
