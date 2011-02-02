@@ -108,9 +108,13 @@ class Guess
     options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
     if ! caller_options[:photo]
       photo_options = { :label => (padded_label + 'guess') }
+      if caller_options[:photo_person]
+        photo_options[:person] = caller_options[:photo_person]
+      end
       options[:photo] = new_or_create == :new \
         ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
     end
+    caller_options.delete :photo_person
     if ! caller_options[:person]
       person_options = {:label => (padded_label + 'guesser')}
       options[:person] = new_or_create == :new \

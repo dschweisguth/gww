@@ -30,12 +30,9 @@ describe Person do
     it 'sorts by score' do
       person1 = Person.create_for_test! :label => 1, :username => 'a'
       person2 = Person.create_for_test! :label => 2, :username => 'z'
-      photo11 = Photo.create_for_test! :label => 11, :person => person2
-      photo21 = Photo.create_for_test! :label => 21, :person => person1
-      photo22 = Photo.create_for_test! :label => 22, :person => person1
-      Guess.create_for_test! :label => 11, :person => person1, :photo => photo11
-      Guess.create_for_test! :label => 21, :person => person2, :photo => photo21
-      Guess.create_for_test! :label => 22, :person => person2, :photo => photo22
+      Guess.create_for_test! :label => 11, :person => person1, :photo_person => person2
+      Guess.create_for_test! :label => 21, :person => person2, :photo_person => person1
+      Guess.create_for_test! :label => 22, :person => person2, :photo_person => person1
       Person.all_sorted('score', '+').should == [ person2, person1 ]
     end
 
