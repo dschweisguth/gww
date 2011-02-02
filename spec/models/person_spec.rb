@@ -49,6 +49,14 @@ describe Person do
       Person.all_sorted('guesses-per-day', '+').should == [ person2, person1 ]
     end
 
+    it 'sorts by posts/guess' do
+      person1 = Person.create_for_test! :label => 1, :username => 'a'
+      person2 = Person.create_for_test! :label => 2, :username => 'z'
+      stub(Photo).count.with(:group => 'person_id') { { person1.id => 4, person2.id => 3 } }
+      stub(Guess).count.with(:group => 'person_id') { { person1.id => 4, person2.id => 1 } }
+      Person.all_sorted('posts-per-guess', '+').should == [ person2, person1 ]
+    end
+
   end
 
   describe '.guesses_per_day' do
