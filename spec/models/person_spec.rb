@@ -236,17 +236,17 @@ describe Person do
 
   describe '.top_guessers' do
     it 'returns some stuff' do
-      guess = Guess.create_for_test! :guessed_at => Time.utc(2011, 1, 2)
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2011, 1, 3)
       periods = Person.top_guessers Time.utc(2011, 1, 3)
       periods.should == [ 
         [
           {
             :dates => { :begin => Time.utc(2011, 1, 3), :end => Time.utc(2011, 1, 4) },
-            :scores => {}
+            :scores => { 1 => [ guess.person ] }
           },
           {
             :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
-            :scores => { 1 => [ guess.person ] }
+            :scores => {}
           },
           {
             :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 2) },
