@@ -63,9 +63,9 @@ class Photo
       :dateadded => now, :lastupdate => now, :seen_at => now,
       :mapped => 'false', :game_status => 'unfound', :views => 0 }
     if ! caller_options[:person]
+      person_options = {:label => (padded_label + 'poster')}
       options[:person] = new_or_create == :new \
-        ? Person.new_for_test(:label => (padded_label + 'poster')) \
-        : Person.create_for_test!(:label => (padded_label + 'poster'))
+        ? Person.new_for_test(person_options) : Person.create_for_test!(person_options)
     end
     options.merge! caller_options
     new_or_create == :new ? Photo.new(options) : Photo.create!(options)
