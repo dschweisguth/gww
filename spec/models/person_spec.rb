@@ -319,6 +319,34 @@ describe Person do
           {
             :dates => { :begin => Time.utc(2010, 8, 1), :end => Time.utc(2010, 9, 1) },
             :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 7, 1), :end => Time.utc(2010, 8, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 6, 1), :end => Time.utc(2010, 7, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 5, 1), :end => Time.utc(2010, 6, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 4, 1), :end => Time.utc(2010, 5, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 3, 1), :end => Time.utc(2010, 4, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 2, 1), :end => Time.utc(2010, 3, 1) },
+            :scores => {}
+          },
+          {
+            :dates => { :begin => Time.utc(2010, 1, 1), :end => Time.utc(2010, 2, 1) },
+            :scores => {}
           }
         ],
         [

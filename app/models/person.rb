@@ -176,7 +176,7 @@ class Person < ActiveRecord::Base
     thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
     months =
       [ { :dates => thismonth_dates, :scores => thismonth_scores } ]
-    (1..5).each do |num|
+    (1..12).each do |num|
       dates = { :begin => (now - num.month).beginning_of_month,
         :end => (now - (num - 1).month).beginning_of_month }
       scores = get_scores_from_date dates[:begin], dates[:end]
