@@ -22,39 +22,39 @@ describe Person do
 
   describe '.all_sorted' do
     it 'sorts by username' do
-      person1 = Person.create_for_test! :label => 1, :username => 'z'
-      person2 = Person.create_for_test! :label => 2, :username => 'a'
-      Person.all_sorted('username', '+').should == [ person2, person1 ]
+      create_people_named 'z', 'a'
+      Person.all_sorted('username', '+').should == [ @person2, @person1 ]
     end
 
     it 'sorts by score' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      stub(Guess).count.with(:group => 'person_id') { { person1.id => 1, person2.id => 2 } }
-      Person.all_sorted('score', '+').should == [ person2, person1 ]
+      create_people_named 'a', 'z'
+      stub(Guess).count.with(:group => 'person_id') { { @person1.id => 1, @person2.id => 2 } }
+      Person.all_sorted('score', '+').should == [ @person2, @person1 ]
     end
 
     it 'sorts by post count' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      stub(Photo).count.with(:group => 'person_id') { { person1.id => 1, person2.id => 2 } }
-      Person.all_sorted('posts', '+').should == [ person2, person1 ]
+      create_people_named 'a', 'z'
+      stub(Photo).count.with(:group => 'person_id') { { @person1.id => 1, @person2.id => 2 } }
+      Person.all_sorted('posts', '+').should == [ @person2, @person1 ]
     end
 
     it 'sorts by guesses per day' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      stub(Guess).count.with(:group => 'person_id') { { person1.id => 2, person2.id => 1 } }
-      stub(Person).guesses_per_day { { person1.id => 1, person2.id => 2 } }
-      Person.all_sorted('guesses-per-day', '+').should == [ person2, person1 ]
+      create_people_named 'a', 'z'
+      stub(Guess).count.with(:group => 'person_id') { { @person1.id => 2, @person2.id => 1 } }
+      stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 2 } }
+      Person.all_sorted('guesses-per-day', '+').should == [ @person2, @person1 ]
     end
 
     it 'sorts by posts/guess' do
-      person1 = Person.create_for_test! :label => 1, :username => 'a'
-      person2 = Person.create_for_test! :label => 2, :username => 'z'
-      stub(Photo).count.with(:group => 'person_id') { { person1.id => 4, person2.id => 3 } }
-      stub(Guess).count.with(:group => 'person_id') { { person1.id => 4, person2.id => 1 } }
-      Person.all_sorted('posts-per-guess', '+').should == [ person2, person1 ]
+      create_people_named 'a', 'z'
+      stub(Photo).count.with(:group => 'person_id') { { @person1.id => 4, @person2.id => 3 } }
+      stub(Guess).count.with(:group => 'person_id') { { @person1.id => 4, @person2.id => 1 } }
+      Person.all_sorted('posts-per-guess', '+').should == [ @person2, @person1 ]
+    end
+
+    def create_people_named(username1, username2)
+      @person1 = Person.create_for_test! :label => 1, :username => username1
+      @person2 = Person.create_for_test! :label => 2, :username => username2
     end
 
   end
