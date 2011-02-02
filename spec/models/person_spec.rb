@@ -76,14 +76,14 @@ describe Person do
       should_put_person2_before_person1 'comments-to-be-guessed'
     end
 
+    it 'sorts the other direction, too' do
+      create_people_named 'a', 'z'
+      Person.all_sorted('username', '-').should == [ @person2, @person1 ]
+    end
+
     def create_people_named(username1, username2)
       @person1 = Person.create_for_test! :label => 1, :username => username1
       @person2 = Person.create_for_test! :label => 2, :username => username2
-    end
-
-    #noinspection RubyResolve
-    def should_put_person2_before_person1(sorted_by)
-      Person.all_sorted(sorted_by, '+').should == [ @person2, @person1 ]
     end
 
     #noinspection RubyResolve
@@ -94,6 +94,19 @@ describe Person do
     #noinspection RubyResolve
     def stub_guess_count(count1, count2)
       stub(Guess).count.with(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
+    end
+
+    #noinspection RubyResolve
+    def should_put_person2_before_person1(sorted_by)
+      Person.all_sorted(sorted_by, '+').should == [ @person2, @person1 ]
+    end
+
+    it 'explodes if sorted_by is invalid' do
+      lambda { Person.all_sorted('hat-size', '+') }.should raise_error ArgumentError
+    end
+
+    it 'explodes if order is invalid' do
+      lambda { Person.all_sorted('username', '?') }.should raise_error ArgumentError
     end
 
   end

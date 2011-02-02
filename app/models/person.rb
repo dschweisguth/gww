@@ -9,6 +9,17 @@ class Person < ActiveRecord::Base
   has_many :guesses
 
   def self.all_sorted(sorted_by, order)
+    # I'd have raised Argument error in the case below to avoid duplication,
+    # but when I do that something eats the raised error.
+    if ! [ 'username', 'score', 'posts', 'guesses-per-day', 'posts-per-guess',
+      'time-to-guess', 'time-to-be-guessed', 'comments-to-guess', 
+      'comments-to-be-guessed' ].include? sorted_by
+      raise ArgumentError, "#{sorted_by} is not a valid sort order"
+    end
+    if ! ['+', '-'].include? order
+      raise ArgumentError, "#{order} is not a valid sort direction"
+    end
+
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
     guesses_per_days = Person.guesses_per_day
@@ -63,10 +74,7 @@ class Person < ActiveRecord::Base
 	when 'comments-to-be-guessed'
 	  first_applicable criterion(x, y, :comments_to_be_guessed),
 	    criterion(x, y, :post_count), username
-	else
-	  first_applicable criterion(x, y, :guess_count),
-	    criterion(x, y, :post_count), username
-	end
+        end
       order == '+' ? sorted_by_criterion : -sorted_by_criterion
     end
 
