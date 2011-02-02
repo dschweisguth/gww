@@ -60,8 +60,7 @@ class Person < ActiveRecord::Base
 	    criterion(x, y, :guess_count), username
 	when 'posts-per-guess'
 	  first_applicable criterion(x, y, :posts_per_guess),
-	    criterion(x, y, :post_count), -criterion(x, y, :guess_count),
-	    username
+	    criterion(x, y, :post_count), username
 	when 'time-to-guess'
 	  first_applicable criterion(x, y, :guess_speed),
 	    criterion(x, y, :guess_count), username

@@ -108,8 +108,6 @@ describe Person do
       should_put_person2_before_person1 'posts-per-guess'
     end
 
-    # TODO Dave determine whether the score criterion makes any difference
-
     it 'sorts by posts/guess, post count, username' do
       create_people_named 'z', 'a'
       stub_post_count 1, 1
