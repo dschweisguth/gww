@@ -52,6 +52,12 @@ describe Person do
       should_put_person2_before_person1 'posts-per-guess'
     end
 
+    it 'sorts by time-to-guess' do
+      create_people_named 'a', 'z'
+      stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 2 } }
+      should_put_person2_before_person1 'time-to-guess'
+    end
+
     def create_people_named(username1, username2)
       @person1 = Person.create_for_test! :label => 1, :username => username1
       @person2 = Person.create_for_test! :label => 2, :username => username2
