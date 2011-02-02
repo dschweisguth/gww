@@ -75,8 +75,22 @@ describe Person do
 
     it 'sorts by guesses per day' do
       create_people_named 'a', 'z'
-      stub_score 2, 1
       stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 2 } }
+      stub_score 2, 1
+      should_put_person2_before_person1 'guesses-per-day'
+    end
+
+    it 'sorts by guesses per day, score' do
+      create_people_named 'a', 'z'
+      stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 1 } }
+      stub_score 1, 2
+      should_put_person2_before_person1 'guesses-per-day'
+    end
+
+    it 'sorts by guesses per day, score, username' do
+      create_people_named 'z', 'a'
+      stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 1 } }
+      stub_score 1, 1
       should_put_person2_before_person1 'guesses-per-day'
     end
 
