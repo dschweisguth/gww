@@ -22,6 +22,7 @@ Include comments in update
 Require admin to indicate when they've published scores
   Add to home page
   Add x-passed-y indicators to score report
+  Use score publication time instead of current time in top_guessers
 Post scores to Flickr group automatically
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
