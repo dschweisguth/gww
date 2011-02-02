@@ -107,14 +107,14 @@ class Guess
     now = Time.now
     options = { :guess_text => 'guess text', :guessed_at => now, :added_at => now }
     if ! caller_options[:photo]
+      photo_options = { :label => (padded_label + 'guess') }
       options[:photo] = new_or_create == :new \
-        ? Photo.new_for_test(:label => (padded_label + 'guess')) \
-        : Photo.create_for_test!(:label => (padded_label + 'guess'))
+        ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
     end
     if ! caller_options[:person]
+      person_options = {:label => (padded_label + 'guesser')}
       options[:person] = new_or_create == :new \
-        ? Person.new_for_test(:label => (padded_label + 'guesser')) \
-        : Person.create_for_test!(:label => (padded_label + 'guesser'))
+        ? Person.new_for_test(person_options) : Person.create_for_test!(person_options)
     end
     options.merge! caller_options
     new_or_create == :new ? Guess.new(options) : Guess.create!(options)
