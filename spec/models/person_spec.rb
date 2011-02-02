@@ -108,7 +108,6 @@ describe Person do
       should_put_person2_before_person1 'posts-per-guess'
     end
 
-    # TODO Dave fix current bug in sorting by posts/guess
     # TODO Dave determine whether the score criterion makes any difference
 
     it 'sorts by posts/guess, post count, username' do

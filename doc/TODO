@@ -1,3 +1,5 @@
+Bug: if a person has no photos and one guess, and that guess is taken away, the person isn't deleted
+Bug: when a photo is deleted, if it was guessed by someone who has no photos and only one guess, the person isn't deleted
 Look in to why some photos have no farm, secret and/or server
 rvm
 Upgrade to Rails 3
