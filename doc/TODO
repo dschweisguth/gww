@@ -6,11 +6,10 @@ Upgrade to Rails 3
 Upgrade to Ruby 1.9.2
 Cucumber
 Give different pages different titles
-Bug: people/show/725 shows that member was in 4th place in the last month, but
-  only third and above should show
 Make a tag for thumbnails in lists
 Remove duplication from wheresies/index.html.erb
-Bug: can't reveal http://www.flickr.com/photos/kewlio/3303015174/
+Bug: can't reveal http://www.flickr.com/photos/kewlio/3303015174/, or Glenn's
+  El Polin picnic post
 Remove duplication from people/list view
 Factor out repeated calls to first_applicable
 Add report of guesses made before photo was added
