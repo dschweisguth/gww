@@ -8,7 +8,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_list
-    get :list
+    get :list, { :sorted_by => 'username', :order => '+' }
 
     assert_response :success
     assert_template 'list'
