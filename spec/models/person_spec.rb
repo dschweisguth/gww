@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/model_factory'
 
 describe Person do
 
@@ -17,6 +18,14 @@ describe Person do
 
   describe '#username' do
     it { should validate_presence_of :username }
+  end
+
+  describe '.all_sorted' do
+    it 'sorts by username' do
+      person1 = Person.create_for_test! :label => 1, :username => 'z'
+      person2 = Person.create_for_test! :label => 2, :username => 'a'
+      Person.all_sorted('username', '+').should == [ person2, person1 ]
+    end
   end
 
   describe '.guesses_per_day' do
