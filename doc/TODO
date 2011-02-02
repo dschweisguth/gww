@@ -4,8 +4,7 @@ Bug: when a photo is deleted, if it was guessed by someone who has no photos and
 Look in to why some photos have no farm, secret and/or server
 rvm
 Upgrade to Rails 3
-Upgrade to Ruby 1.9.2, after the conflict documented here has been fixed:
-  http://blog.zenspider.com/2010/12/rubygems-version-140-has-been.html
+Upgrade to Ruby 1.9.2
 Cucumber
 Give different pages different titles
 Bug: people/show/725 shows that member was in 4th place in the last month, but
