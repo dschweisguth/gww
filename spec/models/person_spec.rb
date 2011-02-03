@@ -238,124 +238,47 @@ describe Person do
     it 'returns some stuff' do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2011, 1, 3)
       periods = Person.top_guessers Time.utc(2011, 1, 3)
-      periods.should == [ 
-        [
-          {
-            :dates => { :begin => Time.utc(2011, 1, 3), :end => Time.utc(2011, 1, 4) },
-            :scores => { 1 => [ guess.person ] }
-          },
-          {
-            :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 2) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 31), :end => Time.utc(2011, 1, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 30), :end => Time.utc(2010, 12, 31) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 29), :end => Time.utc(2010, 12, 30) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 28), :end => Time.utc(2010, 12, 29) },
-            :scores => {}
-          }
-        ],
-        [
-          {
-            :dates => { :begin => Time.utc(2011, 1, 2), :end => Time.utc(2011, 1, 3) },
-            :scores => { 1 => [ guess.person ] }
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 26), :end => Time.utc(2011, 1, 2) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 19), :end => Time.utc(2010, 12, 26) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 12), :end => Time.utc(2010, 12, 19) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 5), :end => Time.utc(2010, 12, 12) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 11, 28), :end => Time.utc(2010, 12, 5) },
-            :scores => {}
-          }
-        ],
-        [
-          {
-            :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 3) },
-            :scores => { 1 => [ guess.person] }
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 12, 1), :end => Time.utc(2011, 1, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 11, 1), :end => Time.utc(2010, 12, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 10, 1), :end => Time.utc(2010, 11, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 9, 1), :end => Time.utc(2010, 10, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 8, 1), :end => Time.utc(2010, 9, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 7, 1), :end => Time.utc(2010, 8, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 6, 1), :end => Time.utc(2010, 7, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 5, 1), :end => Time.utc(2010, 6, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 4, 1), :end => Time.utc(2010, 5, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 3, 1), :end => Time.utc(2010, 4, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 2, 1), :end => Time.utc(2010, 3, 1) },
-            :scores => {}
-          },
-          {
-            :dates => { :begin => Time.utc(2010, 1, 1), :end => Time.utc(2010, 2, 1) },
-            :scores => {}
-          }
-        ],
-        [
-          {
-            :dates => { :begin => Time.utc(2011, 1, 1), :end => Time.utc(2011, 1, 3) },
-            :scores => { 1 => [ guess.person] }
-          }
-        ]
+      expected = [
+        [],
+        [],
+        [],
+        []
       ]
+      now = Time.utc(2011, 1, 3)
+      (0 .. 6).each do |i|
+        expected[0] << {
+            :dates => { :begin => now - i.days, :end => now - (i - 1).days },
+            :scores => {}
+          }
+      end
+      expected[0][0][:scores][1] = [ guess.person ]
+      expected[1] << {
+            :dates => { :begin => now.beginning_of_week - 1.day, :end => now },
+            :scores => { 1 => [ guess.person ] }
+          }
+      (0 .. 4).each do |i|
+        expected[1] << {
+            :dates => { :begin => now.beginning_of_week - 1.day - (i + 1).weeks, :end => now.beginning_of_week - 1.day - i.weeks },
+            :scores => {}
+          }
+      end
+      expected[2] << {
+            :dates => { :begin => now.beginning_of_month, :end => now },
+            :scores => { 1 => [ guess.person ] }
+          }
+      (0 .. 11).each do |i|
+        expected[2] << {
+            :dates => { :begin => now.beginning_of_month - (i + 1).months, :end => now.beginning_of_month - i.months },
+            :scores => {}
+          }
+      end
+      expected[3] = [
+        {
+          :dates => { :begin => now.beginning_of_year, :end => now },
+          :scores => { 1 => [ guess.person ] }
+        }
+      ]
+      periods.should == expected
     end
   end
 
