@@ -294,6 +294,13 @@ describe Person do
 
   end
 
+  describe '.standing' do
+    it "returns the person's score position and whether they're tied" do
+      person = Person.create_for_test!
+      Person.standing(person).should == [ 1, false ]
+    end
+  end
+
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = Guess.create_for_test! :guessed_at => 4.days.ago
