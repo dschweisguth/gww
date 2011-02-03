@@ -234,6 +234,7 @@ describe Person do
 
   end
 
+  # TODO Dave use Array + and map
   describe '.top_guessers' do
     it 'returns a structure of scores by day, week, month and year' do
       now = Time.utc(2011, 1, 3)

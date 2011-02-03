@@ -152,6 +152,7 @@ class Person < ActiveRecord::Base
   end
   private_class_method :statistic_by_person
 
+  # TODO Dave eliminate duplication between start and finish?
   def self.top_guessers(now)
     days =
       (0 .. 6).map do |num|
@@ -192,6 +193,8 @@ class Person < ActiveRecord::Base
       guesses = Guess.all \
         :conditions => [ "? <= guessed_at and guessed_at < ?", begin_date.getutc, end_date.getutc ],
         :include => :person
+
+    # TODO Dave use more collection methods?
 
     guessers = {}
     guesses.each do |guess|
