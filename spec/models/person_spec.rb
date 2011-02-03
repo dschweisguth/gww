@@ -241,7 +241,32 @@ describe Person do
     end
 
     it 'returns a structure of scores by day, week, month and year' do
-      expected = [
+      expected = expected_periods_for_one_guess_at_report_time
+      guess = Guess.create_for_test! :guessed_at => @report_time
+      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
+      Person.top_guessers(@report_time).should == expected
+    end
+
+    it 'handles multiple guesses in the same period' do
+      expected = expected_periods_for_one_guess_at_report_time
+      guesser = Person.create_for_test!
+      Guess.create_for_test! :label => 1, :person => guesser, :guessed_at => @report_time
+      Guess.create_for_test! :label => 2, :person => guesser, :guessed_at => @report_time + 1.minute
+      (0 .. 3).each { |division| expected[division][0].scores[2] = [ guesser ] }
+      Person.top_guessers(@report_time).should == expected
+    end
+
+    it 'handles multiple guessers with the same scores in the same periods' do
+      expected = expected_periods_for_one_guess_at_report_time
+      guess1 = Guess.create_for_test! :label => 1, :guessed_at => @report_time
+      guess2 = Guess.create_for_test! :label => 2, :guessed_at => @report_time
+      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess1.person, guess2.person ] }
+      Person.top_guessers(@report_time).should == expected
+    end
+
+    #noinspection RubyResolve
+    def expected_periods_for_one_guess_at_report_time
+      [
         (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
         [ Period.new @report_day.beginning_of_week - 1.day, @report_day + 1.day ] +
           (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
@@ -249,9 +274,6 @@ describe Person do
           (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
         [ Period.new @report_day.beginning_of_year, @report_day + 1.day ]
       ]
-      guess = Guess.create_for_test! :guessed_at => @report_time
-      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
-      Person.top_guessers(@report_time).should == expected
     end
 
     it 'handles previous years' do
@@ -267,37 +289,6 @@ describe Person do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
       expected[2][12].scores[1] = [ guess.person ]
       expected[3][1].scores[1] = [ guess.person ]
-      Person.top_guessers(@report_time).should == expected
-    end
-
-    it 'handles multiple guesses in the same period' do
-      expected = [
-        (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
-        [ Period.new @report_day.beginning_of_week - 1.day, @report_day + 1.day ] +
-          (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new @report_day.beginning_of_month, @report_day + 1.day ] +
-          (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new @report_day.beginning_of_year, @report_day + 1.day ]
-      ]
-      guesser = Person.create_for_test!
-      Guess.create_for_test! :label => 1, :person => guesser, :guessed_at => @report_time
-      Guess.create_for_test! :label => 2, :person => guesser, :guessed_at => @report_time + 1.minute
-      (0 .. 3).each { |division| expected[division][0].scores[2] = [ guesser ] }
-      Person.top_guessers(@report_time).should == expected
-    end
-
-    it 'handles multiple guessers with the same scores in the same periods' do
-      expected = [
-        (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
-        [ Period.new @report_day.beginning_of_week - 1.day, @report_day + 1.day ] +
-          (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new @report_day.beginning_of_month, @report_day + 1.day ] +
-          (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new @report_day.beginning_of_year, @report_day + 1.day ]
-      ]
-      guess1 = Guess.create_for_test! :label => 1, :guessed_at => @report_time
-      guess2 = Guess.create_for_test! :label => 2, :guessed_at => @report_time
-      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess1.person, guess2.person ] }
       Person.top_guessers(@report_time).should == expected
     end
 
