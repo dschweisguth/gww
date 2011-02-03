@@ -189,10 +189,10 @@ class Person < ActiveRecord::Base
   end
 
   def self.get_scores_from_date(begin_date, end_date)
-      #noinspection RailsParamDefResolve
-      guesses = Guess.all \
-        :conditions => [ "? <= guessed_at and guessed_at < ?", begin_date.getutc, end_date.getutc ],
-        :include => :person
+    #noinspection RailsParamDefResolve
+    guesses = Guess.all \
+      :conditions => [ "? <= guessed_at and guessed_at < ?", begin_date.getutc, end_date.getutc ],
+      :include => :person
 
     # TODO Dave use more collection methods?
 
