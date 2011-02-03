@@ -162,7 +162,7 @@ class Person < ActiveRecord::Base
     end
 
     thisweek_dates = { :begin => now.beginning_of_week - 1.day, :end => now.beginning_of_week + 1.day }
-    thisweek_scores = get_scores_from_date thisweek_dates[:begin], nil
+    thisweek_scores = get_scores_from_date thisweek_dates[:begin], thisweek_dates[:end]
     weeks = [ Period.new(thisweek_dates[:begin], thisweek_dates[:end], thisweek_scores) ]
     (1..5).each do |num|
       dates = {
@@ -173,7 +173,7 @@ class Person < ActiveRecord::Base
     end
 
     thismonth_dates = { :begin => now.beginning_of_month, :end => now.beginning_of_day + 1.day }
-    thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
+    thismonth_scores = get_scores_from_date thismonth_dates[:begin], thismonth_dates[:end]
     months =
       [ Period.new(thismonth_dates[:begin], thismonth_dates[:end], thismonth_scores) ]
     (1..12).each do |num|
@@ -184,7 +184,7 @@ class Person < ActiveRecord::Base
     end
 
     thisyear_dates = { :begin => now.beginning_of_year, :end => now.beginning_of_day + 1.day }
-    thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
+    thisyear_scores = get_scores_from_date thisyear_dates[:begin], thisyear_dates[:end]
     years = [ Period.new(thisyear_dates[:begin], thisyear_dates[:end], thisyear_scores) ]
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
     (1..years_of_guessing).each do |num|
@@ -198,15 +198,9 @@ class Person < ActiveRecord::Base
   end
 
   def self.get_scores_from_date(begin_date, end_date)
-    if begin_date && end_date
-      conditions = [ "? <= guessed_at and guessed_at < ?",
-        begin_date.getutc, end_date.getutc ]
-    elsif begin_date
-      conditions = [ "? <= guessed_at", begin_date.getutc ] # TODO Dave could be eliminated?
-    else
-      conditions = [] # TODO Dave never used?
-    end
-    guesses = Guess.all :conditions => conditions, :include => :person
+      guesses = Guess.all \
+        :conditions => [ "? <= guessed_at and guessed_at < ?", begin_date.getutc, end_date.getutc ],
+        :include => :person
 
     guessers = {}
     guesses.each do |guess|
