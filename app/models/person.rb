@@ -160,7 +160,7 @@ class Person < ActiveRecord::Base
       days << period
     end
 
-    this_week = Period.new(now.beginning_of_week - 1.day, now.beginning_of_week + 1.day)
+    this_week = Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day)
     this_week.scores = get_scores_from_date this_week.start, this_week.finish
     weeks = [ this_week ]
     (1 .. 5).each do |num|
