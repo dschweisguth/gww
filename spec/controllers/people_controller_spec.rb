@@ -116,6 +116,8 @@ describe PeopleController do
 
       response.should render_template 'people/show'
       response.should have_text /username is in 1st place with a score of 2./
+      response.should have_text /username scored the most points in the last week/
+      response.should have_text /username scored the most points in the last month/
       response.should have_tag 'strong', :text => /username has correctly guessed 2 photos/
       response.should have_tag 'strong', :text => /username has posted 2 photos/
       response.should have_text /1 remains unfound/
