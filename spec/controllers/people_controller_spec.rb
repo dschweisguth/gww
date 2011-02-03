@@ -89,7 +89,7 @@ describe PeopleController do
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting { shortest_lasting_guess }
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id { [ Guess.new_for_test :label => 'all' ] }
+      stub(Guess).find_all_by_person_id { [Guess.new_for_test(:label => 'all1'), Guess.new_for_test(:label => 'all2') ] }
       stub(Photo).all { [ Photo.new_for_test :label => 'unfound' ] }
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id_and_game_status { [ Photo.new_for_test :label => 'revealed' ] }
@@ -98,8 +98,8 @@ describe PeopleController do
       get :show, :id => person.id
 
       response.should render_template 'people/show'
-      response.should have_text /username is in 1st place with a score of 1./
-      response.should have_tag 'strong', :text => /username has correctly guessed 1 photo/
+      response.should have_text /username is in 1st place with a score of 2./
+      response.should have_tag 'strong', :text => /username has correctly guessed 2 photos/
       response.should have_tag 'strong', :text => /username has posted 1 photo/
       response.should have_text /1 remains unfound/
       response.should have_text /1 was revealed/
