@@ -277,7 +277,7 @@ describe Person do
           :scores => { 1 => [ guess.person ] }
         }
       ]
-      Person.top_guessers(Time.utc(2011, 1, 3)).should == expected
+      Person.top_guessers(now).should == expected
     end
   end
 
