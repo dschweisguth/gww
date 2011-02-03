@@ -295,10 +295,23 @@ describe Person do
   end
 
   describe '.standing' do
-    it "returns the person's score position and whether they're tied" do
+    it "returns the person's score position" do
       person = Person.create_for_test!
       Person.standing(person).should == [ 1, false ]
     end
+
+    it "considers other players' scores" do
+      Guess.create_for_test!
+      person = Person.create_for_test!
+      Person.standing(person).should == [ 2, false ]
+    end
+
+    it "detects ties" do
+      guess1 = Guess.create_for_test! :label => 1
+      Guess.create_for_test! :label => 2
+      Person.standing(guess1.person).should == [ 1, true ]
+    end
+
   end
 
   describe '.guesses_per_day' do
