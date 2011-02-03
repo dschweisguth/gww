@@ -241,13 +241,13 @@ describe Person do
       guess = Guess.create_for_test! :guessed_at => now
       expected = []
       expected << (0 .. 6).map { |i| Period.starting_at now.beginning_of_day - i.days, 1.day }
-      expected.last.first.scores[1] = [ guess.person ]
       expected <<
-        [ Period.new now.beginning_of_week - 1.day, next_midnight, 1 => [ guess.person ] ] +
+        [ Period.new now.beginning_of_week - 1.day, next_midnight ] +
         (0 .. 4).map { |i| Period.starting_at now.beginning_of_week - 1.day - (i + 1).weeks, 1.week }
-      expected << [ Period.new now.beginning_of_month, next_midnight, 1 => [ guess.person ] ] +
+      expected << [ Period.new now.beginning_of_month, next_midnight ] +
         (0 .. 11).map { |i| Period.starting_at now.beginning_of_month - (i + 1).months, 1.month }
-      expected << [ Period.new now.beginning_of_year, next_midnight, 1 => [ guess.person ] ]
+      expected << [ Period.new now.beginning_of_year, next_midnight ]
+      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
       Person.top_guessers(now).should == expected
     end
 
