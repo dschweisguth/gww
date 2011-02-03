@@ -153,17 +153,19 @@ class Person < ActiveRecord::Base
   private_class_method :statistic_by_person
 
   def self.top_guessers(report_time)
-    days = (0 .. 6).map { |i| Period.starting_at(report_time.beginning_of_day - i.days, 1.day) }
+    report_day = report_time.beginning_of_day
 
-    weeks = [ Period.new(report_time.beginning_of_week - 1.day, report_time.beginning_of_day + 1.day) ] +
-      (1 .. 5).map { |i| Period.starting_at((report_time - i.week).beginning_of_week - 1.day, 1.week) }
+    days = (0 .. 6).map { |i| Period.starting_at(report_day - i.days, 1.day) }
 
-    months = [ Period.new(report_time.beginning_of_month, report_time.beginning_of_day + 1.day) ] +
-      (1 .. 12).map { |i| Period.starting_at((report_time - i.month).beginning_of_month, 1.month) }
+    weeks = [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
+      (1 .. 5).map { |i| Period.starting_at(report_day.beginning_of_week - i.weeks - 1.day, 1.week) }
 
-    years_of_guessing = report_time.getutc.year - Guess.first.guessed_at.year
-    years = [ Period.new(report_time.beginning_of_year, report_time.beginning_of_day + 1.day) ] +
-      (1 .. years_of_guessing).map { |i| Period.starting_at(report_time.beginning_of_year - i.years, 1.year) }
+    months = [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+      (1 .. 12).map { |i| Period.starting_at(report_day.beginning_of_month - i.month, 1.month) }
+
+    years_of_guessing = report_day.getutc.year - Guess.first.guessed_at.year
+    years = [ Period.new(report_day.beginning_of_year, report_day + 1.day) ] +
+      (1 .. years_of_guessing).map { |i| Period.starting_at(report_day.beginning_of_year - i.years, 1.year) }
 
     [ days, weeks, months, years ].each do |periods|
       periods.each do |period|
