@@ -65,43 +65,59 @@ describe PeopleController do
     it 'renders the page' do
       person = Person.new_for_test
       person[:score] = 1 # for the high_scorers methods
+
       stub(Person).find { person }
+
       stub(Person).standing { [ 1, false ] }
-      person_with_score = person.clone
-      person_with_score[:score] = 1
+
       stub(Person).high_scorers.with(7) { [ person ] }
       stub(Person).high_scorers.with(30) { [ person ] }
+
       first_guess = Guess.new_for_test :label => 'first_guess'
       first_guess[:place] = 1
       stub(Guess).first { first_guess }
+
       first_post = Photo.new_for_test :label => 'first_post'
       first_post[:place] = 1
       stub(Photo).first { first_post }
+
       oldest_guess = Guess.new_for_test :label => 'oldest_guess'
       oldest_guess[:place] = 1
       stub(Guess).oldest { oldest_guess }
+
       fastest_guess = Guess.new_for_test :label => 'fastest_guess'
       fastest_guess[:place] = 1
       stub(Guess).fastest { fastest_guess }
+
       longest_lasting_guess = Guess.new_for_test :label => 'longest_lasting_guess'
       longest_lasting_guess[:place] = 1
       stub(Guess).longest_lasting { longest_lasting_guess }
+
       shortest_lasting_guess = Guess.new_for_test :label => 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting { shortest_lasting_guess }
+
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id { [Guess.new_for_test(:label => 'all1'), Guess.new_for_test(:label => 'all2') ] }
+
       stub(Photo).all { [ Photo.new_for_test :label => 'unfound' ] }
+
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id_and_game_status { [ Photo.new_for_test :label => 'revealed' ] }
+
+      found1 = Guess.new_for_test :label => 'found1'
+      found1.photo.guesses << found1
+      found2 = Guess.new_for_test :label => 'found2'
+      found2.photo.guesses << found2
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id { [ Photo.new_for_test :label => 'found' ] }
+      stub(Photo).find_all_by_person_id { [ found1.photo, found2.photo ] }
+
       get :show, :id => person.id
 
       response.should render_template 'people/show'
       response.should have_text /username is in 1st place with a score of 2./
       response.should have_tag 'strong', :text => /username has correctly guessed 2 photos/
-      response.should have_tag 'strong', :text => /username has posted 1 photo/
+      response.should have_tag 'strong', :text => /username has posted 2 photos/
       response.should have_text /1 remains unfound/
       response.should have_text /1 was revealed/
 
