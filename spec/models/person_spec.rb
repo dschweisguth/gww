@@ -237,14 +237,14 @@ describe Person do
   describe '.top_guessers' do
     it 'returns a structure of scores by day, week, month and year' do
       report_time = Time.utc(2011, 1, 3)
-      next_midnight = report_time.beginning_of_day + 1.day
+      report_day = report_time.beginning_of_day
       expected = [
-        (0 .. 6).map { |i| Period.starting_at report_time.beginning_of_day - i.days, 1.day },
-        [ Period.new report_time.beginning_of_week - 1.day, next_midnight ] +
-          (0 .. 4).map { |i| Period.starting_at report_time.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new report_time.beginning_of_month, next_midnight ] +
-          (0 .. 11).map { |i| Period.starting_at report_time.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new report_time.beginning_of_year, next_midnight ]
+        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        [ Period.new report_day.beginning_of_week - 1.day, report_day + 1.day ] +
+          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [ Period.new report_time.beginning_of_month, report_day + 1.day ] +
+          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+        [ Period.new report_day.beginning_of_year, report_day + 1.day ]
       ]
       guess = Guess.create_for_test! :guessed_at => report_time
       (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
@@ -253,15 +253,15 @@ describe Person do
 
     it 'handles previous years' do
       report_time = Time.utc(2011, 1, 3)
-      next_midnight = report_time.beginning_of_day + 1.day
+      report_day = report_time.beginning_of_day
       expected = [
-        (0 .. 6).map { |i| Period.starting_at report_time.beginning_of_day - i.days, 1.day },
-        [ Period.new report_time.beginning_of_week - 1.day, next_midnight] +
-          (0 .. 4).map { |i| Period.starting_at report_time.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new report_time.beginning_of_month, next_midnight] +
-          (0 .. 11).map { |i| Period.starting_at report_time.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new(report_time.beginning_of_year, next_midnight),
-          Period.starting_at(report_time.beginning_of_year - 1.year, 1.year)]
+        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        [ Period.new report_day.beginning_of_week - 1.day, report_day + 1.day ] +
+          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [ Period.new report_day.beginning_of_month, report_day + 1.day ] +
+          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+        [ Period.new(report_day.beginning_of_year, report_day + 1.day),
+          Period.starting_at(report_day.beginning_of_year - 1.year, 1.year)]
       ]
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
       expected[2][12].scores[1] = [ guess.person ]
@@ -271,14 +271,14 @@ describe Person do
 
     it 'handles multiple guesses in the same period' do
       report_time = Time.utc(2011, 1, 3)
-      next_midnight = report_time.beginning_of_day + 1.day
+      report_day = report_time.beginning_of_day
       expected = [
-        (0 .. 6).map { |i| Period.starting_at report_time.beginning_of_day - i.days, 1.day },
-        [ Period.new report_time.beginning_of_week - 1.day, next_midnight ] +
-          (0 .. 4).map { |i| Period.starting_at report_time.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new report_time.beginning_of_month, next_midnight ] +
-          (0 .. 11).map { |i| Period.starting_at report_time.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new report_time.beginning_of_year, next_midnight ]
+        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        [ Period.new report_day.beginning_of_week - 1.day, report_day + 1.day ] +
+          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [ Period.new report_day.beginning_of_month, report_day + 1.day ] +
+          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+        [ Period.new report_day.beginning_of_year, report_day + 1.day ]
       ]
       guesser = Person.create_for_test!
       Guess.create_for_test! :label => 1, :person => guesser, :guessed_at => report_time
