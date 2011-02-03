@@ -153,6 +153,18 @@ class Person < ActiveRecord::Base
   private_class_method :statistic_by_person
 
   def self.top_guessers(report_time)
+    days, weeks, months, years = get_periods(report_time)
+
+    [ days, weeks, months, years ].each do |periods|
+      periods.each do |period|
+        period.scores = get_scores_from_date period.start, period.finish
+      end
+    end
+
+    return days, weeks, months, years
+  end
+
+  def self.get_periods(report_time)
     report_day = report_time.beginning_of_day
 
     days = (0 .. 6).map { |i| Period.starting_at(report_day - i.days, 1.day) }
@@ -166,12 +178,6 @@ class Person < ActiveRecord::Base
     years_of_guessing = report_day.getutc.year - Guess.first.guessed_at.year
     years = [ Period.new(report_day.beginning_of_year, report_day + 1.day) ] +
       (1 .. years_of_guessing).map { |i| Period.starting_at(report_day.beginning_of_year - i.years, 1.year) }
-
-    [ days, weeks, months, years ].each do |periods|
-      periods.each do |period|
-        period.scores = get_scores_from_date period.start, period.finish
-      end
-    end
 
     return days, weeks, months, years
   end
