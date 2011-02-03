@@ -16,9 +16,11 @@ describe PeopleController do
       person[:comments_to_be_guessed] = 1.0
       stub(Person).all_sorted.with('score', '+') { [ person ] }
       get :list, :sorted_by => 'score', :order => '+'
+
       response.should render_template('people/list')
       response.should have_tag 'a[href=/people/list/sorted-by/score/order/-]', :text => 'Score'
       response.should have_tag "a[href=/people/show/#{person.id}]", :text => 'username'
+
     end
   end
 
@@ -37,8 +39,25 @@ describe PeopleController do
       (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ guess.person ] }
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
+
       response.should render_template 'people/top_guessers'
+      response_should_have_table "for Monday, January 03 so far ...", guess
+      response_should_have_table "for the week of January 02 so far ...", guess
+      response_should_have_table "for January 2011 so far ...", guess
+      response_should_have_table "for 2011 so far ...", guess
+
     end
+
+    def response_should_have_table(title, guess)
+      response.should have_tag "table" do
+        with_tag "th", :text => title
+        with_tag "tr" do
+          with_tag "td.opening-number", :text => "1"
+          with_tag "a[href=/people/show/#{guess.person.id}]", :text => 'guesser_username'
+        end
+      end
+    end
+
   end
 
 end
