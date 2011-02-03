@@ -161,7 +161,7 @@ class Person < ActiveRecord::Base
       days << Period.new(dates[:begin], dates[:end], scores)
     end
 
-    thisweek_dates = { :begin => now.beginning_of_week - 1.day, :end => now }
+    thisweek_dates = { :begin => now.beginning_of_week - 1.day, :end => now.beginning_of_week + 1.day }
     thisweek_scores = get_scores_from_date thisweek_dates[:begin], nil
     weeks = [ Period.new(thisweek_dates[:begin], thisweek_dates[:end], thisweek_scores) ]
     (1..5).each do |num|
@@ -172,7 +172,7 @@ class Person < ActiveRecord::Base
       weeks << Period.new(dates[:begin], dates[:end], scores)
     end
 
-    thismonth_dates = { :begin => now.beginning_of_month, :end => now }
+    thismonth_dates = { :begin => now.beginning_of_month, :end => now.beginning_of_day + 1.day }
     thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
     months =
       [ Period.new(thismonth_dates[:begin], thismonth_dates[:end], thismonth_scores) ]
@@ -183,7 +183,7 @@ class Person < ActiveRecord::Base
       months << Period.new(dates[:begin], dates[:end], scores)
     end
 
-    thisyear_dates = { :begin => now.beginning_of_year, :end => now }
+    thisyear_dates = { :begin => now.beginning_of_year, :end => now.beginning_of_day + 1.day }
     thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
     years = [ Period.new(thisyear_dates[:begin], thisyear_dates[:end], thisyear_scores) ]
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year

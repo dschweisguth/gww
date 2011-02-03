@@ -245,19 +245,19 @@ describe Person do
       ]
       expected.last.first.scores[1] = [ guess.person ]
       expected << [
-        Period.new(now.beginning_of_week - 1.day, now, { 1 => [ guess.person ] })
+        Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day, { 1 => [ guess.person ] })
       ]
       (0 .. 4).each do |i|
         expected.last << Period.new(now.beginning_of_week - 1.day - (i + 1).weeks, now.beginning_of_week - 1.day - i.weeks)
       end
       expected << [
-        Period.new(now.beginning_of_month, now, { 1 => [ guess.person ] })
+        Period.new(now.beginning_of_month, now.beginning_of_day + 1.day, { 1 => [ guess.person ] })
       ]
       (0 .. 11).each do |i|
         expected.last << Period.new(now.beginning_of_month - (i + 1).months, now.beginning_of_month - i.months)
       end
       expected << [
-        Period.new(now.beginning_of_year, now, { 1 => [ guess.person ] })
+        Period.new(now.beginning_of_year, now.beginning_of_day + 1.day, { 1 => [ guess.person ] })
       ]
       Person.top_guessers(now).should == expected
     end
@@ -271,20 +271,20 @@ describe Person do
         end
       ]
       expected << [
-        Period.new now.beginning_of_week - 1.day, now
+        Period.new now.beginning_of_week - 1.day, now.beginning_of_day + 1.day
       ]
       (0 .. 4).each do |i|
         expected.last << Period.new(now.beginning_of_week - 1.day - (i + 1).weeks, now.beginning_of_week - 1.day - i.weeks)
       end
       expected << [
-        Period.new now.beginning_of_month, now
+        Period.new now.beginning_of_month, now.beginning_of_day + 1.day
       ]
       (0 .. 11).each do |i|
         expected.last << Period.new(now.beginning_of_month - (i + 1).months, now.beginning_of_month - i.months)
       end
       expected.last[12].scores[1] = [ guess.person ]
       expected << [
-        Period.new(now.beginning_of_year, now),
+        Period.new(now.beginning_of_year, now.beginning_of_day + 1.day),
         Period.new(now.beginning_of_year - 1.year, now.beginning_of_year, { 1 => [ guess.person ] })
       ]
       Person.top_guessers(now).should == expected
