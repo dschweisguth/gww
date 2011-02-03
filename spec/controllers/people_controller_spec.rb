@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/model_factory'
 
 describe PeopleController do
   integrate_views
@@ -58,6 +59,47 @@ describe PeopleController do
       end
     end
 
+  end
+
+  describe '#show' do
+    it 'renders the page' do
+      person = Person.new_for_test
+      stub(Person).find { person }
+      stub(Person).standing { [ 1, false ] }
+      person_with_score = person.clone
+      person_with_score[:score] = 1
+      stub(Person).high_scorers.with(7) { [ person_with_score ] }
+      stub(Person).high_scorers.with(30) { [ person_with_score ] }
+      first_guess = Guess.new_for_test :label => 'first_guess'
+      first_guess[:place] = 1
+      stub(Guess).first { first_guess }
+      first_post = Photo.new_for_test :label => 'first_post'
+      first_post[:place] = 1
+      stub(Photo).first { first_post }
+      oldest_guess = Guess.new_for_test :label => 'oldest_guess'
+      oldest_guess[:place] = 1
+      stub(Guess).oldest { oldest_guess }
+      fastest_guess = Guess.new_for_test :label => 'fastest_guess'
+      fastest_guess[:place] = 1
+      stub(Guess).fastest { fastest_guess }
+      longest_lasting_guess = Guess.new_for_test :label => 'longest_lasting_guess'
+      longest_lasting_guess[:place] = 1
+      stub(Guess).longest_lasting { longest_lasting_guess }
+      shortest_lasting_guess = Guess.new_for_test :label => 'shortest_lasting_guess'
+      shortest_lasting_guess[:place] = 1
+      stub(Guess).shortest_lasting { shortest_lasting_guess }
+      #noinspection RubyResolve
+      stub(Guess).find_all_by_person_id { [ Guess.new_for_test :label => 'all' ] }
+      stub(Photo).all { [ Photo.new_for_test :label => 'unfound' ] }
+      #noinspection RubyResolve
+      stub(Photo).find_all_by_person_id_and_game_status { [ Photo.new_for_test :label => 'revealed' ] }
+      #noinspection RubyResolve
+      stub(Photo).find_all_by_person_id { [ Photo.new_for_test :label => 'found' ] }
+      get :show, :id => person.id
+
+      response.should render_template 'people/show'
+
+    end
   end
 
 end
