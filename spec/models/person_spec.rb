@@ -240,14 +240,14 @@ describe Person do
       next_midnight = now.beginning_of_day + 1.day
       guess = Guess.create_for_test! :guessed_at => now
       expected = []
-      expected << (0 .. 6).map { |i| Period.starting_at(now.beginning_of_day - i.days, 1.day) }
+      expected << (0 .. 6).map { |i| Period.starting_at now.beginning_of_day - i.days, 1.day }
       expected.last.first.scores[1] = [ guess.person ]
       expected <<
-        [ Period.new(now.beginning_of_week - 1.day, next_midnight, { 1 => [ guess.person ] }) ] +
-        (0 .. 4).map { |i| Period.starting_at(now.beginning_of_week - 1.day - (i + 1).weeks, 1.week) }
-      expected << [ Period.new(now.beginning_of_month, next_midnight, { 1 => [ guess.person ] }) ] +
-        (0 .. 11).map { |i| Period.starting_at(now.beginning_of_month - (i + 1).months, 1.month) }
-      expected << [ Period.new(now.beginning_of_year, next_midnight, { 1 => [ guess.person ] }) ]
+        [ Period.new now.beginning_of_week - 1.day, next_midnight, 1 => [ guess.person ] ] +
+        (0 .. 4).map { |i| Period.starting_at now.beginning_of_week - 1.day - (i + 1).weeks, 1.week }
+      expected << [ Period.new now.beginning_of_month, next_midnight, 1 => [ guess.person ] ] +
+        (0 .. 11).map { |i| Period.starting_at now.beginning_of_month - (i + 1).months, 1.month }
+      expected << [ Period.new now.beginning_of_year, next_midnight, 1 => [ guess.person ] ]
       Person.top_guessers(now).should == expected
     end
 
@@ -258,13 +258,13 @@ describe Person do
       expected = []
       expected << (0 .. 6).map { |i| Period.starting_at now.beginning_of_day - i.days, 1.day }
       expected << [ Period.new now.beginning_of_week - 1.day, next_midnight] +
-        (0 .. 4).map { |i| Period.starting_at(now.beginning_of_week - 1.day - (i + 1).weeks, 1.week) }
+        (0 .. 4).map { |i| Period.starting_at now.beginning_of_week - 1.day - (i + 1).weeks, 1.week }
       expected << [ Period.new now.beginning_of_month, next_midnight] +
-        (0 .. 11).map { |i| Period.starting_at(now.beginning_of_month - (i + 1).months, 1.month) }
+        (0 .. 11).map { |i| Period.starting_at now.beginning_of_month - (i + 1).months, 1.month }
       expected.last[12].scores[1] = [ guess.person ]
       expected << [
         Period.new(now.beginning_of_year, next_midnight),
-        Period.starting_at(now.beginning_of_year - 1.year, 1.year, { 1 => [ guess.person ] })
+        Period.starting_at(now.beginning_of_year - 1.year, 1.year, 1 => [ guess.person ])
       ]
       Person.top_guessers(now).should == expected
     end
