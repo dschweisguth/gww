@@ -261,7 +261,7 @@ describe Person do
         [ Period.new report_day.beginning_of_month, report_day + 1.day ] +
           (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
         [ Period.new(report_day.beginning_of_year, report_day + 1.day),
-          Period.starting_at(report_day.beginning_of_year - 1.year, 1.year)]
+          Period.starting_at(report_day.beginning_of_year - 1.year, 1.year) ]
       ]
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
       expected[2][12].scores[1] = [ guess.person ]
