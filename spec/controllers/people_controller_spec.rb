@@ -64,12 +64,13 @@ describe PeopleController do
   describe '#show' do
     it 'renders the page' do
       person = Person.new_for_test
+      person[:score] = 1 # for the high_scorers methods
       stub(Person).find { person }
       stub(Person).standing { [ 1, false ] }
       person_with_score = person.clone
       person_with_score[:score] = 1
-      stub(Person).high_scorers.with(7) { [ person_with_score ] }
-      stub(Person).high_scorers.with(30) { [ person_with_score ] }
+      stub(Person).high_scorers.with(7) { [ person ] }
+      stub(Person).high_scorers.with(30) { [ person ] }
       first_guess = Guess.new_for_test :label => 'first_guess'
       first_guess[:place] = 1
       stub(Guess).first { first_guess }
