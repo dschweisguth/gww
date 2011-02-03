@@ -267,7 +267,7 @@ describe Person do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
       expected = [
         (0 .. 6).map do |i|
-          Period.new now - i.days, now - (i - 1).days
+          Period.new now.beginning_of_day - i.days, now.beginning_of_day - (i - 1).days
         end
       ]
       expected << [
