@@ -181,6 +181,7 @@ class Person < ActiveRecord::Base
 
     return days, weeks, months, years
   end
+  private_class_method :get_periods
 
   def self.get_scores(begin_date, end_date)
     #noinspection RailsParamDefResolve
