@@ -153,30 +153,31 @@ class Person < ActiveRecord::Base
   private_class_method :statistic_by_person
 
   def self.top_guessers(now)
-    days = []
-    (0 .. 6).each do |num|
-      days << Period.new((now - num.day).beginning_of_day,
-        (now - (num - 1).day).beginning_of_day)
-    end
+    days =
+      (0 .. 6).map do |num|
+        Period.new((now - num.day).beginning_of_day,
+          (now - (num - 1).day).beginning_of_day)
+      end
 
-    weeks = [ Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day) ]
-    (1 .. 5).each do |num|
-      weeks << Period.new((now - num.week).beginning_of_week - 1.day,
-        (now - (num - 1).week).beginning_of_week - 1.day )
-    end
+    weeks = [ Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day) ] +
+      (1 .. 5).map do |num|
+        Period.new((now - num.week).beginning_of_week - 1.day,
+          (now - (num - 1).week).beginning_of_week - 1.day )
+      end
 
-    months = [ Period.new(now.beginning_of_month, now.beginning_of_day + 1.day) ]
-    (1 .. 12).each do |num|
-      months << Period.new((now - num.month).beginning_of_month,
-        (now - (num - 1).month).beginning_of_month)
-    end
+    months = [ Period.new(now.beginning_of_month, now.beginning_of_day + 1.day) ] +
+      (1 .. 12).map do |num|
+        Period.new((now - num.month).beginning_of_month,
+          (now - (num - 1).month).beginning_of_month)
+      end
 
-    years = [ Period.new(now.beginning_of_year, now.beginning_of_day + 1.day) ]
+    # TODO Dave
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
-    (1 .. years_of_guessing).each do |num|
-      years << Period.new((now - num.year).beginning_of_year,
+    years = [ Period.new(now.beginning_of_year, now.beginning_of_day + 1.day) ] +
+      (1 .. years_of_guessing).map do |num|
+        Period.new((now - num.year).beginning_of_year,
         (now - (num - 1).year).beginning_of_year)
-    end
+      end
 
     [ days, weeks, months, years ].each do |periods|
       periods.each do |period|
