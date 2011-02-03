@@ -155,33 +155,27 @@ class Person < ActiveRecord::Base
   def self.top_guessers(now)
     days = []
     (0 .. 6).each do |num|
-      period = Period.new((now - num.day).beginning_of_day, (now - (num - 1).day).beginning_of_day)
-      days << period
+      days << Period.new((now - num.day).beginning_of_day,
+        (now - (num - 1).day).beginning_of_day)
     end
 
-    this_week = Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day)
-    weeks = [ this_week ]
+    weeks = [ Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day) ]
     (1 .. 5).each do |num|
-      period = Period.new((now - num.week).beginning_of_week - 1.day,
+      weeks << Period.new((now - num.week).beginning_of_week - 1.day,
         (now - (num - 1).week).beginning_of_week - 1.day )
-      weeks << period
     end
 
-    this_month = Period.new(now.beginning_of_month, now.beginning_of_day + 1.day)
-    months = [ this_month ]
+    months = [ Period.new(now.beginning_of_month, now.beginning_of_day + 1.day) ]
     (1 .. 12).each do |num|
-      period = Period.new((now - num.month).beginning_of_month,
+      months << Period.new((now - num.month).beginning_of_month,
         (now - (num - 1).month).beginning_of_month)
-      months << period
     end
 
-    this_year = Period.new(now.beginning_of_year, now.beginning_of_day + 1.day)
-    years = [ this_year ]
+    years = [ Period.new(now.beginning_of_year, now.beginning_of_day + 1.day) ]
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
     (1 .. years_of_guessing).each do |num|
-      period = Period.new((now - num.year).beginning_of_year,
+      years << Period.new((now - num.year).beginning_of_year,
         (now - (num - 1).year).beginning_of_year)
-      years << period
     end
 
     [ days, weeks, months, years ].each do |periods|
