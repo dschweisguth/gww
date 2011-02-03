@@ -236,7 +236,8 @@ describe Person do
 
   describe '.top_guessers' do
     it 'returns some stuff' do
-      guess = Guess.create_for_test! :guessed_at => Time.utc(2011, 1, 3)
+      now = Time.utc(2011, 1, 3)
+      guess = Guess.create_for_test! :guessed_at => now
       periods = Person.top_guessers Time.utc(2011, 1, 3)
       expected = [
         [],
@@ -244,7 +245,6 @@ describe Person do
         [],
         []
       ]
-      now = Time.utc(2011, 1, 3)
       (0 .. 6).each do |i|
         expected[0] << {
             :dates => { :begin => now - i.days, :end => now - (i - 1).days },
