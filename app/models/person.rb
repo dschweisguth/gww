@@ -171,8 +171,7 @@ class Person < ActiveRecord::Base
           (now - (num - 1).month).beginning_of_month)
       end
 
-    # TODO Dave
-    years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
+    years_of_guessing = now.getutc.year - Guess.first.guessed_at.year
     years = [ Period.new(now.beginning_of_year, now.beginning_of_day + 1.day) ] +
       (1 .. years_of_guessing).map do |num|
         Period.new((now - num.year).beginning_of_year,
