@@ -184,31 +184,19 @@ class Person < ActiveRecord::Base
   private_class_method :get_periods
 
   def self.get_scores(begin_date, end_date)
-    #noinspection RailsParamDefResolve
-    guesses = Guess.all \
-      :conditions => [ "? <= guessed_at and guessed_at < ?", begin_date.getutc, end_date.getutc ],
-      :include => :person
-
-    # TODO Dave use more collection methods?
-
-    guessers = {}
-    guesses.each do |guess|
-      guesser = guessers[guess.person.id]
-      if guesser
-        guesser[:score] += 1
-      else
-        guess.person[:score] = 1
-        guessers[guess.person.id] = guess.person
-      end
-    end
-
     scores = {}
-    guessers.values.each do |guesser|
-      score = scores[guesser[:score]]
-      if score
-        score.push guesser
+
+    guessers = Person.find_by_sql [
+      "select p.*, count(*) score from people p, guesses g " +
+        "where p.id = g.person_id and ? <= g.guessed_at and g.guessed_at < ? group by p.id", 
+      begin_date.getutc, end_date.getutc ]
+    guessers.each do |guesser|
+      score = guesser[:score]
+      guessers_with_score = scores[score]
+      if guessers_with_score
+        guessers_with_score.push guesser
       else
-        scores[guesser[:score]] = [ guesser ]
+        scores[score] = [ guesser ]
       end
     end
 
