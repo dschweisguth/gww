@@ -16,7 +16,6 @@ describe PeopleController do
       person[:comments_to_be_guessed] = 1.0
       stub(Person).all_sorted.with('score', '+') { [ person ] }
       get :list, :sorted_by => 'score', :order => '+'
-      p response.body
       response.should render_template('people/list')
       response.should have_tag 'a[href=/people/list/sorted-by/score/order/-]', :text => 'Score'
       response.should have_tag "a[href=/people/show/#{person.id}]", :text => 'username'
