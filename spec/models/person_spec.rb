@@ -235,7 +235,7 @@ describe Person do
   end
 
   describe '.top_guessers' do
-    it 'returns some stuff' do
+    it 'returns a structure of scores by day, week, month and year' do
       now = Time.utc(2011, 1, 3)
       guess = Guess.create_for_test! :guessed_at => now
       expected = [
