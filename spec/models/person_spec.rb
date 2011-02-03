@@ -238,7 +238,6 @@ describe Person do
     it 'returns some stuff' do
       now = Time.utc(2011, 1, 3)
       guess = Guess.create_for_test! :guessed_at => now
-      periods = Person.top_guessers Time.utc(2011, 1, 3)
       expected = [
         [],
         [],
@@ -278,7 +277,7 @@ describe Person do
           :scores => { 1 => [ guess.person ] }
         }
       ]
-      periods.should == expected
+      Person.top_guessers(Time.utc(2011, 1, 3)).should == expected
     end
   end
 
