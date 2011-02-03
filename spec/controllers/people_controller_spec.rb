@@ -100,7 +100,7 @@ describe PeopleController do
       response.should render_template 'people/show'
       response.should have_text /username is in 1st place with a score of 1./
       response.should have_tag 'strong', :text => /username has correctly guessed 1 photo/
-      response.should have_tag 'b', :text => /username has posted 1 photo/ # TODO Dave
+      response.should have_tag 'strong', :text => /username has posted 1 photo/
       response.should have_text /1 remains unfound/
       response.should have_text /1 was revealed/
 
