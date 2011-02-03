@@ -286,6 +286,21 @@ describe Person do
       Person.top_guessers(@report_time).should == expected
     end
 
+    it 'handles multiple guessers with the same scores in the same periods' do
+      expected = [
+        (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
+        [ Period.new @report_day.beginning_of_week - 1.day, @report_day + 1.day ] +
+          (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [ Period.new @report_day.beginning_of_month, @report_day + 1.day ] +
+          (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
+        [ Period.new @report_day.beginning_of_year, @report_day + 1.day ]
+      ]
+      guess1 = Guess.create_for_test! :label => 1, :guessed_at => @report_time
+      guess2 = Guess.create_for_test! :label => 2, :guessed_at => @report_time
+      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess1.person, guess2.person ] }
+      Person.top_guessers(@report_time).should == expected
+    end
+
   end
 
   describe '.guesses_per_day' do
