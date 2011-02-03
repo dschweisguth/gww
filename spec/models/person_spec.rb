@@ -261,11 +261,12 @@ describe Person do
         (0 .. 4).map { |i| Period.starting_at now.beginning_of_week - 1.day - (i + 1).weeks, 1.week }
       expected << [ Period.new now.beginning_of_month, next_midnight] +
         (0 .. 11).map { |i| Period.starting_at now.beginning_of_month - (i + 1).months, 1.month }
-      expected.last[12].scores[1] = [ guess.person ]
       expected << [
         Period.new(now.beginning_of_year, next_midnight),
-        Period.starting_at(now.beginning_of_year - 1.year, 1.year, 1 => [ guess.person ])
+        Period.starting_at(now.beginning_of_year - 1.year, 1.year)
       ]
+      expected[2][12].scores[1] = [ guess.person ]
+      expected[3][1].scores[1] = [ guess.person ]
       Person.top_guessers(now).should == expected
     end
 
