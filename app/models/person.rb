@@ -201,10 +201,8 @@ class Person < ActiveRecord::Base
     end
 
     scores.values.each do |guessers_with_score|
-      guessers_with_score.each \
-        { |guesser| guesser[:downcased_username] = guesser.username.downcase }
-      guessers_with_score.sort! \
-        { |a, b| a[:downcased_username] <=> b[:downcased_username] }
+      guessers_with_score.replace \
+        guessers_with_score.sort_by { |guesser| guesser.username.downcase }
     end
 
     scores
