@@ -6,7 +6,6 @@ describe PeopleController do
   describe '#list' do
     it 'renders the page' do
       person = Person.create_for_test!
-      person[:downcased_username] = 'downcased_username'
       person[:guess_count] = 1
       person[:post_count] = 1
       person[:guesses_per_day] = 1.0
