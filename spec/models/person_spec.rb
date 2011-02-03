@@ -279,6 +279,56 @@ describe Person do
       ]
       Person.top_guessers(now).should == expected
     end
+
+    it 'handles previous years, too' do
+      now = Time.utc(2011, 1, 3)
+      guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
+      expected = [
+        (0 .. 6).map do |i|
+          {
+            :dates => { :begin => now - i.days, :end => now - (i - 1).days },
+            :scores => {}
+          }
+        end
+      ]
+      expected << [
+        {
+          :dates => { :begin => now.beginning_of_week - 1.day, :end => now },
+          :scores => {}
+        }
+      ]
+      (0 .. 4).each do |i|
+        expected.last << {
+            :dates => { :begin => now.beginning_of_week - 1.day - (i + 1).weeks, :end => now.beginning_of_week - 1.day - i.weeks },
+            :scores => {}
+          }
+      end
+      expected << [
+        {
+          :dates => { :begin => now.beginning_of_month, :end => now },
+          :scores => {}
+        }
+      ]
+      (0 .. 11).each do |i|
+        expected.last << {
+            :dates => { :begin => now.beginning_of_month - (i + 1).months, :end => now.beginning_of_month - i.months },
+            :scores => {}
+          }
+      end
+      expected.last[12][:scores][1] = [ guess.person ]
+      expected << [
+        {
+          :dates => { :begin => now.beginning_of_year, :end => now },
+          :scores => {}
+        },
+        {
+          :dates => { :begin => now.beginning_of_year - 1.year, :end => now.beginning_of_year },
+          :scores => { 1 => [ guess.person ] }
+        }
+      ]
+      Person.top_guessers(now).should == expected
+    end
+
   end
 
   describe '.guesses_per_day' do
