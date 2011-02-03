@@ -157,7 +157,7 @@ class Person < ActiveRecord::Base
 
     [ days, weeks, months, years ].each do |periods|
       periods.each do |period|
-        period.scores = get_scores_from_date period.start, period.finish
+        period.scores = get_scores period.start, period.finish
       end
     end
 
@@ -182,7 +182,7 @@ class Person < ActiveRecord::Base
     return days, weeks, months, years
   end
 
-  def self.get_scores_from_date(begin_date, end_date)
+  def self.get_scores(begin_date, end_date)
     #noinspection RailsParamDefResolve
     guesses = Guess.all \
       :conditions => [ "? <= guessed_at and guessed_at < ?", begin_date.getutc, end_date.getutc ],
@@ -220,7 +220,7 @@ class Person < ActiveRecord::Base
 
     scores
   end
-  private_class_method :get_scores_from_date
+  private_class_method :get_scores
 
   def self.high_scorers(days)
     people = find_by_sql [
