@@ -175,7 +175,7 @@ class Person < ActiveRecord::Base
     years = [ Period.new(now.beginning_of_year, now.beginning_of_day + 1.day) ] +
       (1 .. years_of_guessing).map do |num|
         Period.new((now - num.year).beginning_of_year,
-        (now - (num - 1).year).beginning_of_year)
+         (now - (num - 1).year).beginning_of_year)
       end
 
     [ days, weeks, months, years ].each do |periods|
