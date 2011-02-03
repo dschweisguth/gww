@@ -209,6 +209,25 @@ class Person < ActiveRecord::Base
   end
   private_class_method :get_scores
 
+  def self.standing(person)
+    place = 1
+    tied = false
+    scores_by_person = Guess.count :group => :person_id
+    people_by_score = scores_by_person.keys.group_by \
+      { |person_id| scores_by_person[person_id] }
+    scores = people_by_score.keys.sort { |a, b| b <=> a }
+    scores.each do |score|
+      people_with_score = people_by_score[score]
+      if people_with_score.include? person.id
+        tied = people_with_score.length > 1
+        break
+      else
+        place += people_with_score.length
+      end
+    end
+    return place, tied
+  end
+
   def self.high_scorers(days)
     people = find_by_sql [
       'select p.*, count(*) score from people p, guesses g ' +
