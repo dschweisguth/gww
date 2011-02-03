@@ -7,10 +7,7 @@ class Period < Struct.new :start, :finish, :scores
   end
 
   def self.starting_at(start, duration)
-    period = new(start, start + duration)
-    #noinspection RubyResolve
-    period.scores = {}
-    period
+    new(start, start + duration)
   end
 
 end
