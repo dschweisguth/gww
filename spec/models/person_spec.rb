@@ -240,42 +240,24 @@ describe Person do
       guess = Guess.create_for_test! :guessed_at => now
       expected = [
         (0 .. 6).map do |i|
-          {
-            :dates => { :begin => now - i.days, :end => now - (i - 1).days },
-            :scores => {}
-          }
+          Period.new(now - i.days, now - (i - 1).days)
         end
       ]
-      expected.last.first[:scores][1] = [ guess.person ]
+      expected.last.first.scores[1] = [ guess.person ]
       expected << [
-        {
-          :dates => { :begin => now.beginning_of_week - 1.day, :end => now },
-          :scores => { 1 => [ guess.person ] }
-        }
+        Period.new(now.beginning_of_week - 1.day, now, { 1 => [ guess.person ] })
       ]
       (0 .. 4).each do |i|
-        expected.last << {
-            :dates => { :begin => now.beginning_of_week - 1.day - (i + 1).weeks, :end => now.beginning_of_week - 1.day - i.weeks },
-            :scores => {}
-          }
+        expected.last << Period.new(now.beginning_of_week - 1.day - (i + 1).weeks, now.beginning_of_week - 1.day - i.weeks)
       end
       expected << [
-        {
-          :dates => { :begin => now.beginning_of_month, :end => now },
-          :scores => { 1 => [ guess.person ] }
-        }
+        Period.new(now.beginning_of_month, now, { 1 => [ guess.person ] })
       ]
       (0 .. 11).each do |i|
-        expected.last << {
-            :dates => { :begin => now.beginning_of_month - (i + 1).months, :end => now.beginning_of_month - i.months },
-            :scores => {}
-          }
+        expected.last << Period.new(now.beginning_of_month - (i + 1).months, now.beginning_of_month - i.months)
       end
       expected << [
-        {
-          :dates => { :begin => now.beginning_of_year, :end => now },
-          :scores => { 1 => [ guess.person ] }
-        }
+        Period.new(now.beginning_of_year, now, { 1 => [ guess.person ] })
       ]
       Person.top_guessers(now).should == expected
     end
@@ -285,46 +267,25 @@ describe Person do
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
       expected = [
         (0 .. 6).map do |i|
-          {
-            :dates => { :begin => now - i.days, :end => now - (i - 1).days },
-            :scores => {}
-          }
+          Period.new now - i.days, now - (i - 1).days
         end
       ]
       expected << [
-        {
-          :dates => { :begin => now.beginning_of_week - 1.day, :end => now },
-          :scores => {}
-        }
+        Period.new now.beginning_of_week - 1.day, now
       ]
       (0 .. 4).each do |i|
-        expected.last << {
-            :dates => { :begin => now.beginning_of_week - 1.day - (i + 1).weeks, :end => now.beginning_of_week - 1.day - i.weeks },
-            :scores => {}
-          }
+        expected.last << Period.new(now.beginning_of_week - 1.day - (i + 1).weeks, now.beginning_of_week - 1.day - i.weeks)
       end
       expected << [
-        {
-          :dates => { :begin => now.beginning_of_month, :end => now },
-          :scores => {}
-        }
+        Period.new now.beginning_of_month, now
       ]
       (0 .. 11).each do |i|
-        expected.last << {
-            :dates => { :begin => now.beginning_of_month - (i + 1).months, :end => now.beginning_of_month - i.months },
-            :scores => {}
-          }
+        expected.last << Period.new(now.beginning_of_month - (i + 1).months, now.beginning_of_month - i.months)
       end
-      expected.last[12][:scores][1] = [ guess.person ]
+      expected.last[12].scores[1] = [ guess.person ]
       expected << [
-        {
-          :dates => { :begin => now.beginning_of_year, :end => now },
-          :scores => {}
-        },
-        {
-          :dates => { :begin => now.beginning_of_year - 1.year, :end => now.beginning_of_year },
-          :scores => { 1 => [ guess.person ] }
-        }
+        Period.new(now.beginning_of_year, now),
+        Period.new(now.beginning_of_year - 1.year, now.beginning_of_year, { 1 => [ guess.person ] })
       ]
       Person.top_guessers(now).should == expected
     end

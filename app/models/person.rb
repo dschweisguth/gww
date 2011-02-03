@@ -158,40 +158,40 @@ class Person < ActiveRecord::Base
       dates = { :begin => (now - num.day).beginning_of_day,
         :end => (now - (num - 1).day).beginning_of_day }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      days.push({ :dates => dates, :scores => scores })
+      days << Period.new(dates[:begin], dates[:end], scores)
     end
 
     thisweek_dates = { :begin => now.beginning_of_week - 1.day, :end => now }
     thisweek_scores = get_scores_from_date thisweek_dates[:begin], nil
-    weeks = [ { :dates => thisweek_dates, :scores => thisweek_scores } ]
+    weeks = [ Period.new(thisweek_dates[:begin], thisweek_dates[:end], thisweek_scores) ]
     (1..5).each do |num|
       dates = {
         :begin => (now - num.week).beginning_of_week - 1.day,
         :end => (now - (num - 1).week).beginning_of_week - 1.day }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      weeks.push({ :dates => dates, :scores => scores })
+      weeks << Period.new(dates[:begin], dates[:end], scores)
     end
 
     thismonth_dates = { :begin => now.beginning_of_month, :end => now }
     thismonth_scores = get_scores_from_date thismonth_dates[:begin], nil
     months =
-      [ { :dates => thismonth_dates, :scores => thismonth_scores } ]
+      [ Period.new(thismonth_dates[:begin], thismonth_dates[:end], thismonth_scores) ]
     (1..12).each do |num|
       dates = { :begin => (now - num.month).beginning_of_month,
         :end => (now - (num - 1).month).beginning_of_month }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      months.push({ :dates => dates, :scores => scores })
+      months << Period.new(dates[:begin], dates[:end], scores)
     end
 
     thisyear_dates = { :begin => now.beginning_of_year, :end => now }
     thisyear_scores = get_scores_from_date thisyear_dates[:begin], nil
-    years = [ {:dates => thisyear_dates, :scores => thisyear_scores} ]
+    years = [ Period.new(thisyear_dates[:begin], thisyear_dates[:end], thisyear_scores) ]
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
     (1..years_of_guessing).each do |num|
       dates = { :begin => (now - num.year).beginning_of_year,
         :end => (now - (num - 1).year).beginning_of_year }
       scores = get_scores_from_date dates[:begin], dates[:end]
-      years.push({ :dates => dates, :scores => scores })
+      years << Period.new(dates[:begin], dates[:end], scores)
     end
 
     return days, weeks, months, years
@@ -202,9 +202,9 @@ class Person < ActiveRecord::Base
       conditions = [ "? <= guessed_at and guessed_at < ?",
         begin_date.getutc, end_date.getutc ]
     elsif begin_date
-      conditions = [ "? <= guessed_at", begin_date.getutc ]
+      conditions = [ "? <= guessed_at", begin_date.getutc ] # TODO Dave could be eliminated?
     else
-      conditions = []
+      conditions = [] # TODO Dave never used?
     end
     guesses = Guess.all :conditions => conditions, :include => :person
 
