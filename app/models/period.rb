@@ -6,4 +6,8 @@ class Period < Struct.new :start, :finish, :scores
     self.scores = scores
   end
 
+  def self.starting_at(start, duration, scores = {})
+    new(start, start + duration, scores)
+  end
+
 end
