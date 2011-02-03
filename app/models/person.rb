@@ -156,39 +156,38 @@ class Person < ActiveRecord::Base
     days = []
     (0 .. 6).each do |num|
       period = Period.new((now - num.day).beginning_of_day, (now - (num - 1).day).beginning_of_day)
-      period.scores = get_scores_from_date period.start, period.finish
       days << period
     end
 
     this_week = Period.new(now.beginning_of_week - 1.day, now.beginning_of_day + 1.day)
-    this_week.scores = get_scores_from_date this_week.start, this_week.finish
     weeks = [ this_week ]
     (1 .. 5).each do |num|
       period = Period.new((now - num.week).beginning_of_week - 1.day,
         (now - (num - 1).week).beginning_of_week - 1.day )
-      period.scores = get_scores_from_date period.start, period.finish
       weeks << period
     end
 
     this_month = Period.new(now.beginning_of_month, now.beginning_of_day + 1.day)
-    this_month.scores = get_scores_from_date this_month.start, this_month.finish
     months = [ this_month ]
     (1 .. 12).each do |num|
       period = Period.new((now - num.month).beginning_of_month,
         (now - (num - 1).month).beginning_of_month)
-      period.scores = get_scores_from_date period.start, period.finish
       months << period
     end
 
     this_year = Period.new(now.beginning_of_year, now.beginning_of_day + 1.day)
-    this_year.scores = get_scores_from_date this_year.start, this_year.finish
     years = [ this_year ]
     years_of_guessing = Time.now.getutc.year - Guess.first.guessed_at.year
     (1 .. years_of_guessing).each do |num|
       period = Period.new((now - num.year).beginning_of_year,
         (now - (num - 1).year).beginning_of_year)
-      period.scores = get_scores_from_date period.start, period.finish
       years << period
+    end
+
+    [ days, weeks, months, years ].each do |periods|
+      periods.each do |period|
+        period.scores = get_scores_from_date period.start, period.finish
+      end
     end
 
     return days, weeks, months, years
