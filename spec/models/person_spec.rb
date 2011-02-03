@@ -251,7 +251,7 @@ describe Person do
       Person.top_guessers(now).should == expected
     end
 
-    it 'handles previous years, too' do
+    it 'handles previous years' do
       now = Time.utc(2011, 1, 3)
       next_midnight = now.beginning_of_day + 1.day
       guess = Guess.create_for_test! :guessed_at => Time.utc(2010, 1, 1)
@@ -266,6 +266,24 @@ describe Person do
         Period.new(now.beginning_of_year, next_midnight),
         Period.starting_at(now.beginning_of_year - 1.year, 1.year, 1 => [ guess.person ])
       ]
+      Person.top_guessers(now).should == expected
+    end
+
+    it 'handles multiple guesses in the same period' do
+      now = Time.utc(2011, 1, 3)
+      next_midnight = now.beginning_of_day + 1.day
+      guesser = Person.create_for_test!
+      Guess.create_for_test! :label => 1, :person => guesser, :guessed_at => now
+      Guess.create_for_test! :label => 2, :person => guesser, :guessed_at => now + 1.minute
+      expected = []
+      expected << (0 .. 6).map { |i| Period.starting_at now.beginning_of_day - i.days, 1.day }
+      expected.last.first.scores[2] = [ guesser ]
+      expected <<
+        [ Period.new now.beginning_of_week - 1.day, next_midnight, 2 => [ guesser ] ] +
+        (0 .. 4).map { |i| Period.starting_at now.beginning_of_week - 1.day - (i + 1).weeks, 1.week }
+      expected << [ Period.new now.beginning_of_month, next_midnight, 2 => [ guesser ] ] +
+        (0 .. 11).map { |i| Period.starting_at now.beginning_of_month - (i + 1).months, 1.month }
+      expected << [ Period.new now.beginning_of_year, next_midnight, 2 => [ guesser ] ]
       Person.top_guessers(now).should == expected
     end
 
