@@ -28,4 +28,12 @@ describe RootController do
     end
   end
 
+  describe '#bookmarklet' do
+    it 'renders the page' do
+      get :bookmarklet
+      response.should render_template 'bookmarklet'
+      response.should have_tag 'p', :text => 'To add "View in GWW" to your bookmarks,'
+    end
+  end
+
 end
