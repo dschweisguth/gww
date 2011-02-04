@@ -126,4 +126,19 @@ describe PeopleController do
     end
   end
 
+  describe '#guesses' do
+    it 'renders the page' do
+      person = Person.new_for_test
+      stub(Person).find { person }
+      #noinspection RubyResolve
+      stub(Guess).find_all_by_person_id { [ Guess.new_for_test :person => person ] }
+      get :guesses
+
+      response.should render_template 'people/guesses'
+      response.should have_tag 'h1', :text => '1 guess by username'
+      response.should have_tag 'a', :text => 'guess_poster_username'
+
+    end
+  end
+
 end
