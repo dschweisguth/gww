@@ -20,4 +20,12 @@ describe RootController do
 
   end
 
+  describe '#about' do
+    it 'renders the page' do
+      get :about
+      response.should render_template 'about'
+      response.should have_tag 'a[href=http://www.flickr.com/people/tma/]', :text => 'Tomas Apodaca'
+    end
+  end
+
 end
