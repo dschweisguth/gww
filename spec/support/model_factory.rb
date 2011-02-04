@@ -12,12 +12,21 @@ end
 class FlickrUpdate
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options = {})
+  def self.new_for_test(options = {})
+    make_for_test :new, options
+  end
+
+  def self.create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
+  def self.make_for_test(new_or_create, caller_options = {})
     #noinspection RubyUnusedLocalVariable
     caller_options, padded_label = process_label! caller_options
     options = { :member_count => 0 }
     options.merge! caller_options
     FlickrUpdate.create! options
+    new_or_create == :new ? FlickrUpdate.new(options) : FlickrUpdate.create!(options)
   end
 
 end
