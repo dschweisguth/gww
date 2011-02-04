@@ -59,7 +59,7 @@ class Photo
     caller_options, padded_label = process_label! caller_options
     now = Time.now
     options = { :flickrid => padded_label + 'photo_flickrid',
-      :farm => 'farm', :server => 'server', :secret => 'secret',
+      :farm => '0', :server => 'server', :secret => 'secret',
       :dateadded => now, :lastupdate => now, :seen_at => now,
       :mapped => 'false', :game_status => 'unfound', :views => 0 }
     if ! caller_options[:person]

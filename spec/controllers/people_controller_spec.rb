@@ -141,4 +141,19 @@ describe PeopleController do
     end
   end
 
+  describe '#posts' do
+    it 'renders the page' do
+      person = Person.new_for_test
+      stub(Person).find { person }
+      #noinspection RubyResolve
+      stub(Photo).find_all_by_person_id { [ Photo.new_for_test :person => person ] }
+      get :posts
+
+      response.should render_template 'people/posts'
+      response.should have_tag 'h1', :text => '1 photo posted by username'
+      response.should have_tag 'img[src=http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg]'
+
+    end
+  end
+
 end
