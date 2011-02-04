@@ -95,7 +95,7 @@ class PeopleController < ApplicationController
       'select distinct photo_id id from comments where flickrid = ?',
       @person.flickrid ]
     @photo_ids = photos.map { |p| p.id }
-    @photos = Photo.paginate @photo_ids, :page => params[:page], 
+    @photos = Photo.paginate @photo_ids, :page => params[:page],
       :include => [ :person, { :guesses => :person } ],
       :order => 'lastupdate desc', :per_page => 25
   end

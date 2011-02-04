@@ -156,4 +156,31 @@ describe PeopleController do
     end
   end
 
+  describe '#comments' do
+    it 'renders the page' do
+
+      person = Person.new_for_test
+      stub(Person).find { person }
+
+      #noinspection RubyResolve
+      photo = Photo.new_for_test
+      stub(Comment).find_by_sql { [ photo ] }
+
+      paginated_photos = [ photo ]
+      # Mock methods from will_paginate's version of Array
+      stub(paginated_photos).offset { 0 }
+      stub(paginated_photos).total_pages { 1 }
+      stub(Photo).paginate { paginated_photos }
+
+      get :comments
+
+      response.should render_template 'people/comments'
+      response.should have_tag 'h1', :text => '1 photo commented on by username'
+      response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
+      response.should have_tag 'a[href=/photos/show]', :text => 'GWW'
+      response.should have_tag 'a[href=/people/show]', :text => 'poster_username'
+
+    end
+  end
+
 end
