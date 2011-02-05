@@ -29,10 +29,10 @@ class Admin::GuessesController < ApplicationController
     @people_by_score = Person.by_score people
 
     @total_participants = people.length
-    @total_posters_only = @people_by_score[0].length
+    @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
     @total_correct_guessers = @total_participants - @total_posters_only
     @member_count = updates[0].member_count
-    @total_single_guessers = @people_by_score[1].length
+    @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
     @html = CGI.escapeHTML \
       render_to_string :partial => 'admin/guesses/report/topic_content'
