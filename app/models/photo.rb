@@ -91,6 +91,10 @@ class Photo < ActiveRecord::Base
   end
   private_class_method :order_by
 
+  def self.count_since(update)
+    count :conditions => [ "dateadded > ?", update.created_at ]
+  end
+
   def self.unfound_or_unconfirmed_count
     count :conditions => "game_status in ('unfound', 'unconfirmed')"
   end

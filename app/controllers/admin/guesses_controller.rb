@@ -21,8 +21,7 @@ class Admin::GuessesController < ApplicationController
     @weekly_high_scorers = Person.high_scorers 7
     @monthly_high_scorers = Person.high_scorers 30
 
-    @new_photos_count =
-      Photo.count :conditions => [ "dateadded > ?", updates[1].created_at ]
+    @new_photos_count = Photo.count_since updates[1]
     @unfound_count = Photo.unfound_or_unconfirmed_count
     
     people = Person.all
