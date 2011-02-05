@@ -65,10 +65,12 @@ describe PeopleController do
 
   describe '#show' do
     it 'renders the page' do
+      PERSON_ID_PARAM = "1"
+
       person = Person.new_for_test
       person[:score] = 1 # for the high_scorers methods
 
-      stub(Person).find { person }
+      stub(Person).find(PERSON_ID_PARAM) { person }
 
       stub(Person).standing { [ 1, false ] }
 
@@ -114,7 +116,7 @@ describe PeopleController do
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id { [ found1.photo, found2.photo ] }
 
-      get :show, :id => person.id
+      get :show, :id => PERSON_ID_PARAM
 
       #noinspection RubyResolve
       response.should be_success
@@ -131,11 +133,12 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
+      PERSON_ID_PARAM = "1"
       person = Person.new_for_test
-      stub(Person).find { person }
+      stub(Person).find(PERSON_ID_PARAM) { person }
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id { [ Guess.new_for_test :person => person ] }
-      get :guesses
+      get :guesses, :id => PERSON_ID_PARAM
 
       #noinspection RubyResolve
       response.should be_success
@@ -147,11 +150,12 @@ describe PeopleController do
 
   describe '#posts' do
     it 'renders the page' do
+      PERSON_ID_PARAM = "1"
       person = Person.new_for_test
-      stub(Person).find { person }
+      stub(Person).find(PERSON_ID_PARAM) { person }
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id { [ Photo.new_for_test :person => person ] }
-      get :posts
+      get :posts, :id => PERSON_ID_PARAM
 
       #noinspection RubyResolve
       response.should be_success
@@ -163,9 +167,10 @@ describe PeopleController do
 
   describe '#comments' do
     it 'renders the page' do
+      PERSON_ID_PARAM = "1"
 
       person = Person.new_for_test
-      stub(Person).find { person }
+      stub(Person).find(PERSON_ID_PARAM) { person }
 
       #noinspection RubyResolve
       photo = Photo.new_for_test
@@ -177,7 +182,7 @@ describe PeopleController do
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).paginate { paginated_photos }
 
-      get :comments
+      get :comments, :id => PERSON_ID_PARAM, :page => "2"
 
       #noinspection RubyResolve
       response.should be_success
