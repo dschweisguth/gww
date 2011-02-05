@@ -1,4 +1,12 @@
-module ModelFactorySupport
+module ModelFactory
+  def new_for_test(options = {})
+    make_for_test :new, options
+  end
+
+  def create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
   def process_label!(options)
     padded_label = options.delete(:label).to_s || ''
     if ! padded_label.empty?
@@ -7,18 +15,11 @@ module ModelFactorySupport
     return options, padded_label
   end
   private :process_label!
+
 end
 
 class FlickrUpdate
-  extend ModelFactorySupport
-
-  def self.new_for_test(options = {})
-    make_for_test :new, options
-  end
-
-  def self.create_for_test!(options = {})
-    make_for_test :create, options
-  end
+  extend ModelFactory
 
   def self.make_for_test(new_or_create, caller_options = {})
     #noinspection RubyUnusedLocalVariable
@@ -32,15 +33,7 @@ class FlickrUpdate
 end
 
 class Person
-  extend ModelFactorySupport
-
-  def self.new_for_test(options = {})
-    make_for_test :new, options
-  end
-
-  def self.create_for_test!(options = {})
-    make_for_test :create, options
-  end
+  extend ModelFactory
 
   def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
@@ -54,15 +47,7 @@ class Person
 end
 
 class Photo
-  extend ModelFactorySupport
-
-  def self.new_for_test(options = {})
-    make_for_test :new, options
-  end
-
-  def self.create_for_test!(options = {})
-    make_for_test :create, options
-  end
+  extend ModelFactory
 
   def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
@@ -84,15 +69,7 @@ class Photo
 end
 
 class Comment
-  extend ModelFactorySupport
-
-  def self.new_for_test(options = {})
-    make_for_test :new, options
-  end
-
-  def self.create_for_test!(options = {})
-    make_for_test :create, options
-  end
+  extend ModelFactory
 
   def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
@@ -111,15 +88,7 @@ class Comment
 end
 
 class Guess
-  extend ModelFactorySupport
-
-  def self.new_for_test(options = {})
-    make_for_test :new, options
-  end
-
-  def self.create_for_test!(options = {})
-    make_for_test :create, options
-  end
+  extend ModelFactory
 
   def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
@@ -147,15 +116,7 @@ class Guess
 end
 
 class Revelation
-  extend ModelFactorySupport
-
-  def self.new_for_test(options = {})
-    make_for_test :new, options
-  end
-
-  def self.create_for_test!(options = {})
-    make_for_test :create, options
-  end
+  extend ModelFactory
 
   def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
