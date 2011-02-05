@@ -28,6 +28,7 @@ class FlickrUpdate
     FlickrUpdate.create! options
     new_or_create == :new ? FlickrUpdate.new(options) : FlickrUpdate.create!(options)
   end
+  private_class_method :make_for_test
 
 end
 
@@ -139,15 +140,26 @@ end
 class Revelation
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options = {})
+  def self.new_for_test(options = {})
+    make_for_test :new, options
+  end
+
+  def self.create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
+  def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
     now = Time.now
     options = { :revelation_text => 'revelation text', :revealed_at => now, :added_at => now }
     if ! caller_options[:photo]
-      options[:photo] = Photo.create_for_test! :label => (padded_label + 'revelation')
+      photo_options = { :label => (padded_label + 'revelation') }
+      options[:photo] = new_or_create == :new \
+        ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
     end
     options.merge! caller_options
-    Revelation.create! options
+    new_or_create == :new ? Revelation.new(options) : Revelation.create!(options)
   end
+  private_class_method :make_for_test
 
 end
