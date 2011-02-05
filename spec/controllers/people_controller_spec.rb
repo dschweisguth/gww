@@ -18,7 +18,8 @@ describe PeopleController do
       stub(Person).all_sorted.with('score', '+') { [ person ] }
       get :list, :sorted_by => 'score', :order => '+'
 
-      response.should render_template('people/list')
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_tag 'a[href=/people/list/sorted-by/score/order/-]', :text => 'Score'
       response.should have_tag "a[href=/people/show/#{person.id}]", :text => 'username'
 
@@ -41,7 +42,8 @@ describe PeopleController do
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
 
-      response.should render_template 'people/top_guessers'
+      #noinspection RubyResolve
+      response.should be_success
       response_should_have_table "for Monday, January 03 so far ...", guess
       response_should_have_table "for the week of January 02 so far ...", guess
       response_should_have_table "for January 2011 so far ...", guess
@@ -114,7 +116,8 @@ describe PeopleController do
 
       get :show, :id => person.id
 
-      response.should render_template 'people/show'
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_text /username is in 1st place with a score of 2./
       response.should have_text /username scored the most points in the last week/
       response.should have_text /username scored the most points in the last month/
@@ -134,7 +137,8 @@ describe PeopleController do
       stub(Guess).find_all_by_person_id { [ Guess.new_for_test :person => person ] }
       get :guesses
 
-      response.should render_template 'people/guesses'
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_tag 'h1', :text => '1 guess by username'
       response.should have_tag 'a', :text => 'guess_poster_username'
 
@@ -149,7 +153,8 @@ describe PeopleController do
       stub(Photo).find_all_by_person_id { [ Photo.new_for_test :person => person ] }
       get :posts
 
-      response.should render_template 'people/posts'
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_tag 'h1', :text => '1 photo posted by username'
       response.should have_tag 'img[src=http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg]'
 
@@ -174,7 +179,8 @@ describe PeopleController do
 
       get :comments
 
-      response.should render_template 'people/comments'
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_tag 'h1', :text => '1 photo commented on by username'
       response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
       response.should have_tag 'a[href=/photos/show]', :text => 'GWW'

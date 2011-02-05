@@ -10,11 +10,14 @@ describe GuessesController do
       shortest = [ Guess.new_for_test :label => 2 ]
       stub(Guess).shortest { shortest }
       get :longest_and_shortest
-      response.should render_template('guesses/longest_and_shortest')
+
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_tag 'a', /1_guess_poster_username/
       response.should have_tag 'a', /2_guesser_username/
       response.should have_tag 'a', /1_guess_poster_username/
       response.should have_tag 'a', /2_guesser_username/
+
     end
   end
   

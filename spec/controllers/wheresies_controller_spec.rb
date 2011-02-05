@@ -35,7 +35,8 @@ describe WheresiesController do
       stub(Guess).shortest_in_2010 { [ shortest_in_2010 ] }
 
       get :index
-      response.should render_template 'index'
+      #noinspection RubyResolve
+      response.should be_success
       response.should have_tag 'div' do
         with_tag 'h3', :text => 'Most points in 2010'
         with_tag 'td', :text => '333'
