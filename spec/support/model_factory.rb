@@ -86,16 +86,26 @@ end
 class Comment
   extend ModelFactorySupport
 
-  def self.create_for_test!(caller_options = {})
+  def self.new_for_test(options = {})
+    make_for_test :new, options
+  end
+
+  def self.create_for_test!(options = {})
+    make_for_test :create, options
+  end
+
+  def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'comment_flickrid',
       :username => padded_label + 'comment_username',
       :comment_text => 'comment_text', :commented_at => Time.now }
     if ! caller_options[:photo]
-      options[:photo] = Photo.create_for_test! :label => (padded_label + 'comment')
+      photo_options = { :label => (padded_label + 'comment') }
+      options[:photo] = new_or_create == :new \
+        ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
     end
     options.merge! caller_options
-    Comment.create! options
+    new_or_create == :new ? Comment.new(options) : Comment.create!(options)
   end
 
 end
