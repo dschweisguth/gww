@@ -84,6 +84,12 @@ class Guess < ActiveRecord::Base
       :order => GUESS_AGE, :limit => 10
   end
 
+  def self.all_since(update)
+    Guess.all \
+      :conditions => [ "added_at > ?", update.created_at ],
+      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
+  end
+
   def years_old
     (seconds_old / (365 * 24 * 60 * 60)).truncate
   end
@@ -124,11 +130,5 @@ class Guess < ActiveRecord::Base
     end
   end
 
-
-  def self.all_since(update)
-    Guess.all \
-      :conditions => [ "added_at > ?", update.created_at ],
-      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
-  end
 
 end

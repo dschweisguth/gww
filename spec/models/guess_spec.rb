@@ -212,6 +212,21 @@ describe Guess do
 
   end
 
+  describe '.all_since' do
+    it 'returns all guesses since the most recent Flickr update' do
+      guess = Guess.create_for_test! :added_at => Time.utc(2011, 1, 2)
+      update = FlickrUpdate.new_for_test :created_at => Time.utc(2011)
+      Guess.all_since(update).should == [ guess ]
+    end
+
+    it 'ignores guesses made before the most recent Flickr update' do
+      Guess.create_for_test! :added_at => Time.utc(2011)
+      update = FlickrUpdate.new_for_test :created_at => Time.utc(2011, 1, 2)
+      Guess.all_since(update).should == []
+    end
+
+  end
+
   describe '#years_old' do
     it 'returns the number of full years from post to guess (ignoring leap years)' do
       photo = Photo.new :dateadded => Time.utc(2010)
