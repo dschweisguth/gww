@@ -38,4 +38,19 @@ describe PhotosController do
     end
   end
 
+  describe '#unfound_data' do
+    it 'renders the page' do
+      stub(FlickrUpdate).latest { FlickrUpdate.new_for_test :created_at => Time.utc(2011) }
+      stub(Photo).unfound_or_unconfirmed { [ Photo.new_for_test ] }
+      get :unfound_data
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_tag 'photos[updated_at=1293840000]' do
+        with_tag 'photo[posted_by=poster_username]'
+      end
+
+    end
+  end
+
 end
