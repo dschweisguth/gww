@@ -7,9 +7,7 @@ class Admin::GuessesController < ApplicationController
 
     updates = FlickrUpdate.all :order => "id desc", :limit => 2
 
-    @guesses = Guess.all \
-      :conditions => [ "added_at > ?", updates[0].created_at ],
-      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
+    @guesses = Guess.all_since updates[0]
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|
         c = y[1].length <=> x[1].length
