@@ -105,7 +105,7 @@ class Admin::PhotosController < ApplicationController
   def update_statistics
     Photo.update_statistics
     expire_cached_pages
-    flash[:notice] = "Updated statistics.</br>"
+    flash[:notice] = 'Updated statistics.</br>'
     redirect_to admin_root_path
   end
 
