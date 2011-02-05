@@ -91,10 +91,6 @@ class Photo < ActiveRecord::Base
   end
   private_class_method :order_by
 
-  def self.count_since(update)
-    count :conditions => [ "dateadded > ?", update.created_at ]
-  end
-
   def self.unfound_or_unconfirmed_count
     count :conditions => "game_status in ('unfound', 'unconfirmed')"
   end
@@ -119,6 +115,10 @@ class Photo < ActiveRecord::Base
         'where ? <= f.dateadded and f.dateadded < ? and f.id = c.photo_id ' +
 	'group by f.id order by comments desc limit 10',
       Time.utc(2010), Time.utc(2011) ]
+  end
+
+  def self.count_since(update)
+    count :conditions => [ "dateadded > ?", update.created_at ]
   end
 
   def self.add_posts(people)
