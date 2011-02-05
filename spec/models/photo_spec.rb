@@ -400,4 +400,14 @@ describe Photo do
 
   end
 
+  describe '.add_posts' do
+    it "adds each person's posts as an attribute" do
+      person = Person.create_for_test!
+      Photo.create_for_test! :label => 1, :person => person
+      Photo.create_for_test! :label => 2, :person => person
+      Photo.add_posts [ person ]
+      person[:posts].should == 2
+    end
+  end
+
 end
