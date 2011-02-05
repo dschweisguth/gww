@@ -610,13 +610,23 @@ describe Person do
 
     end
 
-    it 'adds up scores' do
+    it 'adds up guesses' do
       person = Person.create_for_test!
       Guess.create_for_test! :label => 1, :person => person
       Guess.create_for_test! :label => 2, :person => person
 
-      Person.by_score([ person ]).should == [{:score => 2, :people => [ person ] } ]
+      Person.by_score([ person ]).should == [ { :score => 2, :people => [ person ] } ]
       person[:posts].should == 0
+
+    end
+
+    it 'adds up posts' do
+      person = Person.create_for_test!
+      Photo.create_for_test! :label => 1, :person => person
+      Photo.create_for_test! :label => 2, :person => person
+
+      Person.by_score([ person ]).should == [ { :score => 0, :people => [ person ] } ]
+      person[:posts].should == 2
 
     end
 
