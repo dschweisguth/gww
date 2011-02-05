@@ -8,7 +8,6 @@ class PhotosController < ApplicationController
 
   caches_page :unfound
   def unfound
-    @lasttime = FlickrUpdate.latest.created_at
     @photos = Photo.unfound_or_unconfirmed
   end
 
