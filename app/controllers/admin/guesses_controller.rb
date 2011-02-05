@@ -1,7 +1,6 @@
 class Admin::GuessesController < ApplicationController
 
   caches_page :report
-  #noinspection RailsParamDefResolve
   def report
     @report_date = Time.now
 
@@ -14,9 +13,7 @@ class Admin::GuessesController < ApplicationController
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
-    @revelations = Revelation.all \
-      :conditions => [ "added_at > ?", updates[0].created_at ], 
-      :include => { :photo => :person }
+    @revelations = Revelation.all_since updates[0]
     @revealers =
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }

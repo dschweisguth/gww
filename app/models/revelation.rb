@@ -13,6 +13,13 @@ class Revelation < ActiveRecord::Base
       :limit => 10
   end
 
+  #noinspection RailsParamDefResolve
+  def self.all_since(update)
+    @revelations = Revelation.all \
+      :conditions => [ "added_at > ?", update.created_at ],
+      :include => { :photo => :person }
+  end
+
   def time_elapsed
     time_elapsed_between photo.dateadded, revealed_at
   end
