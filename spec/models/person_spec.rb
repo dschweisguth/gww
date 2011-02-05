@@ -602,15 +602,22 @@ describe Person do
     it 'groups people by score, sorted by username' do
       person1 = Person.create_for_test! :label => 1
       person2 = Person.create_for_test! :label => 2
+
       Person.by_score([ person1, person2 ]).should ==
         [ { :score => 0, :people => [ person1, person2 ] } ]
+      person1[:posts].should == 0
+      person2[:posts].should == 0
+
     end
 
     it 'adds up scores' do
       person = Person.create_for_test!
       Guess.create_for_test! :label => 1, :person => person
       Guess.create_for_test! :label => 2, :person => person
+
       Person.by_score([ person ]).should == [{:score => 2, :people => [ person ] } ]
+      person[:posts].should == 0
+
     end
 
   end
