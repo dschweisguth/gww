@@ -38,6 +38,21 @@ describe Revelation do
 
   end
 
+  describe '.all_since' do
+    it 'returns all revelations since the most recent Flickr update' do
+      revelation = Revelation.create_for_test! :added_at => Time.utc(2011, 1, 2)
+      update = FlickrUpdate.new_for_test :created_at => Time.utc(2011)
+      Revelation.all_since(update).should == [ revelation ]
+    end
+
+    it 'ignores revelations made before the most recent Flickr update' do
+      Revelation.create_for_test! :added_at => Time.utc(2011)
+      update = FlickrUpdate.new_for_test :created_at => Time.utc(2011, 1, 2)
+      Revelation.all_since(update).should == []
+    end
+
+  end
+
   describe '#time_elapsed' do
     it 'returns the duration in seconds from post to revelation in English' do
       photo = Photo.new :dateadded => Time.utc(2000)
