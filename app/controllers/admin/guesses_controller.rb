@@ -29,10 +29,10 @@ class Admin::GuessesController < ApplicationController
     @people_by_score = Person.by_score people
 
     @total_participants = people.length
-    @total_posters_only = people_with @people_by_score, 0
+    @total_posters_only = @people_by_score[0].length
     @total_correct_guessers = @total_participants - @total_posters_only
     @member_count = updates[0].member_count
-    @total_single_guessers = people_with @people_by_score, 1
+    @total_single_guessers = @people_by_score[1].length
 
     @html = CGI.escapeHTML \
       render_to_string :partial => 'admin/guesses/report/topic_content'
@@ -41,11 +41,5 @@ class Admin::GuessesController < ApplicationController
         .gsub /$/, '<br/>'
 
   end
-
-  def people_with(people_by_score, score)
-    people_with_score = people_by_score.find { |x| x[:score] == score }
-    people_with_score ? people_with_score[:people].length : 0
-  end
-  private :people_with
 
 end

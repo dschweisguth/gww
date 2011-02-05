@@ -602,15 +602,14 @@ describe Person do
     it "groups people by score and adds each's post count" do
       person1 = Person.create_for_test! :label => 1
       person2 = Person.create_for_test! :label => 2
-      Person.by_score([ person1, person2 ]).should ==
-        [ { :score => 0, :people => [ person1, person2 ] } ]
+      Person.by_score([ person1, person2 ]).should == {0 => [ person1, person2 ] }
     end
 
     it 'adds up guesses' do
       person = Person.create_for_test!
       Guess.create_for_test! :label => 1, :person => person
       Guess.create_for_test! :label => 2, :person => person
-      Person.by_score([ person ]).should == [ { :score => 2, :people => [ person ] } ]
+      Person.by_score([ person ]).should == { 2 => [ person ] }
     end
 
   end

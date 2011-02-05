@@ -298,17 +298,17 @@ class Person < ActiveRecord::Base
 
   def self.by_score(people)
     scores = Guess.count :group => :person_id
-    people_by_score = []
+    people_by_score = {}
     people.each do |person|
       score = scores[person.id] || 0
-      people_with_score = people_by_score.find { |x| x[:score] == score }
+      people_with_score = people_by_score[score]
       if ! people_with_score
-        people_with_score = { :score => score, :people => [] }
-        people_by_score.push people_with_score
+        people_with_score = []
+        people_by_score[score] = people_with_score
       end
-      people_with_score[:people].push person
+      people_with_score << person
     end
-    people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
+    people_by_score
   end
 
 end
