@@ -26,4 +26,17 @@ describe Admin::PhotosController do
     end
   end
 
+  describe '.inaccessible' do
+    it 'renders the page' do
+      photo = Photo.new_for_test :id => 1
+      stub(photo).id { 1 }
+      stub(FlickrUpdate).latest { FlickrUpdate.new_for_test :created_at => Time.utc(2011) }
+      stub(Photo).all { [ photo ] }
+      get :inaccessible
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_tag 'a[href=/admin/photos/edit/1]', :text => 'Edit'
+    end
+  end
+
 end
