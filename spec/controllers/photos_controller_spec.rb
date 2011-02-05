@@ -28,12 +28,13 @@ describe PhotosController do
     it 'renders the page' do
       stub(Photo).unfound_or_unconfirmed { [ Photo.new_for_test ] }
       get :unfound
+
       #noinspection RubyResolve
       response.should be_success
-      p response.body
       response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
       response.should have_tag 'a[href=/photos/show]', :text => 'GWW'
       response.should have_tag 'a[href=/people/show]', :text => 'poster_username'
+
     end
   end
 
