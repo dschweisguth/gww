@@ -211,12 +211,12 @@ describe Person do
 
     #noinspection RubyResolve
     def stub_post_count(count1, count2)
-      stub(Photo).count.with(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
+      stub(Photo).count(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
     end
 
     #noinspection RubyResolve
     def stub_score(count1, count2)
-      stub(Guess).count.with(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
+      stub(Guess).count(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
     end
 
     #noinspection RubyResolve

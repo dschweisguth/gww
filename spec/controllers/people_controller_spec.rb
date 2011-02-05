@@ -15,7 +15,7 @@ describe PeopleController do
       person[:be_guessed_speed] = 1.0
       person[:comments_to_guess] = 1.0
       person[:comments_to_be_guessed] = 1.0
-      stub(Person).all_sorted.with('score', '+') { [ person ] }
+      stub(Person).all_sorted('score', '+') { [ person ] }
       get :list, :sorted_by => 'score', :order => '+'
 
       #noinspection RubyResolve
@@ -74,8 +74,8 @@ describe PeopleController do
 
       stub(Person).standing { [ 1, false ] }
 
-      stub(Person).high_scorers.with(7) { [ person ] }
-      stub(Person).high_scorers.with(30) { [ person ] }
+      stub(Person).high_scorers(7) { [ person ] }
+      stub(Person).high_scorers(30) { [ person ] }
 
       first_guess = Guess.new_for_test :label => 'first_guess'
       first_guess[:place] = 1
