@@ -23,22 +23,9 @@ class Admin::GuessesController < ApplicationController
 
     @new_photos_count = Photo.count_since updates[1]
     @unfound_count = Photo.unfound_or_unconfirmed_count
-    
+
     people = Person.all
-    scores = Guess.count :group => :person_id
-    posts_per_person = Photo.count :group => :person_id
-    @people_by_score = []
-    people.each do |person|
-      score = scores[person.id] || 0
-      people_with_score = @people_by_score.find { |x| x[:score] == score }
-      if ! people_with_score
-        people_with_score = { :score => score, :people => [] }
-        @people_by_score.push people_with_score
-      end
-      people_with_score[:people].push person
-      person[:posts] = posts_per_person[person.id] || 0
-    end
-    @people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
+    @people_by_score = Person.by_score people
 
     @total_participants = people.length
     @total_posters_only = people_with @people_by_score, 0
