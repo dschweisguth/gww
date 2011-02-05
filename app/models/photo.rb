@@ -104,6 +104,13 @@ class Photo < ActiveRecord::Base
       :include => :person, :order => "lastupdate desc"
   end
 
+  def self.add_posts(people)
+    posts_per_person = Photo.count :group => :person_id
+    people.each do |person|
+      person[:posts] = posts_per_person[person.id] || 0
+    end
+  end
+
   def self.most_viewed_in_2010
     find :all,
       :conditions =>

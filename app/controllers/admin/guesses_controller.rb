@@ -25,6 +25,7 @@ class Admin::GuessesController < ApplicationController
     @unfound_count = Photo.unfound_or_unconfirmed_count
 
     people = Person.all
+    Photo.add_posts people
     @people_by_score = Person.by_score people
 
     @total_participants = people.length

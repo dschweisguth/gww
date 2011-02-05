@@ -298,7 +298,6 @@ class Person < ActiveRecord::Base
 
   def self.by_score(people)
     scores = Guess.count :group => :person_id
-    posts_per_person = Photo.count :group => :person_id
     people_by_score = []
     people.each do |person|
       score = scores[person.id] || 0
@@ -308,7 +307,6 @@ class Person < ActiveRecord::Base
         people_by_score.push people_with_score
       end
       people_with_score[:people].push person
-      person[:posts] = posts_per_person[person.id] || 0
     end
     people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
   end
