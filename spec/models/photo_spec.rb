@@ -400,6 +400,21 @@ describe Photo do
 
   end
 
+  describe '.count_since' do
+    it 'counts photos' do
+      update = FlickrUpdate.create_for_test! :created_at => Time.utc(2011)
+      Photo.create_for_test! :dateadded => Time.utc(2011)
+      Photo.count_since(update).should == 1
+    end
+
+    it 'ignores photos added before the last update' do
+      update = FlickrUpdate.create_for_test! :created_at => Time.utc(2011)
+      Photo.create_for_test! :dateadded => Time.utc(2010)
+      Photo.count_since(update).should == 0
+    end
+
+  end
+
   describe '.add_posts' do
     it "adds each person's posts as an attribute" do
       person = Person.create_for_test!

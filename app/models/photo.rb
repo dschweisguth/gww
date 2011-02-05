@@ -118,7 +118,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.count_since(update)
-    count :conditions => [ "dateadded > ?", update.created_at ]
+    count :conditions => [ "? <= dateadded", update.created_at ]
   end
 
   def self.add_posts(people)
