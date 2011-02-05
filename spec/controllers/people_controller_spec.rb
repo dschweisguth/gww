@@ -6,6 +6,9 @@ describe PeopleController do
 
   describe '#list' do
     it 'renders the page' do
+      sorted_by_param = 'score'
+      order_param = '+'
+
       person = Person.create_for_test!
       person[:guess_count] = 1
       person[:post_count] = 1
@@ -15,8 +18,8 @@ describe PeopleController do
       person[:be_guessed_speed] = 1.0
       person[:comments_to_guess] = 1.0
       person[:comments_to_be_guessed] = 1.0
-      stub(Person).all_sorted('score', '+') { [ person ] }
-      get :list, :sorted_by => 'score', :order => '+'
+      stub(Person).all_sorted(sorted_by_param, order_param) { [ person ] }
+      get :list, :sorted_by => sorted_by_param, :order => order_param
 
       #noinspection RubyResolve
       response.should be_success
@@ -65,12 +68,11 @@ describe PeopleController do
 
   describe '#show' do
     it 'renders the page' do
-      PERSON_ID_PARAM = "1"
-
       person = Person.new_for_test
+      stub(person).id { 1 }
       person[:score] = 1 # for the high_scorers methods
 
-      stub(Person).find(PERSON_ID_PARAM) { person }
+      stub(Person).find(person.id.to_s) { person }
 
       stub(Person).standing { [ 1, false ] }
 
@@ -87,36 +89,38 @@ describe PeopleController do
 
       oldest_guess = Guess.new_for_test :label => 'oldest_guess'
       oldest_guess[:place] = 1
-      stub(Guess).oldest { oldest_guess }
+      stub(Guess).oldest(person) { oldest_guess }
 
       fastest_guess = Guess.new_for_test :label => 'fastest_guess'
       fastest_guess[:place] = 1
-      stub(Guess).fastest { fastest_guess }
+      stub(Guess).fastest(person) { fastest_guess }
 
       longest_lasting_guess = Guess.new_for_test :label => 'longest_lasting_guess'
       longest_lasting_guess[:place] = 1
-      stub(Guess).longest_lasting { longest_lasting_guess }
+      stub(Guess).longest_lasting(person) { longest_lasting_guess }
 
       shortest_lasting_guess = Guess.new_for_test :label => 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
-      stub(Guess).shortest_lasting { shortest_lasting_guess }
+      stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id { [Guess.new_for_test(:label => 'all1'), Guess.new_for_test(:label => 'all2') ] }
+      stub(Guess).find_all_by_person_id(person.id, anything) \
+        { [Guess.new_for_test(:label => 'all1'), Guess.new_for_test(:label => 'all2') ] }
 
       stub(Photo).all { [ Photo.new_for_test :label => 'unfound' ] }
 
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id_and_game_status { [ Photo.new_for_test :label => 'revealed' ] }
+      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
+        { [ Photo.new_for_test :label => 'revealed' ] }
 
       found1 = Guess.new_for_test :label => 'found1'
       found1.photo.guesses << found1
       found2 = Guess.new_for_test :label => 'found2'
       found2.photo.guesses << found2
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id { [ found1.photo, found2.photo ] }
+      stub(Photo).find_all_by_person_id(person.id, anything) { [ found1.photo, found2.photo ] }
 
-      get :show, :id => PERSON_ID_PARAM
+      get :show, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -133,12 +137,12 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
-      PERSON_ID_PARAM = "1"
       person = Person.new_for_test
-      stub(Person).find(PERSON_ID_PARAM) { person }
+      stub(person).id { 1 }
+      stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id { [ Guess.new_for_test :person => person ] }
-      get :guesses, :id => PERSON_ID_PARAM
+      stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.new_for_test :person => person ] }
+      get :guesses, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -150,12 +154,12 @@ describe PeopleController do
 
   describe '#posts' do
     it 'renders the page' do
-      PERSON_ID_PARAM = "1"
       person = Person.new_for_test
-      stub(Person).find(PERSON_ID_PARAM) { person }
+      stub(person).id { 1 }
+      stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id { [ Photo.new_for_test :person => person ] }
-      get :posts, :id => PERSON_ID_PARAM
+      stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ Photo.new_for_test :person => person ] }
+      get :posts, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -167,10 +171,9 @@ describe PeopleController do
 
   describe '#comments' do
     it 'renders the page' do
-      PERSON_ID_PARAM = "1"
-
       person = Person.new_for_test
-      stub(Person).find(PERSON_ID_PARAM) { person }
+      stub(person).id { 1 }
+      stub(Person).find(person.id.to_s) { person }
 
       #noinspection RubyResolve
       photo = Photo.new_for_test
@@ -182,7 +185,7 @@ describe PeopleController do
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).paginate { paginated_photos }
 
-      get :comments, :id => PERSON_ID_PARAM, :page => "2"
+      get :comments, :id => person.id, :page => "2"
 
       #noinspection RubyResolve
       response.should be_success

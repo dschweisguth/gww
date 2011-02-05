@@ -5,16 +5,16 @@ describe PhotosController do
 
   describe '#list' do
     it 'renders the page' do
-      SORTED_BY_PARAM = 'username'
-      ORDER_PARAM = '+'
-      PAGE_PARAM = '1'
+      sorted_by_param = 'username'
+      order_param = '+'
+      page_param = '1'
 
       # Mock methods from will_paginate's version of Array
       paginated_photos = [ Photo.new_for_test ]
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
-      stub(Photo).all_sorted_and_paginated(SORTED_BY_PARAM, ORDER_PARAM, PAGE_PARAM, 30) { paginated_photos }
-      get :list, :sorted_by => 'username', :order => ORDER_PARAM, :page => PAGE_PARAM
+      stub(Photo).all_sorted_and_paginated(sorted_by_param, order_param, page_param, 30) { paginated_photos }
+      get :list, :sorted_by => sorted_by_param, :order => order_param, :page => page_param
 
       #noinspection RubyResolve
       response.should be_success
@@ -56,12 +56,13 @@ describe PhotosController do
   describe '#show' do
     it 'renders the page' do
       photo = Photo.new_for_test :dateadded => Time.local(2010)
+      stub(photo).id { 1 }
       guess = Guess.new_for_test :photo => photo
       photo.guesses << guess
       stub(Photo).find { photo }
       #noinspection RubyResolve
-      stub(Comment).find_all_by_photo_id { [ Comment.new_for_test :photo => photo ] }
-      get :show, :id => '1'
+      stub(Comment).find_all_by_photo_id(photo) { [ Comment.new_for_test :photo => photo ] }
+      get :show, :id => photo.id
 
       #noinspection RubyResolve
       response.should be_success
