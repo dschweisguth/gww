@@ -311,7 +311,6 @@ class Person < ActiveRecord::Base
       person[:posts] = posts_per_person[person.id] || 0
     end
     people_by_score.sort! { |x, y| y[:score] <=> x[:score] }
-    people_by_score
   end
 
 end
