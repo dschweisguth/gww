@@ -25,7 +25,6 @@ class FlickrUpdate
     caller_options, padded_label = process_label! caller_options
     options = { :member_count => 0 }
     options.merge! caller_options
-    FlickrUpdate.create! options
     new_or_create == :new ? FlickrUpdate.new(options) : FlickrUpdate.create!(options)
   end
   private_class_method :make_for_test
