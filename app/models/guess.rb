@@ -85,8 +85,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.all_since(update)
-    Guess.all \
-      :conditions => [ "added_at > ?", update.created_at ],
+    all :conditions => [ "added_at > ?", update.created_at ],
       :include => [ { :photo => :person }, :person ], :order => "guessed_at"
   end
 
