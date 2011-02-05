@@ -53,4 +53,32 @@ describe PhotosController do
     end
   end
 
+  describe '#show' do
+    it 'renders the page' do
+      photo = Photo.new_for_test :dateadded => Time.local(2010)
+      guess = Guess.new_for_test :photo => photo
+      photo.guesses << guess
+      stub(Photo).find { photo }
+      #noinspection RubyResolve
+      stub(Comment).find_all_by_photo_id { [ Comment.new_for_test :photo => photo ] }
+      get :show, :id => '1'
+
+      #noinspection RubyResolve
+      response.should be_success
+p response.body
+      response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]' do
+        with_tag 'img[src=http://farm0.static.flickr.com/server/photo_flickrid_secret.jpg]'
+      end
+      response.should have_text /Added to the group at 12:00 AM, January 01, 2010/
+      response.should have_text /This photo is unfound./
+      response.should have_tag 'table' do
+        with_tag 'td', :text => 'guesser_username'
+        with_tag 'td', :text => 'guess text'
+      end
+      response.should have_tag 'strong', :text => 'comment_username says:'
+      response.should have_text /comment text/
+
+    end
+  end
+
 end

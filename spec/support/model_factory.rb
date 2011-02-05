@@ -75,7 +75,7 @@ class Comment
     caller_options, padded_label = process_label! caller_options
     options = { :flickrid => padded_label + 'comment_flickrid',
       :username => padded_label + 'comment_username',
-      :comment_text => 'comment_text', :commented_at => Time.now }
+      :comment_text => 'comment text', :commented_at => Time.now }
     if ! caller_options[:photo]
       photo_options = { :label => (padded_label + 'comment') }
       options[:photo] = new_or_create == :new \
