@@ -9,7 +9,7 @@ describe PhotosController do
       paginated_photos = [ Photo.new_for_test ]
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
-      mock(Photo).all_sorted_and_paginated.with('username', '+', '1', 30) { paginated_photos }
+      stub(Photo).all_sorted_and_paginated.with('username', '+', '1', 30) { paginated_photos }
       get :list, :sorted_by => 'username', :order => '+', :page => 1
 
       #noinspection RubyResolve
