@@ -312,7 +312,7 @@ describe Photo do
 
   end
 
-  describe '#unfound_or_unconfirmed_count' do
+  describe '.unfound_or_unconfirmed_count' do
     %w(unfound unconfirmed).each do |game_status|
       it "counts #{game_status} photos" do
         Photo.create_for_test! :game_status => game_status
@@ -329,7 +329,7 @@ describe Photo do
 
   end
 
-  describe '#unfound_or_unconfirmed' do
+  describe '.unfound_or_unconfirmed' do
     %w(unfound unconfirmed).each do |game_status|
       it "returns #{game_status} photos" do
         photo = Photo.create_for_test! :game_status => game_status
@@ -346,7 +346,7 @@ describe Photo do
 
   end
 
-  describe '#most_viewed_in_2010' do
+  describe '.most_viewed_in_2010' do
     it 'lists photos' do
       photo = Photo.create_for_test! :dateadded => Time.utc(2010)
       Photo.most_viewed_in_2010.should == [ photo ]
@@ -370,7 +370,7 @@ describe Photo do
 
   end
 
-  describe '#most_commented_in_2010' do
+  describe '.most_commented_in_2010' do
     it 'lists photos' do
       photo = Photo.create_for_test! :dateadded => Time.utc(2010)
       Comment.create_for_test! :photo => photo
