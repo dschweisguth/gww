@@ -599,7 +599,7 @@ describe Person do
   end
 
   describe '#by_score' do
-    it 'groups people by score, sorted by username' do
+    it "groups people by score and adds each's post count" do
       person1 = Person.create_for_test! :label => 1
       person2 = Person.create_for_test! :label => 2
 
