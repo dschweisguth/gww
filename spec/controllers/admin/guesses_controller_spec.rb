@@ -7,7 +7,7 @@ describe Admin::GuessesController do
     it 'renders the page' do
       stub(Time).now { Time.local(2011, 1, 5) }
 
-      most_recent_update = FlickrUpdate.new_for_test :created_at => Time.local(2011)
+      most_recent_update = FlickrUpdate.new_for_test :created_at => Time.local(2011), :member_count => 3
       penultimate_update = FlickrUpdate.new_for_test :created_at => Time.local(2011, 1, 4)
       stub(FlickrUpdate).all { [ most_recent_update, penultimate_update ] }
 
@@ -56,9 +56,10 @@ describe Admin::GuessesController do
       response.should have_text /Top guessers in the last month:/
       response.should have_text /6 photos have been added to the pool since the last update./
       response.should have_tag 'a[href=http://anythreewords.com/gwsf/]', :text => '1234 unfound photos'
+      # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
       participation = '2 people have made correct guesses. ' +
         '1 people have put at least one photo in the pool but not guessed any photos correctly. ' +
-        'That means that at least 3 of our 0 members have participated in the game.'
+        'That means that at least 3 of our 3 members have participated in the game.'
       response.should have_text /#{participation}/
       guessing = "Since the beginning of the game, 1 people have guessed one photo correctly. " +
         "Here are the 1 people who've correctly guessed two or more photos."
