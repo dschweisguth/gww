@@ -65,7 +65,6 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-p response.body
       response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]' do
         with_tag 'img[src=http://farm0.static.flickr.com/server/photo_flickrid_secret.jpg]'
       end
