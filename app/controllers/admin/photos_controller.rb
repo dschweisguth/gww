@@ -141,15 +141,9 @@ class Admin::PhotosController < ApplicationController
   end
 
   def change_game_status
-    photo = Photo.find params[:id], :include => :revelation
-    photo.game_status = params[:commit]
-    Photo.transaction do
-      Guess.delete_all [ "photo_id = ?", photo.id ]
-      Revelation.delete photo.revelation.id if photo.revelation
-      photo.save!
-    end
+    Photo.change_game_status params[:id], params[:commit]
     expire_cached_pages
-    redirect_to :action => 'edit', :id => photo, :nocomment => :true
+    redirect_to :action => 'edit', :id => params[:id], :nocomment => :true
   end
 
   def add_guess

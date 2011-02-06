@@ -161,4 +161,15 @@ class Photo < ActiveRecord::Base
     comments
   end
 
+  def self.change_game_status(id, status)
+    transaction do
+      Guess.delete_all [ "photo_id = ?", id ]
+      Revelation.delete_all [ "photo_id = ?", id ]
+      photo = find id
+      photo.game_status = status
+      photo.save!
+    end
+
+  end
+
 end
