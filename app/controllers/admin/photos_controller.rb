@@ -156,7 +156,7 @@ class Admin::PhotosController < ApplicationController
     end
     comment_id = comment[:id]
     if params[:commit] == 'Add this guess or revelation'
-      Photo.add_guess photo_id, comment_id, params[:person][:username]
+      Photo.add_answer photo_id, comment_id, params[:person][:username]
     else
       begin
         Photo.remove_answer photo_id, comment_id

@@ -170,7 +170,7 @@ class Photo < ActiveRecord::Base
 
   end
 
-  def self.add_guess(photo_id, comment_id, username)
+  def self.add_answer(photo_id, comment_id, username)
     Photo.transaction do
       photo = Photo.find photo_id, :include => [ :person, :revelation ]
       comment = Comment.find comment_id
