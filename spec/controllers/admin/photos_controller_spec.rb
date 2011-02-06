@@ -107,13 +107,32 @@ describe Admin::PhotosController do
   end
 
   describe '.update_answer' do
-    it 'adds a guess' do
+    it 'adds a guess or revelation' do
       mock(Photo).add_answer '1', 2, ''
       stub_expire_cached_pages
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Add this guess or revelation'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+
+    it 'removes a guess or revelation' do
+      mock(Photo).remove_answer '1', 2
+      stub_expire_cached_pages
+      get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
+        :commit => 'Remove this guess or revelation'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+
+    it 'complains if the user removes a guess or revelation incorrectly' do
+      mock(Photo).remove_answer('1', 2) { raise Photo::RevealError, 'the message' }
+      stub_expire_cached_pages
+      get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
+        :commit => 'Remove this guess or revelation'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+      flash[:notice].should == 'the message'
     end
 
     it 'punts if the user tries to add an answer without choosing a comment' do
