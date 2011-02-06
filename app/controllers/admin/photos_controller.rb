@@ -145,7 +145,7 @@ class Admin::PhotosController < ApplicationController
       comments_xml = parsed_xml['comments'][0]
       if comments_xml['comment'] && ! comments_xml['comment'].empty?
         expire_cached_pages
-        Photo.transaction do
+        Comment.transaction do
           Comment.delete_all 'photo_id = ' + photo.id.to_s
 	  comments_xml['comment'].each do |comment_xml|
 	    comment = Comment.new
