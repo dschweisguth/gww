@@ -440,7 +440,7 @@ describe Photo do
 
   end
 
-  describe '.load_comments' do
+  describe '#load_comments' do
     before do
       @photo = Photo.make!
     end
@@ -492,4 +492,27 @@ describe Photo do
 
   end
 
+  describe '.change_game_status' do
+    it "changes the photo's status" do
+      photo = Photo.make!
+      Photo.change_game_status photo.id, 'unconfirmed'
+      Photo.find(photo.id).game_status.should == 'unconfirmed'
+    end
+
+    it "deletes existing guesses" do
+      photo = Photo.make!
+      Guess.make! :photo => photo
+      Photo.change_game_status photo.id, 'unconfirmed'
+      Guess.find_all_by_photo_id(photo.id).should == []
+    end
+
+    it "deletes existing guesses" do
+      photo = Photo.make!
+      Revelation.make! :photo => photo
+      Photo.change_game_status photo.id, 'unconfirmed'
+      Revelation.find_all_by_photo_id(photo.id).should == []
+    end
+
+  end
+  
 end
