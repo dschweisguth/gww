@@ -143,15 +143,15 @@ class Admin::PhotosController < ApplicationController
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
     expire_cached_pages
-    redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
+    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
   def update_answer
     photo_id = params[:id]
     comment = params[:comment]
     if comment.nil?
-      flash[:notice] = 'Please select a comment before adding or removing a guess.'
-      redirect_to :action => 'edit', :id => photo_id, :nocomment => 'true'
+      flash[:notice] = 'Please select a comment before adding or removing a guess or revelation.'
+      redirect_to edit_photo_path :id => photo_id, :nocomment => 'true'
       return
     end
     comment_id = comment[:id]
@@ -165,11 +165,11 @@ class Admin::PhotosController < ApplicationController
       end
     end
     expire_cached_pages
-    redirect_to :action => 'edit', :id => photo_id, :nocomment => 'true'
+    redirect_to edit_photo_path :id => photo_id, :nocomment => 'true'
   end
 
   def reload_comments
-    redirect_to :action => 'edit', :id => params[:id]
+    redirect_to edit_photo_path :id => params[:id]
   end
 
   def destroy
