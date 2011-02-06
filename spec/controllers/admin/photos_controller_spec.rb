@@ -116,6 +116,13 @@ describe Admin::PhotosController do
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
 
+    it 'punts if the user tries to add an answer without choosing a comment' do
+      get :update_answer, :id => '1', :person => { :username => '' },
+        :commit => 'Add this guess or revelation'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+
   end
 
   def stub_expire_cached_pages
