@@ -147,22 +147,28 @@ class Admin::PhotosController < ApplicationController
   end
 
   def add_guess
-    if params[:comment].nil?
+    photo_id = params[:id]
+    comment_hash = params[:comment]
+
+    if comment_hash.nil?
       flash[:notice] =
         'Please select a comment before adding or removing a guess.'
-      redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
+      redirect_to :action => 'edit', :id => photo_id, :nocomment => 'true'
       return
     end
 
+    comment_id = comment_hash[:id]
+    username = params[:person][:username]
+
     if params[:commit] == 'Add this guess or revelation'
       Photo.transaction do
-        photo = Photo.find params[:id], :include => [ :person, :revelation ]
-        comment = Comment.find params[:comment][:id]
+        photo = Photo.find photo_id, :include => [ :person, :revelation ]
+        comment = Comment.find comment_id
 
-        if params[:person][:username] != ''
-          guesser = Person.find_by_username params[:person][:username]
+        if username != ''
+          guesser = Person.find_by_username username
           guesser_flickrid =
-            Comment.find_by_username(params[:person][:username]).flickrid
+            Comment.find_by_username(username).flickrid
         else
           guesser = Person.find_by_flickrid comment[:flickrid]
           guesser_flickrid = comment.flickrid
@@ -214,8 +220,8 @@ class Admin::PhotosController < ApplicationController
       end
     else # Remove this guess or revelation
       Photo.transaction do
-        photo = Photo.find params[:id], :include => [ :person, :revelation ]
-        comment = Comment.find params[:comment][:id]
+        photo = Photo.find photo_id, :include => [ :person, :revelation ]
+        comment = Comment.find comment_id
 
         guesser = Person.find_by_flickrid comment[:flickrid]
         if guesser
@@ -251,7 +257,7 @@ class Admin::PhotosController < ApplicationController
     end
 
     expire_cached_pages
-    redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
+    redirect_to :action => 'edit', :id => photo_id, :nocomment => 'true'
   end
 
   def reload_comments
