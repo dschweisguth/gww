@@ -13,7 +13,7 @@ describe Photo do
   describe '#person' do
     it { should belong_to :person }
   end
-  
+
   describe '#comments' do
     it { should have_many :comments }
   end
@@ -438,6 +438,28 @@ describe Photo do
       Photo.multipoint.should == []
     end
 
+  end
+
+  describe '.load_comments' do
+    it 'loads comments from Flickr' do
+      photo = Photo.create_for_test!
+      parsed_xml = {
+        'comments' => [ {
+          'comment' => [ {
+            'author' => 'commenter_flickrid',
+            'authorname' => 'commenter_username',
+            'content' => 'comment text'
+          } ]
+        } ]
+      }
+      stub(FlickrCredentials).request { parsed_xml }
+      comments = photo.load_comments
+      comments.length.should == 1
+      comment = comments[0]
+      comment.flickrid.should == 'commenter_flickrid'
+      comment.username.should == 'commenter_username'
+      comment.comment_text.should == 'comment text'
+    end
   end
 
 end
