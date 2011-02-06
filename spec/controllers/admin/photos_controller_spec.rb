@@ -58,7 +58,7 @@ describe Admin::PhotosController do
       stub(Photo).find(photo.id.to_s, anything) { photo }
       #noinspection RubyResolve
       mock(Comment).find_all_by_photo_id(photo) { [ Comment.new_for_test ] }
-      get :edit, :id => photo.id, :nocomment => ''
+      get :edit, :id => photo.id, :nocomment => 'true'
 
       #noinspection RubyResolve
       response.should be_success
