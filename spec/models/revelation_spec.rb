@@ -24,15 +24,15 @@ describe Revelation do
 
   describe '.longest' do
     it 'lists revelations' do
-      revelation = Revelation.create_for_test!
+      revelation = Revelation.make!
       Revelation.longest.should == [ revelation ]
     end
 
     it 'sorts revelations by the time from post to revelation' do
-      photo1 = Photo.create_for_test! :label => 1, :dateadded => Time.utc(2000)
-      revelation1 = Revelation.create_for_test! :photo => photo1, :revealed_at => Time.utc(2001)
-      photo2 = Photo.create_for_test! :label => 2, :dateadded => Time.utc(2002)
-      revelation2 = Revelation.create_for_test! :photo => photo2, :revealed_at => Time.utc(2004)
+      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2000)
+      revelation1 = Revelation.make! :photo => photo1, :revealed_at => Time.utc(2001)
+      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2002)
+      revelation2 = Revelation.make! :photo => photo2, :revealed_at => Time.utc(2004)
       Revelation.longest.should == [ revelation2, revelation1 ]
     end
 
@@ -40,14 +40,14 @@ describe Revelation do
 
   describe '.all_since' do
     it 'returns all revelations since the most recent Flickr update' do
-      revelation = Revelation.create_for_test! :added_at => Time.utc(2011, 1, 2)
-      update = FlickrUpdate.new_for_test :created_at => Time.utc(2011)
+      revelation = Revelation.make! :added_at => Time.utc(2011, 1, 2)
+      update = FlickrUpdate.make :created_at => Time.utc(2011)
       Revelation.all_since(update).should == [ revelation ]
     end
 
     it 'ignores revelations made before the most recent Flickr update' do
-      Revelation.create_for_test! :added_at => Time.utc(2011)
-      update = FlickrUpdate.new_for_test :created_at => Time.utc(2011, 1, 2)
+      Revelation.make! :added_at => Time.utc(2011)
+      update = FlickrUpdate.make :created_at => Time.utc(2011, 1, 2)
       Revelation.all_since(update).should == []
     end
 

@@ -1,9 +1,9 @@
 module ModelFactory
-  def new_for_test(options = {})
+  def make(options = {})
     make_for_test :new, options
   end
 
-  def create_for_test!(options = {})
+  def make!(options = {})
     make_for_test :create, options
   end
 
@@ -59,7 +59,7 @@ class Photo
     if ! caller_options[:person]
       person_options = {:label => (padded_label + 'poster')}
       options[:person] = new_or_create == :new \
-        ? Person.new_for_test(person_options) : Person.create_for_test!(person_options)
+        ? Person.make(person_options) : Person.make!(person_options)
     end
     options.merge! caller_options
     new_or_create == :new ? Photo.new(options) : Photo.create!(options)
@@ -79,7 +79,7 @@ class Comment
     if ! caller_options[:photo]
       photo_options = { :label => (padded_label + 'comment') }
       options[:photo] = new_or_create == :new \
-        ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
+        ? Photo.make(photo_options) : Photo.make!(photo_options)
     end
     options.merge! caller_options
     new_or_create == :new ? Comment.new(options) : Comment.create!(options)
@@ -100,13 +100,13 @@ class Guess
         photo_options[:person] = caller_options[:photo_person]
       end
       options[:photo] = new_or_create == :new \
-        ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
+        ? Photo.make(photo_options) : Photo.make!(photo_options)
     end
     caller_options.delete :photo_person
     if ! caller_options[:person]
       person_options = {:label => (padded_label + 'guesser')}
       options[:person] = new_or_create == :new \
-        ? Person.new_for_test(person_options) : Person.create_for_test!(person_options)
+        ? Person.make(person_options) : Person.make!(person_options)
     end
     options.merge! caller_options
     new_or_create == :new ? Guess.new(options) : Guess.create!(options)
@@ -125,7 +125,7 @@ class Revelation
     if ! caller_options[:photo]
       photo_options = { :label => (padded_label + 'revelation') }
       options[:photo] = new_or_create == :new \
-        ? Photo.new_for_test(photo_options) : Photo.create_for_test!(photo_options)
+        ? Photo.make(photo_options) : Photo.make!(photo_options)
     end
     options.merge! caller_options
     new_or_create == :new ? Revelation.new(options) : Revelation.create!(options)

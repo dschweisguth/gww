@@ -9,7 +9,7 @@ describe PeopleController do
       sorted_by_param = 'score'
       order_param = '+'
 
-      person = Person.create_for_test!
+      person = Person.make!
       person[:guess_count] = 1
       person[:post_count] = 1
       person[:guesses_per_day] = 1.0
@@ -40,7 +40,7 @@ describe PeopleController do
             (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
           [ Period.new report_day.beginning_of_year, report_day + 1.day ]
       ]
-      guess = Guess.create_for_test! :guessed_at => report_day
+      guess = Guess.make! :guessed_at => report_day
       (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ guess.person ] }
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
@@ -68,7 +68,7 @@ describe PeopleController do
 
   describe '#show' do
     it 'renders the page' do
-      person = Person.new_for_test
+      person = Person.make
       stub(person).id { 1 }
       person[:score] = 1 # for the high_scorers methods
 
@@ -79,43 +79,43 @@ describe PeopleController do
       stub(Person).high_scorers(7) { [ person ] }
       stub(Person).high_scorers(30) { [ person ] }
 
-      first_guess = Guess.new_for_test :label => 'first_guess'
+      first_guess = Guess.make :label => 'first_guess'
       first_guess[:place] = 1
       stub(Guess).first { first_guess }
 
-      first_post = Photo.new_for_test :label => 'first_post'
+      first_post = Photo.make :label => 'first_post'
       first_post[:place] = 1
       stub(Photo).first { first_post }
 
-      oldest_guess = Guess.new_for_test :label => 'oldest_guess'
+      oldest_guess = Guess.make :label => 'oldest_guess'
       oldest_guess[:place] = 1
       stub(Guess).oldest(person) { oldest_guess }
 
-      fastest_guess = Guess.new_for_test :label => 'fastest_guess'
+      fastest_guess = Guess.make :label => 'fastest_guess'
       fastest_guess[:place] = 1
       stub(Guess).fastest(person) { fastest_guess }
 
-      longest_lasting_guess = Guess.new_for_test :label => 'longest_lasting_guess'
+      longest_lasting_guess = Guess.make :label => 'longest_lasting_guess'
       longest_lasting_guess[:place] = 1
       stub(Guess).longest_lasting(person) { longest_lasting_guess }
 
-      shortest_lasting_guess = Guess.new_for_test :label => 'shortest_lasting_guess'
+      shortest_lasting_guess = Guess.make :label => 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id, anything) \
-        { [Guess.new_for_test(:label => 'all1'), Guess.new_for_test(:label => 'all2') ] }
+        { [Guess.make(:label => 'all1'), Guess.make(:label => 'all2') ] }
 
-      stub(Photo).all { [ Photo.new_for_test :label => 'unfound' ] }
+      stub(Photo).all { [ Photo.make :label => 'unfound' ] }
 
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
-        { [ Photo.new_for_test :label => 'revealed' ] }
+        { [ Photo.make :label => 'revealed' ] }
 
-      found1 = Guess.new_for_test :label => 'found1'
+      found1 = Guess.make :label => 'found1'
       found1.photo.guesses << found1
-      found2 = Guess.new_for_test :label => 'found2'
+      found2 = Guess.make :label => 'found2'
       found2.photo.guesses << found2
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(person.id, anything) { [ found1.photo, found2.photo ] }
@@ -137,11 +137,11 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
-      person = Person.new_for_test
+      person = Person.make
       stub(person).id { 1 }
       stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.new_for_test :person => person ] }
+      stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make :person => person ] }
       get :guesses, :id => person.id
 
       #noinspection RubyResolve
@@ -154,11 +154,11 @@ describe PeopleController do
 
   describe '#posts' do
     it 'renders the page' do
-      person = Person.new_for_test
+      person = Person.make
       stub(person).id { 1 }
       stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ Photo.new_for_test :person => person ] }
+      stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ Photo.make :person => person ] }
       get :posts, :id => person.id
 
       #noinspection RubyResolve
@@ -171,12 +171,12 @@ describe PeopleController do
 
   describe '#comments' do
     it 'renders the page' do
-      person = Person.new_for_test
+      person = Person.make
       stub(person).id { 1 }
       stub(Person).find(person.id.to_s) { person }
 
       #noinspection RubyResolve
-      photo = Photo.new_for_test
+      photo = Photo.make
       stub(Comment).find_by_sql { [ photo ] }
 
       paginated_photos = [ photo ]

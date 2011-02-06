@@ -10,7 +10,7 @@ describe PhotosController do
       page_param = '1'
 
       # Mock methods from will_paginate's version of Array
-      paginated_photos = [ Photo.new_for_test ]
+      paginated_photos = [ Photo.make ]
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).all_sorted_and_paginated(sorted_by_param, order_param, page_param, 30) { paginated_photos }
@@ -26,7 +26,7 @@ describe PhotosController do
 
   describe '#unfound' do
     it 'renders the page' do
-      stub(Photo).unfound_or_unconfirmed { [ Photo.new_for_test ] }
+      stub(Photo).unfound_or_unconfirmed { [ Photo.make ] }
       get :unfound
 
       #noinspection RubyResolve
@@ -40,8 +40,8 @@ describe PhotosController do
 
   describe '#unfound_data' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { FlickrUpdate.new_for_test :created_at => Time.utc(2011) }
-      stub(Photo).unfound_or_unconfirmed { [ Photo.new_for_test ] }
+      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.utc(2011) }
+      stub(Photo).unfound_or_unconfirmed { [ Photo.make ] }
       get :unfound_data
 
       #noinspection RubyResolve
@@ -55,13 +55,13 @@ describe PhotosController do
 
   describe '#show' do
     it 'renders the page' do
-      photo = Photo.new_for_test :dateadded => Time.local(2010)
+      photo = Photo.make :dateadded => Time.local(2010)
       stub(photo).id { 1 }
-      guess = Guess.new_for_test :photo => photo
+      guess = Guess.make :photo => photo
       photo.guesses << guess
       stub(Photo).find { photo }
       #noinspection RubyResolve
-      stub(Comment).find_all_by_photo_id(photo) { [ Comment.new_for_test :photo => photo ] }
+      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :photo => photo ] }
       get :show, :id => photo.id
 
       #noinspection RubyResolve
@@ -83,7 +83,7 @@ describe PhotosController do
 
   describe '#view_in_gww' do
     it 'redirects to the given photo' do
-      photo = Photo.new_for_test
+      photo = Photo.make
       #noinspection RubyResolve
       stub(Photo).find_by_flickrid('0123456789') { photo }
       get :view_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'

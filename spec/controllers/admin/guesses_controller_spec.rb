@@ -7,25 +7,25 @@ describe Admin::GuessesController do
     it 'renders the page' do
       stub(Time).now { Time.local(2011, 1, 5) }
 
-      most_recent_update = FlickrUpdate.new_for_test :created_at => Time.local(2011), :member_count => 3
-      penultimate_update = FlickrUpdate.new_for_test :created_at => Time.local(2011, 1, 4)
+      most_recent_update = FlickrUpdate.make :created_at => Time.local(2011), :member_count => 3
+      penultimate_update = FlickrUpdate.make :created_at => Time.local(2011, 1, 4)
       stub(FlickrUpdate).all { [ most_recent_update, penultimate_update ] }
 
-      person0 = Person.new_for_test
-      person1 = Person.new_for_test
-      person2 = Person.new_for_test
+      person0 = Person.make
+      person1 = Person.make
+      person2 = Person.make
 
-      guess11 = Guess.new_for_test :label => 11, :person => person1
-      guess21 = Guess.new_for_test :label => 21, :person => person2
-      guess22 = Guess.new_for_test :label => 22, :person => person2
+      guess11 = Guess.make :label => 11, :person => person1
+      guess21 = Guess.make :label => 21, :person => person2
+      guess22 = Guess.make :label => 22, :person => person2
       mock(Guess).all_since(most_recent_update) { [ guess11, guess21, guess22 ] }
 
-      revealed_photo11 = Photo.new_for_test :label => 11, :person => person1
-      revealed_photo21 = Photo.new_for_test :label => 21, :person => person2
-      revealed_photo22 = Photo.new_for_test :label => 22, :person => person2
-      revelation11 = Revelation.new_for_test :label => 11, :photo => revealed_photo11
-      revelation21 = Revelation.new_for_test :label => 21, :photo => revealed_photo21
-      revelation22 = Revelation.new_for_test :label => 22,  :photo => revealed_photo22
+      revealed_photo11 = Photo.make :label => 11, :person => person1
+      revealed_photo21 = Photo.make :label => 21, :person => person2
+      revealed_photo22 = Photo.make :label => 22, :person => person2
+      revelation11 = Revelation.make :label => 11, :photo => revealed_photo11
+      revelation21 = Revelation.make :label => 21, :photo => revealed_photo21
+      revelation22 = Revelation.make :label => 22,  :photo => revealed_photo22
       mock(Revelation).all_since(most_recent_update) { [ revelation11, revelation21, revelation22 ] }
 
       stub(Person).high_scorers(7) { [ person2, person1 ] }

@@ -5,7 +5,7 @@ describe RevelationsController do
 
   describe '#longest' do
     it 'renders the page' do
-      stub(Revelation).longest { [ Revelation.new_for_test ] }
+      stub(Revelation).longest { [ Revelation.make ] }
       get :longest
 
       #noinspection RubyResolve

@@ -5,9 +5,9 @@ describe GuessesController do
 
   describe '#longest_and_shortest' do
     it 'renders the page' do
-      longest = [ Guess.new_for_test :label => 1 ]
+      longest = [ Guess.make :label => 1 ]
       stub(Guess).longest { longest }
-      shortest = [ Guess.new_for_test :label => 2 ]
+      shortest = [ Guess.make :label => 2 ]
       stub(Guess).shortest { shortest }
       get :longest_and_shortest
 

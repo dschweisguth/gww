@@ -5,7 +5,7 @@ describe RootController do
 
   describe '#index' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { FlickrUpdate.new_for_test :created_at => Time.local(2011) }
+      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011) }
       get :index
 
       #noinspection RubyResolve
@@ -15,7 +15,7 @@ describe RootController do
     end
 
     it 'reports a completed update' do
-      stub(FlickrUpdate).latest { FlickrUpdate.new_for_test :created_at => Time.local(2011), :completed_at => Time.local(2001, 1, 1, 0, 6) }
+      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011), :completed_at => Time.local(2001, 1, 1, 0, 6) }
       get :index
 
       #noinspection RubyResolve
