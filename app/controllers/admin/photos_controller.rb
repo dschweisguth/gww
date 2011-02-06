@@ -132,38 +132,13 @@ class Admin::PhotosController < ApplicationController
   def edit
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
-    @comments = params[:nocomment] \
-      ? Comment.find_all_by_photo_id(@photo) \
-      : load_comments(@photo)
-  end
-
-  def load_comments(photo)
-    comments = []
-    parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
-      'photo_id' => photo.flickrid
-    if parsed_xml['comments']
-      comments_xml = parsed_xml['comments'][0]
-      if comments_xml['comment'] && ! comments_xml['comment'].empty?
-        expire_cached_pages
-        Comment.transaction do
-          Comment.delete_all 'photo_id = ' + photo.id.to_s
-	  comments_xml['comment'].each do |comment_xml|
-	    comment = Comment.new
-	    comment.comment_text = comment_xml['content']
-	    comment.commented_at =
-              Time.at(comment_xml['datecreate'].to_i).getutc
-	    comment.username = comment_xml['authorname']
-	    comment.flickrid = comment_xml['author']
-	    comment.photo_id = photo.id
-	    comment.save!
-	    comments.push comment
-	  end
-	end
-      end
+    if params[:nocomment]
+      @comments = Comment.find_all_by_photo_id(@photo)
+    else
+      @comments = @photo.load_comments
+      expire_cached_pages
     end
-    comments
   end
-  private :load_comments
 
   def change_game_status
     photo = Photo.find params[:id], :include => :revelation

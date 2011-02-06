@@ -135,4 +135,30 @@ class Photo < ActiveRecord::Base
       :include => :person, :order => "lastupdate desc"
   end
 
+  def load_comments
+    comments = []
+    parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList',
+      'photo_id' => flickrid
+    if parsed_xml['comments']
+      comments_xml = parsed_xml['comments'][0]
+      if comments_xml['comment'] && ! comments_xml['comment'].empty?
+        transaction do
+          Comment.delete_all 'photo_id = ' + id.to_s
+	  comments_xml['comment'].each do |comment_xml|
+	    comment = Comment.new
+	    comment.comment_text = comment_xml['content']
+	    comment.commented_at =
+              Time.at(comment_xml['datecreate'].to_i).getutc
+	    comment.username = comment_xml['authorname']
+	    comment.flickrid = comment_xml['author']
+	    comment.photo_id = id
+	    comment.save!
+	    comments.push comment
+	  end
+	end
+      end
+    end
+    comments
+  end
+
 end
