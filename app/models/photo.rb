@@ -184,6 +184,7 @@ class Photo < ActiveRecord::Base
         guesser_flickrid = comment.flickrid
       end
       if !guesser
+        # TODO Dave don't bother to check the username, since we'll update it when we next scrape Flickr?
         result = FlickrCredentials.request 'flickr.people.getInfo',
           'user_id' => guesser_flickrid
         guesser = Person.new

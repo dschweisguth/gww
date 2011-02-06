@@ -524,6 +524,22 @@ describe Photo do
       guess.person_id.should == guesser.id
       guess.guess_text.should == comment.comment_text
     end
+
+    it 'creates the guesser if necessary' do
+      comment = Comment.make!
+      stub(FlickrCredentials).request { {
+        'person' => [ {
+          'id' => 'new_guesser_flickrid',
+          'username' => [ 'new_guesser_username' ]
+        } ]
+      } }
+      Photo.add_answer comment.photo.id, comment.id, ''
+      guess = Guess.find_by_photo_id comment.photo, :include => :person
+      guess.person.flickrid.should == comment.flickrid
+      guess.person.username.should == 'new_guesser_username'
+      guess.guess_text.should == comment.comment_text
+    end
+
   end
 
 end
