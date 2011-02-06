@@ -6,7 +6,7 @@
 
 <% if !flash[:notice].nil? -%>
   <br/>
-  <%= flash[:notice] %><br/>
+  <%= flash[:notice] %><br/><br/>
 <% end -%>
 
 <%= render :partial => 'photos/image_and_status', :locals => { :size => "m" } %>
