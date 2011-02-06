@@ -441,9 +441,23 @@ describe Photo do
   end
 
   describe '.load_comments' do
+    before do
+      @photo = Photo.create_for_test!
+    end
+
     it 'loads comments from Flickr' do
-      photo = Photo.create_for_test!
-      parsed_xml = {
+      stub_request_to_return_one_comment
+      should_be_the_comment_from_the_request @photo.load_comments
+    end
+
+    it 'deletes previous comments' do
+      Comment.create_for_test! :label => 'previous', :photo => @photo
+      stub_request_to_return_one_comment
+      should_be_the_comment_from_the_request @photo.load_comments
+    end
+
+    def stub_request_to_return_one_comment
+      parsed_xml_with_one_comment = {
         'comments' => [ {
           'comment' => [ {
             'author' => 'commenter_flickrid',
@@ -452,14 +466,30 @@ describe Photo do
           } ]
         } ]
       }
-      stub(FlickrCredentials).request { parsed_xml }
-      comments = photo.load_comments
+      stub(FlickrCredentials).request { parsed_xml_with_one_comment }
+    end
+
+    def should_be_the_comment_from_the_request(comments)
       comments.length.should == 1
       comment = comments[0]
       comment.flickrid.should == 'commenter_flickrid'
       comment.username.should == 'commenter_username'
       comment.comment_text.should == 'comment text'
     end
+
+    it 'but not if the photo currently has no comments' do
+      Comment.create_for_test! :label => 'previous', :photo => @photo
+      empty_parsed_xml = {
+        'comments' => [ {
+        } ]
+      }
+      stub(FlickrCredentials).request { empty_parsed_xml }
+      comments = @photo.load_comments
+      # TODO Dave what is the UI consequence of returning 0 comments even if they're still in the database?
+      comments.length.should == 0
+      Comment.count.should == 1
+    end
+
   end
 
 end
