@@ -67,7 +67,7 @@ describe Admin::PhotosController do
       response.should have_tag 'form[action=/admin/photos/change_game_status/1]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_guess/1]' do
+      response.should have_tag 'form[action=/admin/photos/update_answer/1]' do
         with_tag 'strong', :text => 'comment_username says:'
       end
 
@@ -88,7 +88,7 @@ describe Admin::PhotosController do
       response.should have_tag 'form[action=/admin/photos/change_game_status/1]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_guess/1]' do
+      response.should have_tag 'form[action=/admin/photos/update_answer/1]' do
         with_tag 'strong', :text => 'comment_username says:'
       end
 
@@ -106,11 +106,11 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '.add_guess' do
+  describe '.update_answer' do
     it 'adds a guess' do
       mock(Photo).add_answer '1', 2, ''
       stub_expire_cached_pages
-      get :add_guess, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
+      get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Add this guess or revelation'
       # TODO Dave more route convenience methods
       response.should redirect_to :action => 'edit', :id => 1, :nocomment => 'true'

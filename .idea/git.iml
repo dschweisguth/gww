@@ -71,6 +71,7 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.bundle" />
       <excludeFolder url="file://$MODULE_DIR$/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/log" />
       <excludeFolder url="file://$MODULE_DIR$/public/cache" />
       <excludeFolder url="file://$MODULE_DIR$/test/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />

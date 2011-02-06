@@ -146,7 +146,7 @@ class Admin::PhotosController < ApplicationController
     redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
   end
 
-  def add_guess
+  def update_answer
     photo_id = params[:id]
     comment = params[:comment]
     if comment.nil?

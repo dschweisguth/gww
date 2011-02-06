@@ -19,7 +19,7 @@ Change this photo's status from <%= @photo.game_status %> to
 (removes any guesses or revelation)
 <% end %>
 
-<% form_tag :action => 'add_guess', :id => @photo do %>
+<% form_tag :action => 'update_answer', :id => @photo do %>
 <% if ! @comments.empty? -%>
   <table class="comments">
     <tr><th>Choose the correct guess or revelation from the comments below:</th></tr>
