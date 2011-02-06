@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::PhotosController do
   integrate_views
 
-  describe '.update_statistics' do
+  describe '#update_statistics' do
     it 'does some work and redirects to the admin index' do
       mock(Photo).update_statistics
       any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
@@ -14,7 +14,7 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '.unfound' do
+  describe '#unfound' do
     it 'renders the page' do
       photo = Photo.make
       stub(photo).id { 1 }
@@ -26,7 +26,7 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '.inaccessible' do
+  describe '#inaccessible' do
     it 'renders the page' do
       photo = Photo.make
       stub(photo).id { 1 }
@@ -39,7 +39,7 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '.multipoint' do
+  describe '#multipoint' do
     it 'renders the page' do
       photo = Photo.make
       stub(photo).id { 1 }
@@ -51,7 +51,7 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '.edit' do
+  describe '#edit' do
     it 'renders the page without loading comments' do
       photo = Photo.make :dateadded => Time.local(2011)
       stub(photo).id { 1 }
@@ -96,7 +96,7 @@ describe Admin::PhotosController do
 
   end
 
-  describe '.change_game_status' do
+  describe '#change_game_status' do
     it 'changes the game status and reloads the page' do
       mock(Photo).change_game_status('1', 'unconfirmed')
       any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
