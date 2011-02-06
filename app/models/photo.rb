@@ -145,14 +145,12 @@ class Photo < ActiveRecord::Base
         transaction do
           Comment.delete_all 'photo_id = ' + id.to_s
 	  comments_xml['comment'].each do |comment_xml|
-	    comment = Comment.new
-	    comment.comment_text = comment_xml['content']
-	    comment.commented_at =
-              Time.at(comment_xml['datecreate'].to_i).getutc
-	    comment.username = comment_xml['authorname']
-	    comment.flickrid = comment_xml['author']
-	    comment.photo_id = id
-	    comment.save!
+	    comment = Comment.create! \
+              :photo_id => id,
+              :flickrid => comment_xml['author'],
+              :username => comment_xml['authorname'],
+              :comment_text => comment_xml['content'],
+              :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc
 	    comments.push comment
 	  end
 	end
