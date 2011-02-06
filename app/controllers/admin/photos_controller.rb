@@ -125,10 +125,7 @@ class Admin::PhotosController < ApplicationController
 
   caches_page :multipoint
   def multipoint
-    photo_ids = Guess.count(:group => :photo_id).
-      to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
-    @photos = Photo.find_all_by_id photo_ids,
-      :include => :person, :order => "lastupdate desc"
+    @photos = Photo.multipoint
   end
 
   #noinspection RailsParamDefResolve

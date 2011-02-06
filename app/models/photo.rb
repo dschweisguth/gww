@@ -128,4 +128,11 @@ class Photo < ActiveRecord::Base
     end
   end
 
+  def self.multipoint
+    photo_ids = Guess.count(:group => :photo_id).
+      to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
+    Photo.find_all_by_id photo_ids,
+      :include => :person, :order => "lastupdate desc"
+  end
+
 end
