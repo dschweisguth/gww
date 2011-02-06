@@ -514,5 +514,16 @@ describe Photo do
     end
 
   end
-  
+
+  describe '.add_answer' do
+    it 'adds a guess' do
+      guesser = Person.make!
+      comment = Comment.make! :flickrid => guesser.flickrid, :username => guesser.username
+      Photo.add_answer comment.photo.id, comment.id, ''
+      guess = Guess.find_by_photo_id comment.photo
+      guess.person_id.should == guesser.id
+      guess.guess_text.should == comment.comment_text
+    end
+  end
+
 end

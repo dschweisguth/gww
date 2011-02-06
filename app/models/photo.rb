@@ -178,9 +178,9 @@ class Photo < ActiveRecord::Base
       if username != ''
         guesser = Person.find_by_username username
         guesser_flickrid =
-          Comment.find_by_username(username).flickrid
+          Comment.find_by_username(username).flickrid # TODO Dave
       else
-        guesser = Person.find_by_flickrid comment[:flickrid]
+        guesser = Person.find_by_flickrid comment[:flickrid] # TODO Dave
         guesser_flickrid = comment.flickrid
       end
       if !guesser
