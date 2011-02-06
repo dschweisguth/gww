@@ -96,4 +96,14 @@ describe Admin::PhotosController do
 
   end
 
+  describe '.change_game_status' do
+    it 'changes the game status and reloads the page' do
+      mock(Photo).change_game_status('1', 'unconfirmed')
+      any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
+      get :change_game_status, :id => 1, :commit => 'unconfirmed'
+      #noinspection RubyResolve
+      response.should redirect_to :action => 'edit', :id => 1, :nocomment => 'true'
+    end
+  end
+
 end
