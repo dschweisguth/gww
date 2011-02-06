@@ -161,63 +161,7 @@ class Admin::PhotosController < ApplicationController
     username = params[:person][:username]
 
     if params[:commit] == 'Add this guess or revelation'
-      Photo.transaction do
-        photo = Photo.find photo_id, :include => [ :person, :revelation ]
-        comment = Comment.find comment_id
-
-        if username != ''
-          guesser = Person.find_by_username username
-          guesser_flickrid =
-            Comment.find_by_username(username).flickrid
-        else
-          guesser = Person.find_by_flickrid comment[:flickrid]
-          guesser_flickrid = comment.flickrid
-        end
-        if !guesser
-          result = FlickrCredentials.request 'flickr.people.getInfo',
-            'user_id' => guesser_flickrid
-          guesser = Person.new
-          guesser.flickrid = guesser_flickrid
-          guesser.username = result['person'][0]['username'][0]
-          guesser.save!
-        end
-
-        if guesser != photo.person
-          photo.game_status = 'found'
-          photo.save!
-
-          guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
-          if ! guess
-            guess = Guess.new
-            guess.photo_id = photo.id
-            guess.person_id = guesser.id
-            guess.added_at = Time.now.getutc
-          end
-          guess.guessed_at = comment.commented_at
-          guess.guess_text = comment.comment_text
-          guess.save!
-
-          Revelation.delete photo.revelation.id if photo.revelation
-
-        else
-          photo.game_status = 'revealed'
-          photo.save!
-
-          revelation = photo.revelation
-          if ! revelation
-            revelation = Revelation.new
-            revelation.photo_id = photo.id
-            revelation.added_at = Time.now.getutc
-          end
-          revelation.revealed_at = comment.commented_at
-          revelation.revelation_text = comment.comment_text
-          revelation.save!
-
-          Guess.delete_all [ "photo_id = ?", photo.id ]
-
-        end
-
-      end
+      Photo.add_guess photo_id, comment_id, username
     else # Remove this guess or revelation
       Photo.transaction do
         photo = Photo.find photo_id, :include => [ :person, :revelation ]
