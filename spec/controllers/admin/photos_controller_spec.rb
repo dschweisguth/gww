@@ -102,7 +102,7 @@ describe Admin::PhotosController do
       stub_expire_cached_pages
       get :change_game_status, :id => 1, :commit => 'unconfirmed'
       #noinspection RubyResolve
-      response.should redirect_to :action => 'edit', :id => 1, :nocomment => 'true'
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
   end
 
@@ -112,8 +112,8 @@ describe Admin::PhotosController do
       stub_expire_cached_pages
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Add this guess or revelation'
-      # TODO Dave more route convenience methods
-      response.should redirect_to :action => 'edit', :id => 1, :nocomment => 'true'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
 
   end

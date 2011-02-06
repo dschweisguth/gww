@@ -87,7 +87,8 @@ describe PhotosController do
       #noinspection RubyResolve
       stub(Photo).find_by_flickrid('0123456789') { photo }
       get :view_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
-      response.should redirect_to :controller => 'photos', :action => 'show', :id => photo
+      #noinspection RubyResolve
+      response.should redirect_to show_photo_path :id => photo
     end
 
     it 'punts unknown photo Flickr IDs' do
