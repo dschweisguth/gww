@@ -425,4 +425,19 @@ describe Photo do
     end
   end
 
+  describe '.multipoint' do
+    it 'returns photos for which more than one person got a point' do
+      photo = Photo.create_for_test!
+      Guess.create_for_test! :label => 1, :photo => photo
+      Guess.create_for_test! :label => 2, :photo => photo
+      Photo.multipoint.should == [ photo ]
+    end
+
+    it 'ignores photos for which only one person got a point' do
+      Guess.create_for_test!
+      Photo.multipoint.should == []
+    end
+
+  end
+
 end
