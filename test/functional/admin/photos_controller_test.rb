@@ -27,17 +27,6 @@ class Admin::PhotosControllerTest < ActionController::TestCase
 
   end
 
-  def test_edit
-    get :edit, :id => @photo.id
-
-    assert_response :success
-    assert_template 'edit'
-    assert_not_nil assigns(:photo)
-    assert assigns(:photo).valid?
-    # TODO assert other stuff in model
-
-  end
-
   def test_destroy
     assert_not_nil Photo.find(@photo.id)
 
