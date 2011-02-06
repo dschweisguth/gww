@@ -6,7 +6,7 @@ describe Admin::PhotosController do
   describe '#update_statistics' do
     it 'does some work and redirects to the admin index' do
       mock(Photo).update_statistics
-      any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
+      stub_expire_cached_pages
       get :update_statistics
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
@@ -78,7 +78,7 @@ describe Admin::PhotosController do
       stub(photo).id { 1 }
       stub(Photo).find(photo.id.to_s, anything) { photo }
       stub(photo).load_comments { [ Comment.make ] }
-      any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
+      stub_expire_cached_pages
       get :edit, :id => photo.id
 
       #noinspection RubyResolve
@@ -99,11 +99,27 @@ describe Admin::PhotosController do
   describe '#change_game_status' do
     it 'changes the game status and reloads the page' do
       mock(Photo).change_game_status('1', 'unconfirmed')
-      any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
+      stub_expire_cached_pages
       get :change_game_status, :id => 1, :commit => 'unconfirmed'
       #noinspection RubyResolve
       response.should redirect_to :action => 'edit', :id => 1, :nocomment => 'true'
     end
+  end
+
+  describe '.add_guess' do
+    it 'adds a guess' do
+      mock(Photo).add_answer '1', 2, ''
+      stub_expire_cached_pages
+      get :add_guess, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
+        :commit => 'Add this guess or revelation'
+      # TODO Dave more route convenience methods
+      response.should redirect_to :action => 'edit', :id => 1, :nocomment => 'true'
+    end
+
+  end
+
+  def stub_expire_cached_pages
+    any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
   end
 
 end
