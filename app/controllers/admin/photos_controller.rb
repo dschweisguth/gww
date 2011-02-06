@@ -143,14 +143,14 @@ class Admin::PhotosController < ApplicationController
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
     expire_cached_pages
-    redirect_to :action => 'edit', :id => params[:id], :nocomment => :true
+    redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
   end
 
   def add_guess
     if params[:comment].nil?
       flash[:notice] =
         'Please select a comment before adding or removing a guess.'
-      redirect_to :action => 'edit', :id => params[:id], :nocomment => :true
+      redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
       return
     end
 
@@ -247,7 +247,7 @@ class Admin::PhotosController < ApplicationController
     end
 
     expire_cached_pages
-    redirect_to :action => 'edit', :id => photo, :nocomment => :true
+    redirect_to :action => 'edit', :id => photo, :nocomment => 'true'
   end
 
   def reload_comments
