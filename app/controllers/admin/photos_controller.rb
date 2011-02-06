@@ -148,28 +148,22 @@ class Admin::PhotosController < ApplicationController
 
   def add_guess
     photo_id = params[:id]
-    comment_hash = params[:comment]
-
-    if comment_hash.nil?
-      flash[:notice] =
-        'Please select a comment before adding or removing a guess.'
+    comment = params[:comment]
+    if comment.nil?
+      flash[:notice] = 'Please select a comment before adding or removing a guess.'
       redirect_to :action => 'edit', :id => photo_id, :nocomment => 'true'
       return
     end
-
-    comment_id = comment_hash[:id]
-    username = params[:person][:username]
-
+    comment_id = comment[:id]
     if params[:commit] == 'Add this guess or revelation'
-      Photo.add_guess photo_id, comment_id, username
-    else # Remove this guess or revelation
+      Photo.add_guess photo_id, comment_id, params[:person][:username]
+    else
       begin
         Photo.remove_answer photo_id, comment_id
       rescue Photo::RevealError => e
         flash[:notice] = e.message
       end
     end
-
     expire_cached_pages
     redirect_to :action => 'edit', :id => photo_id, :nocomment => 'true'
   end
