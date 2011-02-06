@@ -39,4 +39,16 @@ describe Admin::PhotosController do
     end
   end
 
+  describe '.multipoint' do
+    it 'renders the page' do
+      photo = Photo.new_for_test :id => 1
+      stub(photo).id { 1 }
+      stub(Photo).multipoint { [ photo ] }
+      get :multipoint
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_tag 'a[href=/admin/photos/edit/1]', :text => 'Edit'
+    end
+  end
+
 end
