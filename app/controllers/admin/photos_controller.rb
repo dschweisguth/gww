@@ -163,40 +163,10 @@ class Admin::PhotosController < ApplicationController
     if params[:commit] == 'Add this guess or revelation'
       Photo.add_guess photo_id, comment_id, username
     else # Remove this guess or revelation
-      Photo.transaction do
-        photo = Photo.find photo_id, :include => [ :person, :revelation ]
-        comment = Comment.find comment_id
-
-        guesser = Person.find_by_flickrid comment[:flickrid]
-        if guesser
-          if guesser.id == photo.person_id
-            if photo.revelation
-              photo.game_status = 'unfound'
-              photo.save!
-              photo.revelation.destroy
-            else
-              flash[:notice] =
-                'That comment has not been recorded as a revelation.'
-            end
-          else
-            guess = Guess.find_by_person_id_and_guess_text guesser.id,
-              comment.comment_text
-            if guess
-              guess_count =
-                Guess.count :conditions => [ "photo_id = ?", photo.id ]
-              if guess_count == 1
-                photo.game_status = 'unfound'
-                photo.save!
-              end
-              guess.destroy
-            else
-              flash[:notice] = 'That comment has not been recorded as a guess.'
-            end
-          end
-        else
-          flash[:notice] =
-            'That comment has not been recorded as a guess or revelation.'
-        end
+      begin
+        Photo.remove_answer photo_id, comment_id
+      rescue Photo::RevealError => e
+        flash[:notice] = e.message
       end
     end
 
