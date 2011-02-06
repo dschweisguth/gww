@@ -540,6 +540,17 @@ describe Photo do
       guess.guess_text.should == comment.comment_text
     end
 
+    it 'gives the point to another user' do
+      scorer = Person.make! :label => 'scorer'
+      scorer_comment = Comment.make! :label => 'scorer', :flickrid => scorer.flickrid, :username => scorer.username
+      answer_comment = Comment.make!
+      Photo.add_answer answer_comment.photo.id, answer_comment.id, scorer_comment.username
+      guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
+      guess.person.flickrid.should == scorer_comment.flickrid
+      guess.person.username.should == scorer_comment.username
+      guess.guess_text.should == answer_comment.comment_text
+    end
+
   end
 
 end
