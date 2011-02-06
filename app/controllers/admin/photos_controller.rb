@@ -160,7 +160,7 @@ class Admin::PhotosController < ApplicationController
     else
       begin
         Photo.remove_answer photo_id, comment_id
-      rescue Photo::RevealError => e
+      rescue Photo::RemoveAnswerError => e
         flash[:notice] = e.message
       end
     end

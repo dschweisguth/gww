@@ -243,7 +243,7 @@ class Photo < ActiveRecord::Base
             photo.save!
             photo.revelation.destroy
           else
-            raise RevealError, 'That comment has not been recorded as a revelation.'
+            raise RemoveAnswerError, 'That comment has not been recorded as a revelation.'
           end
         else
           guess = Guess.find_by_person_id_and_guess_text guesser.id,
@@ -257,16 +257,16 @@ class Photo < ActiveRecord::Base
             end
             guess.destroy
           else
-            raise RevealError, 'That comment has not been recorded as a guess.'
+            raise RemoveAnswerError, 'That comment has not been recorded as a guess.'
           end
         end
       else
-        raise RevealError, 'That comment has not been recorded as a guess or revelation.'
+        raise RemoveAnswerError, 'That comment has not been recorded as a guess or revelation.'
       end
     end
   end
 
-  class RevealError < StandardError
+  class RemoveAnswerError < StandardError
   end
 
 end
