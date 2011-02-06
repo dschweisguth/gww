@@ -154,100 +154,104 @@ class Admin::PhotosController < ApplicationController
       return
     end
 
-    photo = Photo.find params[:id], :include => [ :person, :revelation ]
-    comment = Comment.find params[:comment][:id]
+    if params[:commit] == 'Add this guess or revelation'
+      Photo.transaction do
+        photo = Photo.find params[:id], :include => [ :person, :revelation ]
+        comment = Comment.find params[:comment][:id]
 
-    Photo.transaction do
-      if params[:commit] == 'Add this guess or revelation'
+        if params[:person][:username] != ''
+          guesser = Person.find_by_username params[:person][:username]
+          guesser_flickrid =
+            Comment.find_by_username(params[:person][:username]).flickrid
+        else
+          guesser = Person.find_by_flickrid comment[:flickrid]
+          guesser_flickrid = comment.flickrid
+        end
+        if !guesser
+          result = FlickrCredentials.request 'flickr.people.getInfo',
+            'user_id' => guesser_flickrid
+          guesser = Person.new
+          guesser.flickrid = guesser_flickrid
+          guesser.username = result['person'][0]['username'][0]
+          guesser.save!
+        end
 
-	if params[:person][:username] != ''
-	  guesser = Person.find_by_username params[:person][:username]
-	  guesser_flickrid =
-	    Comment.find_by_username(params[:person][:username]).flickrid
-	else
-	  guesser = Person.find_by_flickrid comment[:flickrid]
-	  guesser_flickrid = comment.flickrid
-	end
-	if !guesser
-	  result = FlickrCredentials.request 'flickr.people.getInfo',
-	    'user_id' => guesser_flickrid
-	  guesser = Person.new
-	  guesser.flickrid = guesser_flickrid
-	  guesser.username = result['person'][0]['username'][0]
-	  guesser.save!
-	end
+        if guesser != photo.person
+          photo.game_status = 'found'
+          photo.save!
 
-	if guesser != photo.person
-	  photo.game_status = 'found'
-	  photo.save!
+          guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
+          if ! guess
+            guess = Guess.new
+            guess.photo_id = photo.id
+            guess.person_id = guesser.id
+            guess.added_at = Time.now.getutc
+          end
+          guess.guessed_at = comment.commented_at
+          guess.guess_text = comment.comment_text
+          guess.save!
 
-	  guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
-	  if ! guess
-	    guess = Guess.new
-	    guess.photo_id = photo.id
-	    guess.person_id = guesser.id
-	    guess.added_at = Time.now.getutc
-	  end
-	  guess.guessed_at = comment.commented_at
-	  guess.guess_text = comment.comment_text
-	  guess.save!
+          Revelation.delete photo.revelation.id if photo.revelation
 
-	  Revelation.delete photo.revelation.id if photo.revelation
+        else
+          photo.game_status = 'revealed'
+          photo.save!
 
-	else
-	  photo.game_status = 'revealed'
-	  photo.save!
+          revelation = photo.revelation
+          if ! revelation
+            revelation = Revelation.new
+            revelation.photo_id = photo.id
+            revelation.added_at = Time.now.getutc
+          end
+          revelation.revealed_at = comment.commented_at
+          revelation.revelation_text = comment.comment_text
+          revelation.save!
 
-	  revelation = photo.revelation
-	  if ! revelation
-	    revelation = Revelation.new
-	    revelation.photo_id = photo.id
-	    revelation.added_at = Time.now.getutc
-	  end
-	  revelation.revealed_at = comment.commented_at
-	  revelation.revelation_text = comment.comment_text
-	  revelation.save!
+          Guess.delete_all [ "photo_id = ?", photo.id ]
 
-	  Guess.delete_all [ "photo_id = ?", photo.id ]
+        end
 
-	end
+      end
+    else # Remove this guess or revelation
+      Photo.transaction do
+        photo = Photo.find params[:id], :include => [ :person, :revelation ]
+        comment = Comment.find params[:comment][:id]
 
-      else # Remove this guess or revelation
-	guesser = Person.find_by_flickrid comment[:flickrid]
-	if guesser
-	  if guesser.id == photo.person_id
-	    if photo.revelation
-	      photo.game_status = 'unfound'
-	      photo.save!
-	      photo.revelation.destroy
-	    else
-	      flash[:notice] =
-		'That comment has not been recorded as a revelation.'
-	    end
-	  else
-	    guess = Guess.find_by_person_id_and_guess_text guesser.id,
-	      comment.comment_text
-	    if guess
-	      guess_count =
-		Guess.count :conditions => [ "photo_id = ?", photo.id ]
-	      if guess_count == 1
-		photo.game_status = 'unfound'
-		photo.save!
-	      end
-	      guess.destroy
-	    else
-	      flash[:notice] = 'That comment has not been recorded as a guess.'
-	    end
-	  end
-	else
-	  flash[:notice] =
-	    'That comment has not been recorded as a guess or revelation.'
-	end
+        guesser = Person.find_by_flickrid comment[:flickrid]
+        if guesser
+          if guesser.id == photo.person_id
+            if photo.revelation
+              photo.game_status = 'unfound'
+              photo.save!
+              photo.revelation.destroy
+            else
+              flash[:notice] =
+                'That comment has not been recorded as a revelation.'
+            end
+          else
+            guess = Guess.find_by_person_id_and_guess_text guesser.id,
+              comment.comment_text
+            if guess
+              guess_count =
+                Guess.count :conditions => [ "photo_id = ?", photo.id ]
+              if guess_count == 1
+                photo.game_status = 'unfound'
+                photo.save!
+              end
+              guess.destroy
+            else
+              flash[:notice] = 'That comment has not been recorded as a guess.'
+            end
+          end
+        else
+          flash[:notice] =
+            'That comment has not been recorded as a guess or revelation.'
+        end
       end
     end
 
     expire_cached_pages
-    redirect_to :action => 'edit', :id => photo, :nocomment => 'true'
+    redirect_to :action => 'edit', :id => params[:id], :nocomment => 'true'
   end
 
   def reload_comments
