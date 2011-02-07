@@ -239,8 +239,8 @@ class Photo < ActiveRecord::Base
 
   # TODO Dave eliminate photo_id
   def self.remove_answer(photo_id, comment_id)
-    Photo.transaction do
-      photo = Photo.find photo_id, :include => [ :person, :revelation ]
+    transaction do
+      photo = find photo_id, :include => [ :person, :revelation ]
       comment = Comment.find comment_id
 
       guesser = Person.find_by_flickrid comment[:flickrid]
