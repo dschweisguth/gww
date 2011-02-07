@@ -641,11 +641,11 @@ describe Photo do
 
     it "leaves the photo found if there's another guess" do
       photo = Photo.make! :game_status => 'found'
-      guess1 = Guess.make! :label => 1, :photo => photo, :guess_text => 'guess text 1'
+      guess1 = Guess.make! :label => 1, :photo => photo
       comment1 = Comment.make! :label => 1, :photo => photo,
         :flickrid => guess1.person.flickrid, :username => guess1.person.username,
         :comment_text => guess1.guess_text
-      guess2 = Guess.make! :label => 2, :photo => photo, :guess_text => 'guess text 2'
+      guess2 = Guess.make! :label => 2, :photo => photo
       Comment.make! :label => 2, :photo => photo,
         :flickrid => guess2.person.flickrid, :username => guess2.person.username,
         :comment_text => guess2.guess_text
