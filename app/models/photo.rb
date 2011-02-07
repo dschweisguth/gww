@@ -198,18 +198,17 @@ class Photo < ActiveRecord::Base
         photo.save!
 
         guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
-        if ! guess
-          guess = Guess.new
-          guess.photo_id = photo.id
-          guess.person_id = guesser.id
-          guess.added_at = Time.now.getutc
+        if guess
           guess.guessed_at = comment.commented_at
           guess.guess_text = comment.comment_text
           guess.save!
         else
-          guess.guessed_at = comment.commented_at
-          guess.guess_text = comment.comment_text
-          guess.save!
+          Guess.create! \
+            :photo => photo,
+            :person => guesser,
+            :guess_text => comment.comment_text,
+            :guessed_at => comment.commented_at,
+            :added_at => Time.now.getutc
         end
 
         Revelation.delete photo.revelation.id if photo.revelation
