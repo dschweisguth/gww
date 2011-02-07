@@ -181,6 +181,38 @@ describe Admin::PhotosController do
 
   end
 
+  describe '#edit_in_gww' do
+    it 'redirects to the given photo' do
+      photo = Photo.make
+      #noinspection RubyResolve
+      stub(Photo).find_by_flickrid('0123456789') { photo }
+      get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => photo
+    end
+
+    it 'punts unknown photo Flickr IDs' do
+      #noinspection RubyResolve
+      stub(Photo).find_by_flickrid('0123456789') { nil }
+      get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_text /Sorry/
+
+    end
+
+    it 'punts unknown URLs' do
+      get :edit_in_gww, :from => 'http://www.notflickr.com/'
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_text /Hmmm/
+
+    end
+
+  end
+
   def stub_expire_cached_pages
     any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
   end
