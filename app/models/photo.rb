@@ -237,11 +237,11 @@ class Photo < ActiveRecord::Base
     end
   end
 
-  # TODO Dave eliminate photo_id
   def self.remove_answer(photo_id, comment_id)
     transaction do
-      photo = find photo_id, :include => [ :person, :revelation ]
-      comment = Comment.find comment_id
+      #noinspection RailsParamDefResolve
+      comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }
+      photo = comment.photo
       guesser = Person.find_by_flickrid comment.flickrid
       if ! guesser
         raise RemoveAnswerError, 'That comment has not been recorded as a guess or revelation.'
