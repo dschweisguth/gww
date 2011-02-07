@@ -218,14 +218,17 @@ class Photo < ActiveRecord::Base
         photo.save!
 
         revelation = photo.revelation
-        if ! revelation
-          revelation = Revelation.new
-          revelation.photo_id = photo.id
-          revelation.added_at = Time.now.getutc
+        if revelation
+          revelation.revelation_text = comment.comment_text
+          revelation.revealed_at = comment.commented_at
+          revelation.save!
+        else
+          Revelation.create! \
+            :photo => photo,
+            :revelation_text => comment.comment_text,
+            :revealed_at => comment.commented_at,
+            :added_at => Time.now.getutc
         end
-        revelation.revealed_at = comment.commented_at
-        revelation.revelation_text = comment.comment_text
-        revelation.save!
 
         Guess.delete_all [ "photo_id = ?", photo.id ]
 
