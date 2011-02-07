@@ -696,4 +696,12 @@ describe Photo do
 
   end
 
+  describe '.destroy_photo_and_dependent_objects' do
+    it 'destroys the photo' do
+      photo = Photo.make!
+      Photo.destroy_photo_and_dependent_objects photo.id
+      Photo.count.should == 0
+    end
+  end
+
 end
