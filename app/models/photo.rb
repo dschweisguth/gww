@@ -243,32 +243,28 @@ class Photo < ActiveRecord::Base
       photo = find photo_id, :include => [ :person, :revelation ]
       comment = Comment.find comment_id
       guesser = Person.find_by_flickrid comment.flickrid
-      if guesser
-        if guesser.id == photo.person_id
-          if photo.revelation
-            photo.game_status = 'unfound'
-            photo.save!
-            photo.revelation.destroy
-          else
-            raise RemoveAnswerError, 'That comment has not been recorded as a revelation.'
-          end
-        else
-          guess = Guess.find_by_person_id_and_guess_text guesser.id,
-            comment.comment_text
-          if guess
-            guess_count =
-              Guess.count :conditions => [ "photo_id = ?", photo.id ]
-            if guess_count == 1
-              photo.game_status = 'unfound'
-              photo.save!
-            end
-            guess.destroy
-          else
-            raise RemoveAnswerError, 'That comment has not been recorded as a guess.'
-          end
-        end
-      else
+      if ! guesser
         raise RemoveAnswerError, 'That comment has not been recorded as a guess or revelation.'
+      end
+      if guesser.id == photo.person_id
+        if ! photo.revelation
+          raise RemoveAnswerError, 'That comment has not been recorded as a revelation.'
+        end
+        photo.game_status = 'unfound'
+        photo.save!
+        photo.revelation.destroy
+      else
+        guess = Guess.find_by_person_id_and_guess_text guesser.id,
+          comment.comment_text
+        if ! guess
+          raise RemoveAnswerError, 'That comment has not been recorded as a guess.'
+        end
+        guess_count = Guess.count :conditions => [ "photo_id = ?", photo.id ]
+        if guess_count == 1
+          photo.game_status = 'unfound'
+          photo.save!
+        end
+        guess.destroy
       end
     end
   end
