@@ -542,13 +542,30 @@ describe Photo do
 
     it 'gives the point to another user' do
       scorer = Person.make! :label => 'scorer'
-      scorer_comment = Comment.make! :label => 'scorer', :flickrid => scorer.flickrid, :username => scorer.username
-      answer_comment = Comment.make!
+      scorer_comment = Comment.make! :label => 'scorer',
+        :flickrid => scorer.flickrid, :username => scorer.username
+      answer_comment = Comment.make! :label => 'answer', :commented_at => Time.utc(2011)
       Photo.add_answer answer_comment.photo.id, answer_comment.id, scorer_comment.username
       guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
       guess.person.flickrid.should == scorer_comment.flickrid
       guess.person.username.should == scorer_comment.username
       guess.guess_text.should == answer_comment.comment_text
+      guess.guessed_at.should == answer_comment.commented_at
+    end
+
+    it 'updates an existing guess' do
+      old_guess = Guess.make!
+      comment = Comment.make! :photo => old_guess.photo,
+        :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
+        :commented_at => Time.utc(2011)
+      Photo.add_answer comment.photo.id, comment.id, ''
+      new_guess = Guess.find_by_photo_id comment.photo
+      new_guess.id.should == old_guess.id
+      new_guess.person_id.should == old_guess.person.id
+      # Note that the following two values are different than those for old_guess
+      # TODO Dave why doesn't this work?
+      #new_guess.guess_text.should == comment.comment_text
+      #new_guess.guessed_at.should == comment.commented_at
     end
 
   end

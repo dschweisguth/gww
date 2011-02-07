@@ -194,7 +194,7 @@ class Photo < ActiveRecord::Base
       end
 
       if guesser != photo.person
-        photo.game_status = 'found'
+        photo.game_status = 'found' # TODO Dave assert this
         photo.save!
 
         guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
@@ -203,10 +203,14 @@ class Photo < ActiveRecord::Base
           guess.photo_id = photo.id
           guess.person_id = guesser.id
           guess.added_at = Time.now.getutc
+          guess.guessed_at = comment.commented_at
+          guess.guess_text = comment.comment_text
+          guess.save!
+        else
+          guess.guessed_at = comment.commented_at
+          guess.guess_text = comment.comment_text
+          guess.save!
         end
-        guess.guessed_at = comment.commented_at
-        guess.guess_text = comment.comment_text
-        guess.save!
 
         Revelation.delete photo.revelation.id if photo.revelation
 
