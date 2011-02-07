@@ -655,6 +655,12 @@ describe Photo do
       photo.game_status.should == 'found'
     end
 
+    it "blows up if the commenter isn't in the database" do
+      comment = Comment.make!
+      lambda { Photo.remove_answer comment.photo.id, comment.id }.should \
+        raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a guess or revelation.'
+    end
+
   end
 
 end
