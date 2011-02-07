@@ -597,6 +597,16 @@ describe Photo do
         photo.reload
         photo.game_status.should == 'revealed'
       end
+
+      it 'deletes an existing guess' do
+        photo = Photo.make!
+        comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
+          :username => photo.person.username, :commented_at => Time.utc(2011)
+        Guess.make! :photo => photo
+        Photo.add_answer comment.photo.id, comment.id, ''
+        Guess.count.should == 0
+      end
+
     end
 
 end
