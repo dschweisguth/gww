@@ -237,7 +237,7 @@ class Photo < ActiveRecord::Base
     end
   end
 
-  def self.remove_answer(photo_id, comment_id)
+  def self.remove_answer(comment_id)
     transaction do
       #noinspection RailsParamDefResolve
       comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }

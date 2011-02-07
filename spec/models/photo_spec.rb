@@ -634,7 +634,7 @@ describe Photo do
         comment = Comment.make! :photo => photo,
           :flickrid => guess.person.flickrid, :username => guess.person.username,
           :comment_text => guess.guess_text
-        Photo.remove_answer photo.id, comment.id
+        Photo.remove_answer comment.id
         Guess.count.should == 0
         photo.reload
         photo.game_status.should == 'unfound'
@@ -650,7 +650,7 @@ describe Photo do
         Comment.make! :label => 2, :photo => photo,
           :flickrid => guess2.person.flickrid, :username => guess2.person.username,
           :comment_text => guess2.guess_text
-        Photo.remove_answer photo.id, comment1.id
+        Photo.remove_answer comment1.id
         Guess.all.should == [ guess2 ]
         photo.reload
         photo.game_status.should == 'found'
@@ -659,7 +659,7 @@ describe Photo do
       it "blows up if the commenter doesn't have a guess for this comment" do
         person = Person.make!
         comment = Comment.make! :flickrid => person.flickrid, :username => person.username
-        lambda { Photo.remove_answer comment.photo.id, comment.id }.should \
+        lambda { Photo.remove_answer comment.id }.should \
           raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a guess.'
       end
 
@@ -672,7 +672,7 @@ describe Photo do
         comment = Comment.make! :photo => photo,
           :flickrid => photo.person.flickrid, :username => photo.person.username,
           :comment_text => revelation.revelation_text
-        Photo.remove_answer photo.id, comment.id
+        Photo.remove_answer comment.id
         Revelation.count.should == 0
         photo.reload
         photo.game_status.should == 'unfound'
@@ -682,7 +682,7 @@ describe Photo do
         person = Person.make!
         photo = Photo.make! :person => person
         comment = Comment.make! :photo => photo, :flickrid => person.flickrid, :username => person.username
-        lambda { Photo.remove_answer comment.photo.id, comment.id }.should \
+        lambda { Photo.remove_answer comment.id }.should \
           raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a revelation.'
       end
 
@@ -690,7 +690,7 @@ describe Photo do
 
     it "blows up if the commenter isn't in the database" do
       comment = Comment.make!
-      lambda { Photo.remove_answer comment.photo.id, comment.id }.should \
+      lambda { Photo.remove_answer comment.id }.should \
         raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a guess or revelation.'
     end
 

@@ -159,7 +159,7 @@ class Admin::PhotosController < ApplicationController
       Photo.add_answer comment_id, params[:person][:username]
     else
       begin
-        Photo.remove_answer photo_id, comment_id
+        Photo.remove_answer comment_id
       rescue Photo::RemoveAnswerError => e
         flash[:notice] = e.message
       end

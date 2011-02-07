@@ -117,7 +117,7 @@ describe Admin::PhotosController do
     end
 
     it 'removes a guess or revelation' do
-      mock(Photo).remove_answer '1', 2
+      mock(Photo).remove_answer 2
       stub_expire_cached_pages
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Remove this guess or revelation'
@@ -126,7 +126,7 @@ describe Admin::PhotosController do
     end
 
     it 'complains if the user removes a guess or revelation incorrectly' do
-      mock(Photo).remove_answer('1', 2) { raise Photo::RemoveAnswerError, 'the message' }
+      mock(Photo).remove_answer(2) { raise Photo::RemoveAnswerError, 'the message' }
       stub_expire_cached_pages
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Remove this guess or revelation'
