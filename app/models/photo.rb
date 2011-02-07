@@ -173,8 +173,9 @@ class Photo < ActiveRecord::Base
   # TODO Dave eliminate an argument?
   def self.add_answer(photo_id, comment_id, username)
     transaction do
-      photo = find photo_id, :include => [ :person, :revelation ]
-      comment = Comment.find comment_id
+      #noinspection RailsParamDefResolve
+      comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }
+      photo = comment.photo
 
       if username != ''
         # TODO Dave this branch results in a guess that can't be individually removed
