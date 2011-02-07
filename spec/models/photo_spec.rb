@@ -522,10 +522,11 @@ describe Photo do
         comment = Comment.make! :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Photo.add_answer comment.photo.id, comment.id, ''
-        guess = Guess.find_by_photo_id comment.photo, :include => :photo
+        guess = Guess.find_by_photo_id comment.photo
         guess.person_id.should == guesser.id
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
+        guess.photo.reload
         guess.photo.game_status.should == 'found'
       end
 
@@ -554,6 +555,8 @@ describe Photo do
         guess.person.username.should == scorer_comment.username
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
+        answer_comment.photo.reload
+        answer_comment.photo.game_status.should == 'found'
       end
 
       it 'updates an existing guess' do
