@@ -180,8 +180,8 @@ class Photo < ActiveRecord::Base
         guesser = Person.find_by_username username
         guesser_flickrid = Comment.find_by_username(username).flickrid
       else
-        guesser = Person.find_by_flickrid comment[:flickrid]
         guesser_flickrid = comment.flickrid
+        guesser = Person.find_by_flickrid guesser_flickrid
       end
       if !guesser
         # TODO Dave don't bother to check the username, since we'll update it when we next scrape Flickr?
