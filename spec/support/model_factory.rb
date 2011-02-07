@@ -121,7 +121,7 @@ class Revelation
   def self.make_for_test(new_or_create, caller_options = {})
     caller_options, padded_label = process_label! caller_options
     now = Time.now
-    options = { :revelation_text => 'revelation text', :revealed_at => now, :added_at => now }
+    options = { :revelation_text => padded_label + 'revelation text', :revealed_at => now, :added_at => now }
     if ! caller_options[:photo]
       photo_options = { :label => (padded_label + 'revelation') }
       options[:photo] = new_or_create == :new \

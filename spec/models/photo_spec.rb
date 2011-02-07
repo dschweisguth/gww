@@ -666,6 +666,18 @@ describe Photo do
     end
 
     describe 'when the commenter did post the photo' do
+      it 'removes a revelation' do
+        photo = Photo.make :game_status => 'revealed'
+        revelation = Revelation.make! :photo => photo
+        comment = Comment.make! :photo => photo,
+          :flickrid => photo.person.flickrid, :username => photo.person.username,
+          :comment_text => revelation.revelation_text
+        Photo.remove_answer photo.id, comment.id
+        Revelation.count.should == 0
+        photo.reload
+        photo.game_status.should == 'unfound'
+      end
+
       it "blows up if the commenter doesn't have a revelation for this comment" do
         person = Person.make!
         photo = Photo.make! :person => person
