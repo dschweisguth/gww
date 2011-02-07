@@ -148,4 +148,12 @@ describe Admin::PhotosController do
     any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
   end
 
+  describe '#reload_comments' do
+    it 'just redirects to the edit page without the nocomment param' do
+      get :reload_comments, :id => 1
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1
+    end
+  end
+
 end
