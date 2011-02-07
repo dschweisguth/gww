@@ -194,7 +194,7 @@ class Photo < ActiveRecord::Base
       end
 
       if guesser != photo.person
-        photo.game_status = 'found' # TODO Dave assert this
+        photo.game_status = 'found'
         photo.save!
 
         guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id

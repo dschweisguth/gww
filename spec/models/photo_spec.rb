@@ -518,11 +518,14 @@ describe Photo do
   describe '.add_answer' do
     it 'adds a guess' do
       guesser = Person.make!
-      comment = Comment.make! :flickrid => guesser.flickrid, :username => guesser.username
+      comment = Comment.make! :flickrid => guesser.flickrid,
+        :username => guesser.username, :commented_at => Time.utc(2011)
       Photo.add_answer comment.photo.id, comment.id, ''
-      guess = Guess.find_by_photo_id comment.photo
+      guess = Guess.find_by_photo_id comment.photo, :include => :photo
       guess.person_id.should == guesser.id
       guess.guess_text.should == comment.comment_text
+      guess.guessed_at.should == comment.commented_at
+      guess.photo.game_status.should == 'found'
     end
 
     it 'creates the guesser if necessary' do
@@ -537,7 +540,6 @@ describe Photo do
       guess = Guess.find_by_photo_id comment.photo, :include => :person
       guess.person.flickrid.should == comment.flickrid
       guess.person.username.should == 'new_guesser_username'
-      guess.guess_text.should == comment.comment_text
     end
 
     it 'gives the point to another user' do
