@@ -162,6 +162,25 @@ describe Admin::PhotosController do
     end
   end
 
+  describe '#expire_cached_pages' do
+    CACHE_DIR = RAILS_ROOT + "/public/cache"
+
+    it 'deletes public/cache if it exists' do
+      controller = Admin::PhotosController.new
+      mock(File).exist?(CACHE_DIR) { true }
+      mock(FileUtils).rm_r(CACHE_DIR)
+      controller.expire_cached_pages
+    end
+
+    it "doesn't if it doesn't" do
+      controller = Admin::PhotosController.new
+      mock(File).exist?(CACHE_DIR) { false }
+      dont_allow(FileUtils).rm_r
+      controller.expire_cached_pages
+    end
+
+  end
+
   def stub_expire_cached_pages
     any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
   end

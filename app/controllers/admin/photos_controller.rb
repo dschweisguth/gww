@@ -184,7 +184,6 @@ class Admin::PhotosController < ApplicationController
       FileUtils.rm_r cache_dir
     end
   end
-  private :expire_cached_pages
 
   def edit_in_gww
     in_gww 'admin/photos', 'edit'
