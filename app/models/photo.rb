@@ -15,12 +15,6 @@ class Photo < ActiveRecord::Base
   validates_numericality_of :member_questions, :only_integer => true,
     :greater_than_or_equal_to => 0
 
-  def self.update_seen_at(flickrids, time)
-    joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
-    update_all "seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
-      "flickrid in (#{joined_flickrids})"
-  end
-
   def self.update_all_from_flickr
     group_info = FlickrCredentials.request 'flickr.groups.getInfo'
     member_count = group_info['group'][0]['members'][0]
@@ -40,9 +34,9 @@ class Photo < ActiveRecord::Base
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
       logger.info "Updating database from page #{page} ..."
-      Photo.transaction do
+      transaction do
         now = Time.now.getutc
-        Photo.update_seen_at photo_flickrids, now
+        update_seen_at photo_flickrids, now
 
         people_flickrids =
           Set.new parsed_photos['photo'].map { |p| p['owner'] }
@@ -51,8 +45,7 @@ class Photo < ActiveRecord::Base
           existing_people[person.flickrid] = person
         end
 
-        existing_photos =
-	  Photo.find_all_by_flickrid(photo_flickrids).index_by &:flickrid
+        existing_photos = find_all_by_flickrid(photo_flickrids).index_by &:flickrid
 
         parsed_photos['photo'].each do |parsed_photo|
           person_flickrid = parsed_photo['owner']
@@ -114,6 +107,12 @@ class Photo < ActiveRecord::Base
     update.save!
 
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages']
+  end
+
+  def self.update_seen_at(flickrids, time)
+    joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
+    update_all "seen_at = '#{time.strftime '%Y-%m-%d %H:%M:%S'}'",
+      "flickrid in (#{joined_flickrids})"
   end
 
   def self.update_statistics
