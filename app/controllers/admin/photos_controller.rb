@@ -178,6 +178,7 @@ class Admin::PhotosController < ApplicationController
     redirect_to admin_root_path
   end
 
+  # TODO Dave move this to its own 'model' object so it can be stubbed normally 
   def expire_cached_pages
     cache_dir = RAILS_ROOT + "/public/cache"
     if File.exist? cache_dir
