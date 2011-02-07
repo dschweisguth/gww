@@ -180,7 +180,7 @@ class Photo < ActiveRecord::Base
         guesser_flickrid =
           Comment.find_by_username(username).flickrid # TODO Dave
       else
-        guesser = Person.find_by_flickrid comment[:flickrid] # TODO Dave
+        guesser = Person.find_by_flickrid comment[:flickrid]
         guesser_flickrid = comment.flickrid
       end
       if !guesser
