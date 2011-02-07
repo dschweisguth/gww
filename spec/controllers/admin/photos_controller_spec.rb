@@ -144,16 +144,26 @@ describe Admin::PhotosController do
 
   end
 
-  def stub_expire_cached_pages
-    any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
-  end
-
   describe '#reload_comments' do
     it 'just redirects to the edit page without the nocomment param' do
       get :reload_comments, :id => 1
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1
     end
+  end
+
+  describe '#destroy' do
+    it 'destroys' do
+      mock(Photo).destroy_photo_and_dependent_objects '1'
+      stub_expire_cached_pages
+      get :destroy, :id => 1
+      #noinspection RubyResolve
+      response.should redirect_to admin_root_path
+    end
+  end
+
+  def stub_expire_cached_pages
+    any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
   end
 
 end
