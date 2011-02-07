@@ -668,6 +668,14 @@ describe Photo do
         raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a guess.'
     end
 
+    it "blows up if the commenter did post the photo and doesn't have a revelation for this comment" do
+      person = Person.make!
+      photo = Photo.make! :person => person
+      comment = Comment.make! :photo => photo, :flickrid => person.flickrid, :username => person.username
+      lambda { Photo.remove_answer comment.photo.id, comment.id }.should \
+        raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a revelation.'
+    end
+
   end
 
 end
