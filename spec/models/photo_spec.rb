@@ -609,8 +609,8 @@ describe Photo do
         new_revelation.id.should == old_revelation.id
         # Note that the following two values are different than those for old_guess
         # TODO Dave why doesn't this work?
-#        new_revelation.revelation_text.should == comment.comment_text
-#        new_revelation.revealed_at.should == comment.commented_at
+        #new_revelation.revelation_text.should == comment.comment_text
+        #new_revelation.revealed_at.should == comment.commented_at
       end
 
       it 'deletes an existing guess' do
