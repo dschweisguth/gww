@@ -21,6 +21,101 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
+  def self.update_all_from_flickr
+    group_info = FlickrCredentials.request 'flickr.groups.getInfo'
+    member_count = group_info['group'][0]['members'][0]
+    update = FlickrUpdate.create! :member_count => member_count
+
+    page = 1
+    parsed_photos = nil
+    existing_people = {}
+    new_photo_count = 0
+    new_person_count = 0
+    while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
+      logger.info "Getting page #{page} ..."
+      photos_xml = FlickrCredentials.request 'flickr.groups.pools.getPhotos',
+        'per_page' => '500', 'page' => page.to_s,
+        'extras' => 'geo,last_update,views'
+      parsed_photos = photos_xml['photos'][0]
+      photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
+
+      logger.info "Updating database from page #{page} ..."
+      Photo.transaction do
+        now = Time.now.getutc
+        Photo.update_seen_at photo_flickrids, now
+
+        people_flickrids =
+          Set.new parsed_photos['photo'].map { |p| p['owner'] }
+        existing_people_flickrids = people_flickrids - existing_people.keys
+        Person.find_all_by_flickrid(existing_people_flickrids.to_a).each do |person|
+          existing_people[person.flickrid] = person
+        end
+
+        existing_photos =
+	  Photo.find_all_by_flickrid(photo_flickrids).index_by &:flickrid
+
+        parsed_photos['photo'].each do |parsed_photo|
+          person_flickrid = parsed_photo['owner']
+          person = existing_people[person_flickrid]
+          if ! person
+            person = Person.new
+            person.flickrid = person_flickrid
+            existing_people[person_flickrid] = person
+            new_person_count += 1
+          end
+          old_person_username = person.username
+          person.username = parsed_photo['ownername']
+          if person.id.nil? || person.username != old_person_username
+            person.save!
+          end
+
+          photo_flickrid = parsed_photo['id']
+          photo = existing_photos[photo_flickrid]
+          if ! photo
+            photo = Photo.new
+            photo.flickrid = photo_flickrid
+            photo.game_status = "unfound"
+            photo.seen_at = now
+            new_photo_count += 1
+          end
+          old_photo_farm = photo.farm
+          photo.farm = parsed_photo['farm']
+          old_photo_server = photo.server
+          photo.server = parsed_photo['server']
+          old_photo_secret = photo.secret
+          photo.secret = parsed_photo['secret']
+          old_photo_mapped = photo.mapped
+          photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
+          old_photo_dateadded = photo.dateadded
+          photo.dateadded = Time.at(parsed_photo['dateadded'].to_i).getutc
+          old_photo_lastupdate = photo.lastupdate
+          photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
+          old_photo_views = photo.views
+          photo.views = parsed_photo['views'].to_i
+          photo.person = person
+          if photo.id.nil? ||
+            old_photo_farm != photo.farm ||
+            old_photo_server != photo.server ||
+            old_photo_secret != photo.secret ||
+            old_photo_mapped != photo.mapped ||
+            old_photo_dateadded != photo.dateadded ||
+            old_photo_lastupdate != photo.lastupdate ||
+            old_photo_views != photo.views
+            photo.save!
+          end
+
+        end
+
+        page += 1
+      end
+    end
+
+    update.completed_at = Time.now.getutc
+    update.save!
+
+    return new_photo_count, new_person_count, page - 1, parsed_photos['pages']
+  end
+
   def self.update_statistics
     connection.execute %q{
       update photos p set
