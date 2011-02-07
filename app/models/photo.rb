@@ -15,6 +15,77 @@ class Photo < ActiveRecord::Base
   validates_numericality_of :member_questions, :only_integer => true,
     :greater_than_or_equal_to => 0
 
+  # Used by PhotosController
+
+  def self.all_sorted_and_paginated(sorted_by, order, page, per_page)
+    paginate_by_sql(
+      'select p.* ' +
+        'from photos p, people poster ' +
+        'where p.person_id = poster.id ' +
+        'order by ' + order_by(sorted_by, order),
+      :page => page, :per_page => per_page)
+  end
+
+  SORTED_BY = {
+    'username' => { :secondary => [ 'date-added' ],
+      :column => 'lower(poster.username)', :default_order => '+' },
+    'date-added' => { :secondary => [ 'username' ],
+      :column => 'dateadded', :default_order => '-' },
+    'last-updated' => { :secondary => [ 'username' ],
+      :column => 'lastupdate', :default_order => '-' },
+    'views' => { :secondary => [ 'username' ],
+      :column => 'views', :default_order => '-' },
+    'member-comments' => { :secondary => [ 'date-added', 'username' ],
+      :column => 'member_comments', :default_order => '-' },
+    'member-questions' => { :secondary => [ 'date-added', 'username' ],
+      :column => 'member_questions', :default_order => '-' }
+  }
+
+  def self.order_by(sorted_by, order)
+    term_names = [ sorted_by, *SORTED_BY[sorted_by][:secondary] ]
+    terms = term_names.map do |term_name|
+      term = SORTED_BY[term_name][:column]
+      if SORTED_BY[term_name][:default_order] != order
+	term += ' desc'
+      end
+      term
+    end
+    terms.join ', '
+  end
+  private_class_method :order_by
+
+  def self.unfound_or_unconfirmed
+    all :conditions => "game_status in ('unfound', 'unconfirmed')",
+      :include => :person, :order => "lastupdate desc"
+  end
+
+  # Used by WheresiesController
+
+  def self.most_viewed_in_2010
+    find :all,
+      :conditions =>
+	[ '? <= dateadded and dateadded < ?', Time.utc(2010), Time.utc(2011) ],
+      :order => 'views desc',
+      :limit => 10,
+      :include => :person
+  end
+
+  def self.most_commented_in_2010
+    find_by_sql [
+      'select f.*, count(*) comments from photos f, comments c ' +
+        'where ? <= f.dateadded and f.dateadded < ? and f.id = c.photo_id ' +
+	'group by f.id order by comments desc limit 10',
+      Time.utc(2010), Time.utc(2011) ]
+  end
+
+  # Used by Admin::RootController, Admin::GuessesController
+
+  def self.unfound_or_unconfirmed_count
+    count :conditions => "game_status in ('unfound', 'unconfirmed')"
+  end
+
+  # Used by Admin::PhotosController
+
   def self.update_all_from_flickr
     group_info = FlickrCredentials.request 'flickr.groups.getInfo'
     member_count = group_info['group'][0]['members'][0]
@@ -126,7 +197,7 @@ class Photo < ActiveRecord::Base
                 p.person_id = poster.id and
                 p.id = c.photo_id and
                 poster.flickrid != c.flickrid and
-                c.flickrid = commenter.flickrid and 
+                c.flickrid = commenter.flickrid and
                 p.id = g.photo_id and
                 c.commented_at <= g.guessed_at
               group by c.photo_id),
@@ -139,87 +210,13 @@ class Photo < ActiveRecord::Base
                 p.person_id = poster.id and
                 p.id = c.photo_id and
                 poster.flickrid != c.flickrid and
-                c.flickrid = commenter.flickrid and 
+                c.flickrid = commenter.flickrid and
                 p.id = g.photo_id and
                 c.commented_at <= g.guessed_at and
                 c.comment_text like '%?%'
               group by c.photo_id),
             0)
     }
-  end
-
-  def self.all_sorted_and_paginated(sorted_by, order, page, per_page)
-    paginate_by_sql(
-      'select p.* ' +
-        'from photos p, people poster ' +
-        'where p.person_id = poster.id ' +
-        'order by ' + order_by(sorted_by, order),
-      :page => page, :per_page => per_page)
-  end
-
-  SORTED_BY = {
-    'username' => { :secondary => [ 'date-added' ],
-      :column => 'lower(poster.username)', :default_order => '+' },
-    'date-added' => { :secondary => [ 'username' ],
-      :column => 'dateadded', :default_order => '-' },
-    'last-updated' => { :secondary => [ 'username' ],
-      :column => 'lastupdate', :default_order => '-' },
-    'views' => { :secondary => [ 'username' ],
-      :column => 'views', :default_order => '-' },
-    'member-comments' => { :secondary => [ 'date-added', 'username' ],
-      :column => 'member_comments', :default_order => '-' },
-    'member-questions' => { :secondary => [ 'date-added', 'username' ],
-      :column => 'member_questions', :default_order => '-' }
-  }
-
-  def self.order_by(sorted_by, order)
-    term_names = [ sorted_by, *SORTED_BY[sorted_by][:secondary] ]
-    terms = term_names.map do |term_name|
-      term = SORTED_BY[term_name][:column]
-      if SORTED_BY[term_name][:default_order] != order
-	term += ' desc'
-      end
-      term
-    end
-    terms.join ', '
-  end
-  private_class_method :order_by
-
-  def self.unfound_or_unconfirmed_count
-    count :conditions => "game_status in ('unfound', 'unconfirmed')"
-  end
-
-  def self.unfound_or_unconfirmed
-    all :conditions => "game_status in ('unfound', 'unconfirmed')",
-      :include => :person, :order => "lastupdate desc"
-  end
-
-  def self.most_viewed_in_2010
-    find :all,
-      :conditions =>
-	[ '? <= dateadded and dateadded < ?', Time.utc(2010), Time.utc(2011) ],
-      :order => 'views desc',
-      :limit => 10,
-      :include => :person
-  end
-
-  def self.most_commented_in_2010
-    find_by_sql [
-      'select f.*, count(*) comments from photos f, comments c ' +
-        'where ? <= f.dateadded and f.dateadded < ? and f.id = c.photo_id ' +
-	'group by f.id order by comments desc limit 10',
-      Time.utc(2010), Time.utc(2011) ]
-  end
-
-  def self.count_since(update)
-    count :conditions => [ "? <= dateadded", update.created_at ]
-  end
-
-  def self.add_posts(people)
-    posts_per_person = Photo.count :group => :person_id
-    people.each do |person|
-      person[:posts] = posts_per_person[person.id] || 0
-    end
   end
 
   def self.multipoint
@@ -379,7 +376,20 @@ class Photo < ActiveRecord::Base
 	Guess.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0
 	photo.person.destroy
       end
-      
+
+    end
+  end
+
+  # Used by Admin::GuessesController
+
+  def self.count_since(update)
+    count :conditions => [ "? <= dateadded", update.created_at ]
+  end
+
+  def self.add_posts(people)
+    posts_per_person = Photo.count :group => :person_id
+    people.each do |person|
+      person[:posts] = posts_per_person[person.id] || 0
     end
   end
 
