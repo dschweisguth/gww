@@ -716,6 +716,15 @@ describe Photo do
       Guess.count.should == 0
     end
 
+    it "doesn't delete the photo's owner if they have another photo" do
+      person = Person.make!
+      photo1 = Photo.make! :label => 1, :person => person
+      photo2 = Photo.make! :label => 2, :person => person
+      Photo.destroy_photo_and_dependent_objects photo1.id
+      Person.all.should == [ person ]
+      Photo.all.should == [ photo2 ]
+    end
+
   end
 
 end
