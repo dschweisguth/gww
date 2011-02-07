@@ -170,7 +170,6 @@ class Photo < ActiveRecord::Base
 
   end
 
-  # TODO Dave eliminate an argument?
   def self.add_answer(comment_id, username)
     transaction do
       #noinspection RailsParamDefResolve
@@ -238,6 +237,7 @@ class Photo < ActiveRecord::Base
     end
   end
 
+  # TODO Dave eliminate photo_id
   def self.remove_answer(photo_id, comment_id)
     Photo.transaction do
       photo = Photo.find photo_id, :include => [ :person, :revelation ]
