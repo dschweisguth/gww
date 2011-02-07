@@ -710,6 +710,13 @@ describe Photo do
       Revelation.count.should == 0
     end
 
+    it "destroys the photo's guesses" do
+      guess = Guess.make!
+      Photo.destroy_photo_and_dependent_objects guess.photo.id
+      Photo.count.should == 0
+      Guess.count.should == 0
+    end
+
   end
 
 end
