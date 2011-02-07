@@ -702,6 +702,14 @@ describe Photo do
       Photo.destroy_photo_and_dependent_objects photo.id
       Photo.count.should == 0
     end
+
+    it "destroys the photo's revelation" do
+      revelation = Revelation.make!
+      Photo.destroy_photo_and_dependent_objects revelation.photo.id
+      Photo.count.should == 0
+      Revelation.count.should == 0
+    end
+
   end
 
 end
