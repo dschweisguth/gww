@@ -3,6 +3,18 @@ require 'spec_helper'
 describe Admin::PhotosController do
   integrate_views
 
+  describe '#update' do
+    it 'does some work and redirects to the admin index' do
+      stub_expire_cached_pages
+      mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
+      get :update
+      #noinspection RubyResolve
+      response.should redirect_to admin_root_path
+      flash[:notice].should ==
+        "Created 1 new photos and 2 new users. Got 3 pages out of 4.</br>"
+    end
+  end
+
   describe '#update_statistics' do
     it 'does some work and redirects to the admin index' do
       mock(Photo).update_statistics
