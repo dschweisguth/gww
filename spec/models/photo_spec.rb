@@ -725,6 +725,15 @@ describe Photo do
       Photo.all.should == [ photo2 ]
     end
 
+    it "doesn't delete the photo's owner if they've made a guess" do
+      photo = Photo.make!
+      guess = Guess.make! :person => photo.person
+      Photo.destroy_photo_and_dependent_objects photo.id
+      Person.all.should =~ [ guess.person, guess.photo.person ]
+      Photo.all.should == [ guess.photo ]
+      Guess.all.should == [ guess ]
+    end
+
   end
 
 end
