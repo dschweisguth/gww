@@ -626,4 +626,16 @@ describe Photo do
 
   end
 
+  describe '.remove_answer' do
+    it 'removes a guess' do
+      guess = Guess.make!
+      comment = Comment.make! :photo => guess.photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :comment_text => guess.guess_text
+      Photo.remove_answer comment.photo.id, comment.id
+      Guess.count.should == 0
+      comment.photo.game_status.should == 'unfound'
+    end
+  end
+
 end
