@@ -242,8 +242,7 @@ class Photo < ActiveRecord::Base
     transaction do
       photo = find photo_id, :include => [ :person, :revelation ]
       comment = Comment.find comment_id
-
-      guesser = Person.find_by_flickrid comment[:flickrid]
+      guesser = Person.find_by_flickrid comment.flickrid
       if guesser
         if guesser.id == photo.person_id
           if photo.revelation
