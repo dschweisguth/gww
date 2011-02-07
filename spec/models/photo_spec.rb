@@ -516,7 +516,7 @@ describe Photo do
   end
 
   describe '.add_answer' do
-    describe 'when adding a guess'
+    describe 'when adding a guess' do
       it 'adds a guess' do
         guesser = Person.make!
         comment = Comment.make! :flickrid => guesser.flickrid,
@@ -583,45 +583,47 @@ describe Photo do
         Revelation.count.should == 0
       end
 
-      describe 'when adding a revelation' do
-        it 'adds a revelation' do
-          photo = Photo.make!
-          comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
-            :username => photo.person.username, :commented_at => Time.utc(2011)
-          Photo.add_answer comment.id, ''
-          revelation = Revelation.find_by_photo_id comment.photo.id
-          revelation.revelation_text.should == comment.comment_text
-          revelation.revealed_at.should == comment.commented_at
-          photo.reload
-          photo.game_status.should == 'revealed'
-        end
+    end
 
-        it 'updates an existing revelation' do
-          old_revelation = Revelation.make!
-          comment = Comment.make! :photo => old_revelation.photo,
-            :flickrid => old_revelation.photo.person.flickrid,
-            :username => old_revelation.photo.person.username,
-            :commented_at => Time.utc(2011)
-          Photo.add_answer comment.id, ''
-          new_revelation = Revelation.find_by_photo_id comment.photo
-          new_revelation.id.should == old_revelation.id
-          # Note that the following two values are different than those for old_guess
-          # TODO Dave why doesn't this work?
-          #new_revelation.revelation_text.should == comment.comment_text
-          #new_revelation.revealed_at.should == comment.commented_at
-        end
+    describe 'when adding a revelation' do
+      it 'adds a revelation' do
+        photo = Photo.make!
+        comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
+          :username => photo.person.username, :commented_at => Time.utc(2011)
+        Photo.add_answer comment.id, ''
+        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelation.revelation_text.should == comment.comment_text
+        revelation.revealed_at.should == comment.commented_at
+        photo.reload
+        photo.game_status.should == 'revealed'
+      end
 
-        it 'deletes an existing guess' do
-          photo = Photo.make!
-          comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
-            :username => photo.person.username, :commented_at => Time.utc(2011)
-          Guess.make! :photo => photo
-          Photo.add_answer comment.id, ''
-          Guess.count.should == 0
-        end
+      it 'updates an existing revelation' do
+        old_revelation = Revelation.make!
+        comment = Comment.make! :photo => old_revelation.photo,
+          :flickrid => old_revelation.photo.person.flickrid,
+          :username => old_revelation.photo.person.username,
+          :commented_at => Time.utc(2011)
+        Photo.add_answer comment.id, ''
+        new_revelation = Revelation.find_by_photo_id comment.photo
+        new_revelation.id.should == old_revelation.id
+        # Note that the following two values are different than those for old_guess
+        # TODO Dave why doesn't this work?
+        #new_revelation.revelation_text.should == comment.comment_text
+        #new_revelation.revealed_at.should == comment.commented_at
+      end
 
+      it 'deletes an existing guess' do
+        photo = Photo.make!
+        comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
+          :username => photo.person.username, :commented_at => Time.utc(2011)
+        Guess.make! :photo => photo
+        Photo.add_answer comment.id, ''
+        Guess.count.should == 0
       end
 
     end
+
+  end
 
 end
