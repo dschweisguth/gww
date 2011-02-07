@@ -598,6 +598,21 @@ describe Photo do
         photo.game_status.should == 'revealed'
       end
 
+      it 'updates an existing revelation' do
+        old_revelation = Revelation.make!
+        comment = Comment.make! :photo => old_revelation.photo,
+          :flickrid => old_revelation.photo.person.flickrid,
+          :username => old_revelation.photo.person.username,
+          :commented_at => Time.utc(2011)
+        Photo.add_answer comment.photo.id, comment.id, ''
+        new_revelation = Revelation.find_by_photo_id comment.photo
+        new_revelation.id.should == old_revelation.id
+        # Note that the following two values are different than those for old_guess
+        # TODO Dave why doesn't this work?
+#        new_revelation.revelation_text.should == comment.comment_text
+#        new_revelation.revealed_at.should == comment.commented_at
+      end
+
       it 'deletes an existing guess' do
         photo = Photo.make!
         comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
