@@ -177,8 +177,8 @@ class Photo < ActiveRecord::Base
 
       if username != ''
         # TODO Dave this branch results in a guess that can't be individually removed
-        guesser = Person.find_by_username username
         guesser_flickrid = Comment.find_by_username(username).flickrid
+        guesser = Person.find_by_username username
       else
         guesser_flickrid = comment.flickrid
         guesser = Person.find_by_flickrid guesser_flickrid
