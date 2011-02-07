@@ -521,7 +521,7 @@ describe Photo do
         guesser = Person.make!
         comment = Comment.make! :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo
         guess.person_id.should == guesser.id
         guess.guess_text.should == comment.comment_text
@@ -538,7 +538,7 @@ describe Photo do
             'username' => [ 'new_guesser_username' ]
           } ]
         } }
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'new_guesser_username'
@@ -549,7 +549,7 @@ describe Photo do
         scorer_comment = Comment.make! :label => 'scorer',
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make! :label => 'answer', :commented_at => Time.utc(2011)
-        Photo.add_answer answer_comment.photo.id, answer_comment.id, scorer_comment.username
+        Photo.add_answer answer_comment.id, scorer_comment.username
         guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
         guess.person.flickrid.should == scorer_comment.flickrid
         guess.person.username.should == scorer_comment.username
@@ -564,7 +564,7 @@ describe Photo do
         comment = Comment.make! :photo => old_guess.photo,
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         new_guess = Guess.find_by_photo_id comment.photo
         new_guess.id.should == old_guess.id
         new_guess.person_id.should == old_guess.person.id
@@ -579,7 +579,7 @@ describe Photo do
         comment = Comment.make! :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Revelation.make! :photo => comment.photo
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         Revelation.count.should == 0
       end
 
@@ -590,7 +590,7 @@ describe Photo do
         photo = Photo.make!
         comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         revelation = Revelation.find_by_photo_id comment.photo.id
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
@@ -604,7 +604,7 @@ describe Photo do
           :flickrid => old_revelation.photo.person.flickrid,
           :username => old_revelation.photo.person.username,
           :commented_at => Time.utc(2011)
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         new_revelation = Revelation.find_by_photo_id comment.photo
         new_revelation.id.should == old_revelation.id
         # Note that the following two values are different than those for old_guess
@@ -618,7 +618,7 @@ describe Photo do
         comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         Guess.make! :photo => photo
-        Photo.add_answer comment.photo.id, comment.id, ''
+        Photo.add_answer comment.id, ''
         Guess.count.should == 0
       end
 

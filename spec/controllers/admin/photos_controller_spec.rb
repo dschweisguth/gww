@@ -108,7 +108,7 @@ describe Admin::PhotosController do
 
   describe '.update_answer' do
     it 'adds a guess or revelation' do
-      mock(Photo).add_answer '1', 2, ''
+      mock(Photo).add_answer 2, ''
       stub_expire_cached_pages
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Add this guess or revelation'
