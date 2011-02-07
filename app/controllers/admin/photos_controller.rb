@@ -173,20 +173,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def destroy
-    Photo.transaction do
-      photo = Photo.find params[:id], :include => [ :revelation, :person ]
-      photo.revelation.destroy if photo.revelation
-      Guess.delete_all [ 'photo_id = ?', photo.id ]
-      Comment.delete_all [ 'photo_id = ?', photo.id ]
-      photo.destroy
-
-      # Delete the photo's owner if they have no other photos or guesses
-      if Photo.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
-	Guess.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0
-	photo.person.destroy
-      end
-
-    end
+    Photo.destroy_photo_and_dependent_objects params[:id]
     expire_cached_pages
     redirect_to admin_root_path
   end

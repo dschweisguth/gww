@@ -272,4 +272,21 @@ class Photo < ActiveRecord::Base
   class RemoveAnswerError < StandardError
   end
 
+  def self.destroy_photo_and_dependent_objects(photo_id)
+    transaction do
+      photo = find photo_id, :include => [ :revelation, :person ]
+      photo.revelation.destroy if photo.revelation
+      Guess.delete_all [ 'photo_id = ?', photo.id ]
+      Comment.delete_all [ 'photo_id = ?', photo.id ]
+      photo.destroy
+
+      # Delete the photo's owner if they have no other photos or guesses
+      if Photo.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
+	Guess.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0
+	photo.person.destroy
+      end
+      
+    end
+  end
+
 end
