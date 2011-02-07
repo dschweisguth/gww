@@ -192,7 +192,6 @@ class Photo < ActiveRecord::Base
         guesser.username = result['person'][0]['username'][0]
         guesser.save!
       end
-
       if guesser != photo.person
         photo.game_status = 'found'
         photo.save!

@@ -583,6 +583,17 @@ describe Photo do
     end
 
     describe 'when adding a revelation' do
+      it 'adds a revelation' do
+        photo = Photo.make!
+        comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
+          :username => photo.person.username, :commented_at => Time.utc(2011)
+        Photo.add_answer comment.photo.id, comment.id, ''
+        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelation.revelation_text.should == comment.comment_text
+        revelation.revealed_at.should == comment.commented_at
+        photo.reload
+        photo.game_status.should == 'revealed'
+      end
     end
 
 end
