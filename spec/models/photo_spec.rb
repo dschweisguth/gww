@@ -92,7 +92,7 @@ describe Photo do
     before do
       stub(FlickrCredentials).request('flickr.groups.getInfo') { {
         'group'=> [ {
-          'members'=>['1490']
+          'members'=>['1492']
         } ]
       } }
       stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
@@ -132,6 +132,7 @@ describe Photo do
       photo.mapped.should == 'false'
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
+      flickr_update_should_have_been_created
     end
 
     it 'uses an existing person, and updates their username if it changed' do
@@ -143,6 +144,7 @@ describe Photo do
       person_after.id.should == person_before.id
       person_after.flickrid.should == person_before.flickrid
       person_after.username.should == 'username'
+      flickr_update_should_have_been_created
     end
 
     it 'uses an existing photo, and updates attributes that changed' do
@@ -172,6 +174,16 @@ describe Photo do
       photo_after.mapped.should == 'false'
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
+      flickr_update_should_have_been_created
+    end
+
+    def flickr_update_should_have_been_created
+      updates = FlickrUpdate.all
+      updates.size.should == 1
+      update = updates[0]
+      update.member_count.should == 1492
+      #noinspection RubyResolve
+      update.completed_at.should_not be_nil
     end
 
   end
