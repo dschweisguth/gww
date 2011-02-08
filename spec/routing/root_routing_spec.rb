@@ -2,11 +2,18 @@ require 'spec_helper'
 
 describe RootController do
   describe 'routing' do
-    it 'routes to index' do
-      { :get => '/' }.should route_to :controller => 'root', :action => 'index'
+    describe 'root' do
+      it 'is routed to' do
+        {:get => '/'}.should route_to :controller => 'root', :action => 'index'
+      end
+
+      it 'has a named route' do
+        root_path.should == '/'
+      end
+
     end
 
-    it 'routes to other actions' do
+    it 'routes to a plain action' do
       { :get => '/about' }.should route_to :controller => 'root', :action => 'about'
     end
 
