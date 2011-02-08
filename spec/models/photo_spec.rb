@@ -108,7 +108,7 @@ describe Photo do
             'latitude' => '0',
             'longitude' => '0',
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50',
+            'views' => '50'
           } ]
         } ]
       } }
@@ -133,15 +133,44 @@ describe Photo do
       photo.views.should == 50
     end
 
-    it "uses an existing person, but updates their username if necessary" do
-      old_person = Person.make! :flickrid => 'person_flickrid', :username => 'old_username'
+    it 'uses an existing person, and updates their username if it changed' do
+      person_before = Person.make! :flickrid => 'person_flickrid', :username => 'old_username'
       Photo.update_all_from_flickr
       people = Person.all
       people.size.should == 1
-      new_person = people[0]
-      new_person.id.should == old_person.id
-      new_person.flickrid.should == old_person.flickrid
-      new_person.username.should == 'username'
+      person_after = people[0]
+      person_after.id.should == person_before.id
+      person_after.flickrid.should == person_before.flickrid
+      person_after.username.should == 'username'
+    end
+
+    it 'uses an existing photo, and updates attributes that changed' do
+      # It should never happen that a photo's user's flickrid changes, so make
+      # the existing user's flickrid the same as in the mocked response
+      person = Person.make! :flickrid => 'person_flickrid'
+      photo_before = Photo.make! \
+        :person => person,
+        :flickrid => 'photo_flickrid',
+        :farm => '1',
+        :secret => 'old_secret',
+        :server => 'old_server',
+        :dateadded => Time.utc(2010),
+        :mapped => 'true',
+        :lastupdate => Time.utc(2010, 1, 1, 1),
+        :views => 40
+      Photo.update_all_from_flickr
+      photos = Photo.all
+      photos.size.should == 1
+      photo_after = photos[0]
+      photo_after.id.should == photo_before.id
+      photo_after.flickrid.should == photo_before.flickrid
+      photo_after.farm.should == '0'
+      photo_after.secret.should == 'secret'
+      photo_after.server.should == 'server'
+      photo_after.dateadded.should == Time.utc(2011)
+      photo_after.mapped.should == 'false'
+      photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
+      photo_after.views.should == 50
     end
 
   end
