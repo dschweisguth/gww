@@ -88,6 +88,49 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
+  describe '.update_all_from_flickr' do
+    it "gets the state of the group's photos from Flickr and stores it" do
+      stub(FlickrCredentials).request('flickr.groups.getInfo') { {
+        'group'=> [ {
+          'members'=>['1490']
+        } ]
+      } }
+      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+        'photos' => [ {
+          'photo' =>  [ {
+            'id' => 'photo_flickrid',
+            'owner' => 'person_flickrid',
+            'ownername' => 'username',
+            'farm' => '0',
+            'server' => 'server',
+            'secret' => 'secret',
+            'dateadded' => Time.utc(2011).to_i.to_s,
+            'latitude' => '0',
+            'longitude' => '0',
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
+            'views' => '50',
+          } ]
+        } ]
+      } }
+      Photo.update_all_from_flickr
+      #noinspection RailsParamDefResolve
+      photos = Photo.all :include => :person
+      photos.size.should == 1
+      photo = photos[0]
+      person = photo.person
+      person.flickrid.should == 'person_flickrid'
+      person.username.should == 'username'
+      photo.flickrid.should == 'photo_flickrid'
+      photo.farm.should == '0'
+      photo.server.should == 'server'
+      photo.secret.should == 'secret'
+      photo.dateadded.should == Time.utc(2011)
+      photo.mapped.should == 'false'
+      photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
+      photo.views.should == 50
+    end
+  end
+  
   describe '.update_seen_at' do
     it 'updates seen_at' do
       photo = Photo.make! :seen_at => Time.utc(2010)
