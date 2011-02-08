@@ -122,8 +122,7 @@ class Photo < ActiveRecord::Base
           person_flickrid = parsed_photo['owner']
           person = existing_people[person_flickrid]
           if ! person
-            person = Person.new
-            person.flickrid = person_flickrid
+            person = Person.new :flickrid => person_flickrid
             existing_people[person_flickrid] = person
             new_person_count += 1
           end
@@ -136,10 +135,10 @@ class Photo < ActiveRecord::Base
           photo_flickrid = parsed_photo['id']
           photo = existing_photos[photo_flickrid]
           if ! photo
-            photo = Photo.new
-            photo.flickrid = photo_flickrid
-            photo.game_status = "unfound"
-            photo.seen_at = now
+            photo = Photo.new \
+              :flickrid => photo_flickrid,
+              :game_status => 'unfound',
+              :seen_at => now
             new_photo_count += 1
           end
           old_photo_farm = photo.farm
