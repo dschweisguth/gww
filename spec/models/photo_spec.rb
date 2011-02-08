@@ -89,7 +89,7 @@ describe Photo do
   end
 
   describe '.update_all_from_flickr' do
-    it "gets the state of the group's photos from Flickr and stores it" do
+    before do
       stub(FlickrCredentials).request('flickr.groups.getInfo') { {
         'group'=> [ {
           'members'=>['1490']
@@ -112,6 +112,9 @@ describe Photo do
           } ]
         } ]
       } }
+    end
+
+    it "gets the state of the group's photos from Flickr and stores it" do
       Photo.update_all_from_flickr
       #noinspection RailsParamDefResolve
       photos = Photo.all :include => :person
@@ -129,8 +132,20 @@ describe Photo do
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
     end
+
+    it "uses an existing person, but updates their username if necessary" do
+      old_person = Person.make! :flickrid => 'person_flickrid', :username => 'old_username'
+      Photo.update_all_from_flickr
+      people = Person.all
+      people.size.should == 1
+      new_person = people[0]
+      new_person.id.should == old_person.id
+      new_person.flickrid.should == old_person.flickrid
+      new_person.username.should == 'username'
+    end
+
   end
-  
+
   describe '.update_seen_at' do
     it 'updates seen_at' do
       photo = Photo.make! :seen_at => Time.utc(2010)
