@@ -177,7 +177,7 @@ class Photo < ActiveRecord::Base
     update.completed_at = Time.now.getutc
     update.save!
 
-    return new_photo_count, new_person_count, page - 1, parsed_photos['pages']
+    return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
   end
 
   def self.update_seen_at(flickrids, time)

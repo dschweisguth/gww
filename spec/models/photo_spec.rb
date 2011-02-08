@@ -97,6 +97,7 @@ describe Photo do
       } }
       stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
         'photos' => [ {
+          'pages' => '1',
           'photo' =>  [ {
             'id' => 'photo_flickrid',
             'owner' => 'person_flickrid',
@@ -115,7 +116,7 @@ describe Photo do
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
-      Photo.update_all_from_flickr
+      Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
       #noinspection RailsParamDefResolve
       photos = Photo.all :include => :person
       photos.size.should == 1
@@ -135,7 +136,7 @@ describe Photo do
 
     it 'uses an existing person, and updates their username if it changed' do
       person_before = Person.make! :flickrid => 'person_flickrid', :username => 'old_username'
-      Photo.update_all_from_flickr
+      Photo.update_all_from_flickr.should == [ 1, 0, 1, 1 ]
       people = Person.all
       people.size.should == 1
       person_after = people[0]
@@ -158,7 +159,7 @@ describe Photo do
         :mapped => 'true',
         :lastupdate => Time.utc(2010, 1, 1, 1),
         :views => 40
-      Photo.update_all_from_flickr
+      Photo.update_all_from_flickr.should == [ 0, 0, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
       photo_after = photos[0]
