@@ -13,6 +13,13 @@ describe Guess do
   describe '#guess_text' do
     it { should validate_presence_of :guess_text }
     it { should have_readonly_attribute :guess_text }
+
+    it 'should handle non-ASCII characters' do
+      non_ascii_text = 'π is rad'
+      Guess.make! :guess_text => non_ascii_text
+      Guess.all[0].guess_text.should == non_ascii_text
+    end
+
   end
 
   describe '#guessed_at' do

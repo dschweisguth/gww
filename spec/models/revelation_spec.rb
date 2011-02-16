@@ -10,6 +10,13 @@ describe Revelation do
   describe '#revelation_text' do
     it { should validate_presence_of :revelation_text }
     it { should have_readonly_attribute :revelation_text }
+
+    it 'should handle non-ASCII characters' do
+      non_ascii_text = 'π is rad'
+      Revelation.make! :revelation_text => non_ascii_text
+      Revelation.all[0].revelation_text.should == non_ascii_text
+    end
+
   end
 
   describe '#revealed_at' do
