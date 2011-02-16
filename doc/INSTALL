@@ -107,7 +107,7 @@ Configure
 Create database user and databases
 ----------------------------------
 
-Create users.
+Create users
     mysql> grant usage on gww_dev.* to gww_dev@localhost identified by 'gww_dev';
     mysql> grant usage on gww_production.* to gww_production@localhost identified by 'gww_production';
     gww_dev will control the development and test environments and
