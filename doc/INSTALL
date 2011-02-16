@@ -67,14 +67,14 @@ Install gems
         activerecord (2.3.10)
         activeresource (2.3.10)
         activesupport (2.3.10)
-        bundler (1.0.7)
+        bundler (1.0.10)
         mysql2 (0.2.6)
         rack (1.1.0)
         rails (2.3.10)
         rake (0.8.7)
-        rubygems-update (1.4.2)
+        rubygems-update (1.5.2)
         will_paginate (2.3.15)
-        xml-simple (1.0.12)
+        xml-simple (1.0.14)
     Linux
 	> bundle install --deployment --without test
 	> bundle list
@@ -84,7 +84,7 @@ Install gems
 	  * activerecord (2.3.10)
 	  * activeresource (2.3.10)
 	  * activesupport (2.3.10)
-	  * bundler (1.0.7)
+	  * bundler (1.0.10)
 	  * fastthread (1.0.7)
 	  * mysql2 (0.2.6)
 	  * passenger (2.2.15)
@@ -92,7 +92,7 @@ Install gems
 	  * rails (2.3.10)
 	  * rake (0.8.7)
 	  * will_paginate (2.3.15)
-	  * xml-simple (1.0.12)
+	  * xml-simple (1.0.14)
         (Note that the output of 'gem list' did not change.)
 Configure
     Configure database credentials
