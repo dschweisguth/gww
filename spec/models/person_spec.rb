@@ -18,6 +18,13 @@ describe Person do
 
   describe '#username' do
     it { should validate_presence_of :username }
+
+    it 'should handle non-ASCII characters' do
+      non_ascii_username = '猫娘/ nekomusume'
+      Person.make! :username => non_ascii_username
+      Person.all[0].username.should == non_ascii_username
+    end
+
   end
 
   describe '.all_sorted' do
