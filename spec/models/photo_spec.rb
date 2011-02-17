@@ -605,11 +605,7 @@ describe Photo do
       guess = Guess.make! :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
-      # The guesser has no other photos or other guesses, so they should be deleted too.
-      # Would be nice to mock the method that deletes the person, which handles cases
-      # where the person has a photo or other guess and shouldn't be deleted,
-      # but doing so would be ugly.
-      Person.exists?(guess.person.id).should == false
+      person_should_not_exist guess.person.id
     end
 
     it 'deletes existing revelations' do
@@ -726,11 +722,7 @@ describe Photo do
         guess = Guess.make! :photo => photo
         Photo.add_answer comment.id, ''
         Guess.count.should == 0
-        # The guesser has no other photos or other guesses, so they should be deleted too.
-        # Would be nice to mock the method that deletes the person, which handles cases
-        # where the person has a photo or other guess and shouldn't be deleted,
-        # but doing so would be ugly.
-        Person.exists?(guess.person.id).should == false
+        person_should_not_exist guess.person.id
       end
 
     end
@@ -746,14 +738,10 @@ describe Photo do
           :flickrid => guess.person.flickrid, :username => guess.person.username,
           :comment_text => guess.guess_text
         Photo.remove_answer comment.id
-        Guess.count.should == 0
-        # The guesser has no other photos or other guesses, so they should be deleted too.
-        # Would be nice to mock the method that deletes the person, which handles cases
-        # where the person has a photo or other guess and shouldn't be deleted,
-        # but doing so would be ugly.
-        Person.exists?(guess.person.id).should == false
         photo.reload
         photo.game_status.should == 'unfound'
+        Guess.count.should == 0
+        person_should_not_exist guess.person.id
       end
 
       it "leaves the photo found if there's another guess" do
@@ -816,8 +804,8 @@ describe Photo do
     it 'destroys the photo and its person' do
       photo = Photo.make!
       Photo.destroy_photo_and_dependent_objects photo.id
-      # Would be nice to mock the method that deletes the person, which handles cases
-      # where the person has a photo or other guess and shouldn't be deleted,
+      # It would be nice to mock the method that deletes the poster, which handles
+      # cases where the poster has a photo or other guess and shouldn't be deleted,
       # but doing so would be ugly.
       Person.count.should == 0
       Photo.count.should == 0
@@ -833,8 +821,19 @@ describe Photo do
       guess = Guess.make!
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
+      # TODO Dave
+#      person_should_not_exist guess.person.id
     end
 
+  end
+
+  # Used by specs which delete a guess to assert that the guesser had no other
+  # photos or other guesses, so they should have been deleted too.
+  # It would be nice to mock the method that deletes the guesser, which handles
+  # cases where the guesser has a photo or other guess and shouldn't be deleted,
+  # but doing so would be ugly.
+  def person_should_not_exist(id)
+    Person.exists?(id).should == false
   end
 
 end
