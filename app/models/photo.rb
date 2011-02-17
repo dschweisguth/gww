@@ -374,7 +374,11 @@ class Photo < ActiveRecord::Base
     transaction do
       photo = find photo_id, :include => [ :revelation, :person ]
       photo.revelation.destroy if photo.revelation
-      Guess.delete_all [ 'photo_id = ?', photo.id ]
+      Guess.find_all_by_photo_id(photo.id).each do |guess|
+        # TODO Dave address this duplication and feature envy
+        guess.destroy
+        guess.person.destroy_if_has_no_dependents
+      end
       Comment.delete_all [ 'photo_id = ?', photo.id ]
       photo.destroy
       photo.person.destroy_if_has_no_dependents

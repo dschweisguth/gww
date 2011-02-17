@@ -821,8 +821,7 @@ describe Photo do
       guess = Guess.make!
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
-      # TODO Dave
-#      guesser_should_not_exist guess
+      guesser_should_not_exist guess
     end
 
   end
