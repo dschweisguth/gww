@@ -254,7 +254,6 @@ class Photo < ActiveRecord::Base
       Guess.find_all_by_photo_id(id).each do |guess|
         # TODO Dave address this duplication and feature envy
         guess.destroy
-        guess.person.destroy_if_has_no_dependents
       end
       Revelation.delete_all [ "photo_id = ?", id ]
       photo = find id
@@ -306,7 +305,6 @@ class Photo < ActiveRecord::Base
         Guess.find_all_by_photo_id(photo.id).each do |guess|
           # TODO Dave address this duplication and feature envy
           guess.destroy
-          guess.person.destroy_if_has_no_dependents
         end
 
       else
@@ -377,7 +375,6 @@ class Photo < ActiveRecord::Base
       Guess.find_all_by_photo_id(photo.id).each do |guess|
         # TODO Dave address this duplication and feature envy
         guess.destroy
-        guess.person.destroy_if_has_no_dependents
       end
       Comment.delete_all [ 'photo_id = ?', photo.id ]
       photo.destroy
