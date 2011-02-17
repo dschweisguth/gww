@@ -250,15 +250,17 @@ class Photo < ActiveRecord::Base
   end
 
   def self.change_game_status(id, status)
-    # TODO Dave need to delete orphaned users here, too
     transaction do
-      Guess.delete_all [ "photo_id = ?", id ]
+      Guess.find_all_by_photo_id(id).each do |guess|
+        # TODO Dave address this duplication and feature envy
+        guess.destroy
+        guess.person.destroy_if_has_no_dependents
+      end
       Revelation.delete_all [ "photo_id = ?", id ]
       photo = find id
       photo.game_status = status
       photo.save!
     end
-
   end
 
   def self.add_answer(comment_id, username)

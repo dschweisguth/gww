@@ -600,14 +600,19 @@ describe Photo do
       photo.game_status.should == 'unconfirmed'
     end
 
-    it "deletes existing guesses" do
+    it 'deletes existing guesses' do
       photo = Photo.make!
-      Guess.make! :photo => photo
+      guess = Guess.make! :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
+      # The guesser has no other photos or other guesses, so they should be deleted too.
+      # Would be nice to mock the method that deletes the person, which handles cases
+      # where the person has a photo or other guess and shouldn't be deleted,
+      # but doing so would be ugly.
+      Person.exists?(guess.person.id).should == false
     end
 
-    it "deletes existing guesses" do
+    it 'deletes existing revelations' do
       photo = Photo.make!
       Revelation.make! :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
