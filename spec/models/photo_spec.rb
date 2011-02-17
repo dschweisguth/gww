@@ -605,7 +605,7 @@ describe Photo do
       guess = Guess.make! :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
-      person_should_not_exist guess.person.id
+      guesser_should_not_exist guess
     end
 
     it 'deletes existing revelations' do
@@ -722,7 +722,7 @@ describe Photo do
         guess = Guess.make! :photo => photo
         Photo.add_answer comment.id, ''
         Guess.count.should == 0
-        person_should_not_exist guess.person.id
+        guesser_should_not_exist guess
       end
 
     end
@@ -741,7 +741,7 @@ describe Photo do
         photo.reload
         photo.game_status.should == 'unfound'
         Guess.count.should == 0
-        person_should_not_exist guess.person.id
+        guesser_should_not_exist guess
       end
 
       it "leaves the photo found if there's another guess" do
@@ -822,7 +822,7 @@ describe Photo do
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
       # TODO Dave
-#      person_should_not_exist guess.person.id
+#      guesser_should_not_exist guess
     end
 
   end
@@ -832,8 +832,8 @@ describe Photo do
   # It would be nice to mock the method that deletes the guesser, which handles
   # cases where the guesser has a photo or other guess and shouldn't be deleted,
   # but doing so would be ugly.
-  def person_should_not_exist(id)
-    Person.exists?(id).should == false
+  def guesser_should_not_exist(guess)
+    Person.exists?(guess.person.id).should == false
   end
 
 end
