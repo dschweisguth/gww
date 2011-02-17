@@ -323,6 +323,7 @@ class Photo < ActiveRecord::Base
             :added_at => Time.now.getutc
         end
 
+        # TODO Dave this probably orphans people too
         Guess.delete_all [ "photo_id = ?", photo.id ]
 
       end
