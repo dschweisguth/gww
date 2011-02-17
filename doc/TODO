@@ -1,20 +1,32 @@
-Bug: if a person has no photos and one guess, and that guess is taken away, the person isn't deleted
-Bug: when a photo is deleted, if it was guessed by someone who has no photos and only one guess, the person isn't deleted
+Bugs
+
+If a person has no photos and one guess, and that guess is taken away, the person isn't deleted
+When a photo is deleted, if it was guessed by someone who has no photos and only one guess, the person isn't deleted
+
+Debt
+
 Look in to why some photos have no farm, secret and/or server
-rvm
-Upgrade to Rails 3
-Upgrade to Ruby 1.9.2
-Upgrade to passenger 3 after this bug is resolved:
-  http://code.google.com/p/phusion-passenger/issues/detail?id=563
-Give different pages different titles
 Make a tag for thumbnails in lists
 Remove duplication from wheresies/index.html.erb
-Bug: can't reveal http://www.flickr.com/photos/kewlio/3303015174/, or Glenn's
-  El Polin picnic post
 Remove duplication from people/list view
 Factor out repeated calls to first_applicable
+Extract facades from models
+After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
+  is fixed,
+  Upgrade to passenger 3
+  Upgrade to Rails 3
+  rvm
+  Upgrade to Ruby 1.9.2
+
+Features
+
+Give different pages different titles
+Add a player's most recent post to their GWW page
 Add report of guesses made before photo was added
 Reduce the number of clicks it takes to add or remove a guess or revelation
+Make it possible to mark a photo as revealed which doesn't have a comment by
+  the poster, e.g. http://www.flickr.com/photos/kewlio/3303015174/, or Glenn's
+  El Polin picnic post
 Include tags in update
   Highlight foundinSF/unfoundinSF in unfound list
 Include comments in update
@@ -46,4 +58,5 @@ Track old usernames
   Put on user page
 Track favorites
 Track interestingness
-Extract facades from models
+Combine a player's posts, guesses and comments into a single activity stream
+Do the same for all players?
