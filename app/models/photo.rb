@@ -286,27 +286,7 @@ class Photo < ActiveRecord::Base
         guesser.username = result['person'][0]['username'][0]
         guesser.save!
       end
-      if guesser != photo.person
-        photo.game_status = 'found'
-        photo.save!
-
-        guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
-        if guess
-          guess.guessed_at = comment.commented_at
-          guess.guess_text = comment.comment_text
-          guess.save!
-        else
-          Guess.create! \
-            :photo => photo,
-            :person => guesser,
-            :guess_text => comment.comment_text,
-            :guessed_at => comment.commented_at,
-            :added_at => Time.now.getutc
-        end
-
-        Revelation.delete photo.revelation.id if photo.revelation
-
-      else
+      if guesser == photo.person
         photo.game_status = 'revealed'
         photo.save!
 
@@ -325,6 +305,26 @@ class Photo < ActiveRecord::Base
 
         # TODO Dave this probably orphans people too
         Guess.delete_all [ "photo_id = ?", photo.id ]
+
+      else
+        photo.game_status = 'found'
+        photo.save!
+
+        guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
+        if guess
+          guess.guessed_at = comment.commented_at
+          guess.guess_text = comment.comment_text
+          guess.save!
+        else
+          Guess.create! \
+            :photo => photo,
+            :person => guesser,
+            :guess_text => comment.comment_text,
+            :guessed_at => comment.commented_at,
+            :added_at => Time.now.getutc
+        end
+
+        Revelation.delete photo.revelation.id if photo.revelation
 
       end
 
