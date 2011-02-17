@@ -7,6 +7,13 @@ class Guess < ActiveRecord::Base
   validates_presence_of :guess_text, :guessed_at, :added_at
   attr_readonly :guess_text, :guessed_at, :added_at
 
+  # TODO Dave test
+  def self.destroy_all_by_photo_id(photo_id)
+    find_all_by_photo_id(photo_id).each do |guess|
+      guess.destroy
+    end
+  end
+
   # GWW saves all times as UTC, but the database time zone is Pacific time.
   # unix_timestamp therefore returns the same value for all datetimes in the
   # spring daylight savings jump. This creates spurious zero-second guesses. It

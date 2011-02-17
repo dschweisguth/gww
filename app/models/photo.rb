@@ -251,10 +251,7 @@ class Photo < ActiveRecord::Base
 
   def self.change_game_status(id, status)
     transaction do
-      Guess.find_all_by_photo_id(id).each do |guess|
-        # TODO Dave address this duplication and feature envy
-        guess.destroy
-      end
+      Guess.destroy_all_by_photo_id id
       Revelation.delete_all [ "photo_id = ?", id ]
       photo = find id
       photo.game_status = status
@@ -302,10 +299,7 @@ class Photo < ActiveRecord::Base
             :added_at => Time.now.getutc
         end
 
-        Guess.find_all_by_photo_id(photo.id).each do |guess|
-          # TODO Dave address this duplication and feature envy
-          guess.destroy
-        end
+        Guess.destroy_all_by_photo_id photo.id
 
       else
         photo.game_status = 'found'
@@ -371,10 +365,7 @@ class Photo < ActiveRecord::Base
     transaction do
       photo = find photo_id, :include => [ :revelation, :person ]
       photo.revelation.destroy if photo.revelation
-      Guess.find_all_by_photo_id(photo.id).each do |guess|
-        # TODO Dave address this duplication and feature envy
-        guess.destroy
-      end
+      Guess.destroy_all_by_photo_id photo.id
       Comment.delete_all [ 'photo_id = ?', photo.id ]
       photo.destroy
     end
