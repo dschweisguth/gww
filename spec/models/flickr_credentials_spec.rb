@@ -7,8 +7,7 @@ describe FlickrCredentials do
     end
 
     it 'sends a request to the Flickr API' do
-      # TODO Dave uncomment when Flickr API is back up
-#      request_should_succeed
+      request_should_succeed
     end
 
     it 'retries a failed request once' do
