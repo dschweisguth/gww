@@ -16,13 +16,16 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
+Remove New!
 Give different pages different titles
 Add a player's most recent post to their GWW page
 Add report of guesses made before photo was added
-Reduce the number of clicks it takes to add or remove a guess or revelation
-Make it possible to mark a photo as revealed which doesn't have a comment by
-  the poster, e.g. http://www.flickr.com/photos/kewlio/3303015174/, or Glenn's
-  El Polin picnic post
+Photo edit page
+  Reduce the number of clicks it takes to add or remove a guess or revelation
+  Make it possible to mark a photo as revealed which doesn't have a comment by
+    the poster, e.g. http://www.flickr.com/photos/kewlio/3303015174/, or Glenn's
+    El Polin picnic post
+  Make it possible to individually remove a guess which was added with a different username
 Include tags in update
   Highlight foundinSF/unfoundinSF in unfound list
 Include comments in update
