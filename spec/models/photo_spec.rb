@@ -737,7 +737,7 @@ describe Photo do
         Photo.remove_answer comment.id
         Guess.count.should == 0
         # The guesser has no other photos or other guesses, so they should be deleted too.
-        # Would be nice to mock the method that does this, which handles cases
+        # Would be nice to mock the method that deletes the person, which handles cases
         # where the person has a photo or other guess and shouldn't be deleted,
         # but doing so would be ugly.
         lambda { Person.find guess.person.id }.should raise_error ActiveRecord::RecordNotFound
@@ -805,6 +805,9 @@ describe Photo do
     it 'destroys the photo and its person' do
       photo = Photo.make!
       Photo.destroy_photo_and_dependent_objects photo.id
+      # Would be nice to mock the method that deletes the person, which handles cases
+      # where the person has a photo or other guess and shouldn't be deleted,
+      # but doing so would be ugly.
       Person.count.should == 0
       Photo.count.should == 0
     end
@@ -819,24 +822,6 @@ describe Photo do
       guess = Guess.make!
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
-    end
-
-    it "doesn't delete the photo's owner if they have another photo" do
-      person = Person.make!
-      photo1 = Photo.make! :label => 1, :person => person
-      photo2 = Photo.make! :label => 2, :person => person
-      Photo.destroy_photo_and_dependent_objects photo1.id
-      Person.all.should == [ person ]
-      Photo.all.should == [ photo2 ]
-    end
-
-    it "doesn't delete the photo's owner if they've made a guess" do
-      photo = Photo.make!
-      guess = Guess.make! :person => photo.person
-      Photo.destroy_photo_and_dependent_objects photo.id
-      Person.all.should =~ [ guess.person, guess.photo.person ]
-      Photo.all.should == [ guess.photo ]
-      Guess.all.should == [ guess ]
     end
 
   end
