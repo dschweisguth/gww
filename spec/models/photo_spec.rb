@@ -736,8 +736,32 @@ describe Photo do
           :comment_text => guess.guess_text
         Photo.remove_answer comment.id
         Guess.count.should == 0
+        # The guesser has no other photos or other guesses, so they should be deleted too
+        lambda { Person.find guess.person.id }.should raise_error ActiveRecord::RecordNotFound
         photo.reload
         photo.game_status.should == 'unfound'
+      end
+
+      it "doesn't delete the guesser if they've ever posted a photo" do
+        photo = Photo.make! :game_status => 'found'
+        guess = Guess.make! :photo => photo
+        Photo.make! :label => "guesser's", :person => guess.person
+        comment = Comment.make! :photo => photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :comment_text => guess.guess_text
+        Photo.remove_answer comment.id
+        Person.find(guess.person.id).should == guess.person
+      end
+
+      it "doesn't delete the guesser if they've made another guess" do
+        photo = Photo.make! :game_status => 'found'
+        guess = Guess.make! :photo => photo
+        Guess.make! :label => 'another', :person => guess.person
+        comment = Comment.make! :photo => photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :comment_text => guess.guess_text
+        Photo.remove_answer comment.id
+        Person.find(guess.person.id).should == guess.person
       end
 
       it "leaves the photo found if there's another guess" do
@@ -755,6 +779,8 @@ describe Photo do
         photo.reload
         photo.game_status.should == 'found'
       end
+
+      # TODO Dave remove duplication above
 
       it "blows up if the commenter doesn't have a guess for this comment" do
         person = Person.make!

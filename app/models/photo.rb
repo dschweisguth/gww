@@ -250,6 +250,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.change_game_status(id, status)
+    # TODO Dave need to delete orphaned users here, too
     transaction do
       Guess.delete_all [ "photo_id = ?", id ]
       Revelation.delete_all [ "photo_id = ?", id ]
@@ -355,6 +356,13 @@ class Photo < ActiveRecord::Base
           photo.save!
         end
         guess.destroy
+        p "photos", Photo.count(:conditions => [ 'person_id = ?', guess.person.id ])
+        p "guesses", Guess.count(:conditions => [ 'person_id = ?', guess.person.id ])
+        if Photo.count(:conditions => [ 'person_id = ?', guess.person.id ]) == 0 &&
+          Guess.count(:conditions => [ 'person_id = ?', guess.person.id ]) == 0
+          p "here"
+          guess.person.destroy
+        end
       end
     end
   end
@@ -370,6 +378,7 @@ class Photo < ActiveRecord::Base
       Comment.delete_all [ 'photo_id = ?', photo.id ]
       photo.destroy
 
+      # TODO Dave remove duplication
       # Delete the photo's owner if they have no other photos or guesses
       if Photo.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
 	Guess.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0
