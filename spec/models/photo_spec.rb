@@ -729,11 +729,7 @@ describe Photo do
   describe '.remove_answer' do
     describe "when the commenter didn't post the photo" do
       it 'removes a guess' do
-        photo = Photo.make! :game_status => 'found'
-        guess = Guess.make! :photo => photo
-        comment = Comment.make! :photo => photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :comment_text => guess.guess_text
+        photo, guess, comment = make_photo_with_one_guess
         Photo.remove_answer comment.id
         Guess.count.should == 0
         # The guesser has no other photos or other guesses, so they should be deleted too
@@ -742,26 +738,29 @@ describe Photo do
         photo.game_status.should == 'unfound'
       end
 
-      it "doesn't delete the guesser if they've ever posted a photo" do
-        photo = Photo.make! :game_status => 'found'
-        guess = Guess.make! :photo => photo
+      it "doesn't delete the guesser if they've posted a photo" do
+        #noinspection RubyUnusedLocalVariable
+        photo, guess, comment = make_photo_with_one_guess
         Photo.make! :label => "guesser's", :person => guess.person
-        comment = Comment.make! :photo => photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :comment_text => guess.guess_text
         Photo.remove_answer comment.id
         Person.find(guess.person.id).should == guess.person
       end
 
       it "doesn't delete the guesser if they've made another guess" do
+        #noinspection RubyUnusedLocalVariable
+        photo, guess, comment = make_photo_with_one_guess
+        Guess.make! :label => 'another', :person => guess.person
+        Photo.remove_answer comment.id
+        Person.find(guess.person.id).should == guess.person
+      end
+
+      def make_photo_with_one_guess
         photo = Photo.make! :game_status => 'found'
         guess = Guess.make! :photo => photo
-        Guess.make! :label => 'another', :person => guess.person
         comment = Comment.make! :photo => photo,
           :flickrid => guess.person.flickrid, :username => guess.person.username,
           :comment_text => guess.guess_text
-        Photo.remove_answer comment.id
-        Person.find(guess.person.id).should == guess.person
+        return photo, guess, comment
       end
 
       it "leaves the photo found if there's another guess" do
@@ -779,8 +778,6 @@ describe Photo do
         photo.reload
         photo.game_status.should == 'found'
       end
-
-      # TODO Dave remove duplication above
 
       it "blows up if the commenter doesn't have a guess for this comment" do
         person = Person.make!
