@@ -693,11 +693,11 @@ describe Photo do
         comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         Photo.add_answer comment.id, ''
+        photo.reload
+        photo.game_status.should == 'revealed'
         revelation = Revelation.find_by_photo_id comment.photo.id
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
-        photo.reload
-        photo.game_status.should == 'revealed'
       end
 
       it 'updates an existing revelation' do
@@ -755,9 +755,9 @@ describe Photo do
           :flickrid => guess2.person.flickrid, :username => guess2.person.username,
           :comment_text => guess2.guess_text
         Photo.remove_answer comment1.id
-        Guess.all.should == [ guess2 ]
         photo.reload
         photo.game_status.should == 'found'
+        Guess.all.should == [ guess2 ]
       end
 
       it "blows up if the commenter doesn't have a guess for this comment" do
@@ -777,9 +777,9 @@ describe Photo do
           :flickrid => photo.person.flickrid, :username => photo.person.username,
           :comment_text => revelation.revelation_text
         Photo.remove_answer comment.id
-        Revelation.count.should == 0
         photo.reload
         photo.game_status.should == 'unfound'
+        Revelation.count.should == 0
       end
 
       it "blows up if the commenter doesn't have a revelation for this comment" do
