@@ -325,7 +325,7 @@ class Photo < ActiveRecord::Base
             :added_at => Time.now.getutc
         end
 
-        Revelation.delete photo.revelation.id if photo.revelation
+        photo.revelation.destroy if photo.revelation
 
       end
 
