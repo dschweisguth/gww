@@ -729,38 +729,20 @@ describe Photo do
   describe '.remove_answer' do
     describe "when the commenter didn't post the photo" do
       it 'removes a guess' do
-        photo, guess, comment = make_photo_with_one_guess
-        Photo.remove_answer comment.id
-        Guess.count.should == 0
-        # The guesser has no other photos or other guesses, so they should be deleted too
-        lambda { Person.find guess.person.id }.should raise_error ActiveRecord::RecordNotFound
-        photo.reload
-        photo.game_status.should == 'unfound'
-      end
-
-      it "doesn't delete the guesser if they've posted a photo" do
-        #noinspection RubyUnusedLocalVariable
-        photo, guess, comment = make_photo_with_one_guess
-        Photo.make! :label => "guesser's", :person => guess.person
-        Photo.remove_answer comment.id
-        Person.find(guess.person.id).should == guess.person
-      end
-
-      it "doesn't delete the guesser if they've made another guess" do
-        #noinspection RubyUnusedLocalVariable
-        photo, guess, comment = make_photo_with_one_guess
-        Guess.make! :label => 'another', :person => guess.person
-        Photo.remove_answer comment.id
-        Person.find(guess.person.id).should == guess.person
-      end
-
-      def make_photo_with_one_guess
         photo = Photo.make! :game_status => 'found'
         guess = Guess.make! :photo => photo
         comment = Comment.make! :photo => photo,
           :flickrid => guess.person.flickrid, :username => guess.person.username,
           :comment_text => guess.guess_text
-        return photo, guess, comment
+        Photo.remove_answer comment.id
+        Guess.count.should == 0
+        # The guesser has no other photos or other guesses, so they should be deleted too.
+        # Would be nice to mock the method that does this, which handles cases
+        # where the person has a photo or other guess and shouldn't be deleted,
+        # but doing so would be ugly.
+        lambda { Person.find guess.person.id }.should raise_error ActiveRecord::RecordNotFound
+        photo.reload
+        photo.game_status.should == 'unfound'
       end
 
       it "leaves the photo found if there's another guess" do
