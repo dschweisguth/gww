@@ -129,6 +129,7 @@ class Guess < ActiveRecord::Base
     end
   end
 
+  # TODO Dave test
   def destroy
     super
     person.destroy_if_has_no_dependents

@@ -377,7 +377,6 @@ class Photo < ActiveRecord::Base
       end
       Comment.delete_all [ 'photo_id = ?', photo.id ]
       photo.destroy
-      photo.person.destroy_if_has_no_dependents
     end
   end
 
@@ -392,6 +391,12 @@ class Photo < ActiveRecord::Base
     people.each do |person|
       person[:posts] = posts_per_person[person.id] || 0
     end
+  end
+
+  # TODO Dave test
+  def destroy
+    super
+    person.destroy_if_has_no_dependents
   end
 
 end
