@@ -305,4 +305,13 @@ describe Guess do
     end
   end
 
+  describe '.destroy_all_by_photo_id' do
+    it 'destroys the guess and its person' do
+      guess = Guess.make!
+      guess.destroy
+      Guess.count.should == 0
+      Person.exists?(guess.person.id).should == false
+    end
+  end
+
 end
