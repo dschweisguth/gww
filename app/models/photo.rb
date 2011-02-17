@@ -356,11 +356,8 @@ class Photo < ActiveRecord::Base
           photo.save!
         end
         guess.destroy
-        p "photos", Photo.count(:conditions => [ 'person_id = ?', guess.person.id ])
-        p "guesses", Guess.count(:conditions => [ 'person_id = ?', guess.person.id ])
         if Photo.count(:conditions => [ 'person_id = ?', guess.person.id ]) == 0 &&
           Guess.count(:conditions => [ 'person_id = ?', guess.person.id ]) == 0
-          p "here"
           guess.person.destroy
         end
       end
