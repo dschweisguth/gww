@@ -13,8 +13,25 @@ Mac
     > sudo -u _mysql mysql_install_db5
     > /opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
     > ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
+    Create the following file:
+    > cat /opt/local/etc/mysql5/my.cnf 
+    [mysqld]
+    init-connect='SET NAMES utf8'
+    init_connect='SET collation_connection = utf8_unicode_ci'
+    default-character-set=utf8 
+    default-collation=utf8_unicode_ci
+
+    [clients]
+    default-character-set=utf8
+
+    [mysql]
+    default-character-set=utf8
+
 Linux
     TODO
+    Edit /etc/my.cnf (which on Linux, unlike on Mac OS, will exist on a new
+    installation) and add each of the settings above in the appropriate
+    section.
 
 Install ruby and friends
 ------------------------
@@ -120,17 +137,18 @@ Create dev database
 Create test database
     mysql> grant all privileges on gww_test.* to gww_dev@localhost;
     > rake RAILS_ENV=test db:create
-    > rake db:test:clone_structure
+    > rake db:test:clone_structure # Note that RAILS_ENV is default, not test
 Create production database
     mysql> grant all privileges on gww_production.* to gww_production@localhost;
-    mysql> grant select on gww_production.* to gww_dev@localhost;
+    Allow gww_dev to browse and mysqldump the production database:
+    mysql> grant select, lock tables on gww_production.* to gww_dev@localhost;
     > rake RAILS_ENV=production db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
 
 Test GWW
 --------
 
-> rake tests_and_specs
+> rake spec
 
 Install Phusion Passenger and configure httpd (for Linux production only)
 -------------------------------------------------------------------------

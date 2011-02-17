@@ -1,0 +1,95 @@
+This document logs the steps I took first to test (on my Mac dev box) and then to actually carry out (on my production CentOS box) migration of the GWW database from the latin1 to the utf8 character set.
+
+Test:
+
+> mysqldump -ugww_production -pgww_production --default-character-set=latin1 --skip-set-charset gww_production > gww_production.sql
+> scp schweisguth.org:gww_production.sql .
+> sed s/CHARSET=latin1/CHARSET=utf8/g gww_production.sql > gww_production-utf8.sql
+> mysqladmin5 -uroot -proot shutdown
+# Create /opt/local/etc/mysql5/my.cnf
+> sudo /opt/local/etc/LaunchDaemons/org.macports.mysql5/mysql5.wrapper start
+mysql> show variables like 'char%'; 
+# Remove encoding: utf8 etc. from config/database.yml
+> rake db:drop db:create
+mysql> show create database gww_dev;
+> mysql5 -ugww_dev -pgww_dev --default-character-set=utf8 gww_dev < gww_production-utf8.sql
+mysql> select username from comments where comment_text like '%Smart application Jef%';
+mysql> select username from people where username like '%musume%';
+> script/server
+# Check usernames in active members and comments
+
+Production:
+
+# Put up maintenance page
+
+# Make lots of backups, with the regular script and with copies with --default-character-set=whatever
+> lib/dump-gww-production
+> lib/dump-gww-production-latin1
+> lib/dump-gww-production-utf8
+
+# Dump the database and UTF8ify it
+> mysqldump -ugww_production -pgww_production --default-character-set=latin1 --skip-set-charset gww_production > gww_production.sql
+> sed s/CHARSET=latin1/CHARSET=utf8/g gww_production.sql > gww_production-utf8.sql
+
+# Edit /etc/my.cnf, bounce mysql, test
+> diff my.cnf.previous my.cnf
+14a15,19
+> init-connect='SET NAMES utf8'
+> init_connect='SET collation_connection = utf8_unicode_ci'
+> default-character-set=utf8 
+> default-collation=utf8_unicode_ci
+> 
+17a23,28
+> 
+> [clients]
+> default-character-set=utf8
+> 
+> [mysql]
+> default-character-set=utf8
+# service mysqld restart
+mysql> show variables like 'char%'; 
+
+# Create new user
+mysql> grant usage on gww_prod_utf8.* to gww_prod_utf8@localhost identified by 'gww_prod_utf8';
+mysql> grant all privileges on gww_prod_utf8.* to gww_prod_utf8@localhost;
+mysql> grant select on gww_prod_utf8.* to gww_dev@localhost;
+
+# Edit config/database.yml
+> diff ../gww-config/config/database.yml config/database.yml 
+6,7d5
+<   charset:   latin1
+<   collation: latin1_swedish_ci
+10,12c8,10
+<   database: gww_production
+<   username: gww_production
+<   password:  # <-- put your production database password here
+---
+>   database: gww_prod_utf8
+>   username: gww_prod_utf8 # <-- put your production database username here
+>   password: gww_prod_utf8 # <-- put your production database password here
+
+# Create new database
+> bundle exec rake RAILS_ENV=production db:create
+mysql> show create database gww_dev;
+
+# Load data and test
+> mysql -ugww_prod_utf8 -pgww_prod_utf8 --default-character-set=utf8 gww_prod_utf8 < gww_production-utf8.sql
+mysql> select username from comments where comment_text like '%Smart application Jef%';
+mysql> select username from people where username like '%musume%';
+
+# Take down maintenance page
+# Check usernames in active members and comments
+# Do an update and test again
+
+# Save the temporary files for a while
+> mv gww_production* ~/data/gww-backups
+
+# Clean up
+> cp config/database.yml ../gww-config/config
+# Update backup script to point to new production database
+> lib/dump-gww-production
+> bundle exec rake db:drop db:create
+> zcat ~/data/gww-backups/gww_prod_utf8-110216-16:54:03.sql.gz | mysql -ugww_dev -pgww_dev gww_dev
+> bundle exec rake RAILS_ENV=test db:drop db:create
+> bundle exec rake db:test:clone_structure
+# Manually reran TeamCity build; it passed

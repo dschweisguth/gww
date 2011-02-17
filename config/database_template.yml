@@ -3,9 +3,6 @@
 defaults: &defaults
   adapter:   mysql2
   host:      localhost
-  charset:   latin1
-  collation: latin1_swedish_ci
-  encoding:  latin1
 
 development:
   database: gww_dev
