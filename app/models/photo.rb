@@ -303,8 +303,11 @@ class Photo < ActiveRecord::Base
             :added_at => Time.now.getutc
         end
 
-        # TODO Dave this probably orphans people too
-        Guess.delete_all [ "photo_id = ?", photo.id ]
+        Guess.find_all_by_photo_id(photo.id).each do |guess|
+          # TODO Dave address this duplication and feature envy
+          guess.destroy
+          guess.person.destroy_if_has_no_dependents
+        end
 
       else
         photo.game_status = 'found'

@@ -723,9 +723,14 @@ describe Photo do
         photo = Photo.make!
         comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
-        Guess.make! :photo => photo
+        guess = Guess.make! :photo => photo
         Photo.add_answer comment.id, ''
         Guess.count.should == 0
+        # The guesser has no other photos or other guesses, so they should be deleted too.
+        # Would be nice to mock the method that deletes the person, which handles cases
+        # where the person has a photo or other guess and shouldn't be deleted,
+        # but doing so would be ugly.
+        Person.exists?(guess.person.id).should == false
       end
 
     end
