@@ -605,7 +605,7 @@ describe Photo do
       guess = Guess.make! :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
-      guesser_should_not_exist guess
+      owner_should_not_exist guess
     end
 
     it 'deletes existing revelations' do
@@ -722,7 +722,7 @@ describe Photo do
         guess = Guess.make! :photo => photo
         Photo.add_answer comment.id, ''
         Guess.count.should == 0
-        guesser_should_not_exist guess
+        owner_should_not_exist guess
       end
 
     end
@@ -741,7 +741,7 @@ describe Photo do
         photo.reload
         photo.game_status.should == 'unfound'
         Guess.count.should == 0
-        guesser_should_not_exist guess
+        owner_should_not_exist guess
       end
 
       it "leaves the photo found if there's another guess" do
@@ -804,11 +804,8 @@ describe Photo do
     it 'destroys the photo and its person' do
       photo = Photo.make!
       Photo.destroy_photo_and_dependent_objects photo.id
-      # It would be nice to mock the method that deletes the poster, which handles
-      # cases where the poster has a photo or other guess and shouldn't be deleted,
-      # but doing so would be ugly.
-      Person.count.should == 0
       Photo.count.should == 0
+      owner_should_not_exist photo
     end
 
     it "destroys the photo's revelation" do
@@ -821,17 +818,26 @@ describe Photo do
       guess = Guess.make!
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
-      guesser_should_not_exist guess
+      owner_should_not_exist guess
     end
 
   end
 
-  # Used by specs which delete a guess to assert that the guesser had no other
-  # photos or other guesses, so they should have been deleted too.
-  # It would be nice to mock the method that deletes the guesser, which handles
-  # cases where the guesser has a photo or other guess and shouldn't be deleted,
+  describe '#destroy' do
+    it 'destroys the photo and its person' do
+      photo = Photo.make!
+      photo.destroy
+      Photo.count.should == 0
+      owner_should_not_exist photo
+    end
+  end
+
+  # Used by specs which delete a photo or guess to assert that the owner had no
+  # other photos or other guesses, so they should have been deleted too.
+  # It would be nice to mock the method that deletes the owner, which handles
+  # cases where the owner has a photo or other guess and shouldn't be deleted,
   # but doing so would be ugly.
-  def guesser_should_not_exist(guess)
+  def owner_should_not_exist(guess)
     Person.exists?(guess.person.id).should == false
   end
 
