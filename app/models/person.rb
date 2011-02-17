@@ -311,4 +311,11 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
+  def destroy_if_has_no_dependents
+    if Photo.count(:conditions => [ 'person_id = ?', id ]) == 0 &&
+      Guess.count(:conditions => [ 'person_id = ?', id ]) == 0
+      destroy
+    end
+  end
+
 end

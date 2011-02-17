@@ -356,10 +356,7 @@ class Photo < ActiveRecord::Base
           photo.save!
         end
         guess.destroy
-        if Photo.count(:conditions => [ 'person_id = ?', guess.person.id ]) == 0 &&
-          Guess.count(:conditions => [ 'person_id = ?', guess.person.id ]) == 0
-          guess.person.destroy
-        end
+        guess.person.destroy_if_has_no_dependents
       end
     end
   end
@@ -374,14 +371,7 @@ class Photo < ActiveRecord::Base
       Guess.delete_all [ 'photo_id = ?', photo.id ]
       Comment.delete_all [ 'photo_id = ?', photo.id ]
       photo.destroy
-
-      # TODO Dave remove duplication
-      # Delete the photo's owner if they have no other photos or guesses
-      if Photo.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0 &&
-	Guess.count(:conditions => [ 'person_id = ?', photo.person_id ]) == 0
-	photo.person.destroy
-      end
-
+      photo.person.destroy_if_has_no_dependents
     end
   end
 
