@@ -32,6 +32,23 @@ describe Guess do
     it { should have_readonly_attribute :added_at }
   end
 
+  describe '.destroy_all_by_photo_id' do
+    it 'destroys all guesses of the photo with the given id' do
+      guess = Guess.make!
+      Guess.destroy_all_by_photo_id guess.photo.id
+      Guess.count.should == 0
+      Person.exists?(guess.person.id).should == false
+    end
+
+    it "ignores other photos' guesses" do
+      one_guess = Guess.make! :label => 'one'
+      other_guess = Guess.make! :label => 'other'
+      Guess.destroy_all_by_photo_id one_guess.photo.id
+      Guess.all.should == [ other_guess ]
+    end
+
+  end
+
   describe '.longest' do
     it 'lists guesses sorted by time between post and guess, descending' do
       photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2000)
