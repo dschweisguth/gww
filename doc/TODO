@@ -1,8 +1,3 @@
-Bugs
-
-If a person has no photos and one guess, and that guess is taken away, the person isn't deleted
-When a photo is deleted, if it was guessed by someone who has no photos and only one guess, the person isn't deleted
-
 Debt
 
 Look for guesses and revelation which don't match existing comments, and so might have been orphaned due to encoding bug
