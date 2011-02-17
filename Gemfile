@@ -20,5 +20,5 @@ end
 
 group :production do
   #noinspection RailsParamDefResolve,GemInspection
-  gem 'passenger', '~> 3.0.2'
+  gem 'passenger', '~> 2.2.15'
 end
