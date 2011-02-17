@@ -7,7 +7,6 @@ class Guess < ActiveRecord::Base
   validates_presence_of :guess_text, :guessed_at, :added_at
   attr_readonly :guess_text, :guessed_at, :added_at
 
-  # TODO Dave test
   def self.destroy_all_by_photo_id(photo_id)
     find_all_by_photo_id(photo_id).each do |guess|
       guess.destroy
