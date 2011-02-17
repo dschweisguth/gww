@@ -360,7 +360,6 @@ class Photo < ActiveRecord::Base
           photo.save!
         end
         guess.destroy
-        guess.person.destroy_if_has_no_dependents
       end
     end
   end
