@@ -746,7 +746,7 @@ describe Photo do
         # Would be nice to mock the method that deletes the person, which handles cases
         # where the person has a photo or other guess and shouldn't be deleted,
         # but doing so would be ugly.
-        lambda { Person.find guess.person.id }.should raise_error ActiveRecord::RecordNotFound
+        Person.exists?(guess.person.id).should == false
         photo.reload
         photo.game_status.should == 'unfound'
       end
