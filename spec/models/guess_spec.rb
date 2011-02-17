@@ -305,7 +305,7 @@ describe Guess do
     end
   end
 
-  describe '.destroy_all_by_photo_id' do
+  describe '#destroy' do
     it 'destroys the guess and its person' do
       guess = Guess.make!
       guess.destroy
