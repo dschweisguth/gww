@@ -634,16 +634,10 @@ describe Photo do
 
       it 'creates the guesser if necessary' do
         comment = Comment.make!
-        stub(FlickrCredentials).request { {
-          'person' => [ {
-            'id' => 'new_guesser_flickrid',
-            'username' => [ 'new_guesser_username' ]
-          } ]
-        } }
         Photo.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
-        guess.person.username.should == 'new_guesser_username'
+        guess.person.username.should == comment.username
       end
 
       it 'gives the point to another user' do

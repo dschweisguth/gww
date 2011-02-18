@@ -268,18 +268,17 @@ class Photo < ActiveRecord::Base
       if username != ''
         # Note that this branch results in a guess that can't be individually removed
         guesser_flickrid = Comment.find_by_username(username).flickrid
+        guesser_username = username
         guesser = Person.find_by_username username
       else
         guesser_flickrid = comment.flickrid
+        guesser_username = comment.username
         guesser = Person.find_by_flickrid guesser_flickrid
       end
       if !guesser
-        # TODO Dave don't bother to check the username, since we'll update it when we next scrape Flickr?
-        result = FlickrCredentials.request 'flickr.people.getInfo',
-          'user_id' => guesser_flickrid
         guesser = Person.new
         guesser.flickrid = guesser_flickrid
-        guesser.username = result['person'][0]['username'][0]
+        guesser.username = guesser_username
         guesser.save!
       end
       if guesser == photo.person
