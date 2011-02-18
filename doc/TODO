@@ -11,6 +11,7 @@ Remove duplication from wheresies/index.html.erb
 Remove duplication from people/list view
 Factor out repeated calls to first_applicable
 Extract facades from models
+Merge revelations into guesses?
 After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
   is fixed,
   Upgrade to passenger 3
