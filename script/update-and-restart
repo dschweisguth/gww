@@ -6,8 +6,7 @@
 
 cd `dirname $0`/..
 git fetch --tags
-# TODO Dave use ruby, and eliminate tail
-git checkout `git tag | perl -e 'print sort { substr($a, 6) <=> substr($b, 6) } <>' | tail -1`
+git checkout `git tag | ruby -e 'puts STDIN.readlines.sort_by { |s| s[6, s.length - 6].to_i }.last'`
 # I thought Rails would do this on startup, but it doesn't seem to happen when
 # running this script.
 bundle install --deployment --without test
