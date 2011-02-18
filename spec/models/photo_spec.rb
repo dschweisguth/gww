@@ -661,9 +661,9 @@ describe Photo do
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
         Photo.add_answer comment.id, ''
-        new_guess = Guess.find_by_photo_id comment.photo
-        new_guess.id.should == old_guess.id
-        new_guess.person_id.should == old_guess.person.id
+        new_guesses = Guess.find_all_by_photo_id comment.photo
+        new_guesses.should == [ old_guess ]
+        #new_guess = new_guesses[0]
         # Note that the following two values are different than those for old_guess
         # TODO Dave why doesn't this work?
         #new_guess.guess_text.should == comment.comment_text
@@ -701,8 +701,9 @@ describe Photo do
           :username => old_revelation.photo.person.username,
           :commented_at => Time.utc(2011)
         Photo.add_answer comment.id, ''
-        new_revelation = Revelation.find_by_photo_id comment.photo
-        new_revelation.id.should == old_revelation.id
+        new_revelations = Revelation.find_all_by_photo_id comment.photo
+        new_revelations.should == [ old_revelation ]
+        #new_revelation = new_revelations[0]
         # Note that the following two values are different than those for old_guess
         # TODO Dave why doesn't this work?
         #new_revelation.revelation_text.should == comment.comment_text
