@@ -276,10 +276,9 @@ class Photo < ActiveRecord::Base
         guesser = Person.find_by_flickrid guesser_flickrid
       end
       if !guesser
-        guesser = Person.new
-        guesser.flickrid = guesser_flickrid
-        guesser.username = guesser_username
-        guesser.save!
+        guesser = Person.create! \
+          :flickrid => guesser_flickrid,
+          :username => guesser_username
       end
       if guesser == photo.person
         photo.game_status = 'revealed'
