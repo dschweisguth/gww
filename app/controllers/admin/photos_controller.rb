@@ -3,10 +3,10 @@ class Admin::PhotosController < ApplicationController
 
   def update
     # Expire before updating so everyone sees the in-progress message
-    expire_cached_pages
+    PageCache.clear
     new_photo_count, new_person_count, pages_gotten, pages_available =
       Photo.update_all_from_flickr
-    expire_cached_pages
+    PageCache.clear
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{pages_gotten} pages out of " +
       "#{pages_available}.</br>"
@@ -15,7 +15,7 @@ class Admin::PhotosController < ApplicationController
 
   def update_statistics
     Photo.update_statistics
-    expire_cached_pages
+    PageCache.clear
     flash[:notice] = 'Updated statistics.</br>'
     redirect_to admin_root_path
   end
@@ -47,13 +47,13 @@ class Admin::PhotosController < ApplicationController
       @comments = Comment.find_all_by_photo_id(@photo)
     else
       @comments = @photo.load_comments
-      expire_cached_pages
+      PageCache.clear
     end
   end
 
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
-    expire_cached_pages
+    PageCache.clear
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
@@ -75,7 +75,7 @@ class Admin::PhotosController < ApplicationController
         flash[:notice] = e.message
       end
     end
-    expire_cached_pages
+    PageCache.clear
     redirect_to edit_photo_path :id => photo_id, :nocomment => 'true'
   end
 
@@ -85,16 +85,8 @@ class Admin::PhotosController < ApplicationController
 
   def destroy
     Photo.destroy_photo_and_dependent_objects params[:id]
-    expire_cached_pages
+    PageCache.clear
     redirect_to admin_root_path
-  end
-
-  # TODO Dave move this to its own 'model' object so it can be stubbed normally 
-  def expire_cached_pages
-    cache_dir = RAILS_ROOT + "/public/cache"
-    if File.exist? cache_dir
-      FileUtils.rm_r cache_dir
-    end
   end
 
   def edit_in_gww

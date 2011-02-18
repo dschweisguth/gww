@@ -5,7 +5,7 @@ describe Admin::PhotosController do
 
   describe '#update' do
     it 'does some work and redirects to the admin index' do
-      stub_expire_cached_pages
+      mock_clear_page_cache 2
       mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
       get :update
       #noinspection RubyResolve
@@ -18,7 +18,7 @@ describe Admin::PhotosController do
   describe '#update_statistics' do
     it 'does some work and redirects to the admin index' do
       mock(Photo).update_statistics
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :update_statistics
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
@@ -90,7 +90,7 @@ describe Admin::PhotosController do
       stub(photo).id { 1 }
       stub(Photo).find(photo.id.to_s, anything) { photo }
       stub(photo).load_comments { [ Comment.make ] }
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :edit, :id => photo.id
 
       #noinspection RubyResolve
@@ -111,7 +111,7 @@ describe Admin::PhotosController do
   describe '#change_game_status' do
     it 'changes the game status and reloads the page' do
       mock(Photo).change_game_status('1', 'unconfirmed')
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :change_game_status, :id => 1, :commit => 'unconfirmed'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
@@ -121,7 +121,7 @@ describe Admin::PhotosController do
   describe '.update_answer' do
     it 'adds a guess or revelation' do
       mock(Photo).add_answer 2, ''
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Add this guess or revelation'
       #noinspection RubyResolve
@@ -130,7 +130,7 @@ describe Admin::PhotosController do
 
     it 'removes a guess or revelation' do
       mock(Photo).remove_answer 2
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Remove this guess or revelation'
       #noinspection RubyResolve
@@ -139,7 +139,7 @@ describe Admin::PhotosController do
 
     it 'complains if the user removes a guess or revelation incorrectly' do
       mock(Photo).remove_answer(2) { raise Photo::RemoveAnswerError, 'the message' }
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Remove this guess or revelation'
       #noinspection RubyResolve
@@ -167,30 +167,11 @@ describe Admin::PhotosController do
   describe '#destroy' do
     it 'destroys' do
       mock(Photo).destroy_photo_and_dependent_objects '1'
-      stub_expire_cached_pages
+      mock_clear_page_cache
       get :destroy, :id => 1
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
     end
-  end
-
-  describe '#expire_cached_pages' do
-    CACHE_DIR = RAILS_ROOT + "/public/cache"
-
-    it 'deletes public/cache if it exists' do
-      controller = Admin::PhotosController.new
-      mock(File).exist?(CACHE_DIR) { true }
-      mock(FileUtils).rm_r(CACHE_DIR)
-      controller.expire_cached_pages
-    end
-
-    it "doesn't if it doesn't" do
-      controller = Admin::PhotosController.new
-      mock(File).exist?(CACHE_DIR) { false }
-      dont_allow(FileUtils).rm_r
-      controller.expire_cached_pages
-    end
-
   end
 
   describe '#edit_in_gww' do
@@ -225,8 +206,8 @@ describe Admin::PhotosController do
 
   end
 
-  def stub_expire_cached_pages
-    any_instance_of(Admin::PhotosController) { |i| stub(i).expire_cached_pages }
+  def mock_clear_page_cache(times = 1)
+    mock(PageCache).clear.times(times)
   end
 
 end
