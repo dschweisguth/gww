@@ -1,3 +1,4 @@
+<% content_for :title do %>Photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 <% sandwich do %>
 <%= render :partial => 'image_and_status', :locals => { :size => nil } %>
 

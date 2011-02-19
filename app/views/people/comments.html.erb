@@ -1,3 +1,4 @@
+<% content_for :title do %><%=h @person.username %>'s comments<% end %>
 <% sandwich 'person_breadcrumbs' do %>
 <h1><%= pluralize @photo_ids.length, 'photo' %> commented on by <%=h @person.username %></h1>
 
