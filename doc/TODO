@@ -4,7 +4,6 @@ The username of a person who has guessed but never posted is never updated
 
 Debt
 
-Look for guesses and revelation which don't match existing comments, and so might have been orphaned due to encoding bug
 Look in to why some photos have no farm, secret and/or server
 Make a tag for thumbnails in lists
 Remove duplication from wheresies/index.html.erb
