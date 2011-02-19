@@ -1,10 +1,11 @@
 Bugs
 
 The username of a person who has guessed but never posted is never updated
+A photo which is guessed or revealed and then removed from the group remains
+  in the database but is no longer updated
 
 Debt
 
-Look in to why some photos have no farm, secret and/or server
 Make a tag for thumbnails in lists
 Remove duplication from wheresies/index.html.erb
 Remove duplication from people/list view
