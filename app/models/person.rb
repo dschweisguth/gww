@@ -73,11 +73,6 @@ class Person < ActiveRecord::Base
     people
   end
 
-  def self.criterion(element1, element2, property)
-    element2[property] <=> element1[property]
-  end
-  private_class_method :criterion
-
   def self.guesses_per_day
     statistic_by_person [
       'select ' +
