@@ -58,6 +58,10 @@ module ApplicationHelper
       { :alt => alt_and_title, :title => alt_and_title }.merge(options)
   end
 
+  def thumbnail(photo)
+    link_to titled_image_tag(url_for_flickr_image(photo, 't'), ""), show_photo_path(photo)
+  end
+
   def sandwich(breadcrumbs = 'shared/breadcrumbs', &content)
     render :layout => 'shared/sandwich', :locals => { :breadcrumbs => breadcrumbs }, &content
   end
