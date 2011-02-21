@@ -5,7 +5,7 @@
 <div class="float">
   <h2>Rookies (members who first posted or scored in 2010)</h2>
 
-  <%= render :partial => 'wheresies/index/stat_table', :locals => {
+  <%= render :partial => 'wheresies/index/top_people', :locals => {
           :title => 'Most points in 2010',
           :division => 'Rookie',
           :statistic => 'Points in 2010',
@@ -13,7 +13,7 @@
           :key => :points
   } %>
 
-  <%= render :partial => 'wheresies/index/stat_table', :locals => {
+  <%= render :partial => 'wheresies/index/top_people', :locals => {
           :title => 'Most posts in 2010',
           :division => 'Rookie',
           :statistic => 'Posts in 2010',
@@ -26,7 +26,7 @@
 <div class="float">
   <h2>All GWSF members</h2>
 
-  <%= render :partial => 'wheresies/index/stat_table', :locals => {
+  <%= render :partial => 'wheresies/index/top_people', :locals => {
           :title => 'Most points in 2010',
           :division => 'Member',
           :statistic => 'Points in 2010',
@@ -34,7 +34,7 @@
           :key => :points
   } %>
 
-  <%= render :partial => 'wheresies/index/stat_table', :locals => {
+  <%= render :partial => 'wheresies/index/top_people', :locals => {
           :title => 'Most posts in 2010',
           :division => 'Member',
           :statistic => 'Posts in 2010',
