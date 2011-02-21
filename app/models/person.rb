@@ -45,7 +45,7 @@ class Person < ActiveRecord::Base
 
     people.sort! do |x, y|
       username = -criterion(x, y, :downcased_username)
-      sorted_by_criterion = first_applicable(
+      sorted_by_criterion = (
 	case sorted_by
 	when 'username'
 	  [ username ]
@@ -66,7 +66,7 @@ class Person < ActiveRecord::Base
 	when 'comments-to-be-guessed'
 	  [ criterion(x, y, :comments_to_be_guessed), criterion(x, y, :post_count), username ]
         end
-      )
+      ).find(lambda { 0 }) { |criterion| criterion != 0 }
       order == '+' ? sorted_by_criterion : -sorted_by_criterion
     end
 
@@ -77,11 +77,6 @@ class Person < ActiveRecord::Base
     element2[property] <=> element1[property]
   end
   private_class_method :criterion
-
-  def self.first_applicable(criteria)
-    criteria.find(lambda { 0 }) { |criterion| criterion != 0 }
-  end
-  private_class_method :first_applicable
 
   def self.guesses_per_day
     statistic_by_person [
