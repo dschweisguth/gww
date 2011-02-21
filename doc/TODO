@@ -6,7 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Make a tag for thumbnails in lists
 Factor out repeated calls to first_applicable
 Extract facades from models
 Merge revelations into guesses?
