@@ -6,7 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Factor out repeated calls to first_applicable
 Extract facades from models
 Merge revelations into guesses?
 After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563

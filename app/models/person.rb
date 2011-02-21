@@ -45,35 +45,28 @@ class Person < ActiveRecord::Base
 
     people.sort! do |x, y|
       username = -criterion(x, y, :downcased_username)
-      sorted_by_criterion =
+      sorted_by_criterion = first_applicable(
 	case sorted_by
 	when 'username'
-	  first_applicable username
+	  [ username ]
 	when 'score'
-	  first_applicable criterion(x, y, :guess_count),
-	    criterion(x, y, :post_count), username
+	  [ criterion(x, y, :guess_count), criterion(x, y, :post_count), username ]
 	when 'posts'
-	  first_applicable criterion(x, y, :post_count),
-	    criterion(x, y, :guess_count), username
+	  [ criterion(x, y, :post_count), criterion(x, y, :guess_count), username ]
 	when 'guesses-per-day'
-	  first_applicable criterion(x, y, :guesses_per_day),
-	    criterion(x, y, :guess_count), username
+	  [ criterion(x, y, :guesses_per_day), criterion(x, y, :guess_count), username ]
 	when 'posts-per-guess'
-	  first_applicable criterion(x, y, :posts_per_guess),
-	    criterion(x, y, :post_count), username
+	  [ criterion(x, y, :posts_per_guess), criterion(x, y, :post_count), username ]
 	when 'time-to-guess'
-	  first_applicable criterion(x, y, :guess_speed),
-	    criterion(x, y, :guess_count), username
+	  [ criterion(x, y, :guess_speed), criterion(x, y, :guess_count), username ]
 	when 'time-to-be-guessed'
-	  first_applicable criterion(x, y, :be_guessed_speed),
-	    criterion(x, y, :post_count), username
+	  [ criterion(x, y, :be_guessed_speed), criterion(x, y, :post_count), username ]
 	when 'comments-to-guess'
-	  first_applicable criterion(x, y, :comments_to_guess),
-	    criterion(x, y, :guess_count), username
+	  [ criterion(x, y, :comments_to_guess), criterion(x, y, :guess_count), username ]
 	when 'comments-to-be-guessed'
-	  first_applicable criterion(x, y, :comments_to_be_guessed),
-	    criterion(x, y, :post_count), username
+	  [ criterion(x, y, :comments_to_be_guessed), criterion(x, y, :post_count), username ]
         end
+      )
       order == '+' ? sorted_by_criterion : -sorted_by_criterion
     end
 
@@ -85,7 +78,7 @@ class Person < ActiveRecord::Base
   end
   private_class_method :criterion
 
-  def self.first_applicable(*criteria)
+  def self.first_applicable(criteria)
     criteria.find(lambda { 0 }) { |criterion| criterion != 0 }
   end
   private_class_method :first_applicable
