@@ -5,6 +5,10 @@ module PeopleHelper
       sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
   end
 
+  def to_4_places(x)
+    sprintf("%.4f", x)
+  end
+
   def position(high_scorers, person)
     position = 0
     score_for_this_position = 1.0/0

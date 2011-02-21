@@ -22,6 +22,12 @@ describe PeopleHelper do
 
   end
 
+  describe '#to_four_places' do
+    it 'returns the number, rounded to four places, as a string' do
+      helper.to_4_places(1.11111).should == "1.1111"
+    end
+  end
+
   describe '#position' do
     it "returns the appropriate prefix for '-most': '', if the person is first" do
       position_should_return [], ''
