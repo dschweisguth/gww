@@ -14,7 +14,7 @@
   <tr>
     <td class="row-number"><%= guess_index + 1 %>.</td>
     <% if guess.photo.person_id != 0 -%>
-    <td class="thumbnail"><%= linked_image guess.photo %></td>
+    <td class="thumbnail"><%= thumbnail guess.photo %></td>
     <td><%= link_to_person guess.photo.person %></td>
     <% else -%>
     <td><strong>unknown</strong></td>

@@ -122,7 +122,7 @@ describe ApplicationHelper do
     it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
       photo = Photo.make
       mock(photo).id { 666 }
-      helper.linked_image(photo).should ==
+      helper.thumbnail(photo).should ==
         '<a href="/photos/show/666"><img alt="" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="" /></a>'
     end
   end
