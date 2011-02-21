@@ -28,6 +28,17 @@ describe PeopleHelper do
     end
   end
 
+  describe '#infinity_or' do
+    it 'returns the number, rounded to four places, as a string' do
+      helper.infinity_or(1.11111).should == "1.1111"
+    end
+
+    it 'returns HTML for infinity' do
+      helper.infinity_or(Person::INFINITY).should == '&#8734;'
+    end
+    
+  end
+
   describe '#position' do
     it "returns the appropriate prefix for '-most': '', if the person is first" do
       position_should_return [], ''

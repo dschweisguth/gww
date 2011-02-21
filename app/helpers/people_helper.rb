@@ -9,6 +9,10 @@ module PeopleHelper
     sprintf("%.4f", x)
   end
 
+  def infinity_or(x)
+    x.infinite? ? '&#8734;' : to_4_places(x)
+  end
+
   def position(high_scorers, person)
     position = 0
     score_for_this_position = 1.0/0
