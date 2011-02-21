@@ -14,7 +14,7 @@
 <% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
     <td class="row-number"><%= photo_index + 1 %>.</td>
-    <td class="thumbnail"><%= thumbnail photo %></td>
+    <td class="thumbnail"><%= linked_image photo %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.mapped %></td>

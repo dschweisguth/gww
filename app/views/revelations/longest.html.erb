@@ -12,7 +12,7 @@
   </tr>
   <% @longest.each do |revelation| -%>
     <tr>
-      <td class="thumbnail"><%= thumbnail revelation.photo %></td>
+      <td class="thumbnail"><%= linked_image revelation.photo %></td>
       <td><%= link_to_person revelation.photo.person %></td>
       <td><%= revelation.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
       <td><%= revelation.revealed_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
