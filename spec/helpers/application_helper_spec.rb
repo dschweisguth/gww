@@ -119,12 +119,21 @@ describe ApplicationHelper do
   end
 
   describe '#thumbnail' do
+    before do
+      @photo = Photo.make
+      mock(@photo).id { 666 }
+    end
+
     it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
-      photo = Photo.make
-      mock(photo).id { 666 }
-      helper.thumbnail(photo).should ==
+      helper.thumbnail(@photo).should ==
         '<a href="/photos/show/666"><img alt="" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="" /></a>'
     end
+
+    it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
+      helper.thumbnail(@photo, "alt text").should ==
+        '<a href="/photos/show/666"><img alt="alt text" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="alt text" /></a>'
+    end
+
   end
 
   describe '#sandwich' do

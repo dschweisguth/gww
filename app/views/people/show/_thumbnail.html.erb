@@ -1,1 +1,1 @@
-<%= link_to titled_image_tag(url_for_flickr_image(photo, 't'), render(:partial => 'shared/alt', :locals => { :photo => photo })), show_photo_path(photo) -%>
+<%= thumbnail photo, render(:partial => 'shared/alt', :locals => { :photo => photo }) -%>
