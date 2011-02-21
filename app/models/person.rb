@@ -43,9 +43,9 @@ class Person < ActiveRecord::Base
     people = all
     people.each do |person|
       person[:downcased_username] = person.username.downcase
-      person[:post_count] = post_counts[person.id] || 0.0
-      person[:guess_count] = guess_counts[person.id] || 0.0
-      person[:guesses_per_day] = guesses_per_days[person.id] || 0.0
+      person[:post_count] = post_counts[person.id] || 0
+      person[:guess_count] = guess_counts[person.id] || 0
+      person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:posts_per_guess] =
         person[:post_count].to_f / person[:guess_count]
       person[:guess_speed] = guess_speeds[person.id] || INFINITY
