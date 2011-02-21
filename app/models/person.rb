@@ -8,6 +8,18 @@ class Person < ActiveRecord::Base
   has_many :photos
   has_many :guesses
 
+  CRITERIA = {
+    'username' => [ :downcased_username ],
+    'score' => [ :guess_count, :post_count, :downcased_username ],
+    'posts' => [ :post_count, :guess_count, :downcased_username ],
+    'guesses-per-day' => [ :guesses_per_day, :guess_count, :downcased_username ],
+    'posts-per-guess' => [ :posts_per_guess, :post_count, :downcased_username ],
+    'time-to-guess' => [ :guess_speed, :guess_count, :downcased_username ],
+    'time-to-be-guessed' => [ :be_guessed_speed, :post_count, :downcased_username ],
+    'comments-to-guess' => [ :comments_to_guess, :guess_count, :downcased_username ],
+    'comments-to-be-guessed' => [ :comments_to_be_guessed, :post_count, :downcased_username ]
+  }
+
   def self.all_sorted(sorted_by, order)
     # I'd have raised Argument error in the case below to avoid duplication,
     # but when I do that something eats the raised error.
@@ -44,30 +56,18 @@ class Person < ActiveRecord::Base
     end
 
     people.sort! do |x, y|
-      username = -criterion(x, y, :downcased_username)
-      sorted_by_criterion = (
-	case sorted_by
-	when 'username'
-	  [ username ]
-	when 'score'
-	  [ criterion(x, y, :guess_count), criterion(x, y, :post_count), username ]
-	when 'posts'
-	  [ criterion(x, y, :post_count), criterion(x, y, :guess_count), username ]
-	when 'guesses-per-day'
-	  [ criterion(x, y, :guesses_per_day), criterion(x, y, :guess_count), username ]
-	when 'posts-per-guess'
-	  [ criterion(x, y, :posts_per_guess), criterion(x, y, :post_count), username ]
-	when 'time-to-guess'
-	  [ criterion(x, y, :guess_speed), criterion(x, y, :guess_count), username ]
-	when 'time-to-be-guessed'
-	  [ criterion(x, y, :be_guessed_speed), criterion(x, y, :post_count), username ]
-	when 'comments-to-guess'
-	  [ criterion(x, y, :comments_to_guess), criterion(x, y, :guess_count), username ]
-	when 'comments-to-be-guessed'
-	  [ criterion(x, y, :comments_to_be_guessed), criterion(x, y, :post_count), username ]
+      total_comparison = 0
+      CRITERIA[sorted_by].each do |attr|
+        comparison = y[attr] <=> x[attr]
+        if comparison != 0
+          total_comparison = comparison
+          if attr == :downcased_username
+            total_comparison *= -1
+          end
+          break
         end
-      ).find(lambda { 0 }) { |criterion| criterion != 0 }
-      order == '+' ? sorted_by_criterion : -sorted_by_criterion
+      end
+      order == '+' ? total_comparison : -total_comparison
     end
 
     people
