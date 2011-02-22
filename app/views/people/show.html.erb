@@ -22,9 +22,7 @@ In Guess Where SF:
 
 <%= render :partial => 'people/show/trophies' %>
 
-<%= render :partial => 'people/show/guesses',
-  :locals => { :person => @person, :guesses => @guesses, :posters => @posters }
-  %>
+<%= render :partial => 'people/show/guesses' %>
 
 <%= render :partial => 'people/show/posts',
   :locals => { :person => @person, :posts => @posts,
