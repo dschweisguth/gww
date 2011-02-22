@@ -49,6 +49,32 @@ describe PeopleHelper do
       "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
   end
 
+  describe '#alt_for_star_for_age' do
+    expected = {
+      :bronze => '1 year',
+      :silver => '2 years',
+      :gold => '3 years'
+    }
+    expected.each_pair do |star, period|
+      it "returns the alt text 'Unfound for #{period} or more' given the star :#{star}" do
+        helper.alt_for_star_for_age(star).should == "Unfound for #{period} or more"
+      end
+    end
+  end
+
+  describe '#alt_for_star_for_speed' do
+    expected = {
+      :bronze => nil,
+      :silver => 'Guessed in less than a minute',
+      :gold => 'Guessed in less than 10 seconds'
+    }
+    expected.each_pair do |star, period|
+      it "returns the alt text '#{period}' given the star :#{star}" do
+        helper.alt_for_star_for_speed(star).should == period
+      end
+    end
+  end
+
   describe '#position' do
     it "returns the appropriate prefix for '-most': '', if the person is first" do
       position_should_return [], ''
@@ -111,32 +137,6 @@ describe PeopleHelper do
     expected.each_pair do |star, uri|
       it "returns the image URI #{uri} given the star :#{star}" do
         helper.image_for_star(star).should == uri
-      end
-    end
-  end
-
-  describe '#alt_for_star_for_age' do
-    expected = {
-      :bronze => '1 year',
-      :silver => '2 years',
-      :gold => '3 years'
-    }
-    expected.each_pair do |star, period|
-      it "returns the alt text 'Unfound for #{period} or more' given the star :#{star}" do
-        helper.alt_for_star_for_age(star).should == "Unfound for #{period} or more"
-      end
-    end
-  end
-
-  describe '#alt_for_star_for_speed' do
-    expected = {
-      :bronze => nil,
-      :silver => 'Guessed in less than a minute',
-      :gold => 'Guessed in less than 10 seconds'
-    }
-    expected.each_pair do |star, period|
-      it "returns the alt text '#{period}' given the star :#{star}" do
-        helper.alt_for_star_for_speed(star).should == period
       end
     end
   end
