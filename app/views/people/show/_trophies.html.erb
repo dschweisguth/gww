@@ -10,14 +10,14 @@
   <% if most_recent_post %><th>Most recent post</th><% end %>
 </tr>
 <tr>
-  <% if first_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => first_guess.photo } %></td><% end %>
-  <% if first_post %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => first_post } %></td><% end %>
-  <% if oldest_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => oldest_guess.photo } %></td><% end %>
-  <% if fastest_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => fastest_guess.photo } %></td><% end %>
-  <% if longest_lasting_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => longest_lasting_guess.photo } %></td><% end %>
-  <% if shortest_lasting_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => shortest_lasting_guess.photo } %></td><% end %>
-  <% if most_recent_guess %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => most_recent_guess.photo } %></td><% end %>
-  <% if most_recent_post %><td><%= render :partial => 'people/show/thumbnail', :locals => { :photo => most_recent_post } %></td><% end %>
+  <% if first_guess %><td><%= thumbnail_with_alt first_guess.photo %></td><% end %>
+  <% if first_post %><td><%= thumbnail_with_alt first_post %></td><% end %>
+  <% if oldest_guess %><td><%= thumbnail_with_alt oldest_guess.photo %></td><% end %>
+  <% if fastest_guess %><td><%= thumbnail_with_alt fastest_guess.photo  %></td><% end %>
+  <% if longest_lasting_guess %><td><%= thumbnail_with_alt longest_lasting_guess.photo %></td><% end %>
+  <% if shortest_lasting_guess %><td><%= thumbnail_with_alt shortest_lasting_guess.photo %></td><% end %>
+  <% if most_recent_guess %><td><%= thumbnail_with_alt most_recent_guess.photo %></td><% end %>
+  <% if most_recent_post %><td><%= thumbnail_with_alt most_recent_post %></td><% end %>
 </tr>
 <tr id="trophies-captions">
   <% if first_guess %><td><%= first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end %>

@@ -13,6 +13,10 @@ module PeopleHelper
     x.infinite? ? '&#8734;' : to_4_places(x)
   end
 
+  def thumbnail_with_alt(photo)
+    thumbnail photo, render(:partial => 'shared/alt', :locals => { :photo => photo })
+  end
+
   def position(high_scorers, person)
     position = 0
     score_for_this_position = 1.0/0
