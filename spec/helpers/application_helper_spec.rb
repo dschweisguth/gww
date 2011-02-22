@@ -99,7 +99,7 @@ describe ApplicationHelper do
     end
 
     it 'provides the requested size' do
-      photo = Photo.make! :farm => '0'
+      photo = Photo.make :farm => '0'
       helper.url_for_flickr_image(photo, 't').should ==
         'http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg';
     end
