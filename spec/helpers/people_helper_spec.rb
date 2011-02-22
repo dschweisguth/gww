@@ -49,30 +49,38 @@ describe PeopleHelper do
       "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
   end
 
-  describe '#alt_for_star_for_age' do
-    expected = {
-      :bronze => '1 year',
-      :silver => '2 years',
-      :gold => '3 years'
-    }
-    expected.each_pair do |star, period|
-      it "returns the alt text 'Unfound for #{period} or more' given the star :#{star}" do
-        helper.alt_for_star_for_age(star).should == "Unfound for #{period} or more"
+  describe '#star_and_alt' do
+    describe 'for age' do
+      expected = {
+        nil => nil,
+        :bronze => 'Unfound for 1 year or more',
+        :silver => 'Unfound for 2 years or more',
+        :gold => 'Unfound for 3 years or more'
+      }
+      expected.each_pair do |star, period|
+        it "returns the alt text '#{period}' given the star :#{star}" do
+          guess = Object.new
+          mock(guess).star_for_age { star }
+          helper.star_and_alt(guess, :age).should == [ star, period ]
+        end
       end
     end
-  end
 
-  describe '#alt_for_star_for_speed' do
-    expected = {
-      :bronze => nil,
-      :silver => 'Guessed in less than a minute',
-      :gold => 'Guessed in less than 10 seconds'
-    }
-    expected.each_pair do |star, period|
-      it "returns the alt text '#{period}' given the star :#{star}" do
-        helper.alt_for_star_for_speed(star).should == period
+    describe 'for speed' do
+      expected = {
+        :bronze => nil,
+        :silver => 'Guessed in less than a minute',
+        :gold => 'Guessed in less than 10 seconds'
+      }
+      expected.each_pair do |star, period|
+        it "returns the alt text '#{period}' given the star :#{star}" do
+          guess = Object.new
+          mock(guess).star_for_speed { star }
+          helper.star_and_alt(guess, :speed).should == [ star, period ]
+        end
       end
     end
+
   end
 
   describe '#position' do

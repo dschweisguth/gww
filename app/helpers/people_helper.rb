@@ -18,6 +18,11 @@ module PeopleHelper
   end
 
   def place(guess, reason)
+    star, alt = star_and_alt(guess, reason)
+    render :partial => 'people/show/place', :locals => { :guess => guess, :star => star, :alt => alt }
+  end
+
+  def star_and_alt(guess, reason)
     if reason == :age
       star = guess.star_for_age
       alt = alt_for_star_for_age star
@@ -25,7 +30,7 @@ module PeopleHelper
       star = guess.star_for_speed
       alt = alt_for_star_for_speed star
     end
-    render :partial => 'people/show/place', :locals => { :guess => guess, :star => star, :alt => alt }
+    return star, alt
   end
 
   def alt_for_star_for_age(star)
@@ -38,6 +43,7 @@ module PeopleHelper
       'Unfound for 3 years or more'
     end
   end
+  private :alt_for_star_for_age
 
   def alt_for_star_for_speed(star)
     case star
@@ -47,6 +53,7 @@ module PeopleHelper
       'Guessed in less than 10 seconds'
     end
   end
+  private :alt_for_star_for_speed
 
   def position(high_scorers, person)
     position = 0
