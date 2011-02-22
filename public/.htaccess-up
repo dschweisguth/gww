@@ -1,3 +1,5 @@
+AddOutputFilterByType DEFLATE text/html
+
 RewriteEngine On
 
 # If REDIRECT_STATUS is empty (not set), this request comes directly from a
@@ -12,5 +14,3 @@ RewriteRule ^$ cache/index.html [L]
 
 RewriteCond %{DOCUMENT_ROOT}/cache%{REQUEST_URI}.html -f
 RewriteRule ^(.+)$ cache/$1.html [L]
-
-AddOutputFilterByType DEFLATE text/html

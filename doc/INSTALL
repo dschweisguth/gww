@@ -128,6 +128,9 @@ Install Phusion Passenger
     following option to the appropriate place in your httpd configuration to
     enable GWW's .htaccess: AllowOverride AuthConfig FileInfo
 
+Put the server-up .htaccess in place
+    > script/up
+
 Configure basic HTTP authentication
     Create a username and password per
         http://httpd.apache.org/docs/2.2/howto/auth.html. Be sure not to put

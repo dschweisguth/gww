@@ -1,0 +1,3 @@
+ErrorDocument 503 /maintenance.html
+RewriteCond %{ENV:REDIRECT_STATUS} !=503
+RewriteRule .* - [R=503,L]
