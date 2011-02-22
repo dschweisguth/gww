@@ -17,8 +17,6 @@ class Photo < ActiveRecord::Base
 
   # Used by PeopleController
 
-  # TODO Dave test the following two methods
-
   def self.first_by(poster)
     first :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
   end

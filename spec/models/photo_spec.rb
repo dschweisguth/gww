@@ -88,6 +88,26 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
+  # Used by PeopleController
+
+  describe '.first_by' do
+    it "returns the poster's first post" do
+      poster = Person.make!
+      Photo.make! :label => 'second', :person => poster, :dateadded => Time.utc(2001)
+      first = Photo.make! :label => 'first', :person => poster, :dateadded => Time.utc(2000)
+      Photo.first_by(poster).should == first
+    end
+  end
+
+  describe '.most_recent_by' do
+    it "returns the poster's most recent post" do
+      poster = Person.make!
+      Photo.make! :label => 'penultimate', :person => poster, :dateadded => Time.utc(2000)
+      most_recent = Photo.make! :label => 'most_recent', :person => poster, :dateadded => Time.utc(2001)
+      Photo.most_recent_by(poster).should == most_recent
+    end
+  end
+
   # Used by PhotosController
 
   describe '.all_sorted_and_paginated' do
