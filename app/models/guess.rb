@@ -48,7 +48,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.most_recent_by(guesser)
-    first :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at desc',
+    last :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
       :include => :photo
   end
 

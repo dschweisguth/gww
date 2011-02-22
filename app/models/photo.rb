@@ -22,8 +22,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_recent_by(poster)
-    # TODO Dave use last?
-    first :conditions => [ 'person_id = ?', poster ], :order => 'dateadded desc'
+    last :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
   end
 
   # Used by PhotosController
