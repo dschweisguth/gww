@@ -24,9 +24,6 @@ In Guess Where SF:
 
 <%= render :partial => 'people/show/guesses' %>
 
-<%= render :partial => 'people/show/posts',
-  :locals => { :person => @person, :posts => @posts,
-    :unfound_photos => @unfound_photos, :revealed_photos => @revealed_photos,
-    :guessers => @guessers } %>
+<%= render :partial => 'people/show/posts' %>
 
 <% end %>
