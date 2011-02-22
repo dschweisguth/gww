@@ -48,29 +48,30 @@ describe ApplicationHelper do
 
   describe '#link_to_person' do
     it 'returns a local link to the person' do
-      person = Person.make!
-      helper.link_to_person(person).should ==
-        "<a href=\"/people/show/#{person.id}\">username</a>"
+      person = Person.make
+      mock(person).id { 666 }
+      helper.link_to_person(person).should == '<a href="/people/show/666">username</a>'
     end
 
     it 'escapes HTML special characters in the username' do
-      person = Person.make! :username => 'tom&jerry'
-      helper.link_to_person(person).should ==
-        "<a href=\"/people/show/#{person.id}\">tom&amp;jerry</a>"
+      person = Person.make :username => 'tom&jerry'
+      mock(person).id { 666 }
+      helper.link_to_person(person).should == '<a href="/people/show/666">tom&amp;jerry</a>'
     end
 
   end
 
   describe '#link_to_photo' do
     it 'returns a local link to the photo' do
-      photo = Photo.make!
-      helper.link_to_photo(photo).should == "<a href=\"/photos/show/#{photo.id}\">GWW</a>"
+      photo = Photo.make
+      mock(photo).id { 666 }
+      helper.link_to_photo(photo).should == '<a href="/photos/show/666">GWW</a>'
     end
   end
 
   describe '#url_for_flickr_photo' do
     it "returns the URL to the given photo's Flickr page, in the GWSF pool" do
-      photo = Photo.make!
+      photo = Photo.make
       helper.url_for_flickr_photo(photo).should ==
         "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/";
     end
@@ -78,7 +79,7 @@ describe ApplicationHelper do
 
   describe '#link_to_flickr_photo' do
     it "returns a link to the given photo's Flickr page, in the GWSF pool" do
-      photo = Photo.make!
+      photo = Photo.make
       helper.link_to_flickr_photo(photo).should ==
         "<a href=\"http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/\">Flickr</a>";
     end
@@ -86,13 +87,13 @@ describe ApplicationHelper do
 
   describe '#url_for_flickr_image' do
     it 'returns the URL to the given photo' do
-      photo = Photo.make! :farm => '0'
+      photo = Photo.make :farm => '0'
       helper.url_for_flickr_image(photo, nil).should ==
         'http://farm0.static.flickr.com/server/photo_flickrid_secret.jpg';
     end
 
     it 'handles missing farm' do
-      photo = Photo.make! :farm => ''
+      photo = Photo.make :farm => ''
       helper.url_for_flickr_image(photo, nil).should ==
         'http://static.flickr.com/server/photo_flickrid_secret.jpg';
     end
