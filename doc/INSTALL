@@ -44,29 +44,29 @@ Install ruby
     Mac
 	> sudo port install ruby
 	> ruby --version
-	ruby 1.8.7 (2010-12-23 patchlevel 330) [i686-darwin10]
+        ruby 1.8.7 (2011-02-18 patchlevel 334) [i686-darwin10]
     Linux
 	Get source from http://www.ruby-lang.org/en/ and follow instructions
 	> ruby --version
-	ruby 1.8.7 (2010-12-23 patchlevel 330) [x86_64-linux]
+        ruby 1.8.7 (2011-02-18 patchlevel 334) [x86_64-linux]
 
 Install gem
     Mac
 	> sudo port install rb-rubygems
 	> sudo gem update --system
         > gem --version
-        1.4.2
+        1.5.2
     Linux
 	Get source from http://gems.rubyforge.org/ and follow instructions.
 	> sudo gem update --system
 	> gem --version
-	1.4.2
+	1.5.2
 
 Install bundler
     > sudo gem install bundler
     > gem list
-    bundler (1.0.7)
-    rubygems-update (1.4.2)
+    bundler (1.0.10)
+    rubygems-update (1.5.2)
 
 Get and configure GWW
 ---------------------
@@ -78,39 +78,8 @@ Get the source: Either
 Install gems
     Mac
 	> sudo bundle install --without production
-	> gem list
-        actionmailer (2.3.10)
-        actionpack (2.3.10)
-        activerecord (2.3.10)
-        activeresource (2.3.10)
-        activesupport (2.3.10)
-        bundler (1.0.10)
-        mysql2 (0.2.6)
-        rack (1.1.0)
-        rails (2.3.10)
-        rake (0.8.7)
-        rubygems-update (1.5.2)
-        will_paginate (2.3.15)
-        xml-simple (1.0.14)
     Linux
 	> bundle install --deployment --without test
-	> bundle list
-	Gems included by the bundle:
-	  * actionmailer (2.3.10)
-	  * actionpack (2.3.10)
-	  * activerecord (2.3.10)
-	  * activeresource (2.3.10)
-	  * activesupport (2.3.10)
-	  * bundler (1.0.10)
-	  * fastthread (1.0.7)
-	  * mysql2 (0.2.6)
-	  * passenger (2.2.15)
-	  * rack (1.1.0)
-	  * rails (2.3.10)
-	  * rake (0.8.7)
-	  * will_paginate (2.3.15)
-	  * xml-simple (1.0.14)
-        (Note that the output of 'gem list' did not change.)
 Configure
     Configure database credentials
 	> cp config/database{_template,}.yml
