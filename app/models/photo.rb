@@ -382,6 +382,11 @@ class Photo < ActiveRecord::Base
     end
   end
 
+  def destroy
+    super
+    person.destroy_if_has_no_dependents
+  end
+
   # Used by Admin::GuessesController
 
   def self.count_since(update)
@@ -393,11 +398,6 @@ class Photo < ActiveRecord::Base
     people.each do |person|
       person[:posts] = posts_per_person[person.id] || 0
     end
-  end
-
-  def destroy
-    super
-    person.destroy_if_has_no_dependents
   end
 
 end

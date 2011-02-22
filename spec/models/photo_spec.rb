@@ -88,6 +88,207 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
+  # Used by PhotosController
+
+  describe '.all_sorted_and_paginated' do
+    it 'returns photos sorted by username' do
+      all_sorted_and_paginated_should_reverse_photos('username',
+        { :username => 'z' }, { :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :dateadded => Time.utc(2010) })
+    end
+
+    it 'ignores case' do
+      all_sorted_and_paginated_should_reverse_photos('username',
+        { :username => 'Z' }, { :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :dateadded => Time.utc(2010) })
+    end
+
+    it 'returns photos sorted by username, dateadded' do
+      person = Person.make!
+      photo1 = Photo.make! :label => 1, :person => person, :dateadded => Time.utc(2010)
+      photo2 = Photo.make! :label => 2, :person => person, :dateadded => Time.utc(2011)
+      Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
+    end
+
+    it 'returns photos sorted by dateadded' do
+      all_sorted_and_paginated_should_reverse_photos('date-added',
+        { :username => 'a' }, { :dateadded => Time.utc(2010) },
+        { :username => 'z' }, { :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by dateadded, username' do
+      all_sorted_and_paginated_should_reverse_photos('date-added',
+        { :username => 'z' }, { :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by lastupdate' do
+      all_sorted_and_paginated_should_reverse_photos('last-updated',
+        { :username => 'a' }, { :lastupdate => Time.utc(2010) },
+        { :username => 'z' }, { :lastupdate => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by lastupdate, username' do
+      all_sorted_and_paginated_should_reverse_photos('last-updated',
+        { :username => 'z' }, { :lastupdate => Time.utc(2011) },
+        { :username => 'a' }, { :lastupdate => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by views' do
+      all_sorted_and_paginated_should_reverse_photos('views',
+        { :username => 'a' }, { :views => 0 },
+        { :username => 'z' }, { :views => 1 })
+    end
+
+    it 'returns photos sorted by views, username' do
+      all_sorted_and_paginated_should_reverse_photos('views',
+        { :username => 'z' }, { :views => 0 },
+        { :username => 'a' }, { :views => 0 })
+    end
+
+    it 'returns photos sorted by member_comments' do
+      all_sorted_and_paginated_should_reverse_photos('member-comments',
+        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
+        { :username => 'z' }, { :member_comments => 1, :dateadded => Time.utc(2010) })
+    end
+
+    it 'returns photos sorted by member_comments, dateadded' do
+      all_sorted_and_paginated_should_reverse_photos('member-comments',
+        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2010) },
+        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by member_comments, dateadded, username' do
+      all_sorted_and_paginated_should_reverse_photos('member-comments',
+        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by member_questions' do
+      all_sorted_and_paginated_should_reverse_photos('member-questions',
+        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
+        { :username => 'z' }, { :member_questions => 1, :dateadded => Time.utc(2010) })
+    end
+
+    it 'returns photos sorted by member_questions, dateadded' do
+      all_sorted_and_paginated_should_reverse_photos('member-questions',
+        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2010) },
+        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
+    end
+
+    it 'returns photos sorted by member_questions, dateadded, username' do
+      all_sorted_and_paginated_should_reverse_photos('member-questions',
+        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
+        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
+    end
+
+    def all_sorted_and_paginated_should_reverse_photos(sorted_by,
+      person_1_options, photo_1_options, person_2_options, photo_2_options)
+
+      person1 = Person.make! person_1_options.merge({ :label => 1 })
+      photo1 = Photo.make! photo_1_options.merge({ :label => 1, :person => person1 })
+      person2 = Person.make! person_2_options.merge({ :label => 2 })
+      photo2 = Photo.make! photo_2_options.merge({ :label => 2, :person => person2 })
+      Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
+
+    end
+
+  end
+
+  describe '.unfound_or_unconfirmed' do
+    %w(unfound unconfirmed).each do |game_status|
+      it "returns #{game_status} photos" do
+        photo = Photo.make! :game_status => game_status
+        Photo.unfound_or_unconfirmed.should == [ photo ]
+      end
+    end
+
+    %w(found revealed).each do |game_status|
+      it "ignores #{game_status} photos" do
+        Photo.make! :game_status => game_status
+        Photo.unfound_or_unconfirmed.should == []
+      end
+    end
+
+  end
+
+  # Used by WheresiesController
+
+  describe '.most_viewed_in_2010' do
+    it 'lists photos' do
+      photo = Photo.make! :dateadded => Time.utc(2010)
+      Photo.most_viewed_in_2010.should == [ photo ]
+    end
+
+    it 'sorts by views' do
+      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010), :views => 0
+      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010), :views => 1
+      Photo.most_viewed_in_2010.should == [ photo2, photo1 ]
+    end
+
+    it 'ignores photos from before 2010' do
+      Photo.make! :dateadded => Time.utc(2009)
+      Photo.most_viewed_in_2010.should == []
+    end
+
+    it 'ignores photos from after 2010' do
+      Photo.make! :dateadded => Time.utc(2011)
+      Photo.most_viewed_in_2010.should == []
+    end
+
+  end
+
+  describe '.most_commented_in_2010' do
+    it 'lists photos' do
+      photo = Photo.make! :dateadded => Time.utc(2010)
+      Comment.make! :photo => photo
+      Photo.most_commented_in_2010.should == [ photo ]
+    end
+
+    it 'sorts by comment count' do
+      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010)
+      Comment.make! :label => 11, :photo => photo1
+      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010)
+      Comment.make! :label => 21, :photo => photo2
+      Comment.make! :label => 22, :photo => photo2
+      Photo.most_commented_in_2010.should == [ photo2, photo1 ]
+    end
+
+    it 'ignores photos from before 2010' do
+      photo = Photo.make! :dateadded => Time.utc(2009)
+      Comment.make! :photo => photo
+      Photo.most_commented_in_2010.should == []
+    end
+
+    it 'ignores photos from after 2010' do
+      photo = Photo.make! :dateadded => Time.utc(2011)
+      Comment.make! :photo => photo
+      Photo.most_commented_in_2010.should == []
+    end
+
+  end
+
+  # Used by Admin::RootController, Admin::GuessesController
+
+  describe '.unfound_or_unconfirmed_count' do
+    %w(unfound unconfirmed).each do |game_status|
+      it "counts #{game_status} photos" do
+        Photo.make! :game_status => game_status
+        Photo.unfound_or_unconfirmed_count.should == 1
+      end
+    end
+
+    %w(found revealed).each do |game_status|
+      it "ignores #{game_status} photos" do
+        Photo.make! :game_status => game_status
+        Photo.unfound_or_unconfirmed_count.should == 0
+      end
+    end
+
+  end
+
+  # Used by Admin::PhotosController
+
   describe '.update_all_from_flickr' do
     before do
       stub(FlickrCredentials).request('flickr.groups.getInfo') { {
@@ -305,224 +506,6 @@ describe Photo do
       guess.photo.member_questions.should == 1
     end
 
-  end
-
-  describe '.all_sorted_and_paginated' do
-    it 'returns photos sorted by username' do
-      all_sorted_and_paginated_should_reverse_photos('username',
-        { :username => 'z' }, { :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :dateadded => Time.utc(2010) })
-    end
-
-    it 'ignores case' do
-      all_sorted_and_paginated_should_reverse_photos('username',
-        { :username => 'Z' }, { :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :dateadded => Time.utc(2010) })
-    end
-
-    it 'returns photos sorted by username, dateadded' do
-      person = Person.make!
-      photo1 = Photo.make! :label => 1, :person => person, :dateadded => Time.utc(2010)
-      photo2 = Photo.make! :label => 2, :person => person, :dateadded => Time.utc(2011)
-      Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
-    end
-
-    it 'returns photos sorted by dateadded' do
-      all_sorted_and_paginated_should_reverse_photos('date-added',
-        { :username => 'a' }, { :dateadded => Time.utc(2010) },
-        { :username => 'z' }, { :dateadded => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by dateadded, username' do
-      all_sorted_and_paginated_should_reverse_photos('date-added',
-        { :username => 'z' }, { :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :dateadded => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by lastupdate' do
-      all_sorted_and_paginated_should_reverse_photos('last-updated',
-        { :username => 'a' }, { :lastupdate => Time.utc(2010) },
-        { :username => 'z' }, { :lastupdate => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by lastupdate, username' do
-      all_sorted_and_paginated_should_reverse_photos('last-updated',
-        { :username => 'z' }, { :lastupdate => Time.utc(2011) },
-        { :username => 'a' }, { :lastupdate => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by views' do
-      all_sorted_and_paginated_should_reverse_photos('views',
-        { :username => 'a' }, { :views => 0 },
-        { :username => 'z' }, { :views => 1 })
-    end
-
-    it 'returns photos sorted by views, username' do
-      all_sorted_and_paginated_should_reverse_photos('views',
-        { :username => 'z' }, { :views => 0 },
-        { :username => 'a' }, { :views => 0 })
-    end
-
-    it 'returns photos sorted by member_comments' do
-      all_sorted_and_paginated_should_reverse_photos('member-comments',
-        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
-        { :username => 'z' }, { :member_comments => 1, :dateadded => Time.utc(2010) })
-    end
-
-    it 'returns photos sorted by member_comments, dateadded' do
-      all_sorted_and_paginated_should_reverse_photos('member-comments',
-        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2010) },
-        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by member_comments, dateadded, username' do
-      all_sorted_and_paginated_should_reverse_photos('member-comments',
-        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by member_questions' do
-      all_sorted_and_paginated_should_reverse_photos('member-questions',
-        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
-        { :username => 'z' }, { :member_questions => 1, :dateadded => Time.utc(2010) })
-    end
-
-    it 'returns photos sorted by member_questions, dateadded' do
-      all_sorted_and_paginated_should_reverse_photos('member-questions',
-        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2010) },
-        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
-    end
-
-    it 'returns photos sorted by member_questions, dateadded, username' do
-      all_sorted_and_paginated_should_reverse_photos('member-questions',
-        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
-    end
-
-    def all_sorted_and_paginated_should_reverse_photos(sorted_by,
-      person_1_options, photo_1_options, person_2_options, photo_2_options)
-
-      person1 = Person.make! person_1_options.merge({ :label => 1 })
-      photo1 = Photo.make! photo_1_options.merge({ :label => 1, :person => person1 })
-      person2 = Person.make! person_2_options.merge({ :label => 2 })
-      photo2 = Photo.make! photo_2_options.merge({ :label => 2, :person => person2 })
-      Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
-
-    end
-
-  end
-
-  describe '.unfound_or_unconfirmed_count' do
-    %w(unfound unconfirmed).each do |game_status|
-      it "counts #{game_status} photos" do
-        Photo.make! :game_status => game_status
-        Photo.unfound_or_unconfirmed_count.should == 1
-      end
-    end
-
-    %w(found revealed).each do |game_status|
-      it "ignores #{game_status} photos" do
-        Photo.make! :game_status => game_status
-        Photo.unfound_or_unconfirmed_count.should == 0
-      end
-    end
-
-  end
-
-  describe '.unfound_or_unconfirmed' do
-    %w(unfound unconfirmed).each do |game_status|
-      it "returns #{game_status} photos" do
-        photo = Photo.make! :game_status => game_status
-        Photo.unfound_or_unconfirmed.should == [ photo ]
-      end
-    end
-
-    %w(found revealed).each do |game_status|
-      it "ignores #{game_status} photos" do
-        Photo.make! :game_status => game_status
-        Photo.unfound_or_unconfirmed.should == []
-      end
-    end
-
-  end
-
-  describe '.most_viewed_in_2010' do
-    it 'lists photos' do
-      photo = Photo.make! :dateadded => Time.utc(2010)
-      Photo.most_viewed_in_2010.should == [ photo ]
-    end
-
-    it 'sorts by views' do
-      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010), :views => 0
-      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010), :views => 1
-      Photo.most_viewed_in_2010.should == [ photo2, photo1 ]
-    end
-
-    it 'ignores photos from before 2010' do
-      Photo.make! :dateadded => Time.utc(2009)
-      Photo.most_viewed_in_2010.should == []
-    end
-
-    it 'ignores photos from after 2010' do
-      Photo.make! :dateadded => Time.utc(2011)
-      Photo.most_viewed_in_2010.should == []
-    end
-
-  end
-
-  describe '.most_commented_in_2010' do
-    it 'lists photos' do
-      photo = Photo.make! :dateadded => Time.utc(2010)
-      Comment.make! :photo => photo
-      Photo.most_commented_in_2010.should == [ photo ]
-    end
-
-    it 'sorts by comment count' do
-      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010)
-      Comment.make! :label => 11, :photo => photo1
-      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010)
-      Comment.make! :label => 21, :photo => photo2
-      Comment.make! :label => 22, :photo => photo2
-      Photo.most_commented_in_2010.should == [ photo2, photo1 ]
-    end
-
-    it 'ignores photos from before 2010' do
-      photo = Photo.make! :dateadded => Time.utc(2009)
-      Comment.make! :photo => photo
-      Photo.most_commented_in_2010.should == []
-    end
-
-    it 'ignores photos from after 2010' do
-      photo = Photo.make! :dateadded => Time.utc(2011)
-      Comment.make! :photo => photo
-      Photo.most_commented_in_2010.should == []
-    end
-
-  end
-
-  describe '.count_since' do
-    it 'counts photos' do
-      update = FlickrUpdate.make! :created_at => Time.utc(2011)
-      Photo.make! :dateadded => Time.utc(2011)
-      Photo.count_since(update).should == 1
-    end
-
-    it 'ignores photos added before the last update' do
-      update = FlickrUpdate.make! :created_at => Time.utc(2011)
-      Photo.make! :dateadded => Time.utc(2010)
-      Photo.count_since(update).should == 0
-    end
-
-  end
-
-  describe '.add_posts' do
-    it "adds each person's posts as an attribute" do
-      person = Person.make!
-      Photo.make! :label => 1, :person => person
-      Photo.make! :label => 2, :person => person
-      Photo.add_posts [ person ]
-      person[:posts].should == 2
-    end
   end
 
   describe '.multipoint' do
@@ -824,6 +807,33 @@ describe Photo do
       photo.destroy
       Photo.count.should == 0
       owner_should_not_exist photo
+    end
+  end
+
+  # Used by Admin::GuessesController
+
+  describe '.count_since' do
+    it 'counts photos' do
+      update = FlickrUpdate.make! :created_at => Time.utc(2011)
+      Photo.make! :dateadded => Time.utc(2011)
+      Photo.count_since(update).should == 1
+    end
+
+    it 'ignores photos added before the last update' do
+      update = FlickrUpdate.make! :created_at => Time.utc(2011)
+      Photo.make! :dateadded => Time.utc(2010)
+      Photo.count_since(update).should == 0
+    end
+
+  end
+
+  describe '.add_posts' do
+    it "adds each person's posts as an attribute" do
+      person = Person.make!
+      Photo.make! :label => 1, :person => person
+      Photo.make! :label => 2, :person => person
+      Photo.add_posts [ person ]
+      person[:posts].should == 2
     end
   end
 
