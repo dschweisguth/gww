@@ -51,13 +51,13 @@ describe PeopleHelper do
 
   describe '#star_and_alt' do
     describe 'for age' do
-      expected = {
-        nil => nil,
-        :bronze => 'Unfound for 1 year or more',
-        :silver => 'Unfound for 2 years or more',
-        :gold => 'Unfound for 3 years or more'
-      }
-      expected.each_pair do |star, period|
+      expected = [
+        [ nil => nil ],
+        [ :bronze, 'Unfound for 1 year or more' ],
+        [ :silver, 'Unfound for 2 years or more' ],
+        [ :gold, 'Unfound for 3 years or more' ]
+      ]
+      expected.each do |star, period|
         it "returns the alt text '#{period}' given the star :#{star}" do
           guess = Object.new
           mock(guess).star_for_age { star }
@@ -67,12 +67,12 @@ describe PeopleHelper do
     end
 
     describe 'for speed' do
-      expected = {
-        :bronze => nil,
-        :silver => 'Guessed in less than a minute',
-        :gold => 'Guessed in less than 10 seconds'
-      }
-      expected.each_pair do |star, period|
+      expected = [
+        [ :bronze, nil ],
+        [ :silver, 'Guessed in less than a minute' ],
+        [ :gold, 'Guessed in less than 10 seconds' ]
+      ]
+      expected.each do |star, period|
         it "returns the alt text '#{period}' given the star :#{star}" do
           guess = Object.new
           mock(guess).star_for_speed { star }
