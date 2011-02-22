@@ -17,6 +17,17 @@ module PeopleHelper
     thumbnail photo, render(:partial => 'shared/alt', :locals => { :photo => photo })
   end
 
+  def place(guess, reason)
+    if reason == :age
+      star = guess.star_for_age
+      alt = alt_for_star_for_age star
+    else
+      star = guess.star_for_speed
+      alt = alt_for_star_for_speed star
+    end
+    render :partial => 'people/show/place', :locals => { :guess => guess, :star => star, :alt => alt }
+  end
+
   def position(high_scorers, person)
     position = 0
     score_for_this_position = 1.0/0

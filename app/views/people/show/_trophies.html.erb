@@ -32,10 +32,10 @@
 <tr id="trophies-places">
   <% if first_guess %><td></td><% end %>
   <% if first_post %><td></td><% end %>
-  <%= render :partial => 'people/show/place', :locals => { :guess => oldest_guess, :get_star => :star_for_age, :get_alt => :alt_for_star_for_age } %>
-  <%= render :partial => 'people/show/place', :locals => { :guess => fastest_guess, :get_star => :star_for_speed, :get_alt => :alt_for_star_for_speed } %>
-  <%= render :partial => 'people/show/place', :locals => { :guess => longest_lasting_guess, :get_star => :star_for_age, :get_alt => :alt_for_star_for_age } %>
-  <%= render :partial => 'people/show/place', :locals => { :guess => shortest_lasting_guess, :get_star => :star_for_speed, :get_alt => :alt_for_star_for_speed } %>
+  <%= place oldest_guess, :age %>
+  <%= place fastest_guess, :speed %>
+  <%= place longest_lasting_guess, :age %>
+  <%= place shortest_lasting_guess, :speed %>
   <% if most_recent_guess %><td></td><% end %>
   <% if most_recent_post %><td></td><% end %>
 </tr>

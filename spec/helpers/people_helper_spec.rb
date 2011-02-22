@@ -44,6 +44,11 @@ describe PeopleHelper do
       "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
   end
 
+  describe '#place' do
+    it "renders the trophy's place " +
+      "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
+  end
+
   describe '#position' do
     it "returns the appropriate prefix for '-most': '', if the person is first" do
       position_should_return [], ''

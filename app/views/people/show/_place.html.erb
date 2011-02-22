@@ -1,6 +1,6 @@
 <% if guess -%>
 <td>
-  <% star = guess.method(get_star).call; if star %><%= titled_image_tag image_for_star(star), method(get_alt).call(star), :size => '15x15' %><% end %>
+  <%= if star then titled_image_tag image_for_star(star), alt, :size => '15x15' end %>
   <span><%= link_to_if guess[:place] <= 10, "#{ordinal guess[:place]} place#{'!' if guess[:place] <= 10}", longest_and_shortest_path %></span>
 </td>
 <% end -%>
