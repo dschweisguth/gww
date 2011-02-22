@@ -92,15 +92,6 @@ describe Guess do
     end
   end
 
-  describe '.most_recent_by' do
-    it "returns the guesser's most recent guess" do
-      guesser = Person.make!
-      Guess.make! :label => 'penultimate', :person => guesser, :guessed_at => Time.utc(2000)
-      most_recent = Guess.make! :label => 'most_recent', :person => guesser, :guessed_at => Time.utc(2001)
-      Guess.most_recent_by(guesser).should == most_recent
-    end
-  end
-
   describe '.oldest' do
     it "returns the guesser's guess made the longest after the post" do
       guesser = Person.make!
@@ -235,6 +226,15 @@ describe Guess do
       Guess.shortest_lasting(poster).should == nil
     end
 
+  end
+
+  describe '.most_recent_by' do
+    it "returns the guesser's most recent guess" do
+      guesser = Person.make!
+      Guess.make! :label => 'penultimate', :person => guesser, :guessed_at => Time.utc(2000)
+      most_recent = Guess.make! :label => 'most_recent', :person => guesser, :guessed_at => Time.utc(2001)
+      Guess.most_recent_by(guesser).should == most_recent
+    end
   end
 
   describe '.shortest_in_2010' do

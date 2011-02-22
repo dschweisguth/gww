@@ -27,12 +27,12 @@ class PeopleController < ApplicationController
  
     @first_guess = Guess.first_by @person
     @first_post = Photo.first_by @person
-    @most_recent_guess = Guess.most_recent_by @person
-    @most_recent_post = Photo.most_recent_by @person
     @oldest_guess = Guess.oldest @person
     @fastest_guess = Guess.fastest @person
     @longest_lasting_guess = Guess.longest_lasting @person
     @shortest_lasting_guess = Guess.shortest_lasting @person
+    @most_recent_guess = Guess.most_recent_by @person
+    @most_recent_post = Photo.most_recent_by @person
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }

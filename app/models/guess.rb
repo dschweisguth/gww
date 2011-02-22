@@ -47,11 +47,6 @@ class Guess < ActiveRecord::Base
       :include => :photo
   end
 
-  def self.most_recent_by(guesser)
-    last :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
-      :include => :photo
-  end
-
   def self.oldest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'desc',
       "#{GUESS_AGE} > (select max(#{G_AGE}) from guesses g, photos p " +
@@ -74,6 +69,11 @@ class Guess < ActiveRecord::Base
     first_guess_with_place poster, 'photos.person_id = ?', 'asc',
       "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
 	"where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
+  end
+
+  def self.most_recent_by(guesser)
+    last :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
+      :include => :photo
   end
 
   #noinspection RailsParamDefResolve

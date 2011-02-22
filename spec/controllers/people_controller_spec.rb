@@ -87,14 +87,6 @@ describe PeopleController do
       first_post[:place] = 1
       stub(Photo).first_by(person) { first_post }
 
-      most_recent_guess = Guess.make :label => 'most_recent_guess'
-      most_recent_guess[:place] = 1
-      stub(Guess).most_recent_by(person) { most_recent_guess }
-
-      most_recent_post = Photo.make :label => 'most_recent_post'
-      most_recent_post[:place] = 1
-      stub(Photo).most_recent_by(person) { most_recent_post }
-
       oldest_guess = Guess.make :label => 'oldest_guess'
       oldest_guess[:place] = 1
       stub(Guess).oldest(person) { oldest_guess }
@@ -110,6 +102,14 @@ describe PeopleController do
       shortest_lasting_guess = Guess.make :label => 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
+
+      most_recent_guess = Guess.make :label => 'most_recent_guess'
+      most_recent_guess[:place] = 1
+      stub(Guess).most_recent_by(person) { most_recent_guess }
+
+      most_recent_post = Photo.make :label => 'most_recent_post'
+      most_recent_post[:place] = 1
+      stub(Photo).most_recent_by(person) { most_recent_post }
 
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id, anything) \
