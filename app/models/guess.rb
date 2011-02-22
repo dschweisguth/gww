@@ -42,6 +42,18 @@ class Guess < ActiveRecord::Base
       :conditions => GUESS_AGE_IS_VALID, :order => GUESS_AGE, :limit => 10
   end
 
+  # TODO Dave test the following two methods
+
+  def self.first_by(guesser)
+    first :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
+      :include => :photo
+  end
+
+  def self.most_recent_by(guesser)
+    first :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at desc',
+      :include => :photo
+  end
+
   def self.oldest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'desc',
       "#{GUESS_AGE} > (select max(#{G_AGE}) from guesses g, photos p " +

@@ -15,6 +15,19 @@ class Photo < ActiveRecord::Base
   validates_numericality_of :member_questions, :only_integer => true,
     :greater_than_or_equal_to => 0
 
+  # Used by PeopleController
+
+  # TODO Dave test the following two methods
+
+  def self.first_by(poster)
+    first :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
+  end
+
+  def self.most_recent_by(poster)
+    # TODO Dave use last?
+    first :conditions => [ 'person_id = ?', poster ], :order => 'dateadded desc'
+  end
+
   # Used by PhotosController
 
   def self.all_sorted_and_paginated(sorted_by, order, page, per_page)
