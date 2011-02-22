@@ -22,13 +22,15 @@ describe Admin::GuessesHelper do
 
   describe '#link_to_person' do
     it "returns a fully qualified link to the person's page" do
-      person = Person.make!
+      person = Person.make
+      stub(person).id { 666 }
       helper.link_to_person(person).should ==
         "<a href=\"http://test.host/people/show/#{person.id}\">username</a>"
     end
 
     it "escapes HTML special characters in the person's username" do
       person = Person.make! :username => 'try&catch>me'
+      stub(person).id { 666 }
       helper.link_to_person(person).should ==
         "<a href=\"http://test.host/people/show/#{person.id}\">try&amp;catch&gt;me</a>"
     end
