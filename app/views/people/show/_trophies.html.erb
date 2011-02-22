@@ -1,42 +1,42 @@
 <table id="trophies">
 <tr id="trophies-headers">
-  <% if first_guess %><th>First guess</th><% end %>
-  <% if first_post %><th>First post</th><% end %>
-  <% if oldest_guess %><th>Oldest post guessed</th><% end %>
-  <% if fastest_guess %><th>Fastest guess</th><% end %>
-  <% if longest_lasting_guess %><th>Longest-lasting post</th><% end %>
-  <% if shortest_lasting_guess %><th>Fastest-guessed post</th><% end %>
-  <% if most_recent_guess %><th>Most recent guess</th><% end %>
-  <% if most_recent_post %><th>Most recent post</th><% end %>
+  <% if @first_guess %><th>First guess</th><% end %>
+  <% if @first_post %><th>First post</th><% end %>
+  <% if @oldest_guess %><th>Oldest post guessed</th><% end %>
+  <% if @fastest_guess %><th>Fastest guess</th><% end %>
+  <% if @longest_lasting_guess %><th>Longest-lasting post</th><% end %>
+  <% if @shortest_lasting_guess %><th>Fastest-guessed post</th><% end %>
+  <% if @most_recent_guess %><th>Most recent guess</th><% end %>
+  <% if @most_recent_post %><th>Most recent post</th><% end %>
 </tr>
 <tr>
-  <% if first_guess %><td><%= thumbnail_with_alt first_guess.photo %></td><% end %>
-  <% if first_post %><td><%= thumbnail_with_alt first_post %></td><% end %>
-  <% if oldest_guess %><td><%= thumbnail_with_alt oldest_guess.photo %></td><% end %>
-  <% if fastest_guess %><td><%= thumbnail_with_alt fastest_guess.photo  %></td><% end %>
-  <% if longest_lasting_guess %><td><%= thumbnail_with_alt longest_lasting_guess.photo %></td><% end %>
-  <% if shortest_lasting_guess %><td><%= thumbnail_with_alt shortest_lasting_guess.photo %></td><% end %>
-  <% if most_recent_guess %><td><%= thumbnail_with_alt most_recent_guess.photo %></td><% end %>
-  <% if most_recent_post %><td><%= thumbnail_with_alt most_recent_post %></td><% end %>
+  <% if @first_guess %><td><%= thumbnail_with_alt @first_guess.photo %></td><% end %>
+  <% if @first_post %><td><%= thumbnail_with_alt @first_post %></td><% end %>
+  <% if @oldest_guess %><td><%= thumbnail_with_alt @oldest_guess.photo %></td><% end %>
+  <% if @fastest_guess %><td><%= thumbnail_with_alt @fastest_guess.photo  %></td><% end %>
+  <% if @longest_lasting_guess %><td><%= thumbnail_with_alt @longest_lasting_guess.photo %></td><% end %>
+  <% if @shortest_lasting_guess %><td><%= thumbnail_with_alt @shortest_lasting_guess.photo %></td><% end %>
+  <% if @most_recent_guess %><td><%= thumbnail_with_alt @most_recent_guess.photo %></td><% end %>
+  <% if @most_recent_post %><td><%= thumbnail_with_alt @most_recent_post %></td><% end %>
 </tr>
 <tr id="trophies-captions">
-  <% if first_guess %><td><%= first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
-  <% if first_post %><td><%= first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end %>
-  <% if oldest_guess %><td>Guessed after <%= oldest_guess.ymd_elapsed %></td><% end %>
-  <% if fastest_guess %><td>Guessed in <%= fastest_guess.time_elapsed %></td><% end %>
-  <% if longest_lasting_guess %><td>Guessed after <%= longest_lasting_guess.ymd_elapsed %></td><% end %>
-  <% if shortest_lasting_guess %><td>Guessed in <%= shortest_lasting_guess.time_elapsed %></td><% end %>
-  <% if most_recent_guess %><td><%= most_recent_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
-  <% if most_recent_post %><td><%= most_recent_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end %>
+  <% if @first_guess %><td><%= @first_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
+  <% if @first_post %><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end %>
+  <% if @oldest_guess %><td>Guessed after <%= @oldest_guess.ymd_elapsed %></td><% end %>
+  <% if @fastest_guess %><td>Guessed in <%= @fastest_guess.time_elapsed %></td><% end %>
+  <% if @longest_lasting_guess %><td>Guessed after <%= @longest_lasting_guess.ymd_elapsed %></td><% end %>
+  <% if @shortest_lasting_guess %><td>Guessed in <%= @shortest_lasting_guess.time_elapsed %></td><% end %>
+  <% if @most_recent_guess %><td><%= @most_recent_guess.guessed_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
+  <% if @most_recent_post %><td><%= @most_recent_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end %>
 </tr>
 <tr id="trophies-places">
-  <% if first_guess %><td></td><% end %>
-  <% if first_post %><td></td><% end %>
-  <%= place oldest_guess, :age %>
-  <%= place fastest_guess, :speed %>
-  <%= place longest_lasting_guess, :age %>
-  <%= place shortest_lasting_guess, :speed %>
-  <% if most_recent_guess %><td></td><% end %>
-  <% if most_recent_post %><td></td><% end %>
+  <% if @first_guess %><td></td><% end %>
+  <% if @first_post %><td></td><% end %>
+  <%= place @oldest_guess, :age %>
+  <%= place @fastest_guess, :speed %>
+  <%= place @longest_lasting_guess, :age %>
+  <%= place @shortest_lasting_guess, :speed %>
+  <% if @most_recent_guess %><td></td><% end %>
+  <% if @most_recent_post %><td></td><% end %>
 </tr>
 </table>
