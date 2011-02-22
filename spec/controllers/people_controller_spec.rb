@@ -9,7 +9,8 @@ describe PeopleController do
       sorted_by_param = 'score'
       order_param = '+'
 
-      person = Person.make!
+      person = Person.make
+      stub(person).id { 666 }
       person[:guess_count] = 1
       person[:post_count] = 1
       person[:guesses_per_day] = 1.0
@@ -40,8 +41,10 @@ describe PeopleController do
             (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
           [ Period.new report_day.beginning_of_year, report_day + 1.day ]
       ]
-      guess = Guess.make! :guessed_at => report_day
-      (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ guess.person ] }
+      person = Person.make
+      stub(person).id { 666 }
+      guess = Guess.make :person => person, :guessed_at => report_day
+      (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ person ] }
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
 
@@ -59,7 +62,7 @@ describe PeopleController do
         with_tag "th", :text => title
         with_tag "tr" do
           with_tag "td.opening-number", :text => "1"
-          with_tag "a[href=/people/show/#{guess.person.id}]", :text => 'guesser_username'
+          with_tag "a[href=/people/show/#{guess.person.id}]", :text => 'username'
         end
       end
     end
