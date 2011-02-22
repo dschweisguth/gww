@@ -42,8 +42,6 @@ class Guess < ActiveRecord::Base
       :conditions => GUESS_AGE_IS_VALID, :order => GUESS_AGE, :limit => 10
   end
 
-  # TODO Dave test the following two methods
-
   def self.first_by(guesser)
     first :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
       :include => :photo
