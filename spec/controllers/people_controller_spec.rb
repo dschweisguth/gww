@@ -80,11 +80,9 @@ describe PeopleController do
       stub(Person).high_scorers(30) { [ person ] }
 
       first_guess = Guess.make :label => 'first_guess'
-      first_guess[:place] = 1 # TODO Dave why is this necessary again?
       stub(Guess).first_by(person) { first_guess }
 
       first_post = Photo.make :label => 'first_post'
-      first_post[:place] = 1
       stub(Photo).first_by(person) { first_post }
 
       oldest_guess = Guess.make :label => 'oldest_guess'
@@ -104,11 +102,9 @@ describe PeopleController do
       stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
       most_recent_guess = Guess.make :label => 'most_recent_guess'
-      most_recent_guess[:place] = 1
       stub(Guess).most_recent_by(person) { most_recent_guess }
 
       most_recent_post = Photo.make :label => 'most_recent_post'
-      most_recent_post[:place] = 1
       stub(Photo).most_recent_by(person) { most_recent_post }
 
       #noinspection RubyResolve
