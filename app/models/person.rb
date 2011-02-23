@@ -294,6 +294,23 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
+  def favorite_posters
+    Person.find_by_sql [
+      'select posters.*, ' +
+        'count(*) / posters_posts.post_count / ' +
+          '(select count(*) from guesses where person_id = ?) * ' +
+          '(select count(*) from photos) enthusiasm ' +
+      'from guesses g, photos f, people posters, ' +
+        '(select person_id, count(*) post_count from photos ' +
+          'group by person_id having count(*) >= 10) posters_posts ' +
+      'where g.photo_id = f.id and ' +
+        'g.person_id = ? and f.person_id = posters.id and ' +
+        'f.person_id = posters_posts.person_id ' +
+      'group by posters.id having count(*) >= 10 and enthusiasm >= 2.5 order by enthusiasm desc',
+      id, id
+    ]
+  end
+
   def destroy_if_has_no_dependents
     if Photo.count(:conditions => [ 'person_id = ?', id ]) == 0 &&
       Guess.count(:conditions => [ 'person_id = ?', id ]) == 0
