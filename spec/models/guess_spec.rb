@@ -237,6 +237,23 @@ describe Guess do
     end
   end
 
+  describe '.longest_in_2010' do
+    it 'lists guesses made in 2010 sorted by time between post and guess, descending' do
+      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010)
+      guess1 = Guess.make! :label => 1, :photo => photo1, :guessed_at => Time.utc(2010, 2)
+      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010)
+      guess2 = Guess.make! :label => 2, :photo => photo2, :guessed_at => Time.utc(2010, 3)
+      Guess.longest_in_2010.should == [ guess2, guess1 ]
+    end
+
+    it 'ignores a guess made before it was posted' do
+      photo = Photo.make! :dateadded => Time.utc(2010, 2)
+      Guess.make! :photo => photo, :guessed_at => Time.utc(2010)
+      Guess.longest_in_2010.should == []
+    end
+
+  end
+
   describe '.shortest_in_2010' do
     it 'lists guesses made in 2010 sorted by time between post and guess, ascending' do
       photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010)

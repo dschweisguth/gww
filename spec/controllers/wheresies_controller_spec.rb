@@ -29,6 +29,11 @@ describe WheresiesController do
       most_commented_in_2010[:comments] = 666
       stub(Photo).most_commented_in_2010 { [ most_commented_in_2010 ] }
 
+      longest_in_2010_photo = Photo.make :dateadded => Time.utc(2010)
+      longest_in_2010 = Guess.make :photo => longest_in_2010_photo,
+        :guessed_at => Time.utc(2011)
+      stub(Guess).longest_in_2010 { [ longest_in_2010 ] }
+
       shortest_in_2010_photo = Photo.make :dateadded => Time.utc(2010)
       shortest_in_2010 = Guess.make :photo => shortest_in_2010_photo,
         :guessed_at => Time.utc(2010, 1, 1, 0, 0, 1)
@@ -61,6 +66,7 @@ describe WheresiesController do
         with_tag 'h2', :text => 'Most-commented photos of 2010'
         with_tag 'td', :text => '666'
       end
+      response.should have_tag 'td', :text => '1&nbsp;year'
       response.should have_tag 'td', :text => '1&nbsp;second'
     end
   end

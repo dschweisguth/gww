@@ -67,6 +67,10 @@
 <p>2010 almost completely rewrote
 <%= link_to 'the list of longest-lived unfounds', longest_and_shortest_path %>;
 the all-time list <em>was</em> the 2010 list.</p>
+<table class="dark">
+  <%= render 'guesses/longest_and_shortest/header' %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @longest_in_2010 %>
+</table>
 
 <h2>Fastest-guessed photos of 2010</h2>
 <table class="dark">
