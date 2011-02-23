@@ -15,11 +15,12 @@ module ModelFactory
       label = ''
     end
     if options[:label] then
-      padded_label = options[:label].to_s
+      padded_label = options[:label]
       options.delete :label
     else
       padded_label = label
     end
+    padded_label = padded_label.to_s
     if ! padded_label.empty?
       padded_label += '_'
     end
