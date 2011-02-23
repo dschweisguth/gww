@@ -16,16 +16,14 @@ module Admin::GuessesHelper
     link_to h(escape_username(person.username)), show_person_url(person)
   end
 
+  STAR_IMAGES = {
+    :bronze => '/images/star-padded-bronze.gif',
+    :silver => '/images/star-padded-silver.gif',
+    :gold => '/images/star-padded-gold-animated.gif'
+  }
+
   def image_for_star(star)
-    path_to_url \
-      case star
-      when :bronze
-	'/images/star-padded-bronze.gif'
-      when :silver
-	'/images/star-padded-silver.gif'
-      when :gold
-	'/images/star-padded-gold-animated.gif'
-      end
+    path_to_url STAR_IMAGES[star]
   end
 
   def path_to_url(path)
