@@ -14,16 +14,14 @@ In Guess Where SF:
 
 <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= ordinal @place %> place with a score of <%= @guesses.length %>.<br/>
 
-<%= render :partial => 'people/show/high_scorers',
-  :locals => { :high_scorers => @weekly_high_scorers, :period => 'week' } %>
-<%= render :partial => 'people/show/high_scorers',
-  :locals => { :high_scorers => @monthly_high_scorers, :period => 'month' } %>
+<%= render 'people/show/high_scorers', :high_scorers => @weekly_high_scorers, :period => 'week' %>
+<%= render 'people/show/high_scorers', :high_scorers => @monthly_high_scorers, :period => 'month' %>
 <br/>
 
-<%= render :partial => 'people/show/trophies' %>
+<%= render 'people/show/trophies' %>
 
-<%= render :partial => 'people/show/guesses' %>
+<%= render 'people/show/guesses' %>
 
-<%= render :partial => 'people/show/posts' %>
+<%= render 'people/show/posts' %>
 
 <% end %>

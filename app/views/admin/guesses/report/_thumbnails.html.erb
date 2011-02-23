@@ -7,7 +7,7 @@
 <%= link_to \
       titled_image_tag(
         url_for_flickr_image(change.photo, 's'),
-        render(:partial => 'shared/alt', :locals => { :photo => change.photo }),
+        render('shared/alt', :photo => change.photo),
         :size => '50x50'
       ),
       url_for_flickr_photo(change.photo) -%>

@@ -14,12 +14,12 @@ module PeopleHelper
   end
 
   def thumbnail_with_alt(photo)
-    thumbnail photo, render(:partial => 'shared/alt', :locals => { :photo => photo })
+    thumbnail photo, render('shared/alt', :photo => photo)
   end
 
   def place(guess, reason)
     star, alt = star_and_alt(guess, reason)
-    render :partial => 'people/show/place', :locals => { :guess => guess, :star => star, :alt => alt }
+    render 'people/show/place', :guess => guess, :star => star, :alt => alt
   end
 
   def star_and_alt(guess, reason)

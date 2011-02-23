@@ -5,60 +5,60 @@
 <div class="float">
   <h2>Rookies (members who first posted or scored in 2010)</h2>
 
-  <%= render :partial => 'wheresies/index/top_people', :locals => {
-          :title => 'Most points in 2010',
-          :division => 'Rookie',
-          :statistic => 'Points in 2010',
-          :people => @rookies_with_most_points_in_2010,
-          :key => :points
-  } %>
+  <%= render 'wheresies/index/top_people',
+        :title => 'Most points in 2010',
+        :division => 'Rookie',
+        :statistic => 'Points in 2010',
+        :people => @rookies_with_most_points_in_2010,
+        :key => :points
+  %>
 
-  <%= render :partial => 'wheresies/index/top_people', :locals => {
-          :title => 'Most posts in 2010',
-          :division => 'Rookie',
-          :statistic => 'Posts in 2010',
-          :people => @rookies_with_most_posts_in_2010,
-          :key => :posts
-  } %>
+  <%= render 'wheresies/index/top_people',
+        :title => 'Most posts in 2010',
+        :division => 'Rookie',
+        :statistic => 'Posts in 2010',
+        :people => @rookies_with_most_posts_in_2010,
+        :key => :posts
+  %>
 
 </div>
 
 <div class="float">
   <h2>All GWSF members</h2>
 
-  <%= render :partial => 'wheresies/index/top_people', :locals => {
-          :title => 'Most points in 2010',
-          :division => 'Member',
-          :statistic => 'Points in 2010',
-          :people => @most_points_in_2010,
-          :key => :points
-  } %>
+  <%= render 'wheresies/index/top_people',
+        :title => 'Most points in 2010',
+        :division => 'Member',
+        :statistic => 'Points in 2010',
+        :people => @most_points_in_2010,
+        :key => :points
+  %>
 
-  <%= render :partial => 'wheresies/index/top_people', :locals => {
-          :title => 'Most posts in 2010',
-          :division => 'Member',
-          :statistic => 'Posts in 2010',
-          :people => @most_posts_in_2010,
-          :key => :posts
-  } %>
+  <%= render 'wheresies/index/top_people',
+        :title => 'Most posts in 2010',
+        :division => 'Member',
+        :statistic => 'Posts in 2010',
+        :people => @most_posts_in_2010,
+        :key => :posts
+  %>
 
 </div>
 <br class="clear"/>
 <br class="clear"/>
 
-<%= render :partial => 'wheresies/index/top_photos', :locals => {
-        :title => 'Most-viewed photos of 2010',
-        :statistic => 'views',
-        :photos => @most_viewed_in_2010,
-        :key => :views
-} %>
+<%= render 'wheresies/index/top_photos',
+      :title => 'Most-viewed photos of 2010',
+      :statistic => 'views',
+      :photos => @most_viewed_in_2010,
+      :key => :views
+%>
 
-<%= render :partial => 'wheresies/index/top_photos', :locals => {
-        :title => 'Most-commented photos of 2010',
-        :statistic => 'comments',
-        :photos => @most_commented_in_2010,
-        :key => :comments
-} %>
+<%= render 'wheresies/index/top_photos',
+      :title => 'Most-commented photos of 2010',
+      :statistic => 'comments',
+      :photos => @most_commented_in_2010,
+      :key => :comments
+%>
 
 <br class="clear"/>
 
@@ -66,13 +66,12 @@
 
 <p>2010 almost completely rewrote
 <%= link_to 'the list of longest-lived unfounds', longest_and_shortest_path %>;
-the all-time list <em>is</em> the 2010 list.</p>
+the all-time list <em>was</em> the 2010 list.</p>
 
 <h2>Fastest-guessed photos of 2010</h2>
 <table class="dark">
-  <%= render :partial => 'guesses/longest_and_shortest/header' %>
-  <%= render :partial => 'guesses/longest_and_shortest/guess',
-    :collection => @shortest_in_2010 %>
+  <%= render 'guesses/longest_and_shortest/header' %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @shortest_in_2010 %>
 </table>
 
 <% end %>

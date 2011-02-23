@@ -3,7 +3,7 @@
 <h1>Longest and shortest-lived unfounds</h1>
 
 <table class="dark">
-  <%= render :partial => 'guesses/longest_and_shortest/header' %>
+  <%= render 'guesses/longest_and_shortest/header' %>
   <%= render :partial => 'guesses/longest_and_shortest/guess',
     :collection => @longest_guesses %>
   <tr>
@@ -11,7 +11,7 @@
   </tr>
   <%= render :partial => 'guesses/longest_and_shortest/guess',
     :collection => @shortest_guesses.reverse %>
-  <%= render :partial => 'guesses/longest_and_shortest/header' %>
+  <%= render 'guesses/longest_and_shortest/header' %>
 </table>
 
 <% end %>

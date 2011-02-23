@@ -8,7 +8,7 @@
   <%= flash[:notice] %><br/><br/>
 <% end -%>
 
-<%= render :partial => 'photos/image_and_status', :locals => { :size => "m" } %>
+<%= render 'photos/image_and_status', :size => 'm' %>
 <br/>
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>

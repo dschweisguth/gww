@@ -4,21 +4,21 @@
 
 <table class="container"><tr>
   <td>
-    <%= render :partial => 'people/top_guessers/period', :locals =>
-      { :heading => 'by day for the past week', :periods => @days,
-        :format => '%A, %B %d' } %>
-    <%= render :partial => 'people/top_guessers/period', :locals =>
-      { :heading => 'by week for the past month', :periods => @weeks,
-        :format => 'the week of %B %d' } %>
+    <%= render 'people/top_guessers/period',
+        :heading => 'by day for the past week', :periods => @days,
+        :format => '%A, %B %d' %>
+    <%= render 'people/top_guessers/period',
+        :heading => 'by week for the past month', :periods => @weeks,
+        :format => 'the week of %B %d' %>
   </td>
   <td>
-    <%= render :partial => 'people/top_guessers/period', :locals =>
-      { :heading => 'by month for the past year', :periods => @months,
-        :format => '%B %Y' } %>
+    <%= render 'people/top_guessers/period',
+        :heading => 'by month for the past year', :periods => @months,
+        :format => '%B %Y' %>
   </td>
   <td>
-    <%= render :partial => 'people/top_guessers/period', :locals =>
-      { :heading => 'by year', :periods => @years, :format => '%Y' } %>
+    <%= render 'people/top_guessers/period',
+        :heading => 'by year', :periods => @years, :format => '%Y' %>
   </td>
 </tr></table>
 
