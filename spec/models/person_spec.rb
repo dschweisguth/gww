@@ -635,7 +635,7 @@ describe Person do
       guesser.favorite_posters.should == []
     end
 
-    it "ignores a poster which this person has guessed less than 10 times" do
+    it "ignores a poster which this person has guessed less than #{Person::MIN_GUESSES_FOR_FAVORITE} times" do
       #noinspection RubyUnusedLocalVariable
       guesser, favorite_poster = make_potential_favorite_poster(9, 15)
       guesser.favorite_posters.should == []
@@ -657,7 +657,7 @@ describe Person do
       poster.favorite_posters_of.should == []
     end
 
-    it "ignores a guesser who has guessed this person less than 10 times" do
+    it "ignores a guesser who has guessed this person less than #{Person::MIN_GUESSES_FOR_FAVORITE} times" do
       #noinspection RubyUnusedLocalVariable
       devoted_guesser, poster = make_potential_favorite_poster(9, 15)
       poster.favorite_posters_of.should == []
