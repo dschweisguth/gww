@@ -58,3 +58,7 @@ Track favorites
 Track interestingness
 Combine a player's posts, guesses and comments into a single activity stream
 Do the same for all players?
+Write an admin page that reports on bogus data
+  Photos that have guesses but have game_status != unfound
+  Photos that are guessed by the owner of the photo
+  Photos that have both guesses and revelations
