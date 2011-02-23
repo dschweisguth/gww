@@ -1,3 +1,5 @@
+# TODO Dave provide a more succinct syntax for label?
+
 module ModelFactory
   def make(options = {})
     make_for_test :new, options
