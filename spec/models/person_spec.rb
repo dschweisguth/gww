@@ -622,14 +622,14 @@ describe Person do
   end
 
   describe '#favorite_posters' do
-    it "lists the posters which this person has guessed 2.5 or more times as often as this person has guessed all posts" do
+    it "lists the posters which this person has guessed #{Person::MIN_ENTHUSIASM} or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_favorite_poster
       favorite_posters = guesser.favorite_posters
       favorite_posters.should == [ favorite_poster ]
-      favorite_posters[0][:enthusiasm].should == 2.5
+      favorite_posters[0][:enthusiasm].should == Person::MIN_ENTHUSIASM
     end
 
-    it "ignores a poster which this person has guessed less than 2.5 times as often as this person has guessed all posts" do
+    it "ignores a poster which this person has guessed less than #{Person::MIN_ENTHUSIASM} times as often as this person has guessed all posts" do
       #noinspection RubyUnusedLocalVariable
       guesser, favorite_poster = make_not_quite_favorite_poster
       guesser.favorite_posters.should == []
@@ -638,14 +638,14 @@ describe Person do
   end
 
   describe '#favorite_posters_of' do
-    it "lists the guessers who have guessed this person 2.5 or more times as often as those guessers have guessed all posts" do
+    it "lists the guessers who have guessed this person #{Person::MIN_ENTHUSIASM} or more times as often as those guessers have guessed all posts" do
       devoted_guesser, poster = make_favorite_poster
       favorite_posters_of = poster.favorite_posters_of
       favorite_posters_of.should == [ devoted_guesser ]
-      favorite_posters_of[0][:enthusiasm].should == 2.5
+      favorite_posters_of[0][:enthusiasm].should == Person::MIN_ENTHUSIASM
     end
 
-    it "ignores a guesser who has guessed this person less than 2.5 times as often as that guesser has guessed all posts" do
+    it "ignores a guesser who has guessed this person less than #{Person::MIN_ENTHUSIASM} times as often as that guesser has guessed all posts" do
       #noinspection RubyUnusedLocalVariable
       devoted_guesser, poster = make_not_quite_favorite_poster
       poster.favorite_posters_of.should == []

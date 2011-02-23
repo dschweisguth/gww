@@ -294,9 +294,11 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
+  MIN_ENTHUSIASM = 2.5
+
   def favorite_posters
     Person.find_by_sql [
-      %q{
+      %Q{
         select posters.*,
           count(*) / posters_posts.post_count /
             (select count(*) from guesses where person_id = ?) *
@@ -307,7 +309,7 @@ class Person < ActiveRecord::Base
         where g.photo_id = f.id and
           g.person_id = ? and f.person_id = posters.id and
           f.person_id = posters_posts.person_id
-        group by posters.id having count(*) >= 10 and enthusiasm >= 2.5 order by enthusiasm desc
+        group by posters.id having count(*) >= 10 and enthusiasm >= #{MIN_ENTHUSIASM} order by enthusiasm desc
       },
       id, id
     ]
@@ -315,7 +317,7 @@ class Person < ActiveRecord::Base
 
   def favorite_posters_of
     Person.find_by_sql [
-      %q{
+      %Q{
         select guessers.*,
           count(*) / (select count(*) from photos where person_id = ?) /
             guessers_guesses.guess_count * (select count(*) from photos) enthusiasm
@@ -325,7 +327,7 @@ class Person < ActiveRecord::Base
         where g.photo_id = f.id and
           g.person_id = guessers.id and f.person_id = ? and
           g.person_id = guessers_guesses.person_id
-        group by guessers.id having count(*) >= 10 and enthusiasm >= 2.5 order by enthusiasm desc
+        group by guessers.id having count(*) >= 10 and enthusiasm >= #{MIN_ENTHUSIASM} order by enthusiasm desc
       },
       id, id
     ]
