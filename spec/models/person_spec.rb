@@ -623,7 +623,7 @@ describe Person do
 
   describe '#favorite_posters' do
     it "lists the posters which this person has guessed #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as this person has guessed all posts" do
-      guesser, favorite_poster = make_favorite_poster
+      guesser, favorite_poster = make_potential_favorite_poster(10, 15)
       favorite_posters = guesser.favorite_posters
       favorite_posters.should == [ favorite_poster ]
       favorite_posters[0][:bias].should == Person::MIN_BIAS_FOR_FAVORITE
@@ -631,7 +631,7 @@ describe Person do
 
     it "ignores a poster which this person has guessed less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as this person has guessed all posts" do
       #noinspection RubyUnusedLocalVariable
-      guesser, favorite_poster = make_not_quite_favorite_poster
+      guesser, favorite_poster = make_potential_favorite_poster(10, 14)
       guesser.favorite_posters.should == []
     end
 
@@ -639,7 +639,7 @@ describe Person do
 
   describe '#favorite_posters_of' do
     it "lists the guessers who have guessed this person #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as those guessers have guessed all posts" do
-      devoted_guesser, poster = make_favorite_poster
+      devoted_guesser, poster = make_potential_favorite_poster(10, 15)
       favorite_posters_of = poster.favorite_posters_of
       favorite_posters_of.should == [ devoted_guesser ]
       favorite_posters_of[0][:bias].should == Person::MIN_BIAS_FOR_FAVORITE
@@ -647,35 +647,21 @@ describe Person do
 
     it "ignores a guesser who has guessed this person less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as that guesser has guessed all posts" do
       #noinspection RubyUnusedLocalVariable
-      devoted_guesser, poster = make_not_quite_favorite_poster
+      devoted_guesser, poster = make_potential_favorite_poster(10, 14)
       poster.favorite_posters_of.should == []
     end
 
   end
 
-  def make_favorite_poster
+  def make_potential_favorite_poster(posts_by_favorite, posts_by_others)
     favorite_poster = Person.make! :label => 'favorite_poster'
     devoted_guesser = Person.make! :label => 'devoted_guesser'
-    (1 .. 10).each do |n|
+    (1 .. posts_by_favorite).each do |n|
       photo = Photo.make! :label => n, :person => favorite_poster
       Guess.make! :label => n, :person => devoted_guesser, :photo => photo
     end
     other_poster = Person.make! :label => 'other_poster'
-    (11 .. 25).each do |n|
-      Photo.make! :label => n, :person => other_poster
-    end
-    return devoted_guesser, favorite_poster
-  end
-
-  def make_not_quite_favorite_poster
-    favorite_poster = Person.make! :label => 'favorite_poster'
-    devoted_guesser = Person.make! :label => 'devoted_guesser'
-    (1 .. 10).each do |n|
-      photo = Photo.make! :label => n, :person => favorite_poster
-      Guess.make! :label => n, :person => devoted_guesser, :photo => photo
-    end
-    other_poster = Person.make! :label => 'other_poster'
-    (11 .. 24).each do |n|
+    ((posts_by_favorite + 1) .. (posts_by_favorite + posts_by_others)).each do |n|
       Photo.make! :label => n, :person => other_poster
     end
     return devoted_guesser, favorite_poster
