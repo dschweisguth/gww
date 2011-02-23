@@ -294,6 +294,7 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
+  MIN_GUESSES_FOR_FAVORITE = 10
   MIN_ENTHUSIASM = 2.5
 
   def favorite_posters
@@ -305,11 +306,13 @@ class Person < ActiveRecord::Base
             (select count(*) from photos) enthusiasm
         from guesses g, photos f, people posters,
           (select person_id, count(*) post_count from photos
-            group by person_id having count(*) >= 10) posters_posts
+            group by person_id having count(*) >= #{MIN_GUESSES_FOR_FAVORITE}) posters_posts
         where g.photo_id = f.id and
           g.person_id = ? and f.person_id = posters.id and
           f.person_id = posters_posts.person_id
-        group by posters.id having count(*) >= 10 and enthusiasm >= #{MIN_ENTHUSIASM} order by enthusiasm desc
+        group by posters.id
+        having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and enthusiasm >= #{MIN_ENTHUSIASM}
+        order by enthusiasm desc
       },
       id, id
     ]
@@ -327,7 +330,9 @@ class Person < ActiveRecord::Base
         where g.photo_id = f.id and
           g.person_id = guessers.id and f.person_id = ? and
           g.person_id = guessers_guesses.person_id
-        group by guessers.id having count(*) >= 10 and enthusiasm >= #{MIN_ENTHUSIASM} order by enthusiasm desc
+        group by guessers.id
+        having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and enthusiasm >= #{MIN_ENTHUSIASM} 
+        order by enthusiasm desc
       },
       id, id
     ]
