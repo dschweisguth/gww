@@ -622,21 +622,35 @@ describe Person do
   end
 
   describe '#favorite_posters' do
-    it "lists the posters which this person has guessed 2.5 or more times as often as this person has guessed others" do
+    it "lists the posters which this person has guessed 2.5 or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_favorite_poster
       favorite_posters = guesser.favorite_posters
       favorite_posters.should == [ favorite_poster ]
       favorite_posters[0][:enthusiasm].should == 2.5
     end
+
+    it "ignores a poster which this person has guessed less than 2.5 times as often as this person has guessed all posts" do
+      #noinspection RubyUnusedLocalVariable
+      guesser, favorite_poster = make_not_quite_favorite_poster
+      guesser.favorite_posters.should == []
+    end
+
   end
 
-  describe '#favorite_poster_of' do
-    it "lists the people who have guessed this person 2.5 or more times as often as those people have guessed others" do
+  describe '#favorite_posters_of' do
+    it "lists the guessers who have guessed this person 2.5 or more times as often as those guessers have guessed all posts" do
       devoted_guesser, poster = make_favorite_poster
       favorite_posters_of = poster.favorite_posters_of
       favorite_posters_of.should == [ devoted_guesser ]
       favorite_posters_of[0][:enthusiasm].should == 2.5
     end
+
+    it "ignores a guesser who has guessed this person less than 2.5 times as often as that guesser has guessed all posts" do
+      #noinspection RubyUnusedLocalVariable
+      devoted_guesser, poster = make_not_quite_favorite_poster
+      poster.favorite_posters_of.should == []
+    end
+
   end
 
   def make_favorite_poster
@@ -648,6 +662,20 @@ describe Person do
     end
     other_poster = Person.make! :label => 'other_poster'
     (11 .. 25).each do |n|
+      Photo.make! :label => n, :person => other_poster
+    end
+    return devoted_guesser, favorite_poster
+  end
+
+  def make_not_quite_favorite_poster
+    favorite_poster = Person.make! :label => 'favorite_poster'
+    devoted_guesser = Person.make! :label => 'devoted_guesser'
+    (1 .. 10).each do |n|
+      photo = Photo.make! :label => n, :person => favorite_poster
+      Guess.make! :label => n, :person => devoted_guesser, :photo => photo
+    end
+    other_poster = Person.make! :label => 'other_poster'
+    (11 .. 24).each do |n|
       Photo.make! :label => n, :person => other_poster
     end
     return devoted_guesser, favorite_poster
