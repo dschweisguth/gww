@@ -241,6 +241,17 @@ describe Person do
 
   end
 
+  describe '.nemeses' do
+    it "lists guessers and their favorite posters" do
+      guesser, favorite_poster = make_potential_favorite_poster(10, 15)
+      nemeses = Person.nemeses
+      nemeses.should == [ guesser ]
+      nemesis = nemeses[0]
+      nemesis[:poster_id].should == favorite_poster.id
+      nemesis[:bias].should == 2.5
+    end
+  end
+
   describe '.top_guessers' do
     before do
       @report_time = Time.utc(2011, 1, 3)
@@ -653,20 +664,6 @@ describe Person do
     
   end
 
-  def make_potential_favorite_poster(posts_by_favorite, posts_by_others)
-    favorite_poster = Person.make! 'favorite_poster'
-    devoted_guesser = Person.make! 'devoted_guesser'
-    (1 .. posts_by_favorite).each do |n|
-      photo = Photo.make! n, :person => favorite_poster
-      Guess.make! n, :person => devoted_guesser, :photo => photo
-    end
-    other_poster = Person.make! 'other_poster'
-    ((posts_by_favorite + 1) .. (posts_by_favorite + posts_by_others)).each do |n|
-      Photo.make! n, :person => other_poster
-    end
-    return devoted_guesser, favorite_poster
-  end
-
   describe '#destroy_if_has_no_dependents' do
     it 'destroys the person' do
       person = Person.make!
@@ -688,6 +685,22 @@ describe Person do
       Person.find(person.id).should == person
     end
 
+  end
+
+  # Utilities
+
+  def make_potential_favorite_poster(posts_by_favorite, posts_by_others)
+    favorite_poster = Person.make! 'favorite_poster'
+    devoted_guesser = Person.make! 'devoted_guesser'
+    (1 .. posts_by_favorite).each do |n|
+      photo = Photo.make! n, :person => favorite_poster
+      Guess.make! n, :person => devoted_guesser, :photo => photo
+    end
+    other_poster = Person.make! 'other_poster'
+    ((posts_by_favorite + 1) .. (posts_by_favorite + posts_by_others)).each do |n|
+      Photo.make! n, :person => other_poster
+    end
+    return devoted_guesser, favorite_poster
   end
 
 end
