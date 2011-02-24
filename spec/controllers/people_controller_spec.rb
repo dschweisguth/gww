@@ -4,6 +4,42 @@ require 'support/model_factory'
 describe PeopleController do
   integrate_views
 
+  describe '#find' do
+    it 'finds a person by username' do
+      person = Person.make
+      stub(Person).find_by_username('username') { person }
+      get :find, :person => { :username => 'username' }
+      response.should redirect_to show_person_path person
+    end
+
+    it 'finds a person by flickrid' do
+      person = Person.make
+      stub(Person).find_by_username('flickrid') { nil }
+      stub(Person).find_by_flickrid('flickrid') { person }
+      get :find, :person => { :username => 'flickrid' }
+      response.should redirect_to show_person_path person
+    end
+
+    it 'finds a person by GWW ID' do
+      person = Person.make
+      stub(Person).find_by_username('666') { nil }
+      stub(Person).find_by_flickrid('666') { nil }
+      stub(Person).find_by_id('666') { person }
+      get :find, :person => { :username => '666' }
+      response.should redirect_to show_person_path person
+    end
+
+    it 'punts back to the home page' do
+      stub(Person).find_by_username('xxx') { nil }
+      stub(Person).find_by_flickrid('xxx') { nil }
+      stub(Person).find_by_id('xxx') { nil }
+      get :find, :person => { :username => 'xxx' }
+      response.should redirect_to root_path
+      flash[:find_person_error].should == 'xxx'
+    end
+
+  end
+
   describe '#list' do
     it 'renders the page' do
       sorted_by_param = 'score'

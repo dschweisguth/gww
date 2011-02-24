@@ -17,6 +17,8 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
+Make View in GWW work for Flickr profile pages, and maybe other person-specific
+ pages
 Add a player's oldest unguessed post to their GWW page
 Add a count of all photos to the photos list
 Add report of guesses made before photo was added
@@ -38,9 +40,6 @@ Post scores to Flickr group automatically
 Add a search feature
 Provide page for players which lists scoring actions (guesses and revelations),
   and possibly score publication times, newest to oldest.
-Add to player page
-- other players whom player prefers to guess
-- other players who prefer to guess player
 Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
