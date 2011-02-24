@@ -148,7 +148,7 @@ describe PeopleController do
       stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
       oldest_unfound = Photo.make 'oldest_unfound'
-#      oldest_unfound[:place] = 1 # TODO Dave
+      oldest_unfound[:place] = 1
       stub(Photo).oldest_unfound(person) { oldest_unfound }
 
       #noinspection RubyResolve

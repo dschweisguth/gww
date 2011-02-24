@@ -17,17 +17,17 @@ module PeopleHelper
     thumbnail photo, render('shared/alt', :photo => photo)
   end
 
-  def place(guess, reason)
-    star, alt = star_and_alt(guess, reason)
-    render 'people/show/place', :guess => guess, :star => star, :alt => alt
+  def place(trophy, reason)
+    star, alt = star_and_alt(trophy, reason)
+    render 'people/show/place', :trophy => trophy, :star => star, :alt => alt
   end
 
-  def star_and_alt(guess, reason)
+  def star_and_alt(trophy, reason)
     if reason == :age
-      star = guess.star_for_age
+      star = trophy.star_for_age
       alt = alt_for_star_for_age star
     else
-      star = guess.star_for_speed
+      star = trophy.star_for_speed
       alt = alt_for_star_for_speed star
     end
     return star, alt

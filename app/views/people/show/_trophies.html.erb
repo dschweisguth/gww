@@ -43,11 +43,13 @@
   <% if @fastest_guess %><td>Guessed in <%= @fastest_guess.time_elapsed %></td><% end %>
   <% if @longest_lasting_guess %><td>Guessed after <%= @longest_lasting_guess.ymd_elapsed %></td><% end %>
   <% if @shortest_lasting_guess %><td>Guessed in <%= @shortest_lasting_guess.time_elapsed %></td><% end %>
+  <% if @oldest_unfound %><td><%= @oldest_unfound.years_old %> years old</td><% end %>
 </tr>
 <tr class="trophies-places">
   <%= place @oldest_guess, :age %>
   <%= place @fastest_guess, :speed %>
   <%= place @longest_lasting_guess, :age %>
   <%= place @shortest_lasting_guess, :speed %>
+  <%= place @oldest_unfound, :age %>
 </tr>
 </table>
