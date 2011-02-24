@@ -1,0 +1,20 @@
+<% content_for :title do %>Nemeses<% end %>
+<% sandwich do %>
+<h1>Nemeses</h1>
+
+<table class="dark">
+  <tr>
+    <th>Guesser</th>
+    <th>Poster</th>
+    <th>How much more often<br/>guesser guesses poster than<br/>guesser does other posters</th>
+  </tr>
+  <% @nemeses.each do |nemesis| %>
+  <tr>
+    <td><%= link_to_person nemesis %></td>
+    <td><%= link_to_person nemesis[:poster] %></td>
+    <td class="number"><%= '%.3f' % nemesis[:bias] %></td>
+  </tr>
+  <% end %>
+</table>
+
+<% end %>
