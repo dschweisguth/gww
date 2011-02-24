@@ -10,6 +10,21 @@ class Person < ActiveRecord::Base
   has_many :photos
   has_many :guesses
 
+  def self.find_by_multiple_fields(username)
+    methods = [
+      lambda { Person.find_by_username username },
+      lambda { Person.find_by_flickrid username },
+      lambda { username =~ /\d+/ ? Person.find_by_id(username) : nil }
+    ]
+    methods.each do |method|
+      person = method.call
+      if person
+        return person
+      end
+    end
+    nil
+  end
+
   CRITERIA = {
     'username' => [ :downcased_username ],
     'score' => [ :guess_count, :post_count, :downcased_username ],
