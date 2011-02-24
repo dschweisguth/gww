@@ -135,13 +135,26 @@ describe Photo do
       Photo.oldest_unfound(Person.make!).should be_nil
     end
 
-    it "ignores game statuses other than unfound" do
+    it "considers unconfirmed photos" do
+      photo = Photo.make! :game_status => 'unconfirmed'
+      Photo.oldest_unfound(photo.person).should == photo
+    end
+
+    it "ignores game statuses other than unfound and unconfirmed" do
       photo = Photo.make! :game_status => 'found'
       Photo.oldest_unfound(photo.person).should be_nil
     end
 
     it "considers other posters' oldest unfounds when calculating place" do
       Photo.make! 'oldest', :dateadded => Time.utc(2000)
+      next_oldest = Photo.make! 'next_oldest', :dateadded => Time.utc(2001)
+      oldest_unfound = Photo.oldest_unfound next_oldest.person
+      oldest_unfound.should == next_oldest
+      oldest_unfound[:place].should == 2
+    end
+
+    it "considers unconfirmed photos when calculating place" do
+      Photo.make! 'oldest', :dateadded => Time.utc(2000), :game_status => 'unconfirmed'
       next_oldest = Photo.make! 'next_oldest', :dateadded => Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
