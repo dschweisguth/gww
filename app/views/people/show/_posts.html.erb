@@ -1,7 +1,7 @@
 <h2><%=h @person.username %> has posted <%= pluralize @posts.length, 'photo' %></h2>
 
 <% if ! @favorite_posters_of.empty? -%>
-<p><%=h @person.username %>'s <%= @favorite_posters_of.length == 1 ? 'nemesis is' : 'nemeses are' %> <% -%>
+<p><%=h @person.username %>'s <%= link_to (@favorite_posters_of.length == 1 ? 'nemesis' : 'nemeses'), nemeses_path, :class => 'normal' %> <%= singularize 'are', @favorite_posters_of.length %> <% -%>
 <% @favorite_posters_of.each_with_index do |favorite_poster_of, i| -%>
 <% if 0 < i && i < @favorite_posters_of.length - 1 %>, <% elsif 0 < i %> and <% end -%><%= link_to_person favorite_poster_of %> (<%= '%.1f' % favorite_poster_of[:bias] %>)<% -%>
 <% end %></p>

@@ -129,6 +129,10 @@ th {
   vertical-align: middle;
 }
 
+a.normal {
+  font-weight: normal;
+}
+
 .unconfirmed {
   background-color: #ffcc33;
 }
