@@ -5,6 +5,11 @@ class PeopleController < ApplicationController
     @people = Person.all_sorted params[:sorted_by], params[:order]
   end
 
+  caches_page :nemeses
+  def nemeses
+    @nemeses = Person.nemeses
+  end
+
   caches_page :top_guessers
   def top_guessers
     @days, @weeks, @months, @years = Person.top_guessers Time.now
