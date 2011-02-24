@@ -32,12 +32,12 @@ class Photo < ActiveRecord::Base
     if oldest_unfound
       oldest_unfound[:place] = count_by_sql [
         %q{
-        select count(*)
-        from (select person_id,  min(dateadded) dateadded
-              from photos where game_status = 'unfound' group by person_id) oldest_unfounds
-        where dateadded <= ?
-      },
-          oldest_unfound.dateadded
+          select count(*)
+          from (select person_id,  min(dateadded) dateadded
+                from photos where game_status = 'unfound' group by person_id) oldest_unfounds
+          where dateadded <= ?
+        },
+        oldest_unfound.dateadded
       ]
     end
     oldest_unfound
@@ -46,12 +46,12 @@ class Photo < ActiveRecord::Base
   # Used by PhotosController
 
   def self.all_sorted_and_paginated(sorted_by, order, page, per_page)
-    paginate_by_sql(
-      'select p.* ' +
-        'from photos p, people poster ' +
-        'where p.person_id = poster.id ' +
-        'order by ' + order_by(sorted_by, order),
-      :page => page, :per_page => per_page)
+    paginate_by_sql %Q{
+      select p.*
+        from photos p, people poster
+        where p.person_id = poster.id
+        order by #{order_by(sorted_by, order)} },
+      :page => page, :per_page => per_page
   end
 
   SORTED_BY = {
