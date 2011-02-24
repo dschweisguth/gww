@@ -90,6 +90,12 @@ describe Guess do
       first = Guess.make! 'first', :person => guesser, :guessed_at => Time.utc(2000)
       Guess.first_by(guesser).should == first
     end
+
+    it "ignores other players' guesses" do
+      Guess.make!
+      Guess.first_by(Person.make!).should be_nil
+    end
+
   end
 
   describe '.most_recent_by' do
@@ -99,6 +105,12 @@ describe Guess do
       most_recent = Guess.make! 'most_recent', :person => guesser, :guessed_at => Time.utc(2001)
       Guess.most_recent_by(guesser).should == most_recent
     end
+
+    it "ignores other players' guesses" do
+      Guess.make!
+      Guess.most_recent_by(Person.make!).should be_nil
+    end
+
   end
 
   describe '.oldest' do
@@ -112,6 +124,11 @@ describe Guess do
       oldest = Guess.oldest guesser
       oldest.should == guess2
       oldest[:place].should == 1
+    end
+
+    it "ignores other players' guesses" do
+      Guess.make!
+      Guess.oldest(Person.make!).should be_nil
     end
 
     it "considers other players' guesses when calculating place" do
@@ -146,6 +163,11 @@ describe Guess do
       longest_lasting[:place].should == 1
     end
 
+    it "ignores guesses of other players' posts" do
+      Guess.make! 2
+      Guess.longest_lasting(Photo.make!(1).person).should be_nil
+    end
+
     it "considers other posters when calculating place" do
       poster = Person.make!
       photo1 = Photo.make! 1, :person => poster, :dateadded => Time.utc(2000)
@@ -178,6 +200,11 @@ describe Guess do
       fastest[:place].should == 1
     end
 
+    it "ignores other players' guesses" do
+      Guess.make!
+      Guess.fastest(Person.make!).should be_nil
+    end
+
     it "considers other players' guesses when calculating place" do
       guesser = Person.make!
       photo1 = Photo.make! 1, :dateadded => Time.utc(2002)
@@ -208,6 +235,11 @@ describe Guess do
       shortest_lasting = Guess.shortest_lasting poster
       shortest_lasting.should == guess2
       shortest_lasting[:place].should == 1
+    end
+
+    it "ignores guesses of other players' posts" do
+      Guess.make! 2
+      Guess.shortest_lasting(Photo.make!(1).person).should be_nil
     end
 
     it "considers other posters when calculating place" do
