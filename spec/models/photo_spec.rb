@@ -108,6 +108,21 @@ describe Photo do
     end
   end
 
+  describe '.oldest_unfound' do
+    it "returns the poster's oldest unfound" do
+      poster = Person.make!
+      Photo.make! 'second', :person => poster, :dateadded => Time.utc(2001)
+      first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
+      Photo.oldest_unfound(poster).should == first
+    end
+
+    it "ignores game statuses other than unfound" do
+      photo = Photo.make! :game_status => 'found'
+      Photo.oldest_unfound(photo.person).should be_nil
+    end
+
+  end
+
   # Used by PhotosController
 
   describe '.all_sorted_and_paginated' do
