@@ -93,8 +93,8 @@ describe Photo do
   describe '.first_by' do
     it "returns the poster's first post" do
       poster = Person.make!
-      Photo.make! :label => 'second', :person => poster, :dateadded => Time.utc(2001)
-      first = Photo.make! :label => 'first', :person => poster, :dateadded => Time.utc(2000)
+      Photo.make! 'second', :person => poster, :dateadded => Time.utc(2001)
+      first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
       Photo.first_by(poster).should == first
     end
   end
@@ -102,8 +102,8 @@ describe Photo do
   describe '.most_recent_by' do
     it "returns the poster's most recent post" do
       poster = Person.make!
-      Photo.make! :label => 'penultimate', :person => poster, :dateadded => Time.utc(2000)
-      most_recent = Photo.make! :label => 'most_recent', :person => poster, :dateadded => Time.utc(2001)
+      Photo.make! 'penultimate', :person => poster, :dateadded => Time.utc(2000)
+      most_recent = Photo.make! 'most_recent', :person => poster, :dateadded => Time.utc(2001)
       Photo.most_recent_by(poster).should == most_recent
     end
   end
@@ -125,8 +125,8 @@ describe Photo do
 
     it 'returns photos sorted by username, dateadded' do
       person = Person.make!
-      photo1 = Photo.make! :label => 1, :person => person, :dateadded => Time.utc(2010)
-      photo2 = Photo.make! :label => 2, :person => person, :dateadded => Time.utc(2011)
+      photo1 = Photo.make! 1, :person => person, :dateadded => Time.utc(2010)
+      photo2 = Photo.make! 2, :person => person, :dateadded => Time.utc(2011)
       Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
@@ -205,10 +205,10 @@ describe Photo do
     def all_sorted_and_paginated_should_reverse_photos(sorted_by,
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
-      person1 = Person.make! person_1_options.merge({ :label => 1 })
-      photo1 = Photo.make! photo_1_options.merge({ :label => 1, :person => person1 })
-      person2 = Person.make! person_2_options.merge({ :label => 2 })
-      photo2 = Photo.make! photo_2_options.merge({ :label => 2, :person => person2 })
+      person1 = Person.make! 1, person_1_options
+      photo1 = Photo.make! 1, photo_1_options.merge({ :person => person1 })
+      person2 = Person.make! 2, person_2_options
+      photo2 = Photo.make! 2, photo_2_options.merge({ :person => person2 })
       Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
 
     end
@@ -241,8 +241,8 @@ describe Photo do
     end
 
     it 'sorts by views' do
-      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010), :views => 0
-      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010), :views => 1
+      photo1 = Photo.make! 1, :dateadded => Time.utc(2010), :views => 0
+      photo2 = Photo.make! 2, :dateadded => Time.utc(2010), :views => 1
       Photo.most_viewed_in_2010.should == [ photo2, photo1 ]
     end
 
@@ -266,11 +266,11 @@ describe Photo do
     end
 
     it 'sorts by comment count' do
-      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2010)
-      Comment.make! :label => 11, :photo => photo1
-      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2010)
-      Comment.make! :label => 21, :photo => photo2
-      Comment.make! :label => 22, :photo => photo2
+      photo1 = Photo.make! 1, :dateadded => Time.utc(2010)
+      Comment.make! 11, :photo => photo1
+      photo2 = Photo.make! 2, :dateadded => Time.utc(2010)
+      Comment.make! 21, :photo => photo2
+      Comment.make! 22, :photo => photo2
       Photo.most_commented_in_2010.should == [ photo2, photo1 ]
     end
 
@@ -531,8 +531,8 @@ describe Photo do
   describe '.multipoint' do
     it 'returns photos for which more than one person got a point' do
       photo = Photo.make!
-      Guess.make! :label => 1, :photo => photo
-      Guess.make! :label => 2, :photo => photo
+      Guess.make! 1, :photo => photo
+      Guess.make! 2, :photo => photo
       Photo.multipoint.should == [ photo ]
     end
 
@@ -554,7 +554,7 @@ describe Photo do
     end
 
     it 'deletes previous comments' do
-      Comment.make! :label => 'previous', :photo => @photo
+      Comment.make! 'previous', :photo => @photo
       stub_request_to_return_one_comment
       should_be_the_comment_from_the_request @photo.load_comments
     end
@@ -581,7 +581,7 @@ describe Photo do
     end
 
     it 'but not if the photo currently has no comments' do
-      Comment.make! :label => 'previous', :photo => @photo
+      Comment.make! 'previous', :photo => @photo
       empty_parsed_xml = {
         'comments' => [ {
         } ]
@@ -644,10 +644,10 @@ describe Photo do
       end
 
       it 'gives the point to another user' do
-        scorer = Person.make! :label => 'scorer'
-        scorer_comment = Comment.make! :label => 'scorer',
+        scorer = Person.make! 'scorer'
+        scorer_comment = Comment.make! 'scorer',
           :flickrid => scorer.flickrid, :username => scorer.username
-        answer_comment = Comment.make! :label => 'answer', :commented_at => Time.utc(2011)
+        answer_comment = Comment.make! 'answer', :commented_at => Time.utc(2011)
         Photo.add_answer answer_comment.id, scorer_comment.username
         guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
         guess.person.flickrid.should == scorer_comment.flickrid
@@ -744,12 +744,12 @@ describe Photo do
 
       it "leaves the photo found if there's another guess" do
         photo = Photo.make! :game_status => 'found'
-        guess1 = Guess.make! :label => 1, :photo => photo
-        comment1 = Comment.make! :label => 1, :photo => photo,
+        guess1 = Guess.make! 1, :photo => photo
+        comment1 = Comment.make! 1, :photo => photo,
           :flickrid => guess1.person.flickrid, :username => guess1.person.username,
           :comment_text => guess1.guess_text
-        guess2 = Guess.make! :label => 2, :photo => photo
-        Comment.make! :label => 2, :photo => photo,
+        guess2 = Guess.make! 2, :photo => photo
+        Comment.make! 2, :photo => photo,
           :flickrid => guess2.person.flickrid, :username => guess2.person.username,
           :comment_text => guess2.guess_text
         Photo.remove_answer comment1.id
@@ -850,8 +850,8 @@ describe Photo do
   describe '.add_posts' do
     it "adds each person's posts as an attribute" do
       person = Person.make!
-      Photo.make! :label => 1, :person => person
-      Photo.make! :label => 2, :person => person
+      Photo.make! 1, :person => person
+      Photo.make! 2, :person => person
       Photo.add_posts [ person ]
       person[:posts].should == 2
     end

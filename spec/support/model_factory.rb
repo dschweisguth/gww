@@ -1,32 +1,24 @@
-# TODO Dave provide a more succinct syntax for label?
-
 module ModelFactory
   def make(label = '', options = {})
-    process_label_and_make_for_test :new, label, options
+    parse_args_and_make_for_test :new, label, options
   end
 
   def make!(label = '', options = {})
-    process_label_and_make_for_test :create, label, options
+    parse_args_and_make_for_test :create, label, options
   end
 
-  def process_label_and_make_for_test(new_or_create, label, options)
+  def parse_args_and_make_for_test(new_or_create, label, options)
     if label.is_a? Hash
       options = label
       label = ''
     end
-    if options[:label] then
-      padded_label = options[:label]
-      options.delete :label
-    else
-      padded_label = label
-    end
-    padded_label = padded_label.to_s
+    padded_label = label.to_s
     if ! padded_label.empty?
       padded_label += '_'
     end
     make_for_test new_or_create, padded_label, options
   end
-  private :process_label_and_make_for_test
+  private :parse_args_and_make_for_test
 
 end
 

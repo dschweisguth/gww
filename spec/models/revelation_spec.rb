@@ -36,9 +36,9 @@ describe Revelation do
     end
 
     it 'sorts revelations by the time from post to revelation' do
-      photo1 = Photo.make! :label => 1, :dateadded => Time.utc(2000)
+      photo1 = Photo.make! 1, :dateadded => Time.utc(2000)
       revelation1 = Revelation.make! :photo => photo1, :revealed_at => Time.utc(2001)
-      photo2 = Photo.make! :label => 2, :dateadded => Time.utc(2002)
+      photo2 = Photo.make! 2, :dateadded => Time.utc(2002)
       revelation2 = Revelation.make! :photo => photo2, :revealed_at => Time.utc(2004)
       Revelation.longest.should == [ revelation2, revelation1 ]
     end

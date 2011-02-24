@@ -82,47 +82,47 @@ describe PeopleController do
       stub(Person).high_scorers(7) { [ person ] }
       stub(Person).high_scorers(30) { [ person ] }
 
-      first_guess = Guess.make :label => 'first_guess'
+      first_guess = Guess.make 'first_guess'
       stub(Guess).first_by(person) { first_guess }
 
-      first_post = Photo.make :label => 'first_post'
+      first_post = Photo.make 'first_post'
       stub(Photo).first_by(person) { first_post }
 
-      oldest_guess = Guess.make :label => 'oldest_guess'
+      oldest_guess = Guess.make 'oldest_guess'
       oldest_guess[:place] = 1
       stub(Guess).oldest(person) { oldest_guess }
 
-      fastest_guess = Guess.make :label => 'fastest_guess'
+      fastest_guess = Guess.make 'fastest_guess'
       fastest_guess[:place] = 1
       stub(Guess).fastest(person) { fastest_guess }
 
-      longest_lasting_guess = Guess.make :label => 'longest_lasting_guess'
+      longest_lasting_guess = Guess.make 'longest_lasting_guess'
       longest_lasting_guess[:place] = 1
       stub(Guess).longest_lasting(person) { longest_lasting_guess }
 
-      shortest_lasting_guess = Guess.make :label => 'shortest_lasting_guess'
+      shortest_lasting_guess = Guess.make 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
-      most_recent_guess = Guess.make :label => 'most_recent_guess'
+      most_recent_guess = Guess.make 'most_recent_guess'
       stub(Guess).most_recent_by(person) { most_recent_guess }
 
-      most_recent_post = Photo.make :label => 'most_recent_post'
+      most_recent_post = Photo.make 'most_recent_post'
       stub(Photo).most_recent_by(person) { most_recent_post }
 
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id, anything) \
-        { [Guess.make(:label => 'all1'), Guess.make(:label => 'all2') ] }
+        { [Guess.make('all1'), Guess.make('all2') ] }
 
-      stub(Photo).all { [ Photo.make :label => 'unfound' ] }
+      stub(Photo).all { [ Photo.make 'unfound' ] }
 
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
-        { [ Photo.make :label => 'revealed' ] }
+        { [ Photo.make 'revealed' ] }
 
-      found1 = Guess.make :label => 'found1'
+      found1 = Guess.make 'found1'
       found1.photo.guesses << found1
-      found2 = Guess.make :label => 'found2'
+      found2 = Guess.make 'found2'
       found2.photo.guesses << found2
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(person.id, anything) { [ found1.photo, found2.photo ] }
