@@ -908,4 +908,15 @@ describe Photo do
     Person.exists?(owner.person.id).should == false
   end
 
+  describe '#star_for_age' do
+    now = Time.now
+    expected = { 0 => nil, 1 => :bronze, 2 => :silver, 3 => :gold }
+    expected.keys.sort.each do |years_old|
+      it "returns a #{expected[years_old]} star for a #{years_old}-year-old guess" do
+        photo = Photo.new :dateadded => now - years_old.years
+        photo.star_for_age.should == expected[years_old]
+      end
+    end
+  end
+
 end
