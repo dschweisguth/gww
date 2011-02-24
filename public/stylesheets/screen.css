@@ -76,6 +76,19 @@ th {
   padding-left: 10px;
 }
 
+.spacious {
+  line-height: 200%;
+}
+
+.inline {
+  display: inline-block;
+  margin: 0 3px;
+}
+
+.error {
+  color: red;
+}
+
 /* people/top_guessers, guesses/longest_and_shortest */
 
 .opening-number {

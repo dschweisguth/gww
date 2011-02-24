@@ -1,4 +1,5 @@
 <% content_for :title do %>Home<% end %>
+<%= javascript_include_tag :defaults %>
 <h1>Guess Where Watcher</h1>
 
 <p>Welcome to Guess Where Watcher, the <a
@@ -13,17 +14,27 @@ Comment Searchr</a>.</p>
 <%= render 'shared/most_recent_update' %>
 
 <h2>Reports</h2>
-<ul>
+<ul class="spacious">
 <li>Scores are published to the <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></li>
+<li>Find a person:
+  <% form_tag({ :controller => 'people', :action => 'find' }, :class => 'inline') do %>
+  <%= text_field_with_auto_complete :person, :username %> <%= submit_tag 'Find' %>
+  <% end %>
+  (Flickr and GWW IDs work here, too.)
+  <% if flash[:find_person_error] %><br/>
+    <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.
+      You could try again, or scan the <%= link_to 'Active members', list_people_path('score', '+') %> page.</span>
+  <% end -%>
+</li>
 <li><%= link_to 'Active members', list_people_path('score', '+') %> and statistics. How do you measure up?</li>
 <li><%= link_to 'Nemeses', nemeses_path %>: who guesses whom the most?<span class="new">New!</span></li>
 <li><%= link_to 'Top guessers', :controller => 'people', :action => 'top_guessers' %> by day, week, month and year</li>
-<li><%= link_to 'Photos', list_photos_path('date-added', '+', 1) %>, sortable by statistics</li>
+<li><%= link_to 'Photos', list_photos_path('date-added', '+', 1) %>, sortable by various statistics</li>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_path %></li>
 <li><%= link_to 'Longest-lived revelations', :controller => 'revelations', :action => 'longest' %></li>
 </ul>
-<ul>
+<ul class="spacious">
 <li><%= link_to 'Statistics for the 2010 Wheresies', :controller => 'wheresies' %></li>
 </ul>
 

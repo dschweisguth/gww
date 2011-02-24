@@ -1,5 +1,23 @@
 class PeopleController < ApplicationController
 
+  def find
+    username = params[:person][:username]
+    methods = [
+      lambda { Person.find_by_username username },
+      lambda { Person.find_by_flickrid username },
+      lambda { username =~ /\d+/ ? Person.find_by_id(username) : nil }
+    ]
+    methods.each do |method|
+      person = method.call
+      if person
+        redirect_to show_person_path person
+        return
+      end
+    end
+    flash[:find_person_error] = username
+    redirect_to root_path
+  end
+
   caches_page :list
   def list
     @people = Person.all_sorted params[:sorted_by], params[:order]

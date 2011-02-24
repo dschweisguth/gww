@@ -1,6 +1,6 @@
 class RootController < ApplicationController
+  auto_complete_for :person, :username
 
-  caches_page :index
   def index
     @latest = FlickrUpdate.latest
   end
