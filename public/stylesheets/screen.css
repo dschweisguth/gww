@@ -125,20 +125,20 @@ th {
 
 /* people/show */
 
-#trophies {
-  margin: 0 0 15px 0;
+.trophies {
+  margin-left: 30px;
 }
 
-#trophies td {
+.trophies td {
   width: 110px;
   padding-right: 10px;
 }
 
-#trophies-headers, #trophies-captions {
+.trophies-text {
   vertical-align: top;
 }
 
-#trophies-places img, #trophies-places span {
+.trophies-places img, .trophies-places span {
   vertical-align: middle;
 }
 
