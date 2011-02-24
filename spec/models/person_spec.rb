@@ -250,6 +250,12 @@ describe Person do
       nemesis[:poster_id].should == favorite_poster.id
       nemesis[:bias].should == 2.5
     end
+
+    it "ignores less than #{Person::MIN_GUESSES_FOR_FAVORITE} guesses" do
+      make_potential_favorite_poster(9, 15)
+      Person.nemeses.should == []
+    end
+
   end
 
   describe '.top_guessers' do
