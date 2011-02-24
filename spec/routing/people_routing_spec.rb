@@ -15,6 +15,18 @@ describe PeopleController do
 
     end
 
+    describe 'nemeses' do
+      it 'is routed to' do
+        { :get => '/people/nemeses' }.should route_to :controller => 'people', :action => 'nemeses'
+      end
+
+      it 'has a named route' do
+        #noinspection RubyResolve
+        nemeses_path.should == '/people/nemeses'
+      end
+
+    end
+
     describe 'show' do
       it 'is routed to' do
         { :get => '/people/show/666' }.should route_to \

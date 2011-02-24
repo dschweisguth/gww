@@ -2,6 +2,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.with_options :controller => 'people' do |people|
     people.list_people 'people/list/sorted-by/:sorted_by/order/:order', :action => 'list'
+    people.nemeses 'people/nemeses', :action => 'nemeses'
     people.show_person 'people/show/:id', :action => 'show'
     people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
   end
