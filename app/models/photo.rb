@@ -26,8 +26,21 @@ class Photo < ActiveRecord::Base
   end
 
   def self.oldest_unfound(poster)
-    first :conditions => [ "person_id = ? and game_status = 'unfound'", poster ],
+    oldest_unfound = first \
+      :conditions => [ "person_id = ? and game_status = 'unfound'", poster ],
       :order => 'dateadded'
+    if oldest_unfound
+      oldest_unfound[:place] = count_by_sql [
+        %q{
+        select count(*)
+        from (select person_id,  min(dateadded) dateadded
+              from photos where game_status = 'unfound' group by person_id) oldest_unfounds
+        where dateadded <= ?
+      },
+          oldest_unfound.dateadded
+      ]
+    end
+    oldest_unfound
   end
 
   # Used by PhotosController

@@ -125,7 +125,9 @@ describe Photo do
       poster = Person.make!
       Photo.make! 'second', :person => poster, :dateadded => Time.utc(2001)
       first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
-      Photo.oldest_unfound(poster).should == first
+      oldest_unfound = Photo.oldest_unfound poster
+      oldest_unfound.should == first
+      oldest_unfound[:place].should == 1
     end
 
     it "ignores other posters' photos" do
