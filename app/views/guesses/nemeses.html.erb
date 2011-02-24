@@ -9,10 +9,17 @@
     <th>How much more often<br/>guesser guesses poster than<br/>guesser does other posters</th>
   </tr>
   <% did_2_5 = false %>
+  <% did_1 = false %>
   <% @nemeses.each do |nemesis| %>
     <% if nemesis[:bias] < 2.5 && ! did_2_5 then did_2_5 = true -%>
       <tr>
-        <td colspan="3">Above this line, the guesser's is the poster's nemesis, and they appear on each other's pages.</td>
+        <td colspan="3">Above this line, the guesser is the poster's nemesis, and they appear on each other's pages.</td>
+      </tr>
+    <% end -%>
+    <% if nemesis[:bias] < 1 && ! did_1 then did_1 = true -%>
+      <tr>
+        <td colspan="3">Below this line, the guesser guesses the poster less often than expected.<br/>
+          They're too tough for you, huh?</td>
       </tr>
     <% end -%>
     <tr>
@@ -28,6 +35,7 @@
 (the number of photos the poster has posted)) /
 ((the number of photos the guesser has guessed) /
 (the number of photos that have been posted)).
+Bias is calculated only if the guesser has guessed the poster ten or more times.
 This number isn't adjusted for the periods of time that the guesser and poster have played the game.
 If the number is high, the guesser is really out to get the poster.
 But if the number is low, it might mean that the guesser doesn't like or can't find the poster's photos,
