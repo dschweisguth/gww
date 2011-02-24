@@ -908,6 +908,17 @@ describe Photo do
     Person.exists?(owner.person.id).should == false
   end
 
+  describe '#years_old' do
+    it "returns 0 for a photo posted moments ago" do
+      Photo.make(:dateadded => Time.now).years_old.should == 0
+    end
+
+    it "returns 1 for a photo posted moments + 1 year ago" do
+      Photo.make(:dateadded => Time.now - 1.years).years_old.should == 1
+    end
+
+  end
+
   describe '#star_for_age' do
     now = Time.now
     expected = { 0 => nil, 1 => :bronze, 2 => :silver, 3 => :gold }
