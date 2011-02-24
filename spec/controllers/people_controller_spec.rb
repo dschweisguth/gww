@@ -125,6 +125,12 @@ describe PeopleController do
       first_post = Photo.make 'first_post'
       stub(Photo).first_by(person) { first_post }
 
+      most_recent_guess = Guess.make 'most_recent_guess'
+      stub(Guess).most_recent_by(person) { most_recent_guess }
+
+      most_recent_post = Photo.make 'most_recent_post'
+      stub(Photo).most_recent_by(person) { most_recent_post }
+
       oldest_guess = Guess.make 'oldest_guess'
       oldest_guess[:place] = 1
       stub(Guess).oldest(person) { oldest_guess }
@@ -141,11 +147,9 @@ describe PeopleController do
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
-      most_recent_guess = Guess.make 'most_recent_guess'
-      stub(Guess).most_recent_by(person) { most_recent_guess }
-
-      most_recent_post = Photo.make 'most_recent_post'
-      stub(Photo).most_recent_by(person) { most_recent_post }
+      oldest_unfound = Photo.make 'oldest_unfound'
+#      oldest_unfound[:place] = 1 # TODO Dave
+      stub(Photo).oldest_unfound(person) { oldest_unfound }
 
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id, anything) \
