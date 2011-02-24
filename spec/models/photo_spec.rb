@@ -140,6 +140,14 @@ describe Photo do
       Photo.oldest_unfound(photo.person).should be_nil
     end
 
+    it "considers other posters' oldest unfounds when calculating place" do
+      Photo.make! 'oldest', :dateadded => Time.utc(2000)
+      next_oldest = Photo.make! 'next_oldest', :dateadded => Time.utc(2001)
+      oldest_unfound = Photo.oldest_unfound next_oldest.person
+      oldest_unfound.should == next_oldest
+      oldest_unfound[:place].should == 2
+    end
+
   end
 
   # Used by PhotosController
