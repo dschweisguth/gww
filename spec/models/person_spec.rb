@@ -27,6 +27,29 @@ describe Person do
 
   end
 
+  describe '.find' do
+    before do
+      @person = Person.make!
+    end
+
+    it 'finds a person by username' do
+      Person.find_by_multiple_fields(@person.username).should == @person
+    end
+
+    it 'finds a person by flickrid' do
+      Person.find_by_multiple_fields(@person.flickrid).should == @person
+    end
+
+    it 'finds a person by GWW ID' do
+      Person.find_by_multiple_fields(@person.id.to_s).should == @person
+    end
+
+    it 'punts back to the home page' do
+      Person.find_by_multiple_fields('xxx').should be_nil
+    end
+
+  end
+
   describe '.all_sorted' do
     it 'sorts by username' do
       create_people_named 'z', 'a'
