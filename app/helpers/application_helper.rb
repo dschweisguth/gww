@@ -1,6 +1,10 @@
 module ApplicationHelper
 
-  IRREGULAR_PLURAL_VERBS = { 'were' => 'was', 'have' => 'has' }
+  IRREGULAR_PLURAL_VERBS = {
+    'are' => 'is',
+    'were' => 'was',
+    'have' => 'has'
+  }
 
   def singularize(verb, number)
     if number != 1

@@ -43,14 +43,13 @@ class PeopleController < ApplicationController
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
+    @posts = Photo.find_all_by_person_id @person.id, :include => { :guesses => :person }
+    @favorite_posters_of = @person.favorite_posters_of
     @unfound_photos = Photo.all :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
         @person.id ]
     @revealed_photos =
       Photo.find_all_by_person_id_and_game_status @person.id, 'revealed'
-    
-    @posts = Photo.find_all_by_person_id @person.id,
-      :include => { :guesses => :person }
     @guessers = group_by_guessers @posts
     
   end

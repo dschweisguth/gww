@@ -11,7 +11,7 @@ describe ApplicationHelper do
       helper.singularize('delete', 0).should == 'delete'
     end
 
-    expected = { 'were' => 'was', 'have' => 'has' }
+    expected = { 'are' => 'is', 'were' => 'was', 'have' => 'has' }
     expected.keys.each do |plural|
       it "singularizes the irregular plural verb #{plural} to #{expected[plural]}" do
         helper.singularize(plural, 1).should == expected[plural]

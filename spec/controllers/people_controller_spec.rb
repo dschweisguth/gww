@@ -118,18 +118,22 @@ describe PeopleController do
       favorite_poster[:bias] = 2.5
       stub(person).favorite_posters { [ favorite_poster ] }
       
-      stub(Photo).all { [ Photo.make 'unfound' ] }
-
-      #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
-        { [ Photo.make 'revealed' ] }
-
       found1 = Guess.make 'found1'
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(person.id, anything) { [ found1.photo, found2.photo ] }
+
+      stub(Photo).all { [ Photo.make 'unfound' ] }
+
+      #noinspection RubyResolve
+      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
+        { [ Photo.make 'revealed' ] }
+
+      favorite_poster_of = Person.make 'favorite_poster_of'
+      favorite_poster_of[:bias] = 3.6
+      stub(person).favorite_posters_of { [ favorite_poster_of ] }
 
       get :show, :id => person.id
 
@@ -140,9 +144,10 @@ describe PeopleController do
       response.should have_text /username scored the most points in the last month/
       response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
       response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
-      response.should have_tag 'strong', :text => /username has posted 2 photos/
+      response.should have_tag 'h2', :text => /username has posted 2 photos/
       response.should have_text /1 remains unfound/
       response.should have_text /1 was revealed/
+      response.should have_tag 'p', :text => /username's nemesis is favorite_poster_of_username \(3.6\)/
 
     end
   end
