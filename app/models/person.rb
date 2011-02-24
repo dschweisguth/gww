@@ -138,7 +138,7 @@ class Person < ActiveRecord::Base
   private_class_method :statistic_by_person
 
   def self.nemeses
-    find_by_sql %Q{
+    nemeses = find_by_sql %Q{
       select guessers.*, f.person_id poster_id,
         count(*) / posters_posts.post_count / guessers_guesses.guess_count *
           (select count(*) from photos) bias
@@ -153,6 +153,11 @@ class Person < ActiveRecord::Base
         g.person_id = guessers_guesses.person_id
       group by guessers.id, poster_id having count(*) >= 10 order by bias desc;
     }
+    poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
+    posters = find_all_by_id poster_ids
+    posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
+    nemeses.each { |nemesis| nemesis[:poster] = posters_by_id[nemesis[:poster_id]] }
+    nemeses
   end
 
   def self.top_guessers(report_time)

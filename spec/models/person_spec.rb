@@ -247,7 +247,7 @@ describe Person do
       nemeses = Person.nemeses
       nemeses.should == [ guesser ]
       nemesis = nemeses[0]
-      nemesis[:poster_id].should == favorite_poster.id
+      nemesis[:poster].should == favorite_poster
       nemesis[:bias].should == 2.5
     end
 
