@@ -18,8 +18,7 @@
     <% end -%>
     <% if nemesis[:bias] < 1 && ! did_1 then did_1 = true -%>
       <tr>
-        <td colspan="3">Below this line, the guesser guesses the poster less often than expected.<br/>
-          They're too tough for you, huh?</td>
+        <td colspan="3">Below this line, the guesser guesses the poster less often than expected.</td>
       </tr>
     <% end -%>
     <tr>
@@ -30,15 +29,16 @@
   <% end %>
 </table>
 
-<p>The guesser's bias towards guessing the poster is calculated as
-((the number of times the guesser has guessed the poster) /
+<p>The guesser's bias towards guessing the poster is calculated as</p>
+<p>((the number of times the guesser has guessed the poster) /
 (the number of photos the poster has posted)) /
 ((the number of photos the guesser has guessed) /
-(the number of photos that have been posted)).
-Bias is calculated only if the guesser has guessed the poster ten or more times.
-This number isn't adjusted for the periods of time that the guesser and poster have played the game.
-If the number is high, the guesser is really out to get the poster.
-But if the number is low, it might mean that the guesser doesn't like or can't find the poster's photos,
+(the number of photos that have been posted)).</p>
+<p>Bias is calculated only if the guesser has guessed the poster ten or more times</p>
+<p>Bias isn't adjusted for the periods of time that the guesser and poster have played the game.
+If the number is high, the guesser is clearly out to get the poster.
+But if the number is low, it might mean that the guesser isn't trying,
+the poster's posts are unusually hard to guess,
 or just that the guesser and poster played the game at different times.</p>
 
 <% end %>
