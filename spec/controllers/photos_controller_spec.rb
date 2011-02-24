@@ -9,6 +9,8 @@ describe PhotosController do
       order_param = '+'
       page_param = '1'
 
+      stub(Photo).count { 1 }
+
       # Mock methods from will_paginate's version of Array
       paginated_photos = [ Photo.make ]
       stub(paginated_photos).offset { 0 }
@@ -18,6 +20,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
+      response.should have_tag 'h1', :text => '1 photos'
       response.should have_tag 'a[href=/photos/list/sorted-by/username/order/-/page/1]', :text => 'posted by'
       response.should have_tag 'a[href=/people/show]', :text => 'poster_username'
 

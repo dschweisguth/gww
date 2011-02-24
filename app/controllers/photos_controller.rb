@@ -2,6 +2,7 @@ class PhotosController < ApplicationController
 
   caches_page :list
   def list
+    @photo_count = Photo.count
     @photos = Photo.all_sorted_and_paginated params[:sorted_by], params[:order],
       params[:page], 30
   end
