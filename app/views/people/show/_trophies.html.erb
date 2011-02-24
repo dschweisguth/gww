@@ -29,12 +29,14 @@
   <% if @fastest_guess %><th>Fastest guess</th><% end %>
   <% if @longest_lasting_guess %><th>Longest-lasting post</th><% end %>
   <% if @shortest_lasting_guess %><th>Fastest-guessed post</th><% end %>
+  <% if @oldest_unfound %><th>Oldest unfound post</th><% end %>
 </tr>
 <tr>
   <% if @oldest_guess %><td><%= thumbnail_with_alt @oldest_guess.photo %></td><% end %>
   <% if @fastest_guess %><td><%= thumbnail_with_alt @fastest_guess.photo  %></td><% end %>
   <% if @longest_lasting_guess %><td><%= thumbnail_with_alt @longest_lasting_guess.photo %></td><% end %>
   <% if @shortest_lasting_guess %><td><%= thumbnail_with_alt @shortest_lasting_guess.photo %></td><% end %>
+  <% if @oldest_unfound %><td><%= thumbnail_with_alt @oldest_unfound %></td><% end %>
 </tr>
 <tr class="trophies-text">
   <% if @oldest_guess %><td>Guessed after <%= @oldest_guess.ymd_elapsed %></td><% end %>

@@ -25,6 +25,11 @@ class Photo < ActiveRecord::Base
     last :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
   end
 
+  def self.oldest_unfound(poster)
+    first :conditions => [ "person_id = ? and game_status = 'unfound'", poster ],
+      :order => 'dateadded'
+  end
+
   # Used by PhotosController
 
   def self.all_sorted_and_paginated(sorted_by, order, page, per_page)
