@@ -114,6 +114,10 @@ describe PeopleController do
       stub(Guess).find_all_by_person_id(person.id, anything) \
         { [Guess.make('all1'), Guess.make('all2') ] }
 
+      favorite_poster = Person.make 'favorite_poster'
+      favorite_poster[:bias] = 2.5
+      stub(person).favorite_posters { [ favorite_poster ] }
+      
       stub(Photo).all { [ Photo.make 'unfound' ] }
 
       #noinspection RubyResolve
@@ -134,7 +138,8 @@ describe PeopleController do
       response.should have_text /username is in 1st place with a score of 2./
       response.should have_text /username scored the most points in the last week/
       response.should have_text /username scored the most points in the last month/
-      response.should have_tag 'strong', :text => /username has correctly guessed 2 photos/
+      response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
+      response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
       response.should have_tag 'strong', :text => /username has posted 2 photos/
       response.should have_text /1 remains unfound/
       response.should have_text /1 was revealed/

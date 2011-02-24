@@ -36,6 +36,7 @@ class PeopleController < ApplicationController
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
+    @favorite_posters = @person.favorite_posters
     @posters = @guesses.group_by { |guess| guess.photo.person }.sort \
       do |x,y|
         c = y[1].length <=> x[1].length
