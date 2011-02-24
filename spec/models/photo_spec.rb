@@ -97,6 +97,12 @@ describe Photo do
       first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
       Photo.first_by(poster).should == first
     end
+
+    it "ignores other posters' photos" do
+      Photo.make!
+      Photo.first_by(Person.make!).should be_nil
+    end
+
   end
 
   describe '.most_recent_by' do
@@ -106,6 +112,12 @@ describe Photo do
       most_recent = Photo.make! 'most_recent', :person => poster, :dateadded => Time.utc(2001)
       Photo.most_recent_by(poster).should == most_recent
     end
+
+    it "ignores other posters' photos" do
+      Photo.make!
+      Photo.most_recent_by(Person.make!).should be_nil
+    end
+
   end
 
   describe '.oldest_unfound' do
@@ -114,6 +126,11 @@ describe Photo do
       Photo.make! 'second', :person => poster, :dateadded => Time.utc(2001)
       first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
       Photo.oldest_unfound(poster).should == first
+    end
+
+    it "ignores other posters' photos" do
+      Photo.make!
+      Photo.oldest_unfound(Person.make!).should be_nil
     end
 
     it "ignores game statuses other than unfound" do
