@@ -1,7 +1,15 @@
 <% content_for :title do %>"View in GWW" bookmarklet<% end %>
 <h1>"View in GWW" bookmarklet</h1>
 
-<p>Don't follow the link below; add it to your bookmarks. It lets you jump from a Flickr photo page to that photo's page in Guess Where Watcher, so you can see whether and how the photo has been scored.</p>
+<p>Don't follow the link below; add it to your bookmarks.
+It lets you jump from a Flickr photo page to that photo's page in Guess Where Watcher, so you can see whether and how the photo has been scored.
+You can also jump from any Flickr page that belongs to a person but isn't a photo page
+(for example, <a href="http://www.flickr.com/people/octoferret/">http://www.flickr.com/people/octoferret/</a> or
+<a href="http://www.flickr.com/photos/octoferret/">http://www.flickr.com/photos/octoferret/</a>)
+to that's person's GWW page.</p>
+
+<p>(Unfortunately, GWW doesn't know about custom URLs yet, so you can't jump to
+a person's GWW page unless their custom URL is the same as their username.)</p>
 
 <a id="viewInGWW" href="">View in GWW</a>
 <%# http://juhukinners.wordpress.com/2009/01/08/how-to-write-a-bookmarklet/ -%>
@@ -17,7 +25,7 @@ document.getElementById("viewInGWW").href =
   "javascript:(" + loadViewInGWW.toString() + ")();"
 </script>
 
-<p>To add "View in GWW" to your bookmarks,</p>
+<h2>To add "View in GWW" to your bookmarks,</h2>
 
 <h3>Firefox</h3>
 <p>Either</p>
@@ -34,8 +42,10 @@ document.getElementById("viewInGWW").href =
 <li>Choose Add</li>
 </ul>
 
-<p>To use "View in GWW", go to a Flickr photo page and click on or select "View
-in GWW". You'll be taken to the photo's page in GWW.</p>
+<h2>To use "View in GWW",</h2>
+
+<p>Go to a Flickr photo page or a Flickr page that belongs to a person and
+click on or select "View in GWW". You'll be taken to the photo or person's page in GWW.</p>
 
 <hr/>
 <%= render 'shared/breadcrumbs' %>
