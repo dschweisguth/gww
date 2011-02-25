@@ -5,10 +5,10 @@ describe BookmarkletController do
 
   describe '#view' do
     it 'redirects to the given photo' do
-      photo = Photo.make
+      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
       #noinspection RubyResolve
-      stub(Photo).find_by_flickrid('0123456789') { photo }
-      get :view, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      stub(Photo).find_by_flickrid(photo.flickrid) { photo }
+      get :view, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
       #noinspection RubyResolve
       response.should redirect_to show_photo_path :id => photo
