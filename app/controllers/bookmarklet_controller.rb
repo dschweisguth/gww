@@ -13,18 +13,7 @@ class BookmarkletController < ApplicationController
 	  "that photo. Perhaps it hasn't been added to Guess Where SF, " +
           "or perhaps GWW hasn't updated since it was added."
       end
-    elsif @from =~ /^http:\/\/www.flickr.com\/people\/([^\/]+)/
-      flickrid = Regexp.last_match[1]
-      person = Person.find_by_flickrid flickrid
-      if person
-        redirect_to show_person_path person
-        return
-      else
-        @message = "Sorry, Guess Where Watcher doesn't know anything about " +
-	  "that person. Perhaps they haven't posted or guessed in Guess Where SF, " +
-          "or perhaps GWW hasn't updated since they did."
-      end
-    elsif @from =~ /^http:\/\/www.flickr.com\/photos\/([^\/]+)/
+    elsif @from =~ /^http:\/\/www.flickr.com\/(?:people|photos)\/([^\/]+)/
       flickrid = Regexp.last_match[1]
       person = Person.find_by_flickrid flickrid
       if person
