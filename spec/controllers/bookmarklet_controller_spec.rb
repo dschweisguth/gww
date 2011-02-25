@@ -48,6 +48,17 @@ describe BookmarkletController do
 
     end
 
+    it 'handles a /photo/ URL with a person Flickr ID but no photo Flickr ID' do
+      person = Person.make
+      #noinspection RubyResolve
+      stub(Person).find_by_flickrid(person.flickrid) { person }
+      get :view, :from => "http://www.flickr.com/photos/#{person.flickrid}/"
+
+      #noinspection RubyResolve
+      response.should redirect_to show_person_path person
+
+    end
+
     it 'punts unknown URLs' do
       get :view, :from => 'http://www.notflickr.com/'
 
