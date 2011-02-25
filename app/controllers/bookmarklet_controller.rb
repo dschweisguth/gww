@@ -22,9 +22,9 @@ class BookmarkletController < ApplicationController
         redirect_to show_person_path person
         return
       else
-        @message = "Sorry, Guess Where Watcher doesn't know anything about " +
-	  "that person. Perhaps they haven't posted or guessed in Guess Where SF, " +
-          "or perhaps GWW hasn't updated since they did."
+        @message = "Sorry, Guess Where Watcher doesn't know anything about that person. " +
+          "It might be that their custom URL is different than their username. " +
+          "Or perhaps they haven't posted or guessed in Guess Where SF, or GWW hasn't updated since they did."
       end
     else
       @message = "Hmmm, that's strange. #{@from} isn't a Flickr photo or person page. " +
