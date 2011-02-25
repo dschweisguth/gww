@@ -1,10 +1,9 @@
 function viewInGWW() {
-  var match = /^http:\/\/www.flickr.com\/photos\/[^/]+\/\d+/.exec(window.location);
-  if (match != null) {
-    window.location = "http://guesswheresf.org/photos/view_in_gww?from=" +
+  if (/^http:\/\/www.flickr.com\/(photos|people)\/[^/]+/.exec(window.location) != null) {
+    window.location = "http://guesswheresf.org/bookmarklet/view?from=" +
       encodeURIComponent(window.location);
   } else {
-    alert('Try it on a Flickr photo page.');
+    alert('Try it on a Flickr page beginning with /photos/ or /people/.');
   }
   return false;
 }

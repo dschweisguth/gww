@@ -27,8 +27,4 @@ class PhotosController < ApplicationController
     @comments = Comment.find_all_by_photo_id @photo
   end
 
-  def view_in_gww
-    in_gww 'photos', 'show'
-  end
-
 end

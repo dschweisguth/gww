@@ -11,7 +11,7 @@ describe Admin::PhotosController do
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should ==
-        "Created 1 new photos and 2 new users. Got 3 pages out of 4.</br>"
+        'Created 1 new photos and 2 new users. Got 3 pages out of 4.'
     end
   end
 
@@ -22,7 +22,7 @@ describe Admin::PhotosController do
       get :update_statistics
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
-      flash[:notice].should == 'Updated statistics.</br>'
+      flash[:notice].should == 'Updated statistics.'
     end
   end
 
