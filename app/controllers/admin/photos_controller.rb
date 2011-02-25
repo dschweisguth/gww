@@ -94,8 +94,8 @@ class Admin::PhotosController < ApplicationController
     if @from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
-      if ! photo.nil?
-        redirect_to :controller => 'admin/photos', :action => 'edit', :id => photo
+      if photo
+        redirect_to edit_photo_path photo
         return
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +
