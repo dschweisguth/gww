@@ -9,14 +9,14 @@ class Admin::PhotosController < ApplicationController
     PageCache.clear
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{pages_gotten} pages out of " +
-      "#{pages_available}.</br>"
+      "#{pages_available}."
     redirect_to admin_root_path
   end
 
   def update_statistics
     Photo.update_statistics
     PageCache.clear
-    flash[:notice] = 'Updated statistics.</br>'
+    flash[:notice] = 'Updated statistics.'
     redirect_to admin_root_path
   end
 
