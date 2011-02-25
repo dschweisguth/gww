@@ -176,15 +176,17 @@ describe Admin::PhotosController do
 
   describe '#edit_in_gww' do
     it 'redirects to the given photo' do
-      photo = Photo.make
+      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
       #noinspection RubyResolve
-      stub(Photo).find_by_flickrid('0123456789') { photo }
-      get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      stub(Photo).find_by_flickrid(photo.flickrid) { photo }
+      get :edit_in_gww, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+
       #noinspection RubyResolve
-      response.should redirect_to edit_photo_path :id => photo
+      response.should redirect_to edit_photo_path photo
+
     end
 
-    it 'punts unknown photo Flickr IDs' do
+    it 'punts an unknown photo Flickr ID' do
       #noinspection RubyResolve
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
