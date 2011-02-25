@@ -43,7 +43,10 @@ Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
 and use in unfound list
-Link to photos using player's photosurl rather than by ID
+Track photosurl
+  Generate URLs using it when possible
+  Use it in the front-page person search
+  Use it in the view bookmarklet
 Determine photo locations from correct guess comments
   Determine most-posted locations
 Determine neighborhoods from locations and geocodes

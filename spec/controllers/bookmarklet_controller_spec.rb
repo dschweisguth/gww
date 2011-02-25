@@ -37,7 +37,20 @@ describe BookmarkletController do
 
     end
 
-    it 'punts an unknown person Flickr ID' do
+    it 'handles a person whose custom URL is the same as their username' do
+      person = Person.make
+      #noinspection RubyResolve
+      stub(Person).find_by_flickrid(person.username) { nil }
+      #noinspection RubyResolve
+      stub(Person).find_by_username(person.username) { person }
+      get :view, :from => "http://www.flickr.com/people/#{person.username}/"
+
+      #noinspection RubyResolve
+      response.should redirect_to show_person_path person
+
+    end
+
+    it 'punts an unknown person' do
       #noinspection RubyResolve
       stub(Person).find_by_flickrid('person_flickrid') { nil }
       get :view, :from => "http://www.flickr.com/people/person_flickrid/"

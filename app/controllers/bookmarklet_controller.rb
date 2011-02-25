@@ -15,7 +15,9 @@ class BookmarkletController < ApplicationController
       end
     elsif @from =~ /^http:\/\/www.flickr.com\/(?:people|photos)\/([^\/]+)/
       flickrid = Regexp.last_match[1]
-      person = Person.find_by_flickrid flickrid
+      # The URL might have the person's Flickr ID or their custom URL. We don't
+      # know their custom URL, but see if it's the same as their username.
+      person = Person.find_by_flickrid(flickrid) || Person.find_by_username(flickrid)
       if person
         redirect_to show_person_path person
         return
