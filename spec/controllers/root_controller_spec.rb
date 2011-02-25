@@ -40,7 +40,7 @@ describe RootController do
       get :bookmarklet
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'p', :text => 'To add "View in GWW" to your bookmarks,'
+      response.should have_tag 'h2', :text => 'To add "View in GWW" to your bookmarks,'
     end
   end
 
