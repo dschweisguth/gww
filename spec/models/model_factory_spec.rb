@@ -39,7 +39,7 @@ end
 describe FlickrUpdate do
   describe '.make' do
     it "makes one" do
-      should_make_default_flickr_update :make, false
+      should_make_default_flickr_update :make
     end
 
     it "overrides defaults" do
@@ -54,7 +54,7 @@ describe FlickrUpdate do
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_flickr_update :make!, false
+      should_make_default_flickr_update :make!
     end
 
     it "overrides defaults" do
@@ -67,9 +67,9 @@ describe FlickrUpdate do
 
   end
 
-  def should_make_default_flickr_update(method, created_at_should_be_nil)
+  def should_make_default_flickr_update(method)
     update = FlickrUpdate.send method
-    update.created_at.nil?.should == created_at_should_be_nil
+    update.created_at.should_not be_nil
     update.member_count.should == 0
     update.completed_at.should be_nil
   end
