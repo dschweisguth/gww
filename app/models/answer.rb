@@ -1,18 +1,15 @@
 module Answer
+  extend self
 
   def time_elapsed_between(from, to)
     formatted_age_by_period from, to,
       %w(years months days hours minutes seconds)
   end
-  module_function :time_elapsed_between
-  public :time_elapsed_between
 
   def ymd_elapsed_between(from, to)
     result = formatted_age_by_period from, to, %w(years months days)
     result.empty? ? time_elapsed_between(from, to) : result
   end
-  module_function :ymd_elapsed_between
-  public :ymd_elapsed_between
 
   #noinspection RubyUnusedLocalVariable
   def formatted_age_by_period(from, to, periods)
@@ -50,6 +47,6 @@ module Answer
       end
     time_elapsed.join ', '
   end
-  module_function :formatted_age_by_period
+  private :formatted_age_by_period
 
 end
