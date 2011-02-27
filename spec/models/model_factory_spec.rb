@@ -35,6 +35,33 @@ describe ModelFactory do
 
   end
 
+  describe 'FlickrUpdate#make' do
+    it "makes a FlickrUpdate" do
+      update = FlickrUpdate.make
+      update.created_at.should be_nil # TODO Dave what do we really want here?
+      update.member_count.should == 0
+      update.completed_at.should be_nil
+    end
+
+    it "doesn't save it in the database" do
+      FlickrUpdate.make
+      FlickrUpdate.count.should == 0
+    end
+
+    it "overrides defaults" do
+      created_at = Time.now
+      completed_at = Time.now
+      update = FlickrUpdate.make \
+        :created_at => created_at,
+        :member_count => 1,
+        :completed_at => completed_at
+      update.created_at.should == created_at
+      update.member_count.should == 1
+      update.completed_at.should == completed_at
+    end
+
+  end
+
   describe 'Person#make' do
     it 'makes a Person' do
       person = Person.make
