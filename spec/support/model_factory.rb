@@ -115,7 +115,7 @@ class Guess
       :added_at => now
     }
     if ! caller_options[:photo]
-      photo_label = padded_label + 'guess'
+      photo_label = padded_label + 'guessed_photo'
       options[:photo] =
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end

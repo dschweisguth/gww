@@ -358,7 +358,7 @@ describe Guess do
 
   def should_make_default_guess(method)
     guess = Guess.send method
-    guess.photo.flickrid.should == 'guess_photo_flickrid'
+    guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.guess_text.should == 'guess text'
     guess.guessed_at.should_not be_nil
@@ -366,7 +366,7 @@ describe Guess do
   end
 
   def should_make_guess_with_custom_attributes(method)
-    photo = Photo.send method, 'other_guess'
+    photo = Photo.send method, 'other_guessed_photo'
     guesser = Person.send method, 'other_guesser'
     guess = Guess.send method,
       :photo => photo,
@@ -374,7 +374,7 @@ describe Guess do
       :guess_text => 'other guess text',
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
-    guess.photo.flickrid.should == 'other_guess_photo_flickrid'
+    guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
     guess.guess_text.should == 'other guess text'
     guess.guessed_at.should == Time.utc(2011)
@@ -383,7 +383,7 @@ describe Guess do
 
   def should_make_labeled_guess(method)
     guess = Guess.send method, 'label'
-    guess.photo.flickrid.should == 'label_guess_photo_flickrid'
+    guess.photo.flickrid.should == 'label_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'label_guesser_person_flickrid'
     guess.guess_text.should == 'label_guess text'
   end

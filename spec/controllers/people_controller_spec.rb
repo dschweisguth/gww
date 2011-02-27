@@ -205,7 +205,7 @@ describe PeopleController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'h1', :text => '1 guess by username'
-      response.should have_tag 'a', :text => 'guess_poster_username'
+      response.should have_tag 'a', :text => 'guessed_photo_poster_username'
 
     end
   end

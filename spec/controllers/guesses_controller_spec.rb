@@ -13,9 +13,9 @@ describe GuessesController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a', /1_guess_poster_username/
+      response.should have_tag 'a', /1_guessed_photo_poster_username/
       response.should have_tag 'a', /2_guesser_username/
-      response.should have_tag 'a', /1_guess_poster_username/
+      response.should have_tag 'a', /1_guessed_photo_poster_username/
       response.should have_tag 'a', /2_guesser_username/
 
     end
