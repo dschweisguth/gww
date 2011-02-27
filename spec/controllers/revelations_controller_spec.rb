@@ -10,7 +10,7 @@ describe RevelationsController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a', :text => 'revelation_poster_username'
+      response.should have_tag 'a', :text => 'revealed_photo_poster_username'
 
     end
   end

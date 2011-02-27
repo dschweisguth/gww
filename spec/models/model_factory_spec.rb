@@ -431,20 +431,20 @@ describe Revelation do
 
   def should_make_default_revelation(method)
     revelation = Revelation.send method
-    revelation.photo.flickrid.should == 'revelation_photo_flickrid'
+    revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'revelation text'
     revelation.revealed_at.should_not be_nil
     revelation.added_at.should_not be_nil
   end
 
   def should_make_revelation_with_custom_attributes(method)
-    photo = Photo.send method, 'other_revelation'
+    photo = Photo.send method, 'other_revealed_photo'
     revelation = Revelation.send method,
       :photo => photo,
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
-    revelation.photo.flickrid.should == 'other_revelation_photo_flickrid'
+    revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'other revelation text'
     revelation.revealed_at.should == Time.utc(2011)
     revelation.added_at.should == Time.utc(2012)
@@ -452,7 +452,7 @@ describe Revelation do
 
   def should_make_labeled_revelation(method)
     revelation = Revelation.send method, 'label'
-    revelation.photo.flickrid.should == 'label_revelation_photo_flickrid'
+    revelation.photo.flickrid.should == 'label_revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'label_revelation text'
   end
 
