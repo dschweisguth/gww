@@ -34,4 +34,61 @@ describe ModelFactory do
     end
 
   end
+
+  describe 'Person#make' do
+    it 'makes a Person' do
+      person = Person.make
+      person.flickrid.should == 'person_flickrid'
+      person.username.should == 'username'
+    end
+
+    it "doesn't save them in the database" do
+      Person.make
+      Person.count.should == 0
+    end
+
+    it 'labels them' do
+      person = Person.make 'label'
+      person.flickrid.should == 'label_person_flickrid'
+      person.username.should == 'label_username'
+    end
+
+    it 'overrides_defaults' do
+      person = Person.make \
+        :flickrid => 'other_person_flickrid',
+        :username => 'other_username'
+      person.flickrid.should == 'other_person_flickrid'
+      person.username.should == 'other_username'
+    end
+
+  end
+
+  describe 'Person#make!' do
+    it 'makes a Person' do
+      person = Person.make!
+      person.flickrid.should == 'person_flickrid'
+      person.username.should == 'username'
+    end
+
+    it 'saves them in the database' do
+      person = Person.make!
+      Person.all.should == [ person ]
+    end
+
+    it 'labels them' do
+      person = Person.make! 'label'
+      person.flickrid.should == 'label_person_flickrid'
+      person.username.should == 'label_username'
+    end
+
+    it 'overrides_defaults' do
+      person = Person.make! \
+        :flickrid => 'other_person_flickrid',
+        :username => 'other_username'
+      person.flickrid.should == 'other_person_flickrid'
+      person.username.should == 'other_username'
+    end
+
+  end
+
 end
