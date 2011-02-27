@@ -36,7 +36,7 @@ describe ModelFactory do
   end
 
   describe 'FlickrUpdate#make' do
-    it "makes a FlickrUpdate" do
+    it "makes one" do
       should_make_default_flickr_update :make, true
     end
 
@@ -51,7 +51,7 @@ describe ModelFactory do
   end
 
   describe 'FlickrUpdate#make!' do
-    it "makes a FlickrUpdate" do
+    it "makes one" do
       should_make_default_flickr_update :make!, false
     end
 
@@ -85,7 +85,7 @@ describe ModelFactory do
   end
 
   describe 'Person#make' do
-    it "makes a Person" do
+    it "makes one" do
       should_make_default_person :make
     end
 
@@ -104,7 +104,7 @@ describe ModelFactory do
   end
 
   describe 'Person#make!' do
-    it "makes a Person" do
+    it "makes one" do
       should_make_default_person :make!
     end
 
@@ -143,7 +143,7 @@ describe ModelFactory do
   end
 
   describe 'Photo.make' do
-    it "makes a Photo" do
+    it "makes one" do
       should_make_default_photo :make
     end
 
@@ -162,7 +162,7 @@ describe ModelFactory do
   end
 
   describe 'Photo.make!' do
-    it "makes a Photo" do
+    it "makes one" do
       should_make_default_photo :make!
     end
 
@@ -231,7 +231,7 @@ describe ModelFactory do
   end
 
   describe 'Comment.make' do
-    it "makes a Comment" do
+    it "makes one" do
       should_make_default_comment :make
     end
 
@@ -250,7 +250,7 @@ describe ModelFactory do
   end
 
   describe 'Comment.make!' do
-    it "makes a Comment" do
+    it "makes one" do
       should_make_default_comment :make!
     end
 
@@ -271,6 +271,7 @@ describe ModelFactory do
   def should_make_default_comment(method)
     comment = Comment.send method
     comment.photo.person.flickrid.should == 'comment_poster_person_flickrid'
+    comment.photo.farm.should == '0'
     comment.flickrid.should == 'comment_flickrid'
     comment.username.should == 'comment_username'
     comment.comment_text.should == 'comment text'
@@ -278,6 +279,7 @@ describe ModelFactory do
   end
 
   def should_make_comment_with_custom_attributes(method)
+    # TODO Dave use label
     person = Person.send method,
       :flickrid => 'other_person_flickrid'
     photo = Photo.send method,
@@ -289,8 +291,8 @@ describe ModelFactory do
       :username => 'other_comment_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
-    photo.person.flickrid.should == 'other_person_flickrid'
-    photo.farm.should == '1'
+    comment.photo.person.flickrid.should == 'other_person_flickrid'
+    comment.photo.farm.should == '1'
     comment.flickrid.should == 'other_comment_flickrid'
     comment.username.should == 'other_comment_username'
     comment.comment_text.should == 'other comment text'
@@ -298,12 +300,85 @@ describe ModelFactory do
   end
 
   def should_make_labeled_comment(method)
+    # TODO Dave use label
     comment = Comment.send method, 'label'
     comment.photo.person.flickrid.should == 'label_comment_poster_person_flickrid'
-    comment.photo.person.username.should == 'label_comment_poster_username'
     comment.flickrid.should == 'label_comment_flickrid'
     comment.username.should == 'label_comment_username'
     comment.comment_text.should == 'label_comment text'
+  end
+
+  describe 'Guess.make' do
+    it "makes one" do
+      should_make_default_guess :make
+    end
+
+    it "overrides defaults" do
+      should_make_guess_with_custom_attributes :make
+    end
+
+    it "labels it" do
+      should_make_labeled_guess :make
+    end
+
+    it "doesn't save it in the database" do
+      make_should_not_save_in_database Guess
+    end
+
+  end
+
+  describe 'Guess.make!' do
+    it "makes one" do
+      should_make_default_guess :make!
+    end
+
+    it "overrides defaults" do
+      should_make_guess_with_custom_attributes :make!
+    end
+
+    it "labels it" do
+      should_make_labeled_guess :make!
+    end
+
+    it "saves it in the database" do
+      make_should_save_in_database! Guess
+    end
+
+  end
+
+  def should_make_default_guess(method)
+    guess = Guess.send method
+    guess.photo.person.flickrid.should == 'guess_poster_person_flickrid'
+    guess.photo.farm.should == '0'
+    guess.person.flickrid.should == 'guesser_person_flickrid'
+    guess.guess_text.should == 'guess text'
+    guess.guessed_at.should_not be_nil
+    guess.added_at.should_not be_nil
+  end
+
+  def should_make_guess_with_custom_attributes(method)
+    photo = Photo.send method, 'other_guess',
+      :farm => '1'
+    guesser = Person.send method, 'other_guesser'
+    guess = Guess.send method,
+      :photo => photo,
+      :person => guesser,
+      :guess_text => 'other guess text',
+      :guessed_at => Time.utc(2011),
+      :added_at => Time.utc(2012)
+    guess.photo.person.flickrid.should == 'other_guess_poster_person_flickrid'
+    guess.photo.farm.should == '1'
+    guess.person.flickrid.should == 'other_guesser_person_flickrid'
+    guess.guess_text.should == 'other guess text'
+    guess.guessed_at.should == Time.utc(2011)
+    guess.added_at.should == Time.utc(2012)
+  end
+
+  def should_make_labeled_guess(method)
+    guess = Guess.send method, 'label'
+    guess.photo.person.flickrid.should == 'label_guess_poster_person_flickrid'
+    guess.person.flickrid.should == 'label_guesser_person_flickrid'
+    guess.guess_text.should == 'label_guess text'
   end
 
   # Utilities
