@@ -66,7 +66,7 @@ describe ModelFactory do
   end
 
   def should_make_default_flickr_update(method, created_at_should_be_nil)
-    update = FlickrUpdate.method(method).call
+    update = FlickrUpdate.send method
     update.created_at.nil?.should == created_at_should_be_nil
     update.member_count.should == 0
     update.completed_at.should be_nil
@@ -75,7 +75,7 @@ describe ModelFactory do
   def should_make_flickr_update_with_custom_attributes(method)
     created_at = Time.utc(2011)
     completed_at = Time.utc(2011, 2)
-    update = FlickrUpdate.method(method).call \
+    update = FlickrUpdate.send method,
       :created_at => created_at,
       :member_count => 1,
       :completed_at => completed_at
