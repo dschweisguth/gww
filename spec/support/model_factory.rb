@@ -4,7 +4,7 @@ module ModelFactory
   end
 
   def make!(label = '', options = {})
-    parse_args_and_make_for_test :create, label, options
+    parse_args_and_make_for_test :create!, label, options
   end
 
   def parse_args_and_make_for_test(new_or_create, label, options)
@@ -32,8 +32,7 @@ class FlickrUpdate
       options[:created_at] = Time.now
     end
     options.merge! caller_options
-    update = new_or_create == :new ? FlickrUpdate.new(options) : FlickrUpdate.create!(options)
-    update
+    FlickrUpdate.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -48,7 +47,7 @@ class Person
       :username => padded_label + 'username'
     }
     options.merge! caller_options
-    new_or_create == :new ? Person.new(options) : Person.create!(options)
+    Person.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -77,7 +76,7 @@ class Photo
         new_or_create == :new ? Person.make(person_label) : Person.make!(person_label)
     end
     options.merge! caller_options
-    new_or_create == :new ? Photo.new(options) : Photo.create!(options)
+    Photo.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -99,7 +98,7 @@ class Comment
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end
     options.merge! caller_options
-    new_or_create == :new ? Comment.new(options) : Comment.create!(options)
+    Comment.send new_or_create, options
   end
 
 end
@@ -125,7 +124,7 @@ class Guess
         new_or_create == :new ? Person.make(person_label) : Person.make!(person_label)
     end
     options.merge! caller_options
-    new_or_create == :new ? Guess.new(options) : Guess.create!(options)
+    Guess.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -147,7 +146,7 @@ class Revelation
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end
     options.merge! caller_options
-    new_or_create == :new ? Revelation.new(options) : Revelation.create!(options)
+    Revelation.send new_or_create, options
   end
   private_class_method :make_for_test
 

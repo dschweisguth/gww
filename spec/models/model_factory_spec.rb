@@ -29,7 +29,7 @@ describe ModelFactory do
     end
 
     it "creates, too" do
-      mock(@factory).make_for_test :create, '', {}
+      mock(@factory).make_for_test :create!, '', {}
       @factory.make!
     end
 
