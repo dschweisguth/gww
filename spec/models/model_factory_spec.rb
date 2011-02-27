@@ -279,11 +279,7 @@ describe ModelFactory do
   end
 
   def should_make_comment_with_custom_attributes(method)
-    # TODO Dave use label
-    person = Person.send method,
-      :flickrid => 'other_person_flickrid'
-    photo = Photo.send method,
-      :person => person,
+    photo = Photo.send method, 'other_comment',
       :farm => '1'
     comment = Comment.send method,
       :photo => photo,
@@ -291,7 +287,7 @@ describe ModelFactory do
       :username => 'other_comment_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
-    comment.photo.person.flickrid.should == 'other_person_flickrid'
+    comment.photo.person.flickrid.should == 'other_comment_poster_person_flickrid'
     comment.photo.farm.should == '1'
     comment.flickrid.should == 'other_comment_flickrid'
     comment.username.should == 'other_comment_username'
@@ -300,7 +296,6 @@ describe ModelFactory do
   end
 
   def should_make_labeled_comment(method)
-    # TODO Dave use label
     comment = Comment.send method, 'label'
     comment.photo.person.flickrid.should == 'label_comment_poster_person_flickrid'
     comment.flickrid.should == 'label_comment_flickrid'
