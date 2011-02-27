@@ -80,7 +80,7 @@ describe Admin::PhotosController do
         with_tag 'input[value=unconfirmed]'
       end
       response.should have_tag 'form[action=/admin/photos/update_answer/1]' do
-        with_tag 'strong', :text => 'comment_username says:'
+        with_tag 'strong', :text => 'commenter_username says:'
       end
 
     end
@@ -101,7 +101,7 @@ describe Admin::PhotosController do
         with_tag 'input[value=unconfirmed]'
       end
       response.should have_tag 'form[action=/admin/photos/update_answer/1]' do
-        with_tag 'strong', :text => 'comment_username says:'
+        with_tag 'strong', :text => 'commenter_username says:'
       end
 
     end

@@ -285,33 +285,33 @@ describe Comment do
 
   def should_make_default_comment(method)
     comment = Comment.send method
-    comment.photo.flickrid.should == 'comment_photo_flickrid'
-    comment.flickrid.should == 'comment_flickrid'
-    comment.username.should == 'comment_username'
+    comment.photo.flickrid.should == 'commented_photo_flickrid'
+    comment.flickrid.should == 'commenter_flickrid'
+    comment.username.should == 'commenter_username'
     comment.comment_text.should == 'comment text'
     comment.commented_at.should_not be_nil
   end
 
   def should_make_comment_with_custom_attributes(method)
-    photo = Photo.send method, 'other_comment'
+    photo = Photo.send method, 'other_commented'
     comment = Comment.send method,
       :photo => photo,
-      :flickrid => 'other_comment_flickrid',
-      :username => 'other_comment_username',
+      :flickrid => 'other_commenter_flickrid',
+      :username => 'other_commenter_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
-    comment.photo.flickrid.should == 'other_comment_photo_flickrid'
-    comment.flickrid.should == 'other_comment_flickrid'
-    comment.username.should == 'other_comment_username'
+    comment.photo.flickrid.should == 'other_commented_photo_flickrid'
+    comment.flickrid.should == 'other_commenter_flickrid'
+    comment.username.should == 'other_commenter_username'
     comment.comment_text.should == 'other comment text'
     comment.commented_at.should == Time.utc(2011)
   end
 
   def should_make_labeled_comment(method)
     comment = Comment.send method, 'label'
-    comment.photo.flickrid.should == 'label_comment_photo_flickrid'
-    comment.flickrid.should == 'label_comment_flickrid'
-    comment.username.should == 'label_comment_username'
+    comment.photo.flickrid.should == 'label_commented_photo_flickrid'
+    comment.flickrid.should == 'label_commenter_flickrid'
+    comment.username.should == 'label_commenter_username'
     comment.comment_text.should == 'label_comment text'
   end
 

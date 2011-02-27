@@ -88,13 +88,13 @@ class Comment
 
   def self.make_for_test(new_or_create, padded_label, caller_options)
     options = {
-      :flickrid => padded_label + 'comment_flickrid',
-      :username => padded_label + 'comment_username',
+      :flickrid => padded_label + 'commenter_flickrid',
+      :username => padded_label + 'commenter_username',
       :comment_text => padded_label + 'comment text',
       :commented_at => Time.now
     }
     if ! caller_options[:photo]
-      photo_label = padded_label + 'comment'
+      photo_label = padded_label + 'commented'
       options[:photo] =
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end
