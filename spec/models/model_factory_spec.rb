@@ -34,8 +34,10 @@ describe ModelFactory do
     end
 
   end
+end
 
-  describe 'FlickrUpdate#make' do
+describe FlickrUpdate do
+  describe '.make' do
     it "makes one" do
       should_make_default_flickr_update :make, true
     end
@@ -50,7 +52,7 @@ describe ModelFactory do
 
   end
 
-  describe 'FlickrUpdate#make!' do
+  describe '.make!' do
     it "makes one" do
       should_make_default_flickr_update :make!, false
     end
@@ -84,7 +86,10 @@ describe ModelFactory do
     update.completed_at.should == completed_at
   end
 
-  describe 'Person#make' do
+end
+
+describe Person do
+  describe '.make' do
     it "makes one" do
       should_make_default_person :make
     end
@@ -103,7 +108,7 @@ describe ModelFactory do
 
   end
 
-  describe 'Person#make!' do
+  describe '.make!' do
     it "makes one" do
       should_make_default_person :make!
     end
@@ -142,7 +147,10 @@ describe ModelFactory do
     person.username.should == 'label_username'
   end
 
-  describe 'Photo.make' do
+end
+
+describe Photo do
+  describe '.make' do
     it "makes one" do
       should_make_default_photo :make
     end
@@ -161,7 +169,7 @@ describe ModelFactory do
 
   end
 
-  describe 'Photo.make!' do
+  describe '.make!' do
     it "makes one" do
       should_make_default_photo :make!
     end
@@ -230,7 +238,10 @@ describe ModelFactory do
     photo.person.flickrid.should == 'label_poster_person_flickrid'
   end
 
-  describe 'Comment.make' do
+end
+
+describe Comment do
+  describe '.make' do
     it "makes one" do
       should_make_default_comment :make
     end
@@ -249,7 +260,7 @@ describe ModelFactory do
 
   end
 
-  describe 'Comment.make!' do
+  describe '.make!' do
     it "makes one" do
       should_make_default_comment :make!
     end
@@ -303,7 +314,10 @@ describe ModelFactory do
     comment.comment_text.should == 'label_comment text'
   end
 
-  describe 'Guess.make' do
+end
+
+describe Guess do
+  describe '.make' do
     it "makes one" do
       should_make_default_guess :make
     end
@@ -322,7 +336,7 @@ describe ModelFactory do
 
   end
 
-  describe 'Guess.make!' do
+  describe '.make!' do
     it "makes one" do
       should_make_default_guess :make!
     end
@@ -376,7 +390,10 @@ describe ModelFactory do
     guess.guess_text.should == 'label_guess text'
   end
 
-  describe 'Revelation.make' do
+end
+
+describe Revelation do
+  describe '.make' do
     it "makes one" do
       should_make_default_revelation :make
     end
@@ -395,7 +412,7 @@ describe ModelFactory do
 
   end
 
-  describe 'Revelation.make!' do
+  describe '.make!' do
     it "makes one" do
       should_make_default_revelation :make!
     end
@@ -444,16 +461,16 @@ describe ModelFactory do
     revelation.revelation_text.should == 'label_revelation text'
   end
 
-  # Utilities
+end
 
-  def make_should_not_save_in_database(model_class)
-    model_class.make
-    model_class.count.should == 0
-  end
+# Utilities
 
-  def make_should_save_in_database!(model_class)
-    instance = model_class.make!
-    model_class.all.should == [ instance ]
-  end
+def make_should_not_save_in_database(model_class)
+  model_class.make
+  model_class.count.should == 0
+end
 
+def make_should_save_in_database!(model_class)
+  instance = model_class.make!
+  model_class.all.should == [ instance ]
 end
