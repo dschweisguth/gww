@@ -17,6 +17,7 @@ module ModelFactory
       padded_label += '_'
     end
     options = options calling_method, padded_label, caller_options
+    options.merge! caller_options
     send (calling_method == :make ? :new : :create!), options
   end
   private :do_make
@@ -32,7 +33,6 @@ class FlickrUpdate
     if calling_method == :make && ! caller_options[:created_at]
       options[:created_at] = Time.now
     end
-    options.merge! caller_options
     options
   end
   private_class_method :options
@@ -44,12 +44,10 @@ class Person
 
   #noinspection RubyUnusedLocalVariable
   def self.options(calling_method, padded_label, caller_options)
-    options = {
+    {
       :flickrid => padded_label + 'person_flickrid',
       :username => padded_label + 'username'
     }
-    options.merge! caller_options
-    options
   end
   private_class_method :options
 
@@ -75,7 +73,6 @@ class Photo
     if ! caller_options[:person]
       options[:person] = Person.send calling_method, padded_label + 'poster'
     end
-    options.merge! caller_options
     options
   end
   private_class_method :options
@@ -95,7 +92,6 @@ class Comment
     if ! caller_options[:photo]
       options[:photo] = Photo.send calling_method, padded_label + 'commented_photo'
     end
-    options.merge! caller_options
     options
   end
   private_class_method :options
@@ -118,7 +114,6 @@ class Guess
     if ! caller_options[:person]
       options[:person] = Person.send calling_method, padded_label + 'guesser'
     end
-    options.merge! caller_options
     options
   end
   private_class_method :options
@@ -138,7 +133,6 @@ class Revelation
     if ! caller_options[:photo]
       options[:photo] = Photo.send calling_method, padded_label + 'revealed_photo'
     end
-    options.merge! caller_options
     options
   end
   private_class_method :options

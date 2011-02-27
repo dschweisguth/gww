@@ -16,7 +16,7 @@ describe ModelFactory do
 
     it "handles options" do
       mock(@factory).options(:make, '', { :other_option => 'other_option' }) { {} }
-      mock(@factory).send :new, {}
+      mock(@factory).send :new, { :other_option => 'other_option' }
       @factory.make :other_option => 'other_option'
     end
 
@@ -28,7 +28,7 @@ describe ModelFactory do
 
     it "handles a label passed in as a string plus options" do
       mock(@factory).options(:make, 'xxx_', { :other_option => 'other_option' }) { {} }
-      mock(@factory).send :new, {}
+      mock(@factory).send :new, { :other_option => 'other_option' }
       @factory.make 'xxx', :other_option => 'other_option'
     end
 
