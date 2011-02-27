@@ -1,13 +1,13 @@
 module ModelFactory
   def make(label = '', options = {})
-    do_make :new, label, options
+    do_make __method__, label, options
   end
 
   def make!(label = '', options = {})
-    do_make :create!, label, options
+    do_make __method__, label, options
   end
 
-  def do_make(new_or_create, label, caller_options)
+  def do_make(calling_method, label, caller_options)
     if label.is_a? Hash
       caller_options = label
       label = ''
@@ -16,8 +16,8 @@ module ModelFactory
     if ! padded_label.empty?
       padded_label += '_'
     end
-    options = options new_or_create, padded_label, caller_options
-    send new_or_create, options
+    options = options calling_method, padded_label, caller_options
+    send (calling_method == :make ? :new : :create!), options
   end
   private :do_make
 
@@ -27,9 +27,9 @@ class FlickrUpdate
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(new_or_create, padded_label, caller_options)
+  def self.options(calling_method, padded_label, caller_options)
     options = { :member_count => 0 }
-    if new_or_create == :new && ! caller_options[:created_at]
+    if calling_method == :make && ! caller_options[:created_at]
       options[:created_at] = Time.now
     end
     options.merge! caller_options
@@ -43,7 +43,7 @@ class Person
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(new_or_create, padded_label, caller_options)
+  def self.options(calling_method, padded_label, caller_options)
     options = {
       :flickrid => padded_label + 'person_flickrid',
       :username => padded_label + 'username'
@@ -58,7 +58,7 @@ end
 class Photo
   extend ModelFactory
 
-  def self.options(new_or_create, padded_label, caller_options)
+  def self.options(calling_method, padded_label, caller_options)
     now = Time.now
     options = {
       :flickrid => padded_label + 'photo_flickrid',
@@ -73,9 +73,7 @@ class Photo
       :views => 0
     }
     if ! caller_options[:person]
-      person_label = padded_label + 'poster'
-      options[:person] =
-        new_or_create == :new ? Person.make(person_label) : Person.make!(person_label)
+      options[:person] = Person.send calling_method, padded_label + 'poster'
     end
     options.merge! caller_options
     options
@@ -87,7 +85,7 @@ end
 class Comment
   extend ModelFactory
 
-  def self.options(new_or_create, padded_label, caller_options)
+  def self.options(calling_method, padded_label, caller_options)
     options = {
       :flickrid => padded_label + 'commenter_flickrid',
       :username => padded_label + 'commenter_username',
@@ -95,9 +93,7 @@ class Comment
       :commented_at => Time.now
     }
     if ! caller_options[:photo]
-      photo_label = padded_label + 'commented_photo'
-      options[:photo] =
-        new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
+      options[:photo] = Photo.send calling_method, padded_label + 'commented_photo'
     end
     options.merge! caller_options
     options
@@ -109,7 +105,7 @@ end
 class Guess
   extend ModelFactory
 
-  def self.options(new_or_create, padded_label, caller_options)
+  def self.options(calling_method, padded_label, caller_options)
     now = Time.now
     options = {
       :guess_text => padded_label + 'guess text',
@@ -117,14 +113,10 @@ class Guess
       :added_at => now
     }
     if ! caller_options[:photo]
-      photo_label = padded_label + 'guessed_photo'
-      options[:photo] =
-        new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
+      options[:photo] = Photo.send calling_method, padded_label + 'guessed_photo'
     end
     if ! caller_options[:person]
-      person_label = padded_label + 'guesser'
-      options[:person] =
-        new_or_create == :new ? Person.make(person_label) : Person.make!(person_label)
+      options[:person] = Person.send calling_method, padded_label + 'guesser'
     end
     options.merge! caller_options
     options
@@ -136,7 +128,7 @@ end
 class Revelation
   extend ModelFactory
 
-  def self.options(new_or_create, padded_label, caller_options)
+  def self.options(calling_method, padded_label, caller_options)
     now = Time.now
     options = {
       :revelation_text => padded_label + 'revelation text',
@@ -144,9 +136,7 @@ class Revelation
       :added_at => now
     }
     if ! caller_options[:photo]
-      photo_label = padded_label + 'revealed_photo'
-      options[:photo] =
-        new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
+      options[:photo] = Photo.send calling_method, padded_label + 'revealed_photo'
     end
     options.merge! caller_options
     options
