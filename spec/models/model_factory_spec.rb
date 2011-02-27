@@ -206,7 +206,7 @@ describe Photo do
   end
 
   def should_make_photo_with_custom_attributes(method)
-    person = Person.send method, :flickrid => 'other_person_flickrid'
+    person = Person.send method, 'other_poster'
     photo = Photo.send method,
       :person => person,
       :flickrid => 'other_photo_flickrid',
@@ -221,7 +221,7 @@ describe Photo do
       :views => 1,
       :member_comments => 1,
       :member_questions => 1
-    photo.person.flickrid.should == 'other_person_flickrid'
+    photo.person.flickrid.should == 'other_poster_person_flickrid'
     photo.flickrid.should == 'other_photo_flickrid'
     photo.farm.should == '1'
     photo.server.should == 'other_server'
