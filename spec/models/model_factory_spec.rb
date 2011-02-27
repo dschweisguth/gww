@@ -39,7 +39,7 @@ end
 describe FlickrUpdate do
   describe '.make' do
     it "makes one" do
-      should_make_default_flickr_update :make, true
+      should_make_default_flickr_update :make, false
     end
 
     it "overrides defaults" do

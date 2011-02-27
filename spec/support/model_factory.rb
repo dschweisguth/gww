@@ -28,8 +28,12 @@ class FlickrUpdate
   #noinspection RubyUnusedLocalVariable
   def self.make_for_test(new_or_create, padded_label, caller_options)
     options = { :member_count => 0 }
+    if new_or_create == :new && ! caller_options[:created_at]
+      options[:created_at] = Time.now
+    end
     options.merge! caller_options
-    new_or_create == :new ? FlickrUpdate.new(options) : FlickrUpdate.create!(options)
+    update = new_or_create == :new ? FlickrUpdate.new(options) : FlickrUpdate.create!(options)
+    update
   end
   private_class_method :make_for_test
 
