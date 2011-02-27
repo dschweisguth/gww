@@ -94,7 +94,7 @@ class Comment
       :commented_at => Time.now
     }
     if ! caller_options[:photo]
-      photo_label = padded_label + 'commented'
+      photo_label = padded_label + 'commented_photo'
       options[:photo] =
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end
