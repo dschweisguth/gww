@@ -376,6 +376,74 @@ describe ModelFactory do
     guess.guess_text.should == 'label_guess text'
   end
 
+  describe 'Revelation.make' do
+    it "makes one" do
+      should_make_default_revelation :make
+    end
+
+    it "overrides defaults" do
+      should_make_revelation_with_custom_attributes :make
+    end
+
+    it "labels it" do
+      should_make_labeled_revelation :make
+    end
+
+    it "doesn't save it in the database" do
+      make_should_not_save_in_database Revelation
+    end
+
+  end
+
+  describe 'Revelation.make!' do
+    it "makes one" do
+      should_make_default_revelation :make!
+    end
+
+    it "overrides defaults" do
+      should_make_revelation_with_custom_attributes :make!
+    end
+
+    it "labels it" do
+      should_make_labeled_revelation :make!
+    end
+
+    it "saves it in the database" do
+      make_should_save_in_database! Revelation
+    end
+
+  end
+
+  def should_make_default_revelation(method)
+    revelation = Revelation.send method
+    revelation.photo.person.flickrid.should == 'revelation_poster_person_flickrid'
+    revelation.photo.farm.should == '0'
+    revelation.revelation_text.should == 'revelation text'
+    revelation.revealed_at.should_not be_nil
+    revelation.added_at.should_not be_nil
+  end
+
+  def should_make_revelation_with_custom_attributes(method)
+    photo = Photo.send method, 'other_revelation',
+      :farm => '1'
+    revelation = Revelation.send method,
+      :photo => photo,
+      :revelation_text => 'other revelation text',
+      :revealed_at => Time.utc(2011),
+      :added_at => Time.utc(2012)
+    revelation.photo.person.flickrid.should == 'other_revelation_poster_person_flickrid'
+    revelation.photo.farm.should == '1'
+    revelation.revelation_text.should == 'other revelation text'
+    revelation.revealed_at.should == Time.utc(2011)
+    revelation.added_at.should == Time.utc(2012)
+  end
+
+  def should_make_labeled_revelation(method)
+    revelation = Revelation.send method, 'label'
+    revelation.photo.person.flickrid.should == 'label_revelation_poster_person_flickrid'
+    revelation.revelation_text.should == 'label_revelation text'
+  end
+
   # Utilities
 
   def make_should_not_save_in_database(model_class)
