@@ -41,7 +41,7 @@ describe ModelFactory do
     end
 
     it "doesn't save it in the database" do
-      make_should_save_in_database FlickrUpdate
+      make_should_not_save_in_database FlickrUpdate
     end
 
     it "overrides defaults" do
@@ -56,8 +56,7 @@ describe ModelFactory do
     end
 
     it "saves it in the database" do
-      update = FlickrUpdate.make!
-      FlickrUpdate.all.should == [ update ]
+      make_bang_should_save_in_database FlickrUpdate
     end
 
     it "overrides defaults" do
@@ -269,9 +268,14 @@ describe ModelFactory do
 
   # Utilities
 
-  def make_should_save_in_database(model_class)
+  def make_should_not_save_in_database(model_class)
     model_class.make
     model_class.count.should == 0
+  end
+
+  def make_bang_should_save_in_database(model_class)
+    instance = model_class.make!
+    model_class.all.should == [ instance ]
   end
 
 end
