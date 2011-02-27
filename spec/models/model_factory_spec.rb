@@ -285,7 +285,6 @@ describe Comment do
 
   def should_make_default_comment(method)
     comment = Comment.send method
-    comment.photo.person.flickrid.should == 'comment_poster_person_flickrid'
     comment.photo.flickrid.should == 'comment_photo_flickrid'
     comment.flickrid.should == 'comment_flickrid'
     comment.username.should == 'comment_username'
@@ -301,7 +300,6 @@ describe Comment do
       :username => 'other_comment_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
-    comment.photo.person.flickrid.should == 'other_comment_poster_person_flickrid'
     comment.photo.flickrid.should == 'other_comment_photo_flickrid'
     comment.flickrid.should == 'other_comment_flickrid'
     comment.username.should == 'other_comment_username'
@@ -311,7 +309,6 @@ describe Comment do
 
   def should_make_labeled_comment(method)
     comment = Comment.send method, 'label'
-    comment.photo.person.flickrid.should == 'label_comment_poster_person_flickrid'
     comment.photo.flickrid.should == 'label_comment_photo_flickrid'
     comment.flickrid.should == 'label_comment_flickrid'
     comment.username.should == 'label_comment_username'
@@ -361,7 +358,6 @@ describe Guess do
 
   def should_make_default_guess(method)
     guess = Guess.send method
-    guess.photo.person.flickrid.should == 'guess_poster_person_flickrid'
     guess.photo.flickrid.should == 'guess_photo_flickrid'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.guess_text.should == 'guess text'
@@ -378,7 +374,6 @@ describe Guess do
       :guess_text => 'other guess text',
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
-    guess.photo.person.flickrid.should == 'other_guess_poster_person_flickrid'
     guess.photo.flickrid.should == 'other_guess_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
     guess.guess_text.should == 'other guess text'
@@ -388,7 +383,6 @@ describe Guess do
 
   def should_make_labeled_guess(method)
     guess = Guess.send method, 'label'
-    guess.photo.person.flickrid.should == 'label_guess_poster_person_flickrid'
     guess.photo.flickrid.should == 'label_guess_photo_flickrid'
     guess.person.flickrid.should == 'label_guesser_person_flickrid'
     guess.guess_text.should == 'label_guess text'
@@ -437,7 +431,6 @@ describe Revelation do
 
   def should_make_default_revelation(method)
     revelation = Revelation.send method
-    revelation.photo.person.flickrid.should == 'revelation_poster_person_flickrid'
     revelation.photo.flickrid.should == 'revelation_photo_flickrid'
     revelation.revelation_text.should == 'revelation text'
     revelation.revealed_at.should_not be_nil
@@ -451,7 +444,6 @@ describe Revelation do
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
-    revelation.photo.person.flickrid.should == 'other_revelation_poster_person_flickrid'
     revelation.photo.flickrid.should == 'other_revelation_photo_flickrid'
     revelation.revelation_text.should == 'other revelation text'
     revelation.revealed_at.should == Time.utc(2011)
@@ -460,7 +452,6 @@ describe Revelation do
 
   def should_make_labeled_revelation(method)
     revelation = Revelation.send method, 'label'
-    revelation.photo.person.flickrid.should == 'label_revelation_poster_person_flickrid'
     revelation.photo.flickrid.should == 'label_revelation_photo_flickrid'
     revelation.revelation_text.should == 'label_revelation text'
   end
