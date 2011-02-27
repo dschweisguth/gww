@@ -160,17 +160,6 @@ describe ModelFactory do
       photo.member_questions.should == 0
     end
 
-    it "doesn't save it in the database" do
-      Photo.make
-      Photo.count.should == 0
-    end
-
-    it "labels it" do
-      photo = Photo.make 'label'
-      photo.person.flickrid.should == 'label_poster_person_flickrid'
-      photo.person.username.should == 'label_poster_username'
-    end
-
     it "overrides defaults" do
       person = Person.make \
         :flickrid => 'other_person_flickrid',
@@ -203,6 +192,16 @@ describe ModelFactory do
       photo.member_questions.should == 1
     end
 
+    it "labels it" do
+      photo = Photo.make 'label'
+      photo.person.flickrid.should == 'label_poster_person_flickrid'
+      photo.person.username.should == 'label_poster_username'
+    end
+
+    it "doesn't save it in the database" do
+      make_should_not_save_in_database Photo
+    end
+
   end
 
   describe 'Photo.make!' do
@@ -221,17 +220,6 @@ describe ModelFactory do
       photo.views.should == 0
       photo.member_comments.should == 0
       photo.member_questions.should == 0
-    end
-
-    it "saves it in the database" do
-      photo = Photo.make!
-      Photo.all.should == [ photo ]
-    end
-
-    it "labels it" do
-      photo = Photo.make! 'label'
-      photo.person.flickrid.should == 'label_poster_person_flickrid'
-      photo.person.username.should == 'label_poster_username'
     end
 
     it "overrides defaults" do
@@ -264,6 +252,16 @@ describe ModelFactory do
       photo.views.should == 1
       photo.member_comments.should == 1
       photo.member_questions.should == 1
+    end
+
+    it "labels it" do
+      photo = Photo.make! 'label'
+      photo.person.flickrid.should == 'label_poster_person_flickrid'
+      photo.person.username.should == 'label_poster_username'
+    end
+
+    it "saves it in the database" do
+      make_bang_should_save_in_database Photo
     end
 
   end
