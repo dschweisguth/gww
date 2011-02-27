@@ -191,6 +191,7 @@ describe Photo do
   def should_make_default_photo(method)
     photo = Photo.send method
     photo.person.flickrid.should == 'poster_person_flickrid'
+    photo.flickrid.should == 'photo_flickrid'
     photo.farm.should == '0'
     photo.server.should == 'server'
     photo.secret.should == 'secret'
@@ -208,6 +209,7 @@ describe Photo do
     person = Person.send method, :flickrid => 'other_person_flickrid'
     photo = Photo.send method,
       :person => person,
+      :flickrid => 'other_photo_flickrid',
       :farm => '1',
       :server => 'other_server',
       :secret => 'other_secret',
@@ -220,6 +222,7 @@ describe Photo do
       :member_comments => 1,
       :member_questions => 1
     photo.person.flickrid.should == 'other_person_flickrid'
+    photo.flickrid.should == 'other_photo_flickrid'
     photo.farm.should == '1'
     photo.server.should == 'other_server'
     photo.secret.should == 'other_secret'
@@ -236,6 +239,7 @@ describe Photo do
   def should_make_labeled_photo(method)
     photo = Photo.send method, 'label'
     photo.person.flickrid.should == 'label_poster_person_flickrid'
+    photo.flickrid.should == 'label_photo_flickrid'
   end
 
 end
@@ -282,7 +286,7 @@ describe Comment do
   def should_make_default_comment(method)
     comment = Comment.send method
     comment.photo.person.flickrid.should == 'comment_poster_person_flickrid'
-    comment.photo.farm.should == '0'
+    comment.photo.flickrid.should == 'comment_photo_flickrid'
     comment.flickrid.should == 'comment_flickrid'
     comment.username.should == 'comment_username'
     comment.comment_text.should == 'comment text'
@@ -290,8 +294,7 @@ describe Comment do
   end
 
   def should_make_comment_with_custom_attributes(method)
-    photo = Photo.send method, 'other_comment',
-      :farm => '1'
+    photo = Photo.send method, 'other_comment'
     comment = Comment.send method,
       :photo => photo,
       :flickrid => 'other_comment_flickrid',
@@ -299,7 +302,7 @@ describe Comment do
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
     comment.photo.person.flickrid.should == 'other_comment_poster_person_flickrid'
-    comment.photo.farm.should == '1'
+    comment.photo.flickrid.should == 'other_comment_photo_flickrid'
     comment.flickrid.should == 'other_comment_flickrid'
     comment.username.should == 'other_comment_username'
     comment.comment_text.should == 'other comment text'
@@ -309,6 +312,7 @@ describe Comment do
   def should_make_labeled_comment(method)
     comment = Comment.send method, 'label'
     comment.photo.person.flickrid.should == 'label_comment_poster_person_flickrid'
+    comment.photo.flickrid.should == 'label_comment_photo_flickrid'
     comment.flickrid.should == 'label_comment_flickrid'
     comment.username.should == 'label_comment_username'
     comment.comment_text.should == 'label_comment text'
@@ -358,7 +362,7 @@ describe Guess do
   def should_make_default_guess(method)
     guess = Guess.send method
     guess.photo.person.flickrid.should == 'guess_poster_person_flickrid'
-    guess.photo.farm.should == '0'
+    guess.photo.flickrid.should == 'guess_photo_flickrid'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.guess_text.should == 'guess text'
     guess.guessed_at.should_not be_nil
@@ -366,8 +370,7 @@ describe Guess do
   end
 
   def should_make_guess_with_custom_attributes(method)
-    photo = Photo.send method, 'other_guess',
-      :farm => '1'
+    photo = Photo.send method, 'other_guess'
     guesser = Person.send method, 'other_guesser'
     guess = Guess.send method,
       :photo => photo,
@@ -376,7 +379,7 @@ describe Guess do
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     guess.photo.person.flickrid.should == 'other_guess_poster_person_flickrid'
-    guess.photo.farm.should == '1'
+    guess.photo.flickrid.should == 'other_guess_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
     guess.guess_text.should == 'other guess text'
     guess.guessed_at.should == Time.utc(2011)
@@ -386,6 +389,7 @@ describe Guess do
   def should_make_labeled_guess(method)
     guess = Guess.send method, 'label'
     guess.photo.person.flickrid.should == 'label_guess_poster_person_flickrid'
+    guess.photo.flickrid.should == 'label_guess_photo_flickrid'
     guess.person.flickrid.should == 'label_guesser_person_flickrid'
     guess.guess_text.should == 'label_guess text'
   end
@@ -434,22 +438,21 @@ describe Revelation do
   def should_make_default_revelation(method)
     revelation = Revelation.send method
     revelation.photo.person.flickrid.should == 'revelation_poster_person_flickrid'
-    revelation.photo.farm.should == '0'
+    revelation.photo.flickrid.should == 'revelation_photo_flickrid'
     revelation.revelation_text.should == 'revelation text'
     revelation.revealed_at.should_not be_nil
     revelation.added_at.should_not be_nil
   end
 
   def should_make_revelation_with_custom_attributes(method)
-    photo = Photo.send method, 'other_revelation',
-      :farm => '1'
+    photo = Photo.send method, 'other_revelation'
     revelation = Revelation.send method,
       :photo => photo,
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     revelation.photo.person.flickrid.should == 'other_revelation_poster_person_flickrid'
-    revelation.photo.farm.should == '1'
+    revelation.photo.flickrid.should == 'other_revelation_photo_flickrid'
     revelation.revelation_text.should == 'other revelation text'
     revelation.revealed_at.should == Time.utc(2011)
     revelation.added_at.should == Time.utc(2012)
@@ -458,6 +461,7 @@ describe Revelation do
   def should_make_labeled_revelation(method)
     revelation = Revelation.send method, 'label'
     revelation.photo.person.flickrid.should == 'label_revelation_poster_person_flickrid'
+    revelation.photo.flickrid.should == 'label_revelation_photo_flickrid'
     revelation.revelation_text.should == 'label_revelation text'
   end
 
