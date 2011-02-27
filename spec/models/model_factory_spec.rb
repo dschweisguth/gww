@@ -86,58 +86,60 @@ describe ModelFactory do
 
   describe 'Person#make' do
     it "makes a Person" do
-      person = Person.make
-      person.flickrid.should == 'person_flickrid'
-      person.username.should == 'username'
+      should_make_default_person :make
     end
 
     it "doesn't save it in the database" do
-      Person.make
-      Person.count.should == 0
+      make_should_not_save_in_database Person
     end
 
     it "labels it" do
-      person = Person.make 'label'
-      person.flickrid.should == 'label_person_flickrid'
-      person.username.should == 'label_username'
+      should_make_labeled_person :make
     end
 
     it "overrides defaults" do
-      person = Person.make \
-        :flickrid => 'other_person_flickrid',
-        :username => 'other_username'
-      person.flickrid.should == 'other_person_flickrid'
-      person.username.should == 'other_username'
+      should_make_person_with_custom_attributes :make
     end
 
   end
 
   describe 'Person#make!' do
     it "makes a Person" do
-      person = Person.make!
-      person.flickrid.should == 'person_flickrid'
-      person.username.should == 'username'
+      should_make_default_person :make!
     end
 
     it "saves it in the database" do
-      person = Person.make!
-      Person.all.should == [ person ]
+      make_bang_should_save_in_database Person
     end
 
     it "labels it" do
-      person = Person.make! 'label'
-      person.flickrid.should == 'label_person_flickrid'
-      person.username.should == 'label_username'
+      should_make_labeled_person :make!
     end
 
     it "overrides_defaults" do
-      person = Person.make! \
-        :flickrid => 'other_person_flickrid',
-        :username => 'other_username'
-      person.flickrid.should == 'other_person_flickrid'
-      person.username.should == 'other_username'
+      should_make_person_with_custom_attributes :make!
     end
 
+  end
+
+  def should_make_default_person(method)
+    person = Person.send method
+    person.flickrid.should == 'person_flickrid'
+    person.username.should == 'username'
+  end
+
+  def should_make_labeled_person(method)
+    person = Person.send method, 'label'
+    person.flickrid.should == 'label_person_flickrid'
+    person.username.should == 'label_username'
+  end
+
+  def should_make_person_with_custom_attributes(method)
+    person = Person.send method,
+      :flickrid => 'other_person_flickrid',
+      :username => 'other_username'
+    person.flickrid.should == 'other_person_flickrid'
+    person.username.should == 'other_username'
   end
 
   describe 'Photo.make' do
