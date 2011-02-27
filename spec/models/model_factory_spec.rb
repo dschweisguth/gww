@@ -38,7 +38,7 @@ describe ModelFactory do
   describe 'FlickrUpdate#make' do
     it "makes a FlickrUpdate" do
       update = FlickrUpdate.make
-      update.created_at.should be_nil # TODO Dave what do we really want here?
+      update.created_at.should be_nil # Tests always override this
       update.member_count.should == 0
       update.completed_at.should be_nil
     end
@@ -52,6 +52,33 @@ describe ModelFactory do
       created_at = Time.now
       completed_at = Time.now
       update = FlickrUpdate.make \
+        :created_at => created_at,
+        :member_count => 1,
+        :completed_at => completed_at
+      update.created_at.should == created_at
+      update.member_count.should == 1
+      update.completed_at.should == completed_at
+    end
+
+  end
+
+  describe 'FlickrUpdate#make!' do
+    it "makes a FlickrUpdate" do
+      update = FlickrUpdate.make!
+      update.created_at.should_not be_nil
+      update.member_count.should == 0
+      update.completed_at.should be_nil
+    end
+
+    it "saves it in the database" do
+      update = FlickrUpdate.make!
+      FlickrUpdate.all.should == [ update ]
+    end
+
+    it "overrides defaults" do
+      created_at = Time.utc(2011)
+      completed_at = Time.utc(2011, 2)
+      update = FlickrUpdate.make! \
         :created_at => created_at,
         :member_count => 1,
         :completed_at => completed_at
