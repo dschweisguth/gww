@@ -9,27 +9,32 @@ describe ModelFactory do
     end
 
     it "handles no args" do
-      mock(@factory).make_for_test :new, '', {}
+      mock(@factory).options(:new, '', {}) { {} }
+      mock(@factory).send :new, {}
       @factory.make
     end
 
     it "handles options" do
-      mock(@factory).make_for_test :new, '', { :other_option => 'other_option' }
+      mock(@factory).options(:new, '', { :other_option => 'other_option' }) { {} }
+      mock(@factory).send :new, {}
       @factory.make :other_option => 'other_option'
     end
 
     it "handles a label passed in as a string" do
-      mock(@factory).make_for_test :new, 'xxx_', {}
+      mock(@factory).options(:new, 'xxx_', {}) { {} }
+      mock(@factory).send :new, {}
       @factory.make 'xxx'
     end
 
     it "handles a label passed in as a string plus options" do
-      mock(@factory).make_for_test :new, 'xxx_', { :other_option => 'other_option' }
+      mock(@factory).options(:new, 'xxx_', { :other_option => 'other_option' }) { {} }
+      mock(@factory).send :new, {}
       @factory.make 'xxx', :other_option => 'other_option'
     end
 
     it "creates, too" do
-      mock(@factory).make_for_test :create!, '', {}
+      mock(@factory).options(:create!, '', {}) { {} }
+      mock(@factory).send :create!, {}
       @factory.make!
     end
 
