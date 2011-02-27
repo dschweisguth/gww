@@ -60,7 +60,7 @@ describe ModelFactory do
     end
 
     it "saves it in the database" do
-      make_bang_should_save_in_database FlickrUpdate
+      make_should_save_in_database! FlickrUpdate
     end
 
   end
@@ -117,7 +117,7 @@ describe ModelFactory do
     end
 
     it "saves it in the database" do
-      make_bang_should_save_in_database Person
+      make_should_save_in_database! Person
     end
 
   end
@@ -175,7 +175,7 @@ describe ModelFactory do
     end
 
     it "saves it in the database" do
-      make_bang_should_save_in_database Photo
+      make_should_save_in_database! Photo
     end
 
   end
@@ -242,7 +242,7 @@ describe ModelFactory do
     model_class.count.should == 0
   end
 
-  def make_bang_should_save_in_database(model_class)
+  def make_should_save_in_database!(model_class)
     instance = model_class.make!
     model_class.all.should == [ instance ]
   end
