@@ -37,23 +37,22 @@ describe ModelFactory do
 
   describe 'FlickrUpdate#make' do
     it "makes a FlickrUpdate" do
-      flickr_update_should_have_defaults :make, true
+      should_make_default_flickr_update :make, true
     end
 
     it "doesn't save it in the database" do
-      FlickrUpdate.make
-      FlickrUpdate.count.should == 0
+      make_should_save_in_database FlickrUpdate
     end
 
     it "overrides defaults" do
-      should_override_flickr_update_defaults :make
+      should_make_flickr_update_with_custom_attributes :make
     end
 
   end
 
   describe 'FlickrUpdate#make!' do
     it "makes a FlickrUpdate" do
-      flickr_update_should_have_defaults :make!, false
+      should_make_default_flickr_update :make!, false
     end
 
     it "saves it in the database" do
@@ -62,19 +61,19 @@ describe ModelFactory do
     end
 
     it "overrides defaults" do
-      should_override_flickr_update_defaults :make!
+      should_make_flickr_update_with_custom_attributes :make!
     end
 
   end
 
-  def flickr_update_should_have_defaults(method, created_at_should_be_nil)
+  def should_make_default_flickr_update(method, created_at_should_be_nil)
     update = FlickrUpdate.method(method).call
     update.created_at.nil?.should == created_at_should_be_nil
     update.member_count.should == 0
     update.completed_at.should be_nil
   end
 
-  def should_override_flickr_update_defaults(method)
+  def should_make_flickr_update_with_custom_attributes(method)
     created_at = Time.utc(2011)
     completed_at = Time.utc(2011, 2)
     update = FlickrUpdate.method(method).call \
@@ -266,6 +265,13 @@ describe ModelFactory do
       photo.member_questions.should == 1
     end
 
+  end
+
+  # Utilities
+
+  def make_should_save_in_database(model_class)
+    model_class.make
+    model_class.count.should == 0
   end
 
 end
