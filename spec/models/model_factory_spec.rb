@@ -40,12 +40,12 @@ describe ModelFactory do
       should_make_default_flickr_update :make, true
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database FlickrUpdate
-    end
-
     it "overrides defaults" do
       should_make_flickr_update_with_custom_attributes :make
+    end
+
+    it "doesn't save it in the database" do
+      make_should_not_save_in_database FlickrUpdate
     end
 
   end
@@ -55,12 +55,12 @@ describe ModelFactory do
       should_make_default_flickr_update :make!, false
     end
 
-    it "saves it in the database" do
-      make_bang_should_save_in_database FlickrUpdate
-    end
-
     it "overrides defaults" do
       should_make_flickr_update_with_custom_attributes :make!
+    end
+
+    it "saves it in the database" do
+      make_bang_should_save_in_database FlickrUpdate
     end
 
   end
@@ -89,16 +89,16 @@ describe ModelFactory do
       should_make_default_person :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database Person
+    it "overrides defaults" do
+      should_make_person_with_custom_attributes :make
     end
 
     it "labels it" do
       should_make_labeled_person :make
     end
 
-    it "overrides defaults" do
-      should_make_person_with_custom_attributes :make
+    it "doesn't save it in the database" do
+      make_should_not_save_in_database Person
     end
 
   end
@@ -108,16 +108,16 @@ describe ModelFactory do
       should_make_default_person :make!
     end
 
-    it "saves it in the database" do
-      make_bang_should_save_in_database Person
+    it "overrides_defaults" do
+      should_make_person_with_custom_attributes :make!
     end
 
     it "labels it" do
       should_make_labeled_person :make!
     end
 
-    it "overrides_defaults" do
-      should_make_person_with_custom_attributes :make!
+    it "saves it in the database" do
+      make_bang_should_save_in_database Person
     end
 
   end
@@ -128,18 +128,18 @@ describe ModelFactory do
     person.username.should == 'username'
   end
 
-  def should_make_labeled_person(method)
-    person = Person.send method, 'label'
-    person.flickrid.should == 'label_person_flickrid'
-    person.username.should == 'label_username'
-  end
-
   def should_make_person_with_custom_attributes(method)
     person = Person.send method,
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     person.flickrid.should == 'other_person_flickrid'
     person.username.should == 'other_username'
+  end
+
+  def should_make_labeled_person(method)
+    person = Person.send method, 'label'
+    person.flickrid.should == 'label_person_flickrid'
+    person.username.should == 'label_username'
   end
 
   describe 'Photo.make' do
