@@ -32,7 +32,7 @@ class FlickrUpdate
       options[:created_at] = Time.now
     end
     options.merge! caller_options
-    FlickrUpdate.send new_or_create, options
+    self.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -47,7 +47,7 @@ class Person
       :username => padded_label + 'username'
     }
     options.merge! caller_options
-    Person.send new_or_create, options
+    self.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -76,7 +76,7 @@ class Photo
         new_or_create == :new ? Person.make(person_label) : Person.make!(person_label)
     end
     options.merge! caller_options
-    Photo.send new_or_create, options
+    self.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -98,7 +98,7 @@ class Comment
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end
     options.merge! caller_options
-    Comment.send new_or_create, options
+    self.send new_or_create, options
   end
 
 end
@@ -124,7 +124,7 @@ class Guess
         new_or_create == :new ? Person.make(person_label) : Person.make!(person_label)
     end
     options.merge! caller_options
-    Guess.send new_or_create, options
+    self.send new_or_create, options
   end
   private_class_method :make_for_test
 
@@ -146,7 +146,7 @@ class Revelation
         new_or_create == :new ? Photo.make(photo_label) : Photo.make!(photo_label)
     end
     options.merge! caller_options
-    Revelation.send new_or_create, options
+    self.send new_or_create, options
   end
   private_class_method :make_for_test
 
