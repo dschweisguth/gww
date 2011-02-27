@@ -183,7 +183,6 @@ describe ModelFactory do
   def should_make_default_photo(method)
     photo = Photo.send method
     photo.person.flickrid.should == 'poster_person_flickrid'
-    photo.person.username.should == 'poster_username'
     photo.farm.should == '0'
     photo.server.should == 'server'
     photo.secret.should == 'secret'
@@ -198,9 +197,7 @@ describe ModelFactory do
   end
 
   def should_make_photo_with_custom_attributes(method)
-    person = Person.send method,
-      :flickrid => 'other_person_flickrid',
-      :username => 'other_username'
+    person = Person.send method, :flickrid => 'other_person_flickrid'
     photo = Photo.send method,
       :person => person,
       :farm => '1',
@@ -215,7 +212,6 @@ describe ModelFactory do
       :member_comments => 1,
       :member_questions => 1
     photo.person.flickrid.should == 'other_person_flickrid'
-    photo.person.username.should == 'other_username'
     photo.farm.should == '1'
     photo.server.should == 'other_server'
     photo.secret.should == 'other_secret'
@@ -232,7 +228,82 @@ describe ModelFactory do
   def should_make_labeled_photo(method)
     photo = Photo.send method, 'label'
     photo.person.flickrid.should == 'label_poster_person_flickrid'
-    photo.person.username.should == 'label_poster_username'
+  end
+
+  describe 'Comment.make' do
+    it "makes a Comment" do
+      should_make_default_comment :make
+    end
+
+    it "overrides defaults" do
+      should_make_comment_with_custom_attributes :make
+    end
+
+    it "labels it" do
+      should_make_labeled_comment :make
+    end
+
+    it "doesn't save it in the database" do
+      make_should_not_save_in_database Comment
+    end
+
+  end
+
+  describe 'Comment.make!' do
+    it "makes a Comment" do
+      should_make_default_comment :make!
+    end
+
+    it "overrides defaults" do
+      should_make_comment_with_custom_attributes :make!
+    end
+
+    it "labels it" do
+      should_make_labeled_comment :make!
+    end
+
+    it "saves it in the database" do
+      make_should_save_in_database! Comment
+    end
+
+  end
+
+  def should_make_default_comment(method)
+    comment = Comment.send method
+    comment.photo.person.flickrid.should == 'comment_poster_person_flickrid'
+    comment.flickrid.should == 'comment_flickrid'
+    comment.username.should == 'comment_username'
+    comment.comment_text.should == 'comment text'
+    comment.commented_at.should_not be_nil
+  end
+
+  def should_make_comment_with_custom_attributes(method)
+    person = Person.send method,
+      :flickrid => 'other_person_flickrid'
+    photo = Photo.send method,
+      :person => person,
+      :farm => '1'
+    comment = Comment.send method,
+      :photo => photo,
+      :flickrid => 'other_comment_flickrid',
+      :username => 'other_comment_username',
+      :comment_text => 'other comment text',
+      :commented_at => Time.utc(2011)
+    photo.person.flickrid.should == 'other_person_flickrid'
+    photo.farm.should == '1'
+    comment.flickrid.should == 'other_comment_flickrid'
+    comment.username.should == 'other_comment_username'
+    comment.comment_text.should == 'other comment text'
+    comment.commented_at.should == Time.utc(2011)
+  end
+
+  def should_make_labeled_comment(method)
+    comment = Comment.send method, 'label'
+    comment.photo.person.flickrid.should == 'label_comment_poster_person_flickrid'
+    comment.photo.person.username.should == 'label_comment_poster_username'
+    comment.flickrid.should == 'label_comment_flickrid'
+    comment.username.should == 'label_comment_username'
+    comment.comment_text.should == 'label_comment text'
   end
 
   # Utilities
