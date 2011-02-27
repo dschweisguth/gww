@@ -90,24 +90,24 @@ describe ModelFactory do
   end
 
   describe 'Person#make' do
-    it 'makes a Person' do
+    it "makes a Person" do
       person = Person.make
       person.flickrid.should == 'person_flickrid'
       person.username.should == 'username'
     end
 
-    it "doesn't save them in the database" do
+    it "doesn't save it in the database" do
       Person.make
       Person.count.should == 0
     end
 
-    it 'labels them' do
+    it "labels it" do
       person = Person.make 'label'
       person.flickrid.should == 'label_person_flickrid'
       person.username.should == 'label_username'
     end
 
-    it 'overrides_defaults' do
+    it "overrides defaults" do
       person = Person.make \
         :flickrid => 'other_person_flickrid',
         :username => 'other_username'
@@ -118,29 +118,92 @@ describe ModelFactory do
   end
 
   describe 'Person#make!' do
-    it 'makes a Person' do
+    it "makes a Person" do
       person = Person.make!
       person.flickrid.should == 'person_flickrid'
       person.username.should == 'username'
     end
 
-    it 'saves them in the database' do
+    it "saves it in the database" do
       person = Person.make!
       Person.all.should == [ person ]
     end
 
-    it 'labels them' do
+    it "labels it" do
       person = Person.make! 'label'
       person.flickrid.should == 'label_person_flickrid'
       person.username.should == 'label_username'
     end
 
-    it 'overrides_defaults' do
+    it "overrides_defaults" do
       person = Person.make! \
         :flickrid => 'other_person_flickrid',
         :username => 'other_username'
       person.flickrid.should == 'other_person_flickrid'
       person.username.should == 'other_username'
+    end
+
+  end
+
+  describe 'Photo.make' do
+    it "makes a Photo" do
+      photo = Photo.make
+      photo.person.flickrid.should == 'poster_person_flickrid'
+      photo.person.username.should == 'poster_username'
+      photo.farm.should == '0'
+      photo.server.should == 'server'
+      photo.secret.should == 'secret'
+      photo.dateadded.should_not be_nil
+      photo.mapped.should == 'false'
+      photo.lastupdate.should_not be_nil
+      photo.seen_at.should_not be_nil
+      photo.game_status.should == 'unfound'
+      photo.views.should == 0
+      photo.member_comments.should == 0
+      photo.member_questions.should == 0
+    end
+
+    it "doesn't save it in the database" do
+      Photo.make
+      Photo.count.should == 0
+    end
+
+    it "labels it" do
+      photo = Photo.make 'label'
+      photo.person.flickrid.should == 'label_poster_person_flickrid'
+      photo.person.username.should == 'label_poster_username'
+    end
+
+    it "overrides defaults" do
+      person = Person.make \
+        :flickrid => 'other_person_flickrid',
+        :username => 'other_username'
+      photo = Photo.make \
+        :person => person,
+        :farm => '1',
+        :server => 'other_server',
+        :secret => 'other_secret',
+        :dateadded => Time.utc(2010),
+        :mapped => 'true',
+        :lastupdate => Time.utc(2011),
+        :seen_at => Time.utc(2012),
+        :game_status => 'found',
+        :views => 1,
+        :member_comments => 1,
+        :member_questions => 1
+      photo.person.flickrid.should == 'other_person_flickrid'
+      photo.person.username.should == 'other_username'
+      photo.farm.should == '1'
+      photo.server.should == 'other_server'
+      photo.secret.should == 'other_secret'
+      photo.dateadded.should == Time.utc(2010)
+      photo.mapped.should == 'true'
+      photo.lastupdate.should == Time.utc(2011)
+      photo.seen_at.should == Time.utc(2012)
+      photo.game_status.should == 'found'
+      photo.views.should == 1
+      photo.member_comments.should == 1
+      photo.member_questions.should == 1
     end
 
   end
