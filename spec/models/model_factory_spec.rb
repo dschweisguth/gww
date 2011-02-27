@@ -37,10 +37,7 @@ describe ModelFactory do
 
   describe 'FlickrUpdate#make' do
     it "makes a FlickrUpdate" do
-      update = FlickrUpdate.make
-      update.created_at.should be_nil # Tests always override this
-      update.member_count.should == 0
-      update.completed_at.should be_nil
+      flickr_update_should_have_defaults :make, true
     end
 
     it "doesn't save it in the database" do
@@ -49,25 +46,14 @@ describe ModelFactory do
     end
 
     it "overrides defaults" do
-      created_at = Time.now
-      completed_at = Time.now
-      update = FlickrUpdate.make \
-        :created_at => created_at,
-        :member_count => 1,
-        :completed_at => completed_at
-      update.created_at.should == created_at
-      update.member_count.should == 1
-      update.completed_at.should == completed_at
+      should_override_flickr_update_defaults :make
     end
 
   end
 
   describe 'FlickrUpdate#make!' do
     it "makes a FlickrUpdate" do
-      update = FlickrUpdate.make!
-      update.created_at.should_not be_nil
-      update.member_count.should == 0
-      update.completed_at.should be_nil
+      flickr_update_should_have_defaults :make!, false
     end
 
     it "saves it in the database" do
@@ -76,17 +62,28 @@ describe ModelFactory do
     end
 
     it "overrides defaults" do
-      created_at = Time.utc(2011)
-      completed_at = Time.utc(2011, 2)
-      update = FlickrUpdate.make! \
-        :created_at => created_at,
-        :member_count => 1,
-        :completed_at => completed_at
-      update.created_at.should == created_at
-      update.member_count.should == 1
-      update.completed_at.should == completed_at
+      should_override_flickr_update_defaults :make!
     end
 
+  end
+
+  def flickr_update_should_have_defaults(method, created_at_should_be_nil)
+    update = FlickrUpdate.method(method).call
+    update.created_at.nil?.should == created_at_should_be_nil
+    update.member_count.should == 0
+    update.completed_at.should be_nil
+  end
+
+  def should_override_flickr_update_defaults(method)
+    created_at = Time.utc(2011)
+    completed_at = Time.utc(2011, 2)
+    update = FlickrUpdate.method(method).call \
+      :created_at => created_at,
+      :member_count => 1,
+      :completed_at => completed_at
+    update.created_at.should == created_at
+    update.member_count.should == 1
+    update.completed_at.should == completed_at
   end
 
   describe 'Person#make' do
