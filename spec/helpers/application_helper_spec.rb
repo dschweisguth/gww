@@ -48,14 +48,12 @@ describe ApplicationHelper do
 
   describe '#link_to_person' do
     it 'returns a local link to the person' do
-      person = Person.make
-      stub(person).id { 666 }
+      person = Person.make :id => 666
       helper.link_to_person(person).should == '<a href="/people/show/666">username</a>'
     end
 
     it 'escapes HTML special characters in the username' do
-      person = Person.make :username => 'tom&jerry'
-      stub(person).id { 666 }
+      person = Person.make :id => 666, :username => 'tom&jerry'
       helper.link_to_person(person).should == '<a href="/people/show/666">tom&amp;jerry</a>'
     end
 
@@ -63,8 +61,7 @@ describe ApplicationHelper do
 
   describe '#link_to_photo' do
     it 'returns a local link to the photo' do
-      photo = Photo.make
-      stub(photo).id { 666 }
+      photo = Photo.make :id => 666
       helper.link_to_photo(photo).should == '<a href="/photos/show/666">GWW</a>'
     end
   end
@@ -121,8 +118,7 @@ describe ApplicationHelper do
 
   describe '#thumbnail' do
     before do
-      @photo = Photo.make
-      stub(@photo).id { 666 }
+      @photo = Photo.make :id => 666
     end
 
     it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do

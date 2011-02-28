@@ -26,8 +26,7 @@ describe PeopleController do
       sorted_by_param = 'score'
       order_param = '+'
 
-      person = Person.make
-      stub(person).id { 666 }
+      person = Person.make :id => 666
       person[:guess_count] = 1
       person[:post_count] = 1
       person[:guesses_per_day] = 1.0
@@ -49,10 +48,8 @@ describe PeopleController do
 
   describe '#nemeses' do
     it "renders the page" do
-      guesser = Person.make 'guesser'
-      stub(guesser).id { 666 }
-      poster = Person.make 'poster'
-      stub(poster).id { 777 }
+      guesser = Person.make 'guesser', :id => 666
+      poster = Person.make 'poster', :id => 777
       guesser[:poster] = poster
       guesser[:bias] = 2.5
       stub(Person).nemeses { [ guesser ] }
@@ -78,8 +75,7 @@ describe PeopleController do
             (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
           [ Period.new report_day.beginning_of_year, report_day + 1.day ]
       ]
-      person = Person.make
-      stub(person).id { 666 }
+      person = Person.make :id => 666
       guess = Guess.make :person => person, :guessed_at => report_day
       (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ person ] }
       stub(Person).top_guessers { top_guessers }
@@ -108,8 +104,7 @@ describe PeopleController do
 
   describe '#show' do
     it 'renders the page' do
-      person = Person.make
-      stub(person).id { 1 }
+      person = Person.make :id => 1
       person[:score] = 1 # for the high_scorers methods
 
       stub(Person).find(person.id.to_s) { person }
@@ -195,8 +190,7 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
-      person = Person.make
-      stub(person).id { 1 }
+      person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make :person => person ] }
@@ -212,8 +206,7 @@ describe PeopleController do
 
   describe '#posts' do
     it 'renders the page' do
-      person = Person.make
-      stub(person).id { 1 }
+      person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ Photo.make :person => person ] }
@@ -229,8 +222,7 @@ describe PeopleController do
 
   describe '#comments' do
     it 'renders the page' do
-      person = Person.make
-      stub(person).id { 1 }
+      person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
 
       #noinspection RubyResolve

@@ -58,8 +58,7 @@ describe PhotosController do
 
   describe '#show' do
     it 'renders the page' do
-      photo = Photo.make :dateadded => Time.local(2010)
-      stub(photo).id { 1 }
+      photo = Photo.make :id => 1, :dateadded => Time.local(2010)
       guess = Guess.make :photo => photo
       photo.guesses << guess
       stub(Photo).find { photo }

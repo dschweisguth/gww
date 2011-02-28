@@ -28,8 +28,7 @@ describe Admin::PhotosController do
 
   describe '#unfound' do
     it 'renders the page' do
-      photo = Photo.make
-      stub(photo).id { 1 }
+      photo = Photo.make :id => 1
       stub(Photo).unfound_or_unconfirmed { [ photo ] }
       get :unfound
       #noinspection RubyResolve
@@ -40,8 +39,7 @@ describe Admin::PhotosController do
 
   describe '#inaccessible' do
     it 'renders the page' do
-      photo = Photo.make
-      stub(photo).id { 1 }
+      photo = Photo.make :id => 1
       stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.utc(2011) }
       stub(Photo).all { [ photo ] }
       get :inaccessible
@@ -53,8 +51,7 @@ describe Admin::PhotosController do
 
   describe '#multipoint' do
     it 'renders the page' do
-      photo = Photo.make
-      stub(photo).id { 1 }
+      photo = Photo.make :id => 1
       stub(Photo).multipoint { [ photo ] }
       get :multipoint
       #noinspection RubyResolve
@@ -65,8 +62,7 @@ describe Admin::PhotosController do
 
   describe '#edit' do
     it 'renders the page without loading comments' do
-      photo = Photo.make :dateadded => Time.local(2011)
-      stub(photo).id { 1 }
+      photo = Photo.make :id => 1, :dateadded => Time.local(2011)
       stub(Photo).find(photo.id.to_s, anything) { photo }
       #noinspection RubyResolve
       mock(Comment).find_all_by_photo_id(photo) { [ Comment.make ] }
@@ -86,8 +82,7 @@ describe Admin::PhotosController do
     end
 
     it 'loads comments and renders the page' do
-      photo = Photo.make :dateadded => Time.local(2011)
-      stub(photo).id { 1 }
+      photo = Photo.make :id => 1, :dateadded => Time.local(2011)
       stub(Photo).find(photo.id.to_s, anything) { photo }
       stub(photo).load_comments { [ Comment.make ] }
       mock_clear_page_cache

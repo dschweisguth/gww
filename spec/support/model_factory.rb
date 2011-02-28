@@ -12,13 +12,32 @@ module ModelFactory
       caller_options = label
       label = ''
     end
+
     padded_label = label.to_s
     if ! padded_label.empty?
       padded_label += '_'
     end
+
+    # ActiveRecord protects :id, so handle it ourselves,
+    # but only for memory-only objects used in tests above the model
+    id = caller_options[:id]
+    if id
+      if calling_method != :make
+        raise ArgumentError, "Can't specify :id for an object which is to be create!d in the database"
+      end
+      caller_options.delete :id
+    end
+
     options = options calling_method, padded_label, caller_options
     options.merge! caller_options
-    send (calling_method == :make ? :new : :create!), options
+
+    instance = send((calling_method == :make ? :new : :create!), options)
+
+    if id
+      instance.id = id
+    end
+
+    instance
   end
   private :do_make
 
