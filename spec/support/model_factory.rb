@@ -18,14 +18,20 @@ module ModelFactory
       padded_label += '_'
     end
 
-    # ActiveRecord protects :id, so handle it ourselves,
-    # but only for memory-only objects used in tests above the model
+    # When testing layers above the model layer, we always use :make. We want
+    # model objects to have @ids, but ActiveRecord prevents us from setting
+    # that attribute at creation time, so save it so we can set it later.
+    # When testing the model layer, we always use :make! and let ActiveRecord manage @id.
     id = caller_options[:id]
     if id
       if calling_method != :make
         raise ArgumentError, "Can't specify :id for an object which is to be create!d in the database"
       end
       caller_options.delete :id
+    else
+      if calling_method == :make
+        id = 0
+      end
     end
 
     options = options calling_method, padded_label, caller_options
@@ -35,10 +41,6 @@ module ModelFactory
 
     if id
       instance.id = id
-    else
-      if calling_method == :make
-        instance.id = 0
-      end
     end
 
     instance
