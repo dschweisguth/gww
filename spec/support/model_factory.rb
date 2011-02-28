@@ -35,6 +35,10 @@ module ModelFactory
 
     if id
       instance.id = id
+    else
+      if calling_method == :make
+        instance.id = 0
+      end
     end
 
     instance

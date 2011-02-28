@@ -824,7 +824,7 @@ describe Photo do
 
     describe 'when the commenter did post the photo' do
       it 'removes a revelation' do
-        photo = Photo.make :game_status => 'revealed'
+        photo = Photo.make! :game_status => 'revealed'
         revelation = Revelation.make! :photo => photo
         comment = Comment.make! :photo => photo,
           :flickrid => photo.person.flickrid, :username => photo.person.username,

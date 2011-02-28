@@ -6,29 +6,35 @@ describe ModelFactory do
       @factory = Object.new
       #noinspection RubyResolve
       @factory.extend ModelFactory
+
+      @model_object = Object.new
+      class << @model_object
+        attr_accessor :id
+      end
+
     end
 
     it "handles no args" do
       mock(@factory).options(:make, '', {}) { {} }
-      mock(@factory).send :new, {}
+      mock(@factory).send(:new, {}) { @model_object }
       @factory.make
     end
 
     it "handles options" do
       mock(@factory).options(:make, '', { :other_option => 'other_option' }) { {} }
-      mock(@factory).send :new, { :other_option => 'other_option' }
+      mock(@factory).send(:new, { :other_option => 'other_option' }) { @model_object }
       @factory.make :other_option => 'other_option'
     end
 
     it "handles a label passed in as a string" do
       mock(@factory).options(:make, 'xxx_', {}) { {} }
-      mock(@factory).send :new, {}
+      mock(@factory).send(:new, {}) { @model_object }
       @factory.make 'xxx'
     end
 
     it "handles a label passed in as a string plus options" do
       mock(@factory).options(:make, 'xxx_', { :other_option => 'other_option' }) { {} }
-      mock(@factory).send :new, { :other_option => 'other_option' }
+      mock(@factory).send(:new, { :other_option => 'other_option' }) { @model_object }
       @factory.make 'xxx', :other_option => 'other_option'
     end
 
@@ -40,11 +46,7 @@ describe ModelFactory do
 
     it "allows you to specify id" do
       mock(@factory).options(:make, '', {}) { {} }
-      model_object = Object.new
-      class << model_object
-        attr_accessor :id
-      end
-      mock(@factory).send(:new, {}) { model_object }
+      mock(@factory).send(:new, {}) { @model_object }
       model_object_out = @factory.make :id => 666
       model_object_out.id.should == 666
     end
@@ -60,6 +62,7 @@ describe FlickrUpdate do
   describe '.make' do
     it "makes one" do
       should_make_default_flickr_update :make
+      @update.id.should == 0
     end
 
     it "overrides defaults" do
@@ -88,10 +91,10 @@ describe FlickrUpdate do
   end
 
   def should_make_default_flickr_update(method)
-    update = FlickrUpdate.send method
-    update.created_at.should_not be_nil
-    update.member_count.should == 0
-    update.completed_at.should be_nil
+    @update = FlickrUpdate.send method
+    @update.created_at.should_not be_nil
+    @update.member_count.should == 0
+    @update.completed_at.should be_nil
   end
 
   def should_make_flickr_update_with_custom_attributes(method)
@@ -112,6 +115,7 @@ describe Person do
   describe '.make' do
     it "makes one" do
       should_make_default_person :make
+      @person.id.should == 0
     end
 
     it "overrides defaults" do
@@ -148,9 +152,9 @@ describe Person do
   end
 
   def should_make_default_person(method)
-    person = Person.send method
-    person.flickrid.should == 'person_flickrid'
-    person.username.should == 'username'
+    @person = Person.send method
+    @person.flickrid.should == 'person_flickrid'
+    @person.username.should == 'username'
   end
 
   def should_make_person_with_custom_attributes(method)
@@ -173,6 +177,7 @@ describe Photo do
   describe '.make' do
     it "makes one" do
       should_make_default_photo :make
+      @photo.id.should == 0
     end
 
     it "overrides defaults" do
@@ -209,20 +214,20 @@ describe Photo do
   end
 
   def should_make_default_photo(method)
-    photo = Photo.send method
-    photo.person.flickrid.should == 'poster_person_flickrid'
-    photo.flickrid.should == 'photo_flickrid'
-    photo.farm.should == '0'
-    photo.server.should == 'server'
-    photo.secret.should == 'secret'
-    photo.dateadded.should_not be_nil
-    photo.mapped.should == 'false'
-    photo.lastupdate.should_not be_nil
-    photo.seen_at.should_not be_nil
-    photo.game_status.should == 'unfound'
-    photo.views.should == 0
-    photo.member_comments.should == 0
-    photo.member_questions.should == 0
+    @photo = Photo.send method
+    @photo.person.flickrid.should == 'poster_person_flickrid'
+    @photo.flickrid.should == 'photo_flickrid'
+    @photo.farm.should == '0'
+    @photo.server.should == 'server'
+    @photo.secret.should == 'secret'
+    @photo.dateadded.should_not be_nil
+    @photo.mapped.should == 'false'
+    @photo.lastupdate.should_not be_nil
+    @photo.seen_at.should_not be_nil
+    @photo.game_status.should == 'unfound'
+    @photo.views.should == 0
+    @photo.member_comments.should == 0
+    @photo.member_questions.should == 0
   end
 
   def should_make_photo_with_custom_attributes(method)
@@ -268,6 +273,7 @@ describe Comment do
   describe '.make' do
     it "makes one" do
       should_make_default_comment :make
+      @comment.id.should == 0
     end
 
     it "overrides defaults" do
@@ -304,12 +310,12 @@ describe Comment do
   end
 
   def should_make_default_comment(method)
-    comment = Comment.send method
-    comment.photo.flickrid.should == 'commented_photo_photo_flickrid'
-    comment.flickrid.should == 'commenter_flickrid'
-    comment.username.should == 'commenter_username'
-    comment.comment_text.should == 'comment text'
-    comment.commented_at.should_not be_nil
+    @comment = Comment.send method
+    @comment.photo.flickrid.should == 'commented_photo_photo_flickrid'
+    @comment.flickrid.should == 'commenter_flickrid'
+    @comment.username.should == 'commenter_username'
+    @comment.comment_text.should == 'comment text'
+    @comment.commented_at.should_not be_nil
   end
 
   def should_make_comment_with_custom_attributes(method)
@@ -341,6 +347,7 @@ describe Guess do
   describe '.make' do
     it "makes one" do
       should_make_default_guess :make
+      @guess.id.should == 0
     end
 
     it "overrides defaults" do
@@ -377,12 +384,12 @@ describe Guess do
   end
 
   def should_make_default_guess(method)
-    guess = Guess.send method
-    guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
-    guess.person.flickrid.should == 'guesser_person_flickrid'
-    guess.guess_text.should == 'guess text'
-    guess.guessed_at.should_not be_nil
-    guess.added_at.should_not be_nil
+    @guess = Guess.send method
+    @guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
+    @guess.person.flickrid.should == 'guesser_person_flickrid'
+    @guess.guess_text.should == 'guess text'
+    @guess.guessed_at.should_not be_nil
+    @guess.added_at.should_not be_nil
   end
 
   def should_make_guess_with_custom_attributes(method)
@@ -414,6 +421,7 @@ describe Revelation do
   describe '.make' do
     it "makes one" do
       should_make_default_revelation :make
+      @revelation.id.should == 0
     end
 
     it "overrides defaults" do
@@ -450,11 +458,11 @@ describe Revelation do
   end
 
   def should_make_default_revelation(method)
-    revelation = Revelation.send method
-    revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
-    revelation.revelation_text.should == 'revelation text'
-    revelation.revealed_at.should_not be_nil
-    revelation.added_at.should_not be_nil
+    @revelation = Revelation.send method
+    @revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
+    @revelation.revelation_text.should == 'revelation text'
+    @revelation.revealed_at.should_not be_nil
+    @revelation.added_at.should_not be_nil
   end
 
   def should_make_revelation_with_custom_attributes(method)

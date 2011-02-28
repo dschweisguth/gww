@@ -22,7 +22,7 @@ describe PhotosController do
       response.should be_success
       response.should have_tag 'h1', :text => '1 photos'
       response.should have_tag 'a[href=/photos/list/sorted-by/username/order/-/page/1]', :text => 'posted by'
-      response.should have_tag 'a[href=/people/show]', :text => 'poster_username'
+      response.should have_tag 'a[href=/people/show/0]', :text => 'poster_username'
 
     end
   end
@@ -35,8 +35,8 @@ describe PhotosController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
-      response.should have_tag 'a[href=/photos/show]', :text => 'GWW'
-      response.should have_tag 'a[href=/people/show]', :text => 'poster_username'
+      response.should have_tag 'a[href=/photos/show/0]', :text => 'GWW'
+      response.should have_tag 'a[href=/people/show/0]', :text => 'poster_username'
 
     end
   end
