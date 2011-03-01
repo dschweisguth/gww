@@ -4,7 +4,7 @@ module ModelFactory
   end
 
   def construction_method
-    caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :make : :make!
+    caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :new : :create!
   end
 
   def do_make(calling_method, label, caller_options)
@@ -19,18 +19,18 @@ module ModelFactory
       padded_label += '_'
     end
 
-    # When testing layers above the model layer, we always use :make. We want
+    # When testing layers above the model layer, we always use :new. We want
     # model objects to have @ids, but ActiveRecord prevents us from setting
     # that attribute at creation time, so save it so we can set it later.
-    # When testing the model layer, we always use :make! and let ActiveRecord manage @id.
+    # When testing the model layer, we always use :create! and let ActiveRecord manage @id.
     id = caller_options[:id]
     if id
-      if calling_method != :make
+      if calling_method != :new
         raise ArgumentError, "Can't specify :id for an object which is to be create!d in the database"
       end
       caller_options.delete :id
     else
-      if calling_method == :make
+      if calling_method == :new
         id = 0
       end
     end
@@ -38,7 +38,7 @@ module ModelFactory
     options = options calling_method, padded_label, caller_options
     options.merge! caller_options
 
-    instance = send((calling_method == :make ? :new : :create!), options)
+    instance = send calling_method, options
 
     if id
       instance.id = id
@@ -56,7 +56,7 @@ class FlickrUpdate
   #noinspection RubyUnusedLocalVariable
   def self.options(calling_method, padded_label, caller_options)
     options = { :member_count => 0 }
-    if calling_method == :make && ! caller_options[:created_at]
+    if calling_method == :new && ! caller_options[:created_at]
       options[:created_at] = Time.now
     end
     options

@@ -19,32 +19,32 @@ describe ModelFactory do
     end
 
     it "handles no args" do
-      mock(@factory).options(:make, '', {}) { {} }
+      mock(@factory).options(:new, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       instance = @factory.make
       instance.id.should == 0 # i.e. it sets a default ID
     end
 
     it "handles options" do
-      mock(@factory).options(:make, '', { :other_option => 'other_option' }) { {} }
+      mock(@factory).options(:new, '', { :other_option => 'other_option' }) { {} }
       mock(@factory).send(:new, { :other_option => 'other_option' }) { @model_object }
       @factory.make :other_option => 'other_option'
     end
 
     it "handles a label passed in as a string" do
-      mock(@factory).options(:make, 'xxx_', {}) { {} }
+      mock(@factory).options(:new, 'xxx_', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       @factory.make 'xxx'
     end
 
     it "handles a label passed in as a string plus options" do
-      mock(@factory).options(:make, 'xxx_', { :other_option => 'other_option' }) { {} }
+      mock(@factory).options(:new, 'xxx_', { :other_option => 'other_option' }) { {} }
       mock(@factory).send(:new, { :other_option => 'other_option' }) { @model_object }
       @factory.make 'xxx', :other_option => 'other_option'
     end
 
     it "allows you to override the default id" do
-      mock(@factory).options(:make, '', {}) { {} }
+      mock(@factory).options(:new, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       model_object_out = @factory.make :id => 666
       model_object_out.id.should == 666
@@ -54,7 +54,7 @@ describe ModelFactory do
 
   describe 'when using .create!' do
     it "creates, too" do
-      mock(@factory).options(:make!, '', {}) { {} }
+      mock(@factory).options(:create!, '', {}) { {} }
       @model_object.id = 666
       mock(@factory).send(:create!, {}) { @model_object }
       instance = @factory.make
@@ -442,7 +442,7 @@ def set_spec_type_to_non_model(*model_classes)
   if model_classes.empty?
     model_classes = [ FlickrUpdate, Person, Photo, Comment, Guess, Revelation ]
   end
-  model_classes.each { |model_class| stub(model_class).construction_method { :make } }
+  model_classes.each { |model_class| stub(model_class).construction_method { :new } }
 end
 
 def should_make_with_custom_attributes(model_class, attrs_in)
