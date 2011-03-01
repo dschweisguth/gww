@@ -44,14 +44,14 @@ describe ModelFactory do
       @factory.make!
     end
 
-    it "allows you to specify id" do
+    it "allows you to override the default id" do
       mock(@factory).options(:make, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       model_object_out = @factory.make :id => 666
       model_object_out.id.should == 666
     end
 
-    it "blows up if you try to specify id for an object that will be saved in the database" do
+    it "blows up if you try to override the default id for an object that will be saved in the database" do
       lambda { @factory.make! :id => 1 }.should raise_error ArgumentError
     end
 
