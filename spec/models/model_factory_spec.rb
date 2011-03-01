@@ -15,7 +15,7 @@ describe ModelFactory do
 
   describe '#make' do
     before do
-      stub(@factory).construction_method { :make }
+      set_spec_type_to_non_model @factory
     end
 
     it "handles no args" do
@@ -72,7 +72,7 @@ end
 describe FlickrUpdate do
   describe '.make' do
     before do
-      set_spec_type FlickrUpdate, false
+      set_spec_type_to_non_model
     end
 
     it "makes one" do
@@ -116,7 +116,7 @@ end
 describe Person do
   describe '.make' do
     before do
-      stub(Person).construction_method { :make }
+      set_spec_type_to_non_model
     end
 
     it "makes one" do
@@ -172,8 +172,7 @@ end
 describe Photo do
   describe '.make' do
     before do
-      # TODO Dave I think I need to stub classes that this one will use, too
-      stub(Photo).construction_method { :make }
+      set_spec_type_to_non_model
     end
 
     it "makes one" do
@@ -251,7 +250,7 @@ end
 describe Comment do
   describe '.make' do
     before do
-      stub(Comment).construction_method { :make }
+      set_spec_type_to_non_model
     end
 
     it "makes one" do
@@ -315,7 +314,7 @@ end
 describe Guess do
   describe '.make' do
     before do
-      stub(Guess).construction_method { :make }
+      set_spec_type_to_non_model
     end
 
     it "makes one" do
@@ -378,7 +377,7 @@ end
 describe Revelation do
   describe '.make' do
     before do
-      stub(Revelation).construction_method { :make }
+      set_spec_type_to_non_model
     end
 
     it "makes one" do
@@ -439,8 +438,11 @@ end
 
 # Overrides the detected spec type so that we can test both model (in-database)
 # and non-model (in-memory) and object creation in this single file
-def set_spec_type(model_class, is_model_spec)
-  stub(model_class).construction_method { is_model_spec ? :make! : :make }
+def set_spec_type_to_non_model(*model_classes)
+  if model_classes.empty?
+    model_classes = [ FlickrUpdate, Person, Photo, Comment, Guess, Revelation ]
+  end
+  model_classes.each { |model_class| stub(model_class).construction_method { :make } }
 end
 
 def should_make_with_custom_attributes(model_class, attrs_in)
