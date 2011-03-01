@@ -480,18 +480,14 @@ def id_should_have_default_value(method, object)
 end
 
 def should_make_with_custom_attributes(method, model_class, attrs, extra_attrs)
-  update = model_class.send method, attrs.merge(extra_attrs)
-  id_should_have_custom_value method, update, extra_attrs[:id]
-  should_have_attrs update, attrs
-  update
-end
-
-def id_should_have_custom_value(method, object, id)
+  object = model_class.send method, attrs.merge(extra_attrs)
   if method == :make
-    object.id.should == id
+    object.id.should == extra_attrs[:id]
   else
     object.id.should_not be_nil
   end
+  should_have_attrs object, attrs
+  object
 end
 
 def should_have_attrs(object, expected_attrs)
