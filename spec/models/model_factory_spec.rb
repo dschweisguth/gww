@@ -103,7 +103,7 @@ describe FlickrUpdate do
       :member_count => 1,
       :completed_at => Time.utc(2011, 2)
     }
-    should_make_with_custom_attributes method, FlickrUpdate, attrs
+    should_make_with_custom_attributes FlickrUpdate, method, attrs
   end
 
 end
@@ -159,7 +159,7 @@ describe Person do
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     }
-    should_make_with_custom_attributes method, Person, attrs
+    should_make_with_custom_attributes Person, method, attrs
   end
 
   def should_make_labeled_person(method)
@@ -244,7 +244,7 @@ describe Photo do
       :member_comments => 1,
       :member_questions => 1
     }
-    photo = should_make_with_custom_attributes method, Photo, attrs
+    photo = should_make_with_custom_attributes Photo, method, attrs
     photo.person.flickrid.should == 'other_poster_person_flickrid'
   end
 
@@ -314,7 +314,7 @@ describe Comment do
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
     }
-    comment = should_make_with_custom_attributes method, Comment, attrs
+    comment = should_make_with_custom_attributes Comment, method, attrs
     comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
   end
 
@@ -387,7 +387,7 @@ describe Guess do
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    guess = should_make_with_custom_attributes method, Guess, attrs
+    guess = should_make_with_custom_attributes Guess, method, attrs
     guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
   end
@@ -457,7 +457,7 @@ describe Revelation do
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    revelation = should_make_with_custom_attributes method, Revelation, attrs
+    revelation = should_make_with_custom_attributes Revelation, method, attrs
     revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
   end
 
@@ -479,7 +479,7 @@ def id_should_have_default_value(method, object)
   end
 end
 
-def should_make_with_custom_attributes(method, model_class, expected_attrs)
+def should_make_with_custom_attributes(model_class, method, expected_attrs)
   if method == :make
     expected_attrs.merge!({ :id => 1 })
   end
