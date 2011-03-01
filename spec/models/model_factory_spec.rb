@@ -202,7 +202,7 @@ describe Photo do
   end
 
   def should_make_photo_with_custom_attributes(method)
-    photo = should_make_with_custom_attributes Photo, method, {
+    should_make_with_custom_attributes Photo, method, {
       :person => Person.send(method, 'other_poster'),
       :flickrid => 'other_photo_flickrid',
       :farm => '1',
@@ -217,7 +217,6 @@ describe Photo do
       :member_comments => 1,
       :member_questions => 1
     }
-    photo.person.flickrid.should == 'other_poster_person_flickrid'
   end
 
   def should_make_labeled_photo(method)
@@ -270,14 +269,13 @@ describe Comment do
   end
 
   def should_make_comment_with_custom_attributes(method)
-    comment = should_make_with_custom_attributes Comment, method, {
+    should_make_with_custom_attributes Comment, method, {
       :photo => Photo.send(method, 'other_commented_photo'),
       :flickrid => 'other_commenter_flickrid',
       :username => 'other_commenter_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
     }
-    comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
   end
 
   def should_make_labeled_comment(method)
@@ -332,15 +330,13 @@ describe Guess do
   end
 
   def should_make_guess_with_custom_attributes(method)
-    guess = should_make_with_custom_attributes Guess, method, {
+    should_make_with_custom_attributes Guess, method, {
       :photo => Photo.send(method, 'other_guessed_photo'),
       :person => Person.send(method, 'other_guesser'),
       :guess_text => 'other guess text',
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
-    guess.person.flickrid.should == 'other_guesser_person_flickrid'
   end
 
   def should_make_labeled_guess(method)
@@ -393,13 +389,12 @@ describe Revelation do
   end
 
   def should_make_revelation_with_custom_attributes(method)
-    revelation = should_make_with_custom_attributes Revelation, method, {
+    should_make_with_custom_attributes Revelation, method, {
       :photo => Photo.send(method, 'other_revealed_photo'),
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
   end
 
   def should_make_labeled_revelation(method)
@@ -456,6 +451,4 @@ def should_make_with_custom_attributes(model_class, method, expected_attrs)
   end
 
   munged_actual_attrs.except('id').should == munged_expected_attrs.except('id')
-
-  object
 end
