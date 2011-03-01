@@ -404,24 +404,11 @@ end
 
 # Utilities
 
-def should_make_with_custom_attributes(model_class, method, expected_attrs)
-  instance = model_class.send method, expected_attrs
-
+def should_make_with_custom_attributes(model_class, method, attrs_in)
+  instance = model_class.send method, attrs_in
   actual_attrs = update_nil_id_attributes instance
-
-  munged_expected_attrs = {}
-  expected_attrs.each_pair do |key, val|
-    # Convert the symbol keys used in tests to the string keys returned by .attributes
-    key = key.to_s
-    # Copy a child object attr to the corresponding ID attr
-    if val.is_a? ActiveRecord::Base
-      key += "_id"
-      val = val.id
-    end
-    munged_expected_attrs[key] = val
-  end
-
-  actual_attrs.except('id').should == munged_expected_attrs.except('id')
+  expected_attrs = replace_object_attributes_with_id_attributes stringify_keys attrs_in
+  actual_attrs.except('id').should == expected_attrs.except('id')
 end
 
 # A nil ID attr means that this object hasn't been saved, so the ID of the
@@ -434,6 +421,26 @@ def update_nil_id_attributes object
       val = object.send($1).id
     end
     updated_attrs[key] = val
+  end
+  updated_attrs
+end
+
+def replace_object_attributes_with_id_attributes attrs
+  updated_attrs = {}
+  attrs.each_pair do |key, val|
+    if val.is_a? ActiveRecord::Base
+      key += "_id"
+      val = val.id
+    end
+    updated_attrs[key] = val
+  end
+  updated_attrs
+end
+
+def stringify_keys attrs
+  updated_attrs = {}
+  attrs.each_pair do |key, val|
+    updated_attrs[key.to_s.to_s] = val
   end
   updated_attrs
 end
