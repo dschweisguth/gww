@@ -115,7 +115,7 @@ end
 
 describe Person do
   describe '.make' do
-    before :all do # TODO Dave I think :all breaks this
+    before do
       stub(Person).construction_method { :make }
     end
 
@@ -171,7 +171,7 @@ end
 
 describe Photo do
   describe '.make' do
-    before :all do
+    before do
       # TODO Dave I think I need to stub classes that this one will use, too
       stub(Photo).construction_method { :make }
     end
@@ -250,7 +250,7 @@ end
 
 describe Comment do
   describe '.make' do
-    before :all do
+    before do
       stub(Comment).construction_method { :make }
     end
 
@@ -314,7 +314,7 @@ end
 
 describe Guess do
   describe '.make' do
-    before :all do
+    before do
       stub(Guess).construction_method { :make }
     end
 
@@ -377,7 +377,7 @@ end
 
 describe Revelation do
   describe '.make' do
-    before :all do
+    before do
       stub(Revelation).construction_method { :make }
     end
 
