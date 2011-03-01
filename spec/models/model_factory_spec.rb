@@ -103,9 +103,7 @@ describe FlickrUpdate do
       :member_count => 1,
       :completed_at => Time.utc(2011, 2)
     }
-    update = FlickrUpdate.send method, attrs.merge(extra_attrs)
-    id_should_have_custom_value method, update, extra_attrs[:id]
-    should_have_attrs update, attrs
+    should_make_with_custom_attributes method, FlickrUpdate, attrs, extra_attrs
   end
 
 end
@@ -161,9 +159,7 @@ describe Person do
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     }
-    person = Person.send method, attrs.merge(extra_attrs)
-    id_should_have_custom_value method, person, extra_attrs[:id]
-    should_have_attrs person, attrs
+    should_make_with_custom_attributes method, Person, attrs, extra_attrs
   end
 
   def should_make_labeled_person(method)
@@ -248,9 +244,7 @@ describe Photo do
       :member_comments => 1,
       :member_questions => 1
     }
-    photo = Photo.send method, attrs.merge(extra_attrs)
-    id_should_have_custom_value method, photo, extra_attrs[:id]
-    should_have_attrs photo, attrs
+    photo = should_make_with_custom_attributes method, Photo, attrs, extra_attrs
     photo.person.flickrid.should == 'other_poster_person_flickrid'
   end
 
@@ -320,9 +314,7 @@ describe Comment do
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
     }
-    comment = Comment.send method, attrs.merge(extra_attrs)
-    id_should_have_custom_value method, comment, extra_attrs[:id]
-    should_have_attrs comment, attrs
+    comment = should_make_with_custom_attributes method, Comment, attrs, extra_attrs
     comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
   end
 
@@ -395,9 +387,7 @@ describe Guess do
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    guess = Guess.send method, attrs.merge(extra_attrs)
-    id_should_have_custom_value method, guess, extra_attrs[:id]
-    should_have_attrs guess, attrs
+    guess = should_make_with_custom_attributes method, Guess, attrs, extra_attrs
     guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
   end
@@ -467,9 +457,7 @@ describe Revelation do
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    revelation = Revelation.send method, attrs.merge(extra_attrs)
-    id_should_have_custom_value method, revelation, extra_attrs[:id]
-    should_have_attrs revelation, attrs
+    revelation = should_make_with_custom_attributes method, Revelation, attrs, extra_attrs
     revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
   end
 
@@ -489,6 +477,13 @@ def id_should_have_default_value(method, object)
   else
     object.id.should_not be_nil
   end
+end
+
+def should_make_with_custom_attributes(method, model_class, attrs, extra_attrs)
+  update = model_class.send method, attrs.merge(extra_attrs)
+  id_should_have_custom_value method, update, extra_attrs[:id]
+  should_have_attrs update, attrs
+  update
 end
 
 def id_should_have_custom_value(method, object, id)
