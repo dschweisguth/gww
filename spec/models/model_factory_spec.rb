@@ -419,21 +419,21 @@ def should_make_with_custom_attributes(model_class, method, expected_attrs)
   if method == :make
     expected_attrs.merge!({ :id => 1 })
   end
-  object = model_class.send method, expected_attrs
+  instance = model_class.send method, expected_attrs
 
   if method == :make
-    object.id.should == 1
+    instance.id.should == 1
   else
-    object.id.should_not be_nil
+    instance.id.should_not be_nil
   end
 
   munged_actual_attrs = {}
-  actual_attrs = object.attributes
+  actual_attrs = instance.attributes
   actual_attrs.each_pair do |key, val|
     # A nil ID attr means that this object hasn't been saved, so the ID of the
     # child object corresponding to the ID hasn't been copied to the ID. Do so.
     if key =~ /^(.*)_id$/ && val.nil?
-      val = object.send($1).id
+      val = instance.send($1).id
     end
     munged_actual_attrs[key] = val
   end
