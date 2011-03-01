@@ -90,12 +90,11 @@ describe FlickrUpdate do
   end
 
   def should_make_flickr_update_with_custom_attributes(method)
-    attrs = {
+    should_make_with_custom_attributes FlickrUpdate, method, {
       :created_at => Time.utc(2011),
       :member_count => 1,
       :completed_at => Time.utc(2011, 2)
     }
-    should_make_with_custom_attributes FlickrUpdate, method, attrs
   end
 
 end
@@ -139,11 +138,10 @@ describe Person do
   end
 
   def should_make_person_with_custom_attributes(method)
-    attrs = {
+    should_make_with_custom_attributes Person, method, {
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     }
-    should_make_with_custom_attributes Person, method, attrs
   end
 
   def should_make_labeled_person(method)
@@ -204,9 +202,8 @@ describe Photo do
   end
 
   def should_make_photo_with_custom_attributes(method)
-    person = Person.send method, 'other_poster'
-    attrs = {
-      :person => person,
+    photo = should_make_with_custom_attributes Photo, method, {
+      :person => Person.send(method, 'other_poster'),
       :flickrid => 'other_photo_flickrid',
       :farm => '1',
       :server => 'other_server',
@@ -220,7 +217,6 @@ describe Photo do
       :member_comments => 1,
       :member_questions => 1
     }
-    photo = should_make_with_custom_attributes Photo, method, attrs
     photo.person.flickrid.should == 'other_poster_person_flickrid'
   end
 
@@ -274,15 +270,13 @@ describe Comment do
   end
 
   def should_make_comment_with_custom_attributes(method)
-    photo = Photo.send method, 'other_commented_photo'
-    attrs = {
-      :photo => photo,
+    comment = should_make_with_custom_attributes Comment, method, {
+      :photo => Photo.send(method, 'other_commented_photo'),
       :flickrid => 'other_commenter_flickrid',
       :username => 'other_commenter_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
     }
-    comment = should_make_with_custom_attributes Comment, method, attrs
     comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
   end
 
@@ -338,16 +332,13 @@ describe Guess do
   end
 
   def should_make_guess_with_custom_attributes(method)
-    photo = Photo.send method, 'other_guessed_photo'
-    guesser = Person.send method, 'other_guesser'
-    attrs = {
-      :photo => photo,
-      :person => guesser,
+    guess = should_make_with_custom_attributes Guess, method, {
+      :photo => Photo.send(method, 'other_guessed_photo'),
+      :person => Person.send(method, 'other_guesser'),
       :guess_text => 'other guess text',
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    guess = should_make_with_custom_attributes Guess, method, attrs
     guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
   end
@@ -402,14 +393,12 @@ describe Revelation do
   end
 
   def should_make_revelation_with_custom_attributes(method)
-    photo = Photo.send method, 'other_revealed_photo'
-    attrs = {
-      :photo => photo,
+    revelation = should_make_with_custom_attributes Revelation, method, {
+      :photo => Photo.send(method, 'other_revealed_photo'),
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    revelation = should_make_with_custom_attributes Revelation, method, attrs
     revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
   end
 
