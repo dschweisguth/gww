@@ -1,13 +1,7 @@
 module ModelFactory
-  def make(label = '', options = {})
-    do_make construction_method, label, options
-  end
+  def make(label = '', caller_options = {})
+    method = construction_method
 
-  def construction_method
-    caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :new : :create!
-  end
-
-  def do_make(calling_method, label, caller_options)
     if label.is_a? Hash
       caller_options = label
       label = ''
@@ -25,20 +19,20 @@ module ModelFactory
     # When testing the model layer, we always use :create! and let ActiveRecord manage @id.
     id = caller_options[:id]
     if id
-      if calling_method != :new
+      if method != :new
         raise ArgumentError, "Can't specify :id for an object which is to be create!d in the database"
       end
       caller_options.delete :id
     else
-      if calling_method == :new
+      if method == :new
         id = 0
       end
     end
 
-    options = options calling_method, padded_label, caller_options
+    options = options method, padded_label, caller_options
     options.merge! caller_options
 
-    instance = send calling_method, options
+    instance = send method, options
 
     if id
       instance.id = id
@@ -46,7 +40,10 @@ module ModelFactory
 
     instance
   end
-  private :do_make
+
+  def construction_method
+    caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :new : :create!
+  end
 
 end
 
