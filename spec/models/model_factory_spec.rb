@@ -459,7 +459,7 @@ def update_nil_id_attributes object
   updated_attrs = {}
   object.attributes.each_pair do |key, val|
     if key =~ /^(.*)_id$/ && val.nil?
-      val = object.send($1).id # TODO Dave why isn't this covered?
+      val = object.send($1).id
     end
     updated_attrs[key] = val
   end
