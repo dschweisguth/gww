@@ -405,16 +405,7 @@ end
 # Utilities
 
 def should_make_with_custom_attributes(model_class, method, expected_attrs)
-  if method == :make
-    expected_attrs.merge!({ :id => 1 })
-  end
   instance = model_class.send method, expected_attrs
-
-  if method == :make
-    instance.id.should == 1
-  else
-    instance.id.should_not be_nil
-  end
 
   munged_actual_attrs = {}
   actual_attrs = instance.attributes
