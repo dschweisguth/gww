@@ -407,7 +407,7 @@ end
 def should_make_with_custom_attributes(model_class, method, expected_attrs)
   instance = model_class.send method, expected_attrs
 
-  actual_attrs = copy_child_object_ids_to_id_attributes instance
+  actual_attrs = update_nil_id_attributes instance
 
   munged_expected_attrs = {}
   expected_attrs.each_pair do |key, val|
@@ -427,7 +427,7 @@ end
 # A nil ID attr means that this object hasn't been saved, so the ID of the
 # object attr corresponding to the ID hasn't been copied to the ID attr.
 # This method does that.
-def copy_child_object_ids_to_id_attributes object
+def update_nil_id_attributes object
   updated_attrs = {}
   object.attributes.each_pair do |key, val|
     if key =~ /^(.*)_id$/ && val.nil?
