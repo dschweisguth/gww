@@ -494,6 +494,8 @@ def should_make_with_custom_attributes(method, model_class, expected_attrs)
   munged_actual_attrs = {}
   actual_attrs = object.attributes
   actual_attrs.each_pair do |key, val|
+    # A nil ID attr means that this object hasn't been saved, so the ID of the
+    # child object corresponding to the ID hasn't been copied to the ID. Do so.
     if key =~ /^(.*)_id$/ && val.nil?
       val = object.send($1).id
     end
@@ -502,7 +504,9 @@ def should_make_with_custom_attributes(method, model_class, expected_attrs)
 
   munged_expected_attrs = {}
   expected_attrs.each_pair do |key, val|
+    # Convert the symbol keys used in tests to the string keys returned by .attributes
     key = key.to_s
+    # Copy a child object attr to the corresponding ID attr
     if val.is_a? ActiveRecord::Base
       key += "_id"
       val = val.id
