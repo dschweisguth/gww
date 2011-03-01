@@ -10,8 +10,8 @@ describe FlickrUpdate do
 
   describe '.latest' do
     it 'returns the most recent update' do
-      FlickrUpdate.make!
-      most_recent_update = FlickrUpdate.make!
+      FlickrUpdate.make
+      most_recent_update = FlickrUpdate.make
       FlickrUpdate.latest.should == most_recent_update
     end
   end

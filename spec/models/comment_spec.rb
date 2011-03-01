@@ -16,7 +16,7 @@ describe Comment do
 
     it 'should handle non-ASCII characters' do
       non_ascii_username = '猫娘/ nekomusume'
-      Comment.make! :username => non_ascii_username
+      Comment.make :username => non_ascii_username
       Comment.all[0].username.should == non_ascii_username
     end
 
@@ -28,7 +28,7 @@ describe Comment do
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
-      Comment.make! :comment_text => non_ascii_text
+      Comment.make :comment_text => non_ascii_text
       Comment.all[0].comment_text.should == non_ascii_text
     end
 

@@ -92,70 +92,70 @@ describe Photo do
 
   describe '.first_by' do
     it "returns the poster's first post" do
-      poster = Person.make!
-      Photo.make! 'second', :person => poster, :dateadded => Time.utc(2001)
-      first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
+      poster = Person.make
+      Photo.make 'second', :person => poster, :dateadded => Time.utc(2001)
+      first = Photo.make 'first', :person => poster, :dateadded => Time.utc(2000)
       Photo.first_by(poster).should == first
     end
 
     it "ignores other posters' photos" do
-      Photo.make!
-      Photo.first_by(Person.make!).should be_nil
+      Photo.make
+      Photo.first_by(Person.make).should be_nil
     end
 
   end
 
   describe '.most_recent_by' do
     it "returns the poster's most recent post" do
-      poster = Person.make!
-      Photo.make! 'penultimate', :person => poster, :dateadded => Time.utc(2000)
-      most_recent = Photo.make! 'most_recent', :person => poster, :dateadded => Time.utc(2001)
+      poster = Person.make
+      Photo.make 'penultimate', :person => poster, :dateadded => Time.utc(2000)
+      most_recent = Photo.make 'most_recent', :person => poster, :dateadded => Time.utc(2001)
       Photo.most_recent_by(poster).should == most_recent
     end
 
     it "ignores other posters' photos" do
-      Photo.make!
-      Photo.most_recent_by(Person.make!).should be_nil
+      Photo.make
+      Photo.most_recent_by(Person.make).should be_nil
     end
 
   end
 
   describe '.oldest_unfound' do
     it "returns the poster's oldest unfound" do
-      poster = Person.make!
-      Photo.make! 'second', :person => poster, :dateadded => Time.utc(2001)
-      first = Photo.make! 'first', :person => poster, :dateadded => Time.utc(2000)
+      poster = Person.make
+      Photo.make 'second', :person => poster, :dateadded => Time.utc(2001)
+      first = Photo.make 'first', :person => poster, :dateadded => Time.utc(2000)
       oldest_unfound = Photo.oldest_unfound poster
       oldest_unfound.should == first
       oldest_unfound[:place].should == 1
     end
 
     it "ignores other posters' photos" do
-      Photo.make!
-      Photo.oldest_unfound(Person.make!).should be_nil
+      Photo.make
+      Photo.oldest_unfound(Person.make).should be_nil
     end
 
     it "considers unconfirmed photos" do
-      photo = Photo.make! :game_status => 'unconfirmed'
+      photo = Photo.make :game_status => 'unconfirmed'
       Photo.oldest_unfound(photo.person).should == photo
     end
 
     it "ignores game statuses other than unfound and unconfirmed" do
-      photo = Photo.make! :game_status => 'found'
+      photo = Photo.make :game_status => 'found'
       Photo.oldest_unfound(photo.person).should be_nil
     end
 
     it "considers other posters' oldest unfounds when calculating place" do
-      Photo.make! 'oldest', :dateadded => Time.utc(2000)
-      next_oldest = Photo.make! 'next_oldest', :dateadded => Time.utc(2001)
+      Photo.make 'oldest', :dateadded => Time.utc(2000)
+      next_oldest = Photo.make 'next_oldest', :dateadded => Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound[:place].should == 2
     end
 
     it "considers unconfirmed photos when calculating place" do
-      Photo.make! 'oldest', :dateadded => Time.utc(2000), :game_status => 'unconfirmed'
-      next_oldest = Photo.make! 'next_oldest', :dateadded => Time.utc(2001)
+      Photo.make 'oldest', :dateadded => Time.utc(2000), :game_status => 'unconfirmed'
+      next_oldest = Photo.make 'next_oldest', :dateadded => Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound[:place].should == 2
@@ -179,9 +179,9 @@ describe Photo do
     end
 
     it 'returns photos sorted by username, dateadded' do
-      person = Person.make!
-      photo1 = Photo.make! 1, :person => person, :dateadded => Time.utc(2010)
-      photo2 = Photo.make! 2, :person => person, :dateadded => Time.utc(2011)
+      person = Person.make
+      photo1 = Photo.make 1, :person => person, :dateadded => Time.utc(2010)
+      photo2 = Photo.make 2, :person => person, :dateadded => Time.utc(2011)
       Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
@@ -260,10 +260,10 @@ describe Photo do
     def all_sorted_and_paginated_should_reverse_photos(sorted_by,
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
-      person1 = Person.make! 1, person_1_options
-      photo1 = Photo.make! 1, photo_1_options.merge({ :person => person1 })
-      person2 = Person.make! 2, person_2_options
-      photo2 = Photo.make! 2, photo_2_options.merge({ :person => person2 })
+      person1 = Person.make 1, person_1_options
+      photo1 = Photo.make 1, photo_1_options.merge({ :person => person1 })
+      person2 = Person.make 2, person_2_options
+      photo2 = Photo.make 2, photo_2_options.merge({ :person => person2 })
       Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
 
     end
@@ -273,14 +273,14 @@ describe Photo do
   describe '.unfound_or_unconfirmed' do
     %w(unfound unconfirmed).each do |game_status|
       it "returns #{game_status} photos" do
-        photo = Photo.make! :game_status => game_status
+        photo = Photo.make :game_status => game_status
         Photo.unfound_or_unconfirmed.should == [ photo ]
       end
     end
 
     %w(found revealed).each do |game_status|
       it "ignores #{game_status} photos" do
-        Photo.make! :game_status => game_status
+        Photo.make :game_status => game_status
         Photo.unfound_or_unconfirmed.should == []
       end
     end
@@ -291,23 +291,23 @@ describe Photo do
 
   describe '.most_viewed_in_2010' do
     it 'lists photos' do
-      photo = Photo.make! :dateadded => Time.utc(2010)
+      photo = Photo.make :dateadded => Time.utc(2010)
       Photo.most_viewed_in_2010.should == [ photo ]
     end
 
     it 'sorts by views' do
-      photo1 = Photo.make! 1, :dateadded => Time.utc(2010), :views => 0
-      photo2 = Photo.make! 2, :dateadded => Time.utc(2010), :views => 1
+      photo1 = Photo.make 1, :dateadded => Time.utc(2010), :views => 0
+      photo2 = Photo.make 2, :dateadded => Time.utc(2010), :views => 1
       Photo.most_viewed_in_2010.should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before 2010' do
-      Photo.make! :dateadded => Time.utc(2009)
+      Photo.make :dateadded => Time.utc(2009)
       Photo.most_viewed_in_2010.should == []
     end
 
     it 'ignores photos from after 2010' do
-      Photo.make! :dateadded => Time.utc(2011)
+      Photo.make :dateadded => Time.utc(2011)
       Photo.most_viewed_in_2010.should == []
     end
 
@@ -315,29 +315,29 @@ describe Photo do
 
   describe '.most_commented_in_2010' do
     it 'lists photos' do
-      photo = Photo.make! :dateadded => Time.utc(2010)
-      Comment.make! :photo => photo
+      photo = Photo.make :dateadded => Time.utc(2010)
+      Comment.make :photo => photo
       Photo.most_commented_in_2010.should == [ photo ]
     end
 
     it 'sorts by comment count' do
-      photo1 = Photo.make! 1, :dateadded => Time.utc(2010)
-      Comment.make! 11, :photo => photo1
-      photo2 = Photo.make! 2, :dateadded => Time.utc(2010)
-      Comment.make! 21, :photo => photo2
-      Comment.make! 22, :photo => photo2
+      photo1 = Photo.make 1, :dateadded => Time.utc(2010)
+      Comment.make 11, :photo => photo1
+      photo2 = Photo.make 2, :dateadded => Time.utc(2010)
+      Comment.make 21, :photo => photo2
+      Comment.make 22, :photo => photo2
       Photo.most_commented_in_2010.should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before 2010' do
-      photo = Photo.make! :dateadded => Time.utc(2009)
-      Comment.make! :photo => photo
+      photo = Photo.make :dateadded => Time.utc(2009)
+      Comment.make :photo => photo
       Photo.most_commented_in_2010.should == []
     end
 
     it 'ignores photos from after 2010' do
-      photo = Photo.make! :dateadded => Time.utc(2011)
-      Comment.make! :photo => photo
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Comment.make :photo => photo
       Photo.most_commented_in_2010.should == []
     end
 
@@ -348,14 +348,14 @@ describe Photo do
   describe '.unfound_or_unconfirmed_count' do
     %w(unfound unconfirmed).each do |game_status|
       it "counts #{game_status} photos" do
-        Photo.make! :game_status => game_status
+        Photo.make :game_status => game_status
         Photo.unfound_or_unconfirmed_count.should == 1
       end
     end
 
     %w(found revealed).each do |game_status|
       it "ignores #{game_status} photos" do
-        Photo.make! :game_status => game_status
+        Photo.make :game_status => game_status
         Photo.unfound_or_unconfirmed_count.should == 0
       end
     end
@@ -412,7 +412,7 @@ describe Photo do
     end
 
     it 'uses an existing person, and updates their username if it changed' do
-      person_before = Person.make! :flickrid => 'person_flickrid', :username => 'old_username'
+      person_before = Person.make :flickrid => 'person_flickrid', :username => 'old_username'
       Photo.update_all_from_flickr.should == [ 1, 0, 1, 1 ]
       people = Person.all
       people.size.should == 1
@@ -426,8 +426,8 @@ describe Photo do
     it 'uses an existing photo, and updates attributes that changed' do
       # It should never happen that a photo's user's flickrid changes, so make
       # the existing user's flickrid the same as in the mocked response
-      person = Person.make! :flickrid => 'person_flickrid'
-      photo_before = Photo.make! \
+      person = Person.make :flickrid => 'person_flickrid'
+      photo_before = Photo.make \
         :person => person,
         :flickrid => 'photo_flickrid',
         :farm => '1',
@@ -466,7 +466,7 @@ describe Photo do
 
   describe '.update_seen_at' do
     it 'updates seen_at' do
-      photo = Photo.make! :seen_at => Time.utc(2010)
+      photo = Photo.make :seen_at => Time.utc(2010)
       Photo.update_seen_at [ photo.flickrid ], Time.utc(2011)
       photo.reload
       photo.seen_at.should == Time.utc(2011)
@@ -475,8 +475,8 @@ describe Photo do
 
   describe '.update_statistics' do
     it 'counts comments on guessed photos' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at
       Photo.update_statistics
@@ -485,8 +485,8 @@ describe Photo do
     end
 
     it 'ignores comments by the poster' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username
       Photo.update_statistics
       guess.photo.reload
@@ -494,19 +494,19 @@ describe Photo do
     end
 
     it 'ignores comments by non-members' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo
+      guess = Guess.make
+      Comment.make :photo => guess.photo
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_comments.should == 0
     end
 
     it 'counts comments other than the guess' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at - 5
-      Comment.make! :photo => guess.photo,
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at
       Photo.update_statistics
@@ -515,11 +515,11 @@ describe Photo do
     end
 
     it 'ignores comments after the guess' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at
-      Comment.make! :photo => guess.photo,
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at + 5
       Photo.update_statistics
@@ -528,8 +528,8 @@ describe Photo do
     end
 
     it 'counts questions on guessed photos' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at, :comment_text => '?'
       Photo.update_statistics
@@ -538,8 +538,8 @@ describe Photo do
     end
 
     it 'ignores questions by the poster' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username,
         :comment_text => '?'
       Photo.update_statistics
@@ -548,19 +548,19 @@ describe Photo do
     end
 
     it 'ignores questions by non-members' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo, :comment_text => '?'
+      guess = Guess.make
+      Comment.make :photo => guess.photo, :comment_text => '?'
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_questions.should == 0
     end
 
     it 'counts questions other than the guess' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at - 5, :comment_text => '?'
-      Comment.make! :photo => guess.photo,
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at, :comment_text => '?'
       Photo.update_statistics
@@ -569,11 +569,11 @@ describe Photo do
     end
 
     it 'ignores questions after the guess' do
-      guess = Guess.make!
-      Comment.make! :photo => guess.photo,
+      guess = Guess.make
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at, :comment_text => '?'
-      Comment.make! :photo => guess.photo,
+      Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :commented_at => guess.guessed_at + 5, :comment_text => '?'
       Photo.update_statistics
@@ -585,14 +585,14 @@ describe Photo do
 
   describe '.multipoint' do
     it 'returns photos for which more than one person got a point' do
-      photo = Photo.make!
-      Guess.make! 1, :photo => photo
-      Guess.make! 2, :photo => photo
+      photo = Photo.make
+      Guess.make 1, :photo => photo
+      Guess.make 2, :photo => photo
       Photo.multipoint.should == [ photo ]
     end
 
     it 'ignores photos for which only one person got a point' do
-      Guess.make!
+      Guess.make
       Photo.multipoint.should == []
     end
 
@@ -600,7 +600,7 @@ describe Photo do
 
   describe '#load_comments' do
     before do
-      @photo = Photo.make!
+      @photo = Photo.make
     end
 
     it 'loads comments from Flickr' do
@@ -609,7 +609,7 @@ describe Photo do
     end
 
     it 'deletes previous comments' do
-      Comment.make! 'previous', :photo => @photo
+      Comment.make 'previous', :photo => @photo
       stub_request_to_return_one_comment
       should_be_the_comment_from_the_request @photo.load_comments
     end
@@ -636,7 +636,7 @@ describe Photo do
     end
 
     it 'but not if the photo currently has no comments' do
-      Comment.make! 'previous', :photo => @photo
+      Comment.make 'previous', :photo => @photo
       empty_parsed_xml = {
         'comments' => [ {
         } ]
@@ -652,23 +652,23 @@ describe Photo do
 
   describe '.change_game_status' do
     it "changes the photo's status" do
-      photo = Photo.make!
+      photo = Photo.make
       Photo.change_game_status photo.id, 'unconfirmed'
       photo.reload
       photo.game_status.should == 'unconfirmed'
     end
 
     it 'deletes existing guesses' do
-      photo = Photo.make!
-      guess = Guess.make! :photo => photo
+      photo = Photo.make
+      guess = Guess.make :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
       owner_should_not_exist guess
     end
 
     it 'deletes existing revelations' do
-      photo = Photo.make!
-      Revelation.make! :photo => photo
+      photo = Photo.make
+      Revelation.make :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Revelation.count.should == 0
     end
@@ -678,8 +678,8 @@ describe Photo do
   describe '.add_answer' do
     describe 'when adding a guess' do
       it 'adds a guess' do
-        guesser = Person.make!
-        comment = Comment.make! :flickrid => guesser.flickrid,
+        guesser = Person.make
+        comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Photo.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo
@@ -691,7 +691,7 @@ describe Photo do
       end
 
       it 'creates the guesser if necessary' do
-        comment = Comment.make!
+        comment = Comment.make
         Photo.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
@@ -699,10 +699,10 @@ describe Photo do
       end
 
       it 'gives the point to another user' do
-        scorer = Person.make! 'scorer'
-        scorer_comment = Comment.make! 'scorer',
+        scorer = Person.make 'scorer'
+        scorer_comment = Comment.make 'scorer',
           :flickrid => scorer.flickrid, :username => scorer.username
-        answer_comment = Comment.make! 'answer', :commented_at => Time.utc(2011)
+        answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         Photo.add_answer answer_comment.id, scorer_comment.username
         guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
         guess.person.flickrid.should == scorer_comment.flickrid
@@ -714,8 +714,8 @@ describe Photo do
       end
 
       it 'updates an existing guess' do
-        old_guess = Guess.make!
-        comment = Comment.make! :photo => old_guess.photo,
+        old_guess = Guess.make
+        comment = Comment.make :photo => old_guess.photo,
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
         Photo.add_answer comment.id, ''
@@ -729,10 +729,10 @@ describe Photo do
       end
 
       it 'deletes an existing revelation' do
-        guesser = Person.make!
-        comment = Comment.make! :flickrid => guesser.flickrid,
+        guesser = Person.make
+        comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
-        Revelation.make! :photo => comment.photo
+        Revelation.make :photo => comment.photo
         Photo.add_answer comment.id, ''
         Revelation.count.should == 0
       end
@@ -741,8 +741,8 @@ describe Photo do
 
     describe 'when adding a revelation' do
       it 'adds a revelation' do
-        photo = Photo.make!
-        comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
+        photo = Photo.make
+        comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         Photo.add_answer comment.id, ''
         photo.reload
@@ -753,8 +753,8 @@ describe Photo do
       end
 
       it 'updates an existing revelation' do
-        old_revelation = Revelation.make!
-        comment = Comment.make! :photo => old_revelation.photo,
+        old_revelation = Revelation.make
+        comment = Comment.make :photo => old_revelation.photo,
           :flickrid => old_revelation.photo.person.flickrid,
           :username => old_revelation.photo.person.username,
           :commented_at => Time.utc(2011)
@@ -769,10 +769,10 @@ describe Photo do
       end
 
       it 'deletes an existing guess' do
-        photo = Photo.make!
-        comment = Comment.make! :photo => photo, :flickrid => photo.person.flickrid,
+        photo = Photo.make
+        comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
-        guess = Guess.make! :photo => photo
+        guess = Guess.make :photo => photo
         Photo.add_answer comment.id, ''
         Guess.count.should == 0
         owner_should_not_exist guess
@@ -785,9 +785,9 @@ describe Photo do
   describe '.remove_answer' do
     describe "when the commenter didn't post the photo" do
       it 'removes a guess' do
-        photo = Photo.make! :game_status => 'found'
-        guess = Guess.make! :photo => photo
-        comment = Comment.make! :photo => photo,
+        photo = Photo.make :game_status => 'found'
+        guess = Guess.make :photo => photo
+        comment = Comment.make :photo => photo,
           :flickrid => guess.person.flickrid, :username => guess.person.username,
           :comment_text => guess.guess_text
         Photo.remove_answer comment.id
@@ -798,13 +798,13 @@ describe Photo do
       end
 
       it "leaves the photo found if there's another guess" do
-        photo = Photo.make! :game_status => 'found'
-        guess1 = Guess.make! 1, :photo => photo
-        comment1 = Comment.make! 1, :photo => photo,
+        photo = Photo.make :game_status => 'found'
+        guess1 = Guess.make 1, :photo => photo
+        comment1 = Comment.make 1, :photo => photo,
           :flickrid => guess1.person.flickrid, :username => guess1.person.username,
           :comment_text => guess1.guess_text
-        guess2 = Guess.make! 2, :photo => photo
-        Comment.make! 2, :photo => photo,
+        guess2 = Guess.make 2, :photo => photo
+        Comment.make 2, :photo => photo,
           :flickrid => guess2.person.flickrid, :username => guess2.person.username,
           :comment_text => guess2.guess_text
         Photo.remove_answer comment1.id
@@ -814,8 +814,8 @@ describe Photo do
       end
 
       it "blows up if the commenter doesn't have a guess for this comment" do
-        person = Person.make!
-        comment = Comment.make! :flickrid => person.flickrid, :username => person.username
+        person = Person.make
+        comment = Comment.make :flickrid => person.flickrid, :username => person.username
         lambda { Photo.remove_answer comment.id }.should \
           raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a guess.'
       end
@@ -824,9 +824,9 @@ describe Photo do
 
     describe 'when the commenter did post the photo' do
       it 'removes a revelation' do
-        photo = Photo.make! :game_status => 'revealed'
-        revelation = Revelation.make! :photo => photo
-        comment = Comment.make! :photo => photo,
+        photo = Photo.make :game_status => 'revealed'
+        revelation = Revelation.make :photo => photo
+        comment = Comment.make :photo => photo,
           :flickrid => photo.person.flickrid, :username => photo.person.username,
           :comment_text => revelation.revelation_text
         Photo.remove_answer comment.id
@@ -836,9 +836,9 @@ describe Photo do
       end
 
       it "blows up if the commenter doesn't have a revelation for this comment" do
-        person = Person.make!
-        photo = Photo.make! :person => person
-        comment = Comment.make! :photo => photo, :flickrid => person.flickrid, :username => person.username
+        person = Person.make
+        photo = Photo.make :person => person
+        comment = Comment.make :photo => photo, :flickrid => person.flickrid, :username => person.username
         lambda { Photo.remove_answer comment.id }.should \
           raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a revelation.'
       end
@@ -846,7 +846,7 @@ describe Photo do
     end
 
     it "blows up if the commenter isn't in the database" do
-      comment = Comment.make!
+      comment = Comment.make
       lambda { Photo.remove_answer comment.id }.should \
         raise_error Photo::RemoveAnswerError, 'That comment has not been recorded as a guess or revelation.'
     end
@@ -855,20 +855,20 @@ describe Photo do
 
   describe '.destroy_photo_and_dependent_objects' do
     it 'destroys the photo and its person' do
-      photo = Photo.make!
+      photo = Photo.make
       Photo.destroy_photo_and_dependent_objects photo.id
       Photo.count.should == 0
       owner_should_not_exist photo
     end
 
     it "destroys the photo's revelation" do
-      revelation = Revelation.make!
+      revelation = Revelation.make
       Photo.destroy_photo_and_dependent_objects revelation.photo.id
       Revelation.count.should == 0
     end
 
     it "destroys the photo's guesses" do
-      guess = Guess.make!
+      guess = Guess.make
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
       owner_should_not_exist guess
@@ -878,7 +878,7 @@ describe Photo do
 
   describe '#destroy' do
     it 'destroys the photo and its person' do
-      photo = Photo.make!
+      photo = Photo.make
       photo.destroy
       Photo.count.should == 0
       owner_should_not_exist photo
@@ -889,14 +889,14 @@ describe Photo do
 
   describe '.count_since' do
     it 'counts photos' do
-      update = FlickrUpdate.make! :created_at => Time.utc(2011)
-      Photo.make! :dateadded => Time.utc(2011)
+      update = FlickrUpdate.make :created_at => Time.utc(2011)
+      Photo.make :dateadded => Time.utc(2011)
       Photo.count_since(update).should == 1
     end
 
     it 'ignores photos added before the last update' do
-      update = FlickrUpdate.make! :created_at => Time.utc(2011)
-      Photo.make! :dateadded => Time.utc(2010)
+      update = FlickrUpdate.make :created_at => Time.utc(2011)
+      Photo.make :dateadded => Time.utc(2010)
       Photo.count_since(update).should == 0
     end
 
@@ -904,9 +904,9 @@ describe Photo do
 
   describe '.add_posts' do
     it "adds each person's posts as an attribute" do
-      person = Person.make!
-      Photo.make! 1, :person => person
-      Photo.make! 2, :person => person
+      person = Person.make
+      Photo.make 1, :person => person
+      Photo.make 2, :person => person
       Photo.add_posts [ person ]
       person[:posts].should == 2
     end
