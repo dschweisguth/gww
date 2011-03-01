@@ -68,10 +68,6 @@ describe FlickrUpdate do
       should_make_flickr_update_with_custom_attributes :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database FlickrUpdate
-    end
-
   end
 
   describe '.make!' do
@@ -81,10 +77,6 @@ describe FlickrUpdate do
 
     it "overrides defaults" do
       should_make_flickr_update_with_custom_attributes :make!
-    end
-
-    it "saves it in the database" do
-      make_should_save_in_database! FlickrUpdate
     end
 
   end
@@ -122,10 +114,6 @@ describe Person do
       should_make_labeled_person :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database Person
-    end
-
   end
 
   describe '.make!' do
@@ -139,10 +127,6 @@ describe Person do
 
     it "labels it" do
       should_make_labeled_person :make!
-    end
-
-    it "saves it in the database" do
-      make_should_save_in_database! Person
     end
 
   end
@@ -184,10 +168,6 @@ describe Photo do
       should_make_labeled_photo :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database Photo
-    end
-
   end
 
   describe '.make!' do
@@ -201,10 +181,6 @@ describe Photo do
 
     it "labels it" do
       should_make_labeled_photo :make!
-    end
-
-    it "saves it in the database" do
-      make_should_save_in_database! Photo
     end
 
   end
@@ -270,10 +246,6 @@ describe Comment do
       should_make_labeled_comment :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database Comment
-    end
-
   end
 
   describe '.make!' do
@@ -287,10 +259,6 @@ describe Comment do
 
     it "labels it" do
       should_make_labeled_comment :make!
-    end
-
-    it "saves it in the database" do
-      make_should_save_in_database! Comment
     end
 
   end
@@ -342,10 +310,6 @@ describe Guess do
       should_make_labeled_guess :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database Guess
-    end
-
   end
 
   describe '.make!' do
@@ -359,10 +323,6 @@ describe Guess do
 
     it "labels it" do
       should_make_labeled_guess :make!
-    end
-
-    it "saves it in the database" do
-      make_should_save_in_database! Guess
     end
 
   end
@@ -415,10 +375,6 @@ describe Revelation do
       should_make_labeled_revelation :make
     end
 
-    it "doesn't save it in the database" do
-      make_should_not_save_in_database Revelation
-    end
-
   end
 
   describe '.make!' do
@@ -432,10 +388,6 @@ describe Revelation do
 
     it "labels it" do
       should_make_labeled_revelation :make!
-    end
-
-    it "saves it in the database" do
-      make_should_save_in_database! Revelation
     end
 
   end
@@ -517,14 +469,4 @@ def should_make_with_custom_attributes(model_class, method, expected_attrs)
   munged_actual_attrs.except('id').should == munged_expected_attrs.except('id')
 
   object
-end
-
-def make_should_not_save_in_database(model_class)
-  model_class.make
-  model_class.count.should == 0
-end
-
-def make_should_save_in_database!(model_class)
-  instance = model_class.make!
-  model_class.all.should == [ instance ]
 end
