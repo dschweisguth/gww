@@ -480,17 +480,15 @@ def id_should_have_default_value(method, object)
 end
 
 def should_make_with_custom_attributes(method, model_class, attrs, extra_attrs)
-  object = model_class.send method, attrs.merge(extra_attrs)
+  expected_attrs = attrs.merge(extra_attrs)
+  object = model_class.send method, expected_attrs
+
   if method == :make
     object.id.should == extra_attrs[:id]
   else
     object.id.should_not be_nil
   end
-  should_have_attrs object, attrs
-  object
-end
 
-def should_have_attrs(object, expected_attrs)
   munged_actual_attrs = {}
   actual_attrs = object.attributes
   actual_attrs.each_pair do |key, val|
@@ -511,6 +509,8 @@ def should_have_attrs(object, expected_attrs)
   end
 
   munged_actual_attrs.except('id').should == munged_expected_attrs
+
+  object
 end
 
 def make_should_not_save_in_database(model_class)
