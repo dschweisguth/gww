@@ -438,9 +438,5 @@ def replace_object_attributes_with_id_attributes attrs
 end
 
 def stringify_keys attrs
-  updated_attrs = {}
-  attrs.each_pair do |key, val|
-    updated_attrs[key.to_s.to_s] = val
-  end
-  updated_attrs
+  Hash[attrs.to_a.map { |pair| [ pair[0].to_s, pair[1] ] }]
 end
