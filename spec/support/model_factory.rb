@@ -51,9 +51,9 @@ class FlickrUpdate
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(calling_method, padded_label, caller_options)
+  def self.options(method, padded_label, caller_options)
     options = { :member_count => 0 }
-    if calling_method == :new && ! caller_options[:created_at]
+    if method == :new && ! caller_options[:created_at]
       options[:created_at] = Time.now
     end
     options
@@ -66,7 +66,7 @@ class Person
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(calling_method, padded_label, caller_options)
+  def self.options(method, padded_label, caller_options)
     {
       :flickrid => padded_label + 'person_flickrid',
       :username => padded_label + 'username'
@@ -79,7 +79,8 @@ end
 class Photo
   extend ModelFactory
 
-  def self.options(calling_method, padded_label, caller_options)
+  #noinspection RubyUnusedLocalVariable
+  def self.options(method, padded_label, caller_options)
     now = Time.now
     options = {
       :flickrid => padded_label + 'photo_flickrid',
@@ -105,7 +106,8 @@ end
 class Comment
   extend ModelFactory
 
-  def self.options(calling_method, padded_label, caller_options)
+  #noinspection RubyUnusedLocalVariable
+  def self.options(method, padded_label, caller_options)
     options = {
       :flickrid => padded_label + 'commenter_flickrid',
       :username => padded_label + 'commenter_username',
@@ -124,7 +126,8 @@ end
 class Guess
   extend ModelFactory
 
-  def self.options(calling_method, padded_label, caller_options)
+  #noinspection RubyUnusedLocalVariable
+  def self.options(method, padded_label, caller_options)
     now = Time.now
     options = {
       :guess_text => padded_label + 'guess text',
@@ -146,7 +149,8 @@ end
 class Revelation
   extend ModelFactory
 
-  def self.options(calling_method, padded_label, caller_options)
+  #noinspection RubyUnusedLocalVariable
+  def self.options(method, padded_label, caller_options)
     now = Time.now
     options = {
       :revelation_text => padded_label + 'revelation text',
