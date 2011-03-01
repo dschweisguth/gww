@@ -17,7 +17,8 @@ describe ModelFactory do
     it "handles no args" do
       mock(@factory).options(:make, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
-      @factory.make
+      instance = @factory.make
+      instance.id.should == 0 # i.e. it sets a default ID
     end
 
     it "handles options" do
@@ -40,8 +41,10 @@ describe ModelFactory do
 
     it "creates, too" do
       mock(@factory).options(:make!, '', {}) { {} }
-      mock(@factory).send :create!, {}
-      @factory.make!
+      @model_object.id = 666
+      mock(@factory).send(:create!, {}) { @model_object }
+      instance = @factory.make!
+      instance.id.should == 666 # i.e. it leaves the ActiveRecord ID alone
     end
 
     it "allows you to override the default id" do
@@ -51,7 +54,7 @@ describe ModelFactory do
       model_object_out.id.should == 666
     end
 
-    it "blows up if you try to override the default id for an object that will be saved in the database" do
+    it "blows up if you try to override the default id for an instance that will be saved in the database" do
       lambda { @factory.make! :id => 1 }.should raise_error ArgumentError
     end
 
@@ -83,7 +86,6 @@ describe FlickrUpdate do
 
   def should_make_default_flickr_update(method)
     update = FlickrUpdate.send method
-    id_should_have_default_value method, update
     update.created_at.should_not be_nil
     update.member_count.should == 0
     update.completed_at.should be_nil
@@ -132,7 +134,6 @@ describe Person do
 
   def should_make_default_person(method)
     person = Person.send method
-    id_should_have_default_value method, person
     person.flickrid.should == 'person_flickrid'
     person.username.should == 'username'
   end
@@ -185,7 +186,6 @@ describe Photo do
 
   def should_make_default_photo(method)
     photo = Photo.send method
-    id_should_have_default_value method, photo
     photo.person.flickrid.should == 'poster_person_flickrid'
     photo.flickrid.should == 'photo_flickrid'
     photo.farm.should == '0'
@@ -260,7 +260,6 @@ describe Comment do
 
   def should_make_default_comment(method)
     comment = Comment.send method
-    id_should_have_default_value method, comment
     comment.photo.flickrid.should == 'commented_photo_photo_flickrid'
     comment.flickrid.should == 'commenter_flickrid'
     comment.username.should == 'commenter_username'
@@ -321,7 +320,6 @@ describe Guess do
 
   def should_make_default_guess(method)
     guess = Guess.send method
-    id_should_have_default_value method, guess
     guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.guess_text.should == 'guess text'
@@ -381,7 +379,6 @@ describe Revelation do
 
   def should_make_default_revelation(method)
     revelation = Revelation.send method
-    id_should_have_default_value method, revelation
     revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'revelation text'
     revelation.revealed_at.should_not be_nil
@@ -406,14 +403,6 @@ describe Revelation do
 end
 
 # Utilities
-
-def id_should_have_default_value(method, object)
-  if method == :make
-    object.id.should == 0
-  else
-    object.id.should_not be_nil
-  end
-end
 
 def should_make_with_custom_attributes(model_class, method, expected_attrs)
   if method == :make
