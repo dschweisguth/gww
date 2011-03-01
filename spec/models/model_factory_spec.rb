@@ -76,35 +76,35 @@ describe FlickrUpdate do
     end
 
     it "makes one" do
-      should_make_default_flickr_update :make
+      should_make_default_flickr_update
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes :make
+      should_make_flickr_update_with_custom_attributes
     end
 
   end
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_flickr_update :make!
+      should_make_default_flickr_update
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes :make!
+      should_make_flickr_update_with_custom_attributes
     end
 
   end
 
-  def should_make_default_flickr_update(method)
-    update = FlickrUpdate.send method
+  def should_make_default_flickr_update
+    update = FlickrUpdate.make
     update.created_at.should_not be_nil
     update.member_count.should == 0
     update.completed_at.should be_nil
   end
 
-  def should_make_flickr_update_with_custom_attributes(method)
-    should_make_with_custom_attributes FlickrUpdate, method, {
+  def should_make_flickr_update_with_custom_attributes
+    should_make_with_custom_attributes FlickrUpdate, {
       :created_at => Time.utc(2011),
       :member_count => 1,
       :completed_at => Time.utc(2011, 2)
@@ -115,54 +115,54 @@ end
 
 describe Person do
   describe '.make' do
-    before :all do
+    before :all do # TODO Dave I think :all breaks this
       stub(Person).construction_method { :make }
     end
 
     it "makes one" do
-      should_make_default_person :make
+      should_make_default_person
     end
 
     it "overrides defaults" do
-      should_make_person_with_custom_attributes :make
+      should_make_person_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_person :make
+      should_make_labeled_person
     end
 
   end
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_person :make!
+      should_make_default_person
     end
 
     it "overrides_defaults" do
-      should_make_person_with_custom_attributes :make!
+      should_make_person_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_person :make!
+      should_make_labeled_person
     end
 
   end
 
-  def should_make_default_person(method)
-    person = Person.send method
+  def should_make_default_person
+    person = Person.make
     person.flickrid.should == 'person_flickrid'
     person.username.should == 'username'
   end
 
-  def should_make_person_with_custom_attributes(method)
-    should_make_with_custom_attributes Person, method, {
+  def should_make_person_with_custom_attributes
+    should_make_with_custom_attributes Person, {
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     }
   end
 
-  def should_make_labeled_person(method)
-    person = Person.send method, 'label'
+  def should_make_labeled_person
+    person = Person.make 'label'
     person.flickrid.should == 'label_person_flickrid'
     person.username.should == 'label_username'
   end
@@ -172,40 +172,41 @@ end
 describe Photo do
   describe '.make' do
     before :all do
+      # TODO Dave I think I need to stub classes that this one will use, too
       stub(Photo).construction_method { :make }
     end
 
     it "makes one" do
-      should_make_default_photo :make
+      should_make_default_photo
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes :make
+      should_make_photo_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_photo :make
+      should_make_labeled_photo
     end
 
   end
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_photo :make!
+      should_make_default_photo
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes :make!
+      should_make_photo_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_photo :make!
+      should_make_labeled_photo
     end
 
   end
 
-  def should_make_default_photo(method)
-    photo = Photo.send method
+  def should_make_default_photo
+    photo = Photo.make
     photo.person.flickrid.should == 'poster_person_flickrid'
     photo.flickrid.should == 'photo_flickrid'
     photo.farm.should == '0'
@@ -221,9 +222,9 @@ describe Photo do
     photo.member_questions.should == 0
   end
 
-  def should_make_photo_with_custom_attributes(method)
-    should_make_with_custom_attributes Photo, method, {
-      :person => Person.send(method, 'other_poster'),
+  def should_make_photo_with_custom_attributes
+    should_make_with_custom_attributes Photo, {
+      :person => Person.make('other_poster'),
       :flickrid => 'other_photo_flickrid',
       :farm => '1',
       :server => 'other_server',
@@ -239,8 +240,8 @@ describe Photo do
     }
   end
 
-  def should_make_labeled_photo(method)
-    photo = Photo.send method, 'label'
+  def should_make_labeled_photo
+    photo = Photo.make 'label'
     photo.person.flickrid.should == 'label_poster_person_flickrid'
     photo.flickrid.should == 'label_photo_flickrid'
   end
@@ -254,36 +255,36 @@ describe Comment do
     end
 
     it "makes one" do
-      should_make_default_comment :make
+      should_make_default_comment
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes :make
+      should_make_comment_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_comment :make
+      should_make_labeled_comment
     end
 
   end
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_comment :make!
+      should_make_default_comment
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes :make!
+      should_make_comment_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_comment :make!
+      should_make_labeled_comment
     end
 
   end
 
-  def should_make_default_comment(method)
-    comment = Comment.send method
+  def should_make_default_comment
+    comment = Comment.make
     comment.photo.flickrid.should == 'commented_photo_photo_flickrid'
     comment.flickrid.should == 'commenter_flickrid'
     comment.username.should == 'commenter_username'
@@ -291,9 +292,9 @@ describe Comment do
     comment.commented_at.should_not be_nil
   end
 
-  def should_make_comment_with_custom_attributes(method)
-    should_make_with_custom_attributes Comment, method, {
-      :photo => Photo.send(method, 'other_commented_photo'),
+  def should_make_comment_with_custom_attributes
+    should_make_with_custom_attributes Comment, {
+      :photo => Photo.make('other_commented_photo'),
       :flickrid => 'other_commenter_flickrid',
       :username => 'other_commenter_username',
       :comment_text => 'other comment text',
@@ -301,8 +302,8 @@ describe Comment do
     }
   end
 
-  def should_make_labeled_comment(method)
-    comment = Comment.send method, 'label'
+  def should_make_labeled_comment
+    comment = Comment.make 'label'
     comment.photo.flickrid.should == 'label_commented_photo_photo_flickrid'
     comment.flickrid.should == 'label_commenter_flickrid'
     comment.username.should == 'label_commenter_username'
@@ -318,36 +319,36 @@ describe Guess do
     end
 
     it "makes one" do
-      should_make_default_guess :make
+      should_make_default_guess
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes :make
+      should_make_guess_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_guess :make
+      should_make_labeled_guess
     end
 
   end
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_guess :make!
+      should_make_default_guess
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes :make!
+      should_make_guess_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_guess :make!
+      should_make_labeled_guess
     end
 
   end
 
-  def should_make_default_guess(method)
-    guess = Guess.send method
+  def should_make_default_guess
+    guess = Guess.make
     guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.guess_text.should == 'guess text'
@@ -355,18 +356,18 @@ describe Guess do
     guess.added_at.should_not be_nil
   end
 
-  def should_make_guess_with_custom_attributes(method)
-    should_make_with_custom_attributes Guess, method, {
-      :photo => Photo.send(method, 'other_guessed_photo'),
-      :person => Person.send(method, 'other_guesser'),
+  def should_make_guess_with_custom_attributes
+    should_make_with_custom_attributes Guess, {
+      :photo => Photo.make('other_guessed_photo'),
+      :person => Person.make('other_guesser'),
       :guess_text => 'other guess text',
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
   end
 
-  def should_make_labeled_guess(method)
-    guess = Guess.send method, 'label'
+  def should_make_labeled_guess
+    guess = Guess.make 'label'
     guess.photo.flickrid.should == 'label_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'label_guesser_person_flickrid'
     guess.guess_text.should == 'label_guess text'
@@ -381,53 +382,53 @@ describe Revelation do
     end
 
     it "makes one" do
-      should_make_default_revelation :make
+      should_make_default_revelation
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes :make
+      should_make_revelation_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_revelation :make
+      should_make_labeled_revelation
     end
 
   end
 
   describe '.make!' do
     it "makes one" do
-      should_make_default_revelation :make!
+      should_make_default_revelation
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes :make!
+      should_make_revelation_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_revelation :make!
+      should_make_labeled_revelation
     end
 
   end
 
-  def should_make_default_revelation(method)
-    revelation = Revelation.send method
+  def should_make_default_revelation
+    revelation = Revelation.make
     revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'revelation text'
     revelation.revealed_at.should_not be_nil
     revelation.added_at.should_not be_nil
   end
 
-  def should_make_revelation_with_custom_attributes(method)
-    should_make_with_custom_attributes Revelation, method, {
-      :photo => Photo.send(method, 'other_revealed_photo'),
+  def should_make_revelation_with_custom_attributes
+    should_make_with_custom_attributes Revelation, {
+      :photo => Photo.make('other_revealed_photo'),
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
   end
 
-  def should_make_labeled_revelation(method)
-    revelation = Revelation.send method, 'label'
+  def should_make_labeled_revelation
+    revelation = Revelation.make 'label'
     revelation.photo.flickrid.should == 'label_revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'label_revelation text'
   end
@@ -442,8 +443,8 @@ def set_spec_type(model_class, is_model_spec)
   stub(model_class).construction_method { is_model_spec ? :make! : :make }
 end
 
-def should_make_with_custom_attributes(model_class, method, attrs_in)
-  instance = model_class.send method, attrs_in
+def should_make_with_custom_attributes(model_class, attrs_in)
+  instance = model_class.make attrs_in
   actual_attrs = update_nil_id_attributes instance
   expected_attrs = replace_object_attributes_with_id_attributes stringify_keys attrs_in
   actual_attrs.except('id').should == expected_attrs.except('id')
@@ -456,7 +457,7 @@ def update_nil_id_attributes object
   updated_attrs = {}
   object.attributes.each_pair do |key, val|
     if key =~ /^(.*)_id$/ && val.nil?
-      val = object.send($1).id
+      val = object.send($1).id # TODO Dave why isn't this covered?
     end
     updated_attrs[key] = val
   end

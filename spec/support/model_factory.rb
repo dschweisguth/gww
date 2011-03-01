@@ -3,10 +3,6 @@ module ModelFactory
     do_make construction_method, label, options
   end
 
-  def make!(label = '', options = {})
-    do_make construction_method, label, options
-  end
-
   def construction_method
     caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :make : :make!
   end
@@ -101,7 +97,7 @@ class Photo
       :views => 0
     }
     if ! caller_options[:person]
-      options[:person] = Person.send calling_method, padded_label + 'poster'
+      options[:person] = Person.make padded_label + 'poster'
     end
     options
   end
@@ -120,7 +116,7 @@ class Comment
       :commented_at => Time.now
     }
     if ! caller_options[:photo]
-      options[:photo] = Photo.send calling_method, padded_label + 'commented_photo'
+      options[:photo] = Photo.make padded_label + 'commented_photo'
     end
     options
   end
@@ -139,10 +135,10 @@ class Guess
       :added_at => now
     }
     if ! caller_options[:photo]
-      options[:photo] = Photo.send calling_method, padded_label + 'guessed_photo'
+      options[:photo] = Photo.make padded_label + 'guessed_photo'
     end
     if ! caller_options[:person]
-      options[:person] = Person.send calling_method, padded_label + 'guesser'
+      options[:person] = Person.make padded_label + 'guesser'
     end
     options
   end
@@ -161,7 +157,7 @@ class Revelation
       :added_at => now
     }
     if ! caller_options[:photo]
-      options[:photo] = Photo.send calling_method, padded_label + 'revealed_photo'
+      options[:photo] = Photo.make padded_label + 'revealed_photo'
     end
     options
   end
