@@ -1,10 +1,14 @@
 module ModelFactory
   def make(label = '', options = {})
-    do_make __method__, label, options
+    do_make construction_method, label, options
   end
 
   def make!(label = '', options = {})
-    do_make __method__, label, options
+    do_make construction_method, label, options
+  end
+
+  def construction_method
+    caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :make : :make!
   end
 
   def do_make(calling_method, label, caller_options)

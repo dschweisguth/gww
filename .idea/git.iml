@@ -12,36 +12,6 @@
   <component name="GemRequirementsHolder" version="3">
     <requirement>
       <requirement>
-        <dependency name="actionmailer" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="actionpack" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="activerecord" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="activeresource" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="activesupport" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
         <dependency name="mysql2" version="0.2.6" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
@@ -54,27 +24,9 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rack" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
         <dependency name="rails" version="2.3.11" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rails" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rake" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>

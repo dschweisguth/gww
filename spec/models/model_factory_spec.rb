@@ -1,17 +1,21 @@
 require 'spec_helper'
 
 describe ModelFactory do
+  before do
+    @factory = Object.new
+    #noinspection RubyResolve
+    @factory.extend ModelFactory
+
+    @model_object = Object.new
+    class << @model_object
+      attr_accessor :id
+    end
+
+  end
+
   describe '#make' do
     before do
-      @factory = Object.new
-      #noinspection RubyResolve
-      @factory.extend ModelFactory
-
-      @model_object = Object.new
-      class << @model_object
-        attr_accessor :id
-      end
-
+      stub(@factory).construction_method { :make }
     end
 
     it "handles no args" do
@@ -39,14 +43,6 @@ describe ModelFactory do
       @factory.make 'xxx', :other_option => 'other_option'
     end
 
-    it "creates, too" do
-      mock(@factory).options(:make!, '', {}) { {} }
-      @model_object.id = 666
-      mock(@factory).send(:create!, {}) { @model_object }
-      instance = @factory.make!
-      instance.id.should == 666 # i.e. it leaves the ActiveRecord ID alone
-    end
-
     it "allows you to override the default id" do
       mock(@factory).options(:make, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
@@ -54,15 +50,31 @@ describe ModelFactory do
       model_object_out.id.should == 666
     end
 
-    it "blows up if you try to override the default id for an instance that will be saved in the database" do
-      lambda { @factory.make! :id => 1 }.should raise_error ArgumentError
+  end
+
+  describe '#make!' do
+    it "creates, too" do
+      mock(@factory).options(:make!, '', {}) { {} }
+      @model_object.id = 666
+      mock(@factory).send(:create!, {}) { @model_object }
+      instance = @factory.make
+      instance.id.should == 666 # i.e. it leaves the ActiveRecord ID alone
     end
 
+    it "blows up if you try to override the default id for an instance that will be saved in the database" do
+      lambda { @factory.make :id => 1 }.should raise_error ArgumentError
+    end
+    
   end
+
 end
 
 describe FlickrUpdate do
   describe '.make' do
+    before do
+      set_spec_type FlickrUpdate, false
+    end
+
     it "makes one" do
       should_make_default_flickr_update :make
     end
@@ -103,6 +115,10 @@ end
 
 describe Person do
   describe '.make' do
+    before :all do
+      stub(Person).construction_method { :make }
+    end
+
     it "makes one" do
       should_make_default_person :make
     end
@@ -155,6 +171,10 @@ end
 
 describe Photo do
   describe '.make' do
+    before :all do
+      stub(Photo).construction_method { :make }
+    end
+
     it "makes one" do
       should_make_default_photo :make
     end
@@ -229,6 +249,10 @@ end
 
 describe Comment do
   describe '.make' do
+    before :all do
+      stub(Comment).construction_method { :make }
+    end
+
     it "makes one" do
       should_make_default_comment :make
     end
@@ -289,6 +313,10 @@ end
 
 describe Guess do
   describe '.make' do
+    before :all do
+      stub(Guess).construction_method { :make }
+    end
+
     it "makes one" do
       should_make_default_guess :make
     end
@@ -348,6 +376,10 @@ end
 
 describe Revelation do
   describe '.make' do
+    before :all do
+      stub(Revelation).construction_method { :make }
+    end
+
     it "makes one" do
       should_make_default_revelation :make
     end
@@ -403,6 +435,12 @@ describe Revelation do
 end
 
 # Utilities
+
+# Overrides the detected spec type so that we can test both model (in-database)
+# and non-model (in-memory) and object creation in this single file
+def set_spec_type(model_class, is_model_spec)
+  stub(model_class).construction_method { is_model_spec ? :make! : :make }
+end
 
 def should_make_with_custom_attributes(model_class, method, attrs_in)
   instance = model_class.send method, attrs_in
