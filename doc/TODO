@@ -15,6 +15,8 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
   Upgrade to Rails 3
   rvm
   Upgrade to Ruby 1.9.2
+After upgrading to rspec 2, make ModelFactory decide whether to new or create!
+  by seeing what kind of example group it was run from
 
 Features
 
