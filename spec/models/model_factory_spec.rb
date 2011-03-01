@@ -65,7 +65,7 @@ describe FlickrUpdate do
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes :make, :id => 1
+      should_make_flickr_update_with_custom_attributes :make
     end
 
     it "doesn't save it in the database" do
@@ -80,7 +80,7 @@ describe FlickrUpdate do
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes :make!, {}
+      should_make_flickr_update_with_custom_attributes :make!
     end
 
     it "saves it in the database" do
@@ -97,13 +97,13 @@ describe FlickrUpdate do
     update.completed_at.should be_nil
   end
 
-  def should_make_flickr_update_with_custom_attributes(method, extra_attrs)
+  def should_make_flickr_update_with_custom_attributes(method)
     attrs = {
       :created_at => Time.utc(2011),
       :member_count => 1,
       :completed_at => Time.utc(2011, 2)
     }
-    should_make_with_custom_attributes method, FlickrUpdate, attrs, extra_attrs
+    should_make_with_custom_attributes method, FlickrUpdate, attrs
   end
 
 end
@@ -115,7 +115,7 @@ describe Person do
     end
 
     it "overrides defaults" do
-      should_make_person_with_custom_attributes :make, :id => 1
+      should_make_person_with_custom_attributes :make
     end
 
     it "labels it" do
@@ -134,7 +134,7 @@ describe Person do
     end
 
     it "overrides_defaults" do
-      should_make_person_with_custom_attributes :make!, {}
+      should_make_person_with_custom_attributes :make!
     end
 
     it "labels it" do
@@ -154,12 +154,12 @@ describe Person do
     person.username.should == 'username'
   end
 
-  def should_make_person_with_custom_attributes(method, extra_attrs)
+  def should_make_person_with_custom_attributes(method)
     attrs = {
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     }
-    should_make_with_custom_attributes method, Person, attrs, extra_attrs
+    should_make_with_custom_attributes method, Person, attrs
   end
 
   def should_make_labeled_person(method)
@@ -177,7 +177,7 @@ describe Photo do
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes :make, :id => 1
+      should_make_photo_with_custom_attributes :make
     end
 
     it "labels it" do
@@ -196,7 +196,7 @@ describe Photo do
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes :make!, {}
+      should_make_photo_with_custom_attributes :make!
     end
 
     it "labels it" do
@@ -227,7 +227,7 @@ describe Photo do
     photo.member_questions.should == 0
   end
 
-  def should_make_photo_with_custom_attributes(method, extra_attrs)
+  def should_make_photo_with_custom_attributes(method)
     person = Person.send method, 'other_poster'
     attrs = {
       :person => person,
@@ -244,7 +244,7 @@ describe Photo do
       :member_comments => 1,
       :member_questions => 1
     }
-    photo = should_make_with_custom_attributes method, Photo, attrs, extra_attrs
+    photo = should_make_with_custom_attributes method, Photo, attrs
     photo.person.flickrid.should == 'other_poster_person_flickrid'
   end
 
@@ -263,7 +263,7 @@ describe Comment do
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes :make, :id => 1
+      should_make_comment_with_custom_attributes :make
     end
 
     it "labels it" do
@@ -282,7 +282,7 @@ describe Comment do
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes :make!, {}
+      should_make_comment_with_custom_attributes :make!
     end
 
     it "labels it" do
@@ -305,7 +305,7 @@ describe Comment do
     comment.commented_at.should_not be_nil
   end
 
-  def should_make_comment_with_custom_attributes(method, extra_attrs)
+  def should_make_comment_with_custom_attributes(method)
     photo = Photo.send method, 'other_commented_photo'
     attrs = {
       :photo => photo,
@@ -314,7 +314,7 @@ describe Comment do
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
     }
-    comment = should_make_with_custom_attributes method, Comment, attrs, extra_attrs
+    comment = should_make_with_custom_attributes method, Comment, attrs
     comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
   end
 
@@ -335,7 +335,7 @@ describe Guess do
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes :make, :id => 1
+      should_make_guess_with_custom_attributes :make
     end
 
     it "labels it" do
@@ -354,7 +354,7 @@ describe Guess do
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes :make!, {}
+      should_make_guess_with_custom_attributes :make!
     end
 
     it "labels it" do
@@ -377,7 +377,7 @@ describe Guess do
     guess.added_at.should_not be_nil
   end
 
-  def should_make_guess_with_custom_attributes(method, extra_attrs)
+  def should_make_guess_with_custom_attributes(method)
     photo = Photo.send method, 'other_guessed_photo'
     guesser = Person.send method, 'other_guesser'
     attrs = {
@@ -387,7 +387,7 @@ describe Guess do
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    guess = should_make_with_custom_attributes method, Guess, attrs, extra_attrs
+    guess = should_make_with_custom_attributes method, Guess, attrs
     guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'other_guesser_person_flickrid'
   end
@@ -408,7 +408,7 @@ describe Revelation do
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes :make, :id => 1
+      should_make_revelation_with_custom_attributes :make
     end
 
     it "labels it" do
@@ -427,7 +427,7 @@ describe Revelation do
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes :make!, {}
+      should_make_revelation_with_custom_attributes :make!
     end
 
     it "labels it" do
@@ -449,7 +449,7 @@ describe Revelation do
     revelation.added_at.should_not be_nil
   end
 
-  def should_make_revelation_with_custom_attributes(method, extra_attrs)
+  def should_make_revelation_with_custom_attributes(method)
     photo = Photo.send method, 'other_revealed_photo'
     attrs = {
       :photo => photo,
@@ -457,7 +457,7 @@ describe Revelation do
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
-    revelation = should_make_with_custom_attributes method, Revelation, attrs, extra_attrs
+    revelation = should_make_with_custom_attributes method, Revelation, attrs
     revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
   end
 
@@ -479,12 +479,14 @@ def id_should_have_default_value(method, object)
   end
 end
 
-def should_make_with_custom_attributes(method, model_class, attrs, extra_attrs)
-  expected_attrs = attrs.merge(extra_attrs)
+def should_make_with_custom_attributes(method, model_class, expected_attrs)
+  if method == :make
+    expected_attrs.merge!({ :id => 1 })
+  end
   object = model_class.send method, expected_attrs
 
   if method == :make
-    object.id.should == extra_attrs[:id]
+    object.id.should == 1
   else
     object.id.should_not be_nil
   end
@@ -508,7 +510,7 @@ def should_make_with_custom_attributes(method, model_class, attrs, extra_attrs)
     munged_expected_attrs[key] = val
   end
 
-  munged_actual_attrs.except('id').should == munged_expected_attrs
+  munged_actual_attrs.except('id').should == munged_expected_attrs.except('id')
 
   object
 end

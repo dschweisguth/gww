@@ -12,6 +12,7 @@ module ModelFactory
       caller_options = label
       label = ''
     end
+    caller_options = caller_options.clone
 
     padded_label = label.to_s
     if ! padded_label.empty?
