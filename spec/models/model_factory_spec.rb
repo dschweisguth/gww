@@ -13,7 +13,7 @@ describe ModelFactory do
 
   end
 
-  describe '#make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model @factory
     end
@@ -52,7 +52,7 @@ describe ModelFactory do
 
   end
 
-  describe '#make!' do
+  describe 'when using .create!' do
     it "creates, too" do
       mock(@factory).options(:make!, '', {}) { {} }
       @model_object.id = 666
@@ -70,7 +70,7 @@ describe ModelFactory do
 end
 
 describe FlickrUpdate do
-  describe '.make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model
     end
@@ -85,7 +85,7 @@ describe FlickrUpdate do
 
   end
 
-  describe '.make!' do
+  describe 'when using .create!' do
     it "makes one" do
       should_make_default_flickr_update
     end
@@ -114,7 +114,7 @@ describe FlickrUpdate do
 end
 
 describe Person do
-  describe '.make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model
     end
@@ -133,7 +133,7 @@ describe Person do
 
   end
 
-  describe '.make!' do
+  describe 'when using .create!' do
     it "makes one" do
       should_make_default_person
     end
@@ -170,7 +170,7 @@ describe Person do
 end
 
 describe Photo do
-  describe '.make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model
     end
@@ -189,7 +189,7 @@ describe Photo do
 
   end
 
-  describe '.make!' do
+  describe 'when using .create!' do
     it "makes one" do
       should_make_default_photo
     end
@@ -248,7 +248,7 @@ describe Photo do
 end
 
 describe Comment do
-  describe '.make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model
     end
@@ -267,7 +267,7 @@ describe Comment do
 
   end
 
-  describe '.make!' do
+  describe 'when using .create!' do
     it "makes one" do
       should_make_default_comment
     end
@@ -312,7 +312,7 @@ describe Comment do
 end
 
 describe Guess do
-  describe '.make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model
     end
@@ -331,7 +331,7 @@ describe Guess do
 
   end
 
-  describe '.make!' do
+  describe 'when using .create!' do
     it "makes one" do
       should_make_default_guess
     end
@@ -375,7 +375,7 @@ describe Guess do
 end
 
 describe Revelation do
-  describe '.make' do
+  describe 'when using .new' do
     before do
       set_spec_type_to_non_model
     end
@@ -394,7 +394,7 @@ describe Revelation do
 
   end
 
-  describe '.make!' do
+  describe 'when using .create!' do
     it "makes one" do
       should_make_default_revelation
     end
