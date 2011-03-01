@@ -66,7 +66,8 @@ describe FlickrUpdate do
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes :make
+      should_make_flickr_update_with_custom_attributes :make, :id => 1
+      @update.id.should == 1
     end
 
     it "doesn't save it in the database" do
@@ -81,7 +82,7 @@ describe FlickrUpdate do
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes :make!
+      should_make_flickr_update_with_custom_attributes :make!, {}
     end
 
     it "saves it in the database" do
@@ -97,16 +98,17 @@ describe FlickrUpdate do
     @update.completed_at.should be_nil
   end
 
-  def should_make_flickr_update_with_custom_attributes(method)
+  def should_make_flickr_update_with_custom_attributes(method, attrs)
     created_at = Time.utc(2011)
     completed_at = Time.utc(2011, 2)
-    update = FlickrUpdate.send method,
+    @update = FlickrUpdate.send method, {
       :created_at => created_at,
       :member_count => 1,
       :completed_at => completed_at
-    update.created_at.should == created_at
-    update.member_count.should == 1
-    update.completed_at.should == completed_at
+    }.merge(attrs)
+    @update.created_at.should == created_at
+    @update.member_count.should == 1
+    @update.completed_at.should == completed_at
   end
 
 end
@@ -119,7 +121,8 @@ describe Person do
     end
 
     it "overrides defaults" do
-      should_make_person_with_custom_attributes :make
+      should_make_person_with_custom_attributes :make, :id => 1
+      @person.id.should == 1
     end
 
     it "labels it" do
@@ -138,7 +141,7 @@ describe Person do
     end
 
     it "overrides_defaults" do
-      should_make_person_with_custom_attributes :make!
+      should_make_person_with_custom_attributes :make!, {}
     end
 
     it "labels it" do
@@ -157,12 +160,13 @@ describe Person do
     @person.username.should == 'username'
   end
 
-  def should_make_person_with_custom_attributes(method)
-    person = Person.send method,
+  def should_make_person_with_custom_attributes(method, attrs)
+    @person = Person.send method, {
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
-    person.flickrid.should == 'other_person_flickrid'
-    person.username.should == 'other_username'
+    }.merge(attrs)
+    @person.flickrid.should == 'other_person_flickrid'
+    @person.username.should == 'other_username'
   end
 
   def should_make_labeled_person(method)
@@ -181,7 +185,8 @@ describe Photo do
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes :make
+      should_make_photo_with_custom_attributes :make, :id => 1
+      @photo.id.should == 1
     end
 
     it "labels it" do
@@ -200,7 +205,7 @@ describe Photo do
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes :make!
+      should_make_photo_with_custom_attributes :make!, {}
     end
 
     it "labels it" do
@@ -230,9 +235,9 @@ describe Photo do
     @photo.member_questions.should == 0
   end
 
-  def should_make_photo_with_custom_attributes(method)
+  def should_make_photo_with_custom_attributes(method, attrs)
     person = Person.send method, 'other_poster'
-    photo = Photo.send method,
+    @photo = Photo.send method, {
       :person => person,
       :flickrid => 'other_photo_flickrid',
       :farm => '1',
@@ -246,19 +251,20 @@ describe Photo do
       :views => 1,
       :member_comments => 1,
       :member_questions => 1
-    photo.person.flickrid.should == 'other_poster_person_flickrid'
-    photo.flickrid.should == 'other_photo_flickrid'
-    photo.farm.should == '1'
-    photo.server.should == 'other_server'
-    photo.secret.should == 'other_secret'
-    photo.dateadded.should == Time.utc(2010)
-    photo.mapped.should == 'true'
-    photo.lastupdate.should == Time.utc(2011)
-    photo.seen_at.should == Time.utc(2012)
-    photo.game_status.should == 'found'
-    photo.views.should == 1
-    photo.member_comments.should == 1
-    photo.member_questions.should == 1
+    }.merge(attrs)
+    @photo.person.flickrid.should == 'other_poster_person_flickrid'
+    @photo.flickrid.should == 'other_photo_flickrid'
+    @photo.farm.should == '1'
+    @photo.server.should == 'other_server'
+    @photo.secret.should == 'other_secret'
+    @photo.dateadded.should == Time.utc(2010)
+    @photo.mapped.should == 'true'
+    @photo.lastupdate.should == Time.utc(2011)
+    @photo.seen_at.should == Time.utc(2012)
+    @photo.game_status.should == 'found'
+    @photo.views.should == 1
+    @photo.member_comments.should == 1
+    @photo.member_questions.should == 1
   end
 
   def should_make_labeled_photo(method)
@@ -277,7 +283,8 @@ describe Comment do
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes :make
+      should_make_comment_with_custom_attributes :make, :id => 1
+      @comment.id.should == 1
     end
 
     it "labels it" do
@@ -296,7 +303,7 @@ describe Comment do
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes :make!
+      should_make_comment_with_custom_attributes :make!, {}
     end
 
     it "labels it" do
@@ -318,19 +325,20 @@ describe Comment do
     @comment.commented_at.should_not be_nil
   end
 
-  def should_make_comment_with_custom_attributes(method)
+  def should_make_comment_with_custom_attributes(method, attrs)
     photo = Photo.send method, 'other_commented_photo'
-    comment = Comment.send method,
+    @comment = Comment.send method, {
       :photo => photo,
       :flickrid => 'other_commenter_flickrid',
       :username => 'other_commenter_username',
       :comment_text => 'other comment text',
       :commented_at => Time.utc(2011)
-    comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
-    comment.flickrid.should == 'other_commenter_flickrid'
-    comment.username.should == 'other_commenter_username'
-    comment.comment_text.should == 'other comment text'
-    comment.commented_at.should == Time.utc(2011)
+    }.merge(attrs)
+    @comment.photo.flickrid.should == 'other_commented_photo_photo_flickrid'
+    @comment.flickrid.should == 'other_commenter_flickrid'
+    @comment.username.should == 'other_commenter_username'
+    @comment.comment_text.should == 'other comment text'
+    @comment.commented_at.should == Time.utc(2011)
   end
 
   def should_make_labeled_comment(method)
@@ -351,7 +359,8 @@ describe Guess do
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes :make
+      should_make_guess_with_custom_attributes :make, :id => 1
+      @guess.id.should == 1
     end
 
     it "labels it" do
@@ -370,7 +379,7 @@ describe Guess do
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes :make!
+      should_make_guess_with_custom_attributes :make!, {}
     end
 
     it "labels it" do
@@ -392,20 +401,21 @@ describe Guess do
     @guess.added_at.should_not be_nil
   end
 
-  def should_make_guess_with_custom_attributes(method)
+  def should_make_guess_with_custom_attributes(method, attrs)
     photo = Photo.send method, 'other_guessed_photo'
     guesser = Person.send method, 'other_guesser'
-    guess = Guess.send method,
+    @guess = Guess.send method, {
       :photo => photo,
       :person => guesser,
       :guess_text => 'other guess text',
       :guessed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
-    guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
-    guess.person.flickrid.should == 'other_guesser_person_flickrid'
-    guess.guess_text.should == 'other guess text'
-    guess.guessed_at.should == Time.utc(2011)
-    guess.added_at.should == Time.utc(2012)
+    }.merge(attrs)
+    @guess.photo.flickrid.should == 'other_guessed_photo_photo_flickrid'
+    @guess.person.flickrid.should == 'other_guesser_person_flickrid'
+    @guess.guess_text.should == 'other guess text'
+    @guess.guessed_at.should == Time.utc(2011)
+    @guess.added_at.should == Time.utc(2012)
   end
 
   def should_make_labeled_guess(method)
@@ -425,7 +435,8 @@ describe Revelation do
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes :make
+      should_make_revelation_with_custom_attributes :make, :id => 1
+      @revelation.id.should == 1
     end
 
     it "labels it" do
@@ -444,7 +455,7 @@ describe Revelation do
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes :make!
+      should_make_revelation_with_custom_attributes :make!, {}
     end
 
     it "labels it" do
@@ -465,17 +476,18 @@ describe Revelation do
     @revelation.added_at.should_not be_nil
   end
 
-  def should_make_revelation_with_custom_attributes(method)
+  def should_make_revelation_with_custom_attributes(method, attrs)
     photo = Photo.send method, 'other_revealed_photo'
-    revelation = Revelation.send method,
+    @revelation = Revelation.send method, {
       :photo => photo,
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
       :added_at => Time.utc(2012)
-    revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
-    revelation.revelation_text.should == 'other revelation text'
-    revelation.revealed_at.should == Time.utc(2011)
-    revelation.added_at.should == Time.utc(2012)
+    }.merge(attrs)
+    @revelation.photo.flickrid.should == 'other_revealed_photo_photo_flickrid'
+    @revelation.revelation_text.should == 'other revelation text'
+    @revelation.revealed_at.should == Time.utc(2011)
+    @revelation.added_at.should == Time.utc(2012)
   end
 
   def should_make_labeled_revelation(method)
