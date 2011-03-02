@@ -1,12 +1,12 @@
 module ModelFactory
-  def make(label = '', caller_options = {})
+  def make(label = '', caller_attrs = {})
     method = construction_method
 
     if label.is_a? Hash
-      caller_options = label
+      caller_attrs = label
       label = ''
     end
-    caller_options = caller_options.clone
+    caller_attrs = caller_attrs.clone
 
     padded_label = label.to_s
     if ! padded_label.empty?
@@ -17,22 +17,22 @@ module ModelFactory
     # model objects to have @ids, but ActiveRecord prevents us from setting
     # that attribute at creation time, so save it so we can set it later.
     # When testing the model layer, we always use :create! and let ActiveRecord manage @id.
-    id = caller_options[:id]
+    id = caller_attrs[:id]
     if id
       if method != :new
         raise ArgumentError, "Can't specify :id for an object which is to be create!d in the database"
       end
-      caller_options.delete :id
+      caller_attrs.delete :id
     else
       if method == :new
         id = 0
       end
     end
 
-    options = options method, padded_label, caller_options
-    options.merge! caller_options
+    attrs = attrs method, padded_label, caller_attrs
+    attrs.merge! caller_attrs
 
-    instance = send method, options
+    instance = send method, attrs
 
     if id
       instance.id = id
@@ -51,14 +51,14 @@ class FlickrUpdate
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(method, padded_label, caller_options)
-    options = { :member_count => 0 }
-    if method == :new && ! caller_options[:created_at]
-      options[:created_at] = Time.now
+  def self.attrs(method, padded_label, caller_attrs)
+    attrs = { :member_count => 0 }
+    if method == :new && ! caller_attrs[:created_at]
+      attrs[:created_at] = Time.now
     end
-    options
+    attrs
   end
-  private_class_method :options
+  private_class_method :attrs
 
 end
 
@@ -66,13 +66,13 @@ class Person
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(method, padded_label, caller_options)
+  def self.attrs(method, padded_label, caller_attrs)
     {
       :flickrid => padded_label + 'person_flickrid',
       :username => padded_label + 'username'
     }
   end
-  private_class_method :options
+  private_class_method :attrs
 
 end
 
@@ -80,9 +80,9 @@ class Photo
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(method, padded_label, caller_options)
+  def self.attrs(method, padded_label, caller_attrs)
     now = Time.now
-    options = {
+    attrs = {
       :flickrid => padded_label + 'photo_flickrid',
       :farm => '0',
       :server => 'server',
@@ -94,12 +94,12 @@ class Photo
       :game_status => 'unfound',
       :views => 0
     }
-    if ! caller_options[:person]
-      options[:person] = Person.make padded_label + 'poster'
+    if ! caller_attrs[:person]
+      attrs[:person] = Person.make padded_label + 'poster'
     end
-    options
+    attrs
   end
-  private_class_method :options
+  private_class_method :attrs
 
 end
 
@@ -107,19 +107,19 @@ class Comment
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(method, padded_label, caller_options)
-    options = {
+  def self.attrs(method, padded_label, caller_attrs)
+    attrs = {
       :flickrid => padded_label + 'commenter_flickrid',
       :username => padded_label + 'commenter_username',
       :comment_text => padded_label + 'comment text',
       :commented_at => Time.now
     }
-    if ! caller_options[:photo]
-      options[:photo] = Photo.make padded_label + 'commented_photo'
+    if ! caller_attrs[:photo]
+      attrs[:photo] = Photo.make padded_label + 'commented_photo'
     end
-    options
+    attrs
   end
-  private_class_method :options
+  private_class_method :attrs
 
 end
 
@@ -127,22 +127,22 @@ class Guess
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(method, padded_label, caller_options)
+  def self.attrs(method, padded_label, caller_attrs)
     now = Time.now
-    options = {
+    attrs = {
       :guess_text => padded_label + 'guess text',
       :guessed_at => now,
       :added_at => now
     }
-    if ! caller_options[:photo]
-      options[:photo] = Photo.make padded_label + 'guessed_photo'
+    if ! caller_attrs[:photo]
+      attrs[:photo] = Photo.make padded_label + 'guessed_photo'
     end
-    if ! caller_options[:person]
-      options[:person] = Person.make padded_label + 'guesser'
+    if ! caller_attrs[:person]
+      attrs[:person] = Person.make padded_label + 'guesser'
     end
-    options
+    attrs
   end
-  private_class_method :options
+  private_class_method :attrs
 
 end
 
@@ -150,18 +150,18 @@ class Revelation
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.options(method, padded_label, caller_options)
+  def self.attrs(method, padded_label, caller_attrs)
     now = Time.now
-    options = {
+    attrs = {
       :revelation_text => padded_label + 'revelation text',
       :revealed_at => now,
       :added_at => now
     }
-    if ! caller_options[:photo]
-      options[:photo] = Photo.make padded_label + 'revealed_photo'
+    if ! caller_attrs[:photo]
+      attrs[:photo] = Photo.make padded_label + 'revealed_photo'
     end
-    options
+    attrs
   end
-  private_class_method :options
+  private_class_method :attrs
 
 end

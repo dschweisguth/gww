@@ -19,32 +19,32 @@ describe ModelFactory do
     end
 
     it "handles no args" do
-      mock(@factory).options(:new, '', {}) { {} }
+      mock(@factory).attrs(:new, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       instance = @factory.make
       instance.id.should == 0 # i.e. it sets a default ID
     end
 
-    it "handles options" do
-      mock(@factory).options(:new, '', { :other_option => 'other_option' }) { {} }
-      mock(@factory).send(:new, { :other_option => 'other_option' }) { @model_object }
-      @factory.make :other_option => 'other_option'
+    it "handles attrs" do
+      mock(@factory).attrs(:new, '', { :attr => 'attr' }) { {} }
+      mock(@factory).send(:new, { :attr => 'attr' }) { @model_object }
+      @factory.make :attr => 'attr'
     end
 
     it "handles a label passed in as a string" do
-      mock(@factory).options(:new, 'xxx_', {}) { {} }
+      mock(@factory).attrs(:new, 'xxx_', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       @factory.make 'xxx'
     end
 
-    it "handles a label passed in as a string plus options" do
-      mock(@factory).options(:new, 'xxx_', { :other_option => 'other_option' }) { {} }
-      mock(@factory).send(:new, { :other_option => 'other_option' }) { @model_object }
-      @factory.make 'xxx', :other_option => 'other_option'
+    it "handles a label passed in as a string plus attrs" do
+      mock(@factory).attrs(:new, 'xxx_', { :attr => 'attr' }) { {} }
+      mock(@factory).send(:new, { :attr => 'attr' }) { @model_object }
+      @factory.make 'xxx', :attr => 'attr'
     end
 
     it "allows you to override the default id" do
-      mock(@factory).options(:new, '', {}) { {} }
+      mock(@factory).attrs(:new, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       model_object_out = @factory.make :id => 666
       model_object_out.id.should == 666
@@ -54,7 +54,7 @@ describe ModelFactory do
 
   describe 'when using .create!' do
     it "creates, too" do
-      mock(@factory).options(:create!, '', {}) { {} }
+      mock(@factory).attrs(:create!, '', {}) { {} }
       @model_object.id = 666
       mock(@factory).send(:create!, {}) { @model_object }
       instance = @factory.make
