@@ -59,7 +59,7 @@ class FlickrCredentials
       if failure_count <= 3
         sleep sleep_time
         retry
-      elsif
+      else
         raise
       end
     end
