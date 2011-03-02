@@ -5,9 +5,10 @@
 
 <p>On Flickr:
 <a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%=h @person.username %>'s profile</a> -
+<a href="http://www.flickr.com/people/<%= @person.flickrid %>/photosof/">photos of <%=h @person.username %></a> -
 <a href="http://www.flickr.com/photos/<%= @person.flickrid %>/"><%=h @person.username %>'s photostream</a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/favorites/"><%=h @person.username %>'s favorites</a> -
-<a href="http://www.flickr.com/people/<%= @person.flickrid %>/photosof/">photos of <%=h @person.username %></a></p>
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/map/"><%=h @person.username %>'s map</a> -
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/favorites/"><%=h @person.username %>'s favorites</a></p>
 
 <p>In Guess Where SF:
 <a href="http://anythreewords.com/gwsf/index.php?pos=<%=h @person.username %>"><%= @person.username %>'s unfounds</a> -
