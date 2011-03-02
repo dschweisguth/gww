@@ -32,13 +32,13 @@ describe ModelFactory do
     end
 
     it "handles a label passed in as a string" do
-      mock(@factory).attrs(:new, 'xxx_', {}) { {} }
+      mock(@factory).attrs(:new, 'xxx', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
       @factory.make 'xxx'
     end
 
     it "handles a label passed in as a string plus attrs" do
-      mock(@factory).attrs(:new, 'xxx_', { :attr => 'attr' }) { {} }
+      mock(@factory).attrs(:new, 'xxx', { :attr => 'attr' }) { {} }
       mock(@factory).send(:new, { :attr => 'attr' }) { @model_object }
       @factory.make 'xxx', :attr => 'attr'
     end

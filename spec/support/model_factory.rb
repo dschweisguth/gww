@@ -8,11 +8,6 @@ module ModelFactory
     end
     caller_attrs = caller_attrs.clone
 
-    padded_label = label.to_s
-    if ! padded_label.empty?
-      padded_label += '_'
-    end
-
     # When testing layers above the model layer, we always use :new. We want
     # model objects to have @ids, but ActiveRecord prevents us from setting
     # that attribute at creation time, so save it so we can set it later.
@@ -29,7 +24,7 @@ module ModelFactory
       end
     end
 
-    attrs = attrs method, padded_label, caller_attrs
+    attrs = attrs method, label, caller_attrs
     attrs.merge! caller_attrs
 
     instance = send method, attrs
@@ -45,13 +40,18 @@ module ModelFactory
     caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :new : :create!
   end
 
+  def affix(label, value)
+    label = label.to_s
+    label.empty? ? value : label + '_' + value
+  end
+
 end
 
 class FlickrUpdate
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, padded_label, caller_attrs)
+  def self.attrs(method, label, caller_attrs)
     attrs = { :member_count => 0 }
     if method == :new && ! caller_attrs[:created_at]
       attrs[:created_at] = Time.now
@@ -66,10 +66,10 @@ class Person
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, padded_label, caller_attrs)
+  def self.attrs(method, label, caller_attrs)
     {
-      :flickrid => padded_label + 'person_flickrid',
-      :username => padded_label + 'username'
+      :flickrid => affix(label, 'person_flickrid'),
+      :username => affix(label, 'username')
     }
   end
   private_class_method :attrs
@@ -80,10 +80,10 @@ class Photo
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, padded_label, caller_attrs)
+  def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :flickrid => padded_label + 'photo_flickrid',
+      :flickrid => affix(label, 'photo_flickrid'),
       :farm => '0',
       :server => 'server',
       :secret => 'secret',
@@ -95,7 +95,7 @@ class Photo
       :views => 0
     }
     if ! caller_attrs[:person]
-      attrs[:person] = Person.make padded_label + 'poster'
+      attrs[:person] = Person.make affix(label, 'poster')
     end
     attrs
   end
@@ -107,15 +107,15 @@ class Comment
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, padded_label, caller_attrs)
+  def self.attrs(method, label, caller_attrs)
     attrs = {
-      :flickrid => padded_label + 'commenter_flickrid',
-      :username => padded_label + 'commenter_username',
-      :comment_text => padded_label + 'comment text',
+      :flickrid => affix(label, 'commenter_flickrid'),
+      :username => affix(label, 'commenter_username'),
+      :comment_text => affix(label, 'comment text'),
       :commented_at => Time.now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make padded_label + 'commented_photo'
+      attrs[:photo] = Photo.make affix(label, 'commented_photo')
     end
     attrs
   end
@@ -127,18 +127,18 @@ class Guess
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, padded_label, caller_attrs)
+  def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :guess_text => padded_label + 'guess text',
+      :guess_text => affix(label, 'guess text'),
       :guessed_at => now,
       :added_at => now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make padded_label + 'guessed_photo'
+      attrs[:photo] = Photo.make affix(label, 'guessed_photo')
     end
     if ! caller_attrs[:person]
-      attrs[:person] = Person.make padded_label + 'guesser'
+      attrs[:person] = Person.make affix(label, 'guesser')
     end
     attrs
   end
@@ -150,15 +150,15 @@ class Revelation
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, padded_label, caller_attrs)
+  def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :revelation_text => padded_label + 'revelation text',
+      :revelation_text => affix(label, 'revelation text'),
       :revealed_at => now,
       :added_at => now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make padded_label + 'revealed_photo'
+      attrs[:photo] = Photo.make affix(label, 'revealed_photo')
     end
     attrs
   end
