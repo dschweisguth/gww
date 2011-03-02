@@ -144,7 +144,7 @@ class Person < ActiveRecord::Base
   private_class_method :statistic_by_person
 
   def self.nemeses
-    nemeses = find_by_sql %Q{
+    nemeses = find_by_sql %Q[
       select guessers.*, f.person_id poster_id,
         count(*) / posters_posts.post_count / guessers_guesses.guess_count *
           (select count(*) from photos) bias
@@ -158,7 +158,7 @@ class Person < ActiveRecord::Base
         f.person_id = posters_posts.person_id and
         g.person_id = guessers_guesses.person_id
       group by guessers.id, poster_id having count(*) >= 10 order by bias desc;
-    }
+    ]
     poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
     posters = find_all_by_id poster_ids
     posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
@@ -328,7 +328,7 @@ class Person < ActiveRecord::Base
 
   def favorite_posters
     Person.find_by_sql [
-      %Q{
+      %Q[
         select posters.*,
           count(*) / posters_posts.post_count /
             (select count(*) from guesses where person_id = ?) *
@@ -342,14 +342,14 @@ class Person < ActiveRecord::Base
         group by posters.id
         having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and bias >= #{MIN_BIAS_FOR_FAVORITE}
         order by bias desc
-      },
+      ],
       id, id
     ]
   end
 
   def favorite_posters_of
     Person.find_by_sql [
-      %Q{
+      %Q[
         select guessers.*,
           count(*) / (select count(*) from photos where person_id = ?) /
             guessers_guesses.guess_count * (select count(*) from photos) bias
@@ -362,7 +362,7 @@ class Person < ActiveRecord::Base
         group by guessers.id
         having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and bias >= #{MIN_BIAS_FOR_FAVORITE}
         order by bias desc
-      },
+      ],
       id, id
     ]
   end
