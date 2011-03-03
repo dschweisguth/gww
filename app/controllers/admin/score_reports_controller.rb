@@ -1,6 +1,5 @@
 class Admin::ScoreReportsController < ApplicationController
 
-  # TODO Dave test
   def index
     @score_reports = ScoreReport.all :order => 'id desc'
   end

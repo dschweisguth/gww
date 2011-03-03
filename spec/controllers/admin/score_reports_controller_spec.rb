@@ -5,10 +5,21 @@ describe Admin::ScoreReportsController do
 
   describe '#index' do
     it 'renders the page' do
-      ScoreReport.make :created_at => Time.utc(2011)
-      ScoreReport.make :created_at => Time.utc(2011, 1, 2)
+      report1 = ScoreReport.make :created_at => Time.local(2011)
+      report2 = ScoreReport.make :created_at => Time.local(2011, 1, 2)
+      stub(ScoreReport).all { [ report2, report1 ] }
       get :index
       response.should be_success
+      p response.body
+      # By experiment, this doesn't actually assert that the form is in the
+      # same tr as the later date!?!
+      response.should have_tag 'tr' do
+        with_tag 'td', :text => 'January  2, 2011 12:00:00 AM'
+        with_tag 'form'
+      end
+      response.should have_tag 'tr' do
+        with_tag 'td', :text => 'January  1, 2011 12:00:00 AM'
+      end
     end
   end
 
