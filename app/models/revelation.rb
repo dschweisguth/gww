@@ -14,8 +14,8 @@ class Revelation < ActiveRecord::Base
   end
 
   #noinspection RailsParamDefResolve
-  def self.all_since(update)
-    all :conditions => [ "added_at > ?", update.created_at ],
+  def self.all_since(report)
+    all :conditions => [ "added_at > ?", report.created_at ],
       :include => { :photo => :person }
   end
 

@@ -46,16 +46,16 @@ describe Revelation do
   end
 
   describe '.all_since' do
-    it 'returns all revelations since the most recent Flickr update' do
+    it 'returns all revelations since the most recent score report' do
       revelation = Revelation.make :added_at => Time.utc(2011, 1, 2)
-      update = FlickrUpdate.make :created_at => Time.utc(2011)
-      Revelation.all_since(update).should == [ revelation ]
+      report = ScoreReport.make :created_at => Time.utc(2011)
+      Revelation.all_since(report).should == [ revelation ]
     end
 
-    it 'ignores revelations made before the most recent Flickr update' do
+    it 'ignores revelations made before the most recent score report' do
       Revelation.make :added_at => Time.utc(2011)
-      update = FlickrUpdate.make :created_at => Time.utc(2011, 1, 2)
-      Revelation.all_since(update).should == []
+      report = ScoreReport.make :created_at => Time.utc(2011, 1, 2)
+      Revelation.all_since(report).should == []
     end
 
   end

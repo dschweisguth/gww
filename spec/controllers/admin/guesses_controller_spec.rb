@@ -7,9 +7,8 @@ describe Admin::GuessesController do
     it 'renders the page' do
       stub(Time).now { Time.local(2011, 1, 5) }
 
-      most_recent_update = FlickrUpdate.make :created_at => Time.local(2011), :member_count => 3
-      penultimate_update = FlickrUpdate.make :created_at => Time.local(2011, 1, 4)
-      stub(FlickrUpdate).all { [ most_recent_update, penultimate_update ] }
+      previous_report = ScoreReport.make :created_at => Time.local(2011)
+      stub(ScoreReport).first { previous_report }
 
       person0 = Person.make
       person1 = Person.make
@@ -18,7 +17,7 @@ describe Admin::GuessesController do
       guess11 = Guess.make 11, :person => person1
       guess21 = Guess.make 21, :person => person2
       guess22 = Guess.make 22, :person => person2
-      mock(Guess).all_since(most_recent_update) { [ guess11, guess21, guess22 ] }
+      mock(Guess).all_since(previous_report) { [ guess11, guess21, guess22 ] }
 
       revealed_photo11 = Photo.make 11, :person => person1
       revealed_photo21 = Photo.make 21, :person => person2
@@ -26,12 +25,12 @@ describe Admin::GuessesController do
       revelation11 = Revelation.make 11, :photo => revealed_photo11
       revelation21 = Revelation.make 21, :photo => revealed_photo21
       revelation22 = Revelation.make 22,  :photo => revealed_photo22
-      mock(Revelation).all_since(most_recent_update) { [ revelation11, revelation21, revelation22 ] }
+      mock(Revelation).all_since(previous_report) { [ revelation11, revelation21, revelation22 ] }
 
       stub(Person).high_scorers(7) { [ person2, person1 ] }
       stub(Person).high_scorers(30) { [ person2, person1 ] }
 
-      mock(Photo).count_since(penultimate_update) { 6 }
+      mock(Photo).count_since(previous_report) { 6 }
       mock(Photo).unfound_or_unconfirmed_count { 1234 }
 
       # Note that we're ignoring the test guesses' photos' people
@@ -45,6 +44,8 @@ describe Admin::GuessesController do
 
       mock(Person).by_score(people) { { 0 => [ person0 ], 1 => [ person1 ], 2 => [ person2 ] } }
 
+      stub(FlickrUpdate).first { FlickrUpdate.make :member_count => 3 }
+
       get :report
 
       #noinspection RubyResolve
@@ -54,7 +55,7 @@ describe Admin::GuessesController do
       response.should have_text /3 photos revealed by .../
       response.should have_text /Top guessers in the last week:/
       response.should have_text /Top guessers in the last month:/
-      response.should have_text /6 photos have been added to the pool since the last update./
+      response.should have_text /6 photos have been added to the pool since the previous report/
       response.should have_tag 'a[href=http://anythreewords.com/gwsf/]', :text => '1234 unfound photos'
       # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
       participation = '2 people have made correct guesses. ' +

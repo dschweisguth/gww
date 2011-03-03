@@ -113,6 +113,46 @@ describe FlickrUpdate do
 
 end
 
+describe ScoreReport do
+  describe 'when using .new' do
+    before do
+      set_spec_type_to_non_model
+    end
+
+    it "makes one" do
+      should_make_default_score_report
+    end
+
+    it "overrides defaults" do
+      should_make_score_report_with_custom_attributes
+    end
+
+  end
+
+  describe 'when using .create!' do
+    it "makes one" do
+      should_make_default_score_report
+    end
+
+    it "overrides defaults" do
+      should_make_score_report_with_custom_attributes
+    end
+
+  end
+
+  def should_make_default_score_report
+    update = ScoreReport.make
+    update.created_at.should_not be_nil
+  end
+
+  def should_make_score_report_with_custom_attributes
+    should_make_with_custom_attributes ScoreReport, {
+      :created_at => Time.utc(2011)
+    }
+  end
+
+end
+
 describe Person do
   describe 'when using .new' do
     before do

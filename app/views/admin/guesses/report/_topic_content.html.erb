@@ -11,7 +11,7 @@
 <%= render 'admin/guesses/report/high_scorers',
     :object => @monthly_high_scorers, :period => 'month' -%>
 
-<%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the last update. There are still <a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos</a> in the pool.
+<%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the previous report. There are still <a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos</a> in the pool.
 
 <%= @total_correct_guessers %> people have made correct guesses. <%= @total_posters_only %> people have put at least one photo in the pool but not guessed any photos correctly. That means that at least <%= @total_participants %> of our <%= pluralize @member_count, 'member' %> have participated in the game.
 

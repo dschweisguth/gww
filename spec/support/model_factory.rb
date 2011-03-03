@@ -62,6 +62,21 @@ class FlickrUpdate
 
 end
 
+class ScoreReport
+  extend ModelFactory
+
+  #noinspection RubyUnusedLocalVariable
+  def self.attrs(method, label, caller_attrs)
+    attrs = {}
+    if method == :new && ! caller_attrs[:created_at]
+      attrs[:created_at] = Time.now
+    end
+    attrs
+  end
+  private_class_method :attrs
+
+end
+
 class Person
   extend ModelFactory
 

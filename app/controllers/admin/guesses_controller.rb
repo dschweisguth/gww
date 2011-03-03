@@ -4,16 +4,16 @@ class Admin::GuessesController < ApplicationController
   def report
     @report_date = Time.now
 
-    updates = FlickrUpdate.all :order => "id desc", :limit => 2
+    previous_report = ScoreReport.first :order => 'id desc'
 
-    @guesses = Guess.all_since updates[0]
+    @guesses = Guess.all_since previous_report
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|
         c = y[1].length <=> x[1].length
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
-    @revelations = Revelation.all_since updates[0]
+    @revelations = Revelation.all_since previous_report
     @revealers =
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
@@ -21,7 +21,7 @@ class Admin::GuessesController < ApplicationController
     @weekly_high_scorers = Person.high_scorers 7
     @monthly_high_scorers = Person.high_scorers 30
 
-    @new_photos_count = Photo.count_since updates[1]
+    @new_photos_count = Photo.count_since previous_report
     @unfound_count = Photo.unfound_or_unconfirmed_count
 
     people = Person.all
@@ -31,7 +31,7 @@ class Admin::GuessesController < ApplicationController
     @total_participants = people.length
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
     @total_correct_guessers = @total_participants - @total_posters_only
-    @member_count = updates[0].member_count
+    @member_count = FlickrUpdate.first(:order => 'id desc').member_count
     @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
     @html = CGI.escapeHTML \
