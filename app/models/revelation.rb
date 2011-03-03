@@ -19,6 +19,12 @@ class Revelation < ActiveRecord::Base
       :include => { :photo => :person }
   end
 
+  #noinspection RailsParamDefResolve
+  def self.all_between(from, to)
+    all :conditions => [ '? < added_at and added_at <= ?', from, to ],
+      :include => { :photo => :person }
+  end
+
   def time_elapsed
     time_elapsed_between photo.dateadded, revealed_at
   end

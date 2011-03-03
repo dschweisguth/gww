@@ -60,6 +60,24 @@ describe Revelation do
 
   end
 
+  describe '.all_between' do
+    it 'returns all revelations between the given dates' do
+      revelation = Revelation.make :added_at => Time.utc(2011, 1, 1, 0, 0, 1)
+      Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == [ revelation ]
+    end
+
+    it 'ignores revelations made on or before the from date' do
+      Revelation.make :added_at => Time.utc(2011)
+      Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
+    end
+
+    it 'ignores revelations made after the to date' do
+      Revelation.make :added_at => Time.utc(2011, 1, 1, 0, 0, 2)
+      Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
+    end
+
+  end
+
   describe '#time_elapsed' do
     it 'returns the duration in seconds from post to revelation in English' do
       photo = Photo.new :dateadded => Time.utc(2000)
