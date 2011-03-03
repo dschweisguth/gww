@@ -48,7 +48,7 @@ class Admin::ScoreReportsController < ApplicationController
 
   def create
     ScoreReport.create!
-    redirect_to :controller => 'admin/score_reports', :action => 'new'
+    redirect_to new_score_report_path
   end
 
   def destroy
