@@ -109,11 +109,6 @@ class Guess < ActiveRecord::Base
       :order => GUESS_AGE, :limit => 10
   end
 
-  def self.all_since(score_report)
-    all :conditions => [ "added_at > ?", score_report.created_at ],
-      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
-  end
-
   def self.all_between(from, to)
     all :conditions => [ "? < added_at and added_at <= ?", from, to ],
       :include => [ { :photo => :person }, :person ], :order => "guessed_at"

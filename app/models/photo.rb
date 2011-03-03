@@ -412,10 +412,6 @@ class Photo < ActiveRecord::Base
 
   # Used by Admin::GuessesController
 
-  def self.count_since(report)
-    count :conditions => [ "? <= dateadded", report.created_at ]
-  end
-
   def self.count_between(from, to)
     count :conditions => [ "? < dateadded and dateadded <= ?", from, to ]
   end

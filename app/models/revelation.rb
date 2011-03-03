@@ -14,12 +14,6 @@ class Revelation < ActiveRecord::Base
   end
 
   #noinspection RailsParamDefResolve
-  def self.all_since(report)
-    all :conditions => [ "added_at > ?", report.created_at ],
-      :include => { :photo => :person }
-  end
-
-  #noinspection RailsParamDefResolve
   def self.all_between(from, to)
     all :conditions => [ '? < added_at and added_at <= ?', from, to ],
       :include => { :photo => :person }

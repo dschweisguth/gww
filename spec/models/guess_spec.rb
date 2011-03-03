@@ -296,21 +296,6 @@ describe Guess do
 
   end
 
-  describe '.all_since' do
-    it 'returns all guesses since the most recent score report' do
-      guess = Guess.make :added_at => Time.utc(2011, 1, 2)
-      report = ScoreReport.make :created_at => Time.utc(2011)
-      Guess.all_since(report).should == [ guess ]
-    end
-
-    it 'ignores guesses made before the most recent score report' do
-      Guess.make :added_at => Time.utc(2011)
-      report = ScoreReport.make :created_at => Time.utc(2011, 1, 2)
-      Guess.all_since(report).should == []
-    end
-
-  end
-
   describe '.all_between' do
     it 'returns all guesses between the given dates' do
       guess = Guess.make :added_at => Time.utc(2011, 1, 1, 0, 0, 1)

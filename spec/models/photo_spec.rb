@@ -887,21 +887,6 @@ describe Photo do
 
   # Used by Admin::GuessesController
 
-  describe '.count_since' do
-    it 'counts photos' do
-      report = ScoreReport.make :created_at => Time.utc(2011)
-      Photo.make :dateadded => Time.utc(2011)
-      Photo.count_since(report).should == 1
-    end
-
-    it 'ignores photos added before the last score_report' do
-      report = ScoreReport.make :created_at => Time.utc(2011)
-      Photo.make :dateadded => Time.utc(2010)
-      Photo.count_since(report).should == 0
-    end
-
-  end
-
   describe '.count_between' do
     it 'counts all photos between the given dates' do
       Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 1)
