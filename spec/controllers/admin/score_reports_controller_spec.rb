@@ -97,4 +97,13 @@ describe Admin::ScoreReportsController do
     end
   end
 
+  describe '#destroy' do
+    it "destroys and redirects" do
+      mock(ScoreReport).destroy('666')
+      get :destroy, :id => 666
+      #noinspection RubyResolve
+      response.should redirect_to score_reports_path
+    end
+  end
+
 end
