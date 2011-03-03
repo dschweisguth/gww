@@ -2,7 +2,11 @@
 <% sandwich 'shared/admin/breadcrumbs' do %>
 <h1>Score report</h1>
 
-<a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a> - <a href="#preview">Preview</a>
+<p><a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a> - <a href="#preview">Preview</a></p>
+
+<% form_tag score_reports_path do %>
+  <%= submit_tag 'Remember that the score report below was published' %> <span class="new-list-item">New!</span>
+<% end -%>
 
 <h2><label for="html">HTML</label></h2>
 <textarea id="html" name="textfield" rows="50" cols="100" onfocus="this.select();"><%= @html %></textarea>
