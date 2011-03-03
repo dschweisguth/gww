@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Admin::ScoreReportsController do
-  describe 'index' do
+  describe '#index' do
     it 'is routed to' do
       { :get => '/admin/score_reports' }.should route_to :controller => 'admin/score_reports', :action => 'index'
     end
@@ -13,7 +13,7 @@ describe Admin::ScoreReportsController do
 
   end
 
-  describe 'new' do
+  describe '#new' do
     it 'is routed to' do
       { :get => '/admin/score_reports/new' }.should route_to :controller => 'admin/score_reports', :action => 'new'
     end
@@ -25,7 +25,7 @@ describe Admin::ScoreReportsController do
 
   end
 
-  describe 'create' do
+  describe '#create' do
     it 'is routed to' do
       { :post => '/admin/score_reports' }.should route_to :controller => 'admin/score_reports', :action => 'create'
     end
@@ -33,6 +33,18 @@ describe Admin::ScoreReportsController do
     it 'has a named route' do
       #noinspection RubyResolve
       score_reports_path.should == '/admin/score_reports'
+    end
+
+  end
+
+  describe '#destroy' do
+    it 'is routed to' do
+      { :delete => '/admin/score_reports/666' }.should route_to :controller => 'admin/score_reports', :action => 'destroy', :id => '666'
+    end
+
+    it 'has a named route' do
+      #noinspection RubyResolve
+      score_report_path('666').should == '/admin/score_reports/666'
     end
 
   end
