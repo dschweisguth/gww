@@ -37,6 +37,18 @@ describe Admin::ScoreReportsController do
 
   end
 
+  describe '#show' do
+    it 'is routed to' do
+      { :get => '/admin/score_reports/666' }.should route_to :controller => 'admin/score_reports', :action => 'show', :id => '666'
+    end
+
+    it 'has a named route' do
+      #noinspection RubyResolve
+      score_report_path('666').should == '/admin/score_reports/666'
+    end
+
+  end
+
   describe '#destroy' do
     it 'is routed to' do
       { :delete => '/admin/score_reports/666' }.should route_to :controller => 'admin/score_reports', :action => 'destroy', :id => '666'
