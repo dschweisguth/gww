@@ -25,7 +25,7 @@ class Admin::ScoreReportsController < ApplicationController
     @monthly_high_scorers = Person.high_scorers 30
 
     @new_photos_count = Photo.count_between previous_report_date, utc_report_date
-    @unfound_count = Photo.unfound_or_unconfirmed_count
+    @unfound_count = Photo.unfound_or_unconfirmed_count_before utc_report_date
 
     people = Person.all
     Photo.add_posts people

@@ -62,7 +62,7 @@ describe Admin::ScoreReportsController do
       stub(Person).high_scorers(30) { [ person2, person1 ] }
 
       mock(Photo).count_between(previous_report.created_at, report_date.getutc) { 6 }
-      mock(Photo).unfound_or_unconfirmed_count { 1234 }
+      mock(Photo).unfound_or_unconfirmed_count_before(report_date) { 1234 }
 
       # Note that we're ignoring the test guesses' photos' people
       people = [ person0, person1, person2 ]
