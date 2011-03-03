@@ -6,18 +6,19 @@ class Admin::ScoreReportsController < ApplicationController
 
   def new
     @report_date = Time.now
+    utc_report_date = @report_date.getutc
 
     previous_report = ScoreReport.first \
       :conditions => [ 'created_at < ?', @report_date ], :order => 'id desc'
-
-    @guesses = Guess.all_since previous_report
+    previous_report_date = previous_report.created_at
+    @guesses = Guess.all_between previous_report_date, utc_report_date
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|
         c = y[1].length <=> x[1].length
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
-    @revelations = Revelation.all_since previous_report
+    @revelations = Revelation.all_between previous_report_date, utc_report_date
     @revealers =
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
@@ -25,7 +26,7 @@ class Admin::ScoreReportsController < ApplicationController
     @weekly_high_scorers = Person.high_scorers 7
     @monthly_high_scorers = Person.high_scorers 30
 
-    @new_photos_count = Photo.count_since previous_report
+    @new_photos_count = Photo.count_between previous_report_date, utc_report_date
     @unfound_count = Photo.unfound_or_unconfirmed_count
 
     people = Person.all

@@ -35,7 +35,8 @@ describe Admin::ScoreReportsController do
 
   describe '#new' do
     it 'renders the page' do
-      stub(Time).now { Time.local(2011, 1, 5) }
+      report_date = Time.local(2011, 1, 5)
+      stub(Time).now { report_date }
 
       previous_report = ScoreReport.make :created_at => Time.local(2011)
       stub(ScoreReport).first { previous_report }
@@ -47,7 +48,7 @@ describe Admin::ScoreReportsController do
       guess11 = Guess.make 11, :person => person1
       guess21 = Guess.make 21, :person => person2
       guess22 = Guess.make 22, :person => person2
-      mock(Guess).all_since(previous_report) { [ guess11, guess21, guess22 ] }
+      mock(Guess).all_between(previous_report.created_at, report_date.getutc) { [ guess11, guess21, guess22 ] }
 
       revealed_photo11 = Photo.make 11, :person => person1
       revealed_photo21 = Photo.make 21, :person => person2
@@ -55,12 +56,12 @@ describe Admin::ScoreReportsController do
       revelation11 = Revelation.make 11, :photo => revealed_photo11
       revelation21 = Revelation.make 21, :photo => revealed_photo21
       revelation22 = Revelation.make 22,  :photo => revealed_photo22
-      mock(Revelation).all_since(previous_report) { [ revelation11, revelation21, revelation22 ] }
+      mock(Revelation).all_between(previous_report.created_at, report_date.getutc) { [ revelation11, revelation21, revelation22 ] }
 
       stub(Person).high_scorers(7) { [ person2, person1 ] }
       stub(Person).high_scorers(30) { [ person2, person1 ] }
 
-      mock(Photo).count_since(previous_report) { 6 }
+      mock(Photo).count_between(previous_report.created_at, report_date.getutc) { 6 }
       mock(Photo).unfound_or_unconfirmed_count { 1234 }
 
       # Note that we're ignoring the test guesses' photos' people
