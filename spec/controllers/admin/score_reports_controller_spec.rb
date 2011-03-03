@@ -3,6 +3,15 @@ require 'spec_helper'
 describe Admin::ScoreReportsController do
   integrate_views
 
+  describe '#index' do
+    it 'renders the page' do
+      ScoreReport.make :created_at => Time.utc(2011)
+      ScoreReport.make :created_at => Time.utc(2011, 1, 2)
+      get :index
+      response.should be_success
+    end
+  end
+
   describe '#new' do
     it 'renders the page' do
       stub(Time).now { Time.local(2011, 1, 5) }

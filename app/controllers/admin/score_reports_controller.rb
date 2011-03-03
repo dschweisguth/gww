@@ -1,5 +1,10 @@
 class Admin::ScoreReportsController < ApplicationController
 
+  # TODO Dave test
+  def index
+    @score_reports = ScoreReport.all :order => 'id desc'
+  end
+
   def new
     @report_date = Time.now
 
@@ -44,6 +49,11 @@ class Admin::ScoreReportsController < ApplicationController
   def create
     ScoreReport.create!
     redirect_to :controller => 'admin/score_reports', :action => 'new'
+  end
+
+  def destroy
+    ScoreReport.destroy params[:id]
+    redirect_to score_reports_path
   end
 
 end

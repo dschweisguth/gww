@@ -17,6 +17,11 @@ img {
   clear: both;
 }
 
+.inline {
+  display: inline-block;
+  margin: 0 3px;
+}
+
 /* Tables */
 
 table {
@@ -78,11 +83,6 @@ th {
 
 .spacious {
   line-height: 200%;
-}
-
-.inline {
-  display: inline-block;
-  margin: 0 3px;
 }
 
 .error {
