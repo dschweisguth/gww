@@ -70,7 +70,6 @@ class Admin::ScoreReportsController < ApplicationController
       render_to_string(:partial => 'admin/score_reports/new/topic_content') \
         .gsub /$/, '<br/>'
 
-    render 'admin/score_reports/new'
   end
   private :render_report
 
