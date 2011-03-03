@@ -311,6 +311,24 @@ describe Guess do
 
   end
 
+  describe '.all_between' do
+    it 'returns all guesses between the given dates' do
+      guess = Guess.make :added_at => Time.utc(2011, 1, 1, 0, 0, 1)
+      Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == [ guess ]
+    end
+
+    it 'ignores guesses made on or before the from date' do
+      Guess.make :added_at => Time.utc(2011)
+      Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
+    end
+
+    it 'ignores guesses made after the to date' do
+      Guess.make :added_at => Time.utc(2011, 1, 1, 0, 0, 2)
+      Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
+    end
+
+  end
+
   describe '#years_old' do
     it 'returns the number of full years from post to guess (ignoring leap years)' do
       photo = Photo.new :dateadded => Time.utc(2010)

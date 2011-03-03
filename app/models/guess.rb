@@ -114,6 +114,11 @@ class Guess < ActiveRecord::Base
       :include => [ { :photo => :person }, :person ], :order => "guessed_at"
   end
 
+  def self.all_between(from, to)
+    all :conditions => [ "? < added_at and added_at <= ?", from, to ],
+      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
+  end
+
   def years_old
     (seconds_old / (365 * 24 * 60 * 60)).truncate
   end
