@@ -11,6 +11,7 @@ class Admin::ScoreReportsController < ApplicationController
 
   def create
     ScoreReport.create!
+    PageCache.clear
     redirect_to new_score_report_path
   end
 
@@ -21,6 +22,7 @@ class Admin::ScoreReportsController < ApplicationController
 
   def destroy
     ScoreReport.destroy params[:id]
+    PageCache.clear
     redirect_to score_reports_path
   end
 

@@ -53,6 +53,7 @@ describe Admin::ScoreReportsController do
   describe '#create' do
     it "creates and redirects" do
       mock(ScoreReport).create!
+      mock_clear_page_cache
       post :create
       response.should redirect_to :controller => 'admin/score_reports', :action => 'new'
     end
@@ -78,6 +79,7 @@ describe Admin::ScoreReportsController do
   describe '#destroy' do
     it "destroys and redirects" do
       mock(ScoreReport).destroy('666')
+      mock_clear_page_cache
       get :destroy, :id => 666
       #noinspection RubyResolve
       response.should redirect_to score_reports_path
@@ -147,4 +149,8 @@ def should_render_report_for(report_date, action, params = {})
     "Here are the 1 people who've correctly guessed two or more photos."
   response.should have_text /#{guessing}/
 
+end
+
+def mock_clear_page_cache(times = 1)
+  mock(PageCache).clear.times(times)
 end
