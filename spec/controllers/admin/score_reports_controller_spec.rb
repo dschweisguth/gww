@@ -55,7 +55,8 @@ describe Admin::ScoreReportsController do
       mock(ScoreReport).create!
       mock_clear_page_cache
       post :create
-      response.should redirect_to :controller => 'admin/score_reports', :action => 'new'
+      #noinspection RubyResolve
+      response.should redirect_to score_reports_path
     end
   end
 

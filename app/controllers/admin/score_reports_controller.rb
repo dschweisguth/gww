@@ -12,7 +12,7 @@ class Admin::ScoreReportsController < ApplicationController
   def create
     ScoreReport.create!
     PageCache.clear
-    redirect_to new_score_report_path
+    redirect_to score_reports_path
   end
 
   caches_page :show
