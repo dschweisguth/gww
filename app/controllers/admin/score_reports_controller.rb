@@ -31,11 +31,8 @@ class Admin::ScoreReportsController < ApplicationController
     utc_report_date = report_date.getutc
 
     previous_report = ScoreReport.preceding(utc_report_date)
-    if ! previous_report
-      raise ActiveRecord::RecordNotFound,
-        "Sorry, the report with that ID isn't real and can't be viewed."
-    end
-    previous_report_date = previous_report.created_at
+    previous_report_date = previous_report ? previous_report.created_at : Time.utc(2005)
+    
     @guesses = Guess.all_between previous_report_date, utc_report_date
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|

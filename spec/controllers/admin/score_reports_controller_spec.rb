@@ -40,12 +40,15 @@ describe Admin::ScoreReportsController do
     end
 
     it "renders the page" do
-      should_render_report_for @report_date, :new
+      previous_report_date = Time.local(2011).getutc
+      previous_report = ScoreReport.make :created_at => previous_report_date
+      stub(ScoreReport).preceding(@report_date.getutc) { previous_report }
+      should_render_report_for @report_date, previous_report_date, :new
     end
 
-    it "refuses to display the earliest report" do
+    it "uses a hardcoded previous report date for the earliest real one" do
       stub(ScoreReport).preceding(@report_date.getutc) { nil }
-      lambda { get :new }.should raise_error ActiveRecord::RecordNotFound
+      should_render_report_for @report_date, Time.utc(2005), :new
     end
 
   end
@@ -67,12 +70,15 @@ describe Admin::ScoreReportsController do
     end
 
     it "renders the page" do
-      should_render_report_for @report_date, :show, :id => 1
+      previous_report_date = Time.local(2011).getutc
+      previous_report = ScoreReport.make :created_at => previous_report_date
+      stub(ScoreReport).preceding(@report_date.getutc) { previous_report }
+      should_render_report_for @report_date, previous_report_date, :show, :id => 1
     end
 
-    it "refuses to display the earliest report" do
+    it "uses a hardcoded previous report date for the earliest real one" do
       stub(ScoreReport).preceding(@report_date.getutc) { nil }
-      lambda { get :show, :id => 1 }.should raise_error ActiveRecord::RecordNotFound
+      should_render_report_for @report_date, Time.utc(2005), :show, :id => 1
     end
 
   end
@@ -89,11 +95,7 @@ describe Admin::ScoreReportsController do
 
 end
 
-def should_render_report_for(report_date, action, params = {})
-  previous_report_date = Time.local(2011).getutc
-  previous_report = ScoreReport.make :created_at => previous_report_date
-  stub(ScoreReport).preceding(report_date.getutc) { previous_report }
-
+def should_render_report_for(report_date, previous_report_date, action, params = {})
   person0 = Person.make
   person1 = Person.make
   person2 = Person.make
