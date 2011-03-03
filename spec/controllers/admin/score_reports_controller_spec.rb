@@ -39,7 +39,7 @@ describe Admin::ScoreReportsController do
       stub(Time).now { report_date }
 
       previous_report = ScoreReport.make :created_at => Time.local(2011)
-      stub(ScoreReport).first { previous_report }
+      stub(ScoreReport).preceding(report_date) { previous_report }
 
       person0 = Person.make
       person1 = Person.make
