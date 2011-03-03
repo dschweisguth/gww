@@ -19,8 +19,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
 
-  # TODO Dave test routes I care about
-  map.resources :score_reports, :controller => 'admin/score_reports'
+  map.resources :score_reports, :path_prefix => '/admin', :controller => 'admin/score_reports'
 
   map.with_options :controller => 'admin/root' do |admin_root|
     admin_root.admin_root 'admin'
