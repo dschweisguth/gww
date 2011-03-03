@@ -7,7 +7,8 @@ class Admin::ScoreReportsController < ApplicationController
   def new
     @report_date = Time.now
 
-    previous_report = ScoreReport.first :order => 'id desc'
+    previous_report = ScoreReport.first \
+      :conditions => [ 'created_at < ?', @report_date ], :order => 'id desc'
 
     @guesses = Guess.all_since previous_report
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
