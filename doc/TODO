@@ -7,7 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Remove unnecessary routing describe blocks from routing specs
 Extract facades from models
 Merge revelations into guesses?
 After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
