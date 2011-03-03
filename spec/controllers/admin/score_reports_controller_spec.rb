@@ -4,14 +4,14 @@ describe Admin::ScoreReportsController do
   integrate_views
 
   describe '#index' do
-    it 'renders the page' do
-      report1 = ScoreReport.make :created_at => Time.local(2011)
-      report2 = ScoreReport.make :created_at => Time.local(2011, 1, 2)
-      stub(ScoreReport).all { [ report2, report1 ] }
+    it "renders the page" do
+      stub(ScoreReport).all { [
+        ScoreReport.make(:created_at => Time.local(2011, 1, 2)),
+        ScoreReport.make(:created_at => Time.local(2011))
+      ] }
       get :index
       #noinspection RubyResolve
       response.should be_success
-      p response.body
       # By experiment, this doesn't actually assert that the form is in the
       # same tr as the later date!?!
       response.should have_tag 'tr' do
@@ -22,6 +22,15 @@ describe Admin::ScoreReportsController do
         with_tag 'td', :text => 'January  1, 2011 12:00:00 AM'
       end
     end
+
+    it "doesn't allow deletion of the last report" do
+      stub(ScoreReport).all { [ ScoreReport.make :created_at => Time.local(2011) ] }
+      get :index
+      #noinspection RubyResolve
+      response.should be_success
+      response.should_not have_tag 'form'
+    end
+
   end
 
   describe '#new' do
