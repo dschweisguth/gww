@@ -9,6 +9,7 @@ describe Admin::ScoreReportsController do
       report2 = ScoreReport.make :created_at => Time.local(2011, 1, 2)
       stub(ScoreReport).all { [ report2, report1 ] }
       get :index
+      #noinspection RubyResolve
       response.should be_success
       p response.body
       # By experiment, this doesn't actually assert that the form is in the
