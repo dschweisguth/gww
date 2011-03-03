@@ -9,13 +9,12 @@ class CreateScoreReports < ActiveRecord::Migration
         begin
           declare done int default 0;
           declare n int default 0;
-          declare start, previous, current datetime;
+          declare previous, current datetime;
           declare cu cursor for (select added_at from guesses) union (select added_at from revelations) order by added_at;
           declare continue handler for not found set done = 1;
 
           open cu;
           fetch cu into previous;
-          set start = previous;
           read_loop: loop
             fetch cu into current;
             set	n = n +	1;
@@ -23,9 +22,8 @@ class CreateScoreReports < ActiveRecord::Migration
               leave read_loop;
             end if;
             if previous < subtime(current, '1 0:0:0') then
-              insert into score_reports values(null, start);
+              insert into score_reports values(null, previous);
               set n = 0;
-              set start	= current;
             end	if;
             set previous = current;
           end loop;
