@@ -9,7 +9,7 @@
 <% @score_reports.each_with_index do |report, i| %>
   <tr>
     <td>
-      <%= report.created_at.getlocal.strftime '%b %e, %Y, %l:%M:%S %p' %>
+      <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M:%S %p'), score_report_path(report.id) %>
     </td>
     <% if i == 0 && @score_reports.length > 1 %>
       <td>
