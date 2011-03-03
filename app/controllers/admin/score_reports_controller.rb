@@ -8,7 +8,7 @@ class Admin::ScoreReportsController < ApplicationController
     @report_date = Time.now
     utc_report_date = @report_date.getutc
 
-    previous_report_date = ScoreReport.preceding(@report_date).created_at
+    previous_report_date = ScoreReport.preceding(utc_report_date).created_at
     @guesses = Guess.all_between previous_report_date, utc_report_date
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|
