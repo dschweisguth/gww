@@ -114,7 +114,7 @@ class Photo < ActiveRecord::Base
       Time.utc(2010), Time.utc(2011) ]
   end
 
-  # Used by Admin::RootController, Admin::GuessesController
+  # Used by Admin::RootController
 
   def self.unfound_or_unconfirmed_count
     count :conditions => "game_status in ('unfound', 'unconfirmed')"
@@ -410,10 +410,22 @@ class Photo < ActiveRecord::Base
     person.destroy_if_has_no_dependents
   end
 
-  # Used by Admin::GuessesController
+  # Used by Admin::ScoreReportsController
 
   def self.count_between(from, to)
     count :conditions => [ "? < dateadded and dateadded <= ?", from, to ]
+  end
+
+  def self.unfound_or_unconfirmed_count_before(date)
+    count_by_sql [
+      %q[
+        select count(*) from photos p where
+          dateadded <= ? and
+          not exists (select 1 from guesses where photo_id = p.id and added_at <= ?) and
+          not exists (select 1 from revelations where photo_id = p.id and added_at <= ?)
+        ],
+        date, date, date
+    ]
   end
 
   def self.add_posts(people)

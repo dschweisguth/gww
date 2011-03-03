@@ -343,7 +343,7 @@ describe Photo do
 
   end
 
-  # Used by Admin::RootController, Admin::GuessesController
+  # Used by Admin::RootController
 
   describe '.unfound_or_unconfirmed_count' do
     %w(unfound unconfirmed).each do |game_status|
@@ -885,7 +885,7 @@ describe Photo do
     end
   end
 
-  # Used by Admin::GuessesController
+  # Used by Admin::ScoreReportController
 
   describe '.count_between' do
     it 'counts all photos between the given dates' do
@@ -901,6 +901,43 @@ describe Photo do
     it 'ignores photos made after the to date' do
       Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 2)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+    end
+
+  end
+
+  describe '.unfound_or_unconfirmed_count_before' do
+    it "counts photos added on or before and not scored on or before the given date" do
+      Photo.make :dateadded => Time.utc(2011)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+    end
+
+    it "includes photos guessed after the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Guess.make :photo => photo, :added_at => Time.utc(2011, 2)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+    end
+
+    it "includes photos revealed after the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Revelation.make :photo => photo, :added_at => Time.utc(2011, 2)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+    end
+
+    it "ignores photos added after the given date" do
+      Photo.make :dateadded => Time.utc(2011, 2)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+    end
+
+    it "ignores photos guessed on or before the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Guess.make :photo => photo, :added_at => Time.utc(2011)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+    end
+
+    it "ignores photos revealed on or before the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Revelation.make :photo => photo, :added_at => Time.utc(2011)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
   end
