@@ -14,7 +14,7 @@
     <% if i == 0 && @score_reports.length > 1 %>
       <td>
         <% form_tag score_report_path(report), :method => :delete, :class => 'inline' do %>
-          <%= submit_tag 'Forget' %>
+          <%= submit_tag 'Forget', :confirm => 'Are you sure?' %>
         <% end -%>
       </td>
     <% end %>
