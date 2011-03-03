@@ -8,8 +8,8 @@
   </tr>
 <% @score_reports.each_with_index do |report, i| %>
   <tr>
-    <td class="number">
-      <%= report.created_at.getlocal.strftime '%B %e, %Y %l:%M:%S %p' %>
+    <td>
+      <%= report.created_at.getlocal.strftime '%b %e, %Y, %l:%M:%S %p' %>
     </td>
     <% if i == 0 && @score_reports.length > 1 %>
       <td>
