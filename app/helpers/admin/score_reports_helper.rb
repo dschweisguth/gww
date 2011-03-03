@@ -1,4 +1,4 @@
-module Admin::GuessesHelper
+module Admin::ScoreReportsHelper
 
   # Flickr replaces link text that looks like a domain name with the URL to
   # deter spoofing, but the result is ugly. Slightly mangle usernames that look
