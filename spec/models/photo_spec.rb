@@ -902,6 +902,24 @@ describe Photo do
 
   end
 
+  describe '.count_between' do
+    it 'counts all photos between the given dates' do
+      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 1)
+      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 1
+    end
+
+    it 'ignores photos made on or before the from date' do
+      Photo.make :dateadded => Time.utc(2011)
+      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+    end
+
+    it 'ignores photos made after the to date' do
+      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 2)
+      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+    end
+
+  end
+
   describe '.add_posts' do
     it "adds each person's posts as an attribute" do
       person = Person.make

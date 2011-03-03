@@ -416,6 +416,10 @@ class Photo < ActiveRecord::Base
     count :conditions => [ "? <= dateadded", report.created_at ]
   end
 
+  def self.count_between(from, to)
+    count :conditions => [ "? < dateadded and dateadded <= ?", from, to ]
+  end
+
   def self.add_posts(people)
     posts_per_person = Photo.count :group => :person_id
     people.each do |person|
