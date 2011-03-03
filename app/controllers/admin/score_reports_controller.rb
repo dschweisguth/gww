@@ -5,10 +5,34 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def new
-    @report_date = Time.now
-    utc_report_date = @report_date.getutc
+    render_report Time.now
+  end
 
-    previous_report_date = ScoreReport.preceding(utc_report_date).created_at
+  def create
+    ScoreReport.create!
+    redirect_to new_score_report_path
+  end
+
+  caches_page :show
+  def show
+    render_report ScoreReport.find(params[:id]).created_at
+  end
+
+  def destroy
+    ScoreReport.destroy params[:id]
+    redirect_to score_reports_path
+  end
+
+  def render_report(report_date)
+    @report_date = report_date.getlocal
+    utc_report_date = report_date.getutc
+
+    previous_report = ScoreReport.preceding(utc_report_date)
+    if ! previous_report
+      raise ActiveRecord::RecordNotFound,
+        "Sorry, the report with that ID isn't real and can't be viewed."
+    end
+    previous_report_date = previous_report.created_at
     @guesses = Guess.all_between previous_report_date, utc_report_date
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|
@@ -43,16 +67,8 @@ class Admin::ScoreReportsController < ApplicationController
       render_to_string(:partial => 'admin/score_reports/new/topic_content') \
         .gsub /$/, '<br/>'
 
+    render 'admin/score_reports/new'
   end
-
-  def create
-    ScoreReport.create!
-    redirect_to new_score_report_path
-  end
-
-  def destroy
-    ScoreReport.destroy params[:id]
-    redirect_to score_reports_path
-  end
+  private :render_report
 
 end
