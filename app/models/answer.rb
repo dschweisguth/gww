@@ -13,12 +13,14 @@ module Answer
 
   #noinspection RubyUnusedLocalVariable
   def formatted_age_by_period(from, to, periods)
-    years = to.year - from.year
-    months = to.month - from.month
-    days = to.day - from.day
-    hours = to.hour - from.hour
-    minutes = to.min - from.min
-    seconds = to.sec - from.sec
+    utc_from = from.getutc
+    utc_to = to.getutc
+    years = utc_to.year - utc_from.year
+    months = utc_to.month - utc_from.month
+    days = utc_to.day - utc_from.day
+    hours = utc_to.hour - utc_from.hour
+    minutes = utc_to.min - utc_from.min
+    seconds = utc_to.sec - utc_from.sec
     if seconds < 0
       seconds += 60
       minutes -= 1
