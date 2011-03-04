@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Admin::PhotosController do
   integrate_views
+  without_transactions
 
   describe '#update' do
     it 'does some work and redirects to the admin index' do

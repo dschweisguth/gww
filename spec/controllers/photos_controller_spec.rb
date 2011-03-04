@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe PhotosController do
   integrate_views
+  without_transactions
 
   describe '#list' do
     it 'renders the page' do

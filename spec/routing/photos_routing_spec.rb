@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe PhotosController do
+  without_transactions
+
   describe 'list' do
     it 'is routed to' do
       { :get => '/photos/list/sorted-by/foo/order/bar/page/666' }.should route_to \

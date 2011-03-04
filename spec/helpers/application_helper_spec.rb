@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'support/model_factory'
 
 describe ApplicationHelper do
+  without_transactions
+
   describe '#singularize' do
     it 'replaces a plural verb with a singular one' do
       helper.singularize('delete', 1).should == 'deletes'

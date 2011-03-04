@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe GuessesController do
+  without_transactions
+
   describe 'longest_and_shortest' do
     it 'is routed to' do
       { :get => '/guesses/longest_and_shortest' }.should route_to \
@@ -13,4 +15,5 @@ describe GuessesController do
     end
 
   end
+
 end

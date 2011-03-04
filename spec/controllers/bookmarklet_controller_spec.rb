@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe BookmarkletController do
   integrate_views
+  without_transactions
 
   describe '#view' do
     it 'redirects to the given photo' do

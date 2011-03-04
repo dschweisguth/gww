@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe PeopleController do
+  without_transactions
+
   describe 'list' do
     it 'is routed to' do
       { :get => '/people/list/sorted-by/foo/order/bar' }.should route_to \

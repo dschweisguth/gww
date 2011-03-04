@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe PeopleHelper do
+  without_transactions
+
   describe '#list_path' do
     it 'returns the URI to the list sorted by the given criterion' do
       list_path_should_return 'score', '+', 'username', '/people/list/sorted-by/username/order/+'

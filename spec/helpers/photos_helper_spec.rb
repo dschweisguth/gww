@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe PhotosHelper do
+  without_transactions
+
   describe '#list_path' do
     it 'returns the URI to the list sorted by the given criterion' do
       list_path_should_return 'date-added', '+', 'username', '/photos/list/sorted-by/username/order/+/page/1'

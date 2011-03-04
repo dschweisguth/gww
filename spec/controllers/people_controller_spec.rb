@@ -3,6 +3,7 @@ require 'support/model_factory'
 
 describe PeopleController do
   integrate_views
+  without_transactions
 
   describe '#find' do
     it 'finds a person' do

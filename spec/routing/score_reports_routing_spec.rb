@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe ScoreReportsController do
+  without_transactions
+
   describe '#index' do
     it 'is routed to' do
       { :get => '/score_reports' }.should route_to :controller => 'score_reports', :action => 'index'
