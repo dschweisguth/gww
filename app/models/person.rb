@@ -167,7 +167,7 @@ class Person < ActiveRecord::Base
   end
 
   def self.top_guessers(report_time)
-    days, weeks, months, years = get_periods(report_time)
+    days, weeks, months, years = get_periods(report_time.getlocal)
 
     [ days, weeks, months, years ].each do |periods|
       periods.each do |period|

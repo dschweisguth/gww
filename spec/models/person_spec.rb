@@ -283,7 +283,7 @@ describe Person do
 
   describe '.top_guessers' do
     before do
-      @report_time = Time.utc(2011, 1, 3)
+      @report_time = Time.local(2011, 1, 3)
       @report_day = @report_time.beginning_of_day
     end
 
@@ -333,7 +333,7 @@ describe Person do
         [ Period.new(@report_day.beginning_of_year, @report_day + 1.day),
           Period.starting_at(@report_day.beginning_of_year - 1.year, 1.year) ]
       ]
-      guess = Guess.make :guessed_at => Time.utc(2010, 1, 1)
+      guess = Guess.make :guessed_at => Time.local(2010, 1, 1).getutc
       expected[2][12].scores[1] = [ guess.person ]
       expected[3][1].scores[1] = [ guess.person ]
       Person.top_guessers(@report_time).should == expected
