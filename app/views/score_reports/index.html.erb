@@ -1,0 +1,24 @@
+<% content_for :title do %>Score reports<% end %>
+<% sandwich do %>
+<h1>Score reports</h1>
+
+<table>
+  <tr>
+    <th>Published</th>
+  </tr>
+<% @score_reports.each do |report| %>
+  <tr>
+    <td>
+      <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), score_report_path(report.id) %>
+    </td>
+  </tr>
+<% end -%>
+</table>
+
+<p>The times of score report publication up to the end of February 2011 were determined
+automatically from the times that guesses and revelations were recorded. Probably due to
+the evolution of this application, the report times from the first year or so
+of GWSF don't seem reliable. They're fairly reliable for the last few years, and
+starting in March 2011 they're genuinely accurate.</p>
+
+<% end %>

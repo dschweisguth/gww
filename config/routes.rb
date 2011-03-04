@@ -15,6 +15,8 @@ ActionController::Routing::Routes.draw do |map|
   map.longest_and_shortest 'guesses/longest_and_shortest',
     :controller => 'guesses', :action => 'longest_and_shortest'
 
+  map.resources :score_reports
+
   map.connect 'wheresies/:action', :controller => 'wheresies'
 
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
