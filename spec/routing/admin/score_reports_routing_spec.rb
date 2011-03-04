@@ -14,7 +14,7 @@ describe Admin::ScoreReportsController do
 
     it 'has a named route' do
       #noinspection RubyResolve
-      new_score_report_path.should == '/admin/score_reports/new'
+      new_admin_score_report_path.should == '/admin/score_reports/new'
     end
 
   end
@@ -28,7 +28,7 @@ describe Admin::ScoreReportsController do
   describe '#index, #create' do
     it 'has a named route' do
       #noinspection RubyResolve
-      score_reports_path.should == '/admin/score_reports'
+      admin_score_reports_path.should == '/admin/score_reports'
     end
 
   end
@@ -48,7 +48,7 @@ describe Admin::ScoreReportsController do
   describe '#show, #destroy' do
     it 'has a named route' do
       #noinspection RubyResolve
-      score_report_path('666').should == '/admin/score_reports/666'
+      admin_score_report_path('666').should == '/admin/score_reports/666'
     end
   end
 

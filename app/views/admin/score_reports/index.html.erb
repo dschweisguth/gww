@@ -2,7 +2,7 @@
 <% sandwich 'shared/admin/breadcrumbs' do %>
 <h1>Score reports</h1>
 
-<p><%= link_to 'New score report', new_score_report_path %></p>
+<p><%= link_to 'New score report', new_admin_score_report_path %></p>
 
 <table>
   <tr>
@@ -11,11 +11,11 @@
 <% @score_reports.each_with_index do |report, i| %>
   <tr>
     <td>
-      <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), score_report_path(report.id) %>
+      <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), admin_score_report_path(report.id) %>
     </td>
     <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago %>
       <td>
-        <% form_tag score_report_path(report), :method => :delete, :class => 'inline' do %>
+        <% form_tag admin_score_report_path(report), :method => :delete, :class => 'inline' do %>
           <%= submit_tag 'Forget', :confirm => 'Are you sure?' %>
         <% end -%>
         (Do this if you just published, maybe scored another photo, changed your mind and want to republish. This can't be undone!)

@@ -19,7 +19,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
 
-  map.resources :score_reports, :path_prefix => '/admin', :controller => 'admin/score_reports'
+  map.resources :admin_score_reports, :path_prefix => '/admin', :controller => 'admin/score_reports', :as => 'score_reports'
 
   map.with_options :controller => 'admin/root' do |admin_root|
     admin_root.admin_root 'admin'

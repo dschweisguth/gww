@@ -12,7 +12,7 @@ class Admin::ScoreReportsController < ApplicationController
   def create
     ScoreReport.create!
     PageCache.clear
-    redirect_to score_reports_path
+    redirect_to admin_score_reports_path
   end
 
   caches_page :show
@@ -23,7 +23,7 @@ class Admin::ScoreReportsController < ApplicationController
   def destroy
     ScoreReport.destroy params[:id]
     PageCache.clear
-    redirect_to score_reports_path
+    redirect_to admin_score_reports_path
   end
 
   def render_report(report_date)

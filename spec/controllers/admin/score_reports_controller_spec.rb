@@ -70,7 +70,7 @@ describe Admin::ScoreReportsController do
       mock_clear_page_cache
       post :create
       #noinspection RubyResolve
-      response.should redirect_to score_reports_path
+      response.should redirect_to admin_score_reports_path
     end
   end
 
@@ -100,7 +100,7 @@ describe Admin::ScoreReportsController do
       mock_clear_page_cache
       get :destroy, :id => 666
       #noinspection RubyResolve
-      response.should redirect_to score_reports_path
+      response.should redirect_to admin_score_reports_path
     end
   end
 
