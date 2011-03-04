@@ -18,6 +18,7 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
+Enforce get, post, etc. in controllers
 Add old score reports to user pages
 Add x-passed-y indicators to score report
 Add report of guesses made before photo was added
