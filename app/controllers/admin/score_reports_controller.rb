@@ -47,7 +47,6 @@ class Admin::ScoreReportsController < ApplicationController
     @weekly_high_scorers = Person.high_scorers @report_date, 7
     @monthly_high_scorers = Person.high_scorers @report_date, 30
 
-    # TODO Dave model methods that need UTC should get it themselves
     @new_photos_count = Photo.count_between previous_report_date, @report_date
     @unfound_count = Photo.unfound_or_unconfirmed_count_before @report_date
 
