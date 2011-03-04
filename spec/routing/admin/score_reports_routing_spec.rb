@@ -5,12 +5,6 @@ describe Admin::ScoreReportsController do
     it 'is routed to' do
       { :get => '/admin/score_reports' }.should route_to :controller => 'admin/score_reports', :action => 'index'
     end
-
-    it 'has a named route' do
-      #noinspection RubyResolve
-      score_reports_path.should == '/admin/score_reports'
-    end
-
   end
 
   describe '#new' do
@@ -29,7 +23,9 @@ describe Admin::ScoreReportsController do
     it 'is routed to' do
       { :post => '/admin/score_reports' }.should route_to :controller => 'admin/score_reports', :action => 'create'
     end
+  end
 
+  describe '#index, #create' do
     it 'has a named route' do
       #noinspection RubyResolve
       score_reports_path.should == '/admin/score_reports'
@@ -41,24 +37,19 @@ describe Admin::ScoreReportsController do
     it 'is routed to' do
       { :get => '/admin/score_reports/666' }.should route_to :controller => 'admin/score_reports', :action => 'show', :id => '666'
     end
-
-    it 'has a named route' do
-      #noinspection RubyResolve
-      score_report_path('666').should == '/admin/score_reports/666'
-    end
-
   end
 
   describe '#destroy' do
     it 'is routed to' do
       { :delete => '/admin/score_reports/666' }.should route_to :controller => 'admin/score_reports', :action => 'destroy', :id => '666'
     end
+  end
 
+  describe '#show, #destroy' do
     it 'has a named route' do
       #noinspection RubyResolve
       score_report_path('666').should == '/admin/score_reports/666'
     end
-
   end
 
 end
