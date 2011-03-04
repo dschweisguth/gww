@@ -11,7 +11,7 @@
 <% @score_reports.each_with_index do |report, i| %>
   <tr>
     <td>
-      <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), admin_score_report_path(report.id) %>
+      <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), score_report_path(report.id) %>
     </td>
     <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago %>
       <td>

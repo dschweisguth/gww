@@ -15,11 +15,6 @@ class Admin::ScoreReportsController < ApplicationController
     redirect_to admin_score_reports_path
   end
 
-  caches_page :show
-  def show
-    render_report ScoreReport.find(params[:id]).created_at
-  end
-
   def destroy
     ScoreReport.destroy params[:id]
     PageCache.clear
