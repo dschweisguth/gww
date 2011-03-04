@@ -63,9 +63,9 @@ class Admin::ScoreReportsController < ApplicationController
     @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
     @html = CGI.escapeHTML \
-      render_to_string :partial => 'admin/score_reports/new/topic_content'
+      render_to_string :partial => 'admin/score_reports/topic_content'
     @topic_content =
-      render_to_string(:partial => 'admin/score_reports/new/topic_content') \
+      render_to_string(:partial => 'admin/score_reports/topic_content') \
         .gsub /$/, '<br/>'
 
   end
