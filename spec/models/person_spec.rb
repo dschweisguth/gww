@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/model_factory'
 
 describe Person do
 
