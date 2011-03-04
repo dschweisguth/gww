@@ -18,11 +18,11 @@ describe Admin::ScoreReportsController do
       # By experiment, this doesn't actually assert that the form is in the
       # same tr as the later date!?!
       response.should have_tag 'tr' do
-        with_tag 'td', :text => 'Jan  2, 2011, 12:00:00 AM'
+        with_tag 'td', :text => 'Jan  2, 2011, 12:00 AM'
         with_tag 'form'
       end
       response.should have_tag 'tr' do
-        with_tag 'td', :text => 'Jan  1, 2011, 12:00:00 AM'
+        with_tag 'td', :text => 'Jan  1, 2011, 12:00 AM'
       end
     end
 
