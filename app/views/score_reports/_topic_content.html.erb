@@ -1,14 +1,14 @@
 <strong>updated <%= @report_date.strftime '%A, %B %d, %I %p' %></strong>
 
-<%= render 'admin/score_reports/thumbnails',
+<%= render 'score_reports/thumbnails',
     :change_name => 'new guess', :change_verb => '',
     :changes => @guesses, :people => @guessers -%>
-<%= render 'admin/score_reports/thumbnails',
+<%= render 'score_reports/thumbnails',
     :change_name => 'photo', :change_verb => ' revealed',
     :changes => @revelations, :people => @revealers -%>
-<%= render 'admin/score_reports/high_scorers',
+<%= render 'score_reports/high_scorers',
     :object => @weekly_high_scorers, :period => 'week' -%>
-<%= render 'admin/score_reports/high_scorers',
+<%= render 'score_reports/high_scorers',
     :object => @monthly_high_scorers, :period => 'month' -%>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the previous report. There are still <a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos</a> in the pool.
