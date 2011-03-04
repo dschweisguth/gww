@@ -15,7 +15,7 @@ class Revelation < ActiveRecord::Base
 
   #noinspection RailsParamDefResolve
   def self.all_between(from, to)
-    all :conditions => [ '? < added_at and added_at <= ?', from, to ],
+    all :conditions => [ '? < added_at and added_at <= ?', from.getutc, to.getutc ],
       :include => { :photo => :person }
   end
 

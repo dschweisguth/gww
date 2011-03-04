@@ -110,7 +110,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.all_between(from, to)
-    all :conditions => [ "? < added_at and added_at <= ?", from, to ],
+    all :conditions => [ "? < added_at and added_at <= ?", from.getutc, to.getutc ],
       :include => [ { :photo => :person }, :person ], :order => "guessed_at"
   end
 

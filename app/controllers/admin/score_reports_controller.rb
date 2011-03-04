@@ -28,19 +28,18 @@ class Admin::ScoreReportsController < ApplicationController
 
   def render_report(report_date)
     @report_date = report_date.getlocal
-    utc_report_date = report_date.getutc
 
-    previous_report = ScoreReport.preceding(utc_report_date)
+    previous_report = ScoreReport.preceding(@report_date)
     previous_report_date = previous_report ? previous_report.created_at : Time.utc(2005)
     
-    @guesses = Guess.all_between previous_report_date, utc_report_date
+    @guesses = Guess.all_between previous_report_date, @report_date
     @guessers = @guesses.group_by { |guess| guess.person }.sort \
       do |x, y|
         c = y[1].length <=> x[1].length
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
-    @revelations = Revelation.all_between previous_report_date, utc_report_date
+    @revelations = Revelation.all_between previous_report_date, @report_date
     @revealers =
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
@@ -49,11 +48,11 @@ class Admin::ScoreReportsController < ApplicationController
     @monthly_high_scorers = Person.high_scorers @report_date, 30
 
     # TODO Dave model methods that need UTC should get it themselves
-    @new_photos_count = Photo.count_between previous_report_date, utc_report_date
-    @unfound_count = Photo.unfound_or_unconfirmed_count_before utc_report_date
+    @new_photos_count = Photo.count_between previous_report_date, @report_date
+    @unfound_count = Photo.unfound_or_unconfirmed_count_before @report_date
 
     people = Person.all_before @report_date
-    Photo.add_posts people, utc_report_date
+    Photo.add_posts people, @report_date
     @people_by_score = Person.by_score people, @report_date
 
     @total_participants = people.length

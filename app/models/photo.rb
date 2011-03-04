@@ -413,10 +413,11 @@ class Photo < ActiveRecord::Base
   # Used by Admin::ScoreReportsController
 
   def self.count_between(from, to)
-    count :conditions => [ "? < dateadded and dateadded <= ?", from, to ]
+    count :conditions => [ "? < dateadded and dateadded <= ?", from.getutc, to.getutc ]
   end
 
   def self.unfound_or_unconfirmed_count_before(date)
+    utc_date = date.getutc
     count_by_sql [
       %q[
         select count(*) from photos p where
@@ -424,13 +425,13 @@ class Photo < ActiveRecord::Base
           not exists (select 1 from guesses where photo_id = p.id and added_at <= ?) and
           not exists (select 1 from revelations where photo_id = p.id and added_at <= ?)
         ],
-        date, date, date
+        utc_date, utc_date, utc_date
     ]
   end
 
-  def self.add_posts(people, report_date)
+  def self.add_posts(people, to_date)
     posts_per_person = Photo.count \
-      :conditions => [ 'dateadded <= ?', report_date ], :group => :person_id
+      :conditions => [ 'dateadded <= ?', to_date.getutc ], :group => :person_id
     people.each do |person|
       person[:posts] = posts_per_person[person.id] || 0
     end
