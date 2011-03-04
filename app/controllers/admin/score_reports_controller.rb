@@ -52,7 +52,7 @@ class Admin::ScoreReportsController < ApplicationController
     @unfound_count = Photo.unfound_or_unconfirmed_count_before utc_report_date
 
     people = Person.all
-    Photo.add_posts people
+    Photo.add_posts people, report_date
     @people_by_score = Person.by_score people
 
     @total_participants = people.length

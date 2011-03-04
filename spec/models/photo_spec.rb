@@ -945,11 +945,18 @@ describe Photo do
   describe '.add_posts' do
     it "adds each person's posts as an attribute" do
       person = Person.make
-      Photo.make 1, :person => person
-      Photo.make 2, :person => person
-      Photo.add_posts [ person ]
-      person[:posts].should == 2
+      Photo.make 1, :person => person, :dateadded => Time.utc(2010)
+      Photo.add_posts [ person ], Time.utc(2011)
+      person[:posts].should == 1
     end
+
+    it "ignores posts made after the report date" do
+      person = Person.make
+      Photo.make 1, :person => person, :dateadded => Time.utc(2011)
+      Photo.add_posts [ person ], Time.utc(2010)
+      person[:posts].should == 0
+    end
+
   end
 
   # Used by specs which delete a photo or guess to assert that the owner had no

@@ -123,7 +123,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   people = [person0, person1, person2]
   stub(Person).all { people }
 
-  mock(Photo).add_posts(people)
+  mock(Photo).add_posts(people, report_date)
   person0[:posts] = 0
   person1[:posts] = 1
   person2[:posts] = 2

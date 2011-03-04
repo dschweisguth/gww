@@ -428,8 +428,9 @@ class Photo < ActiveRecord::Base
     ]
   end
 
-  def self.add_posts(people)
-    posts_per_person = Photo.count :group => :person_id
+  def self.add_posts(people, report_date)
+    posts_per_person = Photo.count \
+      :conditions => [ 'dateadded <= ?', report_date ], :group => :person_id
     people.each do |person|
       person[:posts] = posts_per_person[person.id] || 0
     end
