@@ -9,6 +9,9 @@ describe Admin::ScoreReportsController do
         ScoreReport.make(:created_at => Time.local(2011, 1, 2)),
         ScoreReport.make(:created_at => Time.local(2011))
       ] }
+      any_instance_of(ActiveSupport::Duration) do |d|
+        stub(d).ago { Time.local(2011) }
+      end
       get :index
       #noinspection RubyResolve
       response.should be_success
@@ -24,7 +27,15 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of the last report" do
-      stub(ScoreReport).all { [ ScoreReport.make :created_at => Time.local(2011) ] }
+      stub(ScoreReport).all { [ ScoreReport.make :created_at => Time.now ] }
+      get :index
+      #noinspection RubyResolve
+      response.should be_success
+      response.should_not have_tag 'form'
+    end
+
+    it "doesn't allow deletion of a report more than a day old" do
+      stub(ScoreReport).all { [ ScoreReport.make :created_at => Time.now - 1.day - 1.second ] }
       get :index
       #noinspection RubyResolve
       response.should be_success

@@ -11,7 +11,7 @@
     <td>
       <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M:%S %p'), score_report_path(report.id) %>
     </td>
-    <% if i == 0 && @score_reports.length > 1 %>
+    <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago %>
       <td>
         <% form_tag score_report_path(report), :method => :delete, :class => 'inline' do %>
           <%= submit_tag 'Forget', :confirm => 'Are you sure?' %>
