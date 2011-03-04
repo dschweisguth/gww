@@ -54,7 +54,7 @@ class Admin::ScoreReportsController < ApplicationController
 
     people = Person.all_before @report_date
     Photo.add_posts people, utc_report_date
-    @people_by_score = Person.by_score people
+    @people_by_score = Person.by_score people, @report_date
 
     @total_participants = people.length
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length

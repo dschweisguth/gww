@@ -509,6 +509,27 @@ describe Person do
 
   end
 
+  describe '.by_score' do
+    it "groups people by score and adds each's post count" do
+      person1 = Person.make 1
+      person2 = Person.make 2
+      Person.by_score([ person1, person2 ], Time.utc(2011)).should == { 0 => [ person1, person2 ] }
+    end
+
+    it "adds up guesses" do
+      person = Person.make
+      Guess.make 1, :person => person, :guessed_at => Time.utc(2011)
+      Guess.make 2, :person => person, :guessed_at => Time.utc(2011)
+      Person.by_score([ person ], Time.utc(2011)).should == { 2 => [ person ] }
+    end
+
+    it "ignores guesses from after the report date" do
+      guess = Guess.make :guessed_at => Time.utc(2012)
+      Person.by_score([ guess.person ], Time.utc(2011)).should == { 0 => [ guess.person ] }
+    end
+
+  end
+
   describe '.most_points_in_2010' do
     it 'returns a list of scorers with their scores' do
       guess = Guess.make :guessed_at => Time.utc(2010)
@@ -657,22 +678,6 @@ describe Person do
       top_posters.size.should == 10
       #noinspection RubyResolve
       top_posters.should_not include(single_post.person)
-    end
-
-  end
-
-  describe '.by_score' do
-    it "groups people by score and adds each's post count" do
-      person1 = Person.make 1
-      person2 = Person.make 2
-      Person.by_score([ person1, person2 ]).should == {0 => [ person1, person2 ] }
-    end
-
-    it 'adds up guesses' do
-      person = Person.make
-      Guess.make 1, :person => person
-      Guess.make 2, :person => person
-      Person.by_score([ person ]).should == { 2 => [ person ] }
     end
 
   end

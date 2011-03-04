@@ -128,7 +128,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   person1[:posts] = 1
   person2[:posts] = 2
 
-  mock(Person).by_score(people) { {0 => [person0], 1 => [person1], 2 => [person2]} }
+  mock(Person).by_score(people, report_date) { {0 => [person0], 1 => [person1], 2 => [person2]} }
 
   stub(FlickrUpdate).first { FlickrUpdate.make :member_count => 3 }
 

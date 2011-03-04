@@ -272,6 +272,21 @@ class Person < ActiveRecord::Base
     ]
   end
 
+  def self.by_score(people, report_date)
+    scores = Guess.count :conditions => [ 'guessed_at <= ?', report_date.getutc ], :group => :person_id
+    people_by_score = {}
+    people.each do |person|
+      score = scores[person.id] || 0
+      people_with_score = people_by_score[score]
+      if ! people_with_score
+        people_with_score = []
+        people_by_score[score] = people_with_score
+      end
+      people_with_score << person
+    end
+    people_by_score
+  end
+
   def self.most_points_in_2010
     find_by_sql [ %q{
       select p.*, count(*) points from people p, guesses g
@@ -322,21 +337,6 @@ class Person < ActiveRecord::Base
       },
       Time.utc(2010), Time.utc(2011), Time.utc(2011)
     ]
-  end
-
-  def self.by_score(people)
-    scores = Guess.count :group => :person_id
-    people_by_score = {}
-    people.each do |person|
-      score = scores[person.id] || 0
-      people_with_score = people_by_score[score]
-      if ! people_with_score
-        people_with_score = []
-        people_by_score[score] = people_with_score
-      end
-      people_with_score << person
-    end
-    people_by_score
   end
 
   def favorite_posters
