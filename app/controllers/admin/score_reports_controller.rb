@@ -45,8 +45,8 @@ class Admin::ScoreReportsController < ApplicationController
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
 
-    @weekly_high_scorers = Person.high_scorers 7
-    @monthly_high_scorers = Person.high_scorers 30
+    @weekly_high_scorers = Person.high_scorers @report_date, 7
+    @monthly_high_scorers = Person.high_scorers @report_date, 30
 
     @new_photos_count = Photo.count_between previous_report_date, utc_report_date
     @unfound_count = Photo.unfound_or_unconfirmed_count_before utc_report_date

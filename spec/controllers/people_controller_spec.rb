@@ -111,8 +111,10 @@ describe PeopleController do
 
       stub(Person).standing { [ 1, false ] }
 
-      stub(Person).high_scorers(7) { [ person ] }
-      stub(Person).high_scorers(30) { [ person ] }
+      now = Time.now
+      stub(Time).now { now }
+      stub(Person).high_scorers(now, 7) { [ person ] }
+      stub(Person).high_scorers(now, 30) { [ person ] }
 
       first_guess = Guess.make 'first_guess'
       stub(Guess).first_by(person) { first_guess }

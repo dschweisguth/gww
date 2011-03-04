@@ -113,8 +113,8 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   revelation22 = Revelation.make 22, :photo => revealed_photo22
   mock(Revelation).all_between(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
 
-  stub(Person).high_scorers(7) { [person2, person1] }
-  stub(Person).high_scorers(30) { [person2, person1] }
+  stub(Person).high_scorers(report_date, 7) { [ person2, person1 ] }
+  stub(Person).high_scorers(report_date, 30) { [ person2, person1 ] }
 
   mock(Photo).count_between(previous_report_date, report_date.getutc) { 6 }
   mock(Photo).unfound_or_unconfirmed_count_before(report_date) { 1234 }

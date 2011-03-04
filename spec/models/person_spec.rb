@@ -457,7 +457,7 @@ describe Person do
       guess = Guess.make '1', :guessed_at => 1.days.ago.getutc
       Guess.make '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
 
-      high_scorers = Person.high_scorers 2
+      high_scorers = Person.high_scorers Time.now, 2
       high_scorers.should == [ guess.person ]
       high_scorers[0][:score].should == 2
 
@@ -468,7 +468,7 @@ describe Person do
       Guess.make '2', :person => guess.person, :guessed_at => 1.days.ago.getutc
       Guess.make '3', :person => guess.person, :guessed_at => 3.days.ago.getutc
 
-      high_scorers = Person.high_scorers 2
+      high_scorers = Person.high_scorers Time.now, 2
       high_scorers.should == [ guess.person ]
       high_scorers[0][:score].should == 2
 
@@ -476,7 +476,7 @@ describe Person do
 
     it 'ignores scores of 1' do
       Guess.make :guessed_at => 1.days.ago.getutc
-      Person.high_scorers(2).should == []
+      Person.high_scorers(Time.now, 2).should == []
     end
 
   end

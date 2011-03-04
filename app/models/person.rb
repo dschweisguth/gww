@@ -242,12 +242,12 @@ class Person < ActiveRecord::Base
     return place, tied
   end
 
-  def self.high_scorers(days)
+  def self.high_scorers(now, for_the_past_n_days)
     people = find_by_sql [ %q{
       select p.*, count(*) score from people p, guesses g
-      where p.id = g.person_id and datediff(?, g.guessed_at) < ?
+      where p.id = g.person_id and ? < g.guessed_at and g.guessed_at < ?
       group by p.id having score > 1 order by score desc
-    }, Time.now.getutc.strftime('%Y-%m-%d'), days ]
+    }, now.getutc - for_the_past_n_days.days, now.getutc ]
     high_scorers = []
     current_score = nil
     people.each do |person|

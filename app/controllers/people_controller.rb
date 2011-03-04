@@ -31,12 +31,13 @@ class PeopleController < ApplicationController
     @person = Person.find params[:id]
 
     @place, @tied = Person.standing @person
-   
-    weekly_high_scorers = Person.high_scorers 7
+
+    now = Time.now
+    weekly_high_scorers = Person.high_scorers now, 7
     if weekly_high_scorers.include? @person
       @weekly_high_scorers = weekly_high_scorers
     end
-    monthly_high_scorers = Person.high_scorers 30
+    monthly_high_scorers = Person.high_scorers now, 30
     if monthly_high_scorers.include? @person
       @monthly_high_scorers = monthly_high_scorers
     end
