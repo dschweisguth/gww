@@ -48,11 +48,12 @@ class Admin::ScoreReportsController < ApplicationController
     @weekly_high_scorers = Person.high_scorers @report_date, 7
     @monthly_high_scorers = Person.high_scorers @report_date, 30
 
+    # TODO Dave model methods that need UTC should get it themselves
     @new_photos_count = Photo.count_between previous_report_date, utc_report_date
     @unfound_count = Photo.unfound_or_unconfirmed_count_before utc_report_date
 
-    people = Person.all
-    Photo.add_posts people, report_date
+    people = Person.all_before @report_date
+    Photo.add_posts people, utc_report_date
     @people_by_score = Person.by_score people
 
     @total_participants = people.length

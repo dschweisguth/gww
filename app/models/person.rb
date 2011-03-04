@@ -259,6 +259,17 @@ class Person < ActiveRecord::Base
     high_scorers
   end
 
+  def self.all_before(date)
+    find_by_sql [
+        %q[
+          select p.* from people p
+          where exists (select 1 from photos where person_id = p.id and dateadded <= ?) or
+            exists (select 1 from guesses where person_id = p.id and guessed_at <= ?)
+        ],
+        date, date
+    ]
+  end
+
   def self.most_points_in_2010
     find_by_sql [ %q{
       select p.*, count(*) points from people p, guesses g

@@ -481,6 +481,34 @@ describe Person do
 
   end
 
+  describe '.all_before' do
+    it "returns all people who posted before the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Person.all_before(Time.utc(2011)).should == [ photo.person ]
+    end
+
+    it "returns all people who guessed before the given date" do
+      guess = Guess.make :guessed_at => Time.utc(2011)
+      Person.all_before(Time.utc(2011)).should == [ guess.person ]
+    end
+
+    it "ignores people who did neither" do
+      Person.make
+      Person.all_before(Time.utc(2011)).should == []
+    end
+
+    it "ignores people who only posted after the given date" do
+      Photo.make :dateadded => Time.utc(2012)
+      Person.all_before(Time.utc(2011)).should == []
+    end
+
+    it "returns all people who guessed before the given date" do
+      Guess.make :guessed_at => Time.utc(2012)
+      Person.all_before(Time.utc(2011)).should == []
+    end
+
+  end
+
   describe '.most_points_in_2010' do
     it 'returns a list of scorers with their scores' do
       guess = Guess.make :guessed_at => Time.utc(2010)

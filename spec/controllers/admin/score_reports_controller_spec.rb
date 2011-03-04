@@ -120,8 +120,8 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   mock(Photo).unfound_or_unconfirmed_count_before(report_date) { 1234 }
 
   # Note that we're ignoring the test guesses' photos' people
-  people = [person0, person1, person2]
-  stub(Person).all { people }
+  people = [ person0, person1, person2 ]
+  stub(Person).all_before(report_date) { people }
 
   mock(Photo).add_posts(people, report_date)
   person0[:posts] = 0
