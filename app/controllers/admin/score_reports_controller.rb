@@ -7,6 +7,7 @@ class Admin::ScoreReportsController < ApplicationController
 
   def new
     render_report Time.now
+    @flickr_html = CGI.escapeHTML render_to_string :partial => 'score_reports/topic_content'
   end
 
   def create
@@ -55,11 +56,7 @@ class Admin::ScoreReportsController < ApplicationController
     @member_count = FlickrUpdate.first(:order => 'id desc').member_count
     @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
-    @html = CGI.escapeHTML \
-      render_to_string :partial => 'score_reports/topic_content'
-    @topic_content =
-      render_to_string(:partial => 'score_reports/topic_content') \
-        .gsub /$/, '<br/>'
+    @gww_html = render_to_string(:partial => 'score_reports/topic_content').gsub /$/, '<br/>'
 
   end
   private :render_report
