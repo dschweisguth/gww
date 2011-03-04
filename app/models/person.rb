@@ -260,13 +260,14 @@ class Person < ActiveRecord::Base
   end
 
   def self.all_before(date)
+    utc_date = date.getutc
     find_by_sql [
         %q[
           select p.* from people p
           where exists (select 1 from photos where person_id = p.id and dateadded <= ?) or
             exists (select 1 from guesses where person_id = p.id and guessed_at <= ?)
         ],
-        date, date
+        utc_date, utc_date
     ]
   end
 
