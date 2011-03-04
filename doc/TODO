@@ -21,6 +21,7 @@ Features
 
 Enforce get, post, etc. in controllers
 Add old score reports to user pages
+  Consider fragment-caching index
 Add x-passed-y indicators to score report
 Add report of guesses made before photo was added
 Photo edit page
