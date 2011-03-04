@@ -17,7 +17,7 @@ Comment Searchr</a>.</p>
 <ul class="spacious">
 <li>Scores are published to the <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></li>
 <li>Find a person, by username, Flickr ID or GWW ID:
-  <% form_tag({ :controller => 'people', :action => 'find' }, :class => 'inline') do %>
+  <% form_tag({ :controller => 'people', :action => 'find' }, :method => :get, :class => 'inline') do %>
   <%= text_field_with_auto_complete :person, :username %> <%= submit_tag 'Find' %>
   <% end %>
   <% if flash[:find_person_error] %><br/>
