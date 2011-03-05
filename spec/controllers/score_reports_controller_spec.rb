@@ -15,7 +15,6 @@ describe ScoreReportsController do
 
       #noinspection RubyResolve
       response.should be_success
-      p response.body
       response.should have_tag 'td', :text => 'Jan  1, 2011, 12:00 AM'
       response.should have_tag 'td', :text => '1'
       response.should have_tag 'td', :text => '2'
