@@ -4,17 +4,21 @@
 
 <p><%= link_to 'New score report', new_admin_score_report_path %></p>
 
-<table>
+<table class="top-justified">
   <tr>
     <th>Published</th>
+    <th>Guesses scored</th>
+    <th>Revelations scored</th>
   </tr>
 <% @score_reports.each_with_index do |report, i| -%>
   <tr>
     <td>
       <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), score_report_path(report.id) %>
     </td>
+    <td class="number"><%= @guess_counts[report.id] || 0 %></td>
+    <td class="number"><%= @revelation_counts[report.id] || 0 %></td>
     <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago -%>
-      <td>
+      <td class="forget">
         <% form_tag admin_score_report_path(report), :method => :delete, :class => 'inline' do %>
           <%= submit_tag 'Forget', :confirm => 'Are you sure?' %>
         <% end -%>

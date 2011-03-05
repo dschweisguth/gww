@@ -7,25 +7,33 @@ describe Admin::ScoreReportsController do
 
   describe '#index' do
     it "renders the page" do
-      stub(ScoreReport).all { [
-        ScoreReport.make(:created_at => Time.local(2011, 1, 2)),
-        ScoreReport.make(:created_at => Time.local(2011))
-      ] }
+      report2 = ScoreReport.make :id => 2, :created_at => Time.local(2011, 1, 2)
+      report1 = ScoreReport.make :id => 1, :created_at => Time.local(2011)
+      stub(ScoreReport).all { [ report2, report1 ] }
+      stub(ScoreReport).guess_counts { { report2.id => 4, report1.id => 3 } }
+      stub(ScoreReport).revelation_counts { { report2.id => 1 } }
       any_instance_of(ActiveSupport::Duration) do |d|
         stub(d).ago { Time.local(2011) }
       end
       get :index
+
+      p response.body
       #noinspection RubyResolve
       response.should be_success
       # By experiment, this doesn't actually assert that the form is in the
       # same tr as the later date!?!
       response.should have_tag 'tr' do
         with_tag 'td', :text => 'Jan  2, 2011, 12:00 AM'
+        with_tag 'td', :text => 4
+        with_tag 'td', :text => 1
         with_tag 'form'
       end
       response.should have_tag 'tr' do
         with_tag 'td', :text => 'Jan  1, 2011, 12:00 AM'
+        with_tag 'td', :text => 1
+        with_tag 'td', :text => 0 # the page filled in the missing revelation count
       end
+
     end
 
     it "doesn't allow deletion of the last report" do

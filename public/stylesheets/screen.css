@@ -156,13 +156,20 @@ a.normal {
   background-color: #ffcc33;
 }
 
+/* wheresies/index */
+
+.float {
+  float: left;
+  padding-right: 30px;
+}
+
 /* admin/index */
 
 .button-to, .button-to div {
   display: inline;
 }
 
-/* photos/edit */
+/* admin/photos/edit */
 
 .comments {
   font-size: 11px;
@@ -181,9 +188,12 @@ a.normal {
   padding: 1px 0;
 }
 
-/* wheresies/index */
+/* admin/score_reports/index */
 
-.float {
-  float: left;
-  padding-right: 30px;
+.top-justified td {
+  vertical-align: top;
+}
+
+.forget {
+  width: 300px;
 }
