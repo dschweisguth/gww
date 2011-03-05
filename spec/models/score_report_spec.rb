@@ -26,6 +26,26 @@ describe ScoreReport do
 
   end
 
+  describe '.all_with_revelation_counts' do
+    it "counts the revelations in the first score report" do
+      Revelation.make :added_at => Time.utc(2011)
+      report = ScoreReport.make :created_at => Time.utc(2011)
+      reports = ScoreReport.all_with_revelation_counts
+      reports.should == [ report ]
+      reports[0][:count].should == 1
+    end
+
+    it "counts the revelations in a non-first score report" do
+      Revelation.make :added_at => Time.utc(2011)
+      ScoreReport.make :created_at => Time.utc(2010)
+      report1 = ScoreReport.make :created_at => Time.utc(2011)
+      reports = ScoreReport.all_with_revelation_counts
+      reports.should == [ report1 ]
+      reports[0][:count].should == 1
+    end
+
+  end
+
   describe '.previous' do
     it "returns the report immediately preceding the given date" do
       previous = ScoreReport.make :created_at => Time.utc(2010)
