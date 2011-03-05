@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::ScoreReportsHelper do
+describe ScoreReportsHelper do
   without_transactions
 
   describe '#escape_username' do
