@@ -480,7 +480,7 @@ end
 # and non-model (in-memory) and object creation in this single file
 def set_spec_type_to_non_model(*model_classes)
   if model_classes.empty?
-    model_classes = [ FlickrUpdate, Person, Photo, Comment, Guess, Revelation ]
+    model_classes = [ ScoreReport, FlickrUpdate, Person, Photo, Comment, Guess, Revelation ]
   end
   model_classes.each { |model_class| stub(model_class).construction_method { :new } }
 end
