@@ -20,8 +20,6 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
-Add old score reports to user pages
-  Consider fragment-caching index
 Add x-passed-y indicators to score report
 Add report of guesses made before photo was added
 Photo edit page

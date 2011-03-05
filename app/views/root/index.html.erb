@@ -16,6 +16,7 @@ Comment Searchr</a>.</p>
 <h2>Reports</h2>
 <ul class="spacious">
 <li>Scores are published to the <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></li>
+<li><%= link_to 'Score reports', score_reports_path %><span class="new-list-item">New!</span></li>
 <li>Find a person, by username, Flickr ID or GWW ID:
   <% form_tag({ :controller => 'people', :action => 'find' }, :method => :get, :class => 'inline') do %>
   <%= text_field_with_auto_complete :person, :username %> <%= submit_tag 'Find' %>
@@ -26,7 +27,7 @@ Comment Searchr</a>.</p>
   <% end -%>
 </li>
 <li><%= link_to 'Active members', list_people_path('score', '+') %> and statistics. How do you measure up?</li>
-<li><%= link_to 'Nemeses', nemeses_path %>: who guesses whom the most?<span class="new-list-item">New!</span></li>
+<li><%= link_to 'Nemeses', nemeses_path %>: who guesses whom the most?</li>
 <li><%= link_to 'Top guessers', :controller => 'people', :action => 'top_guessers' %> by day, week, month and year</li>
 <li><%= link_to 'Photos', list_photos_path('date-added', '+', 1) %>, sortable by various statistics</li>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
@@ -44,7 +45,7 @@ Comment Searchr</a>.</p>
 </ul>
 <br/>
 
-<%= link_to 'Get the "View in GWW" bookmarklet', :action => 'bookmarklet' %><span class="new-list-item">New: jumps to people as well as photos!</span>
+<%= link_to 'Get the "View in GWW" bookmarklet', :action => 'bookmarklet' %>
 <br/><br/>
 
 <hr/>
