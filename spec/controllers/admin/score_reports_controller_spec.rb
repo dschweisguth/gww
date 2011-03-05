@@ -68,7 +68,9 @@ describe Admin::ScoreReportsController do
 
   describe '#create' do
     it "creates and redirects" do
-      mock(ScoreReport).create!
+      previous = ScoreReport.make
+      mock(ScoreReport).first({ :order => 'id desc' }) { previous }
+      mock(ScoreReport).create! :previous_report => previous
       mock_clear_page_cache
       post :create
       #noinspection RubyResolve

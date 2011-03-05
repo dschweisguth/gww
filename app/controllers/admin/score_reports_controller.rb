@@ -12,7 +12,8 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def create
-    ScoreReport.create!
+    previous = ScoreReport.first :order => 'id desc'
+    ScoreReport.create! :previous_report => previous
     PageCache.clear
     redirect_to admin_score_reports_path
   end
