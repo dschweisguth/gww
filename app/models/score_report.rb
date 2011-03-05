@@ -3,16 +3,16 @@ class ScoreReport < ActiveRecord::Base
   #noinspection RailsParamDefResolve
   has_one :next_report, :class_name => 'ScoreReport', :foreign_key => :previous_report_id
 
-  def self.all_with_guess_counts
-    all_with_answer_counts :guesses
+  def self.guess_counts
+    answer_counts :guesses
   end
 
-  def self.all_with_revelation_counts
-    all_with_answer_counts :revelations
+  def self.revelation_counts
+    answer_counts :revelations
   end
 
-  def self.all_with_answer_counts(answer_table_name)
-    find_by_sql [
+  def self.answer_counts(answer_table_name)
+    reports = find_by_sql [
       %Q[
         select current.*, count(*) count
         from score_reports current
@@ -23,8 +23,9 @@ class ScoreReport < ActiveRecord::Base
       ],
       Time.local(2005).getutc
     ]
+    Hash[reports.map { |report| [ report.id, report[:count] ] }]
   end
-  private_class_method :all_with_answer_counts
+  private_class_method :answer_counts
 
   def self.previous(date)
     first :conditions => [ 'created_at < ?', date.getutc ], :order => 'created_at desc'

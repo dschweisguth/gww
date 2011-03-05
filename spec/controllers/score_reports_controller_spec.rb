@@ -9,19 +9,15 @@ describe ScoreReportsController do
     it "renders the page" do
       report = ScoreReport.make :created_at => Time.local(2011)
       stub(ScoreReport).all { [ report ] }
-      guess_count_report = report.dup
-      guess_count_report[:count] = 1
-      stub(ScoreReport).all_with_guess_counts { [ guess_count_report ] }
-      revelation_count_report = report.dup
-      revelation_count_report[:count] = 2
-      stub(ScoreReport).all_with_revelation_counts { [ revelation_count_report ] }
+      stub(ScoreReport).guess_counts { { report.id => 1 } }
+      stub(ScoreReport).revelation_counts { { report.id => 2 } }
       get :index
 
       #noinspection RubyResolve
       response.should be_success
       p response.body
       response.should have_tag 'td', :text => 'Jan  1, 2011, 12:00 AM'
-#      response.should have_tag 'td', :text => '1' # TODO Dave fix this
+      response.should have_tag 'td', :text => '1'
       response.should have_tag 'td', :text => '2'
 
     end

@@ -6,42 +6,34 @@ describe ScoreReport do
     it { should have_one :next_report }
   end
 
-  describe '.all_with_guess_counts' do
+  describe '.guess_counts' do
     it "counts the guesses in the first score report" do
       Guess.make :added_at => Time.utc(2011)
       report = ScoreReport.make :created_at => Time.utc(2011)
-      reports = ScoreReport.all_with_guess_counts
-      reports.should == [ report ]
-      reports[0][:count].should == 1
+      ScoreReport.guess_counts.should == { report.id => 1 }
     end
 
     it "counts the guesses in a non-first score report" do
       Guess.make :added_at => Time.utc(2011)
       ScoreReport.make :created_at => Time.utc(2010)
       report1 = ScoreReport.make :created_at => Time.utc(2011)
-      reports = ScoreReport.all_with_guess_counts
-      reports.should == [ report1 ]
-      reports[0][:count].should == 1
+      ScoreReport.guess_counts.should == { report1.id => 1 }
     end
 
   end
 
-  describe '.all_with_revelation_counts' do
+  describe '.revelation_counts' do
     it "counts the revelations in the first score report" do
       Revelation.make :added_at => Time.utc(2011)
       report = ScoreReport.make :created_at => Time.utc(2011)
-      reports = ScoreReport.all_with_revelation_counts
-      reports.should == [ report ]
-      reports[0][:count].should == 1
+      ScoreReport.revelation_counts.should == { report.id => 1 }
     end
 
     it "counts the revelations in a non-first score report" do
       Revelation.make :added_at => Time.utc(2011)
       ScoreReport.make :created_at => Time.utc(2010)
       report1 = ScoreReport.make :created_at => Time.utc(2011)
-      reports = ScoreReport.all_with_revelation_counts
-      reports.should == [ report1 ]
-      reports[0][:count].should == 1
+      ScoreReport.revelation_counts.should == { report1.id => 1 }
     end
 
   end
