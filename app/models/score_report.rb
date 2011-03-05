@@ -3,7 +3,7 @@ class ScoreReport < ActiveRecord::Base
   #noinspection RailsParamDefResolve
   has_one :next_report, :class_name => 'ScoreReport', :foreign_key => :previous_report_id
 
-  def self.preceding(date)
+  def self.previous(date)
     first :conditions => [ 'created_at < ?', date.getutc ], :order => 'created_at desc'
   end
 

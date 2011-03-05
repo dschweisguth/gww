@@ -3,7 +3,7 @@ module ScoreReportsControllerSupport
   def prepare_gww_html(report_date)
     @report_date = report_date.getlocal
 
-    previous_report = ScoreReport.preceding(@report_date)
+    previous_report = ScoreReport.previous(@report_date)
     previous_report_date = previous_report ? previous_report.created_at : Time.utc(2005)
 
     @guesses = Guess.all_between previous_report_date, @report_date
