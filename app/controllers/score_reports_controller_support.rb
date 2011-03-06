@@ -45,7 +45,7 @@ module ScoreReportsControllerSupport
 
   def add_changes_in_standings(people_by_score, people, previous_report_date, guessers)
     add_place people_by_score, :place
-    previous_people_by_score = Person.by_score people, previous_report_date # TODO Dave do I need to look up previous people?
+    previous_people_by_score = Person.by_score people, previous_report_date
     add_place previous_people_by_score, :previous_place
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
