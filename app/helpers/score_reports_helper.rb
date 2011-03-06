@@ -16,14 +16,13 @@ module ScoreReportsHelper
     link_to h(escape_username(person.username)), show_person_url(person)
   end
 
-  STAR_IMAGES = {
-    :bronze => '/images/star-padded-bronze.gif',
-    :silver => '/images/star-padded-silver.gif',
-    :gold => '/images/star-padded-gold-animated.gif'
-  }
-
   def image_for_star(star)
-    path_to_url STAR_IMAGES[star]
+    star_images = {
+      :bronze => '/images/star-padded-bronze.gif',
+      :silver => '/images/star-padded-silver.gif',
+      :gold => '/images/star-padded-gold-animated.gif'
+    }
+    path_to_url star_images[star]
   end
 
   def path_to_url(path)
