@@ -7,6 +7,10 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
+Fix bad data evident in score reports
+  Remove reports with just a few guesses
+  Fix guess scored before the group started
+  Remove checks that filter out that data?
 Use RESTful routing in more places.
   Having done so, enforce correct HTTP method on remaining non-RESTful actions.
 Extract facades from models
@@ -21,7 +25,6 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 Features
 
 Add x-passed-y indicators to score report
-Add report of guesses made before photo was added
 Photo edit page
   Reduce the number of clicks it takes to add or remove a guess or revelation
   Make it possible to mark a photo as revealed which doesn't have a comment by
@@ -61,3 +64,5 @@ Write an admin page that reports on bogus data
   Photos that have guesses but have game_status != unfound
   Photos that are guessed by the owner of the photo
   Photos that have both guesses and revelations
+  Guesses made before photo was added
+Check the bogus data page in update-and-restart
