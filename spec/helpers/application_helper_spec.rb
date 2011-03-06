@@ -21,26 +21,6 @@ describe ApplicationHelper do
 
   end
 
-  describe '#ordinal' do
-    expected = {
-      1 => '1st',
-      2 => '2nd',
-      3 => '3rd',
-      4 => '4th',
-      11 => '11th',
-      12 => '12th',
-      13 => '13th',
-      21 => '21st',
-      22 => '22nd',
-      23 => '23rd'
-    }
-    expected.keys.sort.each do |cardinal|
-      it "converts the number #{cardinal} to its ordinal, #{expected[cardinal]}" do
-        helper.ordinal(cardinal).should == expected[cardinal]
-      end
-    end
-  end
-
   describe '#local_date' do
     it 'returns the local time as yyyy/mm/dd' do
       helper.local_date(Time.utc(2011)).should == '2010/12/31'

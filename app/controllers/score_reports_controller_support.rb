@@ -1,3 +1,5 @@
+require 'fixnum'
+
 module ScoreReportsControllerSupport
 
   # TODO Dave add welcomes to new members
@@ -53,7 +55,7 @@ module ScoreReportsControllerSupport
       place = scored_people[guesser][:place]
       previous_place = scored_people[guesser][:previous_place]
       if place < previous_place
-        guesser[:change_in_standings] = "moved up to 1st place!";
+        guesser[:change_in_standings] = "moved up to #{place.ordinal} place!";
       end
     end
   end
