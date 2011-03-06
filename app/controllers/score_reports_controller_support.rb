@@ -50,7 +50,6 @@ module ScoreReportsControllerSupport
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
-      # TODO Dave there are two copies of each person, right?
       place = scored_people[guesser][:place]
       previous_place = scored_people[guesser][:previous_place]
       if place < previous_place
