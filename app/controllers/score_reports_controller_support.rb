@@ -1,9 +1,10 @@
 module ScoreReportsControllerSupport
 
+  # TODO Dave add welcomes to new members
   def prepare_gww_html(report_date)
     @report_date = report_date.getlocal
 
-    previous_report = ScoreReport.previous(@report_date)
+    previous_report = ScoreReport.previous @report_date
     previous_report_date = previous_report ? previous_report.created_at : Time.utc(2005)
 
     @guesses = Guess.all_between previous_report_date, @report_date
@@ -27,6 +28,7 @@ module ScoreReportsControllerSupport
     people = Person.all_before @report_date
     Photo.add_posts people, @report_date
     @people_by_score = Person.by_score people, @report_date
+#    add_changes_in_standings @people_by_score, people, previous_report_date, @guessers
 
     @total_participants = people.length
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
@@ -38,5 +40,32 @@ module ScoreReportsControllerSupport
 
   end
   private :prepare_gww_html
+
+  # The following methods are public for testing only
+
+  def add_changes_in_standings(people_by_score, people, previous_report_date, guessers)
+    add_place people_by_score, :place
+    previous_people_by_score = Person.by_score people, previous_report_date # TODO Dave do I need to look up previous people?
+    add_place previous_people_by_score, :previous_place
+    scored_people = Hash[people.map { |person| [person, person] }]
+    guessers.each do |guesser_and_guesses|
+      guesser = guesser_and_guesses[0]
+      # TODO Dave there are two copies of each person, right?
+      place = scored_people[guesser][:place]
+      previous_place = scored_people[guesser][:previous_place]
+      if place < previous_place
+        guesser[:change_in_standings] = "moved up to 1st place!";
+      end
+    end
+  end
+
+  def add_place(people_by_score, attr_name)
+    place = 1
+    people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
+      # TODO Dave what if previous score is 0?
+      people_by_score[score].each { |person| person[attr_name] = place }
+      place += 1
+    end
+  end
 
 end
