@@ -16,9 +16,9 @@ describe Subject do
       winner = Person.make 1, :username => 'winner'
       loser = Person.make 2, :username => 'loser'
       people = [ winner, loser ]
-      people_by_score = { 3 => [ winner ], 2 => [ loser ] }
+      people_by_score = { 2 => [ winner ], 1 => [ loser ] }
       guessers = [ [ winner, [] ] ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ loser ], 1 => [ winner ] } }
+      stub(Person).by_score(people, Time.utc(2010)) { { 1 => [ loser ], 0 => [ winner ] } }
       @subject.add_changes_in_standings people_by_score, people, Time.utc(2010), guessers
       winner[:change_in_standings].should == 'moved up to 1st place!'
     end
