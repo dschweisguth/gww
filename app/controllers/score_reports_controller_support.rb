@@ -62,7 +62,6 @@ module ScoreReportsControllerSupport
   def add_place(people_by_score, attr_name)
     place = 1
     people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
-      # TODO Dave what if previous score is 0?
       people_by_score[score].each { |person| person[attr_name] = place }
       place += 1
     end
