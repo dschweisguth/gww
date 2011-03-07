@@ -543,52 +543,51 @@ describe Person do
   describe '.add_change_in_standings' do
     before do
       @person = Person.make 1
+      @people = [ @person ]
     end
 
-    it "congratulates new guessers" do
-      people = [ @person ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 0 => [ @person ] } }
+    it "congratulates a new guesser" do
+      stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
       people_by_score = { 1 => [ @person ] }
-      adds_change people_by_score, people, 'scored his or her first point. Congratulations!'
+      adds_change people_by_score, 'scored his or her first point. Congratulations!'
     end
 
-    it "mentions new guessers' points after the first" do
-      people = [ @person ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 0 => [ @person ] } }
+    it "mentions a new guesser's points after the first" do
+      stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
       people_by_score = { 2 => [ @person ] }
-      adds_change people_by_score, people, 'scored his or her first point (and 1 more). Congratulations!'
+      adds_change people_by_score, 'scored his or her first point (and 1 more). Congratulations!'
     end
 
     it "mentions climbing" do
       other = Person.make 2
-      people = [ @person, other ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ other ], 1 => [ @person ] } }
+      @people << other
+      stub(Person).by_score(@people, Time.utc(2010)) { { 2 => [ other ], 1 => [ @person ] } }
       people_by_score = { 3 => [ @person ], 2 => [ other ] }
-      adds_change people_by_score, people, 'climbed from 2nd to 1st place'
+      adds_change people_by_score, 'climbed from 2nd to 1st place'
     end
 
-    it "says jumped if the person climbed more than one place" do
+    it "says jumped if the guesser climbed more than one place" do
       other2 = Person.make 2
       other3 = Person.make 3
-      people = [ @person, other2, other3 ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] } }
+      @people += [ other2, other3 ]
+      stub(Person).by_score(@people, Time.utc(2010)) { { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] } }
       people_by_score = { 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] }
-      adds_change people_by_score, people, 'jumped from 3rd to 1st place'
+      adds_change people_by_score, 'jumped from 3rd to 1st place'
     end
 
-    it "welcomes people to the top ten" do
+    it "welcomes the guesser to the top ten" do
       others = (2 .. 11).map { |n| [ Person.make n ] }
-      people = [ @person, *others ]
+      @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = other }
-      stub(Person).by_score(people, Time.utc(2010)) { others_by_score.merge({ 1 => [ @person ] }) }
+      stub(Person).by_score(@people, Time.utc(2010)) { others_by_score.merge({ 1 => [ @person ] }) }
       people_by_score = others_by_score.merge({ 12 => [ @person ] })
-      adds_change people_by_score, people, 'jumped from 11th to 1st place. Welcome to the top ten!'
+      adds_change people_by_score, 'jumped from 11th to 1st place. Welcome to the top ten!'
     end
 
-    def adds_change(people_by_score, people, expected_change)
+    def adds_change(people_by_score, expected_change)
       guessers = [ [ @person, [] ] ]
-      Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
+      Person.add_change_in_standings people_by_score, @people, Time.utc(2010), guessers
       @person[:change_in_standing].should == expected_change
     end
 
