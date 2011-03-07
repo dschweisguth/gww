@@ -6,14 +6,12 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Fix bad data evident in score reports
-  Remove reports with just a few guesses
-  Fix guess scored before the group started
-  Remove checks that filter out that data?
 Don't use should grammar in spec helper method names
 Survey use of mock vs. stub
 Use RESTful routing in more places.
   Having done so, enforce correct HTTP method on remaining non-RESTful actions.
+Fix guess scored before the group started
+  Remove checks that filter out that data?
 Extract facades from models
 Merge revelations into guesses?
 After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
