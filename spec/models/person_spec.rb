@@ -517,13 +517,13 @@ describe Person do
 
     it "adds up guesses" do
       person = Person.make
-      Guess.make 1, :person => person, :guessed_at => Time.utc(2011)
-      Guess.make 2, :person => person, :guessed_at => Time.utc(2011)
+      Guess.make 1, :person => person, :added_at => Time.utc(2011)
+      Guess.make 2, :person => person, :added_at => Time.utc(2011)
       Person.by_score([ person ], Time.utc(2011)).should == { 2 => [ person ] }
     end
 
     it "ignores guesses from after the report date" do
-      guess = Guess.make :guessed_at => Time.utc(2012)
+      guess = Guess.make :added_at => Time.utc(2012)
       Person.by_score([ guess.person ], Time.utc(2011)).should == { 0 => [ guess.person ] }
     end
 
