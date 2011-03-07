@@ -989,4 +989,20 @@ describe Photo do
     end
   end
 
+  describe '#time_elapsed' do
+    it 'returns the age with a precision of seconds in English' do
+      photo = Photo.new :dateadded => Time.utc(2000)
+      stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
+      photo.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second';
+    end
+  end
+
+  describe '#ymd_elapsed' do
+    it 'returns the age with a precision of days in English' do
+      photo = Photo.new :dateadded => Time.utc(2000)
+      stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
+      photo.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
+    end
+  end
+
 end

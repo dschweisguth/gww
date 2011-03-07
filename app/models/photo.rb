@@ -456,8 +456,6 @@ class Photo < ActiveRecord::Base
     end
   end
 
-  # TODO Dave test
-
   def time_elapsed
     time_elapsed_between dateadded, Time.now
   end
