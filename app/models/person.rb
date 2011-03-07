@@ -295,23 +295,24 @@ class Person < ActiveRecord::Base
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
-      scored_person = scored_people[guesser]
-      if scored_person[:previous_score] == 0 && scored_person[:score] > 0
-        change = scored_person[:score] > 1 \
-          ? "scored his or her first point (and #{scored_person[:score] - 1} more). Congratulations" \
+      scored_guesser = scored_people[guesser]
+      score = scored_guesser[:score]
+      if scored_guesser[:previous_score] == 0 && score > 0
+        change = score > 1 \
+          ? "scored his or her first point (and #{score - 1} more). Congratulations" \
           : 'scored his or her first point. Congratulations'
-        if scored_person[:previous_posts] == 0
+        if scored_guesser[:previous_posts] == 0
           change += ', and welcome to GWSF'
         end
         change += '!'
         guesser[:change_in_standing] = change
       else
-        place = scored_person[:place]
-        previous_place = scored_person[:previous_place]
+        place = scored_guesser[:place]
+        previous_place = scored_guesser[:previous_place]
         if place < previous_place
           change = (previous_place - place > 1 ? 'jumped' : 'climbed') +
             " from #{previous_place.ordinal} to #{place.ordinal} place"
-          ties = people_by_score[scored_person[:score]] - [ scored_person ]
+          ties = people_by_score[score] - [ scored_guesser ]
           if ties.length == 1
             change += ", tying #{ties[0].username}"
           elsif ties.length > 1
