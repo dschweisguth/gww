@@ -574,6 +574,8 @@ describe Person do
 
     it "welcomes people to the top ten"
     it "mentions who was passed"
+    it "says if the guesser is tied, and who with"
+    it "doesn't name names if the guesser is tied with more than one other person"
 
   end
 
