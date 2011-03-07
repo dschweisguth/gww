@@ -311,6 +311,10 @@ class Person < ActiveRecord::Base
         if place < previous_place
           change = (previous_place - place > 1 ? 'jumped' : 'climbed') +
             " from #{previous_place.ordinal} to #{place.ordinal} place"
+          ties = people_by_score[scored_person[:score]] - [ scored_person ]
+          if ties.length == 1
+            change += ", tying #{ties[0].username}"
+          end
           if previous_place > 10 && place <= 10
             change += '. Welcome to the top ten!'
           end

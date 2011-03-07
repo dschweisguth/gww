@@ -587,6 +587,15 @@ describe Person do
         'jumped from 3rd to 1st place')
     end
 
+    it "indicates a new tie" do
+      other2 = Person.make 2
+      @people << other2
+      adds_change(
+        { 2 => [ other2, @person ] },
+        { 2 => [ other2 ], 1 => [ @person ] },
+        'climbed from 2nd to 1st place, tying 2_username')
+    end
+
     it "welcomes the guesser to the top ten" do
       others = (2 .. 11).map { |n| [ Person.make n ] }
       @people += others
