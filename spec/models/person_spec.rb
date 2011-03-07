@@ -555,13 +555,15 @@ describe Person do
 
     it "congratulates a new guesser" do
       @person[:previous_posts] = 0
-      adds_change({ 1 => [ @person ] },
+      adds_change(
+        { 1 => [ @person ] },
         { 0 => [ @person ] },
         'scored his or her first point. Congratulations, and welcome to GWSF!')
     end
 
     it "mentions a new guesser's points after the first" do
-      adds_change({ 2 => [ @person ] },
+      adds_change(
+        { 2 => [ @person ] },
         { 0 => [ @person ] },
         'scored his or her first point (and 1 more). Congratulations!')
     end
@@ -569,7 +571,8 @@ describe Person do
     it "mentions climbing" do
       other = Person.make 2
       @people << other
-      adds_change({ 3 => [ @person ], 2 => [ other ] },
+      adds_change(
+        { 3 => [ @person ], 2 => [ other ] },
         { 2 => [ other ], 1 => [ @person ] },
         'climbed from 2nd to 1st place')
     end
@@ -578,7 +581,8 @@ describe Person do
       other2 = Person.make 2
       other3 = Person.make 3
       @people += [ other2, other3 ]
-      adds_change({ 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] },
+      adds_change(
+        { 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] },
         { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
         'jumped from 3rd to 1st place')
     end
@@ -588,9 +592,10 @@ describe Person do
       @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = other }
-      adds_change others_by_score.merge({ 12 => [ @person ] }),
+      adds_change(
+        others_by_score.merge({ 12 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place. Welcome to the top ten!'
+        'jumped from 11th to 1st place. Welcome to the top ten!')
     end
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)
