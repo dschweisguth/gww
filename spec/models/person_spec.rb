@@ -451,27 +451,31 @@ describe Person do
   end
 
   describe '.high_scorers' do
+    before do
+      @report_date = Time.utc(2011)
+    end
+
     it "returns the three highest scorers in the given previous # of days" do
       person = Person.make
-      Guess.make 1, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      Guess.make 2, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      high_scorers_should_return Time.utc(2011), 1, person, 2
+      Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
+      Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
+      high_scorers_should_return @report_date, 1, person, 2
     end
 
     it "ignores guesses made before the reporting period" do
       person = Person.make
-      Guess.make 1, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      Guess.make 2, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      Guess.make 3, :person => person, :guessed_at => Time.utc(2011) - 1.day - 1.second, :added_at => Time.utc(2011)
-      high_scorers_should_return Time.utc(2011), 1, person, 2
+      Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
+      Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
+      Guess.make 3, :person => person, :guessed_at => @report_date - 1.day - 1.second, :added_at => @report_date
+      high_scorers_should_return @report_date, 1, person, 2
     end
 
     it "ignores guesses made after the reporting period" do
       person = Person.make
-      Guess.make 1, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      Guess.make 2, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      Guess.make 3, :person => person, :guessed_at => Time.utc(2011), :added_at => Time.utc(2011) + 1.second
-      high_scorers_should_return Time.utc(2011), 1, person, 2
+      Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
+      Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
+      Guess.make 3, :person => person, :guessed_at => @report_date, :added_at => @report_date + 1.second
+      high_scorers_should_return @report_date, 1, person, 2
     end
 
     def high_scorers_should_return(now, for_the_past_n_days, person, score)
@@ -481,8 +485,8 @@ describe Person do
     end
 
     it "ignores scores of 1" do
-      Guess.make :guessed_at => Time.utc(2011), :added_at => Time.utc(2011)
-      Person.high_scorers(Time.utc(2011), 1).should == []
+      Guess.make :guessed_at => @report_date, :added_at => @report_date
+      Person.high_scorers(@report_date, 1).should == []
     end
 
   end
