@@ -2,6 +2,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   person0 = Person.make
   person1 = Person.make
   person2 = Person.make
+  person2[:change_in_standing] = 'guessed their first point. Congratulations!'
 
   guess11 = Guess.make 11, :person => person1
   guess21 = Guess.make 21, :person => person2
@@ -31,7 +32,10 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   person1[:posts] = 1
   person2[:posts] = 2
 
-  mock(Person).by_score(people, report_date) { {0 => [person0], 1 => [person1], 2 => [person2]} }
+  people_by_score = {0 => [ person0 ], 1 => [ person1 ], 2 => [ person2 ] }
+  mock(Person).by_score(people, report_date) { people_by_score }
+  guessers = [ [ person2, [ guess21, guess22 ] ], [ person1, [ guess11 ] ] ]
+  stub(Person).add_changes_in_standings(people_by_score, people, previous_report_date, guessers) {}
 
   stub(FlickrUpdate).first { FlickrUpdate.make :member_count => 3 }
 
@@ -41,6 +45,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   response.should be_success
   response.should have_tag 'strong', :text => 'updated Wednesday, January 05, 12 AM'
   response.should have_text /3 new guesses by .../
+  response.should have_text /#{person2[:change_in_standing]}/
   response.should have_text /3 photos revealed by .../
   response.should have_text /Top guessers in the last week:/
   response.should have_text /Top guessers in the last month:/
