@@ -289,8 +289,8 @@ class Person < ActiveRecord::Base
 
   def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
     add_score_and_place people_by_score, :score, :place
-    previous_people_by_score = Person.by_score people, previous_report_date
-    add_score_and_place previous_people_by_score, :previous_score, :previous_place # TODO Dave people_by_previous_score
+    people_by_previous_score = Person.by_score people, previous_report_date
+    add_score_and_place people_by_previous_score, :previous_score, :previous_place
     Photo.add_posts people, previous_report_date, :previous_posts
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
