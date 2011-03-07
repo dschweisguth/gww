@@ -533,9 +533,9 @@ describe Person do
     it "congratulates new guessers" do
       person = Person.make
       people = [ person ]
+      stub(Person).by_score(people, Time.utc(2010)) { { 0 => [ person ] } }
       people_by_score = { 1 => [ person ] }
       guessers = [ [ person, [] ] ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 0 => [ person ] } }
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
       person[:change_in_standing].should == 'scored their first point. Congratulations!'
     end
@@ -544,9 +544,9 @@ describe Person do
       winner = Person.make 1, :username => 'winner'
       loser = Person.make 2, :username => 'loser'
       people = [ winner, loser ]
+      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ loser ], 1 => [ winner ] } }
       people_by_score = { 3 => [ winner ], 2 => [ loser ] }
       guessers = [ [ winner, [] ] ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ loser ], 1 => [ winner ] } }
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
       winner[:change_in_standing].should == 'moved from 2nd to 1st place.'
     end
