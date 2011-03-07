@@ -451,26 +451,26 @@ describe Person do
   end
 
   describe '.high_scorers' do
-    it 'returns the three highest scorers in the given previous # of days' do
+    it "returns the three highest scorers in the given previous # of days" do
       person = Person.make
-      Guess.make '1', :person => person, :guessed_at => 1.days.ago.getutc
-      Guess.make '2', :person => person, :guessed_at => 1.days.ago.getutc
+      Guess.make 1, :person => person, :guessed_at => 1.days.ago.getutc
+      Guess.make 2, :person => person, :guessed_at => 1.days.ago.getutc
       high_scorers_should_return Time.now, 2, person, 2
     end
 
-    it 'ignores guesses made before the reporting period' do
+    it "ignores guesses made before the reporting period" do
       person = Person.make
-      Guess.make '1', :person => person, :guessed_at => 1.days.ago.getutc
-      Guess.make '2', :person => person, :guessed_at => 1.days.ago.getutc
-      Guess.make '3', :person => person, :guessed_at => 3.days.ago.getutc
+      Guess.make 1, :person => person, :guessed_at => 1.days.ago.getutc
+      Guess.make 2, :person => person, :guessed_at => 1.days.ago.getutc
+      Guess.make 3, :person => person, :guessed_at => 3.days.ago.getutc
       high_scorers_should_return Time.now, 2, person, 2
     end
 
-    it 'ignores guesses made after the reporting period' do
+    it "ignores guesses made after the reporting period" do
       person = Person.make
-      Guess.make '1', :person => person, :guessed_at => 2.days.ago.getutc, :added_at => 1.day.ago.getutc
-      Guess.make '2', :person => person, :guessed_at => 2.days.ago.getutc, :added_at => 1.day.ago.getutc
-      Guess.make '3', :person => person, :guessed_at => 2.days.ago.getutc, :added_at => Time.now.getutc
+      Guess.make 1, :person => person, :guessed_at => 2.days.ago.getutc, :added_at => 1.day.ago.getutc
+      Guess.make 2, :person => person, :guessed_at => 2.days.ago.getutc, :added_at => 1.day.ago.getutc
+      Guess.make 3, :person => person, :guessed_at => 2.days.ago.getutc, :added_at => Time.now.getutc
       high_scorers_should_return 1.day.ago, 2, person, 2
     end
 
@@ -480,7 +480,7 @@ describe Person do
       high_scorers[0][:score].should == score
     end
 
-    it 'ignores scores of 1' do
+    it "ignores scores of 1" do
       Guess.make :guessed_at => 1.days.ago.getutc
       Person.high_scorers(Time.now, 2).should == []
     end
