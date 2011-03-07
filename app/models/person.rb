@@ -296,7 +296,9 @@ class Person < ActiveRecord::Base
       guesser = guesser_and_guesses[0]
       scored_person = scored_people[guesser]
       if scored_person[:previous_score] == 0 and scored_person[:score] > 0
-        guesser[:change_in_standing] = 'scored their first point. Congratulations!'
+        guesser[:change_in_standing] = scored_person[:score] > 1 \
+          ? "scored their first point (and #{scored_person[:score] - 1} more). Congratulations!" \
+          : 'scored their first point. Congratulations!'
       else
         place = scored_person[:place]
         previous_place = scored_person[:previous_place]
