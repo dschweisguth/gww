@@ -124,15 +124,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /username is in 1st place with a score of 2./
-      response.should have_text /username scored the most points in the last week/
-      response.should have_text /username scored the most points in the last month/
-      response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
-      response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
-      response.should have_tag 'h2', :text => /username has posted 2 photos/
-      response.should have_text /1 remains unfound/
-      response.should have_text /1 was revealed/
-      response.should have_tag 'p', :text => /username's nemesis is favorite_poster_of_username \(3.6\)/
+      renders_bits_for_user_who_has_guessed
+      renders_bits_for_user_who_has_posted
 
     end
 
@@ -161,10 +154,8 @@ describe PeopleController do
       response.should have_text /username has correctly guessed 0 photos/
       response.should_not have_text /Of the photos that username has guessed,/
       response.should_not have_text /username is the nemesis of/
-      response.should have_tag 'h2', :text => /username has posted 2 photos/
-      response.should have_text /1 remains unfound/
-      response.should have_text /1 was revealed/
-      response.should have_tag 'p', :text => /username's nemesis is favorite_poster_of_username \(3.6\)/
+
+      renders_bits_for_user_who_has_posted
 
     end
 
@@ -184,11 +175,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /username is in 1st place with a score of 2./
-      response.should have_text /username scored the most points in the last week/
-      response.should have_text /username scored the most points in the last month/
-      response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
-      response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
+      renders_bits_for_user_who_has_guessed
+
       response.should have_tag 'h2', :text => /username has posted 0 photos/
       response.should_not have_text /Of the photos that username has posted/
       response.should_not have_text /remains unfound/
@@ -261,6 +249,22 @@ describe PeopleController do
       favorite_poster_of[:bias] = 3.6
       stub(@person).favorite_posters_of { [ favorite_poster_of ] }
 
+    end
+
+    def renders_bits_for_user_who_has_guessed
+      response.should have_text /username is in 1st place with a score of 2./
+      response.should have_text /username scored the most points in the last week/
+      response.should have_text /username scored the most points in the last month/
+      response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
+      response.should have_text /Of the photos that username has guessed,/
+      response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
+    end
+
+    def renders_bits_for_user_who_has_posted
+      response.should have_tag 'h2', :text => /username has posted 2 photos/
+      response.should have_text /1 remains unfound/
+      response.should have_text /1 was revealed/
+      response.should have_tag 'p', :text => /username's nemesis is favorite_poster_of_username \(3.6\)/
     end
 
   end
