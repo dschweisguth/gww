@@ -43,29 +43,4 @@ module ScoreReportsControllerSupport
   end
   private :prepare_gww_html
 
-  # The following methods are public for testing only
-
-  def add_changes_in_standings(people_by_score, people, previous_report_date, guessers)
-    add_place people_by_score, :place
-    previous_people_by_score = Person.by_score people, previous_report_date
-    add_place previous_people_by_score, :previous_place
-    scored_people = Hash[people.map { |person| [person, person] }]
-    guessers.each do |guesser_and_guesses|
-      guesser = guesser_and_guesses[0]
-      place = scored_people[guesser][:place]
-      previous_place = scored_people[guesser][:previous_place]
-      if place < previous_place
-        guesser[:change_in_standing] = "moved from #{previous_place.ordinal} to #{place.ordinal} place.";
-      end
-    end
-  end
-
-  def add_place(people_by_score, attr_name)
-    place = 1
-    people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
-      people_by_score[score].each { |person| person[attr_name] = place }
-      place += 1
-    end
-  end
-
 end
