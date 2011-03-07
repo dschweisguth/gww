@@ -561,7 +561,7 @@ describe Person do
       person[:change_in_standing].should == 'scored his or her first point (and 1 more). Congratulations!'
     end
 
-    it "mentions moving up" do
+    it "mentions climbing" do
       winner = Person.make 1
       loser = Person.make 2
       people = [ winner, loser ]
@@ -572,7 +572,18 @@ describe Person do
       winner[:change_in_standing].should == 'climbed from 2nd to 1st place.'
     end
 
-    it "says jumped if the person climbed more than one place"
+    it "says jumped if the person climbed more than one place" do
+      person1 = Person.make 1
+      person2 = Person.make 2
+      person3 = Person.make 3
+      people = [ person1, person2, person3 ]
+      stub(Person).by_score(people, Time.utc(2010)) { { 3 => [ person2 ], 2 => [ person3 ], 1 => [ person1 ] } }
+      people_by_score = { 4 => [ person1 ], 3 => [ person2 ], 2 => [ person2 ] }
+      guessers = [ [ person1, [] ] ]
+      Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
+      person1[:change_in_standing].should == 'jumped from 3rd to 1st place.'
+    end
+
     it "welcomes people to the top ten"
     it "mentions who was passed"
     it "says if the guesser is tied, and who with"
