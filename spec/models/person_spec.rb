@@ -562,39 +562,39 @@ describe Person do
     end
 
     it "mentions climbing" do
-      winner = Person.make 1
-      loser = Person.make 2
-      people = [ winner, loser ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ loser ], 1 => [ winner ] } }
-      people_by_score = { 3 => [ winner ], 2 => [ loser ] }
-      guessers = [ [ winner, [] ] ]
+      person = Person.make 1
+      other = Person.make 2
+      people = [ person, other ]
+      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ other ], 1 => [ person ] } }
+      people_by_score = { 3 => [ person ], 2 => [ other ] }
+      guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      winner[:change_in_standing].should == 'climbed from 2nd to 1st place'
+      person[:change_in_standing].should == 'climbed from 2nd to 1st place'
     end
 
     it "says jumped if the person climbed more than one place" do
-      person1 = Person.make 1
-      person2 = Person.make 2
-      person3 = Person.make 3
-      people = [ person1, person2, person3 ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 3 => [ person2 ], 2 => [ person3 ], 1 => [ person1 ] } }
-      people_by_score = { 4 => [ person1 ], 3 => [ person2 ], 2 => [ person2 ] }
-      guessers = [ [ person1, [] ] ]
+      person = Person.make 1
+      other2 = Person.make 2
+      other3 = Person.make 3
+      people = [ person, other2, other3 ]
+      stub(Person).by_score(people, Time.utc(2010)) { { 3 => [ other2 ], 2 => [ other3 ], 1 => [ person ] } }
+      people_by_score = { 4 => [ person ], 3 => [ other2 ], 2 => [ other2 ] }
+      guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person1[:change_in_standing].should == 'jumped from 3rd to 1st place'
+      person[:change_in_standing].should == 'jumped from 3rd to 1st place'
     end
 
     it "welcomes people to the top ten" do
-      person1 = Person.make 1
+      person = Person.make 1
       others = (2 .. 11).map { |n| [ Person.make n ] }
-      people = [ person1, *others ]
+      people = [ person, *others ]
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = other }
-      stub(Person).by_score(people, Time.utc(2010)) { others_by_score.merge({ 1 => [ person1 ] }) }
-      people_by_score = others_by_score.merge({ 12 => [ person1 ] })
-      guessers = [ [ person1, [] ] ]
+      stub(Person).by_score(people, Time.utc(2010)) { others_by_score.merge({ 1 => [ person ] }) }
+      people_by_score = others_by_score.merge({ 12 => [ person ] })
+      guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person1[:change_in_standing].should == 'jumped from 11th to 1st place. Welcome to the top ten!'
+      person[:change_in_standing].should == 'jumped from 11th to 1st place. Welcome to the top ten!'
     end
 
     it "welcomes instead of congratulating if the person had no previous posts"
