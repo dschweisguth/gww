@@ -266,7 +266,80 @@ describe PeopleController do
 
     end
 
-    it "handles a person who has never posted"
+    it "handles a person who has never posted" do
+      person = Person.make :id => 1
+      person[:score] = 1 # for the high_scorers methods
+
+      stub(Person).find(person.id.to_s) { person }
+
+      stub(Person).standing { [ 1, false ] }
+
+      now = Time.now
+      stub(Time).now { now }
+      stub(Person).high_scorers(now, 7) { [ person ] }
+      stub(Person).high_scorers(now, 30) { [ person ] }
+
+      first_guess = Guess.make 'first_guess'
+      stub(Guess).first_by(person) { first_guess }
+
+      stub(Photo).first_by(person)
+
+      most_recent_guess = Guess.make 'most_recent_guess'
+      stub(Guess).most_recent_by(person) { most_recent_guess }
+
+      stub(Photo).most_recent_by(person)
+
+      oldest_guess = Guess.make 'oldest_guess'
+      oldest_guess[:place] = 1
+      stub(Guess).oldest(person) { oldest_guess }
+
+      fastest_guess = Guess.make 'fastest_guess'
+      fastest_guess[:place] = 1
+      stub(Guess).fastest(person) { fastest_guess }
+
+      longest_lasting_guess = Guess.make 'longest_lasting_guess'
+      longest_lasting_guess[:place] = 1
+      stub(Guess).longest_lasting(person) { longest_lasting_guess }
+
+      shortest_lasting_guess = Guess.make 'shortest_lasting_guess'
+      shortest_lasting_guess[:place] = 1
+      stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
+
+      stub(Photo).oldest_unfound(person)
+
+      #noinspection RubyResolve
+      stub(Guess).find_all_by_person_id(person.id, anything) \
+        { [ Guess.make('all1'), Guess.make('all2') ] }
+
+      favorite_poster = Person.make 'favorite_poster'
+      favorite_poster[:bias] = 2.5
+      stub(person).favorite_posters { [ favorite_poster ] }
+
+      #noinspection RubyResolve
+      stub(Photo).find_all_by_person_id(person.id, anything) { [] }
+
+      #noinspection RubyResolve
+      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') { [] }
+
+      stub(person).favorite_posters_of { [] }
+
+      get :show, :id => person.id
+
+      p response.body
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_text /username is in 1st place with a score of 2./
+      response.should have_text /username scored the most points in the last week/
+      response.should have_text /username scored the most points in the last month/
+      response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
+      response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
+      response.should have_tag 'h2', :text => /username has posted 0 photos/
+      response.should_not have_text /Of the photos that username has posted/
+      response.should_not have_text /remains unfound/
+      response.should_not have_text /was revealed/
+      response.should_not have_text /username's nemesis is/
+
+    end
 
   end
 

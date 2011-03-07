@@ -7,7 +7,9 @@
 <% end %></p>
 <% end -%>
 
+<% if ! @posts.empty? -%>
 Of the photos that <%=h @person.username %> has posted,<br/><br/>
+<% end -%>
 <% if ! @unfound_photos.empty? -%>
 <%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<% if @unfound_photos.any? { |p| p.game_status == 'unconfirmed' } %> or <span class="unconfirmed">unconfirmed</span><% end %>:
 <%   @unfound_photos.each_with_index do |photo, photo_index| -%>
