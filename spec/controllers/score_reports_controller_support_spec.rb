@@ -20,7 +20,7 @@ describe Subject do
       guessers = [ [ winner, [] ] ]
       stub(Person).by_score(people, Time.utc(2010)) { { 1 => [ loser ], 0 => [ winner ] } }
       @subject.add_changes_in_standings people_by_score, people, Time.utc(2010), guessers
-      winner[:change_in_standings].should == 'moved up to 1st place!'
+      winner[:change_in_standings].should == 'moved from 2nd to 1st place.'
     end
   end
 
