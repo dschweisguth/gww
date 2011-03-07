@@ -548,22 +548,22 @@ describe Person do
 
     it "congratulates a new guesser" do
       stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
-      people_by_score = { 1 => [ @person ] }
-      adds_change people_by_score, 'scored his or her first point. Congratulations!'
+      adds_change({ 1 => [ @person ] },
+        'scored his or her first point. Congratulations!')
     end
 
     it "mentions a new guesser's points after the first" do
       stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
-      people_by_score = { 2 => [ @person ] }
-      adds_change people_by_score, 'scored his or her first point (and 1 more). Congratulations!'
+      adds_change({ 2 => [ @person ] },
+        'scored his or her first point (and 1 more). Congratulations!')
     end
 
     it "mentions climbing" do
       other = Person.make 2
       @people << other
       stub(Person).by_score(@people, Time.utc(2010)) { { 2 => [ other ], 1 => [ @person ] } }
-      people_by_score = { 3 => [ @person ], 2 => [ other ] }
-      adds_change people_by_score, 'climbed from 2nd to 1st place'
+      adds_change({ 3 => [ @person ], 2 => [ other ] },
+        'climbed from 2nd to 1st place')
     end
 
     it "says jumped if the guesser climbed more than one place" do
@@ -571,8 +571,8 @@ describe Person do
       other3 = Person.make 3
       @people += [ other2, other3 ]
       stub(Person).by_score(@people, Time.utc(2010)) { { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] } }
-      people_by_score = { 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] }
-      adds_change people_by_score, 'jumped from 3rd to 1st place'
+      adds_change({ 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] },
+        'jumped from 3rd to 1st place')
     end
 
     it "welcomes the guesser to the top ten" do
@@ -581,8 +581,8 @@ describe Person do
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = other }
       stub(Person).by_score(@people, Time.utc(2010)) { others_by_score.merge({ 1 => [ @person ] }) }
-      people_by_score = others_by_score.merge({ 12 => [ @person ] })
-      adds_change people_by_score, 'jumped from 11th to 1st place. Welcome to the top ten!'
+      adds_change others_by_score.merge({ 12 => [ @person ] }),
+        'jumped from 11th to 1st place. Welcome to the top ten!'
     end
 
     def adds_change(people_by_score, expected_change)
