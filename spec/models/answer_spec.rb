@@ -4,7 +4,7 @@ describe Answer do
   include Answer
 
   describe '#time_elapsed_between' do
-    it 'returns the duration in seconds from post to answer in English' do
+    it 'returns the age with a precision of seconds in English' do
       time_elapsed_between(Time.utc(2000), Time.utc(2001, 2, 2, 1, 1, 1)).should ==
         '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second';
     end
@@ -22,7 +22,7 @@ describe Answer do
   end
 
   describe '#ymd_elapsed_between' do
-    it 'returns the duration in days from post to answer in English' do
+    it 'returns the age with a precision of days in English' do
       ymd_elapsed_between(Time.utc(2000), Time.utc(2001, 2, 2, 1, 1, 1)).should ==
         '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
     end
