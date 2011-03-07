@@ -10,6 +10,7 @@ Fix bad data evident in score reports
   Remove reports with just a few guesses
   Fix guess scored before the group started
   Remove checks that filter out that data?
+Don't use should grammar in spec helper method names
 Use RESTful routing in more places.
   Having done so, enforce correct HTTP method on remaining non-RESTful actions.
 Extract facades from models
