@@ -569,7 +569,7 @@ describe Person do
       people_by_score = { 3 => [ winner ], 2 => [ loser ] }
       guessers = [ [ winner, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      winner[:change_in_standing].should == 'climbed from 2nd to 1st place.' # TODO Dave lose the period
+      winner[:change_in_standing].should == 'climbed from 2nd to 1st place'
     end
 
     it "says jumped if the person climbed more than one place" do
@@ -581,7 +581,7 @@ describe Person do
       people_by_score = { 4 => [ person1 ], 3 => [ person2 ], 2 => [ person2 ] }
       guessers = [ [ person1, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person1[:change_in_standing].should == 'jumped from 3rd to 1st place.'
+      person1[:change_in_standing].should == 'jumped from 3rd to 1st place'
     end
 
     it "welcomes people to the top ten" do

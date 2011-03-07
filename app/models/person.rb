@@ -304,9 +304,9 @@ class Person < ActiveRecord::Base
         previous_place = scored_person[:previous_place]
         if place < previous_place
           change = (previous_place - place > 1 ? 'jumped' : 'climbed') +
-            " from #{previous_place.ordinal} to #{place.ordinal} place."
+            " from #{previous_place.ordinal} to #{place.ordinal} place"
           if previous_place > 10 && place <= 10
-            change += ' Welcome to the top ten!'
+            change += '. Welcome to the top ten!'
           end
           guesser[:change_in_standing] = change
         end
