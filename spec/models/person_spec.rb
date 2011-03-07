@@ -569,7 +569,7 @@ describe Person do
       people_by_score = { 3 => [ winner ], 2 => [ loser ] }
       guessers = [ [ winner, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      winner[:change_in_standing].should == 'moved from 2nd to 1st place.'
+      winner[:change_in_standing].should == 'climbed from 2nd to 1st place.'
     end
 
     it "says jumped if the person climbed more than one place"

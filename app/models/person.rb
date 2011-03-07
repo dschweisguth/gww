@@ -303,7 +303,7 @@ class Person < ActiveRecord::Base
         place = scored_person[:place]
         previous_place = scored_person[:previous_place]
         if place < previous_place
-          guesser[:change_in_standing] = "moved from #{previous_place.ordinal} to #{place.ordinal} place.";
+          guesser[:change_in_standing] = "climbed from #{previous_place.ordinal} to #{place.ordinal} place.";
         end
       end
     end
