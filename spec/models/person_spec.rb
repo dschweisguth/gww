@@ -600,7 +600,6 @@ describe Person do
       @person[:change_in_standing].should == expected_change
     end
 
-    it "welcomes instead of congratulating if the person had no previous posts"
     it "mentions who was passed"
     it "says if the guesser is tied, and who with"
     it "doesn't name names if the guesser is tied with more than one other person"
