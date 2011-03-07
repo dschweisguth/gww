@@ -314,6 +314,8 @@ class Person < ActiveRecord::Base
           ties = people_by_score[scored_person[:score]] - [ scored_person ]
           if ties.length == 1
             change += ", tying #{ties[0].username}"
+          elsif ties.length > 1
+            change += ", tying #{ties.length} other players"
           end
           if previous_place > 10 && place <= 10
             change += '. Welcome to the top ten!'

@@ -596,6 +596,16 @@ describe Person do
         'climbed from 2nd to 1st place, tying 2_username')
     end
 
+    it "doesn't name names if the guesser is tied with more than one other person" do
+      other2 = Person.make 2
+      other3 = Person.make 3
+      @people += [ other2, other3 ]
+      adds_change(
+        { 2 => [ other2, other3, @person ] },
+        { 2 => [ other2, other3 ], 1 => [ @person ] },
+        'climbed from 2nd to 1st place, tying 2 other players')
+    end
+
     it "welcomes the guesser to the top ten" do
       others = (2 .. 11).map { |n| [ Person.make n ] }
       @people += others
@@ -617,8 +627,6 @@ describe Person do
     end
 
     it "mentions who was passed"
-    it "says if the guesser is tied, and who with"
-    it "doesn't name names if the guesser is tied with more than one other person"
     it "notes numeric milestones"
 
   end
