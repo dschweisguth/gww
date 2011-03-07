@@ -266,7 +266,7 @@ class Person < ActiveRecord::Base
         %q[
           select p.* from people p
           where exists (select 1 from photos where person_id = p.id and dateadded <= ?) or
-            exists (select 1 from guesses where person_id = p.id and guessed_at <= ?)
+            exists (select 1 from guesses where person_id = p.id and added_at <= ?)
         ],
         utc_date, utc_date
     ]

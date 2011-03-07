@@ -498,7 +498,7 @@ describe Person do
     end
 
     it "returns all people who guessed before the given date" do
-      guess = Guess.make :guessed_at => Time.utc(2011)
+      guess = Guess.make :added_at => Time.utc(2011)
       Person.all_before(Time.utc(2011)).should == [ guess.person ]
     end
 
@@ -512,8 +512,8 @@ describe Person do
       Person.all_before(Time.utc(2011)).should == []
     end
 
-    it "returns all people who guessed before the given date" do
-      Guess.make :guessed_at => Time.utc(2012)
+    it "returns all people who only guessed after the given date" do
+      Guess.make :added_at => Time.utc(2012)
       Person.all_before(Time.utc(2011)).should == []
     end
 
