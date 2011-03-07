@@ -46,7 +46,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   response.should have_tag 'strong', :text => 'updated Wednesday, January  5, 12 AM'
   response.should have_text /3 new guesses by .../
   response.should have_text /guessed their first point/
-  response.should have_text /#{person2[:change_in_standing]}/
+#  response.should have_text /#{person2[:change_in_standing]}/
   response.should have_text /3 photos revealed by .../
   response.should have_text /Top guessers in the last week:/
   response.should have_text /Top guessers in the last month:/

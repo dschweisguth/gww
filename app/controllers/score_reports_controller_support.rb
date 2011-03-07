@@ -27,7 +27,7 @@ module ScoreReportsControllerSupport
     people = Person.all_before @report_date
     Photo.add_posts people, @report_date
     @people_by_score = Person.by_score people, @report_date
-    Person.add_change_in_standings @people_by_score, people, previous_report_date, @guessers
+#    Person.add_change_in_standings @people_by_score, people, previous_report_date, @guessers
 
     @total_participants = people.length
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
