@@ -572,6 +572,7 @@ describe Person do
       winner[:change_in_standing].should == 'moved from 2nd to 1st place.'
     end
 
+    it "says jumped if the person climbed more than one place"
     it "welcomes people to the top ten"
     it "mentions who was passed"
     it "says if the guesser is tied, and who with"
