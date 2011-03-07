@@ -548,7 +548,7 @@ describe Person do
       people_by_score = { 1 => [ person ] }
       guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person[:change_in_standing].should == 'scored his or her first point. Congratulations!' # TODO Dave welcome if no previous posts
+      person[:change_in_standing].should == 'scored his or her first point. Congratulations!'
     end
 
     it "mentions new guessers' points after the first" do
@@ -597,6 +597,7 @@ describe Person do
       person1[:change_in_standing].should == 'jumped from 11th to 1st place. Welcome to the top ten!'
     end
 
+    it "welcomes instead of congratulating if the person had no previous posts"
     it "mentions who was passed"
     it "says if the guesser is tied, and who with"
     it "doesn't name names if the guesser is tied with more than one other person"
