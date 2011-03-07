@@ -551,6 +551,10 @@ describe Person do
       winner[:change_in_standing].should == 'moved from 2nd to 1st place.'
     end
 
+    it "mentions points after the first for new guessers"
+    it "welcomes people to the top ten"
+    it "mentions who was passed"
+
   end
 
   describe '.add_score_and_place' do
