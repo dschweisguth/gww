@@ -555,22 +555,22 @@ describe Person do
 
     it "congratulates a new guesser" do
       @person[:previous_posts] = 0
-      stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
       adds_change({ 1 => [ @person ] },
+        { 0 => [ @person ] },
         'scored his or her first point. Congratulations, and welcome to GWSF!')
     end
 
     it "mentions a new guesser's points after the first" do
-      stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
       adds_change({ 2 => [ @person ] },
+        { 0 => [ @person ] },
         'scored his or her first point (and 1 more). Congratulations!')
     end
 
     it "mentions climbing" do
       other = Person.make 2
       @people << other
-      stub(Person).by_score(@people, Time.utc(2010)) { { 2 => [ other ], 1 => [ @person ] } }
       adds_change({ 3 => [ @person ], 2 => [ other ] },
+        { 2 => [ other ], 1 => [ @person ] },
         'climbed from 2nd to 1st place')
     end
 
@@ -578,8 +578,8 @@ describe Person do
       other2 = Person.make 2
       other3 = Person.make 3
       @people += [ other2, other3 ]
-      stub(Person).by_score(@people, Time.utc(2010)) { { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] } }
       adds_change({ 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] },
+        { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
         'jumped from 3rd to 1st place')
     end
 
@@ -588,14 +588,15 @@ describe Person do
       @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = other }
-      stub(Person).by_score(@people, Time.utc(2010)) { others_by_score.merge({ 1 => [ @person ] }) }
       adds_change others_by_score.merge({ 12 => [ @person ] }),
+        others_by_score.merge({ 1 => [ @person ] }),
         'jumped from 11th to 1st place. Welcome to the top ten!'
     end
 
-    def adds_change(people_by_score, expected_change)
-      guessers = [ [ @person, [] ] ]
+    def adds_change(people_by_score, people_by_previous_score, expected_change)
+      stub(Person).by_score(@people, Time.utc(2010)) { people_by_previous_score }
       stub(Photo).add_posts @people, Time.utc(2010), :previous_posts
+      guessers = [ [ @person, [] ] ]
       Person.add_change_in_standings people_by_score, @people, Time.utc(2010), guessers
       @person[:change_in_standing].should == expected_change
     end
