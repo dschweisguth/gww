@@ -541,8 +541,8 @@ describe Person do
     end
 
     it "mentions moving up" do
-      winner = Person.make 1, :username => 'winner'
-      loser = Person.make 2, :username => 'loser'
+      winner = Person.make 1
+      loser = Person.make 2
       people = [ winner, loser ]
       stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ loser ], 1 => [ winner ] } }
       people_by_score = { 3 => [ winner ], 2 => [ loser ] }
