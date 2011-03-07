@@ -7,7 +7,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   guess11 = Guess.make 11, :person => person1
   guess21 = Guess.make 21, :person => person2
   guess22 = Guess.make 22, :person => person2
-  mock(Guess).all_between(previous_report_date, report_date.getutc) { [guess11, guess21, guess22] }
+  stub(Guess).all_between(previous_report_date, report_date.getutc) { [guess11, guess21, guess22] }
 
   revealed_photo11 = Photo.make 11, :person => person1
   revealed_photo21 = Photo.make 21, :person => person2
@@ -15,25 +15,25 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   revelation11 = Revelation.make 11, :photo => revealed_photo11
   revelation21 = Revelation.make 21, :photo => revealed_photo21
   revelation22 = Revelation.make 22, :photo => revealed_photo22
-  mock(Revelation).all_between(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
+  stub(Revelation).all_between(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
 
   stub(Person).high_scorers(report_date, 7) { [ person2, person1 ] }
   stub(Person).high_scorers(report_date, 30) { [ person2, person1 ] }
 
-  mock(Photo).count_between(previous_report_date, report_date.getutc) { 6 }
-  mock(Photo).unfound_or_unconfirmed_count_before(report_date) { 1234 }
+  stub(Photo).count_between(previous_report_date, report_date.getutc) { 6 }
+  stub(Photo).unfound_or_unconfirmed_count_before(report_date) { 1234 }
 
   # Note that we're ignoring the test guesses' photos' people
   people = [ person0, person1, person2 ]
   stub(Person).all_before(report_date) { people }
 
-  mock(Photo).add_posts(people, report_date)
+  stub(Photo).add_posts(people, report_date)
   person0[:posts] = 0
   person1[:posts] = 1
   person2[:posts] = 2
 
   people_by_score = { 0 => [ person0 ], 1 => [ person1 ], 2 => [ person2 ] }
-  mock(Person).by_score(people, report_date) { people_by_score }
+  stub(Person).by_score(people, report_date) { people_by_score }
   guessers = [ [ person2, [ guess21, guess22 ] ], [ person1, [ guess11 ] ] ]
   stub(Person).add_change_in_standings(people_by_score, people, previous_report_date, guessers) {}
 
