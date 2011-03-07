@@ -529,17 +529,19 @@ describe Person do
 
   end
 
-  describe '.add_changes_in_standings' do
-    it "adds their change in standing to each person" do
+  describe '.add_change_in_standings' do
+
+    it "mentions moving up" do
       winner = Person.make 1, :username => 'winner'
       loser = Person.make 2, :username => 'loser'
       people = [ winner, loser ]
       people_by_score = { 2 => [ winner ], 1 => [ loser ] }
       guessers = [ [ winner, [] ] ]
       stub(Person).by_score(people, Time.utc(2010)) { { 1 => [ loser ], 0 => [ winner ] } }
-      Person.add_changes_in_standings people_by_score, people, Time.utc(2010), guessers
+      Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
       winner[:change_in_standing].should == 'moved from 2nd to 1st place.'
     end
+
   end
 
   describe '.add_place' do

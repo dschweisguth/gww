@@ -287,7 +287,7 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
-  def self.add_changes_in_standings(people_by_score, people, previous_report_date, guessers)
+  def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
     add_place people_by_score, :place
     previous_people_by_score = Person.by_score people, previous_report_date
     add_place previous_people_by_score, :previous_place

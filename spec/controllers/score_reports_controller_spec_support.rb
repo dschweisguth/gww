@@ -35,7 +35,7 @@ def should_render_report_for(report_date, previous_report_date, action, params =
   people_by_score = {0 => [ person0 ], 1 => [ person1 ], 2 => [ person2 ] }
   mock(Person).by_score(people, report_date) { people_by_score }
   guessers = [ [ person2, [ guess21, guess22 ] ], [ person1, [ guess11 ] ] ]
-  stub(Person).add_changes_in_standings(people_by_score, people, previous_report_date, guessers) {}
+  stub(Person).add_change_in_standings(people_by_score, people, previous_report_date, guessers) {}
 
   stub(FlickrUpdate).first { FlickrUpdate.make :member_count => 3 }
 
