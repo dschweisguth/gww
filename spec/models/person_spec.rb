@@ -606,6 +606,20 @@ describe Person do
         'climbed from 2nd to 1st place, tying 2 other players')
     end
 
+    it "notes numeric milestones" do
+      adds_change(
+        { 100 => [ @person ] },
+        { 99 => [ @person ] },
+        'Congratulations on reaching 100 points!')
+    end
+
+    it "says passing instead of reaching when appropriate" do
+      adds_change(
+        { 101 => [ @person ] },
+        { 99 => [ @person ] },
+        'Congratulations on passing 100 points!')
+    end
+
     it "welcomes the guesser to the top ten" do
       others = (2 .. 11).map { |n| [ Person.make n ] }
       @people += others
@@ -627,7 +641,6 @@ describe Person do
     end
 
     it "mentions who was passed"
-    it "notes numeric milestones"
 
   end
 

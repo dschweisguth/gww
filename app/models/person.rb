@@ -287,6 +287,11 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
+  # TODO Dave 222 club, 500 club, 3300 club
+
+  # TODO make this work for boundaries above 5000
+  MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
+
   def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
     add_score_and_place people_by_score, :score, :place
     people_by_previous_score = Person.by_score people, previous_report_date
@@ -297,7 +302,8 @@ class Person < ActiveRecord::Base
       guesser = guesser_and_guesses[0]
       scored_guesser = scored_people[guesser]
       score = scored_guesser[:score]
-      if scored_guesser[:previous_score] == 0 && score > 0
+      previous_score = scored_guesser[:previous_score]
+      if previous_score == 0 && score > 0
         change = score > 1 \
           ? "scored his or her first point (and #{score - 1} more). Congratulations" \
           : 'scored his or her first point. Congratulations'
@@ -318,11 +324,24 @@ class Person < ActiveRecord::Base
           elsif ties.length > 1
             change += ", tying #{ties.length} other players"
           end
-          if previous_place > 10 && place <= 10
-            change += '. Welcome to the top ten!'
-          end
-          guesser[:change_in_standing] = change
+        else
+          change = ''
         end
+        milestone = MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
+        entered_top_ten = previous_place > 10 && place <= 10
+        if (milestone || entered_top_ten) && ! change.empty?
+          change += '. '
+        end
+        if milestone
+          change += "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!"
+        end
+        if entered_top_ten
+          if milestone
+            change += ' '
+          end
+          change += 'Welcome to the top ten!'
+        end
+        guesser[:change_in_standing] = change
       end
     end
   end
