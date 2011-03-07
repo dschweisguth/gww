@@ -9,7 +9,10 @@ describe PeopleController do
       person = Person.make
       stub(Person).find_by_multiple_fields('username') { person }
       get :find, :person => { :username => 'username' }
+
+      #noinspection RubyResolve
       response.should redirect_to show_person_path person
+
     end
 
     it 'punts back to the home page' do
