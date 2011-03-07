@@ -1,5 +1,3 @@
-require 'fixnum'
-
 module ScoreReportsControllerSupport
 
   def prepare_gww_html(report_date)
