@@ -431,11 +431,11 @@ class Photo < ActiveRecord::Base
     ]
   end
 
-  def self.add_posts(people, to_date)
+  def self.add_posts(people, to_date, attr_name)
     posts_per_person = Photo.count \
       :conditions => [ 'dateadded <= ?', to_date.getutc ], :group => :person_id
     people.each do |person|
-      person[:posts] = posts_per_person[person.id] || 0
+      person[attr_name] = posts_per_person[person.id] || 0
     end
   end
 

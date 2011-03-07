@@ -548,13 +548,16 @@ describe Person do
   describe '.add_change_in_standings' do
     before do
       @person = Person.make 1
+      @person[:posts] = 1
+      @person[:previous_posts] = 1
       @people = [ @person ]
     end
 
     it "congratulates a new guesser" do
+      @person[:previous_posts] = 0
       stub(Person).by_score(@people, Time.utc(2010)) { { 0 => [ @person ] } }
       adds_change({ 1 => [ @person ] },
-        'scored his or her first point. Congratulations!')
+        'scored his or her first point. Congratulations, and welcome to GWSF!')
     end
 
     it "mentions a new guesser's points after the first" do
@@ -592,6 +595,7 @@ describe Person do
 
     def adds_change(people_by_score, expected_change)
       guessers = [ [ @person, [] ] ]
+      stub(Photo).add_posts @people, Time.utc(2010), :previous_posts
       Person.add_change_in_standings people_by_score, @people, Time.utc(2010), guessers
       @person[:change_in_standing].should == expected_change
     end

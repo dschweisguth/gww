@@ -290,15 +290,21 @@ class Person < ActiveRecord::Base
   def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
     add_score_and_place people_by_score, :score, :place
     previous_people_by_score = Person.by_score people, previous_report_date
-    add_score_and_place previous_people_by_score, :previous_score, :previous_place
+    add_score_and_place previous_people_by_score, :previous_score, :previous_place # TODO Dave people_by_previous_score
+    Photo.add_posts people, previous_report_date, :previous_posts
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
       scored_person = scored_people[guesser]
-      if scored_person[:previous_score] == 0 and scored_person[:score] > 0
-        guesser[:change_in_standing] = scored_person[:score] > 1 \
-          ? "scored his or her first point (and #{scored_person[:score] - 1} more). Congratulations!" \
-          : 'scored his or her first point. Congratulations!'
+      if scored_person[:previous_score] == 0 && scored_person[:score] > 0
+        change = scored_person[:score] > 1 \
+          ? "scored his or her first point (and #{scored_person[:score] - 1} more). Congratulations" \
+          : 'scored his or her first point. Congratulations'
+        if scored_person[:previous_posts] == 0
+          change += ', and welcome to GWSF'
+        end
+        change += '!'
+        guesser[:change_in_standing] = change
       else
         place = scored_person[:place]
         previous_place = scored_person[:previous_place]

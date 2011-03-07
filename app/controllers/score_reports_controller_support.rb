@@ -25,7 +25,7 @@ module ScoreReportsControllerSupport
     @unfound_count = Photo.unfound_or_unconfirmed_count_before @report_date
 
     people = Person.all_before @report_date
-    Photo.add_posts people, @report_date
+    Photo.add_posts people, @report_date, :posts
     @people_by_score = Person.by_score people, @report_date
     Person.add_change_in_standings @people_by_score, people, previous_report_date, @guessers
 
