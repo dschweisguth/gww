@@ -548,7 +548,7 @@ describe Person do
       people_by_score = { 1 => [ person ] }
       guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person[:change_in_standing].should == 'scored his or her first point. Congratulations!'
+      person[:change_in_standing].should == 'scored his or her first point. Congratulations!' # TODO Dave welcome if no previous posts
     end
 
     it "mentions new guessers' points after the first" do
@@ -569,7 +569,7 @@ describe Person do
       people_by_score = { 3 => [ winner ], 2 => [ loser ] }
       guessers = [ [ winner, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      winner[:change_in_standing].should == 'climbed from 2nd to 1st place.'
+      winner[:change_in_standing].should == 'climbed from 2nd to 1st place.' # TODO Dave lose the period
     end
 
     it "says jumped if the person climbed more than one place" do
@@ -584,10 +584,23 @@ describe Person do
       person1[:change_in_standing].should == 'jumped from 3rd to 1st place.'
     end
 
-    it "welcomes people to the top ten"
+    it "welcomes people to the top ten" do
+      person1 = Person.make 1
+      others = (2 .. 11).map { |n| [ Person.make n ] }
+      people = [ person1, *others ]
+      others_by_score = {}
+      others.each_with_index { |other, i| others_by_score[i + 2] = other }
+      stub(Person).by_score(people, Time.utc(2010)) { others_by_score.merge({ 1 => [ person1 ] }) }
+      people_by_score = others_by_score.merge({ 12 => [ person1 ] })
+      guessers = [ [ person1, [] ] ]
+      Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
+      person1[:change_in_standing].should == 'jumped from 11th to 1st place. Welcome to the top ten!'
+    end
+
     it "mentions who was passed"
     it "says if the guesser is tied, and who with"
     it "doesn't name names if the guesser is tied with more than one other person"
+    it "notes numeric milestones"
 
   end
 
