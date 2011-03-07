@@ -594,10 +594,11 @@ describe Person do
     end
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)
-      stub(Person).by_score(@people, Time.utc(2010)) { people_by_previous_score }
-      stub(Photo).add_posts @people, Time.utc(2010), :previous_posts
+      previous_report_date = Time.utc(2010)
+      stub(Person).by_score(@people, previous_report_date) { people_by_previous_score }
+      stub(Photo).add_posts @people, previous_report_date, :previous_posts
       guessers = [ [ @person, [] ] ]
-      Person.add_change_in_standings people_by_score, @people, Time.utc(2010), guessers
+      Person.add_change_in_standings people_by_score, @people, previous_report_date, guessers
       @person[:change_in_standing].should == expected_change
     end
 
