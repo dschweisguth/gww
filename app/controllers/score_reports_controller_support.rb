@@ -55,7 +55,7 @@ module ScoreReportsControllerSupport
       place = scored_people[guesser][:place]
       previous_place = scored_people[guesser][:previous_place]
       if place < previous_place
-        guesser[:change_in_standings] = "moved from #{previous_place.ordinal} to #{place.ordinal} place.";
+        guesser[:change_in_standing] = "moved from #{previous_place.ordinal} to #{place.ordinal} place.";
       end
     end
   end
