@@ -106,77 +106,79 @@ describe PeopleController do
   end
 
   describe '#show' do
-    it "renders the page" do
-      person = Person.make :id => 1
-      person[:score] = 1 # for the high_scorers methods
-
-      stub(Person).find(person.id.to_s) { person }
-
+    before do
+      @person = Person.make :id => 1
+      @person[:score] = 1 # for the high_scorers methods
+      stub(Person).find(@person.id.to_s) { @person }
       stub(Person).standing { [ 1, false ] }
 
-      now = Time.now
-      stub(Time).now { now }
-      stub(Person).high_scorers(now, 7) { [ person ] }
-      stub(Person).high_scorers(now, 30) { [ person ] }
+      @now = Time.now
+      stub(Time).now { @now }
+
+    end
+
+    it "renders the page" do
+      stub(Person).high_scorers(@now, 7) { [ @person ] }
+      stub(Person).high_scorers(@now, 30) { [ @person ] }
 
       first_guess = Guess.make 'first_guess'
-      stub(Guess).first_by(person) { first_guess }
+      stub(Guess).first_by(@person) { first_guess }
 
       first_post = Photo.make 'first_post'
-      stub(Photo).first_by(person) { first_post }
+      stub(Photo).first_by(@person) { first_post }
 
       most_recent_guess = Guess.make 'most_recent_guess'
-      stub(Guess).most_recent_by(person) { most_recent_guess }
+      stub(Guess).most_recent_by(@person) { most_recent_guess }
 
       most_recent_post = Photo.make 'most_recent_post'
-      stub(Photo).most_recent_by(person) { most_recent_post }
+      stub(Photo).most_recent_by(@person) { most_recent_post }
 
       oldest_guess = Guess.make 'oldest_guess'
       oldest_guess[:place] = 1
-      stub(Guess).oldest(person) { oldest_guess }
+      stub(Guess).oldest(@person) { oldest_guess }
 
       fastest_guess = Guess.make 'fastest_guess'
       fastest_guess[:place] = 1
-      stub(Guess).fastest(person) { fastest_guess }
+      stub(Guess).fastest(@person) { fastest_guess }
 
       longest_lasting_guess = Guess.make 'longest_lasting_guess'
       longest_lasting_guess[:place] = 1
-      stub(Guess).longest_lasting(person) { longest_lasting_guess }
+      stub(Guess).longest_lasting(@person) { longest_lasting_guess }
 
       shortest_lasting_guess = Guess.make 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
-      stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
+      stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
       oldest_unfound = Photo.make 'oldest_unfound'
       oldest_unfound[:place] = 1
-      stub(Photo).oldest_unfound(person) { oldest_unfound }
+      stub(Photo).oldest_unfound(@person) { oldest_unfound }
 
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id(person.id, anything) \
+      stub(Guess).find_all_by_person_id(@person.id, anything) \
         { [ Guess.make('all1'), Guess.make('all2') ] }
 
       favorite_poster = Person.make 'favorite_poster'
       favorite_poster[:bias] = 2.5
-      stub(person).favorite_posters { [ favorite_poster ] }
+      stub(@person).favorite_posters { [ favorite_poster ] }
       
       found1 = Guess.make 'found1'
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id(person.id, anything) { [ found1.photo, found2.photo ] }
+      stub(Photo).find_all_by_person_id(@person.id, anything) { [ found1.photo, found2.photo ] }
 
       stub(Photo).all { [ Photo.make 'unfound' ] }
 
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
+      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') \
         { [ Photo.make 'revealed' ] }
 
       favorite_poster_of = Person.make 'favorite_poster_of'
       favorite_poster_of[:bias] = 3.6
-      stub(person).favorite_posters_of { [ favorite_poster_of ] }
+      stub(@person).favorite_posters_of { [ favorite_poster_of ] }
 
-      get :show, :id => person.id
+      get :show, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -193,63 +195,54 @@ describe PeopleController do
     end
 
     it "handles a person who has never guessed" do
-      person = Person.make :id => 1
-      person[:score] = 0 # for the high_scorers methods
+      stub(Person).high_scorers(@now, 7) { [] }
+      stub(Person).high_scorers(@now, 30) { [] }
 
-      stub(Person).find(person.id.to_s) { person }
-
-      stub(Person).standing { [ 1, false ] }
-
-      now = Time.now
-      stub(Time).now { now }
-      stub(Person).high_scorers(now, 7) { [] }
-      stub(Person).high_scorers(now, 30) { [] }
-
-      stub(Guess).first_by(person)
+      stub(Guess).first_by(@person)
 
       first_post = Photo.make 'first_post'
-      stub(Photo).first_by(person) { first_post }
+      stub(Photo).first_by(@person) { first_post }
 
-      stub(Guess).most_recent_by(person)
+      stub(Guess).most_recent_by(@person)
 
       most_recent_post = Photo.make 'most_recent_post'
-      stub(Photo).most_recent_by(person) { most_recent_post }
+      stub(Photo).most_recent_by(@person) { most_recent_post }
 
-      stub(Guess).oldest(person)
+      stub(Guess).oldest(@person)
 
-      stub(Guess).fastest(person)
+      stub(Guess).fastest(@person)
 
-      stub(Guess).longest_lasting(person)
+      stub(Guess).longest_lasting(@person)
 
-      stub(Guess).shortest_lasting(person)
+      stub(Guess).shortest_lasting(@person)
 
       oldest_unfound = Photo.make 'oldest_unfound'
       oldest_unfound[:place] = 1
-      stub(Photo).oldest_unfound(person) { oldest_unfound }
+      stub(Photo).oldest_unfound(@person) { oldest_unfound }
 
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id(person.id, anything) { [] }
+      stub(Guess).find_all_by_person_id(@person.id, anything) { [] }
 
-      stub(person).favorite_posters { [] }
+      stub(@person).favorite_posters { [] }
 
       found1 = Guess.make 'found1'
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id(person.id, anything) { [ found1.photo, found2.photo ] }
+      stub(Photo).find_all_by_person_id(@person.id, anything) { [ found1.photo, found2.photo ] }
 
       stub(Photo).all { [ Photo.make 'unfound' ] }
 
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') \
+      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') \
         { [ Photo.make 'revealed' ] }
 
       favorite_poster_of = Person.make 'favorite_poster_of'
       favorite_poster_of[:bias] = 3.6
-      stub(person).favorite_posters_of { [ favorite_poster_of ] }
+      stub(@person).favorite_posters_of { [ favorite_poster_of ] }
 
-      get :show, :id => person.id
+      get :show, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -267,65 +260,55 @@ describe PeopleController do
     end
 
     it "handles a person who has never posted" do
-      person = Person.make :id => 1
-      person[:score] = 1 # for the high_scorers methods
-
-      stub(Person).find(person.id.to_s) { person }
-
-      stub(Person).standing { [ 1, false ] }
-
-      now = Time.now
-      stub(Time).now { now }
-      stub(Person).high_scorers(now, 7) { [ person ] }
-      stub(Person).high_scorers(now, 30) { [ person ] }
+      stub(Person).high_scorers(@now, 7) { [ @person ] }
+      stub(Person).high_scorers(@now, 30) { [ @person ] }
 
       first_guess = Guess.make 'first_guess'
-      stub(Guess).first_by(person) { first_guess }
+      stub(Guess).first_by(@person) { first_guess }
 
-      stub(Photo).first_by(person)
+      stub(Photo).first_by(@person)
 
       most_recent_guess = Guess.make 'most_recent_guess'
-      stub(Guess).most_recent_by(person) { most_recent_guess }
+      stub(Guess).most_recent_by(@person) { most_recent_guess }
 
-      stub(Photo).most_recent_by(person)
+      stub(Photo).most_recent_by(@person)
 
       oldest_guess = Guess.make 'oldest_guess'
       oldest_guess[:place] = 1
-      stub(Guess).oldest(person) { oldest_guess }
+      stub(Guess).oldest(@person) { oldest_guess }
 
       fastest_guess = Guess.make 'fastest_guess'
       fastest_guess[:place] = 1
-      stub(Guess).fastest(person) { fastest_guess }
+      stub(Guess).fastest(@person) { fastest_guess }
 
       longest_lasting_guess = Guess.make 'longest_lasting_guess'
       longest_lasting_guess[:place] = 1
-      stub(Guess).longest_lasting(person) { longest_lasting_guess }
+      stub(Guess).longest_lasting(@person) { longest_lasting_guess }
 
       shortest_lasting_guess = Guess.make 'shortest_lasting_guess'
       shortest_lasting_guess[:place] = 1
-      stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
+      stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
-      stub(Photo).oldest_unfound(person)
+      stub(Photo).oldest_unfound(@person)
 
       #noinspection RubyResolve
-      stub(Guess).find_all_by_person_id(person.id, anything) \
+      stub(Guess).find_all_by_person_id(@person.id, anything) \
         { [ Guess.make('all1'), Guess.make('all2') ] }
 
       favorite_poster = Person.make 'favorite_poster'
       favorite_poster[:bias] = 2.5
-      stub(person).favorite_posters { [ favorite_poster ] }
+      stub(@person).favorite_posters { [ favorite_poster ] }
 
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id(person.id, anything) { [] }
+      stub(Photo).find_all_by_person_id(@person.id, anything) { [] }
 
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id_and_game_status(person.id, 'revealed') { [] }
+      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [] }
 
-      stub(person).favorite_posters_of { [] }
+      stub(@person).favorite_posters_of { [] }
 
-      get :show, :id => person.id
+      get :show, :id => @person.id
 
-      p response.body
       #noinspection RubyResolve
       response.should be_success
       response.should have_text /username is in 1st place with a score of 2./
