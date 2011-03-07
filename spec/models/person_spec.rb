@@ -537,7 +537,7 @@ describe Person do
       people_by_score = { 1 => [ person ] }
       guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person[:change_in_standing].should == 'scored their first point. Congratulations!'
+      person[:change_in_standing].should == 'scored his or her first point. Congratulations!'
     end
 
     it "mentions new guessers' points after the first" do
@@ -547,7 +547,7 @@ describe Person do
       people_by_score = { 2 => [ person ] }
       guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
-      person[:change_in_standing].should == 'scored their first point (and 1 more). Congratulations!'
+      person[:change_in_standing].should == 'scored his or her first point (and 1 more). Congratulations!'
     end
 
     it "mentions moving up" do
