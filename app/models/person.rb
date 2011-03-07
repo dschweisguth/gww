@@ -246,7 +246,7 @@ class Person < ActiveRecord::Base
     utc_now = now.getutc
     people = find_by_sql [ %q{
       select p.*, count(*) score from people p, guesses g
-      where p.id = g.person_id and ? < g.guessed_at and g.guessed_at < ?
+      where p.id = g.person_id and ? < g.guessed_at and g.added_at <= ?
       group by p.id having score > 1 order by score desc
     }, utc_now - for_the_past_n_days.days, utc_now]
     high_scorers = []
