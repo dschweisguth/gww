@@ -43,7 +43,7 @@
   <% if @fastest_guess %><td>Guessed in <%= @fastest_guess.time_elapsed %></td><% end %>
   <% if @longest_lasting_guess %><td>Guessed after <%= @longest_lasting_guess.ymd_elapsed %></td><% end %>
   <% if @shortest_lasting_guess %><td>Guessed in <%= @shortest_lasting_guess.time_elapsed %></td><% end %>
-  <% if @oldest_unfound %><td><%= pluralize @oldest_unfound.years_old, 'year' %> old</td><% end %>
+  <% if @oldest_unfound %><td><%= @oldest_unfound.ymd_elapsed %> old</td><% end %>
 </tr>
 <tr class="trophies-places">
   <% if @oldest_guess %><%= place @oldest_guess, :age %><% end %>

@@ -1,4 +1,6 @@
 class Photo < ActiveRecord::Base
+  include Answer
+
   belongs_to :person
   has_many :guesses
   has_many :comments
@@ -452,6 +454,16 @@ class Photo < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  # TODO Dave test
+
+  def time_elapsed
+    time_elapsed_between dateadded, Time.now
+  end
+
+  def ymd_elapsed
+    ymd_elapsed_between dateadded, Time.now
   end
 
 end
