@@ -1,6 +1,5 @@
 Bugs
 
-person/show Oldest unfound post says "1 years old"
 Same says "0 years old", e.g. /people/show/79
 The username of a person who has guessed but never posted is never updated
 A photo which is guessed or revealed and then removed from the group remains
