@@ -455,11 +455,7 @@ describe Person do
       person = Person.make
       Guess.make '1', :person => person, :guessed_at => 1.days.ago.getutc
       Guess.make '2', :person => person, :guessed_at => 1.days.ago.getutc
-
-      high_scorers = Person.high_scorers Time.now, 2
-      high_scorers.should == [ person ]
-      high_scorers[0][:score].should == 2
-
+      high_scorers_should_return Time.now, 2, person, 2
     end
 
     it 'ignores guesses made before the reporting period' do
@@ -467,11 +463,7 @@ describe Person do
       Guess.make '1', :person => person, :guessed_at => 1.days.ago.getutc
       Guess.make '2', :person => person, :guessed_at => 1.days.ago.getutc
       Guess.make '3', :person => person, :guessed_at => 3.days.ago.getutc
-
-      high_scorers = Person.high_scorers Time.now, 2
-      high_scorers.should == [ person ]
-      high_scorers[0][:score].should == 2
-
+      high_scorers_should_return Time.now, 2, person, 2
     end
 
     it 'ignores guesses made after the reporting period' do
@@ -479,11 +471,13 @@ describe Person do
       Guess.make '1', :person => person, :guessed_at => 2.days.ago.getutc, :added_at => 1.day.ago.getutc
       Guess.make '2', :person => person, :guessed_at => 2.days.ago.getutc, :added_at => 1.day.ago.getutc
       Guess.make '3', :person => person, :guessed_at => 2.days.ago.getutc, :added_at => Time.now.getutc
+      high_scorers_should_return 1.day.ago, 2, person, 2
+    end
 
-      high_scorers = Person.high_scorers 1.day.ago, 2
+    def high_scorers_should_return(now, for_the_past_n_days, person, score)
+      high_scorers = Person.high_scorers now, for_the_past_n_days
       high_scorers.should == [ person ]
-      high_scorers[0][:score].should == 2
-
+      high_scorers[0][:score].should == score
     end
 
     it 'ignores scores of 1' do
