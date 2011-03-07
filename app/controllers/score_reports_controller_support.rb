@@ -2,7 +2,6 @@ require 'fixnum'
 
 module ScoreReportsControllerSupport
 
-  # TODO Dave add welcomes to new members
   def prepare_gww_html(report_date)
     @report_date = report_date.getlocal
 

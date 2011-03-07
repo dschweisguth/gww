@@ -509,7 +509,7 @@ describe Person do
   end
 
   describe '.by_score' do
-    it "groups people by score and adds each's post count" do
+    it "groups people by score" do
       person1 = Person.make 1
       person2 = Person.make 2
       Person.by_score([ person1, person2 ], Time.utc(2011)).should == { 0 => [ person1, person2 ] }
@@ -530,25 +530,34 @@ describe Person do
   end
 
   describe '.add_change_in_standings' do
+    it "congratulates new guessers" do
+      person = Person.make
+      people = [ person ]
+      people_by_score = { 1 => [ person ] }
+      guessers = [ [ person, [] ] ]
+      stub(Person).by_score(people, Time.utc(2010)) { { 0 => [ person ] } }
+      Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
+      person[:change_in_standing].should == 'scored their first point. Congratulations!'
+    end
 
     it "mentions moving up" do
       winner = Person.make 1, :username => 'winner'
       loser = Person.make 2, :username => 'loser'
       people = [ winner, loser ]
-      people_by_score = { 2 => [ winner ], 1 => [ loser ] }
+      people_by_score = { 3 => [ winner ], 2 => [ loser ] }
       guessers = [ [ winner, [] ] ]
-      stub(Person).by_score(people, Time.utc(2010)) { { 1 => [ loser ], 0 => [ winner ] } }
+      stub(Person).by_score(people, Time.utc(2010)) { { 2 => [ loser ], 1 => [ winner ] } }
       Person.add_change_in_standings people_by_score, people, Time.utc(2010), guessers
       winner[:change_in_standing].should == 'moved from 2nd to 1st place.'
     end
 
   end
 
-  describe '.add_place' do
+  describe '.add_score_and_place' do
     it "adds their place to each person" do
       person = Person.make
       people_by_score = { 2 => [ person ] }
-      Person.add_place people_by_score, :place
+      Person.add_score_and_place people_by_score, :score, :place
       person[:place].should == 1
     end
 
@@ -556,7 +565,7 @@ describe Person do
       first = Person.make 1
       second = Person.make 2
       people_by_score = { 3 => [ first ], 2 => [ second ] }
-      Person.add_place people_by_score, :place
+      Person.add_score_and_place people_by_score, :score, :place
       first[:place].should == 1
       second[:place].should == 2
     end

@@ -288,24 +288,32 @@ class Person < ActiveRecord::Base
   end
 
   def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
-    add_place people_by_score, :place
+    add_score_and_place people_by_score, :score, :place
     previous_people_by_score = Person.by_score people, previous_report_date
-    add_place previous_people_by_score, :previous_place
+    add_score_and_place previous_people_by_score, :previous_score, :previous_place
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
-      place = scored_people[guesser][:place]
-      previous_place = scored_people[guesser][:previous_place]
-      if place < previous_place
-        guesser[:change_in_standing] = "moved from #{previous_place.ordinal} to #{place.ordinal} place.";
+      scored_person = scored_people[guesser]
+      if scored_person[:previous_score] == 0 and scored_person[:score] > 0
+        guesser[:change_in_standing] = 'scored their first point. Congratulations!'
+      else
+        place = scored_person[:place]
+        previous_place = scored_person[:previous_place]
+        if place < previous_place
+          guesser[:change_in_standing] = "moved from #{previous_place.ordinal} to #{place.ordinal} place.";
+        end
       end
     end
   end
 
-  def self.add_place(people_by_score, attr_name)
+  def self.add_score_and_place(people_by_score, score_attr_name, place_attr_name)
     place = 1
     people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
-      people_by_score[score].each { |person| person[attr_name] = place }
+      people_by_score[score].each do |person|
+        person[score_attr_name] = score
+        person[place_attr_name] = place
+      end
       place += 1
     end
   end
