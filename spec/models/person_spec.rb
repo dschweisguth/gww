@@ -489,6 +489,11 @@ describe Person do
       Person.high_scorers(@report_date, 1).should == []
     end
 
+    it "ignores scores of 0" do
+      Photo.make
+      Person.high_scorers(@report_date, 1).should == []
+    end
+
   end
 
   describe '.all_before' do
