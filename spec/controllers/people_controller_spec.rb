@@ -191,6 +191,10 @@ describe PeopleController do
       response.should have_tag 'p', :text => /username's nemesis is favorite_poster_of_username \(3.6\)/
 
     end
+
+    it "handles a person who has never guessed"
+    it "handles a person who has never posted"
+
   end
 
   describe '#guesses' do
