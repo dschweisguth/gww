@@ -6,7 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Review people/show for unnecessary whitespace
 Don't use should grammar in spec helper method names
 Survey use of mock vs. stub
 Use RESTful routing in more places.

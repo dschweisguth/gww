@@ -33,7 +33,7 @@
 </tr>
 <tr>
   <% if @oldest_guess %><td><%= thumbnail_with_alt @oldest_guess.photo %></td><% end %>
-  <% if @fastest_guess %><td><%= thumbnail_with_alt @fastest_guess.photo  %></td><% end %>
+  <% if @fastest_guess %><td><%= thumbnail_with_alt @fastest_guess.photo %></td><% end %>
   <% if @longest_lasting_guess %><td><%= thumbnail_with_alt @longest_lasting_guess.photo %></td><% end %>
   <% if @shortest_lasting_guess %><td><%= thumbnail_with_alt @shortest_lasting_guess.photo %></td><% end %>
   <% if @oldest_unfound %><td><%= thumbnail_with_alt @oldest_unfound %></td><% end %>
@@ -46,10 +46,10 @@
   <% if @oldest_unfound %><td><%= @oldest_unfound.ymd_elapsed %> old</td><% end %>
 </tr>
 <tr class="trophies-places">
-  <% if @oldest_guess %><%= place @oldest_guess, :age %><% end %>
-  <% if @fastest_guess %><%= place @fastest_guess, :speed %><% end %>
-  <% if @longest_lasting_guess %><%= place @longest_lasting_guess, :age %><% end %>
-  <% if @shortest_lasting_guess %><%= place @shortest_lasting_guess, :speed %><% end %>
-  <% if @oldest_unfound %><%= place @oldest_unfound, :age %><% end %>
+  <% if @oldest_guess %><%= place @oldest_guess, :age %><% end -%>
+  <% if @fastest_guess %><%= place @fastest_guess, :speed %><% end -%>
+  <% if @longest_lasting_guess %><%= place @longest_lasting_guess, :age %><% end -%>
+  <% if @shortest_lasting_guess %><%= place @shortest_lasting_guess, :speed %><% end -%>
+  <% if @oldest_unfound %><%= place @oldest_unfound, :age %><% end -%>
 </tr>
 </table>
