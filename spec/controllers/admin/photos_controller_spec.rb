@@ -66,7 +66,7 @@ describe Admin::PhotosController do
       photo = Photo.make :id => 1, :dateadded => Time.local(2011)
       stub(Photo).find(photo.id.to_s, anything) { photo }
       #noinspection RubyResolve
-      mock(Comment).find_all_by_photo_id(photo) { [ Comment.make ] }
+      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make ] }
       get :edit, :id => photo.id, :nocomment => 'true'
 
       #noinspection RubyResolve

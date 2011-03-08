@@ -62,7 +62,7 @@ describe PeopleHelper do
       expected.each do |star, period|
         it "returns the alt text '#{period}' given the star :#{star}" do
           guess = Object.new
-          mock(guess).star_for_age { star }
+          stub(guess).star_for_age { star }
           helper.star_and_alt(guess, :age).should == [ star, period ]
         end
       end
@@ -77,7 +77,7 @@ describe PeopleHelper do
       expected.each do |star, period|
         it "returns the alt text '#{period}' given the star :#{star}" do
           guess = Object.new
-          mock(guess).star_for_speed { star }
+          stub(guess).star_for_speed { star }
           helper.star_and_alt(guess, :speed).should == [ star, period ]
         end
       end
