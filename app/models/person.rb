@@ -308,9 +308,9 @@ class Person < ActiveRecord::Base
           ? "scored his or her first point (and #{score - 1} more). Congratulations" \
           : 'scored his or her first point. Congratulations'
         if scored_guesser[:previous_posts] == 0
-          change += ', and welcome to GWSF'
+          change << ', and welcome to GWSF'
         end
-        change += '!'
+        change << '!'
       else
         place = scored_guesser[:place]
         previous_place = scored_guesser[:previous_place]
@@ -319,9 +319,9 @@ class Person < ActiveRecord::Base
             " from #{previous_place.ordinal} to #{place.ordinal} place"
           ties = people_by_score[score] - [ scored_guesser ]
           if ties.length == 1
-            change += ", tying #{ties[0].username}"
+            change << ", tying #{ties[0].username}"
           elsif ties.length > 1
-            change += ", tying #{ties.length} other players"
+            change << ", tying #{ties.length} other players"
           end
         else
           change = ''
@@ -330,7 +330,7 @@ class Person < ActiveRecord::Base
         milestone = club ? nil : MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
         entered_top_ten = previous_place > 10 && place <= 10
         if (club || milestone || entered_top_ten) && ! change.empty?
-          change += '.'
+          change << '.'
         end
         append(change, club) { "Welcome to the #{club} club!" }
         append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
