@@ -352,12 +352,12 @@ class Person < ActiveRecord::Base
   end
   # public only for testing
 
-  def self.append(change, value, &message)
+  def self.append(change, value)
     if value
       if ! change.empty?
         change << ' '
       end
-      change << message.call
+      change << yield
     end
   end
 
