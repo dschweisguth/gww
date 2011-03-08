@@ -631,6 +631,17 @@ describe Person do
         'jumped from 11th to 1st place. Welcome to the top ten!')
     end
 
+    it "congratulates and welcomes to the top ten at the same time" do
+      others = (2 .. 11).map { |n| [ Person.make n ] }
+      @people += others
+      others_by_score = {}
+      others.each_with_index { |other, i| others_by_score[i + 2] = other }
+      adds_change(
+        others_by_score.merge({ 100 => [ @person ] }),
+        others_by_score.merge({ 1 => [ @person ] }),
+        'jumped from 11th to 1st place. Congratulations on reaching 100 points! Welcome to the top ten!')
+    end
+
     def adds_change(people_by_score, people_by_previous_score, expected_change)
       previous_report_date = Time.utc(2010)
       stub(Person).by_score(@people, previous_report_date) { people_by_previous_score }
