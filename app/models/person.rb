@@ -304,9 +304,11 @@ class Person < ActiveRecord::Base
       score = scored_guesser[:score]
       previous_score = scored_guesser[:previous_score]
       if previous_score == 0 && score > 0
-        change = score > 1 \
-          ? "scored his or her first point (and #{score - 1} more). Congratulations" \
-          : 'scored his or her first point. Congratulations'
+        change = 'scored his or her first point'
+        if score > 1
+          change << " (and #{score - 1} more)"
+        end
+        change << '. Congratulations'
         if scored_guesser[:previous_posts] == 0
           change << ', and welcome to GWSF'
         end
