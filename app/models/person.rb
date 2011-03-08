@@ -317,8 +317,7 @@ class Person < ActiveRecord::Base
         place = scored_guesser[:place]
         previous_place = scored_guesser[:previous_place]
         if place < previous_place
-          change = (previous_place - place > 1 ? 'jumped' : 'climbed') +
-            " from #{previous_place.ordinal} to #{place.ordinal} place"
+          change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
           ties = people_by_score[score] - [ scored_guesser ]
           if ties.length == 1
             change << ", tying #{ties[0].username}"
