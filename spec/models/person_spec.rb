@@ -606,7 +606,15 @@ describe Person do
         'climbed from 2nd to 1st place, tying 2 other players')
     end
 
-    it "handles passing and tying at the same time"
+    it "handles passing and tying at the same time" do
+      other2 = Person.make 2
+      other3 = Person.make 3
+      @people += [ other2, other3 ]
+      adds_change(
+        { 3 => [ @person, other2 ], 2 => [ other3 ] },
+        { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
+        'jumped from 3rd to 1st place, passing 3_username and tying 2_username')
+    end
 
     [ 222, 500, 3300 ].each do |club|
       it "welcomes the guesser to the #{club} club" do
