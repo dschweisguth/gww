@@ -317,8 +317,8 @@ class Person < ActiveRecord::Base
         if place < previous_place
           change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
           passed =
-            people.find_all { |person| person[:previous_place] < guesser[:previous_place] } &
-              people.find_all { |person| person[:place] > guesser[:place] }
+            people.find_all { |person| person[:previous_place] < scored_guesser[:previous_place] } &
+              people.find_all { |person| person[:place] > scored_guesser[:place] }
           ties = people_by_score[score] - [ scored_guesser ]
           if ! passed.empty? || ties.length > 0
             change << ','
