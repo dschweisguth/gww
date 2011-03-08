@@ -582,7 +582,7 @@ describe Person do
       other3 = Person.make 3
       @people += [ other2, other3 ]
       adds_change(
-        { 4 => [ @person ], 3 => [ other2 ], 2 => [ other2 ] },
+        { 4 => [ @person ], 3 => [ other2 ], 2 => [ other3 ] },
         { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
         'jumped from 3rd to 1st place')
     end
@@ -637,10 +637,10 @@ describe Person do
     end
 
     it "welcomes the guesser to the top ten" do
-      others = (2 .. 11).map { |n| [ Person.make n ] }
+      others = (2 .. 11).map { |n| Person.make n }
       @people += others
       others_by_score = {}
-      others.each_with_index { |other, i| others_by_score[i + 2] = other }
+      others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
         others_by_score.merge({ 12 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
@@ -648,10 +648,10 @@ describe Person do
     end
 
     it "congratulates and welcomes to the top ten at the same time" do
-      others = (2 .. 11).map { |n| [ Person.make n ] }
+      others = (2 .. 11).map { |n| Person.make n }
       @people += others
       others_by_score = {}
-      others.each_with_index { |other, i| others_by_score[i + 2] = other }
+      others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
         others_by_score.merge({ 100 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
