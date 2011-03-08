@@ -308,11 +308,9 @@ class Person < ActiveRecord::Base
         if score > 1
           change << " (and #{score - 1} more)"
         end
-        change << '. Congratulations'
-        if scored_guesser[:previous_posts] == 0
-          change << ', and welcome to GWSF'
-        end
-        change << '!'
+        change << (scored_guesser[:previous_posts] == 0 \
+          ? '. Congratulations, and welcome to GWSF!' \
+          : '. Congratulations!')
       else
         place = scored_guesser[:place]
         previous_place = scored_guesser[:previous_place]
