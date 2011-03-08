@@ -316,11 +316,25 @@ class Person < ActiveRecord::Base
         previous_place = scored_guesser[:previous_place]
         if place < previous_place
           change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
+          passed =
+            people.find_all { |person| person[:previous_place] < guesser[:previous_place] } &
+              people.find_all { |person| person[:place] > guesser[:place] }
           ties = people_by_score[score] - [ scored_guesser ]
-          if ties.length == 1
-            change << ", tying #{ties[0].username}"
-          elsif ties.length > 1
-            change << ", tying #{ties.length} other players"
+          if ! passed.empty? || ties.length > 0
+            change << ','
+          end
+          if ! passed.empty?
+            change << " passing #{passed.length == 1 ? passed[0].username : "#{passed.length} other players" }"
+          end
+          if ties.length > 0 then
+            if !passed.empty?
+              change << ' and'
+            end
+            if ties.length == 1
+              change << " tying #{ties[0].username}"
+            else
+              change << " tying #{ties.length} other players"
+            end
           end
         else
           change = ''

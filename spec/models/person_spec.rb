@@ -574,7 +574,7 @@ describe Person do
       adds_change(
         { 3 => [ @person ], 2 => [ other ] },
         { 2 => [ other ], 1 => [ @person ] },
-        'climbed from 2nd to 1st place')
+        'climbed from 2nd to 1st place, passing 2_username')
     end
 
     it "says jumped if the guesser climbed more than one place" do
@@ -584,7 +584,7 @@ describe Person do
       adds_change(
         { 4 => [ @person ], 3 => [ other2 ], 2 => [ other3 ] },
         { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
-        'jumped from 3rd to 1st place')
+        'jumped from 3rd to 1st place, passing 2 other players')
     end
 
     it "indicates a new tie" do
@@ -605,6 +605,8 @@ describe Person do
         { 2 => [ other2, other3 ], 1 => [ @person ] },
         'climbed from 2nd to 1st place, tying 2 other players')
     end
+
+    it "handles passing and tying at the same time"
 
     [ 222, 500, 3300 ].each do |club|
       it "welcomes the guesser to the #{club} club" do
@@ -644,7 +646,7 @@ describe Person do
       adds_change(
         others_by_score.merge({ 12 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place. Welcome to the top ten!')
+        'jumped from 11th to 1st place, passing 10 other players. Welcome to the top ten!')
     end
 
     it "congratulates and welcomes to the top ten at the same time" do
@@ -655,7 +657,7 @@ describe Person do
       adds_change(
         others_by_score.merge({ 100 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place. Congratulations on reaching 100 points! Welcome to the top ten!')
+        'jumped from 11th to 1st place, passing 10 other players. Congratulations on reaching 100 points! Welcome to the top ten!')
     end
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)
@@ -666,8 +668,6 @@ describe Person do
       Person.add_change_in_standings people_by_score, @people, previous_report_date, guessers
       @person[:change_in_standing].should == expected_change
     end
-
-    it "mentions who was passed"
 
   end
 
