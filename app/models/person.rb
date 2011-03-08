@@ -311,7 +311,6 @@ class Person < ActiveRecord::Base
           change += ', and welcome to GWSF'
         end
         change += '!'
-        guesser[:change_in_standing] = change
       else
         place = scored_guesser[:place]
         previous_place = scored_guesser[:previous_place]
@@ -344,8 +343,8 @@ class Person < ActiveRecord::Base
           end
           change += 'Welcome to the top ten!'
         end
-        guesser[:change_in_standing] = change
       end
+      guesser[:change_in_standing] = change
     end
   end
 
