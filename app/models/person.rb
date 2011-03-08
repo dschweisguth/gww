@@ -330,11 +330,8 @@ class Person < ActiveRecord::Base
             if !passed.empty?
               change << ' and'
             end
-            if ties.length == 1
-              change << " tying #{ties[0].username}"
-            else
-              change << " tying #{ties.length} other players"
-            end
+            change << ' tying '
+            change << (ties.length == 1 ? ties[0].username : "#{ties.length} other players") 
           end
         else
           change = ''
