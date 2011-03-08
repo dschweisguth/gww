@@ -654,7 +654,7 @@ describe Person do
       adds_change(
         others_by_score.merge({ 12 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place, passing 10 other players. Welcome to the top ten!')
+        'jumped from 11th to 1st place. Welcome to the top ten!')
     end
 
     it "congratulates and welcomes to the top ten at the same time" do
@@ -665,7 +665,7 @@ describe Person do
       adds_change(
         others_by_score.merge({ 100 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place, passing 10 other players. Congratulations on reaching 100 points! Welcome to the top ten!')
+        'jumped from 11th to 1st place. Congratulations on reaching 100 points! Welcome to the top ten!')
     end
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)

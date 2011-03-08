@@ -320,14 +320,15 @@ class Person < ActiveRecord::Base
             people.find_all { |person| person[:previous_place] < scored_guesser[:previous_place] } &
               people.find_all { |person| person[:place] > scored_guesser[:place] }
           ties = people_by_score[score] - [ scored_guesser ]
-          if ! passed.empty? || ties.length > 0
+          show_passed = passed.length == 1 || passed.length > 0 && previous_place - place == 2
+          if show_passed || ties.length > 0
             change << ','
           end
-          if ! passed.empty?
+          if show_passed
             change << " passing #{passed.length == 1 ? passed[0].username : "#{passed.length} other players" }"
           end
           if ties.length > 0 then
-            if !passed.empty?
+            if show_passed
               change << ' and'
             end
             change << ' tying '
