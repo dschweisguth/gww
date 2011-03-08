@@ -327,22 +327,14 @@ class Person < ActiveRecord::Base
           change = ''
         end
         club = CLUBS.find { |club| previous_score < club && club <= score }
-        milestone = MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
+        milestone = club ? nil : MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
         entered_top_ten = previous_place > 10 && place <= 10
         if (club || milestone || entered_top_ten) && ! change.empty?
-          change += '. '
+          change += '.'
         end
-        if club
-          change += "Welcome to the #{club} club!"
-        elsif milestone
-          change += "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!"
-        end
-        if entered_top_ten
-          if club || milestone
-            change += ' '
-          end
-          change += 'Welcome to the top ten!'
-        end
+        append change, club, "Welcome to the #{club} club!"
+        append change, milestone, "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!"
+        append change, entered_top_ten, 'Welcome to the top ten!'
       end
       guesser[:change_in_standing] = change
     end
@@ -359,6 +351,15 @@ class Person < ActiveRecord::Base
     end
   end
   # public only for testing
+
+  def self.append(change, value, message)
+    if value
+      if ! change.empty?
+        change << ' '
+      end
+      change << message
+    end
+  end
 
   def self.most_points_in_2010
     find_by_sql [ %q{
