@@ -332,9 +332,9 @@ class Person < ActiveRecord::Base
         if (club || milestone || entered_top_ten) && ! change.empty?
           change += '.'
         end
-        append change, club, "Welcome to the #{club} club!"
-        append change, milestone, "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!"
-        append change, entered_top_ten, 'Welcome to the top ten!'
+        append(change, club) { "Welcome to the #{club} club!" }
+        append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
+        append(change, entered_top_ten) { 'Welcome to the top ten!' }
       end
       guesser[:change_in_standing] = change
     end
@@ -352,12 +352,12 @@ class Person < ActiveRecord::Base
   end
   # public only for testing
 
-  def self.append(change, value, message)
+  def self.append(change, value, &message)
     if value
       if ! change.empty?
         change << ' '
       end
-      change << message
+      change << message.call
     end
   end
 
