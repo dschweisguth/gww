@@ -629,6 +629,13 @@ describe Person do
         'Congratulations on passing 100 points!')
     end
 
+    it "reports club, not milestone, if both are options" do
+      adds_change(
+        { 222 => [ @person ] },
+        { 199 => [ @person ] },
+        'Welcome to the 222 club!')
+    end
+
     it "welcomes the guesser to the top ten" do
       others = (2 .. 11).map { |n| [ Person.make n ] }
       @people += others
