@@ -23,7 +23,6 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
-Don't say "passed n people" if the guesser jumped more than one place
 Photo edit page
   Reduce the number of clicks it takes to add or remove a guess or revelation
   Make it possible to mark a photo as revealed which doesn't have a comment by
