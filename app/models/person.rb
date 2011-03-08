@@ -287,7 +287,7 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
-  # TODO Dave 222 club, 500 club, 3300 club
+  CLUBS = [ 222, 500, 3300 ]
 
   # TODO make this work for boundaries above 5000
   MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
@@ -327,16 +327,19 @@ class Person < ActiveRecord::Base
         else
           change = ''
         end
+        club = CLUBS.find { |club| previous_score < club && club <= score }
         milestone = MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
         entered_top_ten = previous_place > 10 && place <= 10
-        if (milestone || entered_top_ten) && ! change.empty?
+        if (club || milestone || entered_top_ten) && ! change.empty?
           change += '. '
         end
-        if milestone
+        if club
+          change += "Welcome to the #{club} club!"
+        elsif milestone
           change += "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!"
         end
         if entered_top_ten
-          if milestone
+          if club || milestone
             change += ' '
           end
           change += 'Welcome to the top ten!'

@@ -606,6 +606,15 @@ describe Person do
         'climbed from 2nd to 1st place, tying 2 other players')
     end
 
+    [ 222, 500, 3300 ].each do |club|
+      it "welcomes the guesser to the #{club} club" do
+        adds_change(
+          { club => [ @person ] },
+          { club - 1 => [ @person ] },
+          "Welcome to the #{club} club!")
+      end
+    end
+
     it "notes numeric milestones" do
       adds_change(
         { 100 => [ @person ] },
