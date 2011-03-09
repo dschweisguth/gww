@@ -603,7 +603,7 @@ describe Person do
       adds_change(
         { 2 => [ other2, other3, @person ] },
         { 2 => [ other2, other3 ], 1 => [ @person ] },
-        'climbed from 2nd to 1st place, tying 2 other players')
+        'jumped from 3rd to 1st place, tying 2 other players')
     end
 
     it "handles passing and tying at the same time" do
@@ -682,18 +682,37 @@ describe Person do
   describe '.add_score_and_place' do
     it "adds their place to each person" do
       person = Person.make
-      people_by_score = { 2 => [ person ] }
+      people_by_score = { 0 => [ person ] }
       Person.add_score_and_place people_by_score, :score, :place
+      person[:score].should == 0
       person[:place].should == 1
     end
 
     it "gives a lower (numerically greater) place to people with lower scores" do
       first = Person.make 1
       second = Person.make 2
-      people_by_score = { 3 => [ first ], 2 => [ second ] }
+      people_by_score = { 1 => [ first ], 0 => [ second ] }
       Person.add_score_and_place people_by_score, :score, :place
       first[:place].should == 1
       second[:place].should == 2
+    end
+
+    it "handles ties" do
+      tied1 = Person.make 1
+      tied2 = Person.make 2
+      people_by_score = { 0 => [ tied1, tied2 ] }
+      Person.add_score_and_place people_by_score, :score, :place
+      tied1[:place].should == 1
+      tied2[:place].should == 1
+    end
+
+    it "counts the number of people above one, not the number of scores above one" do
+      tied1 = Person.make 1
+      tied2 = Person.make 2
+      third = Person.make 3
+      people_by_score = { 1 => [ tied1, tied2 ], 0 => [ third ] }
+      Person.add_score_and_place people_by_score, :score, :place
+      third[:place].should == 3
     end
 
   end

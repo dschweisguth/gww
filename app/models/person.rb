@@ -354,11 +354,12 @@ class Person < ActiveRecord::Base
   def self.add_score_and_place(people_by_score, score_attr_name, place_attr_name)
     place = 1
     people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
-      people_by_score[score].each do |person|
+      people_with_score = people_by_score[score]
+      people_with_score.each do |person|
         person[score_attr_name] = score
         person[place_attr_name] = place
       end
-      place += 1
+      place += people_with_score.length
     end
   end
   # public only for testing
