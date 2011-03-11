@@ -252,12 +252,28 @@ class Person < ActiveRecord::Base
     high_scorers = []
     current_score = nil
     people.each do |person|
-      break if high_scorers.length >= 3 &&
-        person[:score] < current_score
-      high_scorers.push person
+      break if high_scorers.length >= 3 && person[:score] < current_score
+      high_scorers << person
       current_score = person[:score]
     end
     high_scorers
+  end
+
+  def self.top_posters(now, for_the_past_n_days)
+    utc_now = now.getutc
+    people = find_by_sql [ %q{
+      select p.*, count(*) posts from people p, photos f
+      where p.id = f.person_id and ? < f.dateadded and f.dateadded <= ?
+      group by p.id having posts > 1 order by posts desc
+    }, utc_now - for_the_past_n_days.days, utc_now]
+    top_posters = []
+    current_post_count = nil
+    people.each do |person|
+      break if top_posters.length >= 3 && person[:posts] < current_post_count
+      top_posters << person
+      current_post_count = person[:posts]
+    end
+    top_posters
   end
 
   def self.all_before(date)

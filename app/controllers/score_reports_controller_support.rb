@@ -21,6 +21,9 @@ module ScoreReportsControllerSupport
     @weekly_high_scorers = Person.high_scorers @report_date, 7
     @monthly_high_scorers = Person.high_scorers @report_date, 30
 
+    @weekly_top_posters = Person.top_posters @report_date, 7
+    @monthly_top_posters = Person.top_posters @report_date, 30
+
     @new_photos_count = Photo.count_between previous_report_date, @report_date
     @unfound_count = Photo.unfound_or_unconfirmed_count_before @report_date
 

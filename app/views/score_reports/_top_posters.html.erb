@@ -1,0 +1,6 @@
+<% if ! top_posters.empty? -%>
+Top posters in the last <%= period %>: <% -%>
+<% top_posters.each_with_index do |person, person_index| -%>
+<% if person_index > 0 %>, <% end %><strong><%= link_to_person person %></strong> (<%= person[:posts] %>)<% -%>
+<% end %>
+<% end -%>
