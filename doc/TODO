@@ -6,7 +6,8 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Look in to :inverse_of http://apidock.com/rails/ActiveRecord/Associations/ClassMethods
+Redo how add_change_in_standings manages different instance with the same identity
+  (if it's still necessary after adding :inverse_of)
 Use RESTful routing in more places.
   Having done so, enforce correct HTTP method on remaining non-RESTful actions.
 Fix guess scored before the group started
@@ -17,6 +18,7 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
   is fixed,
   Upgrade to passenger 3
   Upgrade to Rails 3
+  See whether it's possible to test :inverse_of
   rvm
   Upgrade to Ruby 1.9.2
 

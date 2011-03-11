@@ -1,7 +1,7 @@
 class ScoreReport < ActiveRecord::Base
-  belongs_to :previous_report, :class_name => 'ScoreReport'
+  belongs_to :previous_report, :class_name => 'ScoreReport', :inverse_of => :next_report
   #noinspection RailsParamDefResolve
-  has_one :next_report, :class_name => 'ScoreReport', :foreign_key => :previous_report_id
+  has_one :next_report, :class_name => 'ScoreReport', :foreign_key => :previous_report_id, :inverse_of => :previous_report
 
   def self.guess_counts
     answer_counts :guesses

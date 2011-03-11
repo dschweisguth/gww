@@ -7,8 +7,8 @@ class Person < ActiveRecord::Base
   validates_presence_of :flickrid, :username
   attr_readonly :flickrid
 
-  has_many :photos
-  has_many :guesses
+  has_many :photos, :inverse_of => :person
+  has_many :guesses, :inverse_of => :person
 
   def self.find_by_multiple_fields(username)
     Person.find_by_username(username) || Person.find_by_flickrid(username) ||

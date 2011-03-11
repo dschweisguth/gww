@@ -1,7 +1,7 @@
 class Revelation < ActiveRecord::Base
   include Answer
 
-  belongs_to :photo
+  belongs_to :photo, :inverse_of => :revelation
   validates_presence_of :revelation_text, :revealed_at, :added_at
   attr_readonly :revelation_text, :revealed_at, :added_at
 

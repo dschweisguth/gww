@@ -1,8 +1,8 @@
 class Guess < ActiveRecord::Base
   include Answer
 
-  belongs_to :photo
-  belongs_to :person
+  belongs_to :photo, :inverse_of => :guesses
+  belongs_to :person, :inverse_of => :guesses
   #noinspection RailsParamDefResolve
   validates_presence_of :guess_text, :guessed_at, :added_at
   attr_readonly :guess_text, :guessed_at, :added_at
