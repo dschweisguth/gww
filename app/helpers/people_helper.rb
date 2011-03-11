@@ -55,13 +55,13 @@ module PeopleHelper
   end
   private :alt_for_star_for_speed
 
-  def position(high_scorers, person)
+  def position(high_scorers, person, attr)
     position = 0
     score_for_this_position = 1.0/0
     high_scorers.each_with_index do |high_scorer, i|
-      if high_scorer[:score] < score_for_this_position
+      if high_scorer[attr] < score_for_this_position
         position = i + 1
-        score_for_this_position = high_scorer[:score]
+        score_for_this_position = high_scorer[attr]
       end
       break if high_scorer == person
     end

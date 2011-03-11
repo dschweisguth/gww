@@ -133,7 +133,7 @@ describe PeopleHelper do
       person_with_score[:score] = 0
       high_scorers.push person_with_score
 
-      helper.position(high_scorers, person).should == expected
+      helper.position(high_scorers, person, :score).should == expected
     end
 
   end

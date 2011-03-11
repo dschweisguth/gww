@@ -41,7 +41,15 @@ class PeopleController < ApplicationController
     if monthly_high_scorers.include? @person
       @monthly_high_scorers = monthly_high_scorers
     end
- 
+    weekly_top_posters = Person.top_posters now, 7
+    if weekly_top_posters.include? @person
+      @weekly_top_posters = weekly_top_posters
+    end
+    monthly_top_posters = Person.top_posters now, 30
+    if monthly_top_posters.include? @person
+      @monthly_top_posters = monthly_top_posters
+    end
+
     @first_guess = Guess.first_by @person
     @first_post = Photo.first_by @person
     @most_recent_guess = Guess.most_recent_by @person
