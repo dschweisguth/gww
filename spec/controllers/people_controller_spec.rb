@@ -109,6 +109,7 @@ describe PeopleController do
     before do
       @person = Person.make :id => 1
       @person[:score] = 1 # for the high_scorers methods
+      @person[:posts] = 1 # for the top_posters methods
       stub(Person).find(@person.id.to_s) { @person }
       stub(Person).standing { [ 1, false ] }
 
@@ -162,6 +163,8 @@ describe PeopleController do
     it "handles a person who has never posted" do
       stub_guesses
 
+      stub(Person).top_posters(@now, 7) { [] }
+      stub(Person).top_posters(@now, 30) { [] }
       stub(Photo).first_by(@person)
       stub(Photo).most_recent_by(@person)
       stub(Photo).oldest_unfound(@person)
@@ -177,6 +180,8 @@ describe PeopleController do
       response.should be_success
       renders_bits_for_user_who_has_guessed
 
+      response.should_not have_text /username posted the most photos in the last week/
+      response.should_not have_text /username posted the most photos in the last month/
       response.should have_tag 'h2', :text => /username has posted 0 photos/
       response.should_not have_text /Of the photos that username has posted/
       response.should_not have_text /remains unfound/
@@ -222,6 +227,9 @@ describe PeopleController do
     end
 
     def stub_posts
+      stub(Person).top_posters(@now, 7) { [ @person ] }
+      stub(Person).top_posters(@now, 30) { [ @person ] }
+
       first_post = Photo.make 'first_post'
       stub(Photo).first_by(@person) { first_post }
 
@@ -261,6 +269,8 @@ describe PeopleController do
     end
 
     def renders_bits_for_user_who_has_posted
+      response.should have_text /username posted the most photos in the last week/
+      response.should have_text /username posted the most photos in the last month/
       response.should have_tag 'h2', :text => /username has posted 2 photos/
       response.should have_text /1 remains unfound/
       response.should have_text /1 was revealed/
