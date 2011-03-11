@@ -23,6 +23,11 @@
 <% else -%>
   <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= @place.ordinal %> place with a score of <%= @guesses.length %>.
 <% end -%>
+<% if @posts.empty? -%>
+  <%=h @person.username %> has never posted a photo to the group. 
+<% else -%>
+  <%=h @person.username %> has posted <%= @posts.length %> photos to the group, <%= if @tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.
+<% end -%>
 <br/>
 
 <%= render 'people/show/high_scorers', :high_scorers => @weekly_high_scorers, :period => 'week' %>

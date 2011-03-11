@@ -31,6 +31,7 @@ class PeopleController < ApplicationController
     @person = Person.find params[:id]
 
     @place, @tied = Person.standing @person
+    @posts_place, @posts_tied = Person.posts_standing @person
 
     now = Time.now
     weekly_high_scorers = Person.high_scorers now, 7

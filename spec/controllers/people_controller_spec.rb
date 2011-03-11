@@ -112,6 +112,7 @@ describe PeopleController do
       @person[:posts] = 1 # for the top_posters methods
       stub(Person).find(@person.id.to_s) { @person }
       stub(Person).standing { [ 1, false ] }
+      stub(Person).posts_standing { [ 1, false ] }
 
       @now = Time.now
       stub(Time).now { @now }
@@ -149,7 +150,7 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /username is in 1st place with a score of 0./
+      response.should have_text /username has never made a correct guess/
       response.should_not have_text /username scored the most points in the last week/
       response.should_not have_text /username scored the most points in the last month/
       response.should have_text /username has correctly guessed 0 photos/
@@ -180,6 +181,7 @@ describe PeopleController do
       response.should be_success
       renders_bits_for_user_who_has_guessed
 
+      response.should have_text /username has never posted a photo to the group/
       response.should_not have_text /username posted the most photos in the last week/
       response.should_not have_text /username posted the most photos in the last month/
       response.should have_tag 'h2', :text => /username has posted 0 photos/
@@ -269,6 +271,7 @@ describe PeopleController do
     end
 
     def renders_bits_for_user_who_has_posted
+      response.should have_text /username has posted 2 photos to the group, the most/
       response.should have_text /username posted the most photos in the last week/
       response.should have_text /username posted the most photos in the last month/
       response.should have_tag 'h2', :text => /username has posted 2 photos/

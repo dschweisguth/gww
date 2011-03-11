@@ -242,6 +242,25 @@ class Person < ActiveRecord::Base
     return place, tied
   end
 
+  def self.posts_standing(person)
+    place = 1
+    tied = false
+    posts_by_person = Photo.count :group => :person_id
+    people_by_post_count = posts_by_person.keys.group_by \
+      { |person_id| posts_by_person[person_id] }
+    post_counts = people_by_post_count.keys.sort { |a, b| b <=> a }
+    post_counts.each do |post_count|
+      people_with_post_count = people_by_post_count[post_count]
+      if people_with_post_count.include? person.id
+        tied = people_with_post_count.length > 1
+        break
+      else
+        place += people_with_post_count.length
+      end
+    end
+    return place, tied
+  end
+
   def self.high_scorers(now, for_the_past_n_days)
     utc_now = now.getutc
     people = find_by_sql [ %q{
