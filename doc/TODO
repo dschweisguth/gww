@@ -6,8 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Redo how add_change_in_standings manages different instance with the same identity
-  (if it's still necessary after adding :inverse_of)
 Use RESTful routing in more places.
   Having done so, enforce correct HTTP method on remaining non-RESTful actions.
 Fix guess scored before the group started
