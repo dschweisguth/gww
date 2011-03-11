@@ -20,6 +20,9 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   stub(Person).high_scorers(report_date, 7) { [ person2, person1 ] }
   stub(Person).high_scorers(report_date, 30) { [ person2, person1 ] }
 
+  stub(Person).top_posters(report_date, 7) { [ person2, person1 ] }
+  stub(Person).top_posters(report_date, 30) { [ person2, person1 ] }
+
   stub(Photo).count_between(previous_report_date, report_date.getutc) { 6 }
   stub(Photo).unfound_or_unconfirmed_count_before(report_date) { 1234 }
 
@@ -50,6 +53,8 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   response.should have_text /3 photos revealed by .../
   response.should have_text /Top guessers in the last week:/
   response.should have_text /Top guessers in the last month:/
+  response.should have_text /Top posters in the last week:/
+  response.should have_text /Top posters in the last month:/
   response.should have_text /6 photos have been added to the pool since the previous report/
   response.should have_tag 'a[href=http://anythreewords.com/gwsf/]', :text => '1234 unfound photos'
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
