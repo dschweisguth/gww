@@ -41,7 +41,6 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
 
   get action, params
 
-  p response.body
   #noinspection RubyResolve
   response.should be_success
   response.should have_tag 'strong', :text => 'updated Wednesday, January  5, 12 AM'
