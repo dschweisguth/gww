@@ -35,7 +35,9 @@ module ScoreReportsControllerSupport
     @member_count = FlickrUpdate.first(:order => 'id desc').member_count
     @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
-    @gww_html = render_to_string(:partial => 'score_reports/topic_content').gsub /$/, '<br/>'
+    raw_html = render_to_string :partial => 'score_reports/topic_content'
+    @gww_html = raw_html.gsub /$/, '<br/>'
+    raw_html
 
   end
   private :prepare_gww_html

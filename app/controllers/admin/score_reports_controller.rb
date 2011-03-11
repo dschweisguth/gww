@@ -9,8 +9,7 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def new
-    prepare_gww_html Time.now
-    @flickr_html = CGI.escapeHTML render_to_string :partial => 'score_reports/topic_content'
+    @flickr_html = CGI.escapeHTML prepare_gww_html Time.now
   end
 
   def create
