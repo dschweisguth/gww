@@ -1,4 +1,4 @@
-def should_render_report_for(report_date, previous_report_date, action, params = {})
+def renders_report_for(report_date, previous_report_date, action, params = {})
   person0 = Person.make
   person1 = Person.make
   person2 = Person.make

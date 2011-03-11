@@ -86,14 +86,14 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response_should_have_table "for Monday, January 03 so far ...", guess
-      response_should_have_table "for the week of January 02 so far ...", guess
-      response_should_have_table "for January 2011 so far ...", guess
-      response_should_have_table "for 2011 so far ...", guess
+      response_has_table "for Monday, January 03 so far ...", guess
+      response_has_table "for the week of January 02 so far ...", guess
+      response_has_table "for January 2011 so far ...", guess
+      response_has_table "for 2011 so far ...", guess
 
     end
 
-    def response_should_have_table(title, guess)
+    def response_has_table(title, guess)
       response.should have_tag "table" do
         with_tag "th", :text => title
         with_tag "tr" do

@@ -52,180 +52,180 @@ describe Person do
   describe '.all_sorted' do
     it 'sorts by username' do
       create_people_named 'z', 'a'
-      should_put_person2_before_person1 'username'
+      puts_person2_before_person1 'username'
     end
 
     it 'ignores case' do
       create_people_named 'Z', 'a'
-      should_put_person2_before_person1 'username'
+      puts_person2_before_person1 'username'
     end
 
     it 'sorts by score' do
       create_people_named 'a', 'z'
       stub_score 1, 2
       stub_post_count 2, 1
-      should_put_person2_before_person1 'score'
+      puts_person2_before_person1 'score'
     end
 
     it 'sorts by score, post count' do
       create_people_named 'a', 'z'
       stub_score 1, 1
       stub_post_count 1, 2
-      should_put_person2_before_person1 'score'
+      puts_person2_before_person1 'score'
     end
 
     it 'sorts by score, post count, username' do
       create_people_named 'z', 'a'
       stub_score 1, 1
       stub_post_count 1, 1
-      should_put_person2_before_person1 'score'
+      puts_person2_before_person1 'score'
     end
 
     it 'sorts by post count' do
       create_people_named 'a', 'z'
       stub_post_count 1, 2
       stub_score 2, 1
-      should_put_person2_before_person1 'posts'
+      puts_person2_before_person1 'posts'
     end
 
     it 'sorts by post count, score' do
       create_people_named 'a', 'z'
       stub_post_count 1, 1
       stub_score 1, 2
-      should_put_person2_before_person1 'posts'
+      puts_person2_before_person1 'posts'
     end
 
     it 'sorts by post count, score, username' do
       create_people_named 'z', 'a'
       stub_post_count 1, 1
       stub_score 1, 1
-      should_put_person2_before_person1 'posts'
+      puts_person2_before_person1 'posts'
     end
 
     it 'sorts by guesses per day' do
       create_people_named 'a', 'z'
       stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 2 } }
       stub_score 2, 1
-      should_put_person2_before_person1 'guesses-per-day'
+      puts_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by guesses per day, score' do
       create_people_named 'a', 'z'
       stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 2
-      should_put_person2_before_person1 'guesses-per-day'
+      puts_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by guesses per day, score, username' do
       create_people_named 'z', 'a'
       stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 1
-      should_put_person2_before_person1 'guesses-per-day'
+      puts_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by posts/guess' do
       create_people_named 'a', 'z'
       stub_post_count 4, 3
       stub_score 4, 1
-      should_put_person2_before_person1 'posts-per-guess'
+      puts_person2_before_person1 'posts-per-guess'
     end
 
     it 'sorts by posts/guess, post count' do
       create_people_named 'a', 'z'
       stub_post_count 2, 4
       stub_score 1, 2
-      should_put_person2_before_person1 'posts-per-guess'
+      puts_person2_before_person1 'posts-per-guess'
     end
 
     it 'sorts by posts/guess, post count, username' do
       create_people_named 'z', 'a'
       stub_post_count 1, 1
       stub_score 1, 1
-      should_put_person2_before_person1 'posts-per-guess'
+      puts_person2_before_person1 'posts-per-guess'
     end
 
     it 'sorts by time-to-guess' do
       create_people_named 'a', 'z'
       stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 2 } }
       stub_score 2, 1
-      should_put_person2_before_person1 'time-to-guess'
+      puts_person2_before_person1 'time-to-guess'
     end
 
     it 'sorts by time-to-guess, score' do
       create_people_named 'a', 'z'
       stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 2
-      should_put_person2_before_person1 'time-to-guess'
+      puts_person2_before_person1 'time-to-guess'
     end
 
     it 'sorts by time-to-guess, score, username' do
       create_people_named 'z', 'a'
       stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 1
-      should_put_person2_before_person1 'time-to-guess'
+      puts_person2_before_person1 'time-to-guess'
     end
 
     it 'sorts by time-to-be-guessed' do
       create_people_named 'a', 'z'
       stub(Person).be_guessed_speeds { { @person1.id => 1, @person2.id => 2 } }
       stub_post_count 2, 1
-      should_put_person2_before_person1 'time-to-be-guessed'
+      puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it 'sorts by time-to-be-guessed, post count' do
       create_people_named 'a', 'z'
       stub(Person).be_guessed_speeds { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 2
-      should_put_person2_before_person1 'time-to-be-guessed'
+      puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it 'sorts by time-to-be-guessed, post count, username' do
       create_people_named 'z', 'a'
       stub(Person).be_guessed_speeds { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
-      should_put_person2_before_person1 'time-to-be-guessed'
+      puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it 'sorts by comments-to-guess' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 2 } }
       stub_score 2, 1
-      should_put_person2_before_person1 'comments-to-guess'
+      puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-guess, score' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 2
-      should_put_person2_before_person1 'comments-to-guess'
+      puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-guess, score, username' do
       create_people_named 'z', 'a'
       stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 1
-      should_put_person2_before_person1 'comments-to-guess'
+      puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-be-guessed' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 2 } }
       stub_post_count 2, 1
-      should_put_person2_before_person1 'comments-to-be-guessed'
+      puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts by comments-to-be-guessed, post count' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 2
-      should_put_person2_before_person1 'comments-to-be-guessed'
+      puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts by comments-to-be-guessed, post count, username' do
       create_people_named 'z', 'a'
       stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
-      should_put_person2_before_person1 'comments-to-be-guessed'
+      puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts the other direction, too' do
@@ -249,7 +249,7 @@ describe Person do
     end
 
     #noinspection RubyResolve
-    def should_put_person2_before_person1(sorted_by)
+    def puts_person2_before_person1(sorted_by)
       Person.all_sorted(sorted_by, '+').should == [ @person2, @person1 ]
     end
 
@@ -459,7 +459,7 @@ describe Person do
       person = Person.make
       Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
       Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
-      high_scorers_should_return @report_date, 1, person, 2
+      high_scorers_returns @report_date, 1, person, 2
     end
 
     it "ignores guesses made before the reporting period" do
@@ -467,7 +467,7 @@ describe Person do
       Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
       Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
       Guess.make 3, :person => person, :guessed_at => @report_date - 1.day - 1.second, :added_at => @report_date
-      high_scorers_should_return @report_date, 1, person, 2
+      high_scorers_returns @report_date, 1, person, 2
     end
 
     it "ignores guesses made after the reporting period" do
@@ -475,10 +475,10 @@ describe Person do
       Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
       Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
       Guess.make 3, :person => person, :guessed_at => @report_date, :added_at => @report_date + 1.second
-      high_scorers_should_return @report_date, 1, person, 2
+      high_scorers_returns @report_date, 1, person, 2
     end
 
-    def high_scorers_should_return(now, for_the_past_n_days, person, score)
+    def high_scorers_returns(now, for_the_past_n_days, person, score)
       high_scorers = Person.high_scorers now, for_the_past_n_days
       high_scorers.should == [ person ]
       high_scorers[0][:score].should == score

@@ -166,13 +166,13 @@ describe Photo do
 
   describe '.all_sorted_and_paginated' do
     it 'returns photos sorted by username' do
-      all_sorted_and_paginated_should_reverse_photos('username',
+      all_sorted_and_paginated_reverses_photos('username',
         { :username => 'z' }, { :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :dateadded => Time.utc(2010) })
     end
 
     it 'ignores case' do
-      all_sorted_and_paginated_should_reverse_photos('username',
+      all_sorted_and_paginated_reverses_photos('username',
         { :username => 'Z' }, { :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :dateadded => Time.utc(2010) })
     end
@@ -185,78 +185,78 @@ describe Photo do
     end
 
     it 'returns photos sorted by dateadded' do
-      all_sorted_and_paginated_should_reverse_photos('date-added',
+      all_sorted_and_paginated_reverses_photos('date-added',
         { :username => 'a' }, { :dateadded => Time.utc(2010) },
         { :username => 'z' }, { :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by dateadded, username' do
-      all_sorted_and_paginated_should_reverse_photos('date-added',
+      all_sorted_and_paginated_reverses_photos('date-added',
         { :username => 'z' }, { :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate' do
-      all_sorted_and_paginated_should_reverse_photos('last-updated',
+      all_sorted_and_paginated_reverses_photos('last-updated',
         { :username => 'a' }, { :lastupdate => Time.utc(2010) },
         { :username => 'z' }, { :lastupdate => Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate, username' do
-      all_sorted_and_paginated_should_reverse_photos('last-updated',
+      all_sorted_and_paginated_reverses_photos('last-updated',
         { :username => 'z' }, { :lastupdate => Time.utc(2011) },
         { :username => 'a' }, { :lastupdate => Time.utc(2011) })
     end
 
     it 'returns photos sorted by views' do
-      all_sorted_and_paginated_should_reverse_photos('views',
+      all_sorted_and_paginated_reverses_photos('views',
         { :username => 'a' }, { :views => 0 },
         { :username => 'z' }, { :views => 1 })
     end
 
     it 'returns photos sorted by views, username' do
-      all_sorted_and_paginated_should_reverse_photos('views',
+      all_sorted_and_paginated_reverses_photos('views',
         { :username => 'z' }, { :views => 0 },
         { :username => 'a' }, { :views => 0 })
     end
 
     it 'returns photos sorted by member_comments' do
-      all_sorted_and_paginated_should_reverse_photos('member-comments',
+      all_sorted_and_paginated_reverses_photos('member-comments',
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
         { :username => 'z' }, { :member_comments => 1, :dateadded => Time.utc(2010) })
     end
 
     it 'returns photos sorted by member_comments, dateadded' do
-      all_sorted_and_paginated_should_reverse_photos('member-comments',
+      all_sorted_and_paginated_reverses_photos('member-comments',
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2010) },
         { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_comments, dateadded, username' do
-      all_sorted_and_paginated_should_reverse_photos('member-comments',
+      all_sorted_and_paginated_reverses_photos('member-comments',
         { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_questions' do
-      all_sorted_and_paginated_should_reverse_photos('member-questions',
+      all_sorted_and_paginated_reverses_photos('member-questions',
         { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
         { :username => 'z' }, { :member_questions => 1, :dateadded => Time.utc(2010) })
     end
 
     it 'returns photos sorted by member_questions, dateadded' do
-      all_sorted_and_paginated_should_reverse_photos('member-questions',
+      all_sorted_and_paginated_reverses_photos('member-questions',
         { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2010) },
         { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_questions, dateadded, username' do
-      all_sorted_and_paginated_should_reverse_photos('member-questions',
+      all_sorted_and_paginated_reverses_photos('member-questions',
         { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
         { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
     end
 
-    def all_sorted_and_paginated_should_reverse_photos(sorted_by,
+    def all_sorted_and_paginated_reverses_photos(sorted_by,
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
       person1 = Person.make 1, person_1_options
@@ -407,7 +407,7 @@ describe Photo do
       photo.mapped.should == 'false'
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
-      flickr_update_should_have_been_created
+      flickr_update_was_created
     end
 
     it 'uses an existing person, and updates their username if it changed' do
@@ -419,7 +419,7 @@ describe Photo do
       person_after.id.should == person_before.id
       person_after.flickrid.should == person_before.flickrid
       person_after.username.should == 'username'
-      flickr_update_should_have_been_created
+      flickr_update_was_created
     end
 
     it 'uses an existing photo, and updates attributes that changed' do
@@ -449,10 +449,10 @@ describe Photo do
       photo_after.mapped.should == 'false'
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
-      flickr_update_should_have_been_created
+      flickr_update_was_created
     end
 
-    def flickr_update_should_have_been_created
+    def flickr_update_was_created
       updates = FlickrUpdate.all
       updates.size.should == 1
       update = updates[0]
@@ -604,13 +604,13 @@ describe Photo do
 
     it 'loads comments from Flickr' do
       stub_request_to_return_one_comment
-      should_be_the_comment_from_the_request @photo.load_comments
+      is_the_comment_from_the_request @photo.load_comments
     end
 
     it 'deletes previous comments' do
       Comment.make 'previous', :photo => @photo
       stub_request_to_return_one_comment
-      should_be_the_comment_from_the_request @photo.load_comments
+      is_the_comment_from_the_request @photo.load_comments
     end
 
     def stub_request_to_return_one_comment
@@ -626,7 +626,7 @@ describe Photo do
       stub(FlickrCredentials).request { parsed_xml_with_one_comment }
     end
 
-    def should_be_the_comment_from_the_request(comments)
+    def is_the_comment_from_the_request(comments)
       comments.length.should == 1
       comment = comments[0]
       comment.flickrid.should == 'commenter_flickrid'
@@ -662,7 +662,7 @@ describe Photo do
       guess = Guess.make :photo => photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
-      owner_should_not_exist guess
+      owner_does_not_exist guess
     end
 
     it 'deletes existing revelations' do
@@ -774,7 +774,7 @@ describe Photo do
         guess = Guess.make :photo => photo
         Photo.add_answer comment.id, ''
         Guess.count.should == 0
-        owner_should_not_exist guess
+        owner_does_not_exist guess
       end
 
     end
@@ -793,7 +793,7 @@ describe Photo do
         photo.reload
         photo.game_status.should == 'unfound'
         Guess.count.should == 0
-        owner_should_not_exist guess
+        owner_does_not_exist guess
       end
 
       it "leaves the photo found if there's another guess" do
@@ -857,7 +857,7 @@ describe Photo do
       photo = Photo.make
       Photo.destroy_photo_and_dependent_objects photo.id
       Photo.count.should == 0
-      owner_should_not_exist photo
+      owner_does_not_exist photo
     end
 
     it "destroys the photo's revelation" do
@@ -870,7 +870,7 @@ describe Photo do
       guess = Guess.make
       Photo.destroy_photo_and_dependent_objects guess.photo.id
       Guess.count.should == 0
-      owner_should_not_exist guess
+      owner_does_not_exist guess
     end
 
   end
@@ -880,7 +880,7 @@ describe Photo do
       photo = Photo.make
       photo.destroy
       Photo.count.should == 0
-      owner_should_not_exist photo
+      owner_does_not_exist photo
     end
   end
 
@@ -963,7 +963,7 @@ describe Photo do
   # It would be nice to mock the method that deletes the owner, which handles
   # cases where the owner has a photo or other guess and shouldn't be deleted,
   # but doing so would be ugly.
-  def owner_should_not_exist(owner)
+  def owner_does_not_exist(owner)
     Person.exists?(owner.person.id).should == false
   end
 

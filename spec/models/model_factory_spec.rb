@@ -76,35 +76,35 @@ describe FlickrUpdate do
     end
 
     it "makes one" do
-      should_make_default_flickr_update
+      makes_default_flickr_update
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes
+      makes_flickr_update_with_custom_attributes
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_flickr_update
+      makes_default_flickr_update
     end
 
     it "overrides defaults" do
-      should_make_flickr_update_with_custom_attributes
+      makes_flickr_update_with_custom_attributes
     end
 
   end
 
-  def should_make_default_flickr_update
+  def makes_default_flickr_update
     update = FlickrUpdate.make
     update.created_at.should_not be_nil
     update.member_count.should == 0
     update.completed_at.should be_nil
   end
 
-  def should_make_flickr_update_with_custom_attributes
-    should_make_with_custom_attributes FlickrUpdate, {
+  def makes_flickr_update_with_custom_attributes
+    makes_with_custom_attributes FlickrUpdate, {
       :created_at => Time.utc(2011),
       :member_count => 1,
       :completed_at => Time.utc(2011, 2)
@@ -120,33 +120,33 @@ describe ScoreReport do
     end
 
     it "makes one" do
-      should_make_default_score_report
+      makes_default_score_report
     end
 
     it "overrides defaults" do
-      should_make_score_report_with_custom_attributes
+      makes_score_report_with_custom_attributes
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_score_report
+      makes_default_score_report
     end
 
     it "overrides defaults" do
-      should_make_score_report_with_custom_attributes
+      makes_score_report_with_custom_attributes
     end
 
   end
 
-  def should_make_default_score_report
+  def makes_default_score_report
     update = ScoreReport.make
     update.created_at.should_not be_nil
   end
 
-  def should_make_score_report_with_custom_attributes
-    should_make_with_custom_attributes ScoreReport, {
+  def makes_score_report_with_custom_attributes
+    makes_with_custom_attributes ScoreReport, {
       :previous_report => ScoreReport.make(:created_at => 2010),
       :created_at => Time.utc(2011)
     }
@@ -161,48 +161,48 @@ describe Person do
     end
 
     it "makes one" do
-      should_make_default_person
+      makes_default_person
     end
 
     it "overrides defaults" do
-      should_make_person_with_custom_attributes
+      makes_person_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_person
+      makes_labeled_person
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_person
+      makes_default_person
     end
 
     it "overrides_defaults" do
-      should_make_person_with_custom_attributes
+      makes_person_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_person
+      makes_labeled_person
     end
 
   end
 
-  def should_make_default_person
+  def makes_default_person
     person = Person.make
     person.flickrid.should == 'person_flickrid'
     person.username.should == 'username'
   end
 
-  def should_make_person_with_custom_attributes
-    should_make_with_custom_attributes Person, {
+  def makes_person_with_custom_attributes
+    makes_with_custom_attributes Person, {
       :flickrid => 'other_person_flickrid',
       :username => 'other_username'
     }
   end
 
-  def should_make_labeled_person
+  def makes_labeled_person
     person = Person.make 'label'
     person.flickrid.should == 'label_person_flickrid'
     person.username.should == 'label_username'
@@ -217,35 +217,35 @@ describe Photo do
     end
 
     it "makes one" do
-      should_make_default_photo
+      makes_default_photo
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes
+      makes_photo_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_photo
+      makes_labeled_photo
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_photo
+      makes_default_photo
     end
 
     it "overrides defaults" do
-      should_make_photo_with_custom_attributes
+      makes_photo_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_photo
+      makes_labeled_photo
     end
 
   end
 
-  def should_make_default_photo
+  def makes_default_photo
     photo = Photo.make
     photo.person.flickrid.should == 'poster_person_flickrid'
     photo.flickrid.should == 'photo_flickrid'
@@ -262,8 +262,8 @@ describe Photo do
     photo.member_questions.should == 0
   end
 
-  def should_make_photo_with_custom_attributes
-    should_make_with_custom_attributes Photo, {
+  def makes_photo_with_custom_attributes
+    makes_with_custom_attributes Photo, {
       :person => Person.make('other_poster'),
       :flickrid => 'other_photo_flickrid',
       :farm => '1',
@@ -280,7 +280,7 @@ describe Photo do
     }
   end
 
-  def should_make_labeled_photo
+  def makes_labeled_photo
     photo = Photo.make 'label'
     photo.person.flickrid.should == 'label_poster_person_flickrid'
     photo.flickrid.should == 'label_photo_flickrid'
@@ -295,35 +295,35 @@ describe Comment do
     end
 
     it "makes one" do
-      should_make_default_comment
+      makes_default_comment
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes
+      makes_comment_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_comment
+      makes_labeled_comment
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_comment
+      makes_default_comment
     end
 
     it "overrides defaults" do
-      should_make_comment_with_custom_attributes
+      makes_comment_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_comment
+      makes_labeled_comment
     end
 
   end
 
-  def should_make_default_comment
+  def makes_default_comment
     comment = Comment.make
     comment.photo.flickrid.should == 'commented_photo_photo_flickrid'
     comment.flickrid.should == 'commenter_flickrid'
@@ -332,8 +332,8 @@ describe Comment do
     comment.commented_at.should_not be_nil
   end
 
-  def should_make_comment_with_custom_attributes
-    should_make_with_custom_attributes Comment, {
+  def makes_comment_with_custom_attributes
+    makes_with_custom_attributes Comment, {
       :photo => Photo.make('other_commented_photo'),
       :flickrid => 'other_commenter_flickrid',
       :username => 'other_commenter_username',
@@ -342,7 +342,7 @@ describe Comment do
     }
   end
 
-  def should_make_labeled_comment
+  def makes_labeled_comment
     comment = Comment.make 'label'
     comment.photo.flickrid.should == 'label_commented_photo_photo_flickrid'
     comment.flickrid.should == 'label_commenter_flickrid'
@@ -359,35 +359,35 @@ describe Guess do
     end
 
     it "makes one" do
-      should_make_default_guess
+      makes_default_guess
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes
+      makes_guess_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_guess
+      makes_labeled_guess
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_guess
+      makes_default_guess
     end
 
     it "overrides defaults" do
-      should_make_guess_with_custom_attributes
+      makes_guess_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_guess
+      makes_labeled_guess
     end
 
   end
 
-  def should_make_default_guess
+  def makes_default_guess
     guess = Guess.make
     guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'guesser_person_flickrid'
@@ -396,8 +396,8 @@ describe Guess do
     guess.added_at.should_not be_nil
   end
 
-  def should_make_guess_with_custom_attributes
-    should_make_with_custom_attributes Guess, {
+  def makes_guess_with_custom_attributes
+    makes_with_custom_attributes Guess, {
       :photo => Photo.make('other_guessed_photo'),
       :person => Person.make('other_guesser'),
       :guess_text => 'other guess text',
@@ -406,7 +406,7 @@ describe Guess do
     }
   end
 
-  def should_make_labeled_guess
+  def makes_labeled_guess
     guess = Guess.make 'label'
     guess.photo.flickrid.should == 'label_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'label_guesser_person_flickrid'
@@ -422,35 +422,35 @@ describe Revelation do
     end
 
     it "makes one" do
-      should_make_default_revelation
+      makes_default_revelation
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes
+      makes_revelation_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_revelation
+      makes_labeled_revelation
     end
 
   end
 
   describe 'when using .create!' do
     it "makes one" do
-      should_make_default_revelation
+      makes_default_revelation
     end
 
     it "overrides defaults" do
-      should_make_revelation_with_custom_attributes
+      makes_revelation_with_custom_attributes
     end
 
     it "labels it" do
-      should_make_labeled_revelation
+      makes_labeled_revelation
     end
 
   end
 
-  def should_make_default_revelation
+  def makes_default_revelation
     revelation = Revelation.make
     revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'revelation text'
@@ -458,8 +458,8 @@ describe Revelation do
     revelation.added_at.should_not be_nil
   end
 
-  def should_make_revelation_with_custom_attributes
-    should_make_with_custom_attributes Revelation, {
+  def makes_revelation_with_custom_attributes
+    makes_with_custom_attributes Revelation, {
       :photo => Photo.make('other_revealed_photo'),
       :revelation_text => 'other revelation text',
       :revealed_at => Time.utc(2011),
@@ -467,7 +467,7 @@ describe Revelation do
     }
   end
 
-  def should_make_labeled_revelation
+  def makes_labeled_revelation
     revelation = Revelation.make 'label'
     revelation.photo.flickrid.should == 'label_revealed_photo_photo_flickrid'
     revelation.revelation_text.should == 'label_revelation text'
@@ -486,7 +486,7 @@ def set_spec_type_to_non_model(*model_classes)
   model_classes.each { |model_class| stub(model_class).construction_method { :new } }
 end
 
-def should_make_with_custom_attributes(model_class, attrs_in)
+def makes_with_custom_attributes(model_class, attrs_in)
   instance = model_class.make attrs_in
   actual_attrs = update_nil_id_attributes instance
   expected_attrs = replace_object_attributes_with_id_attributes stringify_keys attrs_in

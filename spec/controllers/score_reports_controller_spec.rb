@@ -32,12 +32,12 @@ describe ScoreReportsController do
       previous_report_date = Time.local(2011).getutc
       previous_report = ScoreReport.make :created_at => previous_report_date
       stub(ScoreReport).previous(@report_date.getutc) { previous_report }
-      should_render_report_for @report_date, previous_report_date, :show, :id => 1
+      renders_report_for @report_date, previous_report_date, :show, :id => 1
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
       stub(ScoreReport).previous(@report_date.getutc) { nil }
-      should_render_report_for @report_date, Time.utc(2005), :show, :id => 1
+      renders_report_for @report_date, Time.utc(2005), :show, :id => 1
     end
 
   end

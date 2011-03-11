@@ -36,7 +36,7 @@ describe Guess do
       guess = Guess.make
       Guess.destroy_all_by_photo_id guess.photo.id
       Guess.count.should == 0
-      owner_should_not_exist guess
+      owner_doesnt_exist guess
     end
 
     it "ignores other photos' guesses" do
@@ -372,7 +372,7 @@ describe Guess do
       guess = Guess.make
       guess.destroy
       Guess.count.should == 0
-      owner_should_not_exist guess
+      owner_doesnt_exist guess
     end
   end
 
@@ -381,7 +381,7 @@ describe Guess do
   # It would be nice to mock the method that deletes the owner, which handles
   # cases where the owner has a photo or other guess and shouldn't be deleted,
   # but doing so would be ugly.
-  def owner_should_not_exist(guess)
+  def owner_doesnt_exist(guess)
     Person.exists?(guess.person.id).should == false
   end
 

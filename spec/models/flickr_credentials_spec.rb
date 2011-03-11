@@ -7,19 +7,19 @@ describe FlickrCredentials do
     end
 
     it 'sends a request to the Flickr API' do
-      request_should_succeed
+      request_succeeds
     end
 
     it 'retries a failed request once' do
       mock_get_fails 1
       mock_get_succeeds
-      request_should_succeed
+      request_succeeds
     end
 
     it 'retries a failed request thrice' do
       mock_get_fails 3
       mock_get_succeeds
-      request_should_succeed
+      request_succeeds
     end
 
     it 'gives up after four failures' do
@@ -38,7 +38,7 @@ describe FlickrCredentials do
       mock(Net::HTTP).get_response.with_any_args { response }
     end
 
-    def request_should_succeed
+    def request_succeeds
       result = FlickrCredentials.request 'flickr.people.findByUsername',
         'username' => 'dschweisguth'
       result['user'][0]['nsid'].should == '26686665@N06'
