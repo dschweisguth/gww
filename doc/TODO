@@ -6,7 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Remove unnecessary + between adjacent string literals?
 Don't use should grammar in spec helper method names
 Look in to :inverse_of http://apidock.com/rails/ActiveRecord/Associations/ClassMethods
 Use RESTful routing in more places.
