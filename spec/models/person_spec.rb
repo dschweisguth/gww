@@ -470,7 +470,7 @@ describe Person do
       high_scorers_returns @report_date, 1, person, 2
     end
 
-    it "ignores guesses made after the reporting period" do
+    it "ignores guesses added after the reporting period" do
       person = Person.make
       Guess.make 1, :person => person, :guessed_at => @report_date, :added_at => @report_date
       Guess.make 2, :person => person, :guessed_at => @report_date, :added_at => @report_date
@@ -492,6 +492,52 @@ describe Person do
     it "ignores scores of 0" do
       Photo.make
       Person.high_scorers(@report_date, 1).should == []
+    end
+
+  end
+
+  describe '.top_posters' do
+    before do
+      @report_date = Time.utc(2011)
+    end
+
+    it "returns the three most frequent posters in the given previous # of days" do
+      person = Person.make
+      Photo.make 1, :person => person, :dateadded => @report_date
+      Photo.make 2, :person => person, :dateadded => @report_date
+      top_posters_returns @report_date, 1, person, 2
+    end
+
+    it "ignores photos posted before the reporting period" do
+      person = Person.make
+      Photo.make 1, :person => person, :dateadded => @report_date
+      Photo.make 2, :person => person, :dateadded => @report_date
+      Photo.make 3, :person => person, :dateadded => @report_date - 1.day - 1.second
+      top_posters_returns @report_date, 1, person, 2
+    end
+
+    it "ignores photos posted after the reporting period" do
+      person = Person.make
+      Photo.make 1, :person => person, :dateadded => @report_date
+      Photo.make 2, :person => person, :dateadded => @report_date
+      Photo.make 3, :person => person, :dateadded => @report_date + 1.second
+      top_posters_returns @report_date, 1, person, 2
+    end
+
+    def top_posters_returns(now, for_the_past_n_days, person, posts)
+      top_posters = Person.top_posters now, for_the_past_n_days
+      top_posters.should == [ person ]
+      top_posters[0][:posts].should == posts
+    end
+
+    it "ignores post counts of 1" do
+      Photo.make :dateadded => @report_date
+      Person.top_posters(@report_date, 1).should == []
+    end
+
+    it "ignores post counts of 0" do
+      Person.make
+      Person.top_posters(@report_date, 1).should == []
     end
 
   end
