@@ -157,7 +157,7 @@ class Photo < ActiveRecord::Base
 
   # Used by WheresiesController
 
-  def self.most_viewed_in_year(year)
+  def self.most_viewed_in(year)
     find :all,
       :conditions => [ '? <= dateadded and dateadded < ?',
         Time.local(year).getutc, Time.local(year + 1).getutc ],
@@ -166,7 +166,7 @@ class Photo < ActiveRecord::Base
       :include => :person
   end
 
-  def self.most_commented_in_year(year)
+  def self.most_commented_in(year)
     find_by_sql [
       %q{
         select f.*, count(*) comments from photos f, people p, comments c

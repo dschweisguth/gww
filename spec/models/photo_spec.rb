@@ -386,23 +386,23 @@ describe Photo do
   describe '.most_viewed_in_year' do
     it 'lists photos' do
       photo = Photo.make :dateadded => Time.local(2010).getutc
-      Photo.most_viewed_in_year(2010).should == [ photo ]
+      Photo.most_viewed_in(2010).should == [ photo ]
     end
 
     it 'sorts by views' do
       photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc, :views => 0
       photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc, :views => 1
-      Photo.most_viewed_in_year(2010).should == [ photo2, photo1 ]
+      Photo.most_viewed_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
       Photo.make :dateadded => Time.local(2009).getutc
-      Photo.most_viewed_in_year(2010).should == []
+      Photo.most_viewed_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
       Photo.make :dateadded => Time.local(2011).getutc
-      Photo.most_viewed_in_year(2010).should == []
+      Photo.most_viewed_in(2010).should == []
     end
 
   end
@@ -411,7 +411,7 @@ describe Photo do
     it 'lists photos' do
       photo = Photo.make :dateadded => Time.local(2010).getutc
       Comment.make :photo => photo
-      Photo.most_commented_in_year(2010).should == [ photo ]
+      Photo.most_commented_in(2010).should == [ photo ]
     end
 
     it 'sorts by comment count' do
@@ -420,25 +420,25 @@ describe Photo do
       photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc
       Comment.make 21, :photo => photo2
       Comment.make 22, :photo => photo2
-      Photo.most_commented_in_year(2010).should == [ photo2, photo1 ]
+      Photo.most_commented_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
       photo = Photo.make :dateadded => Time.local(2009).getutc
       Comment.make :photo => photo
-      Photo.most_commented_in_year(2010).should == []
+      Photo.most_commented_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
       photo = Photo.make :dateadded => Time.local(2011).getutc
       Comment.make :photo => photo
-      Photo.most_commented_in_year(2010).should == []
+      Photo.most_commented_in(2010).should == []
     end
 
     it "ignores comments by the poster" do
       photo = Photo.make :dateadded => Time.local(2010).getutc
       Comment.make :photo => photo, :flickrid => photo.person.flickrid
-      Photo.most_commented_in_year(2010).should == []
+      Photo.most_commented_in(2010).should == []
     end
 
   end
