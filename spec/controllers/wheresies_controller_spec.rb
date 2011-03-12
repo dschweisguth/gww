@@ -24,11 +24,11 @@ describe WheresiesController do
 
       most_viewed_in_2010 = Photo.make
       most_viewed_in_2010[:views] = 555
-      stub(Photo).most_viewed_in_2010 { [ most_viewed_in_2010 ] }
+      stub(Photo).most_viewed_in_year { [ most_viewed_in_2010 ] }
 
       most_commented_in_2010 = Photo.make
       most_commented_in_2010[:comments] = 666
-      stub(Photo).most_commented_in_2010 { [ most_commented_in_2010 ] }
+      stub(Photo).most_commented_in_year { [ most_commented_in_2010 ] }
 
       longest_in_2010_photo = Photo.make :dateadded => Time.utc(2010)
       longest_in_2010 = Guess.make :photo => longest_in_2010_photo,
