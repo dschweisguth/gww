@@ -131,7 +131,6 @@ class Person < ActiveRecord::Base
     }
   end
 
-  # TODO Dave why did breaking this SQL break so many tests?
   def self.comments_per_post
     statistic_by_person %q{
       select person_id id, avg(comment_count) statistic

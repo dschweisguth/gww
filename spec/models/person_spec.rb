@@ -50,6 +50,18 @@ describe Person do
   end
 
   describe '.all_sorted' do
+    before do
+      stub(Photo).count(:group => 'person_id') { {} }
+      stub(Guess).count(:group => 'person_id') { {} }
+      stub(Person).guesses_per_day { {} }
+      stub(Person).posts_per_day { {} }
+      stub(Person).guess_speeds { {} }
+      stub(Person).be_guessed_speeds { {} }
+      stub(Person).comments_to_guess { {} }
+      stub(Person).comments_per_post { {} }
+      stub(Person).comments_to_be_guessed { {} }
+    end
+
     it 'sorts by username' do
       create_people_named 'z', 'a'
       puts_person2_before_person1 'username'
