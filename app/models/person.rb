@@ -27,7 +27,8 @@ class Person < ActiveRecord::Base
     'time-to-be-guessed' => [ :be_guessed_speed, :post_count, :downcased_username ],
     'comments-to-guess' => [ :comments_to_guess, :guess_count, :downcased_username ],
     'comments-per-post' => [ :comments_per_post, :post_count, :downcased_username ],
-    'comments-to-be-guessed' => [ :comments_to_be_guessed, :post_count, :downcased_username ]
+    'comments-to-be-guessed' => [ :comments_to_be_guessed, :post_count, :downcased_username ],
+    'views-per-post' => [ :views_per_post, :post_count, :downcased_username ]
   }
 
   def self.all_sorted(sorted_by, order)
@@ -49,6 +50,7 @@ class Person < ActiveRecord::Base
     comments_to_guess = Person.comments_to_guess
     comments_per_post = Person.comments_per_post
     comments_to_be_guessed = Person.comments_to_be_guessed
+    views_per_post = Person.views_per_post
 
     people = all
     people.each do |person|
@@ -64,6 +66,7 @@ class Person < ActiveRecord::Base
       person[:comments_to_guess] = comments_to_guess[person.id] || INFINITY
       person[:comments_per_post] = comments_per_post[person.id] || 0.0
       person[:comments_to_be_guessed] = comments_to_be_guessed[person.id] || INFINITY
+      person[:views_per_post] = views_per_post[person.id] || 0.0
     end
 
     people.sort! do |x, y|
@@ -163,6 +166,10 @@ class Person < ActiveRecord::Base
     }
   end
 
+  def self.views_per_post
+    statistic_by_person 'select person_id id, avg(views) statistic from photos group by person_id'
+  end
+  
   def self.statistic_by_person(sql)
     Person.find_by_sql(sql).each_with_object({}) \
       { |person, statistic| statistic[person.id] = person[:statistic].to_f }
