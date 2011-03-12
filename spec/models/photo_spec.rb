@@ -209,7 +209,18 @@ describe Photo do
     end
 
   end
-  
+
+  describe '.most_viewed' do
+    it "returns the poster's most-viewed unfound" do
+      poster = Person.make
+      Photo.make 'second', :person => poster
+      first = Photo.make 'first', :person => poster, :views => 1
+      most_viewed = Photo.most_viewed poster
+      most_viewed.should == first
+      most_viewed[:place].should == 1
+    end
+  end
+
   # Used by PhotosController
 
   describe '.all_sorted_and_paginated' do

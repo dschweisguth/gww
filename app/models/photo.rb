@@ -27,6 +27,8 @@ class Photo < ActiveRecord::Base
     last :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
   end
 
+  # TODO Dave min_dateadded
+  # TODO Dave <, not <=, and +1
   def self.oldest_unfound(poster)
     oldest_unfound = first \
       :conditions => [ "person_id = ? and game_status in ('unfound', 'unconfirmed')", poster ],
@@ -87,6 +89,26 @@ class Photo < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def self.most_viewed(poster)
+    most_viewed = first :conditions => [ 'person_id = ?', poster ],
+      :order => 'views desc'
+    if most_viewed then
+      most_viewed[:place] = count_by_sql([
+        %q[
+          select count(*)
+          from (
+            select max(views) max_views
+            from photos f
+            group by person_id
+          ) most_viewed
+          where max_views > ?
+        ],
+        most_viewed.views
+      ]) + 1
+    end
+    most_viewed
   end
 
   # Used by PhotosController
