@@ -173,6 +173,7 @@ describe PeopleController do
       stub(Photo).first_by(@person)
       stub(Photo).most_recent_by(@person)
       stub(Photo).oldest_unfound(@person)
+      stub(Photo).most_commented(@person)
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(@person.id, anything) { [] }
       #noinspection RubyResolve
@@ -245,6 +246,11 @@ describe PeopleController do
       oldest_unfound = Photo.make 'oldest_unfound'
       oldest_unfound[:place] = 1
       stub(Photo).oldest_unfound(@person) { oldest_unfound }
+
+      most_commented = Photo.make 'most_commented'
+      most_commented[:comment_count] = 1
+      most_commented[:place] = 1
+      stub(Photo).most_commented(@person) { most_commented }
 
       found1 = Guess.make 'found1'
       found1.photo.guesses << found1

@@ -61,6 +61,7 @@ class PeopleController < ApplicationController
     @longest_lasting_guess = Guess.longest_lasting @person
     @shortest_lasting_guess = Guess.shortest_lasting @person
     @oldest_unfound = Photo.oldest_unfound @person
+    @most_commented = Photo.most_commented @person
 
     @guesses =
       Guess.find_all_by_person_id @person.id, :include => { :photo => :person }

@@ -26,9 +26,12 @@ module PeopleHelper
     if reason == :age
       star = trophy.star_for_age
       alt = alt_for_star_for_age star
-    else
+    elsif reason == :speed
       star = trophy.star_for_speed
       alt = alt_for_star_for_speed star
+    else
+      star = trophy.star_for_comments
+      alt = alt_for_star_for_comments :star
     end
     return star, alt
   end
@@ -51,6 +54,16 @@ module PeopleHelper
       'Guessed in less than a minute'
     when :gold
       'Guessed in less than 10 seconds'
+    end
+  end
+  private :alt_for_star_for_speed
+
+  def alt_for_star_for_comments(star)
+    case star
+    when :silver
+      '20 or more comments'
+    when :gold
+      '30 or more comments'
     end
   end
   private :alt_for_star_for_speed

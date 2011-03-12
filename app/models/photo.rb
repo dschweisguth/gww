@@ -27,6 +27,7 @@ class Photo < ActiveRecord::Base
     last :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
   end
 
+  # TODO Dave don't select as much in the inner select?
   def self.oldest_unfound(poster)
     oldest_unfound = first \
       :conditions => [ "person_id = ? and game_status in ('unfound', 'unconfirmed')", poster ],
@@ -47,6 +48,47 @@ class Photo < ActiveRecord::Base
       ]
     end
     oldest_unfound
+  end
+
+  # TODO Dave test
+  def self.most_commented(poster)
+    most_commented = find_by_sql [
+      %q[
+          select f.*, count(*) comment_count
+          from photos f, comments c
+          where
+            f.person_id = ? and
+            f.id = c.photo_id and
+            c.flickrid != ?
+          group by f.id
+          order by comment_count desc 
+          limit 1
+      ],
+      poster.id, poster.flickrid
+    ]
+    if ! most_commented.empty? then
+      most_commented = most_commented[0]
+      most_commented[:place] = count_by_sql([
+        %q[
+        select count(*)
+        from (
+          select max(comment_count) max_comment_count
+          from (
+            select p.id, count(*) comment_count from photos f, people p, comments c
+            where f.person_id = p.id and
+              f.id = c.photo_id and
+              p.flickrid != c.flickrid
+            group by f.id
+          ) comment_counts
+          group by id
+        ) max_comment_counts
+        where max_comment_count > ?
+      ], most_commented[:comment_count]
+      ]) + 1
+      most_commented
+    else
+      nil
+    end
   end
 
   # Used by PhotosController
@@ -462,6 +504,17 @@ class Photo < ActiveRecord::Base
 
   def ymd_elapsed
     ymd_elapsed_between dateadded, Time.now
+  end
+
+  # TODO Dave test
+  def star_for_comments
+    if self[:comment_count] >= 30
+      :gold
+    elsif self[:comment_count] >= 20
+      :silver
+    else
+      nil
+    end
   end
 
 end
