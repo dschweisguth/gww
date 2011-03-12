@@ -20,6 +20,7 @@ class Person < ActiveRecord::Base
     'score' => [ :guess_count, :post_count, :downcased_username ],
     'posts' => [ :post_count, :guess_count, :downcased_username ],
     'guesses-per-day' => [ :guesses_per_day, :guess_count, :downcased_username ],
+    'posts-per-day' => [ :posts_per_day, :post_count, :downcased_username ],
     'posts-per-guess' => [ :posts_per_guess, :post_count, :downcased_username ],
     'time-to-guess' => [ :guess_speed, :guess_count, :downcased_username ],
     'time-to-be-guessed' => [ :be_guessed_speed, :post_count, :downcased_username ],
@@ -30,7 +31,7 @@ class Person < ActiveRecord::Base
   def self.all_sorted(sorted_by, order)
     # I'd have raised Argument error in the case below to avoid duplication,
     # but when I do that something eats the raised error.
-    if ! [ 'username', 'score', 'posts', 'guesses-per-day', 'posts-per-guess',
+    if ! [ 'username', 'score', 'posts', 'guesses-per-day', 'posts-per-day', 'posts-per-guess',
       'time-to-guess', 'time-to-be-guessed', 'comments-to-guess', 
       'comments-to-be-guessed' ].include? sorted_by
       raise ArgumentError, "#{sorted_by} is not a valid sort order"
@@ -42,6 +43,7 @@ class Person < ActiveRecord::Base
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
     guesses_per_days = Person.guesses_per_day
+    posts_per_days = Person.posts_per_day
     guess_speeds = Person.guess_speeds
     be_guessed_speeds = Person.be_guessed_speeds
     comments_to_guess = Person.comments_to_guess
@@ -53,6 +55,7 @@ class Person < ActiveRecord::Base
       person[:post_count] = post_counts[person.id] || 0
       person[:guess_count] = guess_counts[person.id] || 0
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
+      person[:posts_per_day] = posts_per_days[person.id] || 0
       person[:posts_per_guess] =
         person[:post_count].to_f / person[:guess_count]
       person[:guess_speed] = guess_speeds[person.id] || INFINITY
@@ -84,6 +87,13 @@ class Person < ActiveRecord::Base
     statistic_by_person [ %q{
       select person_id id, count(*) / datediff(?, min(guessed_at)) statistic
       from guesses group by person_id
+    }, Time.now.getutc ]
+  end
+
+  def self.posts_per_day
+    statistic_by_person [ %q{
+      select person_id id, count(*) / datediff(?, min(dateadded)) statistic
+      from photos group by person_id
     }, Time.now.getutc ]
   end
 

@@ -33,6 +33,7 @@ describe PeopleController do
       person[:guess_count] = 1
       person[:post_count] = 1
       person[:guesses_per_day] = 1.0
+      person[:posts_per_day] = 1.0
       person[:posts_per_guess] = 1.0
       person[:guess_speed] = 1.0
       person[:be_guessed_speed] = 1.0
