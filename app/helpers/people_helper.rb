@@ -22,66 +22,39 @@ module PeopleHelper
     render 'people/show/place', :trophy => trophy, :star => star, :alt => alt
   end
 
+  ALT = {
+    :age => {
+      :bronze => 'Unfound for 1 year or more',
+      :silver => 'Unfound for 2 years or more',
+      :gold => 'Unfound for 3 years or more'
+    },
+    :speed => {
+      :silver => 'Guessed in less than a minute',
+      :gold => 'Guessed in less than 10 seconds'
+    },
+    :comments => {
+      :silver => '20 or more comments',
+      :gold => '30 or more comments'
+    },
+    :views => {
+      :bronze => '300 or more views',
+      :silver => '1000 or more views',
+      :gold => '3000 or more views'
+    }
+  }
+
   def star_and_alt(trophy, reason)
     if reason == :age
       star = trophy.star_for_age
-      alt = alt_for_star_for_age star
     elsif reason == :speed
       star = trophy.star_for_speed
-      alt = alt_for_star_for_speed star
     elsif reason == :comments
       star = trophy.star_for_comments
-      alt = alt_for_star_for_comments star
     else
       star = trophy.star_for_views
-      alt = alt_for_star_for_views  star
     end
-    return star, alt
+    return star, ALT[reason][star]
   end
-
-  def alt_for_star_for_age(star)
-    case star
-    when :bronze
-      'Unfound for 1 year or more'
-    when :silver
-      'Unfound for 2 years or more'
-    when :gold
-      'Unfound for 3 years or more'
-    end
-  end
-  private :alt_for_star_for_age
-
-  def alt_for_star_for_speed(star)
-    case star
-    when :silver
-      'Guessed in less than a minute'
-    when :gold
-      'Guessed in less than 10 seconds'
-    end
-  end
-  private :alt_for_star_for_speed
-
-  def alt_for_star_for_comments(star)
-    case star
-    when :silver
-      '20 or more comments'
-    when :gold
-      '30 or more comments'
-    end
-  end
-  private :alt_for_star_for_speed
-
-  def alt_for_star_for_views(star)
-    case star
-    when :bronze
-      '300 or more views'
-    when :silver
-      '1000 or more views'
-    when :gold
-      '3000 or more views'
-    end
-  end
-  private :alt_for_star_for_speed
 
   def position(high_scorers, person, attr)
     position = 0
