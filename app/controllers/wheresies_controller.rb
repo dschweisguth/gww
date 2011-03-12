@@ -9,8 +9,8 @@ class WheresiesController < ApplicationController
     @rookies_with_most_posts_in_2010 = Person.rookies_with_most_posts_in year
     @most_viewed_in_2010 = Photo.most_viewed_in year
     @most_commented_in_2010 = Photo.most_commented_in year
-    @shortest_in_2010 = Guess.shortest_in
-    @longest_in_2010 = Guess.longest_in
+    @shortest_in_2010 = Guess.shortest_in year
+    @longest_in_2010 = Guess.longest_in year
   end
 
 end

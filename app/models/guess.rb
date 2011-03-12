@@ -92,20 +92,20 @@ class Guess < ActiveRecord::Base
   private_class_method :first_guess_with_place
 
   #noinspection RailsParamDefResolve
-  def self.longest_in
+  def self.longest_in year
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
 	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",
-	  Time.utc(2010), Time.utc(2011) ],
+	  Time.local(year).getutc, Time.local(year + 1).getutc ],
       :order => "#{GUESS_AGE} desc", :limit => 10
   end
 
   #noinspection RailsParamDefResolve
-  def self.shortest_in
+  def self.shortest_in year
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
 	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",
-	  Time.utc(2010), Time.utc(2011) ],
+          Time.local(year).getutc, Time.local(year + 1).getutc ],
       :order => GUESS_AGE, :limit => 10
   end
 

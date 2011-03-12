@@ -267,13 +267,13 @@ describe Guess do
       guess1 = Guess.make 1, :photo => photo1, :guessed_at => Time.local(2010, 2).getutc
       photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc
       guess2 = Guess.make 2, :photo => photo2, :guessed_at => Time.local(2010, 3).getutc
-      Guess.longest_in.should == [ guess2, guess1 ]
+      Guess.longest_in(2010).should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
       photo = Photo.make :dateadded => Time.local(2010, 2).getutc
       Guess.make :photo => photo, :guessed_at => Time.local(2010).getutc
-      Guess.longest_in.should == []
+      Guess.longest_in(2010).should == []
     end
 
   end
@@ -284,13 +284,13 @@ describe Guess do
       guess1 = Guess.make 1, :photo => photo1, :guessed_at => Time.local(2010, 3).getutc
       photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc
       guess2 = Guess.make 2, :photo => photo2, :guessed_at => Time.local(2010, 2).getutc
-      Guess.shortest_in.should == [ guess2, guess1 ]
+      Guess.shortest_in(2010).should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
       photo = Photo.make :dateadded => Time.local(2010, 2).getutc
       Guess.make :photo => photo, :guessed_at => Time.local(2010).getutc
-      Guess.shortest_in.should == []
+      Guess.shortest_in(2010).should == []
     end
 
   end
