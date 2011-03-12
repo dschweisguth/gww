@@ -256,6 +256,27 @@ describe Person do
       puts_person2_before_person1 'comments-to-guess'
     end
 
+    it 'sorts by comments-per-post' do
+      create_people_named 'a', 'z'
+      stub(Person).comments_per_post { { @person1.id => 1, @person2.id => 2 } }
+      stub_post_count 2, 1
+      puts_person2_before_person1 'comments-per-post'
+    end
+
+    it 'sorts by comments-per-post, post count' do
+      create_people_named 'a', 'z'
+      stub(Person).comments_per_post { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 2
+      puts_person2_before_person1 'comments-per-post'
+    end
+
+    it 'sorts by comments-per-post, post count, username' do
+      create_people_named 'z', 'a'
+      stub(Person).comments_per_post { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 1
+      puts_person2_before_person1 'comments-per-post'
+    end
+
     it 'sorts by comments-to-be-guessed' do
       create_people_named 'a', 'z'
       stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 2 } }
