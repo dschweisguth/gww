@@ -219,6 +219,22 @@ describe Photo do
       most_viewed.should == first
       most_viewed[:place].should == 1
     end
+
+    it "ignores other posters' photos" do
+      Photo.make
+      Photo.most_viewed(Person.make).should be_nil
+    end
+
+    it "considers other posters' photos when calculating place" do
+      Photo.make 'other_posters', :views => 2
+      photo = Photo.make :views => 1
+      Photo.most_viewed(photo.person)[:place].should == 2
+    end
+
+    it "handles a person with no photos" do
+      Photo.most_viewed(Person.make).should be_nil
+    end
+
   end
 
   # Used by PhotosController
