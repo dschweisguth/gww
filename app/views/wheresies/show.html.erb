@@ -5,7 +5,7 @@
 <div class="float">
   <h2>Rookies (members who first posted or scored in 2010)</h2>
 
-  <%= render 'wheresies/index/top_people',
+  <%= render 'wheresies/show/top_people',
         :title => 'Most points in 2010',
         :division => 'Rookie',
         :statistic => 'Points in 2010',
@@ -13,7 +13,7 @@
         :key => :points
   %>
 
-  <%= render 'wheresies/index/top_people',
+  <%= render 'wheresies/show/top_people',
         :title => 'Most posts in 2010',
         :division => 'Rookie',
         :statistic => 'Posts in 2010',
@@ -26,7 +26,7 @@
 <div class="float">
   <h2>All GWSF members</h2>
 
-  <%= render 'wheresies/index/top_people',
+  <%= render 'wheresies/show/top_people',
         :title => 'Most points in 2010',
         :division => 'Member',
         :statistic => 'Points in 2010',
@@ -34,7 +34,7 @@
         :key => :points
   %>
 
-  <%= render 'wheresies/index/top_people',
+  <%= render 'wheresies/show/top_people',
         :title => 'Most posts in 2010',
         :division => 'Member',
         :statistic => 'Posts in 2010',
@@ -46,14 +46,14 @@
 <br class="clear"/>
 <br class="clear"/>
 
-<%= render 'wheresies/index/top_photos',
+<%= render 'wheresies/show/top_photos',
       :title => 'Most-viewed photos of 2010',
       :statistic => 'views',
       :photos => @most_viewed_in_2010,
       :key => :views
 %>
 
-<%= render 'wheresies/index/top_photos',
+<%= render 'wheresies/show/top_photos',
       :title => 'Most-commented photos of 2010',
       :statistic => 'comments',
       :photos => @most_commented_in_2010,

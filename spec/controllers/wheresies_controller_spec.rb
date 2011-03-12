@@ -4,7 +4,7 @@ describe WheresiesController do
   integrate_views
   without_transactions
 
-  describe '#index' do
+  describe '#show' do
     it 'renders the page' do
       most_points_in_2010 = Person.make
       most_points_in_2010[:points] = 111
@@ -40,7 +40,7 @@ describe WheresiesController do
         :guessed_at => Time.utc(2010, 1, 1, 0, 0, 1)
       stub(Guess).shortest_in_2010 { [ shortest_in_2010 ] }
 
-      get :index
+      get :show, :year => 2010
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'div' do

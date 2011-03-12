@@ -17,7 +17,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :score_reports
 
-  map.connect 'wheresies/:action', :controller => 'wheresies'
+  map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
 

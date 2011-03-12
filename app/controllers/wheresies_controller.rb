@@ -1,7 +1,7 @@
 class WheresiesController < ApplicationController
 
-  caches_page :index
-  def index
+  caches_page :show
+  def show
     @most_points_in_2010 = Person.most_points_in_2010
     @most_posts_in_2010 = Person.most_posts_in_2010
     @rookies_with_most_points_in_2010 = Person.rookies_with_most_points_in_2010
