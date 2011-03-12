@@ -310,6 +310,27 @@ describe Person do
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
+    it 'sorts by views-per-post' do
+      create_people_named 'a', 'z'
+      stub(Person).views_per_post { { @person1.id => 1, @person2.id => 2 } }
+      stub_post_count 2, 1
+      puts_person2_before_person1 'views-per-post'
+    end
+
+    it 'sorts by views-per-post, post count' do
+      create_people_named 'a', 'z'
+      stub(Person).views_per_post { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 2
+      puts_person2_before_person1 'views-per-post'
+    end
+
+    it 'sorts by views-per-post, post count, username' do
+      create_people_named 'z', 'a'
+      stub(Person).views_per_post { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 1
+      puts_person2_before_person1 'views-per-post'
+    end
+
     it 'sorts the other direction, too' do
       create_people_named 'a', 'z'
       Person.all_sorted('username', '-').should == [ @person2, @person1 ]
