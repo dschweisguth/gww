@@ -39,11 +39,11 @@ class Photo < ActiveRecord::Base
           select count(*)
           from
             (
-              select min(dateadded) dateadded
+              select min(dateadded) min_dateadded
               from photos where game_status in ('unfound', 'unconfirmed')
               group by person_id
             ) oldest_unfounds
-          where dateadded <= ?
+          where min_dateadded <= ?
         },
         oldest_unfound.dateadded
       ]
