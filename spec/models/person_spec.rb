@@ -60,6 +60,7 @@ describe Person do
       stub(Person).comments_to_guess { {} }
       stub(Person).comments_per_post { {} }
       stub(Person).comments_to_be_guessed { {} }
+      stub(Person).views_per_post { {} }
     end
 
     it 'sorts by username' do
