@@ -360,6 +360,26 @@ describe Person do
 
   end
 
+  describe '.posts_standing' do
+    it "returns the person's post position" do
+      person = Person.make
+      Person.posts_standing(person).should == [ 1, false ]
+    end
+
+    it "considers other players' posts" do
+      Photo.make
+      person = Person.make
+      Person.posts_standing(person).should == [ 2, false ]
+    end
+
+    it "detects ties" do
+      post1 = Photo.make 1
+      Photo.make 2
+      Person.posts_standing(post1.person).should == [ 1, true ]
+    end
+
+  end
+
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = Guess.make :guessed_at => 4.days.ago
