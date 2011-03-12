@@ -160,6 +160,14 @@ describe Photo do
       oldest_unfound[:place].should == 2
     end
 
+    it "ignores other posters' equally old unfounds when calculating place" do
+      Photo.make 'oldest', :dateadded => Time.utc(2001)
+      next_oldest = Photo.make 'next_oldest', :dateadded => Time.utc(2001)
+      oldest_unfound = Photo.oldest_unfound next_oldest.person
+      oldest_unfound.should == next_oldest
+      oldest_unfound[:place].should == 1
+    end
+
     it "handles a person with no photos" do
       Photo.oldest_unfound(Person.make).should be_nil
     end
@@ -204,6 +212,12 @@ describe Photo do
       Photo.most_commented(comment.photo.person)[:place].should == 2
     end
 
+    it "ignores other posters' equally commented photos when calculating place" do
+      Comment.make 'on_other_posters_photo'
+      comment = Comment.make
+      Photo.most_commented(comment.photo.person)[:place].should == 1
+    end
+
     it "handles a person with no photos" do
       Photo.most_commented(Person.make).should be_nil
     end
@@ -229,6 +243,12 @@ describe Photo do
       Photo.make 'other_posters', :views => 2
       photo = Photo.make :views => 1
       Photo.most_viewed(photo.person)[:place].should == 2
+    end
+
+    it "ignores other posters' equally viewed photos when calculating place" do
+      Photo.make 'other_posters'
+      photo = Photo.make
+      Photo.most_viewed(photo.person)[:place].should == 1
     end
 
     it "handles a person with no photos" do
