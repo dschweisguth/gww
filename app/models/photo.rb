@@ -27,7 +27,6 @@ class Photo < ActiveRecord::Base
     last :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
   end
 
-  # TODO Dave don't select as much in the inner select?
   def self.oldest_unfound(poster)
     oldest_unfound = first \
       :conditions => [ "person_id = ? and game_status in ('unfound', 'unconfirmed')", poster ],
@@ -38,7 +37,7 @@ class Photo < ActiveRecord::Base
           select count(*)
           from
             (
-              select person_id,  min(dateadded) dateadded
+              select min(dateadded) dateadded
               from photos where game_status in ('unfound', 'unconfirmed')
               group by person_id
             ) oldest_unfounds
