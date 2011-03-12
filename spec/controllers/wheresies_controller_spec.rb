@@ -7,6 +7,7 @@ describe WheresiesController do
   describe '#show' do
     it 'renders the page' do
       stub(ScoreReport).first { ScoreReport.make :created_at => Time.local(2009).getutc }
+      stub(Time).now { Time.local(2010) }
 
       year = 2010
 
@@ -78,6 +79,13 @@ describe WheresiesController do
       response.should have_tag 'td', :text => '1&nbsp;year'
       response.should have_tag 'td', :text => '1&nbsp;second'
     end
+
+    it 'bails out if the year is invalid' do
+      stub(ScoreReport).first { ScoreReport.make :created_at => Time.local(2010).getutc }
+      stub(Time).now { Time.local(2010) }
+      lambda { get :show, :year => "2011" }.should raise_error ActiveRecord::RecordNotFound
+    end
+
   end
 
 end
