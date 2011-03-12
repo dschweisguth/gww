@@ -401,6 +401,20 @@ describe Person do
 
   end
 
+  describe '.scores_plus_posts' do
+    it 'returns a map of person ID to the sum of their score and posts' do
+      photo = Photo.make
+      Person.scores_plus_posts.should == { photo.person.id => 1 }
+    end
+
+    it 'sums score and posts' do
+      photo = Photo.make
+      Guess.make :person => photo.person, :photo => photo
+      Person.scores_plus_posts.should == { photo.person.id => 2 }
+    end
+
+  end
+
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = Guess.make :guessed_at => 4.days.ago
