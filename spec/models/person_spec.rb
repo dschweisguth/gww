@@ -408,6 +408,13 @@ describe Person do
     end
   end
 
+  describe '.posts_per_day' do
+    it 'returns a map of person ID to average posts per day' do
+      photo = Photo.make :dateadded => 4.days.ago
+      Person.posts_per_day.should == { photo.person.id => 0.25 }
+    end
+  end
+
   describe '.guess_speeds' do
     it 'returns a map of person ID to average seconds to guess' do
       now = Time.now
