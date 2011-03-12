@@ -2,6 +2,7 @@ class WheresiesController < ApplicationController
 
   caches_page :show
   def show
+    @wheresies_years = ScoreReport.first(:order => 'created_at').created_at.getlocal.year .. Time.now.year
     @year = params[:year].to_i
     @most_points_in_year = Person.most_points_in @year
     @most_posts_in_year = Person.most_posts_in @year

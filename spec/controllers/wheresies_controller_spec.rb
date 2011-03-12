@@ -6,6 +6,8 @@ describe WheresiesController do
 
   describe '#show' do
     it 'renders the page' do
+      stub(ScoreReport).first { ScoreReport.make :created_at => Time.local(2009).getutc }
+
       year = 2010
 
       most_points_in_year = Person.make
@@ -45,6 +47,10 @@ describe WheresiesController do
       get :show, :year => year.to_s
       #noinspection RubyResolve
       response.should be_success
+
+      response.should have_tag 'a[href=/wheresies/2009]', :text => '2009'
+      response.should_not have_tag 'a[href=/wheresies/2010]'
+
       response.should have_tag 'div' do
         with_tag 'h3', :text => "Most points in #{year}"
         with_tag 'td', :text => '333'
