@@ -435,6 +435,12 @@ describe Photo do
       Photo.most_commented_in_2010.should == []
     end
 
+    it "ignores comments by the poster" do
+      photo = Photo.make :dateadded => Time.utc(2010)
+      Comment.make :photo => photo, :flickrid => photo.person.flickrid
+      Photo.most_commented_in_2010.should == []
+    end
+
   end
 
   # Used by Admin::RootController

@@ -169,8 +169,11 @@ class Photo < ActiveRecord::Base
   def self.most_commented_in_2010
     find_by_sql [
       %q{
-        select f.*, count(*) comments from photos f, comments c
-        where ? <= f.dateadded and f.dateadded < ? and f.id = c.photo_id
+        select f.*, count(*) comments from photos f, people p, comments c
+        where ? <= f.dateadded and f.dateadded < ? and
+          f.person_id = p.id and
+          f.id = c.photo_id and
+          c.flickrid != p.flickrid
         group by f.id order by comments desc limit 10
       },
       Time.utc(2010), Time.utc(2011) ]
