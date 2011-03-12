@@ -9,7 +9,7 @@
         :title => 'Most points in 2010',
         :division => 'Rookie',
         :statistic => 'Points in 2010',
-        :people => @rookies_with_most_points_in_2010,
+        :people => @rookies_with_most_points_in_year,
         :key => :points
   %>
 
@@ -17,7 +17,7 @@
         :title => 'Most posts in 2010',
         :division => 'Rookie',
         :statistic => 'Posts in 2010',
-        :people => @rookies_with_most_posts_in_2010,
+        :people => @rookies_with_most_posts_in_year,
         :key => :posts
   %>
 
@@ -30,7 +30,7 @@
         :title => 'Most points in 2010',
         :division => 'Member',
         :statistic => 'Points in 2010',
-        :people => @most_points_in_2010,
+        :people => @most_points_in_year,
         :key => :points
   %>
 
@@ -38,7 +38,7 @@
         :title => 'Most posts in 2010',
         :division => 'Member',
         :statistic => 'Posts in 2010',
-        :people => @most_posts_in_2010,
+        :people => @most_posts_in_year,
         :key => :posts
   %>
 
@@ -49,14 +49,14 @@
 <%= render 'wheresies/show/top_photos',
       :title => 'Most-viewed photos of 2010',
       :statistic => 'views',
-      :photos => @most_viewed_in_2010,
+      :photos => @most_viewed_in_year,
       :key => :views
 %>
 
 <%= render 'wheresies/show/top_photos',
       :title => 'Most-commented photos of 2010',
       :statistic => 'comments',
-      :photos => @most_commented_in_2010,
+      :photos => @most_commented_in_year,
       :key => :comments
 %>
 
@@ -69,13 +69,13 @@
 the all-time list <em>was</em> the 2010 list.</p>
 <table class="dark">
   <%= render 'guesses/longest_and_shortest/header' %>
-  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @longest_in_2010 %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @longest_in_year %>
 </table>
 
 <h2>Fastest-guessed photos of 2010</h2>
 <table class="dark">
   <%= render 'guesses/longest_and_shortest/header' %>
-  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @shortest_in_2010 %>
+  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @shortest_in_year %>
 </table>
 
 <% end %>
