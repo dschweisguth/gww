@@ -1,6 +1,7 @@
-<% content_for :title do %>For your consideration for the <%= @year %> Wheresies ...<% end %>
+<% title = "For your consideration for the #{@year} Wheresies #{ if @year == @wheresies_years.last then '(preliminary) ' end }..." -%>
+<% content_for :title do %><%= title %><% end -%>
 <% sandwich 'wheresies/show/breadcrumbs' do %>
-<h1>For your consideration for the <%= @year %> Wheresies ...</h1>
+<h1><%= title %></h1>
 
 <div class="float">
   <h2>Rookies (members who first posted or scored in <%= @year %>)</h2>
