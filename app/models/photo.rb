@@ -506,7 +506,6 @@ class Photo < ActiveRecord::Base
     ymd_elapsed_between dateadded, Time.now
   end
 
-  # TODO Dave test
   def star_for_comments
     if self[:comment_count] >= 30
       :gold
