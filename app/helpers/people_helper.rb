@@ -44,15 +44,7 @@ module PeopleHelper
   }
 
   def star_and_alt(trophy, reason)
-    if reason == :age
-      star = trophy.star_for_age
-    elsif reason == :speed
-      star = trophy.star_for_speed
-    elsif reason == :comments
-      star = trophy.star_for_comments
-    else
-      star = trophy.star_for_views
-    end
+    star = trophy.send "star_for_#{reason}"
     return star, ALT[reason][star]
   end
 

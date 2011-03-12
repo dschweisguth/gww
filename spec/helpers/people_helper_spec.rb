@@ -54,7 +54,7 @@ describe PeopleHelper do
   describe '#star_and_alt' do
     describe 'for age' do
       expected = [
-        [ nil => nil ],
+        [ nil, nil ],
         [ :bronze, 'Unfound for 1 year or more' ],
         [ :silver, 'Unfound for 2 years or more' ],
         [ :gold, 'Unfound for 3 years or more' ]
@@ -70,6 +70,7 @@ describe PeopleHelper do
 
     describe 'for speed' do
       expected = [
+        [ nil, nil ],
         [ :bronze, nil ],
         [ :silver, 'Guessed in less than a minute' ],
         [ :gold, 'Guessed in less than 10 seconds' ]
@@ -85,6 +86,7 @@ describe PeopleHelper do
 
     describe 'for comments' do
       expected = [
+        [ nil, nil ],
         [ :bronze, nil ],
         [ :silver, '20 or more comments' ],
         [ :gold, '30 or more comments' ]
@@ -100,6 +102,7 @@ describe PeopleHelper do
 
     describe 'for views' do
       expected = [
+        [ nil, nil ],
         [ :bronze, '300 or more views' ],
         [ :silver, '1000 or more views' ],
         [ :gold, '3000 or more views' ]
