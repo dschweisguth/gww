@@ -29,9 +29,12 @@ module PeopleHelper
     elsif reason == :speed
       star = trophy.star_for_speed
       alt = alt_for_star_for_speed star
-    else
+    elsif reason == :comments
       star = trophy.star_for_comments
       alt = alt_for_star_for_comments :star
+    else
+      star = trophy.star_for_views
+      alt = alt_for_star_for_views :star
     end
     return star, alt
   end
@@ -64,6 +67,18 @@ module PeopleHelper
       '20 or more comments'
     when :gold
       '30 or more comments'
+    end
+  end
+  private :alt_for_star_for_speed
+
+  def alt_for_star_for_views(star)
+    case star
+    when :bronze
+      '300 or more views'
+    when :silver
+      '1000 or more views'
+    when :gold
+      '3000 or more views'
     end
   end
   private :alt_for_star_for_speed

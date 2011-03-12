@@ -31,6 +31,7 @@
   <% if @shortest_lasting_guess %><th>Fastest-guessed post</th><% end %>
   <% if @oldest_unfound %><th>Oldest unfound post</th><% end %>
   <% if @most_commented %><th>Most-commented post</th><% end %>
+  <% if @most_viewed %><th>Most-viewed post</th><% end %>
 </tr>
 <tr>
   <% if @oldest_guess %><td><%= thumbnail_with_alt @oldest_guess.photo %></td><% end %>
@@ -39,6 +40,7 @@
   <% if @shortest_lasting_guess %><td><%= thumbnail_with_alt @shortest_lasting_guess.photo %></td><% end %>
   <% if @oldest_unfound %><td><%= thumbnail_with_alt @oldest_unfound %></td><% end %>
   <% if @most_commented %><td><%= thumbnail_with_alt @most_commented %></td><% end %>
+  <% if @most_viewed %><td><%= thumbnail_with_alt @most_viewed %></td><% end %>
 </tr>
 <tr class="trophies-text">
   <% if @oldest_guess %><td>Guessed after <%= @oldest_guess.ymd_elapsed %></td><% end %>
@@ -47,6 +49,7 @@
   <% if @shortest_lasting_guess %><td>Guessed in <%= @shortest_lasting_guess.time_elapsed %></td><% end %>
   <% if @oldest_unfound %><td><%= @oldest_unfound.ymd_elapsed %> old</td><% end %>
   <% if @most_commented %><td><%= pluralize @most_commented[:comment_count], 'comment' %></td><% end %>
+  <% if @most_viewed %><td><%= pluralize @most_viewed.views, 'view' %></td><% end %>
 </tr>
 <tr class="trophies-places">
   <% if @oldest_guess %><%= place @oldest_guess, :age %><% end -%>
@@ -55,5 +58,6 @@
   <% if @shortest_lasting_guess %><%= place @shortest_lasting_guess, :speed %><% end -%>
   <% if @oldest_unfound %><%= place @oldest_unfound, :age %><% end -%>
   <% if @most_commented %><%= place @most_commented, :comments %><% end -%>
+  <% if @most_viewed %><%= place @most_viewed, :views %><% end -%>
 </tr>
 </table>
