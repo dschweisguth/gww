@@ -19,6 +19,7 @@ class Person < ActiveRecord::Base
     'username' => [ :downcased_username ],
     'score' => [ :guess_count, :post_count, :downcased_username ],
     'posts' => [ :post_count, :guess_count, :downcased_username ],
+    'score-plus-posts' => [ :score_plus_posts, :guess_count, :post_count, :downcased_username ],
     'guesses-per-day' => [ :guesses_per_day, :guess_count, :downcased_username ],
     'posts-per-day' => [ :posts_per_day, :post_count, :downcased_username ],
     'posts-per-guess' => [ :posts_per_guess, :post_count, :downcased_username ],
@@ -40,6 +41,7 @@ class Person < ActiveRecord::Base
 
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
+    scores_plus_posts = Person.scores_plus_posts
     guesses_per_days = Person.guesses_per_day
     posts_per_days = Person.posts_per_day
     guess_speeds = Person.guess_speeds
@@ -52,6 +54,7 @@ class Person < ActiveRecord::Base
       person[:downcased_username] = person.username.downcase
       person[:post_count] = post_counts[person.id] || 0
       person[:guess_count] = guess_counts[person.id] || 0
+      person[:score_plus_posts] = scores_plus_posts[person.id] || 0
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:posts_per_day] = posts_per_days[person.id] || 0
       person[:posts_per_guess] =
@@ -79,6 +82,19 @@ class Person < ActiveRecord::Base
     end
 
     people
+  end
+
+  def self.scores_plus_posts
+    now = Time.now.getutc
+    people_with_statistic = find_by_sql [ %q{
+      select p.id id, ifnull(scores.score, 0) + ifnull(posts.posts, 0) score_plus_posts
+      from people p
+        left join ((select person_id id, count(*) score
+          from guesses group by person_id) scores) on p.id = scores.id
+        left join ((select person_id id, count(*) posts
+          from photos group by person_id) posts) on p.id = posts.id
+    }, now, now ]
+    Hash[people_with_statistic.map { |person| [ person.id, person[:score_plus_posts] ] }]
   end
 
   def self.guesses_per_day

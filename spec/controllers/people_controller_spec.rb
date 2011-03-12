@@ -32,6 +32,7 @@ describe PeopleController do
       person = Person.make :id => 666
       person[:guess_count] = 1
       person[:post_count] = 1
+      person[:score_plus_posts] = 1
       person[:guesses_per_day] = 1.0
       person[:posts_per_day] = 1.0
       person[:posts_per_guess] = 1.0

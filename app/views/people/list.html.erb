@@ -8,6 +8,7 @@
   <th><%= link_to 'Member', list_path('username') %></th>
   <th><%= link_to 'Score', list_path('score') %></th>
   <th><%= link_to 'Posts', list_path('posts') %></th>
+  <th><%= link_to 'Score + posts', list_path('score-plus-posts') %></th>
   <th><%= link_to 'Guesses per day', list_path('guesses-per-day') %></th>
   <th><%= link_to 'Posts per day', list_path('posts-per-day') %></th>
   <th><%= link_to 'Posts per guess', list_path('posts-per-guess') %></th>
@@ -22,6 +23,7 @@
   <td><%= link_to_person person %></td>
   <td class="number"><%= person[:guess_count] %></td>
   <td class="number"><%= person[:post_count] %></td>
+  <td class="number"><%= person[:score_plus_posts] %></td>
   <td class="number"><%= to_4_places person[:guesses_per_day] %></td>
   <td class="number"><%= to_4_places person[:posts_per_day] %></td>
   <td class="number"><%= infinity_or person[:posts_per_guess] %></td>
