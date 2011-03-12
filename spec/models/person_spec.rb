@@ -123,6 +123,27 @@ describe Person do
       puts_person2_before_person1 'guesses-per-day'
     end
 
+    it 'sorts by posts per day' do
+      create_people_named 'a', 'z'
+      stub(Person).posts_per_day { { @person1.id => 1, @person2.id => 2 } }
+      stub_post_count 2, 1
+      puts_person2_before_person1 'posts-per-day'
+    end
+
+    it 'sorts by posts per day, post count' do
+      create_people_named 'a', 'z'
+      stub(Person).posts_per_day { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 2
+      puts_person2_before_person1 'posts-per-day'
+    end
+
+    it 'sorts by posts per day, post count, username' do
+      create_people_named 'z', 'a'
+      stub(Person).posts_per_day { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 1
+      puts_person2_before_person1 'posts-per-day'
+    end
+
     it 'sorts by posts/guess' do
       create_people_named 'a', 'z'
       stub_post_count 4, 3
