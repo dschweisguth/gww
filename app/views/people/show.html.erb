@@ -19,21 +19,21 @@
 <h2>Standings</h2>
 
 <% if @guesses.empty? -%>
-  <%=h @person.username %> has never made a correct guess. 
+  <%=h @person.username %> has never made a correct guess.<br/>
 <% else -%>
-  <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= @place.ordinal %> place with a score of <%= @guesses.length %>.
-<% end -%>
-<% if @posts.empty? -%>
-  <%=h @person.username %> has never posted a photo to the group. 
-<% else -%>
-  <%=h @person.username %> has posted <%= @posts.length %> photos to the group, <%= if @tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.
+  <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= @place.ordinal %> place with a score of <%= @guesses.length %>.<br/>
+  <%= render 'people/show/high_scorers', :high_scorers => @weekly_high_scorers, :period => 'week' %>
+  <%= render 'people/show/high_scorers', :high_scorers => @monthly_high_scorers, :period => 'month' %>
 <% end -%>
 <br/>
 
-<%= render 'people/show/high_scorers', :high_scorers => @weekly_high_scorers, :period => 'week' %>
-<%= render 'people/show/high_scorers', :high_scorers => @monthly_high_scorers, :period => 'month' %>
-<%= render 'people/show/top_posters', :top_posters => @weekly_top_posters, :period => 'week' %>
-<%= render 'people/show/top_posters', :top_posters => @monthly_top_posters, :period => 'month' %>
+<% if @posts.empty? -%>
+  <%=h @person.username %> has never posted a photo to the group.<br/> 
+<% else -%>
+  <%=h @person.username %> has posted <%= @posts.length %> photos to the group, <%= if @tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.<br/>
+  <%= render 'people/show/top_posters', :top_posters => @weekly_top_posters, :period => 'week' %>
+  <%= render 'people/show/top_posters', :top_posters => @monthly_top_posters, :period => 'month' %>
+<% end -%>
 
 <%= render 'people/show/trophies' %>
 
