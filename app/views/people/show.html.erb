@@ -30,7 +30,7 @@
 <% if @posts.empty? -%>
   <%=h @person.username %> has never posted a photo to the group.<br/> 
 <% else -%>
-  <%=h @person.username %> has posted <%= @posts.length %> photos to the group, <%= if @tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.<br/>
+  <%=h @person.username %> has posted <%= pluralize @posts.length, 'photo' %> to the group, <%= if @posts_tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.<br/>
   <%= render 'people/show/top_posters', :top_posters => @weekly_top_posters, :period => 'week' %>
   <%= render 'people/show/top_posters', :top_posters => @monthly_top_posters, :period => 'month' %>
 <% end -%>
