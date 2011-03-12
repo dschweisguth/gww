@@ -31,9 +31,7 @@ class Person < ActiveRecord::Base
   def self.all_sorted(sorted_by, order)
     # I'd have raised Argument error in the case below to avoid duplication,
     # but when I do that something eats the raised error.
-    if ! [ 'username', 'score', 'posts', 'guesses-per-day', 'posts-per-day', 'posts-per-guess',
-      'time-to-guess', 'time-to-be-guessed', 'comments-to-guess', 
-      'comments-to-be-guessed' ].include? sorted_by
+    if ! CRITERIA.has_key? sorted_by
       raise ArgumentError, "#{sorted_by} is not a valid sort order"
     end
     if ! ['+', '-'].include? order
