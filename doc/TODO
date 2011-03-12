@@ -22,6 +22,8 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
+Add most-commented and most-viewed photos to user page?
+Generalize wheresies page
 Photo edit page
   Reduce the number of clicks it takes to add or remove a guess or revelation
   Make it possible to mark a photo as revealed which doesn't have a comment by
@@ -63,9 +65,3 @@ Write an admin page that reports on bogus data
   Photos that have both guesses and revelations
   Guesses made before photo was added
 Check the bogus data page in update-and-restart
-
-Digest this:
-
-More ambitiously, there's probably a way to figure out who are the best posters a la photo views/comments/"interestingness", although that might be going too far.
-
-Also, starting a 2011 Wheresies page a la the 2010 one could be fun now, especially to see how newbies are doing and which posts so far are popular w/r/t comments/guesses.

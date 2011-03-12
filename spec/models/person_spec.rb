@@ -596,6 +596,13 @@ describe Person do
 
   end
 
+  describe '.views_per_post' do
+    it 'returns a map of person ID to average # of views per post' do
+      photo = Photo.make :views => 1
+      Person.views_per_post.should == { photo.person.id => 1 }
+    end
+  end
+
   describe '.high_scorers' do
     before do
       @report_date = Time.utc(2011)
