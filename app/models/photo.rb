@@ -514,4 +514,16 @@ class Photo < ActiveRecord::Base
     end
   end
 
+  def star_for_views
+    if views >= 3000
+      :gold
+    elsif views >= 1000
+      :silver
+    elsif views >= 300
+      :bronze
+    else
+      nil
+    end
+  end
+
 end

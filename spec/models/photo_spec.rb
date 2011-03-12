@@ -1064,4 +1064,14 @@ describe Photo do
     end
   end
 
+  describe '#star_for_views' do
+    expected = { 0 => nil, 300 => :bronze, 1000 => :silver, 3000 => :gold }
+    expected.keys.sort.each do |views|
+      it "returns a #{expected[views]} star for a photo with #{views} views" do
+        photo = Photo.new :views => views
+        photo.star_for_views.should == expected[views]
+      end
+    end
+  end
+
 end
