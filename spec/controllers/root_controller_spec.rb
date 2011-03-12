@@ -6,17 +6,20 @@ describe RootController do
 
   describe '#index' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011) }
+      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011).getutc }
+      stub(ScoreReport).first { ScoreReport.make :created_at => Time.local(2011).getutc }
       get :index
 
       #noinspection RubyResolve
       response.should be_success
       response.should have_text /The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes./
+      response.should have_tag 'a[href=/wheresies/2011]', :text => '2011'
 
     end
 
     it 'reports a completed update' do
       stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011), :completed_at => Time.local(2001, 1, 1, 0, 6) }
+      stub(ScoreReport).first { ScoreReport.make :created_at => Time.local(2011).getutc }
       get :index
 
       #noinspection RubyResolve

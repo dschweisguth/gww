@@ -15,7 +15,7 @@ Comment Searchr</a>.</p>
 
 <h2>Reports</h2>
 <ul class="spacious">
-<li><%= link_to 'Score reports', score_reports_path %><span class="new-list-item">New!</span></li>
+<li><%= link_to 'Score reports', score_reports_path %></li>
 <li>Find a person, by username, Flickr ID or GWW ID:
   <% form_tag({ :controller => 'people', :action => 'find' }, :method => :get, :class => 'inline') do %>
   <%= text_field_with_auto_complete :person, :username %> <%= submit_tag 'Find' %>
@@ -32,9 +32,7 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_path %></li>
 <li><%= link_to 'Longest-lived revelations', :controller => 'revelations', :action => 'longest' %></li>
-</ul>
-<ul class="spacious">
-<li><%= link_to 'Statistics for the 2010 Wheresies', wheresies_path(2010) %></li>
+<li>Statistics for the prestigious Wheresies awards: <%= @wheresies_years.map { |year| link_to year, wheresies_path(year) }.join ', ' %><span class="new-list-item">New!</span></li>
 </ul>
 
 <h2>API</h2>
