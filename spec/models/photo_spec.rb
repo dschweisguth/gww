@@ -982,7 +982,7 @@ describe Photo do
     now = Time.now
     expected = { 0 => nil, 1 => :bronze, 2 => :silver, 3 => :gold }
     expected.keys.sort.each do |years_old|
-      it "returns a #{expected[years_old]} star for a #{years_old}-year-old guess" do
+      it "returns a #{expected[years_old]} star for a #{years_old}-year-old photo" do
         photo = Photo.new :dateadded => now - years_old.years
         photo.star_for_age.should == expected[years_old]
       end
@@ -1002,6 +1002,17 @@ describe Photo do
       photo = Photo.new :dateadded => Time.utc(2000)
       stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
       photo.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
+    end
+  end
+
+  describe '#star_for_comments' do
+    expected = { 0 => nil, 20 => :silver, 30 => :gold }
+    expected.keys.sort.each do |comment_count|
+      it "returns a #{expected[comment_count]} star for a photo with #{comment_count} comments" do
+        photo = Photo.new
+        photo[:comment_count] = comment_count
+        photo.star_for_comments.should == expected[comment_count]
+      end
     end
   end
 
