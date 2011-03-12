@@ -51,67 +51,49 @@ describe PeopleHelper do
       "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
   end
 
+  STARS = [ nil, :bronze, :silver, :gold ]
+
   describe '#star_and_alt' do
     describe 'for age' do
-      expected = [
-        [ nil, nil ],
-        [ :bronze, 'Unfound for 1 year or more' ],
-        [ :silver, 'Unfound for 2 years or more' ],
-        [ :gold, 'Unfound for 3 years or more' ]
-      ]
-      expected.each do |star, period|
-        it "returns the alt text '#{period}' given the star :#{star}" do
+      STARS.each do |star|
+        alt = PeopleHelper::ALT[:age][star]
+        it "returns the alt '#{alt}' given the star :#{star}" do
           guess = Object.new
           stub(guess).star_for_age { star }
-          helper.star_and_alt(guess, :age).should == [ star, period ]
+          helper.star_and_alt(guess, :age).should == [ star, alt ]
         end
       end
     end
 
     describe 'for speed' do
-      expected = [
-        [ nil, nil ],
-        [ :bronze, nil ],
-        [ :silver, 'Guessed in less than a minute' ],
-        [ :gold, 'Guessed in less than 10 seconds' ]
-      ]
-      expected.each do |star, period|
-        it "returns the alt text '#{period}' given the star :#{star}" do
+      STARS.each do |star|
+        alt = PeopleHelper::ALT[:speed][star]
+        it "returns the alt '#{alt}' given the star :#{star}" do
           guess = Object.new
           stub(guess).star_for_speed { star }
-          helper.star_and_alt(guess, :speed).should == [ star, period ]
+          helper.star_and_alt(guess, :speed).should == [ star, alt ]
         end
       end
     end
 
     describe 'for comments' do
-      expected = [
-        [ nil, nil ],
-        [ :bronze, nil ],
-        [ :silver, '20 or more comments' ],
-        [ :gold, '30 or more comments' ]
-      ]
-      expected.each do |star, comment_count|
-        it "returns the alt text '#{comment_count}' given the star :#{star}" do
+      STARS.each do |star|
+        alt = PeopleHelper::ALT[:comments][star]
+        it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
           stub(photo).star_for_comments { star }
-          helper.star_and_alt(photo, :comments).should == [ star, comment_count ]
+          helper.star_and_alt(photo, :comments).should == [ star, alt ]
         end
       end
     end
 
     describe 'for views' do
-      expected = [
-        [ nil, nil ],
-        [ :bronze, '300 or more views' ],
-        [ :silver, '1000 or more views' ],
-        [ :gold, '3000 or more views' ]
-      ]
-      expected.each do |star, views|
-        it "returns the alt text '#{views}' given the star :#{star}" do
+      STARS.each do |star|
+        alt = PeopleHelper::ALT[:views][star]
+        it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
           stub(photo).star_for_views { star }
-          helper.star_and_alt(photo, :views).should == [ star, views ]
+          helper.star_and_alt(photo, :views).should == [ star, alt ]
         end
       end
     end
