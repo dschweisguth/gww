@@ -26,6 +26,7 @@ class Person < ActiveRecord::Base
     'time-to-guess' => [ :guess_speed, :guess_count, :downcased_username ],
     'time-to-be-guessed' => [ :be_guessed_speed, :post_count, :downcased_username ],
     'comments-to-guess' => [ :comments_to_guess, :guess_count, :downcased_username ],
+    'comments-per-post' => [ :comments_per_post, :post_count, :downcased_username ],
     'comments-to-be-guessed' => [ :comments_to_be_guessed, :post_count, :downcased_username ]
   }
 
@@ -46,6 +47,7 @@ class Person < ActiveRecord::Base
     guess_speeds = Person.guess_speeds
     be_guessed_speeds = Person.be_guessed_speeds
     comments_to_guess = Person.comments_to_guess
+    comments_per_post = Person.comments_per_post
     comments_to_be_guessed = Person.comments_to_be_guessed
 
     people = all
@@ -56,13 +58,12 @@ class Person < ActiveRecord::Base
       person[:score_plus_posts] = person[:post_count] + person[:guess_count] 
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:posts_per_day] = posts_per_days[person.id] || 0
-      person[:posts_per_guess] =
-        person[:post_count].to_f / person[:guess_count]
+      person[:posts_per_guess] = person[:post_count].to_f / person[:guess_count]
       person[:guess_speed] = guess_speeds[person.id] || INFINITY
       person[:be_guessed_speed] = be_guessed_speeds[person.id] || INFINITY
       person[:comments_to_guess] = comments_to_guess[person.id] || INFINITY
-      person[:comments_to_be_guessed] =
-	comments_to_be_guessed[person.id] || INFINITY
+      person[:comments_per_post] = comments_per_post[person.id] || 0.0
+      person[:comments_to_be_guessed] = comments_to_be_guessed[person.id] || INFINITY
     end
 
     people.sort! do |x, y|
@@ -125,6 +126,19 @@ class Person < ActiveRecord::Base
           g.person_id = p.id and
           p.flickrid = c.flickrid and
           g.guessed_at >= c.commented_at group by g.id
+      ) comment_counts
+      group by id
+    }
+  end
+
+  def self.comments_per_post
+    statistic_by_person %q{
+      select person_id id, avg(comment_count) statistic
+      from (
+        select f.person_id, count(*) comment_count
+        from photos f, comments c
+        where f.id = c.photo_id
+        group by f.id
       ) comment_counts
       group by id
     }

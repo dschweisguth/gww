@@ -15,6 +15,7 @@
   <th><%= link_to "Average # of days to guess others' posts", list_path('time-to-guess') %></th>
   <th><%= link_to 'Average # of days for posts to be guessed', list_path('time-to-be-guessed') %></th>
   <th><%= link_to "Average # of comments to guess others' posts", list_path('comments-to-guess') %></th>
+  <th><%= link_to "Average # of comments per post", list_path('comments-per-post') %></th>
   <th><%= link_to 'Average # of comments for posts to be guessed', list_path('comments-to-be-guessed') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
@@ -30,6 +31,7 @@
   <td class="number"><%= infinity_or (person[:guess_speed] / 86400) %></td>
   <td class="number"><%= infinity_or (person[:be_guessed_speed] / 86400) %></td>
   <td class="number"><%= infinity_or person[:comments_to_guess] %></td>
+  <td class="number"><%= infinity_or person[:comments_per_post] %></td>
   <td class="number"><%= infinity_or person[:comments_to_be_guessed] %></td>
 </tr>
 <% end %>
