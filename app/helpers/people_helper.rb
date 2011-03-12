@@ -31,10 +31,10 @@ module PeopleHelper
       alt = alt_for_star_for_speed star
     elsif reason == :comments
       star = trophy.star_for_comments
-      alt = alt_for_star_for_comments :star
+      alt = alt_for_star_for_comments star
     else
       star = trophy.star_for_views
-      alt = alt_for_star_for_views :star
+      alt = alt_for_star_for_views  star
     end
     return star, alt
   end

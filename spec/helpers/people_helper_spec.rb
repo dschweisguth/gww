@@ -83,6 +83,36 @@ describe PeopleHelper do
       end
     end
 
+    describe 'for comments' do
+      expected = [
+        [ :bronze, nil ],
+        [ :silver, '20 or more comments' ],
+        [ :gold, '30 or more comments' ]
+      ]
+      expected.each do |star, comment_count|
+        it "returns the alt text '#{comment_count}' given the star :#{star}" do
+          photo = Object.new
+          stub(photo).star_for_comments { star }
+          helper.star_and_alt(photo, :comments).should == [ star, comment_count ]
+        end
+      end
+    end
+
+    describe 'for views' do
+      expected = [
+        [ :bronze, '300 or more views' ],
+        [ :silver, '1000 or more views' ],
+        [ :gold, '3000 or more views' ]
+      ]
+      expected.each do |star, views|
+        it "returns the alt text '#{views}' given the star :#{star}" do
+          photo = Object.new
+          stub(photo).star_for_views { star }
+          helper.star_and_alt(photo, :views).should == [ star, views ]
+        end
+      end
+    end
+
   end
 
   describe '#position' do
