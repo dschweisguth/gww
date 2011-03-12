@@ -102,6 +102,34 @@ describe Person do
       puts_person2_before_person1 'posts'
     end
 
+    it "sorts by score + post count, even when that's different from score alone" do
+      create_people_named 'a', 'z'
+      stub_score 1, 0
+      stub_post_count 1, 3
+      puts_person2_before_person1 'score-plus-posts'
+    end
+
+    it "sorts by score + post count, even when that's different from post count alone" do
+      create_people_named 'a', 'z'
+      stub_score 1, 3
+      stub_post_count 1, 0
+      puts_person2_before_person1 'score-plus-posts'
+    end
+
+    it "sorts by score + post count, score" do
+      create_people_named 'a', 'z'
+      stub_score 1, 2
+      stub_post_count 1, 0
+      puts_person2_before_person1 'score-plus-posts'
+    end
+
+    it "sorts by score + post count, score, username" do
+      create_people_named 'z', 'a'
+      stub_score 1, 1
+      stub_post_count 1, 1
+      puts_person2_before_person1 'score-plus-posts'
+    end
+
     it 'sorts by guesses per day' do
       create_people_named 'a', 'z'
       stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 2 } }

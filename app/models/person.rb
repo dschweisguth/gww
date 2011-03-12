@@ -19,7 +19,7 @@ class Person < ActiveRecord::Base
     'username' => [ :downcased_username ],
     'score' => [ :guess_count, :post_count, :downcased_username ],
     'posts' => [ :post_count, :guess_count, :downcased_username ],
-    'score-plus-posts' => [ :score_plus_posts, :guess_count, :post_count, :downcased_username ],
+    'score-plus-posts' => [ :score_plus_posts, :guess_count, :downcased_username ],
     'guesses-per-day' => [ :guesses_per_day, :guess_count, :downcased_username ],
     'posts-per-day' => [ :posts_per_day, :post_count, :downcased_username ],
     'posts-per-guess' => [ :posts_per_guess, :post_count, :downcased_username ],
