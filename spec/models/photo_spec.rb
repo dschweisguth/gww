@@ -160,8 +160,56 @@ describe Photo do
       oldest_unfound[:place].should == 2
     end
 
+    it "handles a person with no photos" do
+      Photo.oldest_unfound(Person.make).should be_nil
+    end
+
   end
 
+  describe '.most_commented' do
+    it "returns the poster's most-commented unfound" do
+      poster = Person.make
+      Photo.make 'second', :person => poster
+      first = Photo.make 'first', :person => poster
+      Comment.make :photo => first
+      most_commented = Photo.most_commented poster
+      most_commented.should == first
+      most_commented[:comment_count].should == 1
+      most_commented[:place].should == 1
+    end
+
+    it "counts comments" do
+      poster = Person.make
+      second = Photo.make 'second', :person => poster
+      Comment.make 21, :photo => second
+      first = Photo.make 'first', :person => poster
+      Comment.make 11, :photo => first
+      Comment.make 12, :photo => first
+      most_commented = Photo.most_commented poster
+      most_commented.should == first
+      most_commented[:comment_count].should == 2
+      most_commented[:place].should == 1
+    end
+
+    it "ignores other posters' photos" do
+      Comment.make
+      Photo.most_commented(Person.make).should be_nil
+    end
+
+    it "considers other posters' photos when calculating place" do
+      other_posters_photo = Photo.make 'other_posters'
+      Comment.make 'o1', :photo => other_posters_photo
+      Comment.make 'o2', :photo => other_posters_photo
+      comment = Comment.make
+      Photo.most_commented(comment.photo.person)[:place].should == 2
+    end
+
+    it "handles a person with no photos" do
+      Photo.most_commented(Person.make).should be_nil
+    end
+
+  end
+  
   # Used by PhotosController
 
   describe '.all_sorted_and_paginated' do

@@ -50,7 +50,6 @@ class Photo < ActiveRecord::Base
     oldest_unfound
   end
 
-  # TODO Dave test
   def self.most_commented(poster)
     most_commented = find_by_sql [
       %q[
