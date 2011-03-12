@@ -240,8 +240,8 @@ describe Photo do
     end
 
     it "considers other posters' photos when calculating place" do
-      Photo.make 'other_posters', :views => 2
-      photo = Photo.make :views => 1
+      Photo.make 'other_posters', :views => 1
+      photo = Photo.make
       Photo.most_viewed(photo.person)[:place].should == 2
     end
 
