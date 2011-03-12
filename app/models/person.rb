@@ -131,13 +131,16 @@ class Person < ActiveRecord::Base
     }
   end
 
+  # TODO Dave why did breaking this SQL break so many tests?
   def self.comments_per_post
     statistic_by_person %q{
       select person_id id, avg(comment_count) statistic
       from (
         select f.person_id, count(*) comment_count
-        from photos f, comments c
-        where f.id = c.photo_id
+        from photos f, people p, comments c
+        where f.id = c.photo_id and
+          f.person_id = p.id and
+          p.flickrid != c.flickrid
         group by f.id
       ) comment_counts
       group by id
