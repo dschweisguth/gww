@@ -441,23 +441,23 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def self.most_points_in
+  def self.most_points_in(year)
     find_by_sql [ %q{
       select p.*, count(*) points from people p, guesses g
         where p.id = g.person_id and ? <= g.guessed_at and g.guessed_at < ?
 	group by p.id order by points desc limit 10
-    }, Time.utc(2010), Time.utc(2011) ]
+    }, Time.local(year).getutc, Time.local(year + 1).getutc ]
   end
 
-  def self.most_posts_in
+  def self.most_posts_in(year)
     find_by_sql [ %q{
       select p.*, count(*) posts from people p, photos f
       where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ?
       group by p.id order by posts desc limit 10
-    }, Time.utc(2010), Time.utc(2011) ]
+    }, Time.local(year).getutc, Time.local(year + 1).getutc ]
   end
 
-  def self.rookies_with_most_points_in
+  def self.rookies_with_most_points_in(year)
     find_by_sql [
       %q{
         select p.*, count(*) points
@@ -471,11 +471,11 @@ class Person < ActiveRecord::Base
         where p.id = r.person_id and p.id = g.person_id and g.guessed_at < ?
 	group by p.id order by points desc limit 10
       },
-      Time.utc(2010), Time.utc(2011), Time.utc(2011)
+      Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
   end
 
-  def self.rookies_with_most_posts_in
+  def self.rookies_with_most_posts_in(year)
     find_by_sql [
       %q{
         select p.*, count(*) posts
@@ -489,7 +489,7 @@ class Person < ActiveRecord::Base
         where p.id = r.person_id and p.id = f.person_id and f.dateadded < ?
 	group by p.id order by posts desc limit 10
       },
-      Time.utc(2010), Time.utc(2011), Time.utc(2011)
+      Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
   end
 

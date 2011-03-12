@@ -8,19 +8,19 @@ describe WheresiesController do
     it 'renders the page' do
       most_points_in_year = Person.make
       most_points_in_year[:points] = 111
-      stub(Person).most_points_in { [ most_points_in_year ] }
+      stub(Person).most_points_in(2010) { [ most_points_in_year ] }
 
       most_posts_in_year = Person.make
       most_posts_in_year[:posts] = 222
-      stub(Person).most_posts_in { [ most_posts_in_year ] }
+      stub(Person).most_posts_in(2010) { [ most_posts_in_year ] }
 
       rookie_with_most_points_in_year = Person.make
       rookie_with_most_points_in_year[:points] = 333
-      stub(Person).rookies_with_most_points_in { [ rookie_with_most_points_in_year ] }
+      stub(Person).rookies_with_most_points_in(2010) { [ rookie_with_most_points_in_year ] }
 
       rookie_with_most_posts_in_year = Person.make
       rookie_with_most_posts_in_year[:posts] = 444
-      stub(Person).rookies_with_most_posts_in { [ rookie_with_most_posts_in_year ] }
+      stub(Person).rookies_with_most_posts_in(2010) { [ rookie_with_most_posts_in_year ] }
 
       most_viewed_in_year = Photo.make
       most_viewed_in_year[:views] = 555
