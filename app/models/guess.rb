@@ -92,7 +92,7 @@ class Guess < ActiveRecord::Base
   private_class_method :first_guess_with_place
 
   #noinspection RailsParamDefResolve
-  def self.longest_in_2010
+  def self.longest_in
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
 	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",
@@ -101,7 +101,7 @@ class Guess < ActiveRecord::Base
   end
 
   #noinspection RailsParamDefResolve
-  def self.shortest_in_2010
+  def self.shortest_in
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
 	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",

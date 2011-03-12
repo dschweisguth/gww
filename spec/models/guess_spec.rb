@@ -261,36 +261,36 @@ describe Guess do
 
   end
 
-  describe '.longest_in_2010' do
-    it 'lists guesses made in 2010 sorted by time between post and guess, descending' do
-      photo1 = Photo.make 1, :dateadded => Time.utc(2010)
-      guess1 = Guess.make 1, :photo => photo1, :guessed_at => Time.utc(2010, 2)
-      photo2 = Photo.make 2, :dateadded => Time.utc(2010)
-      guess2 = Guess.make 2, :photo => photo2, :guessed_at => Time.utc(2010, 3)
-      Guess.longest_in_2010.should == [ guess2, guess1 ]
+  describe '.longest_in' do
+    it 'lists guesses made in the given year sorted by time between post and guess, descending' do
+      photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc
+      guess1 = Guess.make 1, :photo => photo1, :guessed_at => Time.local(2010, 2).getutc
+      photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc
+      guess2 = Guess.make 2, :photo => photo2, :guessed_at => Time.local(2010, 3).getutc
+      Guess.longest_in.should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
-      photo = Photo.make :dateadded => Time.utc(2010, 2)
-      Guess.make :photo => photo, :guessed_at => Time.utc(2010)
-      Guess.longest_in_2010.should == []
+      photo = Photo.make :dateadded => Time.local(2010, 2).getutc
+      Guess.make :photo => photo, :guessed_at => Time.local(2010).getutc
+      Guess.longest_in.should == []
     end
 
   end
 
-  describe '.shortest_in_2010' do
-    it 'lists guesses made in 2010 sorted by time between post and guess, ascending' do
-      photo1 = Photo.make 1, :dateadded => Time.utc(2010)
-      guess1 = Guess.make 1, :photo => photo1, :guessed_at => Time.utc(2010, 3)
-      photo2 = Photo.make 2, :dateadded => Time.utc(2010)
-      guess2 = Guess.make 2, :photo => photo2, :guessed_at => Time.utc(2010, 2)
-      Guess.shortest_in_2010.should == [ guess2, guess1 ]
+  describe '.shortest_in' do
+    it 'lists guesses made in the given year sorted by time between post and guess, ascending' do
+      photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc
+      guess1 = Guess.make 1, :photo => photo1, :guessed_at => Time.local(2010, 3).getutc
+      photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc
+      guess2 = Guess.make 2, :photo => photo2, :guessed_at => Time.local(2010, 2).getutc
+      Guess.shortest_in.should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
-      photo = Photo.make :dateadded => Time.utc(2010, 2)
-      Guess.make :photo => photo, :guessed_at => Time.utc(2010)
-      Guess.shortest_in_2010.should == []
+      photo = Photo.make :dateadded => Time.local(2010, 2).getutc
+      Guess.make :photo => photo, :guessed_at => Time.local(2010).getutc
+      Guess.shortest_in.should == []
     end
 
   end

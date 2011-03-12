@@ -441,7 +441,7 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def self.most_points_in_2010
+  def self.most_points_in
     find_by_sql [ %q{
       select p.*, count(*) points from people p, guesses g
         where p.id = g.person_id and ? <= g.guessed_at and g.guessed_at < ?
@@ -449,7 +449,7 @@ class Person < ActiveRecord::Base
     }, Time.utc(2010), Time.utc(2011) ]
   end
 
-  def self.most_posts_in_2010
+  def self.most_posts_in
     find_by_sql [ %q{
       select p.*, count(*) posts from people p, photos f
       where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ?
@@ -457,7 +457,7 @@ class Person < ActiveRecord::Base
     }, Time.utc(2010), Time.utc(2011) ]
   end
 
-  def self.rookies_with_most_points_in_2010
+  def self.rookies_with_most_points_in
     find_by_sql [
       %q{
         select p.*, count(*) points
@@ -475,7 +475,7 @@ class Person < ActiveRecord::Base
     ]
   end
 
-  def self.rookies_with_most_posts_in_2010
+  def self.rookies_with_most_posts_in
     find_by_sql [
       %q{
         select p.*, count(*) posts
