@@ -12,49 +12,51 @@
 <br/>
 
 <% form_tag :action => 'change_game_status', :id => @photo do %>
-Change this photo's status from <%= @photo.game_status %> to
+<div>Change this photo's status from <%= @photo.game_status %> to
 <% if @photo.game_status != 'unfound' %><%= submit_tag 'unfound' %><% end %>
 <% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
-(removes any guesses or revelation)
+(removes any guesses or revelation)</div>
 <% end %>
 
-<% form_tag :action => 'update_answer', :id => @photo do %>
 <% if ! @comments.empty? -%>
-  <table class="comments">
-    <tr><th>Choose the correct guess or revelation from the comments below:</th></tr>
-    <tr>
-      <td>
-	<% @comments.each do |comment| -%>
-	  <% commenter_is_poster = comment.username == @photo.person.username -%>
-          <% guess_is_correct = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
-	  <%= radio_button(:comment, :id, comment.id) %> <strong><%=h comment.username %> says:</strong> <% if commenter_is_poster -%><span class="poster"><% end -%><% if guess_is_correct -%><span class="correct"><% end -%><%= comment.comment_text %><% if guess_is_correct -%></span><% end -%><% if commenter_is_poster -%></span><% end -%><br/>
-	<% end -%>
-      </td>
-    </tr>
-  </table>
-  <table class="dark">
-    <tr><th>Person (if different than commenter)</th></tr>
-    <tr><td class="input"><%= text_field_with_auto_complete :person, :username %></td></tr>
-  </table>
-  <%= submit_tag("Add this guess or revelation") %>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <%= submit_tag("Remove this guess or revelation") %>
+  <% form_tag :action => 'update_answer', :id => @photo do %>
+    <table class="comments">
+      <tr><th>Choose the correct guess or revelation from the comments below:</th></tr>
+      <tr>
+        <td>
+          <% @comments.each do |comment| -%>
+            <% commenter_is_poster = comment.username == @photo.person.username -%>
+            <% guess_is_correct = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
+            <%= radio_button(:comment, :id, comment.id) %> <strong><%=h comment.username %> says:</strong> <% if commenter_is_poster -%><span class="poster"><% end -%><% if guess_is_correct -%><span class="correct"><% end -%><%= comment.comment_text %><% if guess_is_correct -%></span><% end -%><% if commenter_is_poster -%></span><% end -%><br/>
+          <% end -%>
+        </td>
+      </tr>
+    </table>
+    <table class="dark">
+      <tr><th>Person (if different than commenter)</th></tr>
+      <tr><td class="input"><%= text_field_with_auto_complete :person, :username %></td></tr>
+    </table>
+    <div>
+      <%= submit_tag("Add this guess or revelation") %>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <%= submit_tag("Remove this guess or revelation") %>
+    </div>
+  <% end %>
 <% else -%>
   No comments available.
 <% end -%>
-<% end %>
 <br/>
 
 <table>
   <tr>
     <td>
       <% form_tag :action => 'reload_comments', :id => @photo do %>
-      <%= submit_tag("Reload comments") %>
+      <div><%= submit_tag("Reload comments") %></div>
       <% end %>
     </td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td>
-      <%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?', :post => true %>
+      <%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?' %>
     </td>
   </tr>
 </table>
