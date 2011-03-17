@@ -207,8 +207,8 @@ describe Comment do
 
   describe '.remove_revelation' do
     it 'removes a revelation' do
-      photo = Photo.make :game_status => 'revealed'
-      revelation = Revelation.make :photo => photo
+      revelation = Revelation.make
+      photo = revelation.photo
       comment = Comment.make :photo => photo,
         :flickrid => photo.person.flickrid, :username => photo.person.username,
         :comment_text => revelation.revelation_text
@@ -234,8 +234,8 @@ describe Comment do
 
   describe '.remove_guess' do
     it 'removes a guess' do
-      photo = Photo.make :game_status => 'found'
-      guess = Guess.make :photo => photo
+      guess = Guess.make
+      photo = guess.photo
       comment = Comment.make :photo => photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
         :comment_text => guess.guess_text
