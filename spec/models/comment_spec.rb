@@ -108,7 +108,6 @@ describe Comment do
         guess.person.should == guesser
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
-        guess.photo.reload
         guess.photo.game_status.should == 'found'
       end
 
@@ -131,7 +130,6 @@ describe Comment do
         guess.person.should == guesser
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
-        guess.photo.reload
         guess.photo.game_status.should == 'found'
       end
 
@@ -147,7 +145,6 @@ describe Comment do
         guess.person.username.should == scorer_comment.username
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
-        guess.photo.reload
         guess.photo.game_status.should == 'found'
       end
 
@@ -163,7 +160,6 @@ describe Comment do
         guess.person.should == scorer
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
-        guess.photo.reload
         guess.photo.game_status.should == 'found'
       end
 
