@@ -468,6 +468,13 @@ class Photo < ActiveRecord::Base
     end
   end
 
+  def update_game_status_after_removing_guess
+    if (Guess.count :conditions => [ "photo_id = ?", id ]) == 0
+      self.game_status = 'unfound'
+      save!
+    end
+  end
+
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
       photo = find photo_id, :include => [ :revelation, :person ]
