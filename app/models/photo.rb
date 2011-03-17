@@ -460,12 +460,9 @@ class Photo < ActiveRecord::Base
   class RemoveAnswerError < StandardError
   end
 
-  def destroy_revelation
-    transaction do
-      self.game_status = 'unfound'
-      save!
-      revelation.destroy
-    end
+  def update_game_status_after_removing_revelation
+    self.game_status = 'unfound'
+    save!
   end
 
   def update_game_status_after_removing_guess
