@@ -17,7 +17,6 @@ describe Admin::ScoreReportsController do
       end
       get :index
 
-      p response.body
       #noinspection RubyResolve
       response.should be_success
       # By experiment, this doesn't actually assert that the form is in the
