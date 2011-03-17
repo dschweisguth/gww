@@ -11,7 +11,6 @@ describe Guess do
 
   describe '#guess_text' do
     it { should validate_presence_of :guess_text }
-    it { should have_readonly_attribute :guess_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
@@ -23,7 +22,6 @@ describe Guess do
 
   describe '#guessed_at' do
     it { should validate_presence_of :guessed_at }
-    it { should have_readonly_attribute :guessed_at }
   end
 
   describe '#added_at' do

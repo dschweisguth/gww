@@ -5,7 +5,7 @@ class Guess < ActiveRecord::Base
   belongs_to :person, :inverse_of => :guesses
   #noinspection RailsParamDefResolve
   validates_presence_of :guess_text, :guessed_at, :added_at
-  attr_readonly :guess_text, :guessed_at, :added_at
+  attr_readonly :added_at
 
   def self.destroy_all_by_photo_id(photo_id)
     find_all_by_photo_id(photo_id).each do |guess|

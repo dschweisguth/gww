@@ -63,29 +63,29 @@ describe Admin::PhotosController do
 
   describe '#edit' do
     it 'renders the page without loading comments' do
-      photo = Photo.make :id => 1, :dateadded => Time.local(2011)
+      photo = Photo.make :id => 111, :dateadded => Time.local(2011)
       stub(Photo).find(photo.id.to_s, anything) { photo }
       #noinspection RubyResolve
-      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make ] }
+      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :id => 222 ] }
       get :edit, :id => photo.id, :nocomment => 'true'
 
       #noinspection RubyResolve
       response.should be_success
       response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
       response.should have_text /This photo is unfound./
-      response.should have_tag 'form[action=/admin/photos/change_game_status/1]', :text => /Change this photo's status from unfound to/ do
+      response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/update_answer/1]' do
-        with_tag 'strong', :text => 'commenter_username says:'
+      response.should have_tag 'form[action=/admin/photos/add_answer/222]' do
+        with_tag 'input[value=Add this guess]'
       end
 
     end
 
     it 'loads comments and renders the page' do
-      photo = Photo.make :id => 1, :dateadded => Time.local(2011)
+      photo = Photo.make :id => 111, :dateadded => Time.local(2011)
       stub(Photo).find(photo.id.to_s, anything) { photo }
-      stub(photo).load_comments { [ Comment.make ] }
+      stub(photo).load_comments { [ Comment.make :id => 222 ] }
       mock_clear_page_cache
       get :edit, :id => photo.id
 
@@ -93,11 +93,11 @@ describe Admin::PhotosController do
       response.should be_success
       response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
       response.should have_text /This photo is unfound./
-      response.should have_tag 'form[action=/admin/photos/change_game_status/1]', :text => /Change this photo's status from unfound to/ do
+      response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/update_answer/1]' do
-        with_tag 'strong', :text => 'commenter_username says:'
+      response.should have_tag 'form[action=/admin/photos/add_answer/222]' do
+        with_tag 'input[value=Add this guess]'
       end
 
     end

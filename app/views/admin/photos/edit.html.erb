@@ -17,31 +17,53 @@
 <% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
 (removes any guesses or revelation)</div>
 <% end %>
+<br/>
 
 <% if ! @comments.empty? -%>
-  <% form_tag :action => 'update_answer', :id => @photo do %>
-    <table class="comments">
-      <tr><th>Choose the correct guess or revelation from the comments below:</th></tr>
-      <tr>
-        <td>
-          <% @comments.each do |comment| -%>
-            <% commenter_is_poster = comment.username == @photo.person.username -%>
-            <% guess_is_correct = ! @photo.guesses.find_all { |g| g.person.username == comment.username }.empty? %>
-            <%= radio_button(:comment, :id, comment.id) %> <strong><%=h comment.username %> says:</strong> <% if commenter_is_poster -%><span class="poster"><% end -%><% if guess_is_correct -%><span class="correct"><% end -%><%= comment.comment_text %><% if guess_is_correct -%></span><% end -%><% if commenter_is_poster -%></span><% end -%><br/>
-          <% end -%>
-        </td>
-      </tr>
-    </table>
-    <table class="dark">
-      <tr><th>Person (if different than commenter)</th></tr>
-      <tr><td class="input"><%= text_field_with_auto_complete :person, :username %></td></tr>
-    </table>
-    <div>
-      <%= submit_tag("Add this guess or revelation") %>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <%= submit_tag("Remove this guess or revelation") %>
-    </div>
-  <% end %>
+  <div class="comments">
+    <% @comments.each do |comment| -%>
+      <% comment_is_by_poster = comment.username == @photo.person.username -%>
+      <% answer_is_accepted = comment_is_by_poster ? (@photo.revelation && @photo.revelation.revelation_text == comment.comment_text[0, 255]) : (! @photo.guesses.detect { |g| g.person.flickrid == comment.flickrid && g.guess_text == comment.comment_text[0, 255] }.nil?) -%>
+      <% if answer_is_accepted then -%>
+        <% form_tag :action => (comment_is_by_poster ? :remove_revelation : :remove_guess), :id => comment do %>
+          <%= submit_tag(comment_is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
+        <% end %>
+      <% else -%>
+        <% form_tag :action => :add_answer, :id => comment do %>
+          <%= hidden_field_tag 'username', nil, :id => "#{comment.id}_username" %>
+          <%= submit_tag (comment_is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "#{comment.id}_submit" %>
+          <script type="text/javascript">
+            $('<%= comment.id %>_submit').observe('click', function () {
+              $('<%= comment.id %>_username').value = $('person_username').value;
+            });
+          </script>
+        <% end %>
+      <% end -%>
+      <strong><%=h comment.username %> says:</strong>
+      <% if comment_is_by_poster -%><span class="poster"><% end -%>
+      <% if answer_is_accepted -%><span class="accepted"><% end -%>
+      <%= comment.comment_text %>
+      <% if answer_is_accepted -%></span><% end -%>
+      <% if comment_is_by_poster -%></span><% end -%>
+      <br/>
+    <% end -%>
+  </div>
+  <table class="dark">
+    <tr><th>Person (if different than commenter)</th></tr>
+    <tr>
+      <td class="input">
+        <% form_tag({}, :id => 'username_form') do %>
+          <%= text_field_with_auto_complete :person, :username %>
+        <% end %>
+        <script type="text/javascript">
+          $('username_form').observe('submit', function (event) {
+            event.preventDefault();
+            return false;
+          });
+        </script>
+      </td>
+    </tr>
+  </table>
 <% else -%>
   No comments available.
 <% end -%>

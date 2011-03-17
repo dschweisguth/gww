@@ -175,11 +175,16 @@ a.normal {
   font-size: 11px;
 }
 
+.comments form {
+  display: inline-block;
+  width: 150px;
+}
+
 .poster {
   background-color: #cccccc;
 }
 
-.correct {
+.accepted {
   text-decoration: underline;
 }
 

@@ -8,7 +8,6 @@ describe Revelation do
 
   describe '#revelation_text' do
     it { should validate_presence_of :revelation_text }
-    it { should have_readonly_attribute :revelation_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
@@ -20,7 +19,6 @@ describe Revelation do
 
   describe '#revealed_at' do
     it { should validate_presence_of :revealed_at }
-    it { should have_readonly_attribute :revealed_at }
   end
 
   describe '#added_at' do
