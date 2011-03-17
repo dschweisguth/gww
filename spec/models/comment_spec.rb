@@ -147,8 +147,8 @@ describe Comment do
         guess.person.username.should == scorer_comment.username
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
-        answer_comment.photo.reload
-        answer_comment.photo.game_status.should == 'found'
+        guess.photo.reload
+        guess.photo.game_status.should == 'found'
       end
 
       it 'gives the point to another, known user' do
@@ -163,8 +163,8 @@ describe Comment do
         guess.person.should == scorer
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
-        answer_comment.photo.reload
-        answer_comment.photo.game_status.should == 'found'
+        guess.photo.reload
+        guess.photo.game_status.should == 'found'
       end
 
       it 'updates an existing guess' do
