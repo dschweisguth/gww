@@ -109,16 +109,30 @@ class Comment < ActiveRecord::Base
   def self.remove_guess(comment_id)
     transaction do
       comment = Comment.find comment_id, :include => :photo
-      # TODO Dave combine the following two queries
-      guesser = Person.find_by_flickrid comment.flickrid
-      guess = Guess.find_by_person_id_and_guess_text guesser.id, comment.comment_text[0, 255]
-      guess.destroy
+      guesses = Guess.find_by_sql [
+        %q[
+          select g.* from guesses g, people p
+          where
+            g.photo_id = ? and
+            g.person_id = p.id and p.flickrid = ? and
+            g.guess_text = ?
+        ],
+        comment.photo_id, comment.flickrid, comment.comment_text[0, 255]
+      ]
+      if guesses.length != 1
+        raise RemoveAnswerError,
+          "There are #{guesses.length} guesses by the person with the Flickr ID #{comment.flickrid} with the same guess text!?!"
+      end
+      guesses[0].destroy
       photo = comment.photo
       if (Guess.count :conditions => [ "photo_id = ?", photo.id ]) == 0
         photo.game_status = 'unfound'
         photo.save!
       end
     end
+  end
+
+  class RemoveAnswerError < StandardError
   end
 
 end

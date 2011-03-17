@@ -217,6 +217,19 @@ describe Comment do
       photo.game_status.should == 'unfound'
       Revelation.count.should == 0
     end
+
+    it "doesn't delete the revealer's revelation of another photo with the same comment" do
+      revelation1 = Revelation.make :revelation_text => 'identical'
+      photo1 = revelation1.photo
+      photo2 = Photo.make :person => photo1.person
+      revelation2 = Revelation.make :photo => photo2, :revelation_text => 'identical'
+      comment = Comment.make :photo => photo1,
+        :flickrid => photo1.person.flickrid, :username => photo1.person.username,
+        :comment_text => revelation1.revelation_text
+      Comment.remove_revelation comment.id
+      Revelation.all.should == [ revelation2 ]
+    end
+
   end
 
   describe '.remove_guess' do
@@ -248,6 +261,29 @@ describe Comment do
       photo.game_status.should == 'found'
       Guess.all.should == [ guess2 ]
     end
+
+    it "doesn't delete the guesser's guess of another photo with the same comment" do
+      guess1 = Guess.make 1, :guess_text => 'identical'
+      guess2 = Guess.make 2, :person => guess1.person, :guess_text => guess1.guess_text
+      comment = Comment.make :photo => guess1.photo,
+        :flickrid => guess1.person.flickrid, :username => guess1.person.username,
+        :comment_text => guess1.guess_text
+      Comment.remove_guess comment.id
+      Guess.all.should == [ guess2 ]
+    end
+
+    it "blows up if two guesses have the same photo, guesser and guess text" do
+      photo = Photo.make :game_status => 'found'
+      guesser = Person.make 'guesser'
+      guess = Guess.make 1, :photo => photo, :person => guesser, :guess_text => 'identical'
+      Guess.make 2, :photo => photo, :person => guesser, :guess_text => 'identical'
+      comment = Comment.make :photo => photo,
+        :flickrid => guesser.flickrid, :username => guesser.username,
+        :comment_text => guess.guess_text
+      lambda { Comment.remove_guess comment.id }.should raise_error Comment::RemoveAnswerError
+    end
+
+    # TODO Dave test that guesses of other photos are left alone!
 
   end
 
