@@ -26,19 +26,23 @@
       <% answer_is_accepted = comment_is_by_poster ? (@photo.revelation && @photo.revelation.revelation_text == comment.comment_text[0, 255]) : (! @photo.guesses.detect { |g| g.person.flickrid == comment.flickrid && g.guess_text == comment.comment_text[0, 255] }.nil?) -%>
       <% if answer_is_accepted then -%>
         <% form_tag :action => (comment_is_by_poster ? :remove_revelation : :remove_guess), :id => @photo do %>
-          <%= hidden_field_tag 'comment_id', comment.id %>
-          <%= submit_tag(comment_is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
+          <div>
+            <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
+            <%= submit_tag(comment_is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
+          </div>
         <% end %>
       <% else -%>
         <% form_tag :action => :add_answer, :id => @photo do %>
-          <%= hidden_field_tag 'comment_id', comment.id %>
-          <%= hidden_field_tag 'username', nil, :id => "#{comment.id}_username" %>
-          <%= submit_tag (comment_is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "#{comment.id}_submit" %>
-          <script type="text/javascript">
-            $('<%= comment.id %>_submit').observe('click', function () {
-              $('<%= comment.id %>_username').value = $('person_username').value;
-            });
-          </script>
+          <div>
+            <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
+            <%= hidden_field_tag 'username', nil, :id => "#{comment.id}_username" %>
+            <%= submit_tag (comment_is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "#{comment.id}_submit" %>
+            <script type="text/javascript">
+              $('<%= comment.id %>_submit').observe('click', function () {
+                $('<%= comment.id %>_username').value = $('person_username').value;
+              });
+            </script>
+          </div>
         <% end %>
       <% end -%>
       <strong><%=h comment.username %> says:</strong>
@@ -53,7 +57,7 @@
 
   To give a point to someone other than the commenter, enter their username here
   <% form_tag({}, :id => 'username_form', :class => 'inline') do %>
-    <%= text_field_with_auto_complete :person, :username %>
+    <div><%= text_field_with_auto_complete :person, :username %></div>
   <% end %>
   <script type="text/javascript">
     $('username_form').observe('submit', function (event) {
@@ -61,7 +65,8 @@
       return false;
     });
   </script>
-  and choose the comment above.
+  and choose the comment above.<br/>
+  To delete a guess created this way, change the photo's status to unfound or unconfirmed, or reveal it.
   <br/>
 
 <% else -%>
