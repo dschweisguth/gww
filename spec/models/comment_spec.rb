@@ -101,13 +101,7 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, ''
-        guesses = Guess.find_all_by_photo_id comment.photo
-        guesses.length.should == 1
-        guess = guesses[0]
-        guess.person.should == guesser
-        guess.guess_text.should == comment.comment_text
-        guess.guessed_at.should == comment.commented_at
-        guess.photo.game_status.should == 'found'
+        guess_matches_and_person_is comment, guesser
       end
 
       it 'creates the guesser if necessary' do
@@ -123,13 +117,7 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, guesser.username
-        guesses = Guess.find_all_by_photo_id comment.photo
-        guesses.length.should == 1
-        guess = guesses[0]
-        guess.person.should == guesser
-        guess.guess_text.should == comment.comment_text
-        guess.guessed_at.should == comment.commented_at
-        guess.photo.game_status.should == 'found'
+        guess_matches_and_person_is comment, guesser
       end
 
       it 'gives the point to another, new user' do
@@ -137,7 +125,7 @@ describe Comment do
           :flickrid => 'scorer_flickrid', :username => 'scorer_person_username'
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         Comment.add_answer answer_comment.id, scorer_comment.username
-        guesses = Guess.find_all_by_photo_id answer_comment.photo, :include => :person
+        guesses = Guess.find_all_by_photo_id answer_comment.photo
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.flickrid.should == scorer_comment.flickrid
@@ -153,13 +141,7 @@ describe Comment do
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         Comment.add_answer answer_comment.id, scorer_comment.username
-        guesses = Guess.find_all_by_photo_id answer_comment.photo
-        guesses.length.should == 1
-        guess = guesses[0]
-        guess.person.should == scorer
-        guess.guess_text.should == answer_comment.comment_text
-        guess.guessed_at.should == answer_comment.commented_at
-        guess.photo.game_status.should == 'found'
+        guess_matches_and_person_is answer_comment, scorer
       end
 
       it 'updates an existing guess' do
@@ -168,12 +150,17 @@ describe Comment do
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, ''
-        new_guesses = Guess.find_all_by_photo_id comment.photo
-        new_guesses.should == [ old_guess ]
-        new_guess = new_guesses[0]
-        # Note that the following two values are different than those for old_guess
-        new_guess.guess_text.should == comment.comment_text
-        new_guess.guessed_at.should == comment.commented_at
+        guess_matches_and_person_is comment, old_guess.person
+      end
+
+      def guess_matches_and_person_is(comment, person)
+        guesses = Guess.find_all_by_photo_id comment.photo
+        guesses.length.should == 1
+        guess = guesses[0]
+        guess.person.should == person
+        guess.guess_text.should == comment.comment_text
+        guess.guessed_at.should == comment.commented_at
+        guess.photo.game_status.should == 'found'
       end
 
       it 'deletes an existing revelation' do
