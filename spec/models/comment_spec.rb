@@ -48,7 +48,9 @@ describe Comment do
         Comment.add_answer comment.id, ''
         photo.reload
         photo.game_status.should == 'revealed'
-        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelations = Revelation.find_all_by_photo_id comment.photo
+        revelations.length.should == 1
+        revelation = revelations[0]
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
       end
@@ -75,7 +77,9 @@ describe Comment do
         Comment.add_answer comment.id, photo.person.username
         photo.reload
         photo.game_status.should == 'revealed'
-        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelations = Revelation.find_all_by_photo_id comment.photo
+        revelations.length.should == 1
+        revelation = revelations[0]
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
       end
@@ -86,7 +90,9 @@ describe Comment do
         Comment.add_answer comment.id, photo.person.username
         photo.reload
         photo.game_status.should == 'revealed'
-        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelations = Revelation.find_all_by_photo_id comment.photo
+        revelations.length.should == 1
+        revelation = revelations[0]
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
       end
