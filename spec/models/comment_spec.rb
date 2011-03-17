@@ -196,4 +196,36 @@ describe Comment do
     end
   end
 
+  describe '.remove_guess' do
+    it 'removes a guess' do
+      photo = Photo.make :game_status => 'found'
+      guess = Guess.make :photo => photo
+      comment = Comment.make :photo => photo,
+        :flickrid => guess.person.flickrid, :username => guess.person.username,
+        :comment_text => guess.guess_text
+      Comment.remove_guess comment.id
+      photo.reload
+      photo.game_status.should == 'unfound'
+      Guess.count.should == 0
+      owner_does_not_exist guess
+    end
+
+    it "leaves the photo found if there's another guess" do
+      photo = Photo.make :game_status => 'found'
+      guess1 = Guess.make 1, :photo => photo
+      comment1 = Comment.make 1, :photo => photo,
+        :flickrid => guess1.person.flickrid, :username => guess1.person.username,
+        :comment_text => guess1.guess_text
+      guess2 = Guess.make 2, :photo => photo
+      Comment.make 2, :photo => photo,
+        :flickrid => guess2.person.flickrid, :username => guess2.person.username,
+        :comment_text => guess2.guess_text
+      Comment.remove_guess comment1.id
+      photo.reload
+      photo.game_status.should == 'found'
+      Guess.all.should == [ guess2 ]
+    end
+
+  end
+
 end
