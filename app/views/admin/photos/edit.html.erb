@@ -69,18 +69,10 @@
 <% end -%>
 <br/>
 
-<table>
-  <tr>
-    <td>
-      <% form_tag :action => 'reload_comments', :id => @photo do %>
-      <div><%= submit_tag("Reload comments") %></div>
-      <% end %>
-    </td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td>
-      <%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?' %>
-    </td>
-  </tr>
-</table>
+<% form_tag({ :action => 'reload_comments', :id => @photo }, :class => 'inline') do %>
+  <div><%= submit_tag("Reload comments") %></div>
+<% end %>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?' %>
 
 <% end %>
