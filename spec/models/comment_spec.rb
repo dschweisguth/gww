@@ -283,8 +283,6 @@ describe Comment do
       lambda { Comment.remove_guess comment.id }.should raise_error Comment::RemoveAnswerError
     end
 
-    # TODO Dave test that guesses of other photos are left alone!
-
   end
 
 end
