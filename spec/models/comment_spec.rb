@@ -182,4 +182,18 @@ describe Comment do
 
   end
 
+  describe '.remove_revelation' do
+    it 'removes a revelation' do
+      photo = Photo.make :game_status => 'revealed'
+      revelation = Revelation.make :photo => photo # TODO Dave ModelFactory should handle this
+      comment = Comment.make :photo => photo,
+        :flickrid => photo.person.flickrid, :username => photo.person.username,
+        :comment_text => revelation.revelation_text
+      Comment.remove_revelation comment.id
+      photo.reload
+      photo.game_status.should == 'unfound'
+      Revelation.count.should == 0
+    end
+  end
+
 end
