@@ -50,6 +50,8 @@ Determine photo locations from correct guess comments
 Determine neighborhoods from locations and geocodes
   Identify mayors (most posts), tycoons (most guesses) and bosses (both) of
   neighborhoods
+Determine whether a guess is a guess by the presence of known streets, place
+  names, etc.
 In the list of unfounds, highlight photos which if guessed would enter the
   longest-to-find list
 Track old usernames
