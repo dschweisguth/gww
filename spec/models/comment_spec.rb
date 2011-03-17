@@ -110,7 +110,7 @@ describe Comment do
           :username => guesser.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo
-        guess.person_id.should == guesser.id
+        guess.person.should == guesser
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
         guess.photo.reload
@@ -131,7 +131,7 @@ describe Comment do
           :username => guesser.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, guesser.username
         guess = Guess.find_by_photo_id comment.photo
-        guess.person_id.should == guesser.id
+        guess.person.should == guesser
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
         guess.photo.reload
@@ -158,9 +158,8 @@ describe Comment do
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         Comment.add_answer answer_comment.id, scorer_comment.username
-        guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
-        guess.person.flickrid.should == scorer_comment.flickrid
-        guess.person.username.should == scorer_comment.username
+        guess = Guess.find_by_photo_id answer_comment.photo
+        guess.person.should == scorer
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
         answer_comment.photo.reload
