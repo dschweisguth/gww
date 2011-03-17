@@ -155,12 +155,7 @@ class Admin::PhotosController < ApplicationController
     comment_id = params[:id]
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => :revelation }
-    Photo.transaction do
-      photo = comment.photo
-      photo.game_status = 'unfound'
-      photo.save!
-      photo.revelation.destroy
-    end
+    comment.photo.destroy_revelation
     PageCache.clear
     redirect_to edit_photo_path :id => comment.photo_id, :nocomment => 'true'
   end

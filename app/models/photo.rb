@@ -460,6 +460,14 @@ class Photo < ActiveRecord::Base
   class RemoveAnswerError < StandardError
   end
 
+  def destroy_revelation
+    transaction do
+      self.game_status = 'unfound'
+      save!
+      revelation.destroy
+    end
+  end
+
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
       photo = find photo_id, :include => [ :revelation, :person ]
