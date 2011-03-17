@@ -12,7 +12,6 @@ class Comment < ActiveRecord::Base
       guesser_username = comment.username
       guesser_flickrid = comment.flickrid
     else
-      # Note that this branch results in a guess that can't be individually removed
       guesser_username = username
       guesser_flickrid = nil
       if comment.photo.person.username == username
