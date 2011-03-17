@@ -19,6 +19,8 @@ describe Admin::PhotosController do
     { :get => '/admin/photos/update' }.should route_to :controller => 'admin/photos', :action => 'update'
   end
 
-  # TODO Dave test routing with an ID
+  it 'routes to a plain action with an ID' do
+    { :get => '/admin/photos/add_answer/666' }.should route_to :controller => 'admin/photos', :action => 'add_answer', :id => '666'
+  end
 
 end

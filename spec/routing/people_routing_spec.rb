@@ -45,4 +45,8 @@ describe PeopleController do
     { :get => '/people/top_guessers' }.should route_to :controller => 'people', :action => 'top_guessers'
   end
 
+  it 'routes to a plain action with an ID' do
+    { :get => '/people/guesses/666' }.should route_to :controller => 'people', :action => 'guesses', :id => '666'
+  end
+
 end

@@ -32,4 +32,8 @@ describe PhotosController do
     { :get => '/photos/unfound' }.should route_to :controller => 'photos', :action => 'unfound'
   end
 
+  it 'routes to a plain action with an ID' do
+    { :get => '/photos/show/666' }.should route_to :controller => 'photos', :action => 'show', :id => '666'
+  end
+
 end
