@@ -17,7 +17,7 @@ describe Admin::PhotosHelper do
       helper.ago(Time.utc(2011)).should == '2 seconds ago'
     end
 
-    it "returns '1 minute ago' if 1 minute <= time < 2 minutes" do
+    it "returns 'n minutes ago' if the time is < 1 hour ago" do
       stub(Time).now { Time.utc(2011, 1, 1, 0, 1, 0) }
       helper.ago(Time.utc(2011)).should == '1 minute ago'
     end
@@ -30,6 +30,21 @@ describe Admin::PhotosHelper do
     it "wraps minutes" do
       stub(Time).now { Time.utc(2011) }
       helper.ago(Time.utc(2010, 12, 31, 23, 59, 0)).should == '1 minute ago'
+    end
+
+    it "returns 'n hours ago' if the time is < 1 day ago" do
+      stub(Time).now { Time.utc(2011, 1, 1, 1, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '1 hour ago'
+    end
+
+    it "pluralizes hours" do
+      stub(Time).now { Time.utc(2011, 1, 1, 2, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '2 hours ago'
+    end
+
+    it "wraps hours" do
+      stub(Time).now { Time.utc(2011) }
+      helper.ago(Time.utc(2010, 12, 31, 23, 0, 0)).should == '1 hour ago'
     end
 
   end

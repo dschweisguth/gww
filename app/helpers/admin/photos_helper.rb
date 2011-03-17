@@ -15,6 +15,12 @@ module Admin::PhotosHelper
           minutes += 60
         end
         pluralize minutes, 'minute'
+      elsif time > now - 1.day
+        hours = now.hour - time.hour
+        if hours < 0
+          hours += 24
+        end
+        pluralize hours, 'hour'
       end
     ago << ' ago'
     ago
