@@ -49,16 +49,6 @@ describe Comment do
         photo_is_revealed_and_revelation_matches comment
       end
 
-      it 'updates an existing revelation' do
-        old_revelation = Revelation.make
-        comment = Comment.make :photo => old_revelation.photo,
-          :flickrid => old_revelation.photo.person.flickrid,
-          :username => old_revelation.photo.person.username,
-          :commented_at => Time.utc(2011)
-        Comment.add_answer comment.id, ''
-        photo_is_revealed_and_revelation_matches comment
-      end
-
       it 'handles a redundant username' do
         photo = Photo.make
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
@@ -71,6 +61,16 @@ describe Comment do
         photo = Photo.make
         comment = Comment.make :photo => photo, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, photo.person.username
+        photo_is_revealed_and_revelation_matches comment
+      end
+
+      it 'updates an existing revelation' do
+        old_revelation = Revelation.make
+        comment = Comment.make :photo => old_revelation.photo,
+          :flickrid => old_revelation.photo.person.flickrid,
+          :username => old_revelation.photo.person.username,
+          :commented_at => Time.utc(2011)
+        Comment.add_answer comment.id, ''
         photo_is_revealed_and_revelation_matches comment
       end
 
@@ -102,7 +102,9 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, ''
-        guess = Guess.find_by_photo_id comment.photo
+        guesses = Guess.find_all_by_photo_id comment.photo
+        guesses.length.should == 1
+        guess = guesses[0]
         guess.person.should == guesser
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
@@ -123,7 +125,9 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, guesser.username
-        guess = Guess.find_by_photo_id comment.photo
+        guesses = Guess.find_all_by_photo_id comment.photo
+        guesses.length.should == 1
+        guess = guesses[0]
         guess.person.should == guesser
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
@@ -136,7 +140,9 @@ describe Comment do
           :flickrid => 'scorer_flickrid', :username => 'scorer_person_username'
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         Comment.add_answer answer_comment.id, scorer_comment.username
-        guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
+        guesses = Guess.find_all_by_photo_id answer_comment.photo, :include => :person
+        guesses.length.should == 1
+        guess = guesses[0]
         guess.person.flickrid.should == scorer_comment.flickrid
         guess.person.username.should == scorer_comment.username
         guess.guess_text.should == answer_comment.comment_text
@@ -151,7 +157,9 @@ describe Comment do
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         Comment.add_answer answer_comment.id, scorer_comment.username
-        guess = Guess.find_by_photo_id answer_comment.photo
+        guesses = Guess.find_all_by_photo_id answer_comment.photo
+        guesses.length.should == 1
+        guess = guesses[0]
         guess.person.should == scorer
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
