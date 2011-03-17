@@ -116,44 +116,6 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '.update_answer' do
-    it 'adds a guess or revelation' do
-      mock(Photo).old_add_answer 2, ''
-      mock_clear_page_cache
-      get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
-        :commit => 'Add this guess or revelation'
-      #noinspection RubyResolve
-      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
-    end
-
-    it 'removes a guess or revelation' do
-      mock(Photo).remove_answer 2
-      mock_clear_page_cache
-      get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
-        :commit => 'Remove this guess or revelation'
-      #noinspection RubyResolve
-      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
-    end
-
-    it 'complains if the user removes a guess or revelation incorrectly' do
-      mock(Photo).remove_answer(2) { raise Photo::RemoveAnswerError, 'the message' }
-      mock_clear_page_cache
-      get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
-        :commit => 'Remove this guess or revelation'
-      #noinspection RubyResolve
-      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
-      flash[:notice].should == 'the message'
-    end
-
-    it 'punts if the user tries to add an answer without choosing a comment' do
-      get :update_answer, :id => '1', :person => { :username => '' },
-        :commit => 'Add this guess or revelation'
-      #noinspection RubyResolve
-      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
-    end
-
-  end
-
   describe '#add_answer' do
     it "adds an answer" do
       mock(Comment).add_answer '2', 'username'

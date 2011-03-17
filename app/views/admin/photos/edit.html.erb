@@ -3,11 +3,6 @@
 
 <% sandwich 'shared/admin/breadcrumbs' do %>
 
-<% if !flash[:notice].nil? -%>
-  <br/>
-  <%= flash[:notice] %><br/><br/>
-<% end -%>
-
 <%= render 'photos/image_and_status', :size => 'm' %>
 <br/>
 
