@@ -7,19 +7,20 @@ class Comment < ActiveRecord::Base
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }
 
+    guesser = nil
     if username.empty?
-      guesser_flickrid = comment.flickrid
       guesser_username = comment.username
+      guesser_flickrid = comment.flickrid
     else
       # Note that this branch results in a guess that can't be individually removed
+      guesser_username = username
       guesser_flickrid = nil
       if comment.photo.person.username == username
         guesser_flickrid = comment.photo.person.flickrid
       end
       if ! guesser_flickrid
-        # TODO Dave don't look this up again below
-        guesser_person = Person.find_by_username username
-        guesser_flickrid = guesser_person ? guesser_person.flickrid : nil
+        guesser = Person.find_by_username username
+        guesser_flickrid = guesser ? guesser.flickrid : nil
       end
       if ! guesser_flickrid then
         guesser_comment = Comment.find_by_username username
@@ -28,7 +29,6 @@ class Comment < ActiveRecord::Base
       if ! guesser_flickrid
         raise AddAnswerError, "Sorry; GWW hasn't seen any posts or comments by #{} yet, so we don't know enough about them to award them a point."
       end
-      guesser_username = username
     end
 
     Photo.transaction do
@@ -57,7 +57,9 @@ class Comment < ActiveRecord::Base
         photo.game_status = 'found'
         photo.save!
 
-        guesser = Person.find_by_flickrid guesser_flickrid
+        if ! guesser then
+          guesser = Person.find_by_flickrid guesser_flickrid
+        end
         if guesser
           guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
         else
