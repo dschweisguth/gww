@@ -360,7 +360,7 @@ class Photo < ActiveRecord::Base
     end
   end
 
-  def self.add_answer(comment_id, username)
+  def self.old_add_answer(comment_id, username)
     transaction do
       #noinspection RailsParamDefResolve
       comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }

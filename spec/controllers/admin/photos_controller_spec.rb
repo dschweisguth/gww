@@ -116,7 +116,7 @@ describe Admin::PhotosController do
 
   describe '.update_answer' do
     it 'adds a guess or revelation' do
-      mock(Photo).add_answer 2, ''
+      mock(Photo).old_add_answer 2, ''
       mock_clear_page_cache
       get :update_answer, :id => '1', :comment => { :id => 2 }, :person => { :username => '' },
         :commit => 'Add this guess or revelation'
