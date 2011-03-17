@@ -7,8 +7,10 @@ class Comment < ActiveRecord::Base
     transaction do
       #noinspection RailsParamDefResolve
       comment = Comment.find comment_id, :include => { :photo => :revelation }
-      comment.photo.revelation.destroy
-      comment.photo.update_game_status_after_removing_revelation
+      photo = comment.photo
+      photo.revelation.destroy
+      photo.game_status = 'unfound'
+      photo.save!
     end
   end
 
