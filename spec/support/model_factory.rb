@@ -150,7 +150,7 @@ class Guess
       :added_at => now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make affix(label, 'guessed_photo')
+      attrs[:photo] = Photo.make affix(label, 'guessed_photo'), :game_status => 'found'
     end
     if ! caller_attrs[:person]
       attrs[:person] = Person.make affix(label, 'guesser')
@@ -173,7 +173,7 @@ class Revelation
       :added_at => now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make affix(label, 'revealed_photo')
+      attrs[:photo] = Photo.make affix(label, 'revealed_photo'), :game_status => 'revealed'
     end
     attrs
   end

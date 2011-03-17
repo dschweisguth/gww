@@ -390,6 +390,7 @@ describe Guess do
   def makes_default_guess
     guess = Guess.make
     guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
+    guess.photo.game_status.should == 'found'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.guess_text.should == 'guess text'
     guess.guessed_at.should_not be_nil
@@ -453,6 +454,7 @@ describe Revelation do
   def makes_default_revelation
     revelation = Revelation.make
     revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
+    revelation.photo.game_status.should == 'revealed'
     revelation.revelation_text.should == 'revelation text'
     revelation.revealed_at.should_not be_nil
     revelation.added_at.should_not be_nil
