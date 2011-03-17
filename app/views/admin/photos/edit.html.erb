@@ -35,11 +35,11 @@
         <% form_tag :action => :add_answer, :id => @photo do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
-            <%= hidden_field_tag 'username', nil, :id => "#{comment.id}_username" %>
-            <%= submit_tag (comment_is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "#{comment.id}_submit" %>
+            <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
+            <%= submit_tag (comment_is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
             <script type="text/javascript">
-              $('<%= comment.id %>_submit').observe('click', function () {
-                $('<%= comment.id %>_username').value = $('person_username').value;
+              $('submit_<%= comment.id %>').observe('click', function () {
+                $('username_<%= comment.id %>').value = $('person_username').value;
               });
             </script>
           </div>
@@ -66,7 +66,7 @@
     });
   </script>
   and choose the comment above.<br/>
-  To delete a guess created this way, change the photo's status to unfound or unconfirmed, or reveal it.
+  To delete a guess created in this way, change the photo's status to unfound or unconfirmed, or reveal it.
   <br/>
 
 <% else -%>
