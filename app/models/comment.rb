@@ -27,7 +27,10 @@ class Comment < ActiveRecord::Base
           guesser_flickrid = guesser_comment.flickrid
       end
       if ! guesser_flickrid
-        raise AddAnswerError, "Sorry; GWW hasn't seen any posts or comments by #{} yet, so doesn't know enough about them to award them a point."
+        raise AddAnswerError,
+          "Sorry; GWW hasn't seen any posts or comments by #{username} yet, " +
+            "so doesn't know enough about them to award them a point. " +
+            "Did you spell their username correctly?"
       end
     end
 
