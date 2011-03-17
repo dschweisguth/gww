@@ -46,13 +46,7 @@ describe Comment do
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, ''
-        photo.reload
-        photo.game_status.should == 'revealed'
-        revelations = Revelation.find_all_by_photo_id comment.photo
-        revelations.length.should == 1
-        revelation = revelations[0]
-        revelation.revelation_text.should == comment.comment_text
-        revelation.revealed_at.should == comment.commented_at
+        photo_is_revealed_and_revelation_matches comment
       end
 
       it 'updates an existing revelation' do
@@ -62,12 +56,7 @@ describe Comment do
           :username => old_revelation.photo.person.username,
           :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, ''
-        new_revelations = Revelation.find_all_by_photo_id comment.photo
-        new_revelations.should == [ old_revelation ]
-        new_revelation = new_revelations[0]
-        # Note that the following two values are different than those for old_guess
-        new_revelation.revelation_text.should == comment.comment_text
-        new_revelation.revealed_at.should == comment.commented_at
+        photo_is_revealed_and_revelation_matches comment
       end
 
       it 'handles a redundant username' do
@@ -75,21 +64,19 @@ describe Comment do
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, photo.person.username
-        photo.reload
-        photo.game_status.should == 'revealed'
-        revelations = Revelation.find_all_by_photo_id comment.photo
-        revelations.length.should == 1
-        revelation = revelations[0]
-        revelation.revelation_text.should == comment.comment_text
-        revelation.revealed_at.should == comment.commented_at
+        photo_is_revealed_and_revelation_matches comment
       end
 
       it "gets text from another user's comment" do
         photo = Photo.make
         comment = Comment.make :photo => photo, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, photo.person.username
-        photo.reload
-        photo.game_status.should == 'revealed'
+        photo_is_revealed_and_revelation_matches comment
+      end
+
+      def photo_is_revealed_and_revelation_matches(comment)
+        comment.photo.reload
+        comment.photo.game_status.should == 'revealed'
         revelations = Revelation.find_all_by_photo_id comment.photo
         revelations.length.should == 1
         revelation = revelations[0]
