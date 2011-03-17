@@ -141,7 +141,7 @@ class Comment < ActiveRecord::Base
 
   def is_accepted_answer
     is_by_poster \
-      ? (photo.revelation && photo.revelation.revelation_text == comment_text[0, 255]) \
+      ? (photo.revelation ? (photo.revelation.revelation_text == comment_text[0, 255]) : false) \
       : (! photo.guesses.detect { |g| g.person.flickrid == flickrid && g.guess_text == comment_text[0, 255] }.nil?)
   end
 

@@ -298,4 +298,62 @@ describe Comment do
 
   end
 
+  describe '#is_accepted_answer' do
+    it "returns false if this comment has no revelations or guesses" do
+      Comment.make.is_accepted_answer.should == false
+    end
+
+    it "returns true if a revelation was created from this comment" do
+      photo = Photo.make
+      comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
+      Revelation.make :photo => photo, :revelation_text => comment.comment_text
+      comment.is_accepted_answer.should == true
+    end
+
+    it "returns false if the revelation is of another photo" do
+      photo = Photo.make
+      comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
+      other_photo = Photo.make 'other', :person => photo.person
+      Revelation.make :photo => other_photo, :revelation_text => comment.comment_text
+      comment.is_accepted_answer.should == false
+    end
+
+    it "returns false if the text doesn't match" do
+      photo = Photo.make
+      comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
+      Revelation.make :photo => photo, :revelation_text => "something else"
+      comment.is_accepted_answer.should == false
+    end
+
+    it "returns true if a guess was created from this comment" do
+      person = Person.make
+      comment = Comment.make :flickrid => person.flickrid
+      Guess.make :photo => comment.photo, :person => person, :guess_text => comment.comment_text
+      comment.is_accepted_answer.should == true
+    end
+
+    it "returns false if the guess is of another photo" do
+      person = Person.make
+      comment = Comment.make :flickrid => person.flickrid
+      other_photo = Photo.make 'other', :person => person
+      Guess.make :photo => other_photo, :person => person, :guess_text => comment.comment_text
+      comment.is_accepted_answer.should == false
+    end
+
+    it "returns false if the text doesn't match" do
+      person = Person.make
+      comment = Comment.make :flickrid => person.flickrid
+      Guess.make :photo => comment.photo, :person => person, :guess_text => "something else"
+      comment.is_accepted_answer.should == false
+    end
+
+    it "returns false if the guess is by another person" do
+      person = Person.make
+      comment = Comment.make :flickrid => person.flickrid
+      Guess.make :photo => comment.photo, :guess_text => comment.comment_text
+      comment.is_accepted_answer.should == false
+    end
+
+  end
+
 end
