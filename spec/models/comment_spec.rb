@@ -138,7 +138,21 @@ describe Comment do
         guess.photo.game_status.should == 'found'
       end
 
-      it 'gives the point to another user' do
+      it 'gives the point to another, new user' do
+        scorer_comment = Comment.make 'scorer',
+          :flickrid => 'scorer_flickrid', :username => 'scorer_person_username'
+        answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
+        Comment.add_answer answer_comment.id, scorer_comment.username
+        guess = Guess.find_by_photo_id answer_comment.photo, :include => :person
+        guess.person.flickrid.should == scorer_comment.flickrid
+        guess.person.username.should == scorer_comment.username
+        guess.guess_text.should == answer_comment.comment_text
+        guess.guessed_at.should == answer_comment.commented_at
+        answer_comment.photo.reload
+        answer_comment.photo.game_status.should == 'found'
+      end
+
+      it 'gives the point to another, known user' do
         scorer = Person.make 'scorer'
         scorer_comment = Comment.make 'scorer',
           :flickrid => scorer.flickrid, :username => scorer.username
