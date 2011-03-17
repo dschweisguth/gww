@@ -23,8 +23,8 @@ class Comment < ActiveRecord::Base
         guesser_flickrid = guesser ? guesser.flickrid : nil
       end
       if ! guesser_flickrid then
-        guesser_comment = Comment.find_by_username username
-        guesser_flickrid = guesser_comment ? guesser_comment.flickrid : nil
+        (guesser_comment = Comment.find_by_username username) &&
+          guesser_flickrid = guesser_comment.flickrid
       end
       if ! guesser_flickrid
         raise AddAnswerError, "Sorry; GWW hasn't seen any posts or comments by #{} yet, so doesn't know enough about them to award them a point."
