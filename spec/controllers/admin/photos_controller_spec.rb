@@ -153,6 +153,15 @@ describe Admin::PhotosController do
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
+
+    it "notifies the user if there was an error" do
+      mock(Comment).remove_guess('2') { raise Comment::RemoveGuessError, 'Sorry' }
+      post :remove_guess, :id => '1', :comment_id => '2'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+      flash[:notice].should == 'Sorry'
+    end
+
   end
 
   describe '#add_answer' do

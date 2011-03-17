@@ -120,7 +120,7 @@ class Comment < ActiveRecord::Base
         comment.photo_id, comment.flickrid, comment.comment_text[0, 255]
       ]
       if guesses.length != 1
-        raise RemoveAnswerError,
+        raise RemoveGuessError,
           "There are #{guesses.length} guesses by the person with the Flickr ID #{comment.flickrid} with the same guess text!?!"
       end
       guesses[0].destroy
@@ -132,7 +132,7 @@ class Comment < ActiveRecord::Base
     end
   end
 
-  class RemoveAnswerError < StandardError
+  class RemoveGuessError < StandardError
   end
 
 end

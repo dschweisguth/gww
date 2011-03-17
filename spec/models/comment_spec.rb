@@ -280,7 +280,7 @@ describe Comment do
       comment = Comment.make :photo => photo,
         :flickrid => guesser.flickrid, :username => guesser.username,
         :comment_text => guess.guess_text
-      lambda { Comment.remove_guess comment.id }.should raise_error Comment::RemoveAnswerError
+      lambda { Comment.remove_guess comment.id }.should raise_error Comment::RemoveGuessError
     end
 
   end

@@ -74,7 +74,11 @@ class Admin::PhotosController < ApplicationController
   end
 
   def remove_guess
-    Comment.remove_guess params[:comment_id]
+    begin
+      Comment.remove_guess params[:comment_id]
+    rescue Comment::RemoveGuessError => e
+      flash[:notice] = e.message
+    end
     PageCache.clear
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
