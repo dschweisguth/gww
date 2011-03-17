@@ -80,7 +80,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def add_answer
-    comment_id = params[:id]
+    comment_id = params[:comment_id]
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => :revelation }
     photo = comment.photo
@@ -148,21 +148,21 @@ class Admin::PhotosController < ApplicationController
     end
 
     PageCache.clear
-    redirect_to edit_photo_path :id => photo.id, :nocomment => 'true'
+    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
   def remove_revelation
-    comment_id = params[:id]
+    comment_id = params[:comment_id]
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => :revelation }
     comment.photo.revelation.destroy
     comment.photo.update_game_status_after_removing_revelation
     PageCache.clear
-    redirect_to edit_photo_path :id => comment.photo_id, :nocomment => 'true'
+    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
   def remove_guess
-    comment_id = params[:id]
+    comment_id = params[:comment_id]
     comment = Comment.find comment_id, :include => :photo
     Photo.transaction do
       guesser = Person.find_by_flickrid comment.flickrid
@@ -171,7 +171,7 @@ class Admin::PhotosController < ApplicationController
       comment.photo.update_game_status_after_removing_guess
     end
     PageCache.clear
-    redirect_to edit_photo_path :id => comment.photo_id, :nocomment => 'true'
+    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
   def reload_comments
