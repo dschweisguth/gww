@@ -76,8 +76,9 @@ describe Admin::PhotosController do
       response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_answer/222]' do
-        with_tag 'input[value=Add this guess]'
+      response.should have_tag 'form[action=/admin/photos/add_answer/111]' do
+        with_tag 'input[type=submit][name=commit][value=Add this guess]'
+        with_tag 'input[type=hidden][name=comment_id][value=222]'
       end
 
     end
@@ -96,8 +97,9 @@ describe Admin::PhotosController do
       response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_answer/222]' do
-        with_tag 'input[value=Add this guess]'
+      response.should have_tag 'form[action=/admin/photos/add_answer/111]' do
+        with_tag 'input[type=submit][name=commit][value=Add this guess]'
+        with_tag 'input[type=hidden][name=comment_id][value=222]'
       end
 
     end
@@ -150,6 +152,16 @@ describe Admin::PhotosController do
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
 
+  end
+
+  describe '.add_answer' do
+    it "adds an answer" do
+      mock(Comment).add_answer '2', 'username'
+      mock_clear_page_cache
+      post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
   end
 
   describe '#reload_comments' do

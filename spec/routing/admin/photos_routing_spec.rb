@@ -19,4 +19,6 @@ describe Admin::PhotosController do
     { :get => '/admin/photos/update' }.should route_to :controller => 'admin/photos', :action => 'update'
   end
 
+  # TODO Dave test routing with an ID
+
 end
