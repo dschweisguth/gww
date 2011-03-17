@@ -47,6 +47,21 @@ describe Admin::PhotosHelper do
       helper.ago(Time.utc(2010, 12, 31, 23, 0, 0)).should == '1 hour ago'
     end
 
+    it "returns 'n days ago' if the time is < 1 month ago" do
+      stub(Time).now { Time.utc(2011, 1, 2, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '1 day ago'
+    end
+
+    it "pluralizes days" do
+      stub(Time).now { Time.utc(2011, 1, 3, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '2 days ago'
+    end
+
+    it "wraps days" do
+      stub(Time).now { Time.utc(2011) }
+      helper.ago(Time.utc(2010, 12, 31, 0, 0, 0)).should == '1 day ago'
+    end
+
   end
 
   describe '#wrap_if' do

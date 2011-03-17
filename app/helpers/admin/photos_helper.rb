@@ -21,6 +21,12 @@ module Admin::PhotosHelper
           hours += 24
         end
         pluralize hours, 'hour'
+      elsif time > now - 1.month
+        days = now.yday - time.yday
+        if days < 0
+          days += 365 # not perfect
+        end
+        pluralize days, 'day'
       end
     ago << ' ago'
     ago
