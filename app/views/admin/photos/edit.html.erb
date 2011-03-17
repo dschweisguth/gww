@@ -49,23 +49,21 @@
       <% if comment_is_by_poster -%></span><% end -%>
       <br/>
     <% end -%>
-  </div>
-  <table class="dark">
-    <tr><th>Person (if different than commenter)</th></tr>
-    <tr>
-      <td class="input">
-        <% form_tag({}, :id => 'username_form') do %>
-          <%= text_field_with_auto_complete :person, :username %>
-        <% end %>
-        <script type="text/javascript">
-          $('username_form').observe('submit', function (event) {
-            event.preventDefault();
-            return false;
-          });
-        </script>
-      </td>
-    </tr>
-  </table>
+  </div><br/>
+
+  To give a point to someone other than the commenter, enter their username here
+  <% form_tag({}, :id => 'username_form', :class => 'inline') do %>
+    <%= text_field_with_auto_complete :person, :username %>
+  <% end %>
+  <script type="text/javascript">
+    $('username_form').observe('submit', function (event) {
+      event.preventDefault();
+      return false;
+    });
+  </script>
+  and choose the comment above.
+  <br/>
+
 <% else -%>
   No comments available.
 <% end -%>
