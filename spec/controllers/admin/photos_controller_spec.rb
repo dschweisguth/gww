@@ -154,7 +154,37 @@ describe Admin::PhotosController do
 
   end
 
-  describe '.add_answer' do
+  describe '#add_answer' do
+    it "adds an answer" do
+      mock(Comment).add_answer '2', 'username'
+      mock_clear_page_cache
+      post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+  end
+
+  describe '#remove_revelation' do
+    it "removes a revelation" do
+      mock(Comment).remove_revelation '2'
+      mock_clear_page_cache
+      post :remove_revelation, :id => '1', :comment_id => '2'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+  end
+
+  describe '#remove_guess' do
+    it "removes a guess" do
+      mock(Comment).remove_guess '2'
+      mock_clear_page_cache
+      post :remove_guess, :id => '1', :comment_id => '2'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+  end
+
+  describe '#add_answer' do
     it "adds an answer" do
       mock(Comment).add_answer '2', 'username'
       mock_clear_page_cache
