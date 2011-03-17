@@ -58,7 +58,11 @@ class Admin::PhotosController < ApplicationController
   end
 
   def add_answer
-    Comment.add_answer params[:comment_id], params[:username]
+    begin
+      Comment.add_answer params[:comment_id], params[:username]
+    rescue Comment::AddAnswerError => e
+      flash[:notice] = e.message
+    end
     PageCache.clear
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
