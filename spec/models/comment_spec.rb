@@ -68,6 +68,31 @@ describe Comment do
         new_revelation.revealed_at.should == comment.commented_at
       end
 
+      it 'handles a redundant username' do
+        photo = Photo.make
+        comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
+          :username => photo.person.username, :commented_at => Time.utc(2011)
+        Comment.add_answer comment.id, photo.person.username
+        photo.reload
+        photo.game_status.should == 'revealed'
+        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelation.revelation_text.should == comment.comment_text
+        revelation.revealed_at.should == comment.commented_at
+      end
+
+      it "gets text from another user's comment" do
+        photo = Photo.make
+        # The person must have made a comment to be identified by username. TODO Dave just try getting them from the people table first
+        Comment.make :flickrid => photo.person.flickrid, :username => photo.person.username
+        comment = Comment.make :photo => photo, :commented_at => Time.utc(2011)
+        Comment.add_answer comment.id, photo.person.username
+        photo.reload
+        photo.game_status.should == 'revealed'
+        revelation = Revelation.find_by_photo_id comment.photo.id
+        revelation.revelation_text.should == comment.comment_text
+        revelation.revealed_at.should == comment.commented_at
+      end
+
       it 'deletes an existing guess' do
         photo = Photo.make
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
@@ -100,6 +125,19 @@ describe Comment do
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == comment.username
+      end
+
+      it 'handles a redundant username' do
+        guesser = Person.make
+        comment = Comment.make :flickrid => guesser.flickrid,
+          :username => guesser.username, :commented_at => Time.utc(2011)
+        Comment.add_answer comment.id, guesser.username
+        guess = Guess.find_by_photo_id comment.photo
+        guess.person_id.should == guesser.id
+        guess.guess_text.should == comment.comment_text
+        guess.guessed_at.should == comment.commented_at
+        guess.photo.reload
+        guess.photo.game_status.should == 'found'
       end
 
       it 'gives the point to another user' do
