@@ -44,8 +44,10 @@
           </div>
         <% end %>
       <% end -%>
-      <strong><%=h comment.username %> says:</strong>
-      <%= wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
+      <div class="comment">
+        <strong><%=h comment.username %> says:</strong>
+        <%= wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
+      </div>
       <br/>
     <% end -%>
   </div><br/>

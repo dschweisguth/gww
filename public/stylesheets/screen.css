@@ -175,9 +175,17 @@ a.normal {
   font-size: 11px;
 }
 
-.comments form {
+.comments form, .comment {
   display: inline-block;
+  vertical-align: top;
+}
+
+.comments form {
   width: 150px;
+}
+
+.comment {
+  width: 500px;
 }
 
 .poster {
