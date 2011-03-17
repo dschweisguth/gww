@@ -62,6 +62,26 @@ describe Admin::PhotosHelper do
       helper.ago(Time.utc(2010, 12, 31, 0, 0, 0)).should == '1 day ago'
     end
 
+    it "returns 'n months ago'" do
+      stub(Time).now { Time.utc(2011, 2, 1, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '1 month ago'
+    end
+
+    it "pluralizes months" do
+      stub(Time).now { Time.utc(2011, 3, 1, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '2 months ago'
+    end
+
+    it "wraps months" do
+      stub(Time).now { Time.utc(2011) }
+      helper.ago(Time.utc(2010, 12, 1, 0, 0, 0)).should == '1 month ago'
+    end
+
+    it "incorporates years into months" do
+      stub(Time).now { Time.utc(2011) }
+      helper.ago(Time.utc(2010)).should == '12 months ago'
+    end
+
   end
 
   describe '#wrap_if' do

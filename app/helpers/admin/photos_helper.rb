@@ -27,6 +27,9 @@ module Admin::PhotosHelper
           days += 365 # not perfect
         end
         pluralize days, 'day'
+      else
+        months = now.month - time.month + 12 * (now.year - time.year)
+        pluralize months, 'month'
       end
     ago << ' ago'
     ago
