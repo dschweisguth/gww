@@ -39,22 +39,22 @@ th {
   padding: 0 10px 0 10px;
 }
 
-.dark th, .comments th, .row-number, .darker {
+.dark th, .row-number, .darker {
   font-size: 11px;
   font-weight: bold;
 }
 
-.dark th, .comments th, .dark td, .darker {
+.dark th, .dark td, .darker {
   padding: 3px 5px 3px 5px;
   vertical-align: top;
 }
 
-.dark th, .comments th, .dark td {
+.dark th, .dark td {
   border-left: 1px solid #ffffff;
   border-bottom: 1px solid #ffffff;
 }
 
-.dark th, .comments th {
+.dark th {
   background-color: #dddddd;
 }
 
