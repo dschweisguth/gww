@@ -135,4 +135,8 @@ class Comment < ActiveRecord::Base
   class RemoveGuessError < StandardError
   end
 
+  def is_by_poster
+    flickrid == photo.person.flickrid
+  end
+
 end

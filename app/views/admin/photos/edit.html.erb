@@ -22,13 +22,12 @@
 <% if ! @comments.empty? -%>
   <div class="comments">
     <% @comments.each do |comment| -%>
-      <% comment_is_by_poster = comment.username == @photo.person.username -%>
-      <% answer_is_accepted = comment_is_by_poster ? (@photo.revelation && @photo.revelation.revelation_text == comment.comment_text[0, 255]) : (! @photo.guesses.detect { |g| g.person.flickrid == comment.flickrid && g.guess_text == comment.comment_text[0, 255] }.nil?) -%>
+      <% answer_is_accepted = comment.is_by_poster ? (@photo.revelation && @photo.revelation.revelation_text == comment.comment_text[0, 255]) : (! @photo.guesses.detect { |g| g.person.flickrid == comment.flickrid && g.guess_text == comment.comment_text[0, 255] }.nil?) -%>
       <% if answer_is_accepted then -%>
-        <% form_tag :action => (comment_is_by_poster ? :remove_revelation : :remove_guess), :id => @photo do %>
+        <% form_tag :action => (comment.is_by_poster ? :remove_revelation : :remove_guess), :id => @photo do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
-            <%= submit_tag(comment_is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
+            <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
           </div>
         <% end %>
       <% else -%>
@@ -36,7 +35,7 @@
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
             <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
-            <%= submit_tag (comment_is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
+            <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
             <script type="text/javascript">
               $('submit_<%= comment.id %>').observe('click', function () {
                 $('username_<%= comment.id %>').value = $('person_username').value;
@@ -46,7 +45,7 @@
         <% end %>
       <% end -%>
       <strong><%=h comment.username %> says:</strong>
-      <%= wrap_if(comment_is_by_poster, '<span class="poster">', '</span>') { wrap_if(answer_is_accepted, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
+      <%= wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(answer_is_accepted, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
       <br/>
     <% end -%>
   </div><br/>

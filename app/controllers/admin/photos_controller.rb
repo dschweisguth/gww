@@ -49,6 +49,7 @@ class Admin::PhotosController < ApplicationController
       @comments = @photo.load_comments
       PageCache.clear
     end
+    @comments.each { |comment| comment.photo = @photo }
   end
 
   def change_game_status
