@@ -178,6 +178,7 @@ a.normal {
 .comments form, .comment {
   display: inline-block;
   vertical-align: top;
+  margin: 2px 0;
 }
 
 .comments form {
