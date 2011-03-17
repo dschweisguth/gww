@@ -821,11 +821,10 @@ describe Photo do
         Photo.add_answer comment.id, ''
         new_guesses = Guess.find_all_by_photo_id comment.photo
         new_guesses.should == [ old_guess ]
-        #new_guess = new_guesses[0]
+        new_guess = new_guesses[0]
         # Note that the following two values are different than those for old_guess
-        # TODO Dave why doesn't this work?
-        #new_guess.guess_text.should == comment.comment_text
-        #new_guess.guessed_at.should == comment.commented_at
+        new_guess.guess_text.should == comment.comment_text
+        new_guess.guessed_at.should == comment.commented_at
       end
 
       it 'deletes an existing revelation' do
@@ -861,11 +860,10 @@ describe Photo do
         Photo.add_answer comment.id, ''
         new_revelations = Revelation.find_all_by_photo_id comment.photo
         new_revelations.should == [ old_revelation ]
-        #new_revelation = new_revelations[0]
+        new_revelation = new_revelations[0]
         # Note that the following two values are different than those for old_guess
-        # TODO Dave why doesn't this work?
-        #new_revelation.revelation_text.should == comment.comment_text
-        #new_revelation.revealed_at.should == comment.commented_at
+        new_revelation.revelation_text.should == comment.comment_text
+        new_revelation.revealed_at.should == comment.commented_at
       end
 
       it 'deletes an existing guess' do
