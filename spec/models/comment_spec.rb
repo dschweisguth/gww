@@ -144,6 +144,11 @@ describe Comment do
         guess_matches_and_person_is answer_comment, scorer
       end
 
+      it "blows up if the username is unknown" do
+        comment = Comment.make
+        lambda { Comment.add_answer comment.id, 'unknown_username' }.should raise_error Comment::AddAnswerError
+      end
+
       it 'updates an existing guess' do
         old_guess = Guess.make
         comment = Comment.make :photo => old_guess.photo,
