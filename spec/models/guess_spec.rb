@@ -26,7 +26,6 @@ describe Guess do
 
   describe '#added_at' do
     it { should validate_presence_of :added_at }
-    it { should have_readonly_attribute :added_at }
   end
 
   describe '.destroy_all_by_photo_id' do

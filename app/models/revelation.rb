@@ -3,7 +3,6 @@ class Revelation < ActiveRecord::Base
 
   belongs_to :photo, :inverse_of => :revelation
   validates_presence_of :revelation_text, :revealed_at, :added_at
-  attr_readonly :added_at
 
   #noinspection RailsParamDefResolve
   def self.longest

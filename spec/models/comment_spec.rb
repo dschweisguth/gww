@@ -40,11 +40,16 @@ describe Comment do
   end
 
   describe '.add_answer' do
+    before do
+      @now = Time.utc(2010)
+    end
+
     describe 'when adding a revelation' do
       it 'adds a revelation' do
         photo = Photo.make
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, ''
         photo_is_revealed_and_revelation_matches comment
       end
@@ -53,6 +58,7 @@ describe Comment do
         photo = Photo.make
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, photo.person.username
         photo_is_revealed_and_revelation_matches comment
       end
@@ -60,6 +66,7 @@ describe Comment do
       it "gets text from another user's comment" do
         photo = Photo.make
         comment = Comment.make :photo => photo, :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, photo.person.username
         photo_is_revealed_and_revelation_matches comment
       end
@@ -70,6 +77,7 @@ describe Comment do
           :flickrid => old_revelation.photo.person.flickrid,
           :username => old_revelation.photo.person.username,
           :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, ''
         photo_is_revealed_and_revelation_matches comment
       end
@@ -81,6 +89,7 @@ describe Comment do
         revelation.photo.game_status.should == 'revealed'
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
+        revelation.added_at.should == @now
       end
 
       it 'deletes an existing guess' do
@@ -100,12 +109,14 @@ describe Comment do
         guesser = Person.make
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, ''
         guess_matches_and_person_is comment, guesser
       end
 
       it 'creates the guesser if necessary' do
         comment = Comment.make
+        set_time
         Comment.add_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
@@ -116,6 +127,7 @@ describe Comment do
         guesser = Person.make
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, guesser.username
         guess_matches_and_person_is comment, guesser
       end
@@ -124,6 +136,7 @@ describe Comment do
         scorer_comment = Comment.make 'scorer',
           :flickrid => 'scorer_flickrid', :username => 'scorer_person_username'
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer answer_comment.id, scorer_comment.username
         guesses = Guess.find_all_by_photo_id answer_comment.photo
         guesses.length.should == 1
@@ -132,6 +145,7 @@ describe Comment do
         guess.person.username.should == scorer_comment.username
         guess.guess_text.should == answer_comment.comment_text
         guess.guessed_at.should == answer_comment.commented_at
+        guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
       end
 
@@ -140,6 +154,7 @@ describe Comment do
         scorer_comment = Comment.make 'scorer',
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer answer_comment.id, scorer_comment.username
         guess_matches_and_person_is answer_comment, scorer
       end
@@ -154,6 +169,7 @@ describe Comment do
         comment = Comment.make :photo => old_guess.photo,
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
+        set_time
         Comment.add_answer comment.id, ''
         guess_matches_and_person_is comment, old_guess.person
       end
@@ -165,6 +181,7 @@ describe Comment do
         guess.person.should == person
         guess.guess_text.should == comment.comment_text
         guess.guessed_at.should == comment.commented_at
+        guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
       end
 
@@ -177,6 +194,13 @@ describe Comment do
         Revelation.count.should == 0
       end
 
+    end
+
+    # Specs of add_answer call this immediately before calling add_answer so
+    # that it doesn't affect test objects' date attributes and assertions on
+    # those attributes don't pass by accident
+    def set_time
+      stub(Time).now { @now }
     end
 
   end

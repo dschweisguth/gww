@@ -44,7 +44,7 @@ class Comment < ActiveRecord::Base
         if revelation
           revelation.revelation_text = comment.comment_text
           revelation.revealed_at = comment.commented_at
-          # TODO Dave update added_at
+          revelation.added_at = Time.now.getutc
           revelation.save!
         else
           Revelation.create! \
@@ -74,7 +74,7 @@ class Comment < ActiveRecord::Base
         if guess
           guess.guessed_at = comment.commented_at
           guess.guess_text = comment.comment_text
-          # TODO Dave update added_at
+          guess.added_at = Time.now.getutc
           guess.save!
         else
           Guess.create! \
