@@ -12,4 +12,15 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def self.remove_guess(comment_id)
+    transaction do
+      comment = Comment.find comment_id, :include => :photo
+      # TODO Dave combine the following two queries
+      guesser = Person.find_by_flickrid comment.flickrid
+      guess = Guess.find_by_person_id_and_guess_text guesser.id, comment.comment_text[0, 255]
+      guess.destroy
+      comment.photo.update_game_status_after_removing_guess
+    end
+  end
+
 end

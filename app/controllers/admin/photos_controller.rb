@@ -158,14 +158,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def remove_guess
-    comment_id = params[:comment_id]
-    comment = Comment.find comment_id, :include => :photo
-    Photo.transaction do
-      guesser = Person.find_by_flickrid comment.flickrid
-      guess = Guess.find_by_person_id_and_guess_text guesser.id, comment.comment_text[0, 255]
-      guess.destroy
-      comment.photo.update_game_status_after_removing_guess
-    end
+    Comment.remove_guess params[:comment_id]
     PageCache.clear
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
