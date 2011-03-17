@@ -343,11 +343,12 @@ class Photo < ActiveRecord::Base
               :comment_text => comment_xml['content'],
               :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc
 	    comments.push comment
-	  end
+          end
+          return comments
 	end
       end
     end
-    comments
+    self.comments
   end
 
   def self.change_game_status(id, status)

@@ -743,8 +743,7 @@ describe Photo do
       }
       stub(FlickrCredentials).request { empty_parsed_xml }
       comments = @photo.load_comments
-      # TODO Dave what is the UI consequence of returning 0 comments even if they're still in the database?
-      comments.length.should == 0
+      comments.length.should == 1
       Comment.count.should == 1
     end
 
