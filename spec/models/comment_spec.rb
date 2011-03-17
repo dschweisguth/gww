@@ -75,11 +75,10 @@ describe Comment do
       end
 
       def photo_is_revealed_and_revelation_matches(comment)
-        comment.photo.reload
-        comment.photo.game_status.should == 'revealed'
         revelations = Revelation.find_all_by_photo_id comment.photo
         revelations.length.should == 1
         revelation = revelations[0]
+        revelation.photo.game_status.should == 'revealed'
         revelation.revelation_text.should == comment.comment_text
         revelation.revealed_at.should == comment.commented_at
       end
