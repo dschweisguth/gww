@@ -285,4 +285,17 @@ describe Comment do
 
   end
 
+  describe '#is_by_poster' do
+    it "returns true if the comment was made by the photo's poster" do
+      photo = Photo.make
+      comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
+      comment.is_by_poster.should == true
+    end
+
+    it "returns false if the comment was not made by the photo's poster" do
+      Comment.make.is_by_poster.should == false
+    end
+
+  end
+
 end
