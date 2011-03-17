@@ -12,7 +12,16 @@ class Comment < ActiveRecord::Base
       guesser_username = comment.username
     else
       # Note that this branch results in a guess that can't be individually removed
-      guesser_flickrid = Comment.find_by_username(username).flickrid
+      guesser_comment = Comment.find_by_username username
+      guesser_flickrid = guesser_comment ? guesser_comment.flickrid : nil
+      if ! guesser_flickrid
+        # TODO Dave save this extra load
+        guesser_person = Person.find_by_username username
+        guesser_flickrid = guesser_person ? guesser_person.flickrid : nil
+      end
+      if ! guesser_flickrid
+        raise AddAnswerError, "Sorry; GWW hasn't seen any posts or comments by #{} yet, so we don't know enough about them to award them a point."
+      end
       guesser_username = username
     end
     Photo.transaction do
@@ -70,6 +79,9 @@ class Comment < ActiveRecord::Base
     end
 
   end
+
+  class AddAnswerError < StandardError
+  end 
 
   def self.remove_revelation(comment_id)
     transaction do

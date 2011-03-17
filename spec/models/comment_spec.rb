@@ -82,8 +82,6 @@ describe Comment do
 
       it "gets text from another user's comment" do
         photo = Photo.make
-        # The person must have made a comment to be identified by username. TODO Dave just try getting them from the people table first
-        Comment.make :flickrid => photo.person.flickrid, :username => photo.person.username
         comment = Comment.make :photo => photo, :commented_at => Time.utc(2011)
         Comment.add_answer comment.id, photo.person.username
         photo.reload
