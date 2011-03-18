@@ -19,12 +19,15 @@ module Admin::PhotosHelper
         end
         pluralize minutes, 'minute'
       elsif time > now - 37.hours
-        hours = now.hour - time.hour + 24 * (now.yday - time.yday + 365 * (now.year - time.year))
+        hours = now.hour - time.hour
+        if hours < 0
+          hours += 24
+        end
         pluralize hours, 'hour'
       elsif time > now - 1.month
         days = (now + 12.hours).yday - time.yday
         if days < 0
-          days += 365 # not perfect
+          days += 365
         end
         days >= 10 ? "#{(days + 4) / 7} weeks" : "#{days} days"
       else
