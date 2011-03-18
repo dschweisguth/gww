@@ -6,7 +6,7 @@ class Comment < ActiveRecord::Base
   def self.add_selected_answer(comment_id, username)
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }
-    add_answer2(comment.photo, comment.username, comment.flickrid, username,
+    add_answer(comment.photo, comment.username, comment.flickrid, username,
       comment.comment_text, comment.commented_at)
   end
 
@@ -20,11 +20,11 @@ class Comment < ActiveRecord::Base
 
     #noinspection RailsParamDefResolve
     photo = Photo.find photo_id, :include => [ :person, :revelation ]
-    add_answer2(photo, nil, nil, username, comment_text, Time.now.getutc)
+    add_answer(photo, nil, nil, username, comment_text, Time.now.getutc)
 
   end
 
-  def self.add_answer2(photo, selected_username, selected_flickrid, entered_username, answer_text, answered_at)
+  def self.add_answer(photo, selected_username, selected_flickrid, entered_username, answer_text, answered_at)
     guesser = nil
     if entered_username.empty?
       guesser_username = selected_username
@@ -40,6 +40,7 @@ class Comment < ActiveRecord::Base
         guesser_flickrid = guesser ? guesser.flickrid : nil
       end
       if !guesser_flickrid then
+        #noinspection RubyResolve
         (guesser_comment = Comment.find_by_username entered_username) &&
           guesser_flickrid = guesser_comment.flickrid
       end
@@ -106,7 +107,7 @@ class Comment < ActiveRecord::Base
       end
     end
   end
-  private_class_method :add_answer2
+  private_class_method :add_answer
 
   class AddAnswerError < StandardError
   end 
