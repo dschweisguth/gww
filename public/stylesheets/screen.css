@@ -216,11 +216,6 @@ a.normal {
   text-decoration: underline;
 }
 
-.dark .input {
-  background-color: #ffffff;
-  padding: 1px 0;
-}
-
 /* admin/score_reports/index */
 
 .top-justified td {
