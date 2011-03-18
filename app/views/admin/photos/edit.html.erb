@@ -1,5 +1,5 @@
 <% content_for :title do %>Editing photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
-<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag :defaults, 'editPhoto' %>
 
 <% sandwich 'shared/admin/breadcrumbs' do %>
 
@@ -18,13 +18,6 @@
 (removes any guesses or revelation)</div>
 <% end %>
 
-<script type="text/javascript">
-  function copyUsernameToFormFor(comment_id) {
-    $('submit_' + comment_id).observe('click', function () {
-      $('username_' + comment_id).value = $('person_username').value;
-    });
-  }
-</script>
 <p id="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
   <div id="comments" class="edit">
@@ -43,9 +36,6 @@
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
             <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
             <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
-            <script type="text/javascript">
-              copyUsernameToFormFor(<%= comment.id %>);
-            </script>
           </div>
         <% end %>
       <% end -%>
@@ -76,12 +66,3 @@
 <%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?' %>
 
 <% end %>
-<script type="text/javascript">
-  username_form = $('username_form');
-  if (username_form) {
-    username_form.observe('submit', function (event) {
-      event.preventDefault();
-      return false;
-    });
-  }
-</script>
