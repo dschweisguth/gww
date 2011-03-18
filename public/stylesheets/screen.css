@@ -156,6 +156,12 @@ a.normal {
   background-color: #ffcc33;
 }
 
+/* photos/show, admin/photos/edit */
+
+.comments-header {
+  font-size: 16px;
+}
+
 /* wheresies/index */
 
 .float {
@@ -170,10 +176,6 @@ a.normal {
 }
 
 /* admin/photos/edit */
-
-.comments-header {
-  font-size: 16px;
-}
 
 .comments {
   font-size: 11px;

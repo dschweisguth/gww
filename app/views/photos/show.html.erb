@@ -2,8 +2,8 @@
 <% sandwich do %>
 <%= render 'image_and_status', :size => nil %>
 
+<p class="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
-<h2>Comments</h2>
 <% @comments.each do |comment| -%>
   <strong><%=h comment.username %> says:</strong> <%= comment.comment_text %><br/>
 <% end -%>
