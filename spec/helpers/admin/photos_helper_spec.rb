@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe Admin::PhotosHelper do
   describe 'ago' do
-    # TODO Dave 36 h
-
     it "returns 'a moment ago' if time < 1 second ago" do
       ago_returns 2011, 2011, 'a moment ago'
     end
@@ -28,7 +26,7 @@ describe Admin::PhotosHelper do
       ago_returns 2011, [ 2010, 12, 31, 23, 59, 0 ], '1 minute ago'
     end
 
-    it "returns 'n hours ago' if 1 hour ago <= time < 1 day ago" do
+    it "returns 'n hours ago' if 1 hour ago <= time < 37 hours ago" do
       ago_returns [ 2011, 1, 1, 1, 0, 0 ], 2011, '1 hour ago'
     end
 
@@ -40,16 +38,12 @@ describe Admin::PhotosHelper do
       ago_returns 2011, [ 2010, 12, 31, 23, 0, 0 ], '1 hour ago'
     end
 
-    it "returns 'n days ago' if 1 day ago <= time < 10 days ago" do
-      ago_returns [ 2011, 1, 2, 0, 0, 0 ], 2011, '1 day ago'
-    end
-
-    it "pluralizes days" do
-      ago_returns [ 2011, 1, 3, 0, 0, 0 ], 2011, '2 days ago'
+    it "returns 'n days ago' if 37 hours ago <= time < 10 days ago" do
+      ago_returns [ 2011, 1, 2, 13, 0, 0 ], 2011, '2 days ago'
     end
 
     it "wraps days" do
-      ago_returns 2011, [ 2010, 12, 31, 0, 0, 0 ], '1 day ago'
+      ago_returns 2011, [ 2010, 12, 30, 11, 0, 0 ], '2 days ago'
     end
 
     it "returns 'n weeks ago' if 10 days ago <= time < 1 month ago" do

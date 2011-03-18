@@ -2,6 +2,8 @@
 
 module Admin::PhotosHelper
 
+  # Returns a phrase like '24 hours ago', always with a single time unit,
+  # carefully adjusted to match what Flickr shows on comments on photos.
   def ago(time)
     now = Time.now.getutc
     time = time.getutc
@@ -16,18 +18,15 @@ module Admin::PhotosHelper
           minutes += 60
         end
         pluralize minutes, 'minute'
-      elsif time > now - 1.day
-        hours = now.hour - time.hour
-        if hours < 0
-          hours += 24
-        end
+      elsif time > now - 37.hours
+        hours = now.hour - time.hour + 24 * (now.yday - time.yday + 365 * (now.year - time.year))
         pluralize hours, 'hour'
       elsif time > now - 1.month
-        days = now.yday - time.yday
+        days = (now + 12.hours).yday - time.yday
         if days < 0
           days += 365 # not perfect
         end
-        days >= 10 ? "#{(days + 4) / 7} weeks" : pluralize(days, 'day')
+        days >= 10 ? "#{(days + 4) / 7} weeks" : "#{days} days"
       else
         months = now.month - time.month + 12 * (now.year - time.year)
         pluralize months, 'month'
