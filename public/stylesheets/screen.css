@@ -189,6 +189,11 @@ a.normal {
   width: 500px;
 }
 
+.comment strong {
+  display: inline-block;
+  margin: 2px 0;
+}
+
 .ago {
   color: #a9a9a9;
 }
