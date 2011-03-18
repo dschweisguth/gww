@@ -76,7 +76,7 @@ describe Admin::PhotosController do
       response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_answer/111]' do
+      response.should have_tag 'form[action=/admin/photos/add_selected_answer/111]' do
         with_tag 'input[type=submit][name=commit][value=Add this guess]'
         with_tag 'input[type=hidden][name=comment_id][value=222]'
       end
@@ -97,7 +97,7 @@ describe Admin::PhotosController do
       response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_answer/111]' do
+      response.should have_tag 'form[action=/admin/photos/add_selected_answer/111]' do
         with_tag 'input[type=submit][name=commit][value=Add this guess]'
         with_tag 'input[type=hidden][name=comment_id][value=222]'
       end
@@ -116,18 +116,18 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '#add_answer' do
+  describe '#add_selected_answer' do
     it "adds a selected answer" do
       mock(Comment).add_selected_answer '2', 'username'
       mock_clear_page_cache
-      post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
+      post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_selected_answer('2', 'username') { raise Comment::AddAnswerError, 'Sorry' }
-      post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
+      post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
       flash[:notice].should == 'Sorry'
@@ -139,14 +139,14 @@ describe Admin::PhotosController do
     it "adds an entered answer" do
       mock(Comment).add_entered_answer 1, 'username', 'comment text'
       mock_clear_page_cache
-      post :add_custom_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
+      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_entered_answer(1, 'username', 'comment text') { raise Comment::AddAnswerError, 'Sorry' }
-      post :add_custom_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
+      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
       flash[:notice].should == 'Sorry'
@@ -181,16 +181,6 @@ describe Admin::PhotosController do
       flash[:notice].should == 'Sorry'
     end
 
-  end
-
-  describe '#add_answer' do
-    it "adds an answer" do
-      mock(Comment).add_selected_answer '2', 'username'
-      mock_clear_page_cache
-      post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
-      #noinspection RubyResolve
-      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
-    end
   end
 
   describe '#reload_comments' do

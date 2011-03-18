@@ -31,7 +31,7 @@
           </div>
         <% end %>
       <% else -%>
-        <% form_tag :action => :add_answer, :id => @photo do %>
+        <% form_tag :action => :add_selected_answer, :id => @photo do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
             <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
@@ -47,7 +47,7 @@
     <% end -%>
   </div><br/>
 
-  <% form_tag({ :action => :add_custom_answer, :id => @photo }, :id => 'username_form') do %>
+  <% form_tag({ :action => :add_entered_answer, :id => @photo }, :id => 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here
         <%= text_field_with_auto_complete :person, :username %>

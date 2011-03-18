@@ -58,7 +58,7 @@ class Admin::PhotosController < ApplicationController
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
-  def add_answer
+  def add_selected_answer
     begin
       Comment.add_selected_answer params[:comment_id], params[:username]
     rescue Comment::AddAnswerError => e
@@ -68,7 +68,7 @@ class Admin::PhotosController < ApplicationController
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
-  def add_custom_answer
+  def add_entered_answer
     begin
       Comment.add_entered_answer params[:id].to_i, params[:person][:username], params[:comment_text]
     rescue Comment::AddAnswerError => e
