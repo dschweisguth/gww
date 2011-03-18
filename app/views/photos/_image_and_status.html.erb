@@ -2,36 +2,35 @@
 Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %Y' %> by <%= link_to_person @photo.person %>.<br/><br/>
 
 <% if @photo.game_status == 'found' -%>
-This photo was correctly guessed by
-<%= @photo.guesses.map { |guess| link_to_person guess.person }.join ', ' -%>.
+  This photo was correctly guessed by ...
 <% elsif @photo.game_status == 'revealed' -%>
-This photo's location was revealed by the person who posted it.
+  This photo's location was revealed by ...
 <% else -%>
-This photo is <%= @photo.game_status %>.
+  This photo is <%= @photo.game_status %>.
 <% end -%>
 <br/>
 
 <% if ! @photo.guesses.empty? || @photo.revelation -%>
 <table class="dark">
-    <tr>
-        <th>Person</th>
-        <th>Date</th>
-        <th>Text</th>
-    </tr>
-<% if ! @photo.guesses.empty? -%>
+  <tr>
+    <th>Person</th>
+    <th>Date</th>
+    <th>Text</th>
+  </tr>
+  <% if ! @photo.guesses.empty? -%>
     <% @photo.guesses.each do |guess| -%>
-    <tr>
-        <td><%= guess.person.username %></td>
+      <tr>
+        <td><%= link_to_person guess.person %></td>
         <td><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
         <td><%= guess.guess_text %></td>
-    </tr>
+      </tr>
     <% end -%>
-<% else -%>
+  <% else -%>
     <tr>
-        <td><%=h @photo.person.username %></td>
-        <td><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
-        <td><%=h @photo.revelation.revelation_text %></td>
+      <td><%= link_to_person @photo.person %></td>
+      <td><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
+      <td><%=h @photo.revelation.revelation_text %></td>
     </tr>
-<% end -%>
+  <% end -%>
 </table>
 <% end -%>
