@@ -63,12 +63,11 @@
   <% end %>
   and choose the comment above.<br/>
   To delete a guess created in this way, change the photo's status to unfound or unconfirmed, or reveal it.
-  <br/>
 
 <% else -%>
   No comments available.
 <% end -%>
-<br/>
+<br/><br/>
 
 <% form_tag({ :action => 'reload_comments', :id => @photo }, :class => 'inline') do %>
   <div><%= submit_tag("Reload comments") %></div>
