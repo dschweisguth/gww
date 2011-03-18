@@ -171,6 +171,10 @@ a.normal {
 
 /* admin/photos/edit */
 
+.comments-header {
+  font-size: 16px;
+}
+
 .comments {
   font-size: 11px;
 }

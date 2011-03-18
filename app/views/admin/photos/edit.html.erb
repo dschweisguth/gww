@@ -17,8 +17,8 @@
 <% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
 (removes any guesses or revelation)</div>
 <% end %>
-<br/>
 
+<p class="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
   <div class="comments">
     <% @comments.each do |comment| -%>
