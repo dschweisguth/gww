@@ -14,21 +14,21 @@ Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %
 <table class="dark">
   <tr>
     <th>Person</th>
-    <th>Date</th>
+    <th>When</th>
     <th>Text</th>
   </tr>
   <% if ! @photo.guesses.empty? -%>
     <% @photo.guesses.each do |guess| -%>
       <tr>
         <td><%= link_to_person guess.person %></td>
-        <td><%= guess.guessed_at.getlocal.strftime '%Y/%m/%d' %></td>
+        <td><%= ago guess.guessed_at %></td>
         <td><%= guess.guess_text %></td>
       </tr>
     <% end -%>
   <% else -%>
     <tr>
       <td><%= link_to_person @photo.person %></td>
-      <td><%= @photo.revelation.revealed_at.getlocal.strftime '%Y/%m/%d' %></td>
+      <td><%= ago @photo.revelation.revealed_at %></td>
       <td><%=h @photo.revelation.revelation_text %></td>
     </tr>
   <% end -%>
