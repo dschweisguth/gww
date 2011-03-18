@@ -77,8 +77,11 @@
 
 <% end %>
 <script type="text/javascript">
-  $('username_form').observe('submit', function (event) {
-    event.preventDefault();
-    return false;
-  });
+  username_form = $('username_form');
+  if (username_form) {
+    username_form.observe('submit', function (event) {
+      event.preventDefault();
+      return false;
+    });
+  }
 </script>
