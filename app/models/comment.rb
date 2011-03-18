@@ -92,11 +92,11 @@ class Comment < ActiveRecord::Base
   end
 
   def self.add_custom_answer(photo_id, username, comment_text)
-    if username.empty?
-      raise ArgumentError, 'username may not be empty'
+    if username.nil? || username.empty?
+      raise ArgumentError, 'username may not be nil or empty'
     end
-    if comment_text.empty?
-      raise ArgumentError, 'comment_text may not be empty'
+    if comment_text.nil? || comment_text.empty?
+      raise ArgumentError, 'comment_text may not be nil or empty'
     end
 
     #noinspection RailsParamDefResolve
