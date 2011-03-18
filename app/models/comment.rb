@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
       comment.comment_text, comment.commented_at)
   end
 
-  def self.add_custom_answer(photo_id, username, comment_text)
+  def self.add_entered_answer(photo_id, username, comment_text)
     if username.nil? || username.empty?
       raise ArgumentError, 'username may not be nil or empty'
     end

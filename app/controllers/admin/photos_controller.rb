@@ -70,7 +70,7 @@ class Admin::PhotosController < ApplicationController
 
   def add_custom_answer
     begin
-      Comment.add_custom_answer params[:id].to_i, params[:person][:username], params[:comment_text]
+      Comment.add_entered_answer params[:id].to_i, params[:person][:username], params[:comment_text]
     rescue Comment::AddAnswerError => e
       flash[:notice] = e.message
     end

@@ -135,9 +135,9 @@ describe Admin::PhotosController do
 
   end
 
-  describe '#add_custom_answer' do
-    it "adds a custom answer" do
-      mock(Comment).add_custom_answer 1, 'username', 'comment text'
+  describe '#add_entered_answer' do
+    it "adds an entered answer" do
+      mock(Comment).add_entered_answer 1, 'username', 'comment text'
       mock_clear_page_cache
       post :add_custom_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
       #noinspection RubyResolve
@@ -145,7 +145,7 @@ describe Admin::PhotosController do
     end
 
     it "notifies the user if there was an error" do
-      mock(Comment).add_custom_answer(1, 'username', 'comment text') { raise Comment::AddAnswerError, 'Sorry' }
+      mock(Comment).add_entered_answer(1, 'username', 'comment text') { raise Comment::AddAnswerError, 'Sorry' }
       post :add_custom_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
