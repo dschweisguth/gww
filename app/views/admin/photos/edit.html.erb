@@ -18,6 +18,13 @@
 (removes any guesses or revelation)</div>
 <% end %>
 
+<script type="text/javascript">
+  function copyUsernameToFormFor(comment_id) {
+    $('submit_' + comment_id).observe('click', function () {
+      $('username_' + comment_id).value = $('person_username').value;
+    });
+  }
+</script>
 <p class="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
   <div class="comments edit">
@@ -37,9 +44,7 @@
             <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
             <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
             <script type="text/javascript">
-              $('submit_<%= comment.id %>').observe('click', function () {
-                $('username_<%= comment.id %>').value = $('person_username').value;
-              });
+              copyUsernameToFormFor(<%= comment.id %>);
             </script>
           </div>
         <% end %>
@@ -56,12 +61,6 @@
   <% form_tag({}, :id => 'username_form', :class => 'inline') do %>
     <div><%= text_field_with_auto_complete :person, :username %></div>
   <% end %>
-  <script type="text/javascript">
-    $('username_form').observe('submit', function (event) {
-      event.preventDefault();
-      return false;
-    });
-  </script>
   and choose the comment above.<br/>
   To delete a guess created in this way, change the photo's status to unfound or unconfirmed, or reveal it.
   <br/>
@@ -78,3 +77,9 @@
 <%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?' %>
 
 <% end %>
+<script type="text/javascript">
+  $('username_form').observe('submit', function (event) {
+    event.preventDefault();
+    return false;
+  });
+</script>
