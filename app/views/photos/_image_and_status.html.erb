@@ -1,4 +1,4 @@
-<%= link_to titled_image_tag(url_for_flickr_image(@photo, size), ""), url_for_flickr_photo(@photo) %><br/>
+<%= link_to titled_image_tag(url_for_flickr_image(@photo, (defined?(size) ? size : nil)), ""), url_for_flickr_photo(@photo) %><br/>
 Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %Y' %> by <%= link_to_person @photo.person %>.<br/><br/>
 
 <% if @photo.game_status == 'found' -%>
