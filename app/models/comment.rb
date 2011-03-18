@@ -10,17 +10,17 @@ class Comment < ActiveRecord::Base
       comment.comment_text, comment.commented_at)
   end
 
-  def self.add_entered_answer(photo_id, username, comment_text)
+  def self.add_entered_answer(photo_id, username, answer_text)
     if username.nil? || username.empty?
       raise ArgumentError, 'username may not be nil or empty'
     end
-    if comment_text.nil? || comment_text.empty?
-      raise ArgumentError, 'comment_text may not be nil or empty'
+    if answer_text.nil? || answer_text.empty?
+      raise ArgumentError, 'answer_text may not be nil or empty'
     end
 
     #noinspection RailsParamDefResolve
     photo = Photo.find photo_id, :include => [ :person, :revelation ]
-    add_answer(photo, nil, nil, username, comment_text, Time.now.getutc)
+    add_answer(photo, nil, nil, username, answer_text, Time.now.getutc)
 
   end
 
