@@ -22,9 +22,6 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
-Make it possible to mark a photo as revealed which doesn't have a comment by
-  the poster, e.g. http://www.flickr.com/photos/kewlio/3303015174/, or Glenn's
-  El Polin picnic post
 Include tags in update
   Highlight foundinSF/unfoundinSF in unfound list
 Include comments in update
