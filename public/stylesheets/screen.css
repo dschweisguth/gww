@@ -162,6 +162,25 @@ a.normal {
   font-size: 16px;
 }
 
+.comments form, .comment {
+  display: inline-block;
+  vertical-align: top;
+  margin: 2px 0;
+}
+
+.comment {
+  width: 500px;
+}
+
+.comment strong {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.ago {
+  color: #bbbbbb;
+}
+
 /* wheresies/index */
 
 .float {
@@ -177,31 +196,12 @@ a.normal {
 
 /* admin/photos/edit */
 
-.comments {
+.edit {
   font-size: 11px;
-}
-
-.comments form, .comment {
-  display: inline-block;
-  vertical-align: top;
-  margin: 2px 0;
 }
 
 .comments form {
   width: 150px;
-}
-
-.comment {
-  width: 500px;
-}
-
-.comment strong {
-  display: inline-block;
-  margin-bottom: 2px;
-}
-
-.ago {
-  color: #bbbbbb;
 }
 
 .poster {

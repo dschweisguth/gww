@@ -78,7 +78,7 @@ describe PhotosController do
         with_tag 'td', :text => 'guesser_username'
         with_tag 'td', :text => 'guess text'
       end
-      response.should have_tag 'strong', :text => 'commenter_username says:'
+      response.should have_tag 'strong', :text => 'commenter_username'
       response.should have_text /comment text/
 
     end

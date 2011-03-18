@@ -20,7 +20,7 @@
 
 <p class="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
-  <div class="comments">
+  <div class="comments edit">
     <% @comments.each do |comment| -%>
       <% is_accepted_answer = comment.is_accepted_answer -%>
       <% if is_accepted_answer then -%>

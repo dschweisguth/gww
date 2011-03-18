@@ -4,9 +4,15 @@
 
 <p class="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
-<% @comments.each do |comment| -%>
-  <strong><%=h comment.username %> says:</strong> <%= comment.comment_text %><br/>
-<% end -%>
+  <div class="comments">
+    <% @comments.each do |comment| -%>
+      <div class="comment">
+        <strong><%=h comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
+        <%= comment.comment_text %><br/>
+      </div>
+      <br/>
+    <% end -%>
+  </div>
 <% else -%>
 No comments available.
 <% end -%>
