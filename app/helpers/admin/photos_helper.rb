@@ -3,7 +3,8 @@
 module Admin::PhotosHelper
 
   def ago(time)
-    now = Time.now
+    now = Time.now.getutc
+    time = time.getutc
     ago =
       if time > now - 1.second
         'a moment'
@@ -26,7 +27,7 @@ module Admin::PhotosHelper
         if days < 0
           days += 365 # not perfect
         end
-        days >= 7 ? pluralize(days / 7, 'week') : pluralize(days, 'day')
+        days >= 10 ? "#{(days + 4) / 7} weeks" : pluralize(days, 'day')
       else
         months = now.month - time.month + 12 * (now.year - time.year)
         pluralize months, 'month'
