@@ -16,19 +16,23 @@
     }
   }
 
-  function preventSubmitUsernameForm() {
+  function preventSubmitPartialUsernameForm() {
     var username_form = $('username_form');
     if (username_form) {
       username_form.observe('submit', function (event) {
-        event.preventDefault();
-        return false;
+        if (event.element()['comment_text'].value === '') {
+          event.preventDefault();
+          return false;
+        } else {
+          return true;
+        }
       });
     }
   }
 
   Event.observe(window, 'load', function() {
     setUpCopyUsername();
-    preventSubmitUsernameForm();
+    preventSubmitPartialUsernameForm();
   });
 
 })();

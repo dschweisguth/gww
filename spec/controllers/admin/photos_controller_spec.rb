@@ -135,6 +135,25 @@ describe Admin::PhotosController do
 
   end
 
+  describe '#add_custom_answer' do
+    it "adds a custom answer" do
+      mock(Comment).add_custom_answer 1, 'username', 'comment text'
+      mock_clear_page_cache
+      post :add_custom_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+    end
+
+    it "notifies the user if there was an error" do
+      mock(Comment).add_custom_answer(1, 'username', 'comment text') { raise Comment::AddAnswerError, 'Sorry' }
+      post :add_custom_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
+      #noinspection RubyResolve
+      response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
+      flash[:notice].should == 'Sorry'
+    end
+
+  end
+
   describe '#remove_revelation' do
     it "removes a revelation" do
       mock(Comment).remove_revelation '2'

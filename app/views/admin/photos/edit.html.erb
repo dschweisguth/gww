@@ -47,12 +47,15 @@
     <% end -%>
   </div><br/>
 
-  To give a point to someone other than the commenter, enter their username here
-  <% form_tag({}, :id => 'username_form', :class => 'inline') do %>
-    <div><%= text_field_with_auto_complete :person, :username %></div>
+  <% form_tag({ :action => :add_custom_answer, :id => @photo }, :id => 'username_form') do %>
+    <div>
+      To give a point to someone other than the commenter, enter their username here
+        <%= text_field_with_auto_complete :person, :username %>
+        and choose the comment above.<br/>
+      <%= submit_tag 'Reveal the photo with the following text:' %> <%= text_field_tag 'comment_text' %><br/>
+      To delete a guess created with either of these options, change the photo's status to unfound or unconfirmed, or accept the poster's revelation.
+    </div>
   <% end %>
-  and choose the comment above.<br/>
-  To delete a guess created in this way, change the photo's status to unfound or unconfirmed, or reveal it.
 
 <% else -%>
   No comments available.

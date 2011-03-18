@@ -68,6 +68,16 @@ class Admin::PhotosController < ApplicationController
     redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
   end
 
+  def add_custom_answer
+    begin
+      Comment.add_custom_answer params[:id].to_i, params[:person][:username], params[:comment_text]
+    rescue Comment::AddAnswerError => e
+      flash[:notice] = e.message
+    end
+    PageCache.clear
+    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+  end
+
   def remove_revelation
     Comment.remove_revelation params[:comment_id]
     PageCache.clear

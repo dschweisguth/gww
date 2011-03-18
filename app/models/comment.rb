@@ -91,6 +91,95 @@ class Comment < ActiveRecord::Base
 
   end
 
+  def self.add_custom_answer(photo_id, username, comment_text)
+    if username.empty?
+      raise ArgumentError, 'username may not be empty'
+    end
+    if comment_text.empty?
+      raise ArgumentError, 'comment_text may not be empty'
+    end
+
+    #noinspection RailsParamDefResolve
+    photo = Photo.find photo_id, :include => [ :person, :revelation ]
+
+    guesser = nil
+    guesser_username = username
+    guesser_flickrid = nil
+    if photo.person.username == username
+      guesser_flickrid = photo.person.flickrid
+    end
+    if ! guesser_flickrid
+      guesser = Person.find_by_username username
+      guesser_flickrid = guesser ? guesser.flickrid : nil
+    end
+    if ! guesser_flickrid then
+      (guesser_comment = Comment.find_by_username username) &&
+        guesser_flickrid = guesser_comment.flickrid
+    end
+    if ! guesser_flickrid
+      raise AddAnswerError,
+        "Sorry; GWW hasn't seen any posts or comments by #{username} yet, " +
+          "so doesn't know enough about them to award them a point. " +
+          "Did you spell their username correctly?"
+    end
+
+    Photo.transaction do
+      if guesser_flickrid == photo.person.flickrid
+        photo.game_status = 'revealed'
+        photo.save!
+
+        revelation = photo.revelation
+        if revelation
+          revelation.revelation_text = comment_text
+          revelation.revealed_at = Time.now.getutc
+          revelation.added_at = Time.now.getutc
+          revelation.save!
+        else
+          Revelation.create! \
+            :photo => photo,
+            :revelation_text => comment_text,
+            :revealed_at => Time.now.getutc,
+            :added_at => Time.now.getutc
+        end
+
+        Guess.destroy_all_by_photo_id photo.id
+
+      else
+        photo.game_status = 'found'
+        photo.save!
+
+        if ! guesser then
+          guesser = Person.find_by_flickrid guesser_flickrid
+        end
+        if guesser
+          guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
+        else
+          guesser = Person.create! \
+            :flickrid => guesser_flickrid,
+            :username => guesser_username
+          guess = nil
+        end
+        if guess
+          guess.guessed_at = Time.now.getutc
+          guess.guess_text = comment_text
+          guess.added_at = Time.now.getutc
+          guess.save!
+        else
+          Guess.create! \
+            :photo => photo,
+            :person => guesser,
+            :guess_text => comment_text,
+            :guessed_at => Time.now.getutc,
+            :added_at => Time.now.getutc
+        end
+
+        photo.revelation.destroy if photo.revelation
+
+      end
+    end
+
+  end
+
   class AddAnswerError < StandardError
   end 
 
