@@ -250,8 +250,11 @@ class Photo < ActiveRecord::Base
           photo.secret = parsed_photo['secret']
           old_photo_mapped = photo.mapped
           photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
-          old_photo_dateadded = photo.dateadded
-          photo.dateadded = Time.at(parsed_photo['dateadded'].to_i).getutc
+          # Don't overwrite an existing photo's dateadded, so that if a photo
+          # is added, removed and added again it retains its original dateadded.
+          if photo.id.nil? then
+            photo.dateadded = Time.at(parsed_photo['dateadded'].to_i).getutc
+          end
           old_photo_lastupdate = photo.lastupdate
           photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
           old_photo_views = photo.views
@@ -262,7 +265,6 @@ class Photo < ActiveRecord::Base
             old_photo_server != photo.server ||
             old_photo_secret != photo.secret ||
             old_photo_mapped != photo.mapped ||
-            old_photo_dateadded != photo.dateadded ||
             old_photo_lastupdate != photo.lastupdate ||
             old_photo_views != photo.views
             photo.save!

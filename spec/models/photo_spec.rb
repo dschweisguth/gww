@@ -546,7 +546,8 @@ describe Photo do
       photo_after.farm.should == '0'
       photo_after.secret.should == 'secret'
       photo_after.server.should == 'server'
-      photo_after.dateadded.should == Time.utc(2011)
+      # Note that dateadded is not updated
+      photo_after.dateadded.should == Time.utc(2010)
       photo_after.mapped.should == 'false'
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
