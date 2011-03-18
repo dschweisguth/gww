@@ -191,7 +191,7 @@ a.normal {
 
 .comment strong {
   display: inline-block;
-  margin: 2px 0;
+  margin-bottom: 2px;
 }
 
 .ago {
