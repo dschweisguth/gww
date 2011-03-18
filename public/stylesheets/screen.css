@@ -189,6 +189,10 @@ a.normal {
   width: 500px;
 }
 
+.ago {
+  color: #a9a9a9;
+}
+
 .poster {
   background-color: #cccccc;
 }
