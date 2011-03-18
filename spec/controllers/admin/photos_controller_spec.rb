@@ -137,16 +137,16 @@ describe Admin::PhotosController do
 
   describe '#add_entered_answer' do
     it "adds an entered answer" do
-      mock(Comment).add_entered_answer 1, 'username', 'comment text'
+      mock(Comment).add_entered_answer 1, 'username', 'answer text'
       mock_clear_page_cache
-      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
+      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
     end
 
     it "notifies the user if there was an error" do
-      mock(Comment).add_entered_answer(1, 'username', 'comment text') { raise Comment::AddAnswerError, 'Sorry' }
-      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :comment_text => 'comment text'
+      mock(Comment).add_entered_answer(1, 'username', 'answer text') { raise Comment::AddAnswerError, 'Sorry' }
+      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
       flash[:notice].should == 'Sorry'
