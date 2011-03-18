@@ -162,11 +162,11 @@ a.normal {
   width: 100px;
 }
 
-.comments-header {
+#comments-header {
   font-size: 16px;
 }
 
-.comments form, .comment {
+#comments form, .comment {
   display: inline-block;
   vertical-align: top;
   margin: 2px 0;
@@ -204,7 +204,7 @@ a.normal {
   font-size: 11px;
 }
 
-.comments form {
+#comments form {
   width: 150px;
 }
 

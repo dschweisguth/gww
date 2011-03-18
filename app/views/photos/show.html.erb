@@ -2,9 +2,9 @@
 <% sandwich do %>
 <%= render 'image_and_status' %>
 
-<p class="comments-header">Comments</p>
+<p id="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
-  <div class="comments">
+  <div id="comments">
     <% @comments.each do |comment| -%>
       <div class="comment">
         <strong><%=h comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>

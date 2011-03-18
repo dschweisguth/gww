@@ -25,9 +25,9 @@
     });
   }
 </script>
-<p class="comments-header">Comments</p>
+<p id="comments-header">Comments</p>
 <% if ! @comments.empty? -%>
-  <div class="comments edit">
+  <div id="comments" class="edit">
     <% @comments.each do |comment| -%>
       <% is_accepted_answer = comment.is_accepted_answer -%>
       <% if is_accepted_answer then -%>
