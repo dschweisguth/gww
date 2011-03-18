@@ -117,8 +117,8 @@ describe Admin::PhotosController do
   end
 
   describe '#add_answer' do
-    it "adds an answer" do
-      mock(Comment).add_answer '2', 'username'
+    it "adds a selected answer" do
+      mock(Comment).add_selected_answer '2', 'username'
       mock_clear_page_cache
       post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
       #noinspection RubyResolve
@@ -126,7 +126,7 @@ describe Admin::PhotosController do
     end
 
     it "notifies the user if there was an error" do
-      mock(Comment).add_answer('2', 'username') { raise Comment::AddAnswerError, 'Sorry' }
+      mock(Comment).add_selected_answer('2', 'username') { raise Comment::AddAnswerError, 'Sorry' }
       post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
       #noinspection RubyResolve
       response.should redirect_to edit_photo_path :id => 1, :nocomment => 'true'
@@ -185,7 +185,7 @@ describe Admin::PhotosController do
 
   describe '#add_answer' do
     it "adds an answer" do
-      mock(Comment).add_answer '2', 'username'
+      mock(Comment).add_selected_answer '2', 'username'
       mock_clear_page_cache
       post :add_answer, :id => '1', :comment_id => '2', :username => 'username'
       #noinspection RubyResolve

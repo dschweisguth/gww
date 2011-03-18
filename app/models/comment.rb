@@ -3,7 +3,7 @@ class Comment < ActiveRecord::Base
   validates_presence_of :flickrid, :username, :comment_text, :commented_at
   attr_readonly :flickrid, :username, :comment_text, :commented_at
 
-  def self.add_answer(comment_id, username)
+  def self.add_selected_answer(comment_id, username)
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }
     add_answer2(comment.photo, comment.username, comment.flickrid, username,

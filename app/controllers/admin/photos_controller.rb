@@ -60,7 +60,7 @@ class Admin::PhotosController < ApplicationController
 
   def add_answer
     begin
-      Comment.add_answer params[:comment_id], params[:username]
+      Comment.add_selected_answer params[:comment_id], params[:username]
     rescue Comment::AddAnswerError => e
       flash[:notice] = e.message
     end

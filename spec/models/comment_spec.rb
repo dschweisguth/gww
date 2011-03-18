@@ -39,7 +39,7 @@ describe Comment do
     it { should have_readonly_attribute :commented_at }
   end
 
-  describe '.add_answer' do
+  describe '.add_selected_answer' do
     before do
       @now = Time.utc(2010)
     end
@@ -50,7 +50,7 @@ describe Comment do
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         photo_is_revealed_and_revelation_matches comment
       end
 
@@ -59,7 +59,7 @@ describe Comment do
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, photo.person.username
+        Comment.add_selected_answer comment.id, photo.person.username
         photo_is_revealed_and_revelation_matches comment
       end
 
@@ -67,7 +67,7 @@ describe Comment do
         photo = Photo.make
         comment = Comment.make :photo => photo, :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, photo.person.username
+        Comment.add_selected_answer comment.id, photo.person.username
         photo_is_revealed_and_revelation_matches comment
       end
 
@@ -78,7 +78,7 @@ describe Comment do
           :username => old_revelation.photo.person.username,
           :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         photo_is_revealed_and_revelation_matches comment
       end
 
@@ -97,7 +97,7 @@ describe Comment do
         comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid,
           :username => photo.person.username, :commented_at => Time.utc(2011)
         guess = Guess.make :photo => photo
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         Guess.count.should == 0
         owner_does_not_exist guess
       end
@@ -110,14 +110,14 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         guess_matches_and_person_is comment, guesser
       end
 
       it 'creates the guesser if necessary' do
         comment = Comment.make
         set_time
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == comment.username
@@ -128,7 +128,7 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, guesser.username
+        Comment.add_selected_answer comment.id, guesser.username
         guess_matches_and_person_is comment, guesser
       end
 
@@ -137,7 +137,7 @@ describe Comment do
           :flickrid => 'scorer_flickrid', :username => 'scorer_person_username'
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer answer_comment.id, scorer_comment.username
+        Comment.add_selected_answer answer_comment.id, scorer_comment.username
         guesses = Guess.find_all_by_photo_id answer_comment.photo
         guesses.length.should == 1
         guess = guesses[0]
@@ -155,13 +155,13 @@ describe Comment do
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer answer_comment.id, scorer_comment.username
+        Comment.add_selected_answer answer_comment.id, scorer_comment.username
         guess_matches_and_person_is answer_comment, scorer
       end
 
       it "blows up if the username is unknown" do
         comment = Comment.make
-        lambda { Comment.add_answer comment.id, 'unknown_username' }.should raise_error Comment::AddAnswerError
+        lambda { Comment.add_selected_answer comment.id, 'unknown_username' }.should raise_error Comment::AddAnswerError
       end
 
       it 'updates an existing guess' do
@@ -170,7 +170,7 @@ describe Comment do
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
         set_time
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         guess_matches_and_person_is comment, old_guess.person
       end
 
@@ -190,13 +190,13 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Revelation.make :photo => comment.photo
-        Comment.add_answer comment.id, ''
+        Comment.add_selected_answer comment.id, ''
         Revelation.count.should == 0
       end
 
     end
 
-    # Specs of add_answer call this immediately before calling add_answer so
+    # Specs of add_selected_answer call this immediately before calling add_selected_answer so
     # that it doesn't affect test objects' date attributes and assertions on
     # those attributes don't pass by accident
     def set_time
@@ -205,7 +205,7 @@ describe Comment do
 
   end
 
-  describe '.add_custom_answer' do
+  describe '.add_entered_answer' do
     before do
       @now = Time.utc(2010)
     end
@@ -316,7 +316,7 @@ describe Comment do
 
     end
 
-    # Specs of add_custom_answer call this immediately before calling add_custom_answer so
+    # Specs of add_entered_answer call this immediately before calling add_selected_answer so
     # that it doesn't affect test objects' date attributes and assertions on
     # those attributes don't pass by accident
     def set_time
