@@ -47,7 +47,7 @@ describe Admin::PhotosHelper do
       helper.ago(Time.utc(2010, 12, 31, 23, 0, 0)).should == '1 hour ago'
     end
 
-    it "returns 'n days ago' if 1 day ago <= time < 1 month ago" do
+    it "returns 'n days ago' if 1 day ago <= time < 1 week ago" do
       stub(Time).now { Time.utc(2011, 1, 2, 0, 0, 0) }
       helper.ago(Time.utc(2011)).should == '1 day ago'
     end
@@ -60,6 +60,26 @@ describe Admin::PhotosHelper do
     it "wraps days" do
       stub(Time).now { Time.utc(2011) }
       helper.ago(Time.utc(2010, 12, 31, 0, 0, 0)).should == '1 day ago'
+    end
+
+    it "returns 'n weeks ago' if 1 week ago <= time < 1 month ago" do
+      stub(Time).now { Time.utc(2011, 1, 8, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '1 week ago'
+    end
+    
+    it "rounds down weeks" do
+      stub(Time).now { Time.utc(2011, 1, 9, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '1 week ago'
+    end
+
+    it "pluralizes weeks" do
+      stub(Time).now { Time.utc(2011, 1, 15, 0, 0, 0) }
+      helper.ago(Time.utc(2011)).should == '2 weeks ago'
+    end
+
+    it "wraps weeks" do
+      stub(Time).now { Time.utc(2011) }
+      helper.ago(Time.utc(2010, 12, 25, 0, 0, 0)).should == '1 week ago'
     end
 
     it "returns 'n months ago' if 1 month ago <= time" do

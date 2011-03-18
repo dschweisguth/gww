@@ -26,7 +26,7 @@ module Admin::PhotosHelper
         if days < 0
           days += 365 # not perfect
         end
-        pluralize days, 'day'
+        days >= 7 ? pluralize(days / 7, 'week') : pluralize(days, 'day')
       else
         months = now.month - time.month + 12 * (now.year - time.year)
         pluralize months, 'month'
