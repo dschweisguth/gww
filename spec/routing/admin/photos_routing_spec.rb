@@ -15,41 +15,18 @@ describe Admin::PhotosController do
 
     end
   end
-  
-  describe 'unfound' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      unfound_admin_photos_path.should == '/admin/photos/unfound'
+
+  %w{ unfound inaccessible multipoint }.each do |action|
+    describe action do
+      it 'has a named route' do
+        eval "#{action}_admin_photos_path.should == '/admin/photos/#{action}'"
+      end
+
+      it 'is routed to' do
+        { :get => "/admin/photos/#{action}" }.should route_to :controller => 'admin/photos', :action => action
+      end
+
     end
-
-    it 'is routed to' do
-      { :get => '/admin/photos/unfound' }.should route_to :controller => 'admin/photos', :action => 'unfound'
-    end
-
-  end
-
-  describe 'inaccessible' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      inaccessible_admin_photos_path.should == '/admin/photos/inaccessible'
-    end
-
-    it 'is routed to' do
-      { :get => '/admin/photos/inaccessible' }.should route_to :controller => 'admin/photos', :action => 'inaccessible'
-    end
-
-  end
-
-  describe 'multipoint' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      multipoint_admin_photos_path.should == '/admin/photos/multipoint'
-    end
-
-    it 'is routed to' do
-      { :get => '/admin/photos/multipoint' }.should route_to :controller => 'admin/photos', :action => 'multipoint'
-    end
-
   end
 
   describe 'edit' do
