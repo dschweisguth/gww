@@ -19,6 +19,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
+  map.update_photos 'admin/photos/update', :controller => 'admin/photos', :action => 'update', :conditions => { :method => :post }
+  map.update_photo_statistics 'admin/photos/update_statistics', :controller => 'admin/photos', :action => 'update_statistics', :conditions => { :method => :post }
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
 
   map.resources :admin_score_reports, :path_prefix => '/admin', :controller => 'admin/score_reports', :as => 'score_reports', :only => [ :index, :new, :create, :destroy ]
