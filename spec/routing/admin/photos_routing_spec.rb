@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Admin::PhotosController do
   without_transactions
 
-  describe 'update' do
+  describe 'update_all' do
     it 'has a named route' do
       #noinspection RubyResolve
-      update_all_path.should == '/admin/photos/update'
+      update_all_path.should == '/admin/photos/update_all'
     end
     
     it 'is routed to' do
-      { :post => '/admin/photos/update' }.should route_to :controller => 'admin/photos', :action => 'update'
+      { :post => '/admin/photos/update_all' }.should route_to :controller => 'admin/photos', :action => 'update_all'
     end
 
   end

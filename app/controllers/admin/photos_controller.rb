@@ -1,7 +1,7 @@
 class Admin::PhotosController < ApplicationController
   auto_complete_for :person, :username
 
-  def update
+  def update_all
     # Expire before updating so everyone sees the in-progress message
     PageCache.clear
     new_photo_count, new_person_count, pages_gotten, pages_available =

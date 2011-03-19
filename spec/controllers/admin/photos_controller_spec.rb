@@ -4,11 +4,11 @@ describe Admin::PhotosController do
   integrate_views
   without_transactions
 
-  describe '#update' do
-    it 'does some work and redirects to the admin index' do
+  describe '#update_all' do
+    it 'does some work and redirects' do
       mock_clear_page_cache 2
       mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
-      get :update
+      get :update_all
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should ==
@@ -17,7 +17,7 @@ describe Admin::PhotosController do
   end
 
   describe '#update_statistics' do
-    it 'does some work and redirects to the admin index' do
+    it 'does some work and redirects' do
       mock(Photo).update_statistics
       mock_clear_page_cache
       get :update_statistics
