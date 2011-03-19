@@ -32,9 +32,7 @@ describe Admin::PhotosController do
       photo = Photo.make :id => 1
       stub(Photo).unfound_or_unconfirmed { [ photo ] }
       get :unfound
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_tag 'a[href=/admin/photos/edit/1]', :text => 'Edit'
+      lists_photo
     end
   end
 
@@ -43,9 +41,7 @@ describe Admin::PhotosController do
       photo = Photo.make :id => 1
       stub(Photo).inaccessible { [ photo ] }
       get :inaccessible
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_tag 'a[href=/admin/photos/edit/1]', :text => 'Edit'
+      lists_photo
     end
   end
 
@@ -54,10 +50,14 @@ describe Admin::PhotosController do
       photo = Photo.make :id => 1
       stub(Photo).multipoint { [ photo ] }
       get :multipoint
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_tag 'a[href=/admin/photos/edit/1]', :text => 'Edit'
+      lists_photo
     end
+  end
+
+  #noinspection RubyResolve
+  def lists_photo
+    response.should be_success
+    response.should have_tag "a[href=#{edit_photo_path(1)}]", :text => 'Edit'
   end
 
   describe '#edit' do
