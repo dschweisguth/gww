@@ -15,13 +15,13 @@ ActionController::Routing::Routes.draw do |map|
   map.longest_and_shortest 'guesses/longest_and_shortest',
     :controller => 'guesses', :action => 'longest_and_shortest'
 
-  map.resources :score_reports
+  map.resources :score_reports, :only => [ :index, :show ]
 
   map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
   map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
 
-  map.resources :admin_score_reports, :path_prefix => '/admin', :controller => 'admin/score_reports', :as => 'score_reports'
+  map.resources :admin_score_reports, :path_prefix => '/admin', :controller => 'admin/score_reports', :as => 'score_reports', :only => [ :index, :new, :create, :destroy ]
 
   map.with_options :controller => 'admin/root' do |admin_root|
     admin_root.admin_root 'admin'
