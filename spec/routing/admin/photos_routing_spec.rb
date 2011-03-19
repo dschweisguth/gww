@@ -75,7 +75,7 @@ describe Admin::PhotosController do
 
   end
 
-  [ 'change_game_status', 'add_selected_answer', 'add_entered_answer', 'remove_revelation', 'remove_guess', 'reload_comments' ].each do |action|
+  %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
     describe action do
       it 'is routed to' do
         { :post => "/admin/photos/666/#{action}" }.should route_to :controller => 'admin/photos', :action => action, :id => '666'
