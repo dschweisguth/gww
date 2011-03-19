@@ -92,7 +92,7 @@ class Admin::PhotosController < ApplicationController
 
   def reload_comments
     #noinspection RubyResolve
-    redirect_to edit_admin_photo_path :id => params[:id]
+    redirect_to_edit_path
   end
 
   def redirect_to_edit_path(options = {})
