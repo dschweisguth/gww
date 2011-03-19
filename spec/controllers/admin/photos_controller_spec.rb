@@ -4,11 +4,11 @@ describe Admin::PhotosController do
   integrate_views
   without_transactions
 
-  describe '#update_all' do
+  describe '#update_all_from_flickr' do
     it 'does some work and redirects' do
       mock_clear_page_cache 2
       mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
-      get :update_all
+      get :update_all_from_flickr
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should ==
