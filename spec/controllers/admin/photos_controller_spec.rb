@@ -67,19 +67,7 @@ describe Admin::PhotosController do
       #noinspection RubyResolve
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :id => 222 ] }
       get :edit, :id => photo.id, :nocomment => 'true'
-
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
-      response.should have_text /This photo is unfound./
-      response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
-        with_tag 'input[value=unconfirmed]'
-      end
-      response.should have_tag 'form[action=/admin/photos/add_selected_answer/111]' do
-        with_tag 'input[type=submit][name=commit][value=Add this guess]'
-        with_tag 'input[type=hidden][name=comment_id][value=222]'
-      end
-
+      renders_edit_page
     end
 
     it 'loads comments and renders the page' do
@@ -88,7 +76,10 @@ describe Admin::PhotosController do
       stub(photo).load_comments { [ Comment.make :id => 222 ] }
       mock_clear_page_cache
       get :edit, :id => photo.id
+      renders_edit_page
+    end
 
+    def renders_edit_page
       #noinspection RubyResolve
       response.should be_success
       response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
@@ -100,7 +91,6 @@ describe Admin::PhotosController do
         with_tag 'input[type=submit][name=commit][value=Add this guess]'
         with_tag 'input[type=hidden][name=comment_id][value=222]'
       end
-
     end
 
   end
