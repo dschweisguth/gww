@@ -14,7 +14,7 @@
 
 <h2>Score</h2>
 <ul>
-<li><%= link_to 'Unfound or unconfirmed photos', :controller => 'photos', :action => 'unfound' %> (<%= @unfound_photos_count %>)</li>
+<li><%= link_to 'Unfound or unconfirmed photos', unfound_admin_photos_path %> (<%= @unfound_photos_count %>)</li>
 <li><%= link_to 'Inaccessible and unfound or unconfirmed photos', :controller => 'photos', :action => 'inaccessible' %> (<%= @inaccessible_photos_count %>), for possible manual removal</li>
 <li><%= link_to 'Photos worth more than one point', :controller => 'photos', :action => 'multipoint' %> (<%= @multipoint_photos_count %>), for possible rescoring</li>
 </ul>

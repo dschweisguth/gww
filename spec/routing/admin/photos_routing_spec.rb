@@ -27,6 +27,18 @@ describe Admin::PhotosController do
 
   end
 
+  describe 'unfound' do
+    it 'is routed to' do
+      { :get => '/admin/photos/unfound' }.should route_to :controller => 'admin/photos', :action => 'unfound'
+    end
+
+    it 'has a named route' do
+      #noinspection RubyResolve
+      unfound_admin_photos_path.should == '/admin/photos/unfound'
+    end
+
+  end
+
   describe 'edit' do
     it 'is routed to' do
       { :get => '/admin/photos/edit/666' }.should route_to :controller => 'admin/photos', :action => 'edit', :id => '666'
