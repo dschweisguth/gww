@@ -6,7 +6,7 @@ describe Admin::PhotosController do
   %w{ update_all_from_flickr update_statistics }.each do |action|
     describe action do
       it 'has a named route' do
-        eval "#{action}_path.should == '/admin/photos/#{action}'"
+        send("#{action}_path").should == "/admin/photos/#{action}"
       end
 
       it 'is routed to' do
@@ -19,7 +19,7 @@ describe Admin::PhotosController do
   %w{ unfound inaccessible multipoint }.each do |action|
     describe action do
       it 'has a named route' do
-        eval "#{action}_admin_photos_path.should == '/admin/photos/#{action}'"
+        send("#{action}_admin_photos_path").should == "/admin/photos/#{action}"
       end
 
       it 'is routed to' do
@@ -44,7 +44,7 @@ describe Admin::PhotosController do
   %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
     describe action do
       it 'has a named route' do
-        eval("#{action}_path(666)").should == "/admin/photos/666/#{action}"
+        send("#{action}_path", 666).should == "/admin/photos/666/#{action}"
       end
 
       it 'is routed to' do
