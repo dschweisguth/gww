@@ -51,7 +51,7 @@ class Admin::PhotosController < ApplicationController
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
     PageCache.clear
-    redirect_to_edit_path :nocomment => 'true'
+    redirect_to_edit_path params[:id], :nocomment => 'true'
   end
 
   def add_selected_answer
