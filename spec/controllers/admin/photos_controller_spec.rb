@@ -171,11 +171,6 @@ describe Admin::PhotosController do
     end
   end
 
-  def redirects_to_edit_path(id, options = {})
-    #noinspection RubyResolve
-    response.should redirect_to edit_admin_photo_path id, options
-  end
-
   describe '#destroy' do
     it 'destroys' do
       mock(Photo).destroy_photo_and_dependent_objects '1'
@@ -193,8 +188,7 @@ describe Admin::PhotosController do
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path photo
+      redirects_to_edit_path photo
 
     end
 
@@ -218,6 +212,11 @@ describe Admin::PhotosController do
 
     end
 
+  end
+
+  def redirects_to_edit_path(id, options = {})
+    #noinspection RubyResolve
+    response.should redirect_to edit_admin_photo_path id, options
   end
 
 end
