@@ -39,6 +39,30 @@ describe Admin::PhotosController do
 
   end
 
+  describe 'inaccessible' do
+    it 'is routed to' do
+      { :get => '/admin/photos/inaccessible' }.should route_to :controller => 'admin/photos', :action => 'inaccessible'
+    end
+
+    it 'has a named route' do
+      #noinspection RubyResolve
+      inaccessible_admin_photos_path.should == '/admin/photos/inaccessible'
+    end
+
+  end
+
+  describe 'multipoint' do
+    it 'is routed to' do
+      { :get => '/admin/photos/multipoint' }.should route_to :controller => 'admin/photos', :action => 'multipoint'
+    end
+
+    it 'has a named route' do
+      #noinspection RubyResolve
+      multipoint_admin_photos_path.should == '/admin/photos/multipoint'
+    end
+
+  end
+
   describe 'edit' do
     it 'is routed to' do
       { :get => '/admin/photos/edit/666' }.should route_to :controller => 'admin/photos', :action => 'edit', :id => '666'
