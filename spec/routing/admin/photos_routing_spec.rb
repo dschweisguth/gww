@@ -78,14 +78,4 @@ describe Admin::PhotosController do
 
   end
 
-  # TODO Dave after adding more RESTful and named routes, either remove these or use current examples
-
-  it 'routes to a plain action' do
-    { :get => '/admin/photos/update' }.should route_to :controller => 'admin/photos', :action => 'update'
-  end
-
-  it 'routes to a plain action with an ID' do
-    { :get => '/admin/photos/add_answer/666' }.should route_to :controller => 'admin/photos', :action => 'add_answer', :id => '666'
-  end
-
 end
