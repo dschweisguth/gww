@@ -62,9 +62,7 @@
 <% end -%>
 <br/><br/>
 
-<% form_tag({ :action => 'reload_comments', :id => @photo }, :class => 'inline') do %>
-  <div><%= submit_tag("Reload comments") %></div>
-<% end %>
+<%= button_to 'Reload comments', { :action => 'reload_comments', :id => @photo } %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
 
