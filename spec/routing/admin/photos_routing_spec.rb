@@ -3,30 +3,19 @@ require 'spec_helper'
 describe Admin::PhotosController do
   without_transactions
 
-  describe 'update_all_from_flickr' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      update_all_from_flickr_path.should == '/admin/photos/update_all_from_flickr'
-    end
-    
-    it 'is routed to' do
-      { :post => '/admin/photos/update_all_from_flickr' }.should route_to :controller => 'admin/photos', :action => 'update_all_from_flickr'
-    end
+  %w{ update_all_from_flickr update_statistics }.each do |action|
+    describe action do
+      it 'has a named route' do
+        eval "#{action}_path.should == '/admin/photos/#{action}'"
+      end
 
+      it 'is routed to' do
+        { :post => "/admin/photos/#{action}" }.should route_to :controller => 'admin/photos', :action => action
+      end
+
+    end
   end
-
-  describe 'update_statistics' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      update_statistics_path.should == '/admin/photos/update_statistics'
-    end
-
-    it 'is routed to' do
-      { :post => '/admin/photos/update_statistics' }.should route_to :controller => 'admin/photos', :action => 'update_statistics'
-    end
-
-  end
-
+  
   describe 'unfound' do
     it 'has a named route' do
       #noinspection RubyResolve
