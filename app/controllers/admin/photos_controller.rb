@@ -61,7 +61,7 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_path :nocomment => 'true'
+    redirect_to_edit_path params[:id], :nocomment => 'true'
   end
 
   def add_entered_answer
@@ -71,13 +71,13 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_path :nocomment => 'true'
+    redirect_to_edit_path params[:id], :nocomment => 'true'
   end
 
   def remove_revelation
     Comment.remove_revelation params[:comment_id]
     PageCache.clear
-    redirect_to_edit_path :nocomment => 'true'
+    redirect_to_edit_path params[:id], :nocomment => 'true'
   end
 
   def remove_guess
@@ -87,19 +87,13 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_path :nocomment => 'true'
+    redirect_to_edit_path params[:id], :nocomment => 'true'
   end
 
   def reload_comments
     #noinspection RubyResolve
-    redirect_to_edit_path
+    redirect_to_edit_path params[:id]
   end
-
-  def redirect_to_edit_path(options = {})
-    #noinspection RubyResolve
-    redirect_to edit_admin_photo_path params[:id], options
-  end
-  private :redirect_to_edit_path
 
   def destroy
     Photo.destroy_photo_and_dependent_objects params[:id]
@@ -114,7 +108,7 @@ class Admin::PhotosController < ApplicationController
       photo = Photo.find_by_flickrid flickrid
       if photo
         #noinspection RubyResolve
-        redirect_to edit_admin_photo_path photo
+        redirect_to_edit_path photo
         return
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +
@@ -127,5 +121,11 @@ class Admin::PhotosController < ApplicationController
     end
     render :file => 'shared/in_gww'
   end
+
+  def redirect_to_edit_path(id, options = {})
+    #noinspection RubyResolve
+    redirect_to edit_admin_photo_path id, options
+  end
+  private :redirect_to_edit_path
 
 end
