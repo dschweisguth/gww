@@ -100,8 +100,7 @@ describe Admin::PhotosController do
       mock(Photo).change_game_status('1', 'unconfirmed')
       mock_clear_page_cache
       get :change_game_status, :id => 1, :commit => 'unconfirmed'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
     end
   end
 
@@ -110,15 +109,13 @@ describe Admin::PhotosController do
       mock(Comment).add_selected_answer '2', 'username'
       mock_clear_page_cache
       post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_selected_answer('2', 'username') { raise Comment::AddAnswerError, 'Sorry' }
       post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
       flash[:notice].should == 'Sorry'
     end
 
@@ -129,15 +126,13 @@ describe Admin::PhotosController do
       mock(Comment).add_entered_answer 1, 'username', 'answer text'
       mock_clear_page_cache
       post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_entered_answer(1, 'username', 'answer text') { raise Comment::AddAnswerError, 'Sorry' }
       post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
       flash[:notice].should == 'Sorry'
     end
 
@@ -148,8 +143,7 @@ describe Admin::PhotosController do
       mock(Comment).remove_revelation '2'
       mock_clear_page_cache
       post :remove_revelation, :id => '1', :comment_id => '2'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
     end
   end
 
@@ -158,15 +152,13 @@ describe Admin::PhotosController do
       mock(Comment).remove_guess '2'
       mock_clear_page_cache
       post :remove_guess, :id => '1', :comment_id => '2'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true'
+      redirects_to_edit_path 1, :nocomment => 'true'
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).remove_guess('2') { raise Comment::RemoveGuessError, 'Sorry' }
       post :remove_guess, :id => '1', :comment_id => '2'
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1, :nocomment => 'true' # TODO Dave extract method
+      redirects_to_edit_path 1, :nocomment => 'true'
       flash[:notice].should == 'Sorry'
     end
 
@@ -175,9 +167,13 @@ describe Admin::PhotosController do
   describe '#reload_comments' do
     it 'just redirects to the edit page without the nocomment param' do
       get :reload_comments, :id => 1
-      #noinspection RubyResolve
-      response.should redirect_to edit_admin_photo_path :id => 1
+      redirects_to_edit_path 1
     end
+  end
+
+  def redirects_to_edit_path(id, options = {})
+    #noinspection RubyResolve
+    response.should redirect_to edit_admin_photo_path id, options
   end
 
   describe '#destroy' do
