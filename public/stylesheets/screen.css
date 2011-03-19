@@ -156,7 +156,7 @@ a.normal {
   background-color: #ffcc33;
 }
 
-/* photos/show, admin/photos/edit */
+/* photos/show, admin/photos/#/edit */
 
 .when {
   width: 100px;
@@ -198,7 +198,7 @@ a.normal {
   display: inline;
 }
 
-/* admin/photos/edit */
+/* admin/photos/#/edit */
 
 .edit {
   font-size: 11px;

@@ -91,12 +91,14 @@ class Admin::PhotosController < ApplicationController
   end
 
   def redirect_to_edit_page_without_reloading_comments
-    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+    #noinspection RubyResolve
+    redirect_to edit_admin_photo_path :id => params[:id], :nocomment => 'true'
   end
   private :redirect_to_edit_page_without_reloading_comments
   
   def reload_comments
-    redirect_to edit_photo_path :id => params[:id]
+    #noinspection RubyResolve
+    redirect_to edit_admin_photo_path :id => params[:id]
   end
 
   def destroy
@@ -111,7 +113,8 @@ class Admin::PhotosController < ApplicationController
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
-        redirect_to edit_photo_path photo
+        #noinspection RubyResolve
+        redirect_to edit_admin_photo_path photo
         return
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +

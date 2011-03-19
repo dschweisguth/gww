@@ -20,13 +20,12 @@ ActionController::Routing::Routes.draw do |map|
   map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
   map.namespace :admin do |admin|
-    admin.resources :photos, :only => [ :destroy ], :collection => { :unfound => :get, :inaccessible => :get, :multipoint => :get }
+    admin.resources :photos, :only => [ :edit, :destroy ], :collection => { :unfound => :get, :inaccessible => :get, :multipoint => :get }
     admin.resources :score_reports, :only => [ :index, :new, :create, :destroy ]
   end
 
   map.update_photos 'admin/photos/update', :controller => 'admin/photos', :action => 'update', :conditions => { :method => :post }
   map.update_photo_statistics 'admin/photos/update_statistics', :controller => 'admin/photos', :action => 'update_statistics', :conditions => { :method => :post }
-  map.edit_photo 'admin/photos/edit/:id', :controller => 'admin/photos', :action => 'edit'
 
   map.with_options :controller => 'admin/root' do |admin_root|
     admin_root.admin_root 'admin'
