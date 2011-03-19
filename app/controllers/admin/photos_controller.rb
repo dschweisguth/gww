@@ -97,7 +97,7 @@ class Admin::PhotosController < ApplicationController
 
   def redirect_to_edit_path(options = {})
     #noinspection RubyResolve
-    redirect_to edit_admin_photo_path options.merge({ :id => params[:id] })
+    redirect_to edit_admin_photo_path params[:id], options
   end
   private :redirect_to_edit_path
 
