@@ -26,7 +26,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.with_options :controller => 'admin/photos' do |photos|
 
-    photos.edit_in_gww 'admin/photos/edit_in_gww', :action => 'edit_in_gww'
+    photos.edit_in_gww 'admin/photos/edit_in_gww', :action => 'edit_in_gww', :conditions => { :method => :get }
 
     photos.with_options :conditions => { :method => :post } do |photos_with_post|
       photos_with_post.update_photos 'admin/photos/update', :action => 'update'
