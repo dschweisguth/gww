@@ -27,11 +27,7 @@ class Admin::PhotosController < ApplicationController
 
   caches_page :inaccessible
   def inaccessible
-    @photos = Photo.all \
-      :conditions =>
-        [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
-          FlickrUpdate.latest.created_at ],
-      :include => :person, :order => "lastupdate desc"
+    @photos = Photo.inaccessible
   end
 
   caches_page :multipoint

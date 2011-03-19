@@ -41,8 +41,7 @@ describe Admin::PhotosController do
   describe '#inaccessible' do
     it 'renders the page' do
       photo = Photo.make :id => 1
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.utc(2011) }
-      stub(Photo).all { [ photo ] }
+      stub(Photo).inaccessible { [ photo ] }
       get :inaccessible
       #noinspection RubyResolve
       response.should be_success
