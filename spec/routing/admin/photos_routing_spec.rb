@@ -9,9 +9,7 @@ describe Admin::PhotosController do
         send("#{action}_path").should == "/admin/photos/#{action}"
       end
 
-      it 'is routed to' do
-        { :post => "/admin/photos/#{action}" }.should route_to :controller => 'admin/photos', :action => action
-      end
+      it { should route(:post, "/admin/photos/#{action}").to :controller => 'admin/photos', :action => action }
 
     end
   end
@@ -22,9 +20,7 @@ describe Admin::PhotosController do
         send("#{action}_admin_photos_path").should == "/admin/photos/#{action}"
       end
 
-      it 'is routed to' do
-        { :get => "/admin/photos/#{action}" }.should route_to :controller => 'admin/photos', :action => action
-      end
+      it { should route(:get, "/admin/photos/#{action}").to :controller => 'admin/photos', :action => action }
 
     end
   end
@@ -35,9 +31,7 @@ describe Admin::PhotosController do
       edit_admin_photo_path(666).should == '/admin/photos/666/edit'
     end
 
-    it 'is routed to' do
-      { :get => '/admin/photos/666/edit' }.should route_to :controller => 'admin/photos', :action => 'edit', :id => '666'
-    end
+    it { should route(:get, '/admin/photos/666/edit').to :controller => 'admin/photos', :action => 'edit', :id => '666' }
 
   end
 
@@ -47,9 +41,7 @@ describe Admin::PhotosController do
         send("#{action}_path", 666).should == "/admin/photos/666/#{action}"
       end
 
-      it 'is routed to' do
-        { :post => "/admin/photos/666/#{action}" }.should route_to :controller => 'admin/photos', :action => action, :id => '666'
-      end
+      it { should route(:post, "/admin/photos/666/#{action}").to :controller => 'admin/photos', :action => action, :id => '666' }
 
     end
   end
@@ -60,9 +52,7 @@ describe Admin::PhotosController do
       admin_photo_path(666).should == '/admin/photos/666'
     end
 
-    it 'is routed to' do
-      { :delete => '/admin/photos/666' }.should route_to :controller => 'admin/photos', :action => 'destroy', :id => '666'
-    end
+    it { should route(:delete, "/admin/photos/666").to :controller => 'admin/photos', :action => 'destroy', :id => '666' }
 
   end
 
@@ -72,9 +62,7 @@ describe Admin::PhotosController do
       edit_in_gww_path.should == '/admin/photos/edit_in_gww'
     end
 
-    it 'is routed to' do
-      { :get => '/admin/photos/edit_in_gww' }.should route_to :controller => 'admin/photos', :action => 'edit_in_gww'
-    end
+    it { should route(:get, "/admin/photos/edit_in_gww").to :controller => 'admin/photos', :action => 'edit_in_gww' }
 
   end
 
