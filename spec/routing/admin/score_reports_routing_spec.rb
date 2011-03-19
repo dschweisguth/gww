@@ -39,13 +39,12 @@ describe Admin::ScoreReportsController do
     it 'is routed to' do
       { :delete => '/admin/score_reports/666' }.should route_to :controller => 'admin/score_reports', :action => 'destroy', :id => '666'
     end
-  end
 
-  describe '#destroy' do
     it 'has a named route' do
       #noinspection RubyResolve
       admin_score_report_path('666').should == '/admin/score_reports/666'
     end
+
   end
 
 end
