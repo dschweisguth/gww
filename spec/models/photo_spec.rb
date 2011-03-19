@@ -684,6 +684,33 @@ describe Photo do
 
   end
 
+  describe '.inaccessible' do
+    it "lists photos not seen since the last update" do
+      FlickrUpdate.make :created_at => Time.utc(2011)
+      photo = Photo.make :seen_at => Time.utc(2010)
+      Photo.inaccessible.should == [ photo ]
+    end
+
+    it "includes unconfirmed photos" do
+      FlickrUpdate.make :created_at => Time.utc(2011)
+      photo = Photo.make :seen_at => Time.utc(2010), :game_status => 'unconfirmed'
+      Photo.inaccessible.should == [ photo ]
+    end
+
+    it "ignores photos seen since the last update" do
+      FlickrUpdate.make :created_at => Time.utc(2011)
+      Photo.make :seen_at => Time.utc(2011)
+      Photo.inaccessible.should == []
+    end
+
+    it "ignores statuses other than unfound and unconfirmed" do
+      FlickrUpdate.make :created_at => Time.utc(2011)
+      Photo.make :seen_at => Time.utc(2010), :game_status => 'found'
+      Photo.inaccessible.should == []
+    end
+
+  end
+
   describe '.multipoint' do
     it 'returns photos for which more than one person got a point' do
       photo = Photo.make
