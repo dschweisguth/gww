@@ -57,7 +57,7 @@ describe Admin::PhotosController do
   #noinspection RubyResolve
   def lists_photo
     response.should be_success
-    response.should have_tag "a[href=#{edit_admin_photo_path(1)}]", :text => 'Edit'
+    response.should have_tag "a[href=#{edit_admin_photo_path(1, :load_comments => true)}]", :text => 'Edit'
   end
 
   describe '#edit' do
@@ -66,7 +66,7 @@ describe Admin::PhotosController do
       stub(Photo).find(photo.id.to_s, anything) { photo }
       #noinspection RubyResolve
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :id => 222 ] }
-      get :edit, :id => photo.id, :nocomment => 'true'
+      get :edit, :id => photo.id
       renders_edit_page
     end
 
@@ -75,7 +75,7 @@ describe Admin::PhotosController do
       stub(Photo).find(photo.id.to_s, anything) { photo }
       stub(photo).load_comments { [ Comment.make :id => 222 ] }
       mock_clear_page_cache
-      get :edit, :id => photo.id
+      get :edit, :id => photo.id, :load_comments => true
       renders_edit_page
     end
 
@@ -100,7 +100,7 @@ describe Admin::PhotosController do
       mock(Photo).change_game_status('1', 'unconfirmed')
       mock_clear_page_cache
       get :change_game_status, :id => 1, :commit => 'unconfirmed'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
     end
   end
 
@@ -109,13 +109,13 @@ describe Admin::PhotosController do
       mock(Comment).add_selected_answer '2', 'username'
       mock_clear_page_cache
       post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_selected_answer('2', 'username') { raise Comment::AddAnswerError, 'Sorry' }
       post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end
 
@@ -126,13 +126,13 @@ describe Admin::PhotosController do
       mock(Comment).add_entered_answer 1, 'username', 'answer text'
       mock_clear_page_cache
       post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_entered_answer(1, 'username', 'answer text') { raise Comment::AddAnswerError, 'Sorry' }
       post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end
 
@@ -143,7 +143,7 @@ describe Admin::PhotosController do
       mock(Comment).remove_revelation '2'
       mock_clear_page_cache
       post :remove_revelation, :id => '1', :comment_id => '2'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
     end
   end
 
@@ -152,22 +152,23 @@ describe Admin::PhotosController do
       mock(Comment).remove_guess '2'
       mock_clear_page_cache
       post :remove_guess, :id => '1', :comment_id => '2'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).remove_guess('2') { raise Comment::RemoveGuessError, 'Sorry' }
       post :remove_guess, :id => '1', :comment_id => '2'
-      redirects_to_edit_path 1, :nocomment => 'true'
+      redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end
 
   end
 
+  # TODO Dave eliminate
   describe '#reload_comments' do
-    it 'just redirects to the edit page without the nocomment param' do
+    it 'just redirects to the edit page with load_comments=true' do
       get :reload_comments, :id => 1
-      redirects_to_edit_path 1
+      redirects_to_edit_path 1, :load_comments => true
     end
   end
 
@@ -188,7 +189,7 @@ describe Admin::PhotosController do
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
-      redirects_to_edit_path photo
+      redirects_to_edit_path photo, :load_comments => true
 
     end
 

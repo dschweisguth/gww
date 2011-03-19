@@ -10,7 +10,7 @@ function editInGWW() {
     var match = /^(http:\/\/[^/]+\/)photos\/show(\/\d+)/.exec(window.location);
     if (match != null) {
       setTimeout(function() {
-        window.location = match[1] + 'admin/photos' + match[2] + '/edit' ;
+        window.location = match[1] + 'admin/photos' + match[2] + '/edit?load_comments=true' ;
       }, 0);
     } else {
       alert('Try it on a Flickr or GWW photo page.');

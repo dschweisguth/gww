@@ -39,11 +39,11 @@ class Admin::PhotosController < ApplicationController
   def edit
     @photo = Photo.find params[:id],
       :include => [ :person, :revelation, { :guesses => :person } ]
-    if params[:nocomment]
-      @comments = Comment.find_all_by_photo_id(@photo)
-    else
+    if params[:load_comments]
       @comments = @photo.load_comments
       PageCache.clear
+    else
+      @comments = Comment.find_all_by_photo_id(@photo)
     end
     @comments.each { |comment| comment.photo = @photo }
   end
@@ -51,7 +51,7 @@ class Admin::PhotosController < ApplicationController
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
     PageCache.clear
-    redirect_to_edit_path params[:id], :nocomment => 'true'
+    redirect_to_edit_path params[:id]
   end
 
   def add_selected_answer
@@ -61,7 +61,7 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_path params[:id], :nocomment => 'true'
+    redirect_to_edit_path params[:id]
   end
 
   def add_entered_answer
@@ -71,13 +71,13 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_path params[:id], :nocomment => 'true'
+    redirect_to_edit_path params[:id]
   end
 
   def remove_revelation
     Comment.remove_revelation params[:comment_id]
     PageCache.clear
-    redirect_to_edit_path params[:id], :nocomment => 'true'
+    redirect_to_edit_path params[:id]
   end
 
   def remove_guess
@@ -87,12 +87,12 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_path params[:id], :nocomment => 'true'
+    redirect_to_edit_path params[:id]
   end
 
   def reload_comments
     #noinspection RubyResolve
-    redirect_to_edit_path params[:id]
+    redirect_to_edit_path params[:id], :load_comments => true
   end
 
   def destroy
@@ -108,7 +108,7 @@ class Admin::PhotosController < ApplicationController
       photo = Photo.find_by_flickrid flickrid
       if photo
         #noinspection RubyResolve
-        redirect_to_edit_path photo
+        redirect_to_edit_path photo, :load_comments => true
         return
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +
