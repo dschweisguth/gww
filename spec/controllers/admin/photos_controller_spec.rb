@@ -166,7 +166,6 @@ describe Admin::PhotosController do
 
   end
 
-  # TODO Dave eliminate
   describe '#reload_comments' do
     it 'just redirects to the edit page with load_comments=true' do
       get :reload_comments, :id => 1
