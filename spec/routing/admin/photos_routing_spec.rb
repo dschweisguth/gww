@@ -100,6 +100,18 @@ describe Admin::PhotosController do
 
   end
 
+  describe 'edit_in_gww' do
+    it 'has a named route' do
+      #noinspection RubyResolve
+      edit_in_gww_path.should == '/admin/photos/edit_in_gww'
+    end
+
+    it 'is routed to' do
+      { :get => '/admin/photos/edit_in_gww' }.should route_to :controller => 'admin/photos', :action => 'edit_in_gww'
+    end
+
+  end
+
   # TODO Dave after adding more RESTful and named routes, either remove these or use current examples
 
   it 'routes to a plain action' do

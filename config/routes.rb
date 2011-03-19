@@ -24,12 +24,15 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :score_reports, :only => [ :index, :new, :create, :destroy ]
   end
 
-  map.with_options :controller => 'admin/photos', :conditions => { :method => :post } do |photos|
-    photos.update_photos 'admin/photos/update', :action => 'update'
-    photos.update_photo_statistics 'admin/photos/update_statistics', :action => 'update_statistics'
-    %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
-      eval "photos.#{action} 'admin/photos/:id/#{action}', :action => '#{action}'"
+  map.with_options :controller => 'admin/photos' do |photos|
+    photos.with_options :conditions => { :method => :post } do |photos_with_post|
+      photos_with_post.update_photos 'admin/photos/update', :action => 'update'
+      photos_with_post.update_photo_statistics 'admin/photos/update_statistics', :action => 'update_statistics'
+      %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
+        eval "photos.#{action} 'admin/photos/:id/#{action}', :action => '#{action}'"
+      end
     end
+    photos.edit_in_gww 'admin/photos/edit_in_gww', :action => 'edit_in_gww'
   end
 
   map.with_options :controller => 'admin/root' do |admin_root|
