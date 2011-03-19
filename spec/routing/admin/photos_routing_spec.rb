@@ -75,6 +75,18 @@ describe Admin::PhotosController do
 
   end
 
+  describe 'destroy' do
+    it 'is routed to' do
+      { :delete => '/admin/photos/666' }.should route_to :controller => 'admin/photos', :action => 'destroy', :id => '666'
+    end
+
+    it 'has a named route' do
+      #noinspection RubyResolve
+      admin_photo_path(666).should == '/admin/photos/666'
+    end
+
+  end
+
   # TODO Dave after adding more RESTful and named routes, either remove these or use current examples
 
   it 'routes to a plain action' do

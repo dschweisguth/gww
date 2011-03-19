@@ -66,6 +66,6 @@
   <div><%= submit_tag("Reload comments") %></div>
 <% end %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<%= button_to 'Delete this photo', { :action => 'destroy', :id => @photo }, :confirm => 'Are you sure?' %>
+<%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
 
 <% end %>
