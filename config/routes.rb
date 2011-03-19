@@ -27,6 +27,11 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'admin/photos', :conditions => { :method => :post } do |photos|
     photos.update_photos 'admin/photos/update', :action => 'update'
     photos.update_photo_statistics 'admin/photos/update_statistics', :action => 'update_statistics'
+    photos.change_game_status 'admin/photos/:id/change_game_status', :action => 'change_game_status'
+    photos.add_selected_answer 'admin/photos/:id/add_selected_answer', :action => 'add_selected_answer'
+    photos.add_entered_answer 'admin/photos/:id/add_entered_answer', :action => 'add_entered_answer'
+    photos.remove_revelation 'admin/photos/:id/remove_revelation', :action => 'remove_revelation'
+    photos.remove_guess 'admin/photos/:id/remove_guess', :action => 'remove_guess'
   end
 
   map.with_options :controller => 'admin/root' do |admin_root|

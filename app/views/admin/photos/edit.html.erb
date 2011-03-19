@@ -11,7 +11,7 @@
 <%= render 'photos/image_and_status', :size => 'm' %>
 <br/>
 
-<% form_tag :action => 'change_game_status', :id => @photo do %>
+<% form_tag change_game_status_path(@photo) do %>
 <div>Change this photo's status from <%= @photo.game_status %> to
 <% if @photo.game_status != 'unfound' %><%= submit_tag 'unfound' %><% end %>
 <% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
@@ -24,14 +24,14 @@
     <% @comments.each do |comment| -%>
       <% is_accepted_answer = comment.is_accepted_answer -%>
       <% if is_accepted_answer then -%>
-        <% form_tag :action => (comment.is_by_poster ? :remove_revelation : :remove_guess), :id => @photo do %>
+        <% form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
             <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
           </div>
         <% end %>
       <% else -%>
-        <% form_tag :action => :add_selected_answer, :id => @photo do %>
+        <% form_tag add_selected_answer_path(@photo) do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
             <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
@@ -47,7 +47,7 @@
     <% end -%>
   </div><br/>
 
-  <% form_tag({ :action => :add_entered_answer, :id => @photo }, :id => 'username_form') do %>
+  <% form_tag(add_entered_answer_path(@photo), :id => 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here
         <%= text_field_with_auto_complete :person, :username %>

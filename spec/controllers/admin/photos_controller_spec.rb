@@ -84,10 +84,12 @@ describe Admin::PhotosController do
       response.should be_success
       response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
       response.should have_text /This photo is unfound./
-      response.should have_tag 'form[action=/admin/photos/change_game_status/111]', :text => /Change this photo's status from unfound to/ do
+      #noinspection RubyResolve
+      response.should have_tag "form[action=#{change_game_status_path(111)}]", :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
-      response.should have_tag 'form[action=/admin/photos/add_selected_answer/111]' do
+      #noinspection RubyResolve
+      response.should have_tag "form[action=#{add_selected_answer_path(111)}]" do
         with_tag 'input[type=submit][name=commit][value=Add this guess]'
         with_tag 'input[type=hidden][name=comment_id][value=222]'
       end

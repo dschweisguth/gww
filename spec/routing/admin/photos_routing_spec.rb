@@ -75,6 +75,19 @@ describe Admin::PhotosController do
 
   end
 
+  [ 'change_game_status', 'add_selected_answer', 'add_entered_answer', 'remove_revelation', 'remove_guess' ].each do |action|
+    describe action do
+      it 'is routed to' do
+        { :post => "/admin/photos/666/#{action}" }.should route_to :controller => 'admin/photos', :action => action, :id => '666'
+      end
+
+      it 'has a named route' do
+        eval("#{action}_path(666)").should == "/admin/photos/666/#{action}"
+      end
+
+    end
+  end
+
   describe 'destroy' do
     it 'is routed to' do
       { :delete => '/admin/photos/666' }.should route_to :controller => 'admin/photos', :action => 'destroy', :id => '666'
