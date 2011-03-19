@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
     photos.add_entered_answer 'admin/photos/:id/add_entered_answer', :action => 'add_entered_answer'
     photos.remove_revelation 'admin/photos/:id/remove_revelation', :action => 'remove_revelation'
     photos.remove_guess 'admin/photos/:id/remove_guess', :action => 'remove_guess'
+    photos.reload_comments 'admin/photos/:id/reload_comments', :action => 'reload_comments'
   end
 
   map.with_options :controller => 'admin/root' do |admin_root|
