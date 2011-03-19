@@ -214,9 +214,9 @@ describe Admin::PhotosController do
 
   end
 
-  def redirects_to_edit_path(id, options = {})
+  def redirects_to_edit_path(photo_or_id, options = {})
     #noinspection RubyResolve
-    response.should redirect_to edit_admin_photo_path id, options
+    response.should redirect_to edit_admin_photo_path photo_or_id, options
   end
 
 end
