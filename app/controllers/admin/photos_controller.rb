@@ -51,7 +51,7 @@ class Admin::PhotosController < ApplicationController
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
     PageCache.clear
-    redirect_to_edit_page_without_reloading_comments
+    redirect_to_edit_path :nocomment => 'true'
   end
 
   def add_selected_answer
@@ -61,7 +61,7 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_page_without_reloading_comments
+    redirect_to_edit_path :nocomment => 'true'
   end
 
   def add_entered_answer
@@ -71,13 +71,13 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_page_without_reloading_comments
+    redirect_to_edit_path :nocomment => 'true'
   end
 
   def remove_revelation
     Comment.remove_revelation params[:comment_id]
     PageCache.clear
-    redirect_to_edit_page_without_reloading_comments
+    redirect_to_edit_path :nocomment => 'true'
   end
 
   def remove_guess
@@ -87,19 +87,19 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to_edit_page_without_reloading_comments
+    redirect_to_edit_path :nocomment => 'true'
   end
 
-  def redirect_to_edit_page_without_reloading_comments
-    #noinspection RubyResolve
-    redirect_to edit_admin_photo_path :id => params[:id], :nocomment => 'true'
-  end
-  private :redirect_to_edit_page_without_reloading_comments
-  
   def reload_comments
     #noinspection RubyResolve
     redirect_to edit_admin_photo_path :id => params[:id]
   end
+
+  def redirect_to_edit_path(options = {})
+    #noinspection RubyResolve
+    redirect_to edit_admin_photo_path options.merge({ :id => params[:id] })
+  end
+  private :redirect_to_edit_path
 
   def destroy
     Photo.destroy_photo_and_dependent_objects params[:id]
