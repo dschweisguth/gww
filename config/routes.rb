@@ -29,8 +29,8 @@ ActionController::Routing::Routes.draw do |map|
     photos.edit_in_gww 'admin/photos/edit_in_gww', :action => 'edit_in_gww', :conditions => { :method => :get }
 
     photos.with_options :conditions => { :method => :post } do |photos_with_post|
-      photos_with_post.update_photos 'admin/photos/update', :action => 'update'
-      photos_with_post.update_photo_statistics 'admin/photos/update_statistics', :action => 'update_statistics'
+      photos_with_post.update_all 'admin/photos/update', :action => 'update'
+      photos_with_post.update_statistics 'admin/photos/update_statistics', :action => 'update_statistics'
       %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
         eval "photos.#{action} 'admin/photos/:id/#{action}', :action => '#{action}'"
       end

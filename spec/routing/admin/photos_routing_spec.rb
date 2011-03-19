@@ -6,7 +6,7 @@ describe Admin::PhotosController do
   describe 'update' do
     it 'has a named route' do
       #noinspection RubyResolve
-      update_photos_path.should == '/admin/photos/update'
+      update_all_path.should == '/admin/photos/update'
     end
     
     it 'is routed to' do
@@ -18,7 +18,7 @@ describe Admin::PhotosController do
   describe 'update_statistics' do
     it 'has a named route' do
       #noinspection RubyResolve
-      update_photo_statistics_path.should == '/admin/photos/update_statistics'
+      update_statistics_path.should == '/admin/photos/update_statistics'
     end
 
     it 'is routed to' do
