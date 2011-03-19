@@ -55,7 +55,7 @@ class Admin::PhotosController < ApplicationController
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
     PageCache.clear
-    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+    redirect_to_edit_page_without_reloading_comments
   end
 
   def add_selected_answer
@@ -65,7 +65,7 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+    redirect_to_edit_page_without_reloading_comments
   end
 
   def add_entered_answer
@@ -75,13 +75,13 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+    redirect_to_edit_page_without_reloading_comments
   end
 
   def remove_revelation
     Comment.remove_revelation params[:comment_id]
     PageCache.clear
-    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+    redirect_to_edit_page_without_reloading_comments
   end
 
   def remove_guess
@@ -91,9 +91,14 @@ class Admin::PhotosController < ApplicationController
       flash[:notice] = e.message
     end
     PageCache.clear
-    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+    redirect_to_edit_page_without_reloading_comments
   end
 
+  def redirect_to_edit_page_without_reloading_comments
+    redirect_to edit_photo_path :id => params[:id], :nocomment => 'true'
+  end
+  private :redirect_to_edit_page_without_reloading_comments
+  
   def reload_comments
     redirect_to edit_photo_path :id => params[:id]
   end
