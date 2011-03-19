@@ -30,13 +30,13 @@ ActionController::Routing::Routes.draw do |map|
 
     photos.with_options :conditions => { :method => :post } do |photos_with_post|
       %w{ update_all_from_flickr update_statistics }.each do |action|
-        eval "photos_with_post.#{action} 'admin/photos/#{action}', :action => '#{action}'"
+        photos_with_post.send action, "admin/photos/#{action}", :action => action
       end
     end
 
     photos.with_options :conditions => { :method => :post } do |photos_with_post|
       %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
-        eval "photos_with_post.#{action} 'admin/photos/:id/#{action}', :action => '#{action}'"
+        photos_with_post.send action, "admin/photos/:id/#{action}", :action => action
       end
     end
 
