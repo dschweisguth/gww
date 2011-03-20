@@ -37,8 +37,11 @@ module GWW
         end
 
         def example_call
-          # TODO Dave remove parens if not needed
-          "#{@name}_path(#{@args.map(&:to_s).join(', ')})"
+          call = "#{@name}_path"
+          if ! @args.empty?
+            call << "(#{@args.map(&:to_s).join(', ')})"
+          end
+          call
         end
 
       end
