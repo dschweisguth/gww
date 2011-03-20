@@ -20,6 +20,7 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
   Upgrade to passenger 3
   Upgrade to Rails 3
   See whether it's possible to test :inverse_of
+  Try to remove :controller from routing specs
   rvm
   Upgrade to Ruby 1.9.2
 
