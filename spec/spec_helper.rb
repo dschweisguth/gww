@@ -52,4 +52,5 @@ Spec::Runner.configure do |config|
   #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
   config.include GWW::Matchers::Model, :type => :model
+  config.include GWW::Matchers::Routing, :type => :routing
 end
