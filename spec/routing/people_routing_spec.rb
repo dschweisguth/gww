@@ -9,10 +9,8 @@ describe PeopleController do
       list_people_path('foo', 'bar').should == '/people/list/sorted-by/foo/order/bar'
     end
 
-    it 'is routed to' do
-      { :get => '/people/list/sorted-by/foo/order/bar' }.should route_to \
-        :controller => 'people', :action => 'list', :sorted_by => 'foo', :order => 'bar'
-    end
+    it { should route(:get, '/people/list/sorted-by/foo/order/bar').to(
+      :controller => 'people', :action => 'list', :sorted_by => 'foo', :order => 'bar') }
 
   end
 
@@ -22,9 +20,7 @@ describe PeopleController do
       nemeses_path.should == '/people/nemeses'
     end
 
-    it 'is routed to' do
-      { :get => '/people/nemeses' }.should route_to :controller => 'people', :action => 'nemeses'
-    end
+    it { should route(:get, '/people/nemeses').to :controller => 'people', :action => 'nemeses' }
 
   end
 
@@ -34,19 +30,16 @@ describe PeopleController do
       show_person_path(666).should == '/people/show/666'
     end
 
-    it 'is routed to' do
-      { :get => '/people/show/666' }.should route_to \
-        :controller => 'people', :action => 'show', :id => '666'
-    end
+    it { should route(:get, '/people/show/666').to :controller => 'people', :action => 'show', :id => '666' }
 
   end
 
   it 'routes to a plain action' do
-    { :get => '/people/top_guessers' }.should route_to :controller => 'people', :action => 'top_guessers'
+    should route(:get, '/people/top_guessers').to :controller => 'people', :action => 'top_guessers'
   end
 
   it 'routes to a plain action with an ID' do
-    { :get => '/people/guesses/666' }.should route_to :controller => 'people', :action => 'guesses', :id => '666'
+    should route(:get, '/people/guesses/666').to :controller => 'people', :action => 'guesses', :id => '666'
   end
 
 end
