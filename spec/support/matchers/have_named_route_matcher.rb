@@ -22,6 +22,7 @@ module GWW
           "have a route named #{@name}, where e.g. #{example_call} == #{@expected_uri}"
         end
 
+        #noinspection RubyUnusedLocalVariable
         def matches?(subject)
           @actual_uri = @context.send("#{@name}_path", *@args)
           @actual_uri == @expected_uri
