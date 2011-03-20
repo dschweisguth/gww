@@ -9,9 +9,7 @@ describe ScoreReportsController do
       score_reports_path.should == '/score_reports'
     end
 
-    it 'is routed to' do
-      { :get => '/score_reports' }.should route_to :controller => 'score_reports', :action => 'index'
-    end
+    it { should route(:get, '/score_reports').to :controller => 'score_reports', :action => 'index' }
 
   end
 
@@ -21,9 +19,7 @@ describe ScoreReportsController do
       score_report_path('666').should == '/score_reports/666'
     end
 
-    it 'is routed to' do
-      { :get => '/score_reports/666' }.should route_to :controller => 'score_reports', :action => 'show', :id => '666'
-    end
+    it { should route(:get, '/score_reports/666').to :controller => 'score_reports', :action => 'show', :id => '666' }
 
   end
 
