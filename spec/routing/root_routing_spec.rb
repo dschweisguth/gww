@@ -8,14 +8,12 @@ describe RootController do
       root_path.should == '/'
     end
 
-    it 'is routed to' do
-      { :get => '/' }.should route_to :controller => 'root', :action => 'index'
-    end
+    it { should route(:get, '/').to :controller => 'root', :action => 'index' }
 
   end
 
   it 'routes to a plain action' do
-    { :get => '/about' }.should route_to :controller => 'root', :action => 'about'
+    should route(:get, 'about').to :controller => 'root', :action => 'about'
   end
 
 end
