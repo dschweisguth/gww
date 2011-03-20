@@ -1,6 +1,7 @@
 module GWW
   module Matchers
     module Model
+      
       def validate_non_negative_integer(attr)
         ValidateNonNegativeInteger.new(attr)
       end
