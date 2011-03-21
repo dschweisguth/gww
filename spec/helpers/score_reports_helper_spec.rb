@@ -24,15 +24,13 @@ describe ScoreReportsHelper do
 
   describe '#link_to_person' do
     it "returns a fully qualified link to the person's page" do
-      person = Person.make :id => 666
-      helper.link_to_person(person).should ==
-        "<a href=\"http://test.host/people/show/#{person.id}\">username</a>"
+      person = Person.make
+      helper.link_to_person(person).should == "<a href=\"#{person_url person}\">#{person.username}</a>"
     end
 
     it "escapes HTML special characters in the person's username" do
-      person = Person.make :id => 666, :username => 'try&catch>me'
-      helper.link_to_person(person).should ==
-        "<a href=\"http://test.host/people/show/#{person.id}\">try&amp;catch&gt;me</a>"
+      person = Person.make :username => 'try&catch>me'
+      helper.link_to_person(person).should == "<a href=\"#{person_url person}\">try&amp;catch&gt;me</a>"
     end
 
   end

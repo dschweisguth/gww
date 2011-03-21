@@ -34,7 +34,7 @@ describe BookmarkletController do
       get :show, :from => "http://www.flickr.com/people/#{person.flickrid}/"
 
       #noinspection RubyResolve
-      response.should redirect_to show_person_path person
+      response.should redirect_to person_path person
 
     end
 
@@ -47,7 +47,7 @@ describe BookmarkletController do
       get :show, :from => "http://www.flickr.com/people/#{person.username}/"
 
       #noinspection RubyResolve
-      response.should redirect_to show_person_path person
+      response.should redirect_to person_path person
 
     end
 
@@ -69,7 +69,7 @@ describe BookmarkletController do
       get :show, :from => "http://www.flickr.com/photos/#{person.flickrid}/"
 
       #noinspection RubyResolve
-      response.should redirect_to show_person_path person
+      response.should redirect_to person_path person
 
     end
 

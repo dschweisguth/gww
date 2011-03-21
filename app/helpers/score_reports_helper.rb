@@ -13,7 +13,7 @@ module ScoreReportsHelper
 
   # This overrides the version in ApplicationHelper
   def link_to_person(person)
-    link_to h(escape_username(person.username)), show_person_url(person)
+    link_to h(escape_username(person.username)), person_url(person)
   end
 
   def image_for_star(star)

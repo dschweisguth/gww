@@ -22,13 +22,8 @@ describe PeopleController do
   end
 
   describe 'show' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      show_person_path(666).should == '/people/show/666'
-    end
-
-    it { should route(:get, '/people/show/666').to :controller => 'people', :action => 'show', :id => '666' }
-
+    it { should have_named_route :person, 666, '/people/666' }
+    it { should route(:get, '/people/666').to :controller => 'people', :action => 'show', :id => '666' }
   end
 
   it 'routes to a plain action with an ID' do

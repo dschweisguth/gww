@@ -11,7 +11,7 @@ describe PeopleController do
       get :find, :person => { :username => 'username' }
 
       #noinspection RubyResolve
-      response.should redirect_to show_person_path person
+      response.should redirect_to person_path person
 
     end
 
@@ -47,8 +47,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a[href=/people/sorted-by/score/order/-]', :text => 'Score'
-      response.should have_tag "a[href=/people/show/#{person.id}]", :text => 'username'
+      response.should have_tag "a[href=#{people_path 'score', '-'}]", :text => 'Score'
+      response.should have_tag "a[href=#{person_path person}]", :text => 'username'
 
     end
   end
@@ -64,8 +64,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=/people/show/#{guesser.id}]", "guesser_username"
-      response.should have_tag "a[href=/people/show/#{poster.id}]", "poster_username"
+      response.should have_tag "a[href=#{person_path guesser}]", "guesser_username"
+      response.should have_tag "a[href=#{person_path poster}]", "poster_username"
       response.should have_tag 'td', '%.3f' % guesser[:bias].to_s
 
     end
@@ -102,7 +102,7 @@ describe PeopleController do
         with_tag "th", :text => title
         with_tag "tr" do
           with_tag "td.opening-number", :text => "1"
-          with_tag "a[href=/people/show/#{guess.person.id}]", :text => 'username'
+          with_tag "a[href=#{person_path guess.person}]", :text => 'username'
         end
       end
     end
@@ -350,8 +350,8 @@ describe PeopleController do
       response.should be_success
       response.should have_tag 'h1', :text => '1 photo commented on by username'
       response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
-      response.should have_tag 'a[href=/photos/0]', :text => 'GWW'
-      response.should have_tag 'a[href=/people/show/0]', :text => 'poster_username'
+      response.should have_tag "a[href=#{photo_path photo}]", :text => 'GWW'
+      response.should have_tag "a[href=#{person_path photo.person}]", :text => 'poster_username'
 
     end
   end

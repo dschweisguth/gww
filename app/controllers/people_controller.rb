@@ -4,7 +4,7 @@ class PeopleController < ApplicationController
     username = params[:person][:username]
     person = Person.find_by_multiple_fields username
     if person
-      redirect_to show_person_path person
+      redirect_to person_path person
     else
       flash[:find_person_error] = username
       redirect_to root_path

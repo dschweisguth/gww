@@ -1,11 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resources :score_reports, :only => [ :index, :show ]
-  map.resources :people, :only => [], :collection => { :nemeses => :get, :top_guessers => :get }
-  map.resources :photos, :only => [ :show ], :collection => { :unfound => :get, :unfound_data => :get }
-  map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
-  map.resources :revelations, :only => [], :collection => { :longest => :get }
-
   map.with_options :conditions => { :method => :get } do |user|
     
     user.with_options :controller => 'root' do |root|
@@ -18,7 +12,6 @@ ActionController::Routing::Routes.draw do |map|
     user.with_options :controller => 'people' do |people|
       people.find_person 'people/find', :action => 'find'
       people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
-      people.show_person 'people/show/:id', :action => 'show'
       people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
     end
 
@@ -29,6 +22,12 @@ ActionController::Routing::Routes.draw do |map|
     user.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show'
 
   end
+
+  map.resources :score_reports, :only => [ :index, :show ]
+  map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
+  map.resources :photos, :only => [ :show ], :collection => { :unfound => :get, :unfound_data => :get }
+  map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
+  map.resources :revelations, :only => [], :collection => { :longest => :get }
 
   map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
     admin_root.admin_root 'admin'

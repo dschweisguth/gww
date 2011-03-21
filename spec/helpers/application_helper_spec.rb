@@ -29,13 +29,13 @@ describe ApplicationHelper do
 
   describe '#link_to_person' do
     it 'returns a local link to the person' do
-      person = Person.make :id => 666
-      helper.link_to_person(person).should == '<a href="/people/show/666">username</a>'
+      person = Person.make
+      helper.link_to_person(person).should == "<a href=\"#{person_path person}\">#{person.username}</a>"
     end
 
     it 'escapes HTML special characters in the username' do
-      person = Person.make :id => 666, :username => 'tom&jerry'
-      helper.link_to_person(person).should == '<a href="/people/show/666">tom&amp;jerry</a>'
+      person = Person.make :username => 'tom&jerry'
+      helper.link_to_person(person).should == "<a href=\"#{person_path person}\">tom&amp;jerry</a>"
     end
 
   end
