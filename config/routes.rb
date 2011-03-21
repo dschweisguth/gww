@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
     people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
   end
 
+  map.resources :photos, :only => [], :collection => { :unfound => :get, :unfound_data => :get }
   map.with_options :controller => 'photos', :conditions => { :method => :get } do |photos|
     photos.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :action => 'index'
     photos.show_photo 'photos/show/:id', :action => 'show'

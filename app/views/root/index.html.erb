@@ -29,7 +29,7 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Nemeses', nemeses_path %>: who guesses whom the most?</li>
 <li><%= link_to 'Top guessers', :controller => 'people', :action => 'top_guessers' %> by day, week, month and year</li>
 <li><%= link_to 'Photos', photos_path('date-added', '+', 1) %>, sortable in many ways</li>
-<li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
+<li><%= link_to 'Unfound photos', unfound_photos_path %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_guesses_path %></li>
 <li><%= link_to 'Longest-lived revelations', longest_revelations_path %></li>
 <li>Statistics for the prestigious annual Wheresies awards: <%= render 'shared/wheresies' %><span class="new-list-item">New!</span></li>
@@ -38,7 +38,7 @@ Comment Searchr</a>.</p>
 <h2>API</h2>
 <p>The following page is XML, intended to be used by other programs and analytically minded humans.</p>
 <ul>
-<li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound_data' %></li>
+<li><%= link_to 'Unfound photos', unfound_data_photos_path %></li>
 </ul>
 <br/>
 

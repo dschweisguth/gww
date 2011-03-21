@@ -9,6 +9,13 @@ describe PhotosController do
       :controller => 'photos', :action => 'index', :sorted_by => 'foo', :order => 'bar', :page => '666') }
   end
 
+  %w{ unfound unfound_data }.each do |action|
+    describe action do
+      it { should have_named_route "#{action}_photos", "/photos/#{action}" }
+      it { should route(:get, "/photos/#{action}").to :controller => 'photos', :action => action }
+    end
+  end
+
   describe 'show' do
     it 'has a named route' do
       #noinspection RubyResolve
@@ -17,10 +24,6 @@ describe PhotosController do
 
     it { should route(:get, '/photos/show/666').to :controller => 'photos', :action => 'show', :id => '666' }
 
-  end
-
-  it 'routes to a plain action' do
-    should route(:get, '/photos/unfound').to :controller => 'photos', :action => 'unfound'
   end
 
   it 'routes to a plain action with an ID' do
