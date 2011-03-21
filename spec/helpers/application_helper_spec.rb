@@ -43,7 +43,7 @@ describe ApplicationHelper do
   describe '#link_to_photo' do
     it 'returns a local link to the photo' do
       photo = Photo.make :id => 666
-      helper.link_to_photo(photo).should == '<a href="/photos/show/666">GWW</a>'
+      helper.link_to_photo(photo).should == '<a href="/photos/666">GWW</a>'
     end
   end
 
@@ -104,12 +104,12 @@ describe ApplicationHelper do
 
     it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
       helper.thumbnail(@photo).should ==
-        '<a href="/photos/show/666"><img alt="" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="" /></a>'
+        '<a href="/photos/666"><img alt="" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="" /></a>'
     end
 
     it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
       helper.thumbnail(@photo, "alt text").should ==
-        '<a href="/photos/show/666"><img alt="alt text" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="alt text" /></a>'
+        '<a href="/photos/666"><img alt="alt text" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="alt text" /></a>'
     end
 
   end

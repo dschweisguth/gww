@@ -6,7 +6,7 @@ class BookmarkletController < ApplicationController
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
-        redirect_to show_photo_path photo
+        redirect_to photo_path photo
         return
       else
         @message = "Sorry, Guess Where Watcher doesn't know anything about " +

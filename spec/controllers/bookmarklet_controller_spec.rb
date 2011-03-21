@@ -12,7 +12,7 @@ describe BookmarkletController do
       get :show, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
       #noinspection RubyResolve
-      response.should redirect_to show_photo_path :id => photo
+      response.should redirect_to photo_path photo
 
     end
 

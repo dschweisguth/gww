@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def link_to_photo(photo)
-    link_to 'GWW', show_photo_path(photo)
+    link_to 'GWW', photo_path(photo)
   end
 
   def url_for_flickr_photo(photo)
@@ -47,7 +47,7 @@ module ApplicationHelper
   end
 
   def thumbnail(photo, alt = "")
-    link_to titled_image_tag(url_for_flickr_image(photo, 't'), alt), show_photo_path(photo)
+    link_to titled_image_tag(url_for_flickr_image(photo, 't'), alt), photo_path(photo)
   end
 
   def sandwich(breadcrumbs = 'shared/breadcrumbs', &content)
