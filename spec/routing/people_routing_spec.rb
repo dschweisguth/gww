@@ -3,6 +3,11 @@ require 'spec_helper'
 describe PeopleController do
   without_transactions
 
+  describe 'find' do
+    it { should have_named_route 'find_person', '/people/find' }
+    it { should route(:get, '/people/find').to :controller => 'people', :action => 'find' }
+  end
+
   describe 'list' do
     it 'has a named route' do
       #noinspection RubyResolve
