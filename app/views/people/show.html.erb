@@ -12,8 +12,8 @@
 
 <p>In Guess Where SF:
 <a href="http://anythreewords.com/gwsf/index.php?pos=<%=h @person.username %>"><%= @person.username %>'s unfounds</a> -
-<%= link_to "#{@person.username}'s posts", :action => 'posts', :id => @person %> -
-<%= link_to "#{@person.username}'s guesses", :action => 'guesses', :id => @person %> -
+<%= link_to "#{@person.username}'s posts", person_posts_path(@person) %> -
+<%= link_to "#{@person.username}'s guesses", person_guesses_path(@person) %> -
 <%= link_to "#{@person.username}'s comments", list_comments_path(@person, 1) %></p>
 
 <h2>Standings</h2>

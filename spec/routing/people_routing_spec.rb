@@ -8,7 +8,7 @@ describe PeopleController do
     it { should route(:get, '/people/find').to :controller => 'people', :action => 'find' }
   end
 
-  describe 'list' do
+  describe 'index' do
     it { should have_named_route :people, 'foo', 'bar', '/people/sorted-by/foo/order/bar' }
     it { should route(:get, '/people/sorted-by/foo/order/bar').to(
       :controller => 'people', :action => 'index', :sorted_by => 'foo', :order => 'bar') }
@@ -26,8 +26,11 @@ describe PeopleController do
     it { should route(:get, '/people/666').to :controller => 'people', :action => 'show', :id => '666' }
   end
 
-  it 'routes to a plain action with an ID' do
-    should route(:get, '/people/guesses/666').to :controller => 'people', :action => 'guesses', :id => '666'
+  %w{ guesses posts }.each do |action|
+    describe action do
+      it { should have_named_route "person_#{action}", 666, "/people/666/#{action}" }
+      it { should route(:get, "/people/666/#{action}").to :controller => 'people', :action => action, :id => '666' }
+    end
   end
 
 end

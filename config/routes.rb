@@ -12,6 +12,9 @@ ActionController::Routing::Routes.draw do |map|
     user.with_options :controller => 'people' do |people|
       people.find_person 'people/find', :action => 'find'
       people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
+      %w{ guesses posts }.each do |action|
+        people.send "person_#{action}", "people/:id/#{action}", :action => action
+      end
       people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
     end
 
