@@ -16,6 +16,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
 
+  map.resources :revelations, :only => [], :collection => { :longest => :get }
+
   map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
   map.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show'

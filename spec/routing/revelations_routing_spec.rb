@@ -3,8 +3,9 @@ require 'spec_helper'
 describe RevelationsController do
   without_transactions
 
-  it 'routes to a plain action' do
-    should route(:get, '/revelations/longest').to :controller => 'revelations', :action => 'longest'
+  describe 'longest' do
+    it { should have_named_route :longest_revelations, '/revelations/longest' }
+    it { should route(:get, '/revelations/longest').to :controller => 'revelations', :action => 'longest' }
   end
 
 end

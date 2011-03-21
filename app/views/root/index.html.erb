@@ -31,7 +31,7 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Photos', list_photos_path('date-added', '+', 1) %>, sortable by various statistics</li>
 <li><%= link_to 'Unfound photos', :controller => 'photos', :action => 'unfound' %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_guesses_path %></li>
-<li><%= link_to 'Longest-lived revelations', :controller => 'revelations', :action => 'longest' %></li>
+<li><%= link_to 'Longest-lived revelations', longest_revelations_path %></li>
 <li>Statistics for the prestigious annual Wheresies awards: <%= render 'shared/wheresies' %><span class="new-list-item">New!</span></li>
 </ul>
 
