@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.resources :score_reports, :only => [ :index, :show ]
+
   map.with_options :controller => 'people' do |people|
     people.list_people 'people/list/sorted-by/:sorted_by/order/:order', :action => 'list'
     people.nemeses 'people/nemeses', :action => 'nemeses'
@@ -13,8 +15,6 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
-
-  map.resources :score_reports, :only => [ :index, :show ]
 
   map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
