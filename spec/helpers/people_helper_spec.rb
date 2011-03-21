@@ -3,17 +3,18 @@ require 'spec_helper'
 describe PeopleHelper do
   without_transactions
 
+  # TODO Dave rename this and the photos equivalent
   describe '#list_path' do
     it 'returns the URI to the list sorted by the given criterion' do
-      list_path_returns 'score', '+', 'username', '/people/list/sorted-by/username/order/+'
+      list_path_returns 'score', '+', 'username', '/people/sorted-by/username/order/+'
     end
 
     it 'reverses the sort order if the list is already sorted by the given criterion' do
-      list_path_returns 'username', '+', 'username', '/people/list/sorted-by/username/order/-'
+      list_path_returns 'username', '+', 'username', '/people/sorted-by/username/order/-'
     end
 
     it 'restores the sort order if the list is already reverse-sorted by the given criterion' do
-      list_path_returns 'username', '-', 'username', '/people/list/sorted-by/username/order/+'
+      list_path_returns 'username', '-', 'username', '/people/sorted-by/username/order/+'
     end
 
     def list_path_returns(current_criterion, current_order, requested_criterion, expected_uri)
@@ -26,13 +27,13 @@ describe PeopleHelper do
 
   describe '#to_four_places' do
     it 'returns the number, rounded to four places, as a string' do
-      helper.to_4_places(1.11111).should == "1.1111"
+      helper.to_4_places(1.11111).should == '1.1111'
     end
   end
 
   describe '#infinity_or' do
     it 'returns the number, rounded to four places, as a string' do
-      helper.infinity_or(1.11111).should == "1.1111"
+      helper.infinity_or(1.11111).should == '1.1111'
     end
 
     it 'returns HTML for infinity' do

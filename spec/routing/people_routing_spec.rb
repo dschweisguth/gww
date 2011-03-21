@@ -4,19 +4,14 @@ describe PeopleController do
   without_transactions
 
   describe 'find' do
-    it { should have_named_route 'find_person', '/people/find' }
+    it { should have_named_route :find_person, '/people/find' }
     it { should route(:get, '/people/find').to :controller => 'people', :action => 'find' }
   end
 
   describe 'list' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      list_people_path('foo', 'bar').should == '/people/list/sorted-by/foo/order/bar'
-    end
-
-    it { should route(:get, '/people/list/sorted-by/foo/order/bar').to(
-      :controller => 'people', :action => 'list', :sorted_by => 'foo', :order => 'bar') }
-
+    it { should have_named_route :people, 'foo', 'bar', '/people/sorted-by/foo/order/bar' }
+    it { should route(:get, '/people/sorted-by/foo/order/bar').to(
+      :controller => 'people', :action => 'index', :sorted_by => 'foo', :order => 'bar') }
   end
 
   describe 'nemeses' do

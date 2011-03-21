@@ -22,10 +22,10 @@ Comment Searchr</a>.</p>
   <% end %>
   <% if flash[:find_person_error] %><br/>
     <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.
-      You could try again, or scan the <%= link_to 'Active members', list_people_path('score', '+') %> page.</span>
+      You could try again, or scan the <%= link_to 'Active members', people_path('score', '+') %> page.</span>
   <% end -%>
 </li>
-<li><%= link_to 'Active members', list_people_path('score', '+') %> and statistics. How do you measure up?</li>
+<li><%= link_to 'Active members', people_path('score', '+') %> and statistics. How do you measure up?</li>
 <li><%= link_to 'Nemeses', nemeses_path %>: who guesses whom the most?</li>
 <li><%= link_to 'Top guessers', :controller => 'people', :action => 'top_guessers' %> by day, week, month and year</li>
 <li><%= link_to 'Photos', photos_path('date-added', '+', 1) %>, sortable in many ways</li>

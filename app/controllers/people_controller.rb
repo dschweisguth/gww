@@ -11,8 +11,8 @@ class PeopleController < ApplicationController
     end
   end
 
-  caches_page :list
-  def list
+  caches_page :index
+  def index
     @people = Person.all_sorted params[:sorted_by], params[:order]
   end
 

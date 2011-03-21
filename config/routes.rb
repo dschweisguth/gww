@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.with_options :controller => 'people' do |people|
     people.find_person 'people/find', :action => 'find'
-    people.list_people 'people/list/sorted-by/:sorted_by/order/:order', :action => 'list'
+    people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
     people.nemeses 'people/nemeses', :action => 'nemeses'
     people.show_person 'people/show/:id', :action => 'show'
     people.list_comments 'people/comments/:id/page/:page', :action => 'comments'

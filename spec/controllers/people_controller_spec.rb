@@ -24,7 +24,7 @@ describe PeopleController do
 
   end
 
-  describe '#list' do
+  describe '#index' do
     it 'renders the page' do
       sorted_by_param = 'score'
       order_param = '+'
@@ -43,11 +43,11 @@ describe PeopleController do
       person[:comments_to_be_guessed] = 1.0
       person[:views_per_post] = 1.0
       stub(Person).all_sorted(sorted_by_param, order_param) { [ person ] }
-      get :list, :sorted_by => sorted_by_param, :order => order_param
+      get :index, :sorted_by => sorted_by_param, :order => order_param
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a[href=/people/list/sorted-by/score/order/-]', :text => 'Score'
+      response.should have_tag 'a[href=/people/sorted-by/score/order/-]', :text => 'Score'
       response.should have_tag "a[href=/people/show/#{person.id}]", :text => 'username'
 
     end
