@@ -8,8 +8,8 @@ describe Admin::RootController do
     it { should route(:get, '/admin').to :controller => 'admin/root', :action => 'index' }
   end
 
-  it 'routes to a plain action' do
-    should route(:get, '/admin/bookmarklet').to :controller => 'admin/root', :action => 'bookmarklet'
+  describe 'bookmarklet' do
+    it { should route(:get, '/admin/bookmarklet').to :controller => 'admin/root', :action => 'bookmarklet' }
   end
 
 end
