@@ -12,8 +12,7 @@ ActionController::Routing::Routes.draw do |map|
     photos.show_photo 'photos/show/:id', :action => 'show'
   end
 
-  map.longest_and_shortest 'guesses/longest_and_shortest',
-    :controller => 'guesses', :action => 'longest_and_shortest'
+  map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
 
   map.resources :score_reports, :only => [ :index, :show ]
 
