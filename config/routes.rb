@@ -22,9 +22,7 @@ ActionController::Routing::Routes.draw do |map|
       people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
     end
 
-    user.with_options :controller => 'photos' do |photos|
-      photos.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :action => 'index'
-    end
+    user.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :controller => 'photos', :action => 'index'
 
     user.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
