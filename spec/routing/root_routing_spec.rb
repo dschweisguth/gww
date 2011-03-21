@@ -8,8 +8,11 @@ describe RootController do
     it { should route(:get, '/').to :controller => 'root', :action => 'index' }
   end
 
-  it 'routes to a plain action' do
-    should route(:get, 'about').to :controller => 'root', :action => 'about'
+  %w{ about bookmarklet }.each do |action|
+    describe action do
+      it { should have_named_route "root_#{action}", "/#{action}" }
+      it { should route(:get, "/#{action}").to :controller => 'root', :action => action }
+    end
   end
 
 end

@@ -1,5 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.with_options :controller => 'root', :conditions => { :method => :get } do |root|
+    root.root
+    %w{ about bookmarklet }.each do |action|
+      root.send "root_#{action}", action, :action => action
+    end
+  end
+
   map.resources :score_reports, :only => [ :index, :show ]
 
   map.with_options :controller => 'people' do |people|
@@ -48,11 +55,6 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
 
-  end
-
-  map.with_options :controller => 'root', :conditions => { :method => :get } do |root|
-    root.root
-    root.connect ':action'
   end
 
   map.connect ':controller/:action/:id'
