@@ -3,15 +3,10 @@ require 'spec_helper'
 describe PhotosController do
   without_transactions
 
-  describe 'list' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      list_photos_path('foo', 'bar', '1').should == '/photos/list/sorted-by/foo/order/bar/page/1'
-    end
-
-    it { should route(:get, '/photos/list/sorted-by/foo/order/bar/page/666').to(
-      :controller => 'photos', :action => 'list', :sorted_by => 'foo', :order => 'bar', :page => '666') }
-
+  describe 'index' do
+    it { should have_named_route :photos, 'foo', 'bar', 666, '/photos/sorted-by/foo/order/bar/page/666' }
+    it { should route(:get, '/photos/sorted-by/foo/order/bar/page/666').to(
+      :controller => 'photos', :action => 'index', :sorted_by => 'foo', :order => 'bar', :page => '666') }
   end
 
   describe 'show' do

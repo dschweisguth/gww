@@ -17,12 +17,12 @@ describe PhotosController do
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).all_sorted_and_paginated(sorted_by_param, order_param, page_param, 30) { paginated_photos }
-      get :list, :sorted_by => sorted_by_param, :order => order_param, :page => page_param
+      get :index, :sorted_by => sorted_by_param, :order => order_param, :page => page_param
 
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'h1', :text => '1 photos'
-      response.should have_tag 'a[href=/photos/list/sorted-by/username/order/-/page/1]', :text => 'posted by'
+      response.should have_tag 'a[href=/photos/sorted-by/username/order/-/page/1]', :text => 'posted by'
       response.should have_tag 'a[href=/people/show/0]', :text => 'poster_username'
 
     end

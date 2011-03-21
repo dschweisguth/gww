@@ -16,8 +16,8 @@ ActionController::Routing::Routes.draw do |map|
     people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
   end
 
-  map.with_options :controller => 'photos' do |photos|
-    photos.list_photos 'photos/list/sorted-by/:sorted_by/order/:order/page/:page', :action => 'list'
+  map.with_options :controller => 'photos', :conditions => { :method => :get } do |photos|
+    photos.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :action => 'index'
     photos.show_photo 'photos/show/:id', :action => 'show'
   end
 
