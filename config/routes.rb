@@ -1,6 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.resources :score_reports, :only => [ :index, :show ]
+  map.resources :people, :only => [], :collection => { :nemeses => :get, :top_guessers => :get }
   map.resources :photos, :only => [ :show ], :collection => { :unfound => :get, :unfound_data => :get }
   map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
   map.resources :revelations, :only => [], :collection => { :longest => :get }

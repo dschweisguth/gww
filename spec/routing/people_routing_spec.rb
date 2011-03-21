@@ -14,14 +14,11 @@ describe PeopleController do
       :controller => 'people', :action => 'index', :sorted_by => 'foo', :order => 'bar') }
   end
 
-  describe 'nemeses' do
-    it 'has a named route' do
-      #noinspection RubyResolve
-      nemeses_path.should == '/people/nemeses'
+  %w{ nemeses top_guessers }.each do |action|
+    describe action do
+      it { should have_named_route "#{action}_people", "/people/#{action}" }
+      it { should route(:get, "/people/#{action}").to :controller => 'people', :action => action }
     end
-
-    it { should route(:get, '/people/nemeses').to :controller => 'people', :action => 'nemeses' }
-
   end
 
   describe 'show' do
@@ -32,10 +29,6 @@ describe PeopleController do
 
     it { should route(:get, '/people/show/666').to :controller => 'people', :action => 'show', :id => '666' }
 
-  end
-
-  it 'routes to a plain action' do
-    should route(:get, '/people/top_guessers').to :controller => 'people', :action => 'top_guessers'
   end
 
   it 'routes to a plain action with an ID' do
