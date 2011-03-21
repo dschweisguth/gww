@@ -45,12 +45,12 @@ ActionController::Routing::Routes.draw do |map|
 
   end
 
-  map.with_options :controller => 'admin/root' do |admin_root|
+  map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
     admin_root.admin_root 'admin'
     admin_root.connect 'admin/:action'
   end
 
-  map.with_options :controller => 'root' do |root|
+  map.with_options :controller => 'root', :conditions => { :method => :get } do |root|
     root.root
     root.connect ':action'
   end
