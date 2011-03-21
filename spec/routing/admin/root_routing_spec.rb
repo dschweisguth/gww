@@ -9,7 +9,7 @@ describe Admin::RootController do
   end
 
   describe 'bookmarklet' do
-    it { should have_named_route :admin_bookmarklet, '/admin/bookmarklet' }
+    it { should have_named_route :admin_root_bookmarklet, '/admin/bookmarklet' }
     it { should route(:get, '/admin/bookmarklet').to :controller => 'admin/root', :action => 'bookmarklet' }
   end
 

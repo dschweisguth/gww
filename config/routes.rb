@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
     admin_root.admin_root 'admin'
-    admin_root.admin_bookmarklet 'admin/bookmarklet', :action => 'bookmarklet'
+    admin_root.admin_root_bookmarklet 'admin/bookmarklet', :action => 'bookmarklet'
   end
 
   map.namespace :admin do |admin|
