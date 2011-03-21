@@ -1,6 +1,6 @@
 class BookmarkletController < ApplicationController
 
-  def view
+  def show
     @from = params[:from]
     if @from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
       flickrid = Regexp.last_match[1]

@@ -4,12 +4,12 @@ describe BookmarkletController do
   integrate_views
   without_transactions
 
-  describe '#view' do
+  describe '#show' do
     it 'redirects to the given photo' do
       photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
       #noinspection RubyResolve
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :view, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :show, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
       #noinspection RubyResolve
       response.should redirect_to show_photo_path :id => photo
@@ -19,7 +19,7 @@ describe BookmarkletController do
     it 'punts an unknown photo Flickr ID' do
       #noinspection RubyResolve
       stub(Photo).find_by_flickrid('0123456789') { nil }
-      get :view, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      get :show, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
       #noinspection RubyResolve
       response.should be_success
@@ -31,7 +31,7 @@ describe BookmarkletController do
       person = Person.make
       #noinspection RubyResolve
       stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :view, :from => "http://www.flickr.com/people/#{person.flickrid}/"
+      get :show, :from => "http://www.flickr.com/people/#{person.flickrid}/"
 
       #noinspection RubyResolve
       response.should redirect_to show_person_path person
@@ -44,7 +44,7 @@ describe BookmarkletController do
       stub(Person).find_by_flickrid(person.username) { nil }
       #noinspection RubyResolve
       stub(Person).find_by_username(person.username) { person }
-      get :view, :from => "http://www.flickr.com/people/#{person.username}/"
+      get :show, :from => "http://www.flickr.com/people/#{person.username}/"
 
       #noinspection RubyResolve
       response.should redirect_to show_person_path person
@@ -54,7 +54,7 @@ describe BookmarkletController do
     it 'punts an unknown person' do
       #noinspection RubyResolve
       stub(Person).find_by_flickrid('person_flickrid') { nil }
-      get :view, :from => "http://www.flickr.com/people/person_flickrid/"
+      get :show, :from => "http://www.flickr.com/people/person_flickrid/"
 
       #noinspection RubyResolve
       response.should be_success
@@ -66,7 +66,7 @@ describe BookmarkletController do
       person = Person.make
       #noinspection RubyResolve
       stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :view, :from => "http://www.flickr.com/photos/#{person.flickrid}/"
+      get :show, :from => "http://www.flickr.com/photos/#{person.flickrid}/"
 
       #noinspection RubyResolve
       response.should redirect_to show_person_path person
@@ -74,7 +74,7 @@ describe BookmarkletController do
     end
 
     it 'punts unknown URLs' do
-      get :view, :from => 'http://www.notflickr.com/'
+      get :show, :from => 'http://www.notflickr.com/'
 
       #noinspection RubyResolve
       response.should be_success

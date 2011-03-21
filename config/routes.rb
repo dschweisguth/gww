@@ -18,7 +18,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
 
-  map.bookmarklet '/bookmarklet/view', :controller => 'bookmarklet', :action => 'view'
+  map.bookmarklet '/bookmarklet/show', :controller => 'bookmarklet', :action => 'show'
 
   map.namespace :admin do |admin|
     admin.resources :photos, :only => [ :edit, :destroy ], :collection => { :unfound => :get, :inaccessible => :get, :multipoint => :get }
