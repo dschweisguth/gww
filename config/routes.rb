@@ -9,7 +9,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :score_reports, :only => [ :index, :show ]
 
-  map.with_options :controller => 'people' do |people|
+  map.with_options :controller => 'people', :conditions => { :method => :get } do |people|
     people.find_person 'people/find', :action => 'find'
     people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
     people.nemeses 'people/nemeses', :action => 'nemeses'
@@ -26,9 +26,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :revelations, :only => [], :collection => { :longest => :get }
 
-  map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
+  map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show', :conditions => { :method => :get }
 
-  map.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show'
+  map.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show', :conditions => { :method => :get }
 
   map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
     admin_root.admin_root 'admin'
