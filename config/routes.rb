@@ -1,34 +1,36 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.with_options :controller => 'root', :conditions => { :method => :get } do |root|
-    root.root
-    %w{ about bookmarklet }.each do |action|
-      root.send "root_#{action}", action, :action => action
-    end
-  end
-
   map.resources :score_reports, :only => [ :index, :show ]
-
-  map.with_options :controller => 'people', :conditions => { :method => :get } do |people|
-    people.find_person 'people/find', :action => 'find'
-    people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
-    people.nemeses 'people/nemeses', :action => 'nemeses'
-    people.show_person 'people/show/:id', :action => 'show'
-    people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
-  end
-
   map.resources :photos, :only => [ :show ], :collection => { :unfound => :get, :unfound_data => :get }
-  map.with_options :controller => 'photos', :conditions => { :method => :get } do |photos|
-    photos.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :action => 'index'
-  end
-
   map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
-
   map.resources :revelations, :only => [], :collection => { :longest => :get }
 
-  map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show', :conditions => { :method => :get }
+  map.with_options :conditions => { :method => :get } do |user|
+    
+    user.with_options :controller => 'root' do |root|
+      root.root
+      %w{ about bookmarklet }.each do |action|
+        root.send "root_#{action}", action, :action => action
+      end
+    end
 
-  map.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show', :conditions => { :method => :get }
+    user.with_options :controller => 'people' do |people|
+      people.find_person 'people/find', :action => 'find'
+      people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
+      people.nemeses 'people/nemeses', :action => 'nemeses'
+      people.show_person 'people/show/:id', :action => 'show'
+      people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
+    end
+
+    user.with_options :controller => 'photos' do |photos|
+      photos.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :action => 'index'
+    end
+
+    user.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show'
+
+    user.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show'
+
+  end
 
   map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
     admin_root.admin_root 'admin'
