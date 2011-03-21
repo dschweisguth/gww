@@ -22,6 +22,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show'
 
+  map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
+    admin_root.admin_root 'admin'
+    admin_root.admin_bookmarklet 'admin/bookmarklet', :action => 'bookmarklet'
+  end
+
   map.namespace :admin do |admin|
     admin.resources :photos, :only => [ :edit, :destroy ], :collection => { :unfound => :get, :inaccessible => :get, :multipoint => :get }
     admin.resources :score_reports, :only => [ :index, :new, :create, :destroy ]
@@ -43,11 +48,6 @@ ActionController::Routing::Routes.draw do |map|
       end
     end
 
-  end
-
-  map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
-    admin_root.admin_root 'admin'
-    admin_root.connect 'admin/:action'
   end
 
   map.with_options :controller => 'root', :conditions => { :method => :get } do |root|
