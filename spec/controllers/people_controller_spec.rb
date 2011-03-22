@@ -357,7 +357,7 @@ describe PeopleController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'h1', :text => '1 photo commented on by username'
-      response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
+      response.should have_tag "a[href=#{url_for_flickr_photo photo}]", :text => 'Flickr'
       response.should have_tag "a[href=#{photo_path photo}]", :text => 'GWW'
       response.should have_tag "a[href=#{person_path photo.person}]", :text => 'poster_username'
 

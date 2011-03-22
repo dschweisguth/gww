@@ -37,7 +37,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]', :text => 'Flickr'
+      response.should have_tag "a[href=#{url_for_flickr_photo photo}]", :text => 'Flickr'
       response.should have_tag "a[href=#{photo_path photo}]", :text => 'GWW'
       response.should have_tag "a[href=#{person_path photo.person}]", :text => 'poster_username'
 
@@ -71,7 +71,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a[href=http://www.flickr.com/photos/poster_person_flickrid/photo_flickrid/in/pool-guesswheresf/]' do
+      response.should have_tag "a[href=#{url_for_flickr_photo photo}]" do
         with_tag 'img[src=http://farm0.static.flickr.com/server/photo_flickrid_secret.jpg]'
       end
       response.should have_text /Added to the group at 12:00 AM, January 01, 2010/

@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include Photos
 
   IRREGULAR_PLURAL_VERBS = {
     'are' => 'is',
@@ -27,10 +28,6 @@ module ApplicationHelper
 
   def link_to_photo(photo)
     link_to 'GWW', photo_path(photo)
-  end
-
-  def url_for_flickr_photo(photo)
-    "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/";
   end
 
   def link_to_flickr_photo(photo)
