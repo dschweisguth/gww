@@ -133,5 +133,10 @@ class PeopleController < ApplicationController
       :include => [ :person, { :guesses => :person } ],
       :order => 'lastupdate desc', :per_page => 25
   end
-  
+
+  caches_page :map
+  def map
+    @person = Person.find params[:id]
+  end
+
 end

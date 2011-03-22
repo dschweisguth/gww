@@ -150,6 +150,14 @@ a.normal {
   background-color: #ffcc33;
 }
 
+/* people/#/map */
+
+#map_canvas {
+  width: 900px;
+  height: 900px;
+  margin: 0 auto;
+}
+
 /* photos/#, admin/photos/edit */
 
 .when {
