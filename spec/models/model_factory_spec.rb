@@ -253,7 +253,6 @@ describe Photo do
     photo.server.should == 'server'
     photo.secret.should == 'secret'
     photo.dateadded.should_not be_nil
-    photo.mapped.should == 'false'
     photo.lastupdate.should_not be_nil
     photo.seen_at.should_not be_nil
     photo.game_status.should == 'unfound'
@@ -269,8 +268,10 @@ describe Photo do
       :farm => '1',
       :server => 'other_server',
       :secret => 'other_secret',
+      :latitude => 37.123456,
+      :longitude => -122.654321,
+      :accuracy => 16,
       :dateadded => Time.utc(2010),
-      :mapped => 'true',
       :lastupdate => Time.utc(2011),
       :seen_at => Time.utc(2012),
       :game_status => 'found',

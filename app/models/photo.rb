@@ -5,10 +5,13 @@ class Photo < ActiveRecord::Base
   has_many :guesses, :inverse_of => :photo
   has_many :comments, :inverse_of => :photo
   has_one :revelation, :inverse_of => :photo
-  validates_presence_of :flickrid, :dateadded, :mapped, :lastupdate, :seen_at,
+  validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
     :game_status, :views, :member_comments, :member_questions
   attr_readonly :person, :flickrid
-  validates_inclusion_of :mapped, :in => %w(false true)
+  validates_numericality_of :latitude, :allow_nil => true
+  validates_numericality_of :longitude, :allow_nil => true
+  validates_numericality_of :accuracy, :allow_nil => true,
+    :only_integer => true, :greater_than_or_equal_to => 0
   validates_inclusion_of :game_status, :in => %w(unfound unconfirmed found revealed)
   validates_numericality_of :views, :only_integer => true,
     :greater_than_or_equal_to => 0
@@ -248,8 +251,21 @@ class Photo < ActiveRecord::Base
           photo.server = parsed_photo['server']
           old_photo_secret = photo.secret
           photo.secret = parsed_photo['secret']
-          old_photo_mapped = photo.mapped
-          photo.mapped = (parsed_photo['latitude'] == '0') ? 'false' : 'true'
+          old_photo_latitude = photo.latitude
+          photo.latitude = parsed_photo['latitude']
+          if photo.latitude == 0.0
+            photo.latitude = nil
+          end
+          old_photo_longitude = photo.longitude
+          photo.longitude = parsed_photo['longitude']
+          if photo.longitude == 0.0
+            photo.longitude = nil
+          end
+          old_photo_accuracy = photo.accuracy
+          photo.accuracy = parsed_photo['accuracy']
+          if photo.accuracy == 0.0
+            photo.accuracy = nil
+          end
           # Don't overwrite an existing photo's dateadded, so that if a photo
           # is added, removed and added again it retains its original dateadded.
           if photo.id.nil? then
@@ -264,7 +280,9 @@ class Photo < ActiveRecord::Base
             old_photo_farm != photo.farm ||
             old_photo_server != photo.server ||
             old_photo_secret != photo.secret ||
-            old_photo_mapped != photo.mapped ||
+            old_photo_latitude != photo.latitude ||
+            old_photo_longitude != photo.longitude ||
+            old_photo_accuracy != photo.accuracy ||
             old_photo_lastupdate != photo.lastupdate ||
             old_photo_views != photo.views
             photo.save!

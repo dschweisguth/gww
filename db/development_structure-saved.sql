@@ -8,15 +8,15 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=370545 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=380253 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `created_at` datetime NOT NULL,
-  `member_count` int(11) NOT NULL DEFAULT '0',
+  `member_count` int(11) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1191 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1257 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -30,7 +30,7 @@ CREATE TABLE `guesses` (
   KEY `guesses_person_id_fk` (`person_id`),
   CONSTRAINT `guesses_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
   CONSTRAINT `guesses_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25716 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26571 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,7 +39,7 @@ CREATE TABLE `people` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=1180 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1200 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -48,8 +48,10 @@ CREATE TABLE `photos` (
   `farm` varchar(255) NOT NULL,
   `server` varchar(255) NOT NULL,
   `secret` varchar(255) NOT NULL,
+  `latitude` decimal(9,6) DEFAULT NULL,
+  `longitude` decimal(9,6) DEFAULT NULL,
+  `accuracy` int(2) DEFAULT NULL,
   `dateadded` datetime NOT NULL,
-  `mapped` enum('false','true') NOT NULL,
   `lastupdate` datetime NOT NULL,
   `seen_at` datetime NOT NULL,
   `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL,
@@ -61,7 +63,7 @@ CREATE TABLE `photos` (
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29271 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=30116 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,12 +74,21 @@ CREATE TABLE `revelations` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=435 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=465 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
   UNIQUE KEY `unique_schema_migrations` (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `score_reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `previous_report_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `previous_report_id_fk` (`previous_report_id`),
+  CONSTRAINT `previous_report_id_fk` FOREIGN KEY (`previous_report_id`) REFERENCES `score_reports` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=566 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO schema_migrations (version) VALUES ('12');
 
@@ -102,6 +113,18 @@ INSERT INTO schema_migrations (version) VALUES ('20100612165811');
 INSERT INTO schema_migrations (version) VALUES ('20100615121254');
 
 INSERT INTO schema_migrations (version) VALUES ('20110120174937');
+
+INSERT INTO schema_migrations (version) VALUES ('20110129012304');
+
+INSERT INTO schema_migrations (version) VALUES ('20110202170911');
+
+INSERT INTO schema_migrations (version) VALUES ('20110303010929');
+
+INSERT INTO schema_migrations (version) VALUES ('20110305155922');
+
+INSERT INTO schema_migrations (version) VALUES ('20110307195223');
+
+INSERT INTO schema_migrations (version) VALUES ('20110322133223');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

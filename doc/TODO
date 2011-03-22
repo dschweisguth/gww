@@ -57,4 +57,5 @@ Write an admin page that reports on bogus data
   Photos that are guessed by the owner of the photo
   Photos that have both guesses and revelations
   Guesses made before photo was added
+  latitude, longitude, accuracy = 0
 Check the bogus data page in update-and-restart

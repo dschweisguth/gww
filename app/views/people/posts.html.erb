@@ -17,7 +17,7 @@
     <td class="thumbnail"><%= thumbnail photo %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
-    <td><%= photo.mapped %></td>
+    <td><%= photo.latitude.nil? %></td>
     <td><strong><%= photo.game_status %></strong></td>
   </tr>
 <% end -%>

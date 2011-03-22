@@ -4,8 +4,8 @@ describe Photo do
   def valid_attrs
     now = Time.now
     { :flickrid => 'flickrid',
-      :dateadded => now, 'mapped' => 'false',
-      :lastupdate => now, :seen_at => now, :game_status => 'unfound',
+      :dateadded => now, :lastupdate => now, :seen_at => now,
+      :game_status => 'unfound',
       :views => 0, :member_comments => 0, :member_questions => 0 }
   end
 
@@ -34,19 +34,17 @@ describe Photo do
     it { should validate_presence_of :dateadded }
   end
 
-  describe '#mapped' do
-    it { should validate_presence_of :mapped }
+  describe '#latitude' do
+    it { should validate_numericality_of :latitude }
+  end
 
-    %w(false true).each do |value|
-      it "accepts '#{value}'" do
-        Photo.new(valid_attrs.merge({ :mapped => value })).should be_valid
-      end
-    end
+  describe '#longitude' do
+    it { should validate_numericality_of :longitude }
+  end
 
-    it "rejects other values" do
-      Photo.new(valid_attrs.merge({ :mapped => 'maybe' })).should_not be_valid
-    end
-
+  describe '#accuracy' do
+    it { should validate_numericality_of :accuracy }
+    it { should validate_non_negative_integer :accuracy }
   end
 
   describe '#lastupdate' do
@@ -482,8 +480,9 @@ describe Photo do
             'server' => 'server',
             'secret' => 'secret',
             'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '0',
-            'longitude' => '0',
+            'latitude' => '37.123456',
+            'longitude' => '-122.654321',
+            'accuracy' => '16',
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
             'views' => '50'
           } ]
@@ -493,22 +492,33 @@ describe Photo do
 
     it "gets the state of the group's photos from Flickr and stores it" do
       Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
-      #noinspection RailsParamDefResolve
+
       photos = Photo.all :include => :person
       photos.size.should == 1
       photo = photos[0]
       person = photo.person
+
       person.flickrid.should == 'person_flickrid'
       person.username.should == 'username'
+
       photo.flickrid.should == 'photo_flickrid'
       photo.farm.should == '0'
       photo.server.should == 'server'
       photo.secret.should == 'secret'
+      photo.latitude.should == 37.123456
+      photo.longitude.should == -122.654321
+      photo.accuracy.should == 16
       photo.dateadded.should == Time.utc(2011)
-      photo.mapped.should == 'false'
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
-      flickr_update_was_created
+
+      updates = FlickrUpdate.all
+      updates.size.should == 1
+      update = updates[0]
+      update.member_count.should == 1492
+      #noinspection RubyResolve
+      update.completed_at.should_not be_nil
+
     end
 
     it 'uses an existing person, and updates their username if it changed' do
@@ -520,7 +530,6 @@ describe Photo do
       person_after.id.should == person_before.id
       person_after.flickrid.should == person_before.flickrid
       person_after.username.should == 'username'
-      flickr_update_was_created
     end
 
     it 'uses an existing photo, and updates attributes that changed' do
@@ -531,10 +540,12 @@ describe Photo do
         :person => person,
         :flickrid => 'photo_flickrid',
         :farm => '1',
-        :secret => 'old_secret',
         :server => 'old_server',
+        :secret => 'old_secret',
+        :latitude => 37.123456,
+        :latitude => -122.654321,
+        :accuracy => 16,
         :dateadded => Time.utc(2010),
-        :mapped => 'true',
         :lastupdate => Time.utc(2010, 1, 1, 1),
         :views => 40
       Photo.update_all_from_flickr.should == [ 0, 0, 1, 1 ]
@@ -544,23 +555,51 @@ describe Photo do
       photo_after.id.should == photo_before.id
       photo_after.flickrid.should == photo_before.flickrid
       photo_after.farm.should == '0'
-      photo_after.secret.should == 'secret'
       photo_after.server.should == 'server'
+      photo_after.secret.should == 'secret'
+      photo_after.latitude.should == 37.123456
+      photo_after.longitude.should == -122.654321
+      photo_after.accuracy.should == 16
       # Note that dateadded is not updated
       photo_after.dateadded.should == Time.utc(2010)
-      photo_after.mapped.should == 'false'
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
-      flickr_update_was_created
     end
 
-    def flickr_update_was_created
-      updates = FlickrUpdate.all
-      updates.size.should == 1
-      update = updates[0]
-      update.member_count.should == 1492
-      #noinspection RubyResolve
-      update.completed_at.should_not be_nil
+    it "stores 0 latitude, longitude and accuracy as nil" do
+      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+        'photos' => [ {
+          'pages' => '1',
+          'photo' =>  [ {
+            'id' => 'photo_flickrid',
+            'owner' => 'person_flickrid',
+            'ownername' => 'username',
+            'farm' => '0',
+            'server' => 'server',
+            'secret' => 'secret',
+            'dateadded' => Time.utc(2011).to_i.to_s,
+            'latitude' => '0',
+            'longitude' => '0',
+            'accuracy' => '0',
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
+            'views' => '50'
+          } ]
+        } ]
+      } }
+      Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
+      photos = Photo.all :include => :person
+      photos.size.should == 1
+      photo = photos[0]
+      photo.flickrid.should == 'photo_flickrid'
+      photo.farm.should == '0'
+      photo.server.should == 'server'
+      photo.secret.should == 'secret'
+      photo.latitude.should be_nil
+      photo.longitude.should be_nil
+      photo.accuracy.should be_nil
+      photo.dateadded.should == Time.utc(2011)
+      photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
+      photo.views.should == 50
     end
 
   end

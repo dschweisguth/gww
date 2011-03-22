@@ -105,7 +105,6 @@ class Photo
       :dateadded => now,
       :lastupdate => now,
       :seen_at => now,
-      :mapped => 'false',
       :game_status => 'unfound',
       :views => 0
     }
