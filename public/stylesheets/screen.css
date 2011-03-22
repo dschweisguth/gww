@@ -73,7 +73,7 @@ th {
   text-align: right;
 }
 
-/* root/index */
+/* / */
 
 .spacious {
   line-height: 200%;
@@ -83,20 +83,20 @@ th {
   color: red;
 }
 
-/* root/bookmarklet */
+/* /bookmarklet */
 
 .new {
   color: red;
 }
 
-/* people/top_guessers, guesses/longest_and_shortest */
+/* /people/top_guessers, /guesses/longest_and_shortest */
 
 .opening-number {
   font-weight: bold;
   text-align: right;
 }
 
-/* people/top_guessers */
+/* /people/top_guessers */
 
 .container {
   margin: 0;
@@ -117,13 +117,13 @@ th {
   width: 285px;
 }
 
-/* guesses/longest_and_shortest */
+/* /guesses/longest_and_shortest */
 
 .thumbnail {
   text-align: center;
 }
 
-/* people/# */
+/* /people/# */
 
 .trophies {
   margin-left: 30px;
@@ -150,7 +150,7 @@ a.normal {
   background-color: #ffcc33;
 }
 
-/* people/#/map */
+/* /people/#/map */
 
 #map_canvas {
   width: 900px;
@@ -158,7 +158,7 @@ a.normal {
   margin: 0 auto;
 }
 
-/* photos/#, admin/photos/edit */
+/* /photos/#, /admin/photos/#/edit */
 
 .when {
   width: 100px;
@@ -187,20 +187,20 @@ a.normal {
   color: #bbbbbb;
 }
 
-/* wheresies/index */
+/* /wheresies/# */
 
 .float {
   float: left;
   padding-right: 30px;
 }
 
-/* admin/index */
+/* /admin */
 
 .button-to, .button-to div {
   display: inline;
 }
 
-/* admin/photos/#/edit */
+/* /admin/photos/#/edit */
 
 .edit {
   font-size: 11px;
@@ -226,7 +226,7 @@ a.normal {
   width: 500px;
 }
 
-/* admin/score_reports/index */
+/* /admin/score_reports */
 
 .top-justified td {
   vertical-align: top;
