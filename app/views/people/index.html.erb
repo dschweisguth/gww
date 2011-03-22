@@ -5,19 +5,19 @@
 <table class="dark">
 <tr>
   <th class="empty"></th>
-  <th><%= link_to 'Member', list_path('username') %></th>
-  <th><%= link_to 'Score', list_path('score') %></th>
-  <th><%= link_to 'Posts', list_path('posts') %></th>
-  <th><%= link_to 'Score + posts', list_path('score-plus-posts') %></th>
-  <th><%= link_to 'Guesses per day', list_path('guesses-per-day') %></th>
-  <th><%= link_to 'Posts per day', list_path('posts-per-day') %></th>
-  <th><%= link_to 'Posts per guess', list_path('posts-per-guess') %></th>
-  <th><%= link_to "Average # of days to guess others' posts", list_path('time-to-guess') %></th>
-  <th><%= link_to 'Average # of days for posts to be guessed', list_path('time-to-be-guessed') %></th>
-  <th><%= link_to "Average # of comments to guess others' posts", list_path('comments-to-guess') %></th>
-  <th><%= link_to "Average # of comments per post", list_path('comments-per-post') %></th>
-  <th><%= link_to 'Average # of comments for posts to be guessed', list_path('comments-to-be-guessed') %></th>
-  <th><%= link_to 'Average # of views per post', list_path('views-per-post') %></th>
+  <th><%= link_to 'Member', other_people_path('username') %></th>
+  <th><%= link_to 'Score', other_people_path('score') %></th>
+  <th><%= link_to 'Posts', other_people_path('posts') %></th>
+  <th><%= link_to 'Score + posts', other_people_path('score-plus-posts') %></th>
+  <th><%= link_to 'Guesses per day', other_people_path('guesses-per-day') %></th>
+  <th><%= link_to 'Posts per day', other_people_path('posts-per-day') %></th>
+  <th><%= link_to 'Posts per guess', other_people_path('posts-per-guess') %></th>
+  <th><%= link_to "Average # of days to guess others' posts", other_people_path('time-to-guess') %></th>
+  <th><%= link_to 'Average # of days for posts to be guessed', other_people_path('time-to-be-guessed') %></th>
+  <th><%= link_to "Average # of comments to guess others' posts", other_people_path('comments-to-guess') %></th>
+  <th><%= link_to "Average # of comments per post", other_people_path('comments-per-post') %></th>
+  <th><%= link_to 'Average # of comments for posts to be guessed', other_people_path('comments-to-be-guessed') %></th>
+  <th><%= link_to 'Average # of views per post', other_people_path('views-per-post') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
 <tr>

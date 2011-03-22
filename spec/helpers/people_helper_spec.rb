@@ -3,24 +3,23 @@ require 'spec_helper'
 describe PeopleHelper do
   without_transactions
 
-  # TODO Dave rename this and the photos equivalent
-  describe '#list_path' do
+  describe '#other_people_path' do
     it 'returns the URI to the list sorted by the given criterion' do
-      list_path_returns 'score', '+', 'username', '/people/sorted-by/username/order/+'
+      other_people_path_returns 'score', '+', 'username', '/people/sorted-by/username/order/+'
     end
 
     it 'reverses the sort order if the list is already sorted by the given criterion' do
-      list_path_returns 'username', '+', 'username', '/people/sorted-by/username/order/-'
+      other_people_path_returns 'username', '+', 'username', '/people/sorted-by/username/order/-'
     end
 
     it 'restores the sort order if the list is already reverse-sorted by the given criterion' do
-      list_path_returns 'username', '-', 'username', '/people/sorted-by/username/order/+'
+      other_people_path_returns 'username', '-', 'username', '/people/sorted-by/username/order/+'
     end
 
-    def list_path_returns(current_criterion, current_order, requested_criterion, expected_uri)
+    def other_people_path_returns(current_criterion, current_order, requested_criterion, expected_uri)
       params[:sorted_by] = current_criterion
       params[:order] = current_order
-      helper.list_path(requested_criterion).should == expected_uri
+      helper.other_people_path(requested_criterion).should == expected_uri
     end
 
   end
