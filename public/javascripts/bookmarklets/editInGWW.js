@@ -7,7 +7,7 @@ function editInGWW() {
         encodeURIComponent(window.location);
     }, 0);
   } else {
-    var match = /^(http:\/\/[^/]+\/)photos\/show(\/\d+)/.exec(window.location);
+    var match = /^(http:\/\/[^/]+\/)photos(\/\d+)/.exec(window.location);
     if (match != null) {
       setTimeout(function() {
         window.location = match[1] + 'admin/photos' + match[2] + '/edit?load_comments=true' ;

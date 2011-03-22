@@ -1,7 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.with_options :conditions => { :method => :get } do |user|
-    
+
     user.with_options :controller => 'root' do |root|
       root.root
       %w{ about bookmarklet }.each do |action|
@@ -25,6 +25,7 @@ ActionController::Routing::Routes.draw do |map|
     user.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show'
 
   end
+  map.connect '/auto_complete_for_person_username', :controller => 'root', :action => 'auto_complete_for_person_username', :conditions => { :method => :post }
 
   map.resources :score_reports, :only => [ :index, :show ]
   map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
@@ -50,6 +51,7 @@ ActionController::Routing::Routes.draw do |map|
       %w{ update_all_from_flickr update_statistics }.each do |action|
         photos_with_post.send action, "admin/photos/#{action}", :action => action
       end
+      photos_with_post.connect '/admin/photos/auto_complete_for_person_username', :action => 'auto_complete_for_person_username'
     end
 
     photos.with_options :conditions => { :method => :post } do |photos_with_post|
@@ -59,7 +61,5 @@ ActionController::Routing::Routes.draw do |map|
     end
 
   end
-
-  map.connect ':controller/:action/:id'
 
 end

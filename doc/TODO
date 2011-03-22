@@ -6,11 +6,8 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Use RESTful routing in more places
-  Having done so, enforce correct HTTP method on remaining non-RESTful actions
-  Remove default route
-  Use named routes in controller tests 
-  Use named routes in Javascript
+Use named routes in controller tests
+Use named routes in Javascript
 Pass model objects directly to link_to or url_for instead of constructing paths
 Fix guess scored before the group started
   Remove checks that filter out that data?

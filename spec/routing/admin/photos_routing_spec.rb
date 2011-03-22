@@ -3,6 +3,10 @@ require 'spec_helper'
 describe Admin::PhotosController do
   without_transactions
 
+  describe 'auto_complete_for_person_username' do
+    it { should route(:post, '/admin/photos/auto_complete_for_person_username').to :controller => 'admin/photos', :action => 'auto_complete_for_person_username' }
+  end
+
   %w{ update_all_from_flickr update_statistics }.each do |action|
     describe action do
       it { should have_named_route action, "/admin/photos/#{action}" }
