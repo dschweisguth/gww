@@ -8,15 +8,13 @@
   <tr>
     <th class="empty"></th>
     <th>photo</th>
-    <th><%= link_to 'posted by', list_path('username') %></th>
-    <th><%= link_to 'date added', list_path('date-added') %></th>
-    <th><%= link_to 'last updated', list_path('last-updated') %></th>
+    <th><%= link_to 'posted by', other_photos_path('username') %></th>
+    <th><%= link_to 'date added', other_photos_path('date-added') %></th>
+    <th><%= link_to 'last updated', other_photos_path('last-updated') %></th>
     <th>game status</th>
-    <th><%= link_to 'views', list_path('views') %></th>
-    <th><%= link_to '# of comments by members while unfound',
-      list_path('member-comments') %></th>
-    <th><%= link_to '# of comments with ? by members while unfound',
-      list_path('member-questions') %></th>
+    <th><%= link_to 'views', other_photos_path('views') %></th>
+    <th><%= link_to '# of comments by members while unfound', other_photos_path('member-comments') %></th>
+    <th><%= link_to '# of comments with ? by members while unfound', other_photos_path('member-questions') %></th>
   </tr>  
 <% @photos.each_with_index do |photo, photo_index| -%>
   <tr>
