@@ -211,16 +211,6 @@ describe Comment do
     end
 
     describe 'when adding a revelation' do
-      it 'needs a non-nil username' do
-        photo = Photo.make
-        lambda { Comment.add_entered_answer photo.id, nil, 'answer text' }.should raise_error ArgumentError
-      end
-
-      it 'needs a non-empty username' do
-        photo = Photo.make
-        lambda { Comment.add_entered_answer photo.id, '', 'answer text' }.should raise_error ArgumentError
-      end
-
       it 'needs a non-nil answer text' do
         photo = Photo.make
         lambda { Comment.add_entered_answer photo.id, photo.person.username, nil }.should raise_error ArgumentError
@@ -235,6 +225,13 @@ describe Comment do
         photo = Photo.make
         set_time
         Comment.add_entered_answer photo.id, photo.person.username, 'answer text'
+        is_revealed photo, 'answer text'
+      end
+
+      it "defaults to the photo's owner" do
+        photo = Photo.make
+        set_time
+        Comment.add_entered_answer photo.id, '', 'answer text'
         is_revealed photo, 'answer text'
       end
 

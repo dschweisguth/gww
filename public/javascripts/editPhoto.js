@@ -23,7 +23,7 @@
     if (username_form) {
       username_form.observe('submit', function (event) {
         var form = event.element();
-        if (form['person[username]'].value === '' || form['answer_text'].value === '') {
+        if (form['answer_text'].value === '') {
           event.preventDefault();
           return false;
         } else {

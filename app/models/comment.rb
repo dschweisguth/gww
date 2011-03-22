@@ -6,21 +6,20 @@ class Comment < ActiveRecord::Base
   def self.add_selected_answer(comment_id, username)
     #noinspection RailsParamDefResolve
     comment = Comment.find comment_id, :include => { :photo => [ :person, :revelation ] }
-    add_answer(comment.photo, comment.username, comment.flickrid, username,
-      comment.comment_text, comment.commented_at)
+    add_answer comment.photo, comment.username, comment.flickrid, username,
+      comment.comment_text, comment.commented_at
   end
 
   def self.add_entered_answer(photo_id, username, answer_text)
-    if username.nil? || username.empty?
-      raise ArgumentError, 'username may not be nil or empty'
-    end
     if answer_text.nil? || answer_text.empty?
       raise ArgumentError, 'answer_text may not be nil or empty'
     end
 
-    #noinspection RailsParamDefResolve
     photo = Photo.find photo_id, :include => [ :person, :revelation ]
-    add_answer(photo, nil, nil, username, answer_text, Time.now.getutc)
+    if username.empty?
+      username = photo.person.username
+    end
+    add_answer photo, nil, nil, username, answer_text, Time.now.getutc
 
   end
 

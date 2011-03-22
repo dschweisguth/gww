@@ -52,8 +52,8 @@
       To give a point to someone other than the commenter, enter their username here
         <%= text_field_with_auto_complete :person, :username %>
         and choose the comment above.<br/>
-      <%= submit_tag 'Reveal the photo with the following text:' %> <%= text_field_tag 'answer_text' %><br/>
-      To delete a guess created with either of these options, change the photo's status to unfound or unconfirmed, or accept the poster's revelation.
+      <%= submit_tag 'Guess or reveal the photo with the following text:' %> <%= text_field_tag 'answer_text' %> (Leave the username above blank to reveal.)<br/>
+      To delete a guess or revelation created with either of these options, change the photo's status to unfound or unconfirmed, or accept the poster's revelation.
     </div>
   <% end %>
 

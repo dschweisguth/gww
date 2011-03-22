@@ -23,7 +23,6 @@ After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
 
 Features
 
-Allow custom text for guess as well as revelation. Treat empty field as revelation.
 Include tags in update
   Highlight foundinSF/unfoundinSF in unfound list
 Include comments in update
