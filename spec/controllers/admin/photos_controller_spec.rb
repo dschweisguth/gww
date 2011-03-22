@@ -27,37 +27,44 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '#unfound' do
-    it 'renders the page' do
-      photo = Photo.make :id => 1
-      stub(Photo).unfound_or_unconfirmed { [ photo ] }
-      get :unfound
-      lists_photo
+  describe 'collections' do
+    before do
+      @photo = Photo.make :id => 1
     end
-  end
 
-  describe '#inaccessible' do
-    it 'renders the page' do
-      photo = Photo.make :id => 1
-      stub(Photo).inaccessible { [ photo ] }
-      get :inaccessible
-      lists_photo
+    describe '#unfound' do
+      it 'renders the page' do
+        stub(Photo).unfound_or_unconfirmed { [ @photo ] }
+        get :unfound
+        lists_photo
+      end
     end
-  end
 
-  describe '#multipoint' do
-    it 'renders the page' do
-      photo = Photo.make :id => 1
-      stub(Photo).multipoint { [ photo ] }
-      get :multipoint
-      lists_photo
+    describe '#inaccessible' do
+      it 'renders the page' do
+        stub(Photo).inaccessible { [ @photo ] }
+        get :inaccessible
+        lists_photo
+      end
     end
-  end
 
-  #noinspection RubyResolve
-  def lists_photo
-    response.should be_success
-    response.should have_tag "a[href=#{edit_admin_photo_path 1, :load_comments => true}]", :text => 'Edit'
+    describe '#multipoint' do
+      it 'renders the page' do
+        stub(Photo).multipoint { [ @photo ] }
+        get :multipoint
+        lists_photo
+      end
+    end
+
+    #noinspection RubyResolve
+    def lists_photo
+      response.should be_success
+      response.should have_tag "a[href=#{person_path @photo.person}]", :text => @photo.person.username
+      response.should have_tag 'td', :text => 'false'
+      response.should have_tag 'td', :text => 'unfound'
+      response.should have_tag "a[href=#{edit_admin_photo_path @photo, :load_comments => true}]", :text => 'Edit'
+    end
+
   end
 
   describe '#edit' do
