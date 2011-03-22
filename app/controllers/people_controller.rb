@@ -141,10 +141,10 @@ class PeopleController < ApplicationController
 
   def map_markers
     #noinspection RailsParamDefResolve
-    guessed_photos = Guess.all(
+    guesses = Guess.all(
       :joins => :photo, :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', params[:id] ],
-      :include => { :photo => :person }).map &:photo
-    render :json => guessed_photos
+      :include => { :photo => :person })
+    render :json => guesses.to_json(:include => { :photo => { :include => :person } })
   end
 
 end
