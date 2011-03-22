@@ -12,13 +12,13 @@ describe Photos do
   describe '#url_for_flickr_image' do
     it 'returns the URL to the given photo' do
       photo = Photo.make
-      url_for_flickr_image(photo, nil).should ==
+      url_for_flickr_image(photo).should ==
         "http://farm#{photo.farm}.static.flickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
     end
 
     it 'handles missing farm' do
       photo = Photo.make :farm => ''
-      url_for_flickr_image(photo, nil).should ==
+      url_for_flickr_image(photo).should ==
         "http://static.flickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
     end
 

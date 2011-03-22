@@ -72,7 +72,7 @@ describe PhotosController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag "a[href=#{url_for_flickr_photo photo}]" do
-        with_tag "img[src=#{url_for_flickr_image photo, nil}]"
+        with_tag "img[src=#{url_for_flickr_image photo}]"
       end
       response.should have_text /Added to the group at 12:00 AM, January 01, 2010/
       response.should have_text /This photo is unfound./
