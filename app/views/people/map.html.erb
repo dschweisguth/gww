@@ -1,8 +1,8 @@
-<% content_for :title do %>Photos guessed or posted by <%=h @person.username %><% end %>
+<% content_for :title do %>Mapped photos guessed by <%=h @person.username %><% end %>
 <%= javascript_include_tag :defaults, 'map' %>
 
 <% sandwich 'person_breadcrumbs' do %>
-<h1>Photos guessed by <%=h @person.username %></h1>
+<h1>Mapped photos guessed by <%=h @person.username %></h1>
 
   <div id="map_canvas"></div>
 
