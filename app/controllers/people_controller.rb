@@ -139,4 +139,12 @@ class PeopleController < ApplicationController
     @person = Person.find params[:id]
   end
 
+  def map_markers
+    #noinspection RailsParamDefResolve
+    guessed_photos = Guess.all(
+      :joins => :photo, :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', params[:id] ],
+      :include => { :photo => :person }).map &:photo
+    render :json => guessed_photos
+  end
+
 end
