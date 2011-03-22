@@ -15,7 +15,7 @@ ActionController::Routing::Routes.draw do |map|
       %w{ guesses posts }.each do |action|
         people.send "person_#{action}", "people/:id/#{action}", :action => action
       end
-      people.list_comments 'people/comments/:id/page/:page', :action => 'comments'
+      people.person_comments 'people/:id/comments/page/:page', :action => 'comments'
     end
 
     user.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :controller => 'photos', :action => 'index'

@@ -33,4 +33,9 @@ describe PeopleController do
     end
   end
 
+  describe 'comments' do
+    it { should have_named_route :person_comments, 666, 1, '/people/666/comments/page/1' }
+    it { should route(:get, '/people/666/comments/page/1').to :controller => 'people', :action => 'comments', :id => '666', :page => '1' }
+  end
+
 end
