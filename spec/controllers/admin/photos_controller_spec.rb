@@ -57,7 +57,7 @@ describe Admin::PhotosController do
   #noinspection RubyResolve
   def lists_photo
     response.should be_success
-    response.should have_tag "a[href=#{edit_admin_photo_path(1, :load_comments => true)}]", :text => 'Edit'
+    response.should have_tag "a[href=#{edit_admin_photo_path 1, :load_comments => true}]", :text => 'Edit'
   end
 
   describe '#edit' do
@@ -85,11 +85,11 @@ describe Admin::PhotosController do
       response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
       response.should have_text /This photo is unfound./
       #noinspection RubyResolve
-      response.should have_tag "form[action=#{change_game_status_path(111)}]", :text => /Change this photo's status from unfound to/ do
+      response.should have_tag "form[action=#{change_game_status_path 111}]", :text => /Change this photo's status from unfound to/ do
         with_tag 'input[value=unconfirmed]'
       end
       #noinspection RubyResolve
-      response.should have_tag "form[action=#{add_selected_answer_path(111)}]" do
+      response.should have_tag "form[action=#{add_selected_answer_path 111}]" do
         with_tag 'input[type=submit][name=commit][value=Add this guess]'
         with_tag 'input[type=hidden][name=comment_id][value=222]'
       end

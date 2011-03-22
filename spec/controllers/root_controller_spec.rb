@@ -13,7 +13,7 @@ describe RootController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_text /The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes./
-      response.should have_tag 'a[href=/wheresies/2011]', :text => '2011'
+      response.should have_tag "a[href=#{wheresies_path 2011}]", :text => '2011'
 
     end
 

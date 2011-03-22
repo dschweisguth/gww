@@ -12,8 +12,8 @@ describe WheresiesController do
       #noinspection RubyResolve
       response.should be_success
 
-      response.should have_tag 'a[href=/wheresies/2009]', :text => '2009'
-      response.should_not have_tag 'a[href=/wheresies/2010]'
+      response.should have_tag "a[href=#{wheresies_path 2009}]", :text => '2009'
+      response.should_not have_tag "a[href=#{wheresies_path 2010}]"
 
       response.should have_tag 'h1', :text => /2010 Wheresies \(preliminary\)/
 

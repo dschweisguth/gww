@@ -39,7 +39,7 @@ describe Admin::RootController do
       get :bookmarklet
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a[href=/bookmarklet]'
+      response.should have_tag "a[href=#{root_bookmarklet_path}]"
     end
   end
 
