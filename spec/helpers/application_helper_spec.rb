@@ -55,27 +55,6 @@ describe ApplicationHelper do
     end
   end
 
-  describe '#url_for_flickr_image' do
-    it 'returns the URL to the given photo' do
-      photo = Photo.make :farm => '0'
-      helper.url_for_flickr_image(photo, nil).should ==
-        'http://farm0.static.flickr.com/server/photo_flickrid_secret.jpg';
-    end
-
-    it 'handles missing farm' do
-      photo = Photo.make :farm => ''
-      helper.url_for_flickr_image(photo, nil).should ==
-        'http://static.flickr.com/server/photo_flickrid_secret.jpg';
-    end
-
-    it 'provides the requested size' do
-      photo = Photo.make :farm => '0'
-      helper.url_for_flickr_image(photo, 't').should ==
-        'http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg';
-    end
-
-  end
-
   describe '#titled_image_tag' do
     it 'returns an image tag with alt and title attributes set to the given value' do
       helper.titled_image_tag('http://the.url', 'the title').should ==
@@ -94,14 +73,14 @@ describe ApplicationHelper do
       @photo = Photo.make :id => 666
     end
 
-    it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
+    it "returns a photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
       helper.thumbnail(@photo).should ==
-        '<a href="/photos/666"><img alt="" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="" /></a>'
+        %Q{<a href="#{photo_path @photo}"><img alt="" src="#{url_for_flickr_image @photo, 't'}" title="" /></a>}
     end
 
-    it "returns an photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
+    it "returns a photo's thumbnail with non-empty alt and title wrapped in a link to the photo's page" do
       helper.thumbnail(@photo, "alt text").should ==
-        '<a href="/photos/666"><img alt="alt text" src="http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg" title="alt text" /></a>'
+        %Q{<a href="#{photo_path @photo}"><img alt="alt text" src="#{url_for_flickr_image @photo, 't'}" title="alt text" /></a>}
     end
 
   end

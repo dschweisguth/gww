@@ -325,15 +325,16 @@ describe PeopleController do
     it 'renders the page' do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
+      photo = Photo.make :person => person
       #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ Photo.make :person => person ] }
+      stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ photo ] }
       get :posts, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'h1', :text => '1 photo posted by username'
       response.should have_tag "a[href=#{person_path person}]"
-      response.should have_tag 'img[src=http://farm0.static.flickr.com/server/photo_flickrid_secret_t.jpg]'
+      response.should have_tag "img[src=#{url_for_flickr_image photo, 't'}]"
       response.should have_tag 'td', :text => 'false'
       response.should have_tag 'td', :text => 'unfound'
 

@@ -34,10 +34,6 @@ module ApplicationHelper
     link_to 'Flickr', url_for_flickr_photo(photo)
   end
 
-  def url_for_flickr_image(photo, size)
-    "http://#{ "farm#{photo.farm}." if ! photo.farm.empty? }static.flickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}#{ '_' + size if ! size.nil? }.jpg"
-  end
-
   def titled_image_tag(src, alt_and_title, options = {})
     image_tag src,
       { :alt => alt_and_title, :title => alt_and_title }.merge(options)
