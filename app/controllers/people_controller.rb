@@ -25,7 +25,11 @@ class PeopleController < ApplicationController
   def top_guessers
     @days, @weeks, @months, @years = Person.top_guessers Time.now
   end
-  
+
+  def old_show
+    redirect_to person_path params[:id]
+  end
+
   caches_page :show
   def show
     @person = Person.find params[:id]

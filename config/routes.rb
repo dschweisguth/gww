@@ -12,6 +12,7 @@ ActionController::Routing::Routes.draw do |map|
     user.with_options :controller => 'people' do |people|
       people.find_person 'people/find', :action => 'find'
       people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
+      people.connect 'people/show/:id', :action => 'old_show' # TODO Dave remove after first score report after 3/21/2011
       %w{ guesses posts }.each do |action|
         people.send "person_#{action}", "people/:id/#{action}", :action => action
       end
