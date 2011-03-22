@@ -75,12 +75,6 @@ th {
 
 /* root/index */
 
-.new-list-item {
-  color: red;
-  display: inline-block;
-  padding-left: 10px;
-}
-
 .spacious {
   line-height: 200%;
 }
