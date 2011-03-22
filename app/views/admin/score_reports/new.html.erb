@@ -2,7 +2,7 @@
 <% sandwich 'admin/score_reports/breadcrumbs' do %>
 <h1>New score report</h1>
 
-<p><a href="#preview">Preview</a> - <a href="http://www.flickr.com/groups/guesswheresf/discuss/72157613300758288/">GWSF Scores discussion topic</a></p>
+<p><a href="#preview">Preview</a> - <a href="<%= FlickrCredentials::SCORE_TOPIC_URL %>">GWSF Scores discussion topic</a></p>
 
 <% form_tag admin_score_reports_path do %>
   <%= submit_tag 'Remember that the score report below was published' %>

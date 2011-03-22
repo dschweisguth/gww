@@ -6,6 +6,7 @@ class FlickrCredentials
   SECRET = CREDENTIALS['secret']
   API_KEY = CREDENTIALS['api_key']
   AUTH_TOKEN = CREDENTIALS['auth_token']
+  SCORE_TOPIC_URL = CREDENTIALS['score_topic_url']
 
   class << self; attr_accessor :retry_quantum end
   @retry_quantum = 30
