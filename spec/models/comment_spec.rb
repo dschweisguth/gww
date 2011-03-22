@@ -211,11 +211,6 @@ describe Comment do
     end
 
     describe 'when adding a revelation' do
-      it 'needs a non-nil answer text' do
-        photo = Photo.make
-        lambda { Comment.add_entered_answer photo.id, photo.person.username, nil }.should raise_error ArgumentError
-      end
-
       it 'needs a non-empty answer text' do
         photo = Photo.make
         lambda { Comment.add_entered_answer photo.id, photo.person.username, '' }.should raise_error ArgumentError

@@ -11,8 +11,8 @@ class Comment < ActiveRecord::Base
   end
 
   def self.add_entered_answer(photo_id, username, answer_text)
-    if answer_text.nil? || answer_text.empty?
-      raise ArgumentError, 'answer_text may not be nil or empty'
+    if answer_text.empty?
+      raise ArgumentError, 'answer_text may not be empty'
     end
 
     photo = Photo.find photo_id, :include => [ :person, :revelation ]
