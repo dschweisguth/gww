@@ -473,12 +473,12 @@ describe Photo do
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
-            'id' => 'photo_flickrid',
-            'owner' => 'person_flickrid',
-            'ownername' => 'username',
-            'farm' => '0',
-            'server' => 'server',
-            'secret' => 'secret',
+            'id' => 'incoming_photo_flickrid',
+            'owner' => 'incoming_person_flickrid',
+            'ownername' => 'incoming_username',
+            'farm' => '1',
+            'server' => 'incoming_server',
+            'secret' => 'incoming_secret',
             'dateadded' => Time.utc(2011).to_i.to_s,
             'latitude' => '37.123456',
             'longitude' => '-122.654321',
@@ -498,13 +498,13 @@ describe Photo do
       photo = photos[0]
       person = photo.person
 
-      person.flickrid.should == 'person_flickrid'
-      person.username.should == 'username'
+      person.flickrid.should == 'incoming_person_flickrid'
+      person.username.should == 'incoming_username'
 
-      photo.flickrid.should == 'photo_flickrid'
-      photo.farm.should == '0'
-      photo.server.should == 'server'
-      photo.secret.should == 'secret'
+      photo.flickrid.should == 'incoming_photo_flickrid'
+      photo.farm.should == '1'
+      photo.server.should == 'incoming_server'
+      photo.secret.should == 'incoming_secret'
       photo.latitude.should == 37.123456
       photo.longitude.should == -122.654321
       photo.accuracy.should == 16
@@ -522,23 +522,21 @@ describe Photo do
     end
 
     it 'uses an existing person, and updates their username if it changed' do
-      person_before = Person.make :flickrid => 'person_flickrid', :username => 'old_username'
+      person_before = Person.make :flickrid => 'incoming_person_flickrid', :username => 'old_username'
       Photo.update_all_from_flickr.should == [ 1, 0, 1, 1 ]
       people = Person.all
       people.size.should == 1
       person_after = people[0]
       person_after.id.should == person_before.id
       person_after.flickrid.should == person_before.flickrid
-      person_after.username.should == 'username'
+      person_after.username.should == 'incoming_username'
     end
 
     it 'uses an existing photo, and updates attributes that changed' do
-      # It should never happen that a photo's user's flickrid changes, so make
-      # the existing user's flickrid the same as in the mocked response
-      person = Person.make :flickrid => 'person_flickrid'
+      person = Person.make :flickrid => 'incoming_person_flickrid'
       photo_before = Photo.make \
         :person => person,
-        :flickrid => 'photo_flickrid',
+        :flickrid => 'incoming_photo_flickrid',
         :farm => '1',
         :server => 'old_server',
         :secret => 'old_secret',
@@ -554,9 +552,9 @@ describe Photo do
       photo_after = photos[0]
       photo_after.id.should == photo_before.id
       photo_after.flickrid.should == photo_before.flickrid
-      photo_after.farm.should == '0'
-      photo_after.server.should == 'server'
-      photo_after.secret.should == 'secret'
+      photo_after.farm.should == '1'
+      photo_after.server.should == 'incoming_server'
+      photo_after.secret.should == 'incoming_secret'
       photo_after.latitude.should == 37.123456
       photo_after.longitude.should == -122.654321
       photo_after.accuracy.should == 16
@@ -571,12 +569,12 @@ describe Photo do
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
-            'id' => 'photo_flickrid',
-            'owner' => 'person_flickrid',
-            'ownername' => 'username',
+            'id' => 'incoming_photo_flickrid',
+            'owner' => 'incoming_person_flickrid',
+            'ownername' => 'incoming_username',
             'farm' => '0',
-            'server' => 'server',
-            'secret' => 'secret',
+            'server' => 'incoming_server',
+            'secret' => 'incoming_secret',
             'dateadded' => Time.utc(2011).to_i.to_s,
             'latitude' => '0',
             'longitude' => '0',
@@ -587,19 +585,12 @@ describe Photo do
         } ]
       } }
       Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
-      photos = Photo.all :include => :person
+      photos = Photo.all
       photos.size.should == 1
       photo = photos[0]
-      photo.flickrid.should == 'photo_flickrid'
-      photo.farm.should == '0'
-      photo.server.should == 'server'
-      photo.secret.should == 'secret'
       photo.latitude.should be_nil
       photo.longitude.should be_nil
       photo.accuracy.should be_nil
-      photo.dateadded.should == Time.utc(2011)
-      photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
-      photo.views.should == 50
     end
 
   end
