@@ -1,4 +1,6 @@
-function initializeMap() {
+var GWW = {};
+
+GWW.initializeMap = function () {
   new google.maps.Map($('map_canvas'), {
     zoom: 13,
     center: new google.maps.LatLng(37.755, -122.442112),
@@ -9,6 +11,6 @@ function initializeMap() {
 Event.observe(window, 'load', function() {
   var script = document.createElement('script');
   script.type = "text/javascript";
-  script.src = 'http://maps.google.com/maps/api/js?sensor=false&callback=initializeMap';
+  script.src = 'http://maps.google.com/maps/api/js?sensor=false&callback=GWW.initializeMap';
   document.body.appendChild(script);
 });
