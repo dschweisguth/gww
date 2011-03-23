@@ -138,12 +138,14 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
+      response.should have_tag "a[href=#{person_map_path @person}]"
       renders_bits_for_user_who_has_guessed
       renders_bits_for_user_who_has_posted
 
     end
 
     it "handles a person who has never guessed" do
+      stub(Guess).mapped_count { 0 }
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
       stub(Guess).first_by(@person)
@@ -162,6 +164,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
+      response.should have_tag "a[href=#{person_map_path @person}]"
+
       response.should have_text /username has never made a correct guess/
       response.should_not have_text /username scored the most points in the last week/
       response.should_not have_text /username scored the most points in the last month/
@@ -176,6 +180,7 @@ describe PeopleController do
     it "handles a person who has never posted" do
       stub_guesses
 
+      stub(Photo).mapped_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
       stub(Photo).first_by(@person)
@@ -194,6 +199,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
+      response.should have_tag "a[href=#{person_map_path @person}]"
+
       renders_bits_for_user_who_has_guessed
 
       response.should have_text /username has never posted a photo to the group/
@@ -208,6 +215,8 @@ describe PeopleController do
     end
 
     def stub_guesses
+      stub(Guess).mapped_count { 1 }
+
       stub(Person).high_scorers(@now, 7) { [ @person ] }
       stub(Person).high_scorers(@now, 30) { [ @person ] }
 
@@ -244,6 +253,8 @@ describe PeopleController do
     end
 
     def stub_posts
+      stub(Photo).mapped_count { 1 }
+
       stub(Person).top_posters(@now, 7) { [ @person ] }
       stub(Person).top_posters(@now, 30) { [ @person ] }
 
