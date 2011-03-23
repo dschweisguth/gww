@@ -258,6 +258,28 @@ describe Guess do
 
   end
 
+  describe '.all_mapped' do
+    it "returns the person's guesses" do
+      photo = Photo.make :latitude => 37
+      guess = Guess.make :photo => photo
+      Guess.all_mapped(guess.person.id).should == [ guess ]
+    end
+
+    it "ignores others' guesses" do
+      photo = Photo.make :latitude => 37
+      Guess.make :photo => photo
+      other_person = Person.make
+      Guess.all_mapped(other_person.id).should == []
+    end
+
+    it "ignores guesses of unmapped photos" do
+      photo = Photo.make
+      guess = Guess.make :photo => photo
+      Guess.all_mapped(guess.person.id).should == []
+    end
+
+  end
+
   describe '.longest_in' do
     it 'lists guesses made in the given year sorted by time between post and guess, descending' do
       photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc
