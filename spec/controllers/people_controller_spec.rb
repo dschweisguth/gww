@@ -397,6 +397,23 @@ describe PeopleController do
       photo_out['pin_type'].should == 'guess'
       photo_out['pin_color'].should == '008000'
     end
+
+    it 'renders posts, too' do
+      person = Person.make :id => 1
+      photo = Photo.make :person => person, :latitude => 37
+      stub(Guess).all_mapped(person.id.to_s) { [] }
+      stub(Photo).all_mapped(person.id.to_s) { [ photo ] }
+      get :map_markers, :id => person.id
+
+      #noinspection RubyResolve
+      response.should be_success
+      photos = ActiveSupport::JSON.decode response.body
+      photos.length.should == 1
+      photo_out = photos[0]['photo']
+      photo_out['pin_type'].should == 'post'
+      photo_out['pin_color'].should == '0000FF'
+    end
+
   end
 
 end
