@@ -145,23 +145,28 @@ class PeopleController < ApplicationController
       :joins => :photo, :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', params[:id] ],
       :order => 'guesses.guessed_at',
       :include => { :photo => :person })
-    time_of_first_guess = guesses.first.guessed_at.to_f
-    time_of_last_guess = guesses.last.guessed_at.to_f
+    first_guessed_at = guesses.first.guessed_at
+    last_guessed_at = guesses.last.guessed_at
     guesses.each do |guess|
-      position_in_range = (guess.guessed_at.to_f - time_of_first_guess) / (time_of_last_guess - time_of_first_guess)
-      # DDFFDD .. 008800
-      intensity = (256.0 * (1 - 0.5 * position_in_range)).to_i
-      intensity -= intensity % 4
-      if intensity == 256
-        intensity = 252
-      end
-      others_intensity = (222.0 * (1 - position_in_range)).to_i
-      others_intensity -= others_intensity % 4
-      p "intensity #{intensity} others_intensity #{others_intensity}"
-      guess.photo[:pin_color] = "%02X%02X%02X" % [ others_intensity, intensity, others_intensity ]
+      guess.photo[:pin_color] = scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
     end
     photos = guesses.map &:photo
     render :json => photos
   end
+
+  def scaled_green(start_of_range, end_of_range, position)
+    start_of_range = start_of_range.to_f
+    fractional_position = (position.to_f - start_of_range) / (end_of_range.to_f - start_of_range)
+    # DDFFDD .. 008800
+    intensity = (256.0 * (1 - 0.5 * fractional_position)).to_i
+    intensity -= intensity % 4
+    if intensity == 256
+      intensity = 252
+    end
+    others_intensity = (222.0 * (1 - fractional_position)).to_i
+    others_intensity -= others_intensity % 4
+    "%02X%02X%02X" % [others_intensity, intensity, others_intensity]
+  end
+  private :scaled_green
 
 end
