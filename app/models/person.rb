@@ -10,10 +10,164 @@ class Person < ActiveRecord::Base
   has_many :photos, :inverse_of => :person
   has_many :guesses, :inverse_of => :person
 
+  # Used by RootController
+
   def self.find_by_multiple_fields(username)
     Person.find_by_username(username) || Person.find_by_flickrid(username) ||
       (username =~ /\d+/ && Person.find_by_id(username))
   end
+
+  # Used by ScoreReportsController
+
+  def self.all_before(date)
+    utc_date = date.getutc
+    find_by_sql [
+        %q[
+          select p.* from people p
+          where exists (select 1 from photos where person_id = p.id and dateadded <= ?) or
+            exists (select 1 from guesses where person_id = p.id and added_at <= ?)
+        ],
+        utc_date, utc_date
+    ]
+  end
+  
+  def self.high_scorers(now, for_the_past_n_days)
+    utc_now = now.getutc
+    people = find_by_sql [ %q{
+      select p.*, count(*) score from people p, guesses g
+      where p.id = g.person_id and ? < g.guessed_at and g.added_at <= ?
+      group by p.id having score > 1 order by score desc
+    }, utc_now - for_the_past_n_days.days, utc_now]
+    high_scorers = []
+    current_score = nil
+    people.each do |person|
+      break if high_scorers.length >= 3 && person[:score] < current_score
+      high_scorers << person
+      current_score = person[:score]
+    end
+    high_scorers
+  end
+
+  def self.top_posters(now, for_the_past_n_days)
+    utc_now = now.getutc
+    people = find_by_sql [ %q{
+      select p.*, count(*) posts from people p, photos f
+      where p.id = f.person_id and ? < f.dateadded and f.dateadded <= ?
+      group by p.id having posts > 1 order by posts desc
+    }, utc_now - for_the_past_n_days.days, utc_now]
+    top_posters = []
+    current_post_count = nil
+    people.each do |person|
+      break if top_posters.length >= 3 && person[:posts] < current_post_count
+      top_posters << person
+      current_post_count = person[:posts]
+    end
+    top_posters
+  end
+
+  def self.by_score(people, to_date)
+    scores = Guess.count :conditions => [ 'added_at <= ?', to_date.getutc ], :group => :person_id
+    people_by_score = {}
+    people.each do |person|
+      score = scores[person.id] || 0
+      people_with_score = people_by_score[score]
+      if ! people_with_score
+        people_with_score = []
+        people_by_score[score] = people_with_score
+      end
+      people_with_score << person
+    end
+    people_by_score
+  end
+
+  CLUBS = [ 222, 500, 3300 ]
+
+  # TODO make this work for boundaries above 5000
+  MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
+
+  def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
+    add_score_and_place people_by_score, :score, :place
+    people_by_previous_score = Person.by_score people, previous_report_date
+    add_score_and_place people_by_previous_score, :previous_score, :previous_place
+    Photo.add_posts people, previous_report_date, :previous_posts
+    scored_people = Hash[people.map { |person| [person, person] }]
+    guessers.each do |guesser_and_guesses|
+      guesser = guesser_and_guesses[0]
+      scored_guesser = scored_people[guesser]
+      score = scored_guesser[:score]
+      previous_score = scored_guesser[:previous_score]
+      if previous_score == 0 && score > 0
+        change = 'scored his or her first point'
+        if score > 1
+          change << " (and #{score - 1} more)"
+        end
+        change << (scored_guesser[:previous_posts] == 0 \
+          ? '. Congratulations, and welcome to GWSF!' \
+          : '. Congratulations!')
+      else
+        place = scored_guesser[:place]
+        previous_place = scored_guesser[:previous_place]
+        if place < previous_place
+          change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
+          passed =
+            people.find_all { |person| person[:previous_place] < scored_guesser[:previous_place] } &
+              people.find_all { |person| person[:place] > scored_guesser[:place] }
+          ties = people_by_score[score] - [ scored_guesser ]
+          show_passed = passed.length == 1 || passed.length > 0 && previous_place - place == 2
+          if show_passed || ties.length > 0
+            change << ','
+          end
+          if show_passed
+            change << " passing #{passed.length == 1 ? passed[0].username : "#{passed.length} other players" }"
+          end
+          if ties.length > 0 then
+            if show_passed
+              change << ' and'
+            end
+            change << ' tying '
+            change << (ties.length == 1 ? ties[0].username : "#{ties.length} other players")
+          end
+        else
+          change = ''
+        end
+        club = CLUBS.find { |club| previous_score < club && club <= score }
+        milestone = club ? nil : MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
+        entered_top_ten = previous_place > 10 && place <= 10
+        if (club || milestone || entered_top_ten) && ! change.empty?
+          change << '.'
+        end
+        append(change, club) { "Welcome to the #{club} club!" }
+        append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
+        append(change, entered_top_ten) { 'Welcome to the top ten!' }
+      end
+      guesser[:change_in_standing] = change
+    end
+  end
+
+  def self.add_score_and_place(people_by_score, score_attr_name, place_attr_name)
+    place = 1
+    people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
+      people_with_score = people_by_score[score]
+      people_with_score.each do |person|
+        person[score_attr_name] = score
+        person[place_attr_name] = place
+      end
+      place += people_with_score.length
+    end
+  end
+  # public only for testing
+
+  def self.append(change, value)
+    if value
+      if ! change.empty?
+        change << ' '
+      end
+      change << yield
+    end
+  end
+  private_class_method :append
+
+  # Used by PeopleController
 
   CRITERIA = {
     'username' => [ :downcased_username ],
@@ -294,152 +448,48 @@ class Person < ActiveRecord::Base
     return place, tied
   end
 
-  def self.high_scorers(now, for_the_past_n_days)
-    utc_now = now.getutc
-    people = find_by_sql [ %q{
-      select p.*, count(*) score from people p, guesses g
-      where p.id = g.person_id and ? < g.guessed_at and g.added_at <= ?
-      group by p.id having score > 1 order by score desc
-    }, utc_now - for_the_past_n_days.days, utc_now]
-    high_scorers = []
-    current_score = nil
-    people.each do |person|
-      break if high_scorers.length >= 3 && person[:score] < current_score
-      high_scorers << person
-      current_score = person[:score]
-    end
-    high_scorers
-  end
-
-  def self.top_posters(now, for_the_past_n_days)
-    utc_now = now.getutc
-    people = find_by_sql [ %q{
-      select p.*, count(*) posts from people p, photos f
-      where p.id = f.person_id and ? < f.dateadded and f.dateadded <= ?
-      group by p.id having posts > 1 order by posts desc
-    }, utc_now - for_the_past_n_days.days, utc_now]
-    top_posters = []
-    current_post_count = nil
-    people.each do |person|
-      break if top_posters.length >= 3 && person[:posts] < current_post_count
-      top_posters << person
-      current_post_count = person[:posts]
-    end
-    top_posters
-  end
-
-  def self.all_before(date)
-    utc_date = date.getutc
-    find_by_sql [
-        %q[
-          select p.* from people p
-          where exists (select 1 from photos where person_id = p.id and dateadded <= ?) or
-            exists (select 1 from guesses where person_id = p.id and added_at <= ?)
-        ],
-        utc_date, utc_date
+  def favorite_posters
+    Person.find_by_sql [
+      %Q[
+        select posters.*,
+          count(*) / posters_posts.post_count /
+            (select count(*) from guesses where person_id = ?) *
+            (select count(*) from photos) bias
+        from guesses g, photos f, people posters,
+          (select person_id, count(*) post_count from photos
+            group by person_id having count(*) >= #{MIN_GUESSES_FOR_FAVORITE}) posters_posts
+        where g.photo_id = f.id and
+          g.person_id = ? and f.person_id = posters.id and
+          f.person_id = posters_posts.person_id
+        group by posters.id
+        having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and bias >= #{MIN_BIAS_FOR_FAVORITE}
+        order by bias desc
+      ],
+      id, id
     ]
   end
 
-  def self.by_score(people, to_date)
-    scores = Guess.count :conditions => [ 'added_at <= ?', to_date.getutc ], :group => :person_id
-    people_by_score = {}
-    people.each do |person|
-      score = scores[person.id] || 0
-      people_with_score = people_by_score[score]
-      if ! people_with_score
-        people_with_score = []
-        people_by_score[score] = people_with_score
-      end
-      people_with_score << person
-    end
-    people_by_score
+  def favorite_posters_of
+    Person.find_by_sql [
+      %Q[
+        select guessers.*,
+          count(*) / (select count(*) from photos where person_id = ?) /
+            guessers_guesses.guess_count * (select count(*) from photos) bias
+        from guesses g, photos f, people guessers,
+          (select person_id, count(*) guess_count from guesses
+            group by person_id) guessers_guesses
+        where g.photo_id = f.id and
+          g.person_id = guessers.id and f.person_id = ? and
+          g.person_id = guessers_guesses.person_id
+        group by guessers.id
+        having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and bias >= #{MIN_BIAS_FOR_FAVORITE}
+        order by bias desc
+      ],
+      id, id
+    ]
   end
 
-  CLUBS = [ 222, 500, 3300 ]
-
-  # TODO make this work for boundaries above 5000
-  MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
-
-  def self.add_change_in_standings(people_by_score, people, previous_report_date, guessers)
-    add_score_and_place people_by_score, :score, :place
-    people_by_previous_score = Person.by_score people, previous_report_date
-    add_score_and_place people_by_previous_score, :previous_score, :previous_place
-    Photo.add_posts people, previous_report_date, :previous_posts
-    scored_people = Hash[people.map { |person| [person, person] }]
-    guessers.each do |guesser_and_guesses|
-      guesser = guesser_and_guesses[0]
-      scored_guesser = scored_people[guesser]
-      score = scored_guesser[:score]
-      previous_score = scored_guesser[:previous_score]
-      if previous_score == 0 && score > 0
-        change = 'scored his or her first point'
-        if score > 1
-          change << " (and #{score - 1} more)"
-        end
-        change << (scored_guesser[:previous_posts] == 0 \
-          ? '. Congratulations, and welcome to GWSF!' \
-          : '. Congratulations!')
-      else
-        place = scored_guesser[:place]
-        previous_place = scored_guesser[:previous_place]
-        if place < previous_place
-          change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
-          passed =
-            people.find_all { |person| person[:previous_place] < scored_guesser[:previous_place] } &
-              people.find_all { |person| person[:place] > scored_guesser[:place] }
-          ties = people_by_score[score] - [ scored_guesser ]
-          show_passed = passed.length == 1 || passed.length > 0 && previous_place - place == 2
-          if show_passed || ties.length > 0
-            change << ','
-          end
-          if show_passed
-            change << " passing #{passed.length == 1 ? passed[0].username : "#{passed.length} other players" }"
-          end
-          if ties.length > 0 then
-            if show_passed
-              change << ' and'
-            end
-            change << ' tying '
-            change << (ties.length == 1 ? ties[0].username : "#{ties.length} other players") 
-          end
-        else
-          change = ''
-        end
-        club = CLUBS.find { |club| previous_score < club && club <= score }
-        milestone = club ? nil : MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
-        entered_top_ten = previous_place > 10 && place <= 10
-        if (club || milestone || entered_top_ten) && ! change.empty?
-          change << '.'
-        end
-        append(change, club) { "Welcome to the #{club} club!" }
-        append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
-        append(change, entered_top_ten) { 'Welcome to the top ten!' }
-      end
-      guesser[:change_in_standing] = change
-    end
-  end
-
-  def self.add_score_and_place(people_by_score, score_attr_name, place_attr_name)
-    place = 1
-    people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
-      people_with_score = people_by_score[score]
-      people_with_score.each do |person|
-        person[score_attr_name] = score
-        person[place_attr_name] = place
-      end
-      place += people_with_score.length
-    end
-  end
-  # public only for testing
-
-  def self.append(change, value)
-    if value
-      if ! change.empty?
-        change << ' '
-      end
-      change << yield
-    end
-  end
+  # Used in WheresiesController
 
   def self.most_points_in(year)
     find_by_sql [ %q{
@@ -493,46 +543,7 @@ class Person < ActiveRecord::Base
     ]
   end
 
-  def favorite_posters
-    Person.find_by_sql [
-      %Q[
-        select posters.*,
-          count(*) / posters_posts.post_count /
-            (select count(*) from guesses where person_id = ?) *
-            (select count(*) from photos) bias
-        from guesses g, photos f, people posters,
-          (select person_id, count(*) post_count from photos
-            group by person_id having count(*) >= #{MIN_GUESSES_FOR_FAVORITE}) posters_posts
-        where g.photo_id = f.id and
-          g.person_id = ? and f.person_id = posters.id and
-          f.person_id = posters_posts.person_id
-        group by posters.id
-        having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and bias >= #{MIN_BIAS_FOR_FAVORITE}
-        order by bias desc
-      ],
-      id, id
-    ]
-  end
-
-  def favorite_posters_of
-    Person.find_by_sql [
-      %Q[
-        select guessers.*,
-          count(*) / (select count(*) from photos where person_id = ?) /
-            guessers_guesses.guess_count * (select count(*) from photos) bias
-        from guesses g, photos f, people guessers,
-          (select person_id, count(*) guess_count from guesses
-            group by person_id) guessers_guesses
-        where g.photo_id = f.id and
-          g.person_id = guessers.id and f.person_id = ? and
-          g.person_id = guessers_guesses.person_id
-        group by guessers.id
-        having count(*) >= #{MIN_GUESSES_FOR_FAVORITE} and bias >= #{MIN_BIAS_FOR_FAVORITE}
-        order by bias desc
-      ],
-      id, id
-    ]
-  end
+  # Used in Admin::PhotosController
 
   def destroy_if_has_no_dependents
     if Photo.count(:conditions => [ 'person_id = ?', id ]) == 0 &&
