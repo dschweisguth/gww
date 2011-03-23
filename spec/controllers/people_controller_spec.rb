@@ -404,7 +404,7 @@ describe PeopleController do
       response.should have_tag 'label', :text => '1 mapped guess (!)'
       response.should have_text /GWW\.config = '\[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\]'/
 
-      json = ActiveSupport::JSON.decode assigns[:json]
+      json = decode_json
       json.length.should == 2
       post_out = json[0]['photo']
       post_out['id'].should == post.id
@@ -433,7 +433,7 @@ describe PeopleController do
       response.should_not have_tag 'input[id=guesses]'
       response.should have_text /1 mapped guess/
 
-      json = ActiveSupport::JSON.decode assigns[:json]
+      json = decode_json
       json.length.should == 1
       guessed_photo_out = json[0]['photo']
       guessed_photo_out['id'].should == guessed_photo.id
@@ -457,13 +457,17 @@ describe PeopleController do
       response.should_not have_tag 'input[id=guesses]'
       response.should_not have_text /mapped guess/
 
-      json = ActiveSupport::JSON.decode assigns[:json]
+      json = decode_json
       json.length.should == 1
       post_out = json[0]['photo']
       post_out['id'].should == post.id
       post_out['pin_type'].should == 'post'
       post_out['pin_color'].should == '0000FF'
 
+    end
+
+    def decode_json
+      ActiveSupport::JSON.decode assigns[:json]
     end
 
   end
