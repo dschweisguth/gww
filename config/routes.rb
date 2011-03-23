@@ -20,7 +20,7 @@ ActionController::Routing::Routes.draw do |map|
     people.find_person 'people/find', :action => 'find'
     people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
     people.connect 'people/show/:id', :action => 'old_show' # TODO Dave remove after first score report after 3/21/2011
-    %w{ guesses posts map map_markers }.each do |action|
+    %w{ guesses posts map }.each do |action|
       people.send "person_#{action}", "people/:id/#{action}", :action => action
     end
     people.person_comments 'people/:id/comments/page/:page', :action => 'comments'

@@ -22,35 +22,30 @@ GWW.userMap = (function () {
         center: new google.maps.LatLng(37.76, -122.442112),
         mapTypeId: google.maps.MapTypeId.ROADMAP
       });
-      new Ajax.Request(window.location + '_markers', {
-        method: 'get',
-        requestHeaders: { Accept: 'application/json' },
-        onSuccess: addMarkers
-      });
-    }
 
-  };
-
-  var addMarkers = function (transport) {
-    var photos = transport.responseText.evalJSON(true);
-    infoWindow = new google.maps.InfoWindow();
-    for (var i = 0; i < photos.length; i++) {
-      var photo = photos[i].photo;
-      var marker = new google.maps.Marker({
-        map: map,
-        position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%' +
-          (photo.pin_type === 'guess' ? '21' : '3F') + '|' + photo.pin_color + '|000000'
-      });
-      google.maps.event.addListener(marker, 'click', loadInfoWindow(marker, photo));
-      if (photo.pin_type === 'guess') {
-        guesses.push(marker);
-      } else {
-        posts.push(marker);
+      var photos = GWW.config;
+      infoWindow = new google.maps.InfoWindow();
+      for (var i = 0; i < photos.length; i++) {
+        var photo = photos[i].photo;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: new google.maps.LatLng(photo.latitude, photo.longitude),
+          icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%' +
+            (photo.pin_type === 'guess' ? '21' : '3F') + '|' + photo.pin_color + '|000000'
+        });
+        google.maps.event.addListener(marker, 'click', loadInfoWindow(marker, photo));
+        if (photo.pin_type === 'guess') {
+          guesses.push(marker);
+        } else {
+          posts.push(marker);
+        }
       }
+
+      $('guesses').observe('click', hideOrShowMarkers('guesses', guesses));
+      $('posts').observe('click', hideOrShowMarkers('posts', posts));
+
     }
-    $('guesses').observe('click', hideOrShowMarkers('guesses', guesses));
-    $('posts').observe('click', hideOrShowMarkers('posts', posts));
+
   };
 
   var loadInfoWindow = function (marker, photo) {

@@ -386,6 +386,11 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       stub(Photo).mapped_count(person.id.to_s) { 1 }
       stub(Guess).mapped_count(person.id.to_s) { 1 }
+      guessed_photo = Photo.make :latitude => 37 # TODO Dave latitude necessary?
+      guess = Guess.make :photo => guessed_photo, :person => person
+      stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
+      post = Photo.make :person => person, :latitude => 37 # TODO Dave latitude necessary?
+      stub(Photo).all_mapped(person.id.to_s) { [ post ] }
       get :map, :id => person.id
 
       #noinspection RubyResolve
@@ -394,6 +399,16 @@ describe PeopleController do
       response.should have_tag 'label', :text => '1 mapped post (?)'
       response.should have_tag 'input[id=guesses]'
       response.should have_tag 'label', :text => '1 mapped guess (!)'
+      response.should have_text /GWW\.config = '\[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\]'/
+
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 2
+      guessed_photo_out = json[0]['photo']
+      guessed_photo_out['pin_type'].should == 'guess'
+      guessed_photo_out['pin_color'].should == '008000'
+      post_out = json[1]['photo']
+      post_out['pin_type'].should == 'post'
+      post_out['pin_color'].should == '0000FF'
 
     end
 
@@ -402,6 +417,10 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       stub(Photo).mapped_count(person.id.to_s) { 0 }
       stub(Guess).mapped_count(person.id.to_s) { 1 }
+      guessed_photo = Photo.make :latitude => 37 # TODO Dave latitude necessary?
+      guess = Guess.make :photo => guessed_photo, :person => person
+      stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
+      stub(Photo).all_mapped(person.id.to_s) { [] }
       get :map, :id => person.id
 
       #noinspection RubyResolve
@@ -411,6 +430,12 @@ describe PeopleController do
       response.should_not have_tag 'input[id=guesses]'
       response.should have_text /1 mapped guess/
 
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 1
+      guessed_photo_out = json[0]['photo']
+      guessed_photo_out['pin_type'].should == 'guess'
+      guessed_photo_out['pin_color'].should == '008000'
+
     end
 
     it "shows only the post count if there are no guesses" do
@@ -418,6 +443,9 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       stub(Photo).mapped_count(person.id.to_s) { 1 }
       stub(Guess).mapped_count(person.id.to_s) { 0 }
+      stub(Guess).all_mapped(person.id.to_s) { [] }
+      post = Photo.make :person => person, :latitude => 37 # TODO Dave latitude necessary?
+      stub(Photo).all_mapped(person.id.to_s) { [ post ] }
       get :map, :id => person.id
 
       #noinspection RubyResolve
@@ -427,42 +455,12 @@ describe PeopleController do
       response.should_not have_tag 'input[id=guesses]'
       response.should_not have_text /mapped guess/
 
-    end
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 1
+      post_out = json[0]['photo']
+      post_out['pin_type'].should == 'post'
+      post_out['pin_color'].should == '0000FF'
 
-  end
-
-  describe '#map_marker' do
-    it 'renders the JSON' do
-      person = Person.make :id => 1
-      photo = Photo.make :latitude => 37
-      guess = Guess.make :photo => photo, :person => person
-      stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
-      stub(Photo).all_mapped(person.id.to_s) { [] }
-      get :map_markers, :id => person.id
-
-      #noinspection RubyResolve
-      response.should be_success
-      photos = ActiveSupport::JSON.decode response.body
-      photos.length.should == 1
-      photo_out = photos[0]['photo']
-      photo_out['pin_type'].should == 'guess'
-      photo_out['pin_color'].should == '008000'
-    end
-
-    it 'renders posts, too' do
-      person = Person.make :id => 1
-      photo = Photo.make :person => person, :latitude => 37
-      stub(Guess).all_mapped(person.id.to_s) { [] }
-      stub(Photo).all_mapped(person.id.to_s) { [ photo ] }
-      get :map_markers, :id => person.id
-
-      #noinspection RubyResolve
-      response.should be_success
-      photos = ActiveSupport::JSON.decode response.body
-      photos.length.should == 1
-      photo_out = photos[0]['photo']
-      photo_out['pin_type'].should == 'post'
-      photo_out['pin_color'].should == '0000FF'
     end
 
   end
