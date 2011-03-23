@@ -31,7 +31,7 @@ GWW.userMap = (function () {
       Event.observe(window, 'load', function() {
         var script = document.createElement('script');
         script.type = "text/javascript";
-        script.src = 'http://maps.google.com/maps/api/js?sensor=false&callback=GWW.userMap.initializeMap';
+        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.userMap.initializeMap';
         document.body.appendChild(script);
       });
     },
