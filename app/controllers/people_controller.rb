@@ -154,7 +154,6 @@ class PeopleController < ApplicationController
       end
     end
     photos = guesses.map &:photo
-    p photos.length
 
     posts = Photo.find_all_by_person_id params[:id],
       :conditions => 'latitude is not null', :order => 'dateadded'
@@ -166,9 +165,7 @@ class PeopleController < ApplicationController
         post[:pin_color] = scaled_blue first_dateadded, last_dateadded, post.dateadded
       end
     end
-    p posts.length
     photos += posts
-    p photos.length
 
     render :json => photos
   end
