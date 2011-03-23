@@ -141,10 +141,9 @@ class PeopleController < ApplicationController
 
   def map_markers
     #noinspection RailsParamDefResolve
-    guesses = Guess.all(
+    guesses = Guess.all \
       :joins => :photo, :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', params[:id] ],
-      :order => 'guesses.guessed_at',
-      :include => { :photo => :person })
+      :order => 'guesses.guessed_at'
     first_guessed_at = guesses.first.guessed_at
     last_guessed_at = guesses.last.guessed_at
     guesses.each do |guess|
