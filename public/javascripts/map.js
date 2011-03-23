@@ -13,14 +13,13 @@ var GWW = {
   },
 
   addMarkers: function (transport) {
-    var guesses = transport.responseText.evalJSON(true);
-    for (var i = 0; i < guesses.length; i++) {
-      var guess = guesses[i].guess;
-      var photo = guess.photo;
+    var photos = transport.responseText.evalJSON(true);
+    for (var i = 0; i < photos.length; i++) {
+      var photo = photos[i].photo;
       new google.maps.Marker({
         map: GWW.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=+|' + guess.color + '|000000'
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=+|' + photo.pin_color + '|000000'
       });
     }
   }

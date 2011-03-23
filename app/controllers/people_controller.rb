@@ -149,9 +149,10 @@ class PeopleController < ApplicationController
     color_units_per_second = 223.0 / (guesses.last.guessed_at.to_i - time_of_first_guess)
     guesses.each do |guess|
       non_red_intensity = 223 - ((guess.guessed_at.to_i - time_of_first_guess) * color_units_per_second).to_i
-      guess[:color] = "FF%02X%02X" % [ non_red_intensity, non_red_intensity ]
+      guess.photo[:pin_color] = "FF%02X%02X" % [ non_red_intensity, non_red_intensity ]
     end
-    render :json => guesses.to_json(:include => { :photo => { :include => :person } })
+    photos = guesses.map &:photo
+    render :json => photos
   end
 
 end
