@@ -515,10 +515,8 @@ describe PeopleController do
 
   describe '#map_post' do
     it "renders the partial" do
-      poster = Person.make :id => 14
-      photo = Photo.make :person => poster, :dateadded => Time.local(2011)
-      guesser = Person.make :id => 15
-      guess = Guess.make :photo => photo, :person => guesser, :guessed_at => Time.local(2011, 2)
+      photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
+      guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :guessed_at => Time.local(2011, 2)
       photo.guesses << guess
       stub(Photo).find { photo }
       get :map_post, :id => photo.person.id, :photo_id => photo.id
@@ -530,7 +528,7 @@ describe PeopleController do
       end
       response.should have_text /Posted January  1, 2011\./
       response.should have_tag "a[href=#{person_path guess.person}]", :text => guess.person.username
-      response.should have_text /February  1, 2011./
+      response.should have_text /, February  1, 2011./
 
     end
 
@@ -552,6 +550,23 @@ describe PeopleController do
   end
 
   describe '#map_guess' do
+    it "renders the partial" do
+      photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
+      guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :guessed_at => Time.local(2011, 2)
+      #noinspection RubyResolve
+      stub(Guess).find_by_person_id_and_photo_id(guess.person.id.to_s, photo.id.to_s, anything) { guess }
+      get :map_guess, :id => guess.person.id, :photo_id => photo.id
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_tag "a[href=#{photo_path photo}]" do
+        with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
+      end
+      response.should have_tag "a[href=#{person_path photo.person}]", :text => photo.person.username
+      response.should have_text /, January  1, 2011\./;
+      response.should have_text /Guessed February  1, 2011\./;
+
+    end
   end
 
 end

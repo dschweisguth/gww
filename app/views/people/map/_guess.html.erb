@@ -1,7 +1,7 @@
 <div id="info-window">
   <%= thumbnail @guess.photo %>
   <p>
-    Posted by <%= link_to_person @guess.photo.person %>, <%= @guess.photo.dateadded.strftime '%B %e, %Y' %>.<br/>
-    Guessed <%= @guess.guessed_at.strftime '%B %e, %Y' %>.
+    Posted by <%= link_to_person @guess.photo.person %>, <%= @guess.photo.dateadded.getlocal.strftime '%B %e, %Y' %>.<br/>
+    Guessed <%= @guess.guessed_at.getlocal.strftime '%B %e, %Y' %>.
   </p>
 </div>
