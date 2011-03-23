@@ -112,6 +112,11 @@ class Photo < ActiveRecord::Base
     most_viewed
   end
 
+  def self.all_mapped(poster_id)
+    find_all_by_person_id poster_id,
+      :conditions => 'latitude is not null', :order => 'dateadded'
+  end
+
   # Used by PhotosController
 
   def self.all_sorted_and_paginated(sorted_by, order, page, per_page)

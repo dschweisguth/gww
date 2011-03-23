@@ -152,8 +152,7 @@ class PeopleController < ApplicationController
     end
     photos = guesses.map &:photo
 
-    posts = Photo.find_all_by_person_id params[:id],
-      :conditions => 'latitude is not null', :order => 'dateadded'
+    posts = Photo.all_mapped params[:id]
     if ! posts.empty?
       first_dateadded = posts.first.dateadded
       last_dateadded = posts.last.dateadded
@@ -164,7 +163,7 @@ class PeopleController < ApplicationController
     end
     photos += posts
 
-    render :json => photos
+    render :json => photos.to_json
   end
 
   def scaled_green(start_of_range, end_of_range, position)
