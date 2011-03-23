@@ -1,11 +1,10 @@
 (function () {
-  function setUpCopyUsernameFor(comment_id) {
-    $('submit_' + comment_id).observe('click', function () {
-      $('username_' + comment_id).value = $('person_username').value;
-    });
-  }
+  Event.observe(window, 'load', function() {
+    setUpCopyUsername();
+    preventSubmitPartialUsernameForm();
+  });
 
-  function setUpCopyUsername() {
+  var setUpCopyUsername = function () {
     var comments = $('comments');
     if (comments) {
       var forms = comments.select('form');
@@ -18,7 +17,13 @@
     }
   }
 
-  function preventSubmitPartialUsernameForm() {
+  var setUpCopyUsernameFor = function (comment_id) {
+    $('submit_' + comment_id).observe('click', function () {
+      $('username_' + comment_id).value = $('person_username').value;
+    });
+  }
+
+  var preventSubmitPartialUsernameForm = function () {
     var username_form = $('username_form');
     if (username_form) {
       username_form.observe('submit', function (event) {
@@ -32,10 +37,5 @@
       });
     }
   }
-
-  Event.observe(window, 'load', function() {
-    setUpCopyUsername();
-    preventSubmitPartialUsernameForm();
-  });
 
 })();
