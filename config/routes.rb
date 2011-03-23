@@ -24,6 +24,10 @@ ActionController::Routing::Routes.draw do |map|
       people.send "person_#{action}", "people/:id/#{action}", :action => action
     end
     people.person_comments 'people/:id/comments/page/:page', :action => 'comments'
+    # TODO Dave test
+    %w{ guess post }.each do |pin_type|
+      people.send "person_map_#{pin_type}", "people/:id/map/:photo_id/#{pin_type}", :action => "map_#{pin_type}"
+    end
   end
   map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
 

@@ -145,6 +145,8 @@ class PeopleController < ApplicationController
     @guesses_count = Guess.mapped_count person_id
   end
 
+  # TODO Dave check MIME type
+  caches_page :map_markers
   def map_markers
     #noinspection RailsParamDefResolve
     guesses = Guess.all_mapped params[:id]
@@ -196,6 +198,22 @@ class PeopleController < ApplicationController
     others_intensity = (224.0 * (1 - fractional_position)).to_i
     others_intensity -= others_intensity % 4
     "%02X%02XFF" % [ others_intensity, others_intensity ]
+  end
+
+  # TODO Dave test
+
+  caches_page :map_post
+  def map_post
+    #noinspection RailsParamDefResolve
+    @post = Photo.find params[:photo_id], :include => { :guesses => :person }
+    render :partial => 'people/map/post'
+  end
+
+  caches_page :map_guess
+  def map_guess
+    @guess = Guess.find_by_person_id_and_photo_id params[:id], params[:photo_id],
+      :include => [ :person, { :photo => :person } ]
+    render :partial => 'people/map/guess'
   end
 
 end
