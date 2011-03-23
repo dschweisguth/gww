@@ -372,12 +372,51 @@ describe PeopleController do
     it "renders the page" do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
+      stub(Photo).mapped_count(person.id.to_s) { 1 }
+      stub(Guess).mapped_count(person.id.to_s) { 1 }
       get :map, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
+      response.should have_tag 'input[id=posts]'
+      response.should have_tag 'label', :text => '1 mapped post (?)'
+      response.should have_tag 'input[id=guesses]'
+      response.should have_tag 'label', :text => '1 mapped guess (!)'
 
     end
+
+    it "shows only the guess count if there are no posts" do
+      person = Person.make :id => 1
+      stub(Person).find(person.id.to_s) { person }
+      stub(Photo).mapped_count(person.id.to_s) { 0 }
+      stub(Guess).mapped_count(person.id.to_s) { 1 }
+      get :map, :id => person.id
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should_not have_tag 'input[id=posts]'
+      response.should_not have_text /mapped post/
+      response.should_not have_tag 'input[id=guesses]'
+      response.should have_text /1 mapped guess/
+
+    end
+
+    it "shows only the post count if there are no guesses" do
+      person = Person.make :id => 1
+      stub(Person).find(person.id.to_s) { person }
+      stub(Photo).mapped_count(person.id.to_s) { 1 }
+      stub(Guess).mapped_count(person.id.to_s) { 0 }
+      get :map, :id => person.id
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should_not have_tag 'input[id=posts]'
+      response.should have_text /1 mapped post/
+      response.should_not have_tag 'input[id=guesses]'
+      response.should_not have_text /mapped guess/
+
+    end
+
   end
 
   describe '#map_marker' do
