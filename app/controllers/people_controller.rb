@@ -147,7 +147,7 @@ class PeopleController < ApplicationController
       last_guessed_at = guesses.last.guessed_at
       guesses.each do |guess|
         guess.photo[:pin_type] = 'guess'
-        guess.photo[:pin_color] = scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
+        guess.photo[:pin_color] = PeopleController.scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
       end
     end
     photos = guesses.map &:photo
@@ -158,7 +158,7 @@ class PeopleController < ApplicationController
       last_dateadded = posts.last.dateadded
       posts.each do |post|
         post[:pin_type] = 'post'
-        post[:pin_color] = scaled_blue first_dateadded, last_dateadded, post.dateadded
+        post[:pin_color] = PeopleController.scaled_blue first_dateadded, last_dateadded, post.dateadded
       end
     end
     photos += posts
@@ -166,33 +166,30 @@ class PeopleController < ApplicationController
     render :json => photos.to_json
   end
 
-  def scaled_green(start_of_range, end_of_range, position)
+  def self.scaled_green(start_of_range, end_of_range, position)
     start_of_range = start_of_range.to_f
     end_of_range = end_of_range.to_f
     fractional_position = start_of_range == end_of_range \
       ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
-    # DDFFDD .. 008800
     intensity = (256.0 * (1 - 0.5 * fractional_position)).to_i
     intensity -= intensity % 4
     if intensity == 256
       intensity = 252
     end
-    others_intensity = (222.0 * (1 - fractional_position)).to_i
+    others_intensity = (224.0 * (1 - fractional_position)).to_i
     others_intensity -= others_intensity % 4
     "%02X%02X%02X" % [ others_intensity, intensity, others_intensity ]
   end
-  private :scaled_green
 
-  def scaled_blue(start_of_range, end_of_range, position)
+  def self.scaled_blue(start_of_range, end_of_range, position)
     start_of_range = start_of_range.to_f
     end_of_range = end_of_range.to_f
     fractional_position = start_of_range == end_of_range \
       ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
-    # DDDDFF .. 0000FF
-    others_intensity = (222.0 * (1 - fractional_position)).to_i
+    # more or less DFDFFF .. 0000FF
+    others_intensity = (224.0 * (1 - fractional_position)).to_i
     others_intensity -= others_intensity % 4
     "%02X%02XFF" % [ others_intensity, others_intensity ]
   end
-  private :scaled_blue
 
 end
