@@ -19,7 +19,7 @@ var GWW = {
       new google.maps.Marker({
         map: GWW.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=+|' + photo.pin_color + '|000000'
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%21|' + photo.pin_color + '|000000'
       });
     }
   }
