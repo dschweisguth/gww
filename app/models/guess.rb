@@ -90,6 +90,13 @@ class Guess < ActiveRecord::Base
   end
   private_class_method :first_guess_with_place
 
+  def all_mapped
+    all :joins => :photo,
+      :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', params[:id] ],
+      :order => 'guesses.guessed_at',
+      :include => :photo
+  end
+
   #noinspection RailsParamDefResolve
   def self.longest_in year
     all :include => [ :person, { :photo => :person } ],
