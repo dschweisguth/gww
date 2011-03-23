@@ -37,8 +37,8 @@ GWW.userMap = (function () {
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
-      $('guesses').observe('click', hideOrShowMarkers('guesses', guesses));
-      $('posts').observe('click', hideOrShowMarkers('posts', posts));
+      $('guesses').observe('click', toggleMarkers('guesses', guesses));
+      $('posts').observe('click', toggleMarkers('posts', posts));
 
     }
 
@@ -49,19 +49,19 @@ GWW.userMap = (function () {
       new Ajax.Request(window.location + '/' + photo.id + '/' + photo.pin_type, {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
-        onSuccess: showInfoWindow(marker)
+        onSuccess: openInfoWindow(marker)
       });
     };
   };
 
-  var showInfoWindow = function(marker) {
+  var openInfoWindow = function(marker) {
     return function (transport) {
       infoWindow.setContent(transport.responseText);
       infoWindow.open(map, marker);
     }
   };
 
-  var hideOrShowMarkers = function (id, list) {
+  var toggleMarkers = function (id, list) {
     return function (event) {
       var checkboxIsChecked = $(id).checked
       for (var i = 0; i < list.length; i++) {
