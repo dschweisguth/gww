@@ -168,7 +168,9 @@ class PeopleController < ApplicationController
 
   def scaled_green(start_of_range, end_of_range, position)
     start_of_range = start_of_range.to_f
-    fractional_position = (position.to_f - start_of_range) / (end_of_range.to_f - start_of_range)
+    end_of_range = end_of_range.to_f
+    fractional_position = start_of_range == end_of_range \
+      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
     # DDFFDD .. 008800
     intensity = (256.0 * (1 - 0.5 * fractional_position)).to_i
     intensity -= intensity % 4
@@ -183,7 +185,9 @@ class PeopleController < ApplicationController
 
   def scaled_blue(start_of_range, end_of_range, position)
     start_of_range = start_of_range.to_f
-    fractional_position = (position.to_f - start_of_range) / (end_of_range.to_f - start_of_range)
+    end_of_range = end_of_range.to_f
+    fractional_position = start_of_range == end_of_range \
+      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
     # DDDDFF .. 0000FF
     others_intensity = (222.0 * (1 - fractional_position)).to_i
     others_intensity -= others_intensity % 4

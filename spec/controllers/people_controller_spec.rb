@@ -380,4 +380,23 @@ describe PeopleController do
     end
   end
 
+  describe '#map_marker' do
+    it 'renders the JSON' do
+      person = Person.make :id => 1
+      photo = Photo.make :latitude => 37
+      guess = Guess.make :photo => photo, :person => person
+      stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
+      stub(Photo).all_mapped(person.id.to_s) { [] }
+      get :map_markers, :id => person.id
+
+      #noinspection RubyResolve
+      response.should be_success
+      photos = ActiveSupport::JSON.decode response.body
+      photos.length.should == 1
+      photo_out = photos[0]['photo']
+      photo_out['pin_type'].should == 'guess'
+      photo_out['pin_color'].should == '008000'
+    end
+  end
+
 end
