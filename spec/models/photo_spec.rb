@@ -329,6 +329,25 @@ describe Photo do
 
   end
 
+  describe '.mapped_count' do
+    it "counts photos" do
+      photo = Photo.make :latitude => 37
+      Photo.mapped_count(photo.person.id).should == 1
+    end
+
+    it "ignores other people's photos" do
+      Photo.make :latitude => 37
+      other_person = Person.make
+      Photo.mapped_count(other_person.id).should == 0
+    end
+
+    it "ignores unmapped photos" do
+      photo = Photo.make
+      Photo.mapped_count(photo.person.id).should == 0
+    end
+
+  end
+
   describe '.all_mapped' do
     it "lists photos" do
       photo = Photo.make :latitude => 37
