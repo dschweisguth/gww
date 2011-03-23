@@ -15,14 +15,13 @@ GWW.userMap = (function () {
       });
       markers.push(marker);
     }
-    var guessesCheckbox = $('guesses');
-    guessesCheckbox.observe('click', hideOrShowMarkers);
+    $('guesses').observe('click', hideOrShowMarkers);
   };
 
   var hideOrShowMarkers = function (event) {
     var checkboxIsChecked = $('guesses').checked
-    for (var j = 0; j < markers.length; j++) {
-      markers[j].setMap(checkboxIsChecked ? map : null);
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(checkboxIsChecked ? map : null);
     }
   };
 
