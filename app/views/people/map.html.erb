@@ -6,14 +6,15 @@
 
 <p>Show:
   <%= check_box_tag 'posts', '', true %>
-  <%= label_tag 'posts', 'Posts (?)' %>
+  <%= label_tag 'posts', "#{pluralize @posts_count, 'mapped post'} (?)" %>
   <%= check_box_tag 'guesses', '', true %>
-  <%= label_tag 'guesses', 'Guesses (!)' %>
+  <%= label_tag 'guesses', "#{pluralize @guesses_count, 'mapped guess'} (!)" %>
 </p>
 
 <div id="map_canvas"></div>
 
 <p>Photos that were posted or guessed recently are marked with darker colors;
-photos that were posted or guessed less recently are marked with lighter colors.</p>  
+photos that were posted or guessed less recently are marked with lighter colors.
+Photos that are not mapped are not shown or counted on this page.</p>  
 
 <% end %>

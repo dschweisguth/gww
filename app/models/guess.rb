@@ -90,6 +90,11 @@ class Guess < ActiveRecord::Base
   end
   private_class_method :first_guess_with_place
 
+  def self.mapped_count(person_id)
+    count :joins => :photo,
+      :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', person_id ]
+  end
+
   def self.all_mapped(person_id)
     all :joins => :photo,
       :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', person_id ],

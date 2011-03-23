@@ -136,7 +136,10 @@ class PeopleController < ApplicationController
 
   caches_page :map
   def map
-    @person = Person.find params[:id]
+    person_id = params[:id]
+    @person = Person.find person_id
+    @posts_count = Photo.mapped_count person_id
+    @guesses_count = Guess.mapped_count person_id
   end
 
   def map_markers
