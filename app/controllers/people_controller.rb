@@ -150,8 +150,14 @@ class PeopleController < ApplicationController
     guesses.each do |guess|
       position_in_range = (guess.guessed_at.to_f - time_of_first_guess) / (time_of_last_guess - time_of_first_guess)
       # DDFFDD .. 008800
-      intensity = (255.0 * (1 - 0.5 * position_in_range)).to_i
-      others_intensity = (223.0 * (1 - position_in_range)).to_i
+      intensity = (256.0 * (1 - 0.5 * position_in_range)).to_i
+      intensity -= intensity % 4
+      if intensity == 256
+        intensity = 252
+      end
+      others_intensity = (222.0 * (1 - position_in_range)).to_i
+      others_intensity -= others_intensity % 4
+      p "intensity #{intensity} others_intensity #{others_intensity}"
       guess.photo[:pin_color] = "%02X%02X%02X" % [ others_intensity, intensity, others_intensity ]
     end
     photos = guesses.map &:photo
