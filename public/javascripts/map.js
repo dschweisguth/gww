@@ -11,12 +11,12 @@ GWW.userMap = (function () {
       Event.observe(window, 'load', function() {
         var script = document.createElement('script');
         script.type = "text/javascript";
-        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.userMap.initializeMap';
+        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.userMap.mapsAPIIsLoadedCallback';
         document.body.appendChild(script);
       });
     },
 
-    initializeMap: function () {
+    mapsAPIIsLoadedCallback: function () {
       map = new google.maps.Map($('map_canvas'), {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.442112),
