@@ -4,11 +4,19 @@
 <% sandwich 'person_breadcrumbs' do %>
 <h1>Mapped photos posted or guessed by <%=h @person.username %></h1>
 
-<p>Show:
-  <%= check_box_tag 'posts', '', true %>
-  <%= label_tag 'posts', "#{pluralize @posts_count, 'mapped post'} (?)" %>
-  <%= check_box_tag 'guesses', '', true %>
-  <%= label_tag 'guesses', "#{pluralize @guesses_count, 'mapped guess'} (!)" %>
+<p><% if @posts_count > 0 && @guesses_count > 0 -%>Show:<% end %>
+  <% if @posts_count > 0 -%>
+    <% if @guesses_count > 0 -%>
+      <%= check_box_tag 'posts', '', true %>
+    <% end -%>
+    <%= label_tag 'posts', "#{pluralize @posts_count, 'mapped post'} (?)" %>
+  <% end -%>
+  <% if @guesses_count > 0 -%>
+    <% if @posts_count > 0 -%>
+      <%= check_box_tag 'guesses', '', true %>
+    <% end -%>
+    <%= label_tag 'guesses', "#{pluralize @guesses_count, 'mapped guess'} (!)" %>
+  <% end -%>
 </p>
 
 <div id="map_canvas"></div>
