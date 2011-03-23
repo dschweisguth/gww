@@ -20,13 +20,16 @@ GWW.userMap = (function () {
         posts.push(marker);
       }
     }
-    $('guesses').observe('click', hideOrShowMarkers);
+    $('guesses').observe('click', hideOrShowMarkers('guesses', guesses));
+    $('posts').observe('click', hideOrShowMarkers('posts', posts));
   };
 
-  var hideOrShowMarkers = function (event) {
-    var checkboxIsChecked = $('guesses').checked
-    for (var i = 0; i < guesses.length; i++) {
-      guesses[i].setMap(checkboxIsChecked ? map : null);
+  var hideOrShowMarkers = function (id, list) {
+    return function (event) {
+      var checkboxIsChecked = $(id).checked
+      for (var i = 0; i < list.length; i++) {
+        list[i].setMap(checkboxIsChecked ? map : null);
+      }
     }
   };
 
