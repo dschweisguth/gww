@@ -185,6 +185,7 @@ describe PeopleController do
       stub(Photo).most_viewed(@person)
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(@person.id, anything) { [] }
+      stub(Photo).all { [] }
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
