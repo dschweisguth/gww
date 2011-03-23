@@ -20,6 +20,33 @@ class Photo < ActiveRecord::Base
   validates_numericality_of :member_questions, :only_integer => true,
     :greater_than_or_equal_to => 0
 
+  # Used by ScoreReportsController
+
+  def self.count_between(from, to)
+    count :conditions => [ "? < dateadded and dateadded <= ?", from.getutc, to.getutc ]
+  end
+
+  def self.unfound_or_unconfirmed_count_before(date)
+    utc_date = date.getutc
+    count_by_sql [
+      %q[
+        select count(*) from photos p where
+          dateadded <= ? and
+          not exists (select 1 from guesses where photo_id = p.id and added_at <= ?) and
+          not exists (select 1 from revelations where photo_id = p.id and added_at <= ?)
+        ],
+        utc_date, utc_date, utc_date
+    ]
+  end
+
+  def self.add_posts(people, to_date, attr_name)
+    posts_per_person = Photo.count \
+      :conditions => [ 'dateadded <= ?', to_date.getutc ], :group => :person_id
+    people.each do |person|
+      person[attr_name] = posts_per_person[person.id] || 0
+    end
+  end
+
   # Used by PeopleController
 
   def self.first_by(poster)
@@ -407,33 +434,6 @@ class Photo < ActiveRecord::Base
   def destroy
     super
     person.destroy_if_has_no_dependents
-  end
-
-  # Used by Admin::ScoreReportsController
-
-  def self.count_between(from, to)
-    count :conditions => [ "? < dateadded and dateadded <= ?", from.getutc, to.getutc ]
-  end
-
-  def self.unfound_or_unconfirmed_count_before(date)
-    utc_date = date.getutc
-    count_by_sql [
-      %q[
-        select count(*) from photos p where
-          dateadded <= ? and
-          not exists (select 1 from guesses where photo_id = p.id and added_at <= ?) and
-          not exists (select 1 from revelations where photo_id = p.id and added_at <= ?)
-        ],
-        utc_date, utc_date, utc_date
-    ]
-  end
-
-  def self.add_posts(people, to_date, attr_name)
-    posts_per_person = Photo.count \
-      :conditions => [ 'dateadded <= ?', to_date.getutc ], :group => :person_id
-    people.each do |person|
-      person[attr_name] = posts_per_person[person.id] || 0
-    end
   end
 
   def years_old

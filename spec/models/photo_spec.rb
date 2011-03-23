@@ -85,6 +85,80 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
+  # Used by ScoreReportController
+
+  describe '.count_between' do
+    it 'counts all photos between the given dates' do
+      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 1)
+      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 1
+    end
+
+    it 'ignores photos made on or before the from date' do
+      Photo.make :dateadded => Time.utc(2011)
+      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+    end
+
+    it 'ignores photos made after the to date' do
+      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 2)
+      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+    end
+
+  end
+
+  describe '.unfound_or_unconfirmed_count_before' do
+    it "counts photos added on or before and not scored on or before the given date" do
+      Photo.make :dateadded => Time.utc(2011)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+    end
+
+    it "includes photos guessed after the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Guess.make :photo => photo, :added_at => Time.utc(2011, 2)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+    end
+
+    it "includes photos revealed after the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Revelation.make :photo => photo, :added_at => Time.utc(2011, 2)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+    end
+
+    it "ignores photos added after the given date" do
+      Photo.make :dateadded => Time.utc(2011, 2)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+    end
+
+    it "ignores photos guessed on or before the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Guess.make :photo => photo, :added_at => Time.utc(2011)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+    end
+
+    it "ignores photos revealed on or before the given date" do
+      photo = Photo.make :dateadded => Time.utc(2011)
+      Revelation.make :photo => photo, :added_at => Time.utc(2011)
+      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+    end
+
+  end
+
+  describe '.add_posts' do
+    it "adds each person's posts as an attribute" do
+      person = Person.make
+      Photo.make 1, :person => person, :dateadded => Time.utc(2010)
+      Photo.add_posts [ person ], Time.utc(2011), :posts
+      person[:posts].should == 1
+    end
+
+    it "ignores posts made after the report date" do
+      person = Person.make
+      Photo.make 1, :person => person, :dateadded => Time.utc(2011)
+      Photo.add_posts [ person ], Time.utc(2010), :posts
+      person[:posts].should == 0
+    end
+
+  end
+
   # Used by PeopleController
 
   describe '.first_by' do
@@ -881,80 +955,6 @@ describe Photo do
       Photo.count.should == 0
       owner_does_not_exist photo
     end
-  end
-
-  # Used by Admin::ScoreReportController
-
-  describe '.count_between' do
-    it 'counts all photos between the given dates' do
-      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 1)
-      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 1
-    end
-
-    it 'ignores photos made on or before the from date' do
-      Photo.make :dateadded => Time.utc(2011)
-      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
-    end
-
-    it 'ignores photos made after the to date' do
-      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 2)
-      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
-    end
-
-  end
-
-  describe '.unfound_or_unconfirmed_count_before' do
-    it "counts photos added on or before and not scored on or before the given date" do
-      Photo.make :dateadded => Time.utc(2011)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
-    end
-
-    it "includes photos guessed after the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Guess.make :photo => photo, :added_at => Time.utc(2011, 2)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
-    end
-
-    it "includes photos revealed after the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Revelation.make :photo => photo, :added_at => Time.utc(2011, 2)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
-    end
-
-    it "ignores photos added after the given date" do
-      Photo.make :dateadded => Time.utc(2011, 2)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
-    end
-
-    it "ignores photos guessed on or before the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Guess.make :photo => photo, :added_at => Time.utc(2011)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
-    end
-
-    it "ignores photos revealed on or before the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Revelation.make :photo => photo, :added_at => Time.utc(2011)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
-    end
-
-  end
-
-  describe '.add_posts' do
-    it "adds each person's posts as an attribute" do
-      person = Person.make
-      Photo.make 1, :person => person, :dateadded => Time.utc(2010)
-      Photo.add_posts [ person ], Time.utc(2011), :posts
-      person[:posts].should == 1
-    end
-
-    it "ignores posts made after the report date" do
-      person = Person.make
-      Photo.make 1, :person => person, :dateadded => Time.utc(2011)
-      Photo.add_posts [ person ], Time.utc(2010), :posts
-      person[:posts].should == 0
-    end
-
   end
 
   describe '#years_old' do
