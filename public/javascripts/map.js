@@ -34,11 +34,7 @@ GWW.userMap = (function () {
             (photo.pin_type === 'guess' ? '21' : '3F') + '|' + photo.pin_color + '|000000'
         });
         google.maps.event.addListener(marker, 'click', loadInfoWindow(marker, photo));
-        if (photo.pin_type === 'guess') {
-          guesses.push(marker);
-        } else {
-          posts.push(marker);
-        }
+        (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
       $('guesses').observe('click', hideOrShowMarkers('guesses', guesses));
