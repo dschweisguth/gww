@@ -406,14 +406,8 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 2
-      post_out = json[0]['photo']
-      post_out['id'].should == post.id
-      post_out['pin_type'].should == 'post'
-      post_out['pin_color'].should == '0000FF'
-      guessed_photo_out = json[1]['photo']
-      guessed_photo_out['id'].should == guessed_photo.id
-      guessed_photo_out['pin_type'].should == 'guess'
-      guessed_photo_out['pin_color'].should == '008000'
+      decoded_post_has_expected_attrs json[0], post
+      decoded_guessed_photo_has_expected_attrs json[1], guessed_photo
 
     end
 
@@ -435,10 +429,7 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 1
-      guessed_photo_out = json[0]['photo']
-      guessed_photo_out['id'].should == guessed_photo.id
-      guessed_photo_out['pin_type'].should == 'guess'
-      guessed_photo_out['pin_color'].should == '008000'
+      decoded_guessed_photo_has_expected_attrs json[0], guessed_photo
 
     end
 
@@ -459,15 +450,26 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 1
-      post_out = json[0]['photo']
-      post_out['id'].should == post.id
-      post_out['pin_type'].should == 'post'
-      post_out['pin_color'].should == '0000FF'
+      decoded_post_has_expected_attrs json[0], post
 
     end
 
     def decode_json
       ActiveSupport::JSON.decode assigns[:json]
+    end
+
+    def decoded_post_has_expected_attrs(decoded_post, post)
+      photo = decoded_post['photo']
+      photo['id'].should == post.id
+      photo['pin_type'].should == 'post'
+      photo['pin_color'].should == '0000FF'
+    end
+
+    def decoded_guessed_photo_has_expected_attrs(decoded_guessed_photo, guessed_photo)
+      photo = decoded_guessed_photo['photo']
+      photo['id'].should == guessed_photo.id
+      photo['pin_type'].should == 'guess'
+      photo['pin_color'].should == '008000'
     end
 
   end
