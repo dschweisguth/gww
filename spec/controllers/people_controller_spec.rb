@@ -513,4 +513,27 @@ describe PeopleController do
 
   end
 
+  describe '#map_post' do
+    it 'renders the partial' do
+      photo = Photo.make :dateadded => Time.local(2011)
+      guess = Guess.make :photo => photo, :guessed_at => Time.local(2011, 2)
+      photo.guesses << guess
+      stub(Photo).find { photo }
+      get :map_post, :id => photo.person.id, :photo_id => photo.id
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_tag "a[href=#{photo_path photo}]" do
+        with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
+      end
+      response.should have_text /Posted January  1, 2011\./
+      response.should have_tag "a[href=#{person_path photo.person}]", :text => guess.person.username
+      response.should have_text /February  1, 2011./
+
+    end
+  end
+
+  describe '#map_guess' do
+  end
+
 end

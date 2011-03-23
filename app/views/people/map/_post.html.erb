@@ -1,9 +1,9 @@
 <div id="info-window">
   <%= thumbnail @post %>
   <p>
-    Posted <%= @post.dateadded.strftime '%B %e, %Y' %>.<br/>
+    Posted <%= @post.dateadded.getlocal.strftime '%B %e, %Y' %>.<br/>
     <% guesses = @post.guesses; if ! guesses.empty? -%>
-      Guessed by <%= guesses.map { |guess| "#{link_to_person guess.person}, #{guess.guessed_at.strftime '%B %e, %Y'}" }.join '; ' %>.
+      Guessed by <%= guesses.map { |guess| "#{link_to_person guess.person}, #{guess.guessed_at.getlocal.strftime '%B %e, %Y'}" }.join '; ' %>.
     <% end -%>
   </p>
 </div>

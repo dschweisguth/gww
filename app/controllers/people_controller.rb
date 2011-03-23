@@ -192,8 +192,6 @@ class PeopleController < ApplicationController
     "%02X%02XFF" % [ others_intensity, others_intensity ]
   end
 
-  # TODO Dave test
-
   caches_page :map_post
   def map_post
     #noinspection RailsParamDefResolve
