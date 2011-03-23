@@ -386,11 +386,11 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       stub(Photo).mapped_count(person.id.to_s) { 1 }
       stub(Guess).mapped_count(person.id.to_s) { 1 }
-      guessed_photo = Photo.make :latitude => 37 # TODO Dave latitude necessary?
+      post = Photo.make :id => 14, :person => person
+      stub(Photo).all_mapped(person.id.to_s) { [ post ] }
+      guessed_photo = Photo.make :id => 15
       guess = Guess.make :photo => guessed_photo, :person => person
       stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
-      post = Photo.make :person => person, :latitude => 37 # TODO Dave latitude necessary?
-      stub(Photo).all_mapped(person.id.to_s) { [ post ] }
       get :map, :id => person.id
 
       #noinspection RubyResolve
@@ -404,9 +404,11 @@ describe PeopleController do
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 2
       post_out = json[0]['photo']
+      post_out['id'].should == post.id
       post_out['pin_type'].should == 'post'
       post_out['pin_color'].should == '0000FF'
       guessed_photo_out = json[1]['photo']
+      guessed_photo_out['id'].should == guessed_photo.id
       guessed_photo_out['pin_type'].should == 'guess'
       guessed_photo_out['pin_color'].should == '008000'
 
@@ -417,10 +419,10 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       stub(Photo).mapped_count(person.id.to_s) { 0 }
       stub(Guess).mapped_count(person.id.to_s) { 1 }
-      guessed_photo = Photo.make :latitude => 37 # TODO Dave latitude necessary?
+      stub(Photo).all_mapped(person.id.to_s) { [] }
+      guessed_photo = Photo.make :id => 15
       guess = Guess.make :photo => guessed_photo, :person => person
       stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
-      stub(Photo).all_mapped(person.id.to_s) { [] }
       get :map, :id => person.id
 
       #noinspection RubyResolve
@@ -433,6 +435,7 @@ describe PeopleController do
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 1
       guessed_photo_out = json[0]['photo']
+      guessed_photo_out['id'].should == guessed_photo.id
       guessed_photo_out['pin_type'].should == 'guess'
       guessed_photo_out['pin_color'].should == '008000'
 
@@ -443,9 +446,9 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       stub(Photo).mapped_count(person.id.to_s) { 1 }
       stub(Guess).mapped_count(person.id.to_s) { 0 }
-      stub(Guess).all_mapped(person.id.to_s) { [] }
-      post = Photo.make :person => person, :latitude => 37 # TODO Dave latitude necessary?
+      post = Photo.make :id => 14, :person => person
       stub(Photo).all_mapped(person.id.to_s) { [ post ] }
+      stub(Guess).all_mapped(person.id.to_s) { [] }
       get :map, :id => person.id
 
       #noinspection RubyResolve
@@ -458,6 +461,7 @@ describe PeopleController do
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 1
       post_out = json[0]['photo']
+      post_out['id'].should == post.id
       post_out['pin_type'].should == 'post'
       post_out['pin_color'].should == '0000FF'
 
