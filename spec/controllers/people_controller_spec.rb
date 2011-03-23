@@ -368,4 +368,16 @@ describe PeopleController do
     end
   end
 
+  describe '#map' do
+    it "renders the page" do
+      person = Person.make :id => 1
+      stub(Person).find(person.id.to_s) { person }
+      get :map, :id => person.id
+
+      #noinspection RubyResolve
+      response.should be_success
+
+    end
+  end
+
 end
