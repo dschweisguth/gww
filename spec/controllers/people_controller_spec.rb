@@ -387,13 +387,9 @@ describe PeopleController do
     end
 
     it "renders the page" do
-      stub(Photo).mapped_count(@person.id.to_s) { 1 }
-      stub(Guess).mapped_count(@person.id.to_s) { 1 }
-      post = Photo.make :id => 14, :person => @person
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      guessed_photo = Photo.make :id => 15
-      guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      stub_mapped_counts 1, 1
+      post = stub_post
+      guessed_photo = stub_guessed_photo
       get :map, :id => @person.id
 
       #noinspection RubyResolve
@@ -412,12 +408,9 @@ describe PeopleController do
     end
 
     it "shows only the guess count if there are no posts" do
-      stub(Photo).mapped_count(@person.id.to_s) { 0 }
-      stub(Guess).mapped_count(@person.id.to_s) { 1 }
+      stub_mapped_counts 0, 1
       stub(Photo).all_mapped(@person.id.to_s) { [] }
-      guessed_photo = Photo.make :id => 15
-      guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      guessed_photo = stub_guessed_photo
       get :map, :id => @person.id
 
       #noinspection RubyResolve
@@ -434,10 +427,8 @@ describe PeopleController do
     end
 
     it "shows only the post count if there are no guesses" do
-      stub(Photo).mapped_count(@person.id.to_s) { 1 }
-      stub(Guess).mapped_count(@person.id.to_s) { 0 }
-      post = Photo.make :id => 14, :person => @person
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      stub_mapped_counts 1, 0
+      post = stub_post
       stub(Guess).all_mapped(@person.id.to_s) { [] }
       get :map, :id => @person.id
 
@@ -452,6 +443,24 @@ describe PeopleController do
       json.length.should == 1
       decoded_post_has_expected_attrs json[0], post
 
+    end
+
+    def stub_mapped_counts(post_count, guess_count)
+      stub(Photo).mapped_count(@person.id.to_s) { post_count }
+      stub(Guess).mapped_count(@person.id.to_s) { guess_count }
+    end
+
+    def stub_post
+      post = Photo.make :id => 14, :person => @person
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      post
+    end
+
+    def stub_guessed_photo
+      guessed_photo = Photo.make :id => 15
+      guess = Guess.make :photo => guessed_photo, :person => @person
+      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      guessed_photo
     end
 
     def decode_json
