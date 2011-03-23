@@ -381,17 +381,20 @@ describe PeopleController do
   end
 
   describe '#map' do
+    before do
+      @person = Person.make :id => 1
+      stub(Person).find(@person.id.to_s) { @person }
+    end
+
     it "renders the page" do
-      person = Person.make :id => 1
-      stub(Person).find(person.id.to_s) { person }
-      stub(Photo).mapped_count(person.id.to_s) { 1 }
-      stub(Guess).mapped_count(person.id.to_s) { 1 }
-      post = Photo.make :id => 14, :person => person
-      stub(Photo).all_mapped(person.id.to_s) { [ post ] }
+      stub(Photo).mapped_count(@person.id.to_s) { 1 }
+      stub(Guess).mapped_count(@person.id.to_s) { 1 }
+      post = Photo.make :id => 14, :person => @person
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       guessed_photo = Photo.make :id => 15
-      guess = Guess.make :photo => guessed_photo, :person => person
-      stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
-      get :map, :id => person.id
+      guess = Guess.make :photo => guessed_photo, :person => @person
+      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      get :map, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -415,15 +418,13 @@ describe PeopleController do
     end
 
     it "shows only the guess count if there are no posts" do
-      person = Person.make :id => 1
-      stub(Person).find(person.id.to_s) { person }
-      stub(Photo).mapped_count(person.id.to_s) { 0 }
-      stub(Guess).mapped_count(person.id.to_s) { 1 }
-      stub(Photo).all_mapped(person.id.to_s) { [] }
+      stub(Photo).mapped_count(@person.id.to_s) { 0 }
+      stub(Guess).mapped_count(@person.id.to_s) { 1 }
+      stub(Photo).all_mapped(@person.id.to_s) { [] }
       guessed_photo = Photo.make :id => 15
-      guess = Guess.make :photo => guessed_photo, :person => person
-      stub(Guess).all_mapped(person.id.to_s) { [ guess ] }
-      get :map, :id => person.id
+      guess = Guess.make :photo => guessed_photo, :person => @person
+      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      get :map, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -442,14 +443,12 @@ describe PeopleController do
     end
 
     it "shows only the post count if there are no guesses" do
-      person = Person.make :id => 1
-      stub(Person).find(person.id.to_s) { person }
-      stub(Photo).mapped_count(person.id.to_s) { 1 }
-      stub(Guess).mapped_count(person.id.to_s) { 0 }
-      post = Photo.make :id => 14, :person => person
-      stub(Photo).all_mapped(person.id.to_s) { [ post ] }
-      stub(Guess).all_mapped(person.id.to_s) { [] }
-      get :map, :id => person.id
+      stub(Photo).mapped_count(@person.id.to_s) { 1 }
+      stub(Guess).mapped_count(@person.id.to_s) { 0 }
+      post = Photo.make :id => 14, :person => @person
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      stub(Guess).all_mapped(@person.id.to_s) { [] }
+      get :map, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
