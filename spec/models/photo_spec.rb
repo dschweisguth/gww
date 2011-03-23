@@ -255,6 +255,25 @@ describe Photo do
 
   end
 
+  describe '.all_mapped' do
+    it "lists photos" do
+      photo = Photo.make :latitude => 37
+      Photo.all_mapped(photo.person.id).should == [ photo ]
+    end
+
+    it "ignores other people's photos" do
+      Photo.make :latitude => 37
+      other_person = Person.make
+      Photo.all_mapped(other_person.id).should == []
+    end
+
+    it "ignores unmapped photos" do
+      photo = Photo.make
+      Photo.all_mapped(photo.person.id).should == []
+    end
+
+  end
+
   # Used by PhotosController
 
   describe '.all_sorted_and_paginated' do
