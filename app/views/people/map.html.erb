@@ -4,6 +4,10 @@
 <% sandwich 'person_breadcrumbs' do %>
 <h1>Mapped photos guessed by <%=h @person.username %></h1>
 
+  <p>Show:
+  <%= check_box_tag 'guesses', '', true %>
+  <%= label_tag 'guesses' %>
+  </p>
   <div id="map_canvas"></div>
 
 <% end %>
