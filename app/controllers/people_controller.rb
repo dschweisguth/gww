@@ -143,13 +143,33 @@ class PeopleController < ApplicationController
     #noinspection RailsParamDefResolve
     guesses = Guess.all \
       :joins => :photo, :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', params[:id] ],
-      :order => 'guesses.guessed_at'
-    first_guessed_at = guesses.first.guessed_at
-    last_guessed_at = guesses.last.guessed_at
-    guesses.each do |guess|
-      guess.photo[:pin_color] = scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
+      :order => 'guesses.guessed_at',
+      :include => :photo
+    if ! guesses.empty?
+      first_guessed_at = guesses.first.guessed_at
+      last_guessed_at = guesses.last.guessed_at
+      guesses.each do |guess|
+        guess.photo[:pin_type] = 'guess'
+        guess.photo[:pin_color] = scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
+      end
     end
     photos = guesses.map &:photo
+    p photos.length
+
+    posts = Photo.find_all_by_person_id params[:id],
+      :conditions => 'latitude is not null', :order => 'dateadded'
+    if ! posts.empty?
+      first_dateadded = posts.first.dateadded
+      last_dateadded = posts.last.dateadded
+      posts.each do |post|
+        post[:pin_type] = 'post'
+        post[:pin_color] = scaled_blue first_dateadded, last_dateadded, post.dateadded
+      end
+    end
+    p posts.length
+    photos += posts
+    p photos.length
+
     render :json => photos
   end
 
@@ -164,8 +184,18 @@ class PeopleController < ApplicationController
     end
     others_intensity = (222.0 * (1 - fractional_position)).to_i
     others_intensity -= others_intensity % 4
-    "%02X%02X%02X" % [others_intensity, intensity, others_intensity]
+    "%02X%02X%02X" % [ others_intensity, intensity, others_intensity ]
   end
   private :scaled_green
+
+  def scaled_blue(start_of_range, end_of_range, position)
+    start_of_range = start_of_range.to_f
+    fractional_position = (position.to_f - start_of_range) / (end_of_range.to_f - start_of_range)
+    # DDDDFF .. 0000FF
+    others_intensity = (222.0 * (1 - fractional_position)).to_i
+    others_intensity -= others_intensity % 4
+    "%02X%02XFF" % [ others_intensity, others_intensity ]
+  end
+  private :scaled_blue
 
 end
