@@ -4,12 +4,16 @@
 <% sandwich 'person_breadcrumbs' do %>
 <h1>Mapped photos posted or guessed by <%=h @person.username %></h1>
 
-  <p>Show:
-    <%= check_box_tag 'posts', '', true %>
-    <%= label_tag 'posts', 'Posts (?)' %>
-    <%= check_box_tag 'guesses', '', true %>
-    <%= label_tag 'guesses', 'Guesses (!)' %>
-  </p>
-  <div id="map_canvas"></div>
+<p>Show:
+  <%= check_box_tag 'posts', '', true %>
+  <%= label_tag 'posts', 'Posts (?)' %>
+  <%= check_box_tag 'guesses', '', true %>
+  <%= label_tag 'guesses', 'Guesses (!)' %>
+</p>
+
+<div id="map_canvas"></div>
+
+<p>Photos that were posted or guessed recently are marked with darker colors;
+photos that were posted or guessed less recently are marked with lighter colors.</p>  
 
 <% end %>
