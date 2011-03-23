@@ -1,5 +1,5 @@
 function viewInGWW() {
-  if (/^http:\/\/www.flickr.com\/(photos|people)\/[^/]+/.exec(window.location) != null) {
+  if (/^http:\/\/www.flickr.com\/(photos|people)\/[^/]+/.test(window.location)) {
     // Do this asynchronously so Firefox doesn't treat it as a replace.
     // See http://stackoverflow.com/questions/3731888/javascript-redirect-location-href-breaks-the-back-button-unless-settimeout-is
     setTimeout(function() {
