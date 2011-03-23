@@ -403,12 +403,12 @@ describe PeopleController do
 
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 2
-      guessed_photo_out = json[0]['photo']
-      guessed_photo_out['pin_type'].should == 'guess'
-      guessed_photo_out['pin_color'].should == '008000'
-      post_out = json[1]['photo']
+      post_out = json[0]['photo']
       post_out['pin_type'].should == 'post'
       post_out['pin_color'].should == '0000FF'
+      guessed_photo_out = json[1]['photo']
+      guessed_photo_out['pin_type'].should == 'guess'
+      guessed_photo_out['pin_color'].should == '008000'
 
     end
 

@@ -144,16 +144,6 @@ class PeopleController < ApplicationController
     @posts_count = Photo.mapped_count person_id
     @guesses_count = Guess.mapped_count person_id
 
-    guesses = Guess.all_mapped params[:id]
-    if ! guesses.empty?
-      first_guessed_at = guesses.first.guessed_at
-      last_guessed_at = guesses.last.guessed_at
-      guesses.each do |guess|
-        guess.photo[:pin_type] = 'guess'
-        guess.photo[:pin_color] = PeopleController.scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
-      end
-    end
-    photos = guesses.map &:photo
     posts = Photo.all_mapped params[:id]
     if ! posts.empty?
       first_dateadded = posts.first.dateadded
@@ -163,8 +153,16 @@ class PeopleController < ApplicationController
         post[:pin_color] = PeopleController.scaled_blue first_dateadded, last_dateadded, post.dateadded
       end
     end
-    photos += posts
-    @json = photos.to_json
+    guesses = Guess.all_mapped params[:id]
+    if ! guesses.empty?
+      first_guessed_at = guesses.first.guessed_at
+      last_guessed_at = guesses.last.guessed_at
+      guesses.each do |guess|
+        guess.photo[:pin_type] = 'guess'
+        guess.photo[:pin_color] = PeopleController.scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
+      end
+    end
+    @json = (posts + (guesses.map &:photo)).to_json
 
   end
 
