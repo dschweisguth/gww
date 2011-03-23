@@ -2,7 +2,7 @@ var GWW = {
   initializeMap: function () {
     GWW.map = new google.maps.Map($('map_canvas'), {
       zoom: 13,
-      center: new google.maps.LatLng(37.755, -122.442112),
+      center: new google.maps.LatLng(37.76, -122.442112),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
     new Ajax.Request(window.location + '_markers', {
@@ -15,10 +15,12 @@ var GWW = {
   addMarkers: function (transport) {
     var guesses = transport.responseText.evalJSON(true);
     for (var i = 0; i < guesses.length; i++) {
-      var photo = guesses[i].guess.photo;
+      var guess = guesses[i].guess;
+      var photo = guess.photo;
       new google.maps.Marker({
         map: GWW.map,
-        position: new google.maps.LatLng(photo.latitude, photo.longitude)
+        position: new google.maps.LatLng(photo.latitude, photo.longitude),
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=+|' + guess.color + '|000000'
       });
     }
   }
