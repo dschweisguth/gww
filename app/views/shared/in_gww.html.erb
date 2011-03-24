@@ -1,3 +1,6 @@
 <p><%=h @message %></p>
 
-<a href="<%= @from %>">OK, go back where I came from</a>
+<ul>
+<li>If you were trying to jump to a person's page in GWW, try searching for them on <%= link_to 'the GWW home page', root_path %></li>
+<li><%= link_to 'Go back where I came from', @from %></li>
+</ul>
