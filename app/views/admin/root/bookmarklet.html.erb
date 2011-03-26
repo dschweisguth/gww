@@ -1,20 +1,10 @@
+<%= javascript_include_tag :defaults, 'linkToEditInGWW' %>
 <% content_for :title do %>"Edit in GWW" bookmarklet<% end %>
 <h1>"Edit in GWW" bookmarklet</h1>
 
 <p>This bookmarklet lets you jump from either a Flickr photo page or a GWW photo view page to that photo's GWW edit page.</p>
 
-<a id="editInGWW" href="">Edit in GWW</a>
-<script type="text/javascript">
-function loadEditInGWW() {
-  var script = document.createElement("script");
-  script.src =
-    "http://guesswheresf.org/javascripts/bookmarklets/editInGWW.js";
-  script.type = "text/javascript";
-  document.body.appendChild(script);
-}
-document.getElementById("editInGWW").href =
-  "javascript:(" + loadEditInGWW.toString() + ")();"
-</script>
+<a id="bookmarklet" href="">Edit in GWW</a>
 
 <p>Install it <%= link_to 'the same way as the "View in GWW" bookmarklet', root_bookmarklet_path %>.</p>
 
