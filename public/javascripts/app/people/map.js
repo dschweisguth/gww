@@ -54,6 +54,7 @@ GWW.userMap = (function () {
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
+      // TODO Dave fix JS error when either is absent
       $('guesses').observe('click', toggleMarkers('guesses', guesses));
       $('posts').observe('click', toggleMarkers('posts', posts));
 
@@ -63,7 +64,10 @@ GWW.userMap = (function () {
 
   var loadInfoWindow = function (marker, photo) {
     return function () {
-      new Ajax.Request(window.location + '/' + photo.id + '/' + photo.pin_type, {
+      var path = photo.pin_type == 'guess'
+        ? window.location + '/' + photo.id + '/guess'
+        : '/photos/' + photo.id + '/map_post';
+      new Ajax.Request(path, {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
         onSuccess: openInfoWindow(marker)

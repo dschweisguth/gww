@@ -24,14 +24,14 @@ ActionController::Routing::Routes.draw do |map|
       people.send "person_#{action}", "people/:id/#{action}", :action => action
     end
     people.person_comments 'people/:id/comments/page/:page', :action => 'comments'
-    %w{ guess post }.each do |pin_type|
+    %w{ guess }.each do |pin_type|
       people.send "person_map_#{pin_type}", "people/:id/map/:photo_id/#{pin_type}", :action => "map_#{pin_type}"
     end
   end
   map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
 
   map.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :controller => 'photos', :action => 'index', :conditions => { :method => :get }
-  map.resources :photos, :only => [ :show ], :collection => { :map => :get, :unfound => :get, :unfound_data => :get }
+  map.resources :photos, :only => [ :show ], :member => { :map_post => :get }, :collection => { :map => :get, :unfound => :get, :unfound_data => :get }
 
   map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
 

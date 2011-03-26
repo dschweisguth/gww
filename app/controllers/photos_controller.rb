@@ -31,6 +31,13 @@ class PhotosController < ApplicationController
     "%02X%02X%02X" % [ others_intensity, intensity, others_intensity ]
   end
 
+  caches_page :map_post
+  def map_post
+    #noinspection RailsParamDefResolve
+    @post = Photo.find params[:id], :include => { :guesses => :person }
+    render :partial => 'photos/map/post'
+  end
+
   caches_page :unfound
   def unfound
     @photos = Photo.unfound_or_unconfirmed

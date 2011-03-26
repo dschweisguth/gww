@@ -192,13 +192,6 @@ class PeopleController < ApplicationController
     "%02X%02XFF" % [ others_intensity, others_intensity ]
   end
 
-  caches_page :map_post
-  def map_post
-    #noinspection RailsParamDefResolve
-    @post = Photo.find params[:photo_id], :include => { :guesses => :person }
-    render :partial => 'people/map/post'
-  end
-
   caches_page :map_guess
   def map_guess
     @guess = Guess.find_by_person_id_and_photo_id params[:id], params[:photo_id],
