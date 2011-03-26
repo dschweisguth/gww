@@ -9,7 +9,11 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    @json = '{}';
+    posts = Photo.all :joins => :guesses, :conditions => 'latitude is not null'
+    posts.each do |post|
+      post[:pin_color] = '008800'
+    end
+    @json = posts.to_json;
   end
 
   caches_page :unfound
