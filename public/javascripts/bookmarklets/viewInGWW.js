@@ -1,4 +1,4 @@
-function viewInGWW() {
+(function () {
   if (/^http:\/\/www.flickr.com\/(photos|people)\/[^/]+/.test(window.location)) {
     // Do this asynchronously so Firefox doesn't treat it as a replace.
     // See http://stackoverflow.com/questions/3731888/javascript-redirect-location-href-breaks-the-back-button-unless-settimeout-is
@@ -10,5 +10,4 @@ function viewInGWW() {
     alert('Try it on a Flickr photo page or a page which belongs to a Flickr user.');
   }
   return false;
-}
-viewInGWW();
+})();

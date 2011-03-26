@@ -6,7 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Remove global function names from bookmarklet Javascript
 Inline bookmarklet error page into index or admin/index
 Fix guess scored before the group started
   Remove checks that filter out that data?
