@@ -31,7 +31,10 @@ describe PhotosController do
 
   describe '#map' do
     it "renders the page" do
-      
+      stub(Photo).all { [ Photo.make ] }
+      get :map
+      #noinspection RubyResolve
+      response.should be_success
     end
   end
 
