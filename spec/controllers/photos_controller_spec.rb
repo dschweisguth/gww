@@ -31,10 +31,18 @@ describe PhotosController do
 
   describe '#map' do
     it "renders the page" do
-      stub(Photo).all { [ Photo.make ] }
+      post = Photo.make :id => 14
+      stub(Photo).all { [ post ] }
       get :map
+
       #noinspection RubyResolve
       response.should be_success
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 1
+      post_out = json[0]['photo']
+      post_out['id'].should == post.id
+      post_out['pin_color'].should == '008000'
+      
     end
   end
 
