@@ -29,6 +29,12 @@ describe PhotosController do
     end
   end
 
+  describe '#map' do
+    it "renders the page" do
+      
+    end
+  end
+
   describe '#unfound' do
     it 'renders the page' do
       photo = Photo.make

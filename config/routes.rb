@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
 
   map.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :controller => 'photos', :action => 'index', :conditions => { :method => :get }
-  map.resources :photos, :only => [ :show ], :collection => { :unfound => :get, :unfound_data => :get }
+  map.resources :photos, :only => [ :show ], :collection => { :map => :get, :unfound => :get, :unfound_data => :get }
 
   map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
 

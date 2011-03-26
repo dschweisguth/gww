@@ -9,7 +9,7 @@ describe PhotosController do
       :controller => 'photos', :action => 'index', :sorted_by => 'foo', :order => 'bar', :page => '1') }
   end
 
-  %w{ unfound unfound_data }.each do |action|
+  %w{ map unfound unfound_data }.each do |action|
     describe action do
       it { should have_named_route "#{action}_photos", "/photos/#{action}" }
       it { should route(:get, "/photos/#{action}").to :controller => 'photos', :action => action }

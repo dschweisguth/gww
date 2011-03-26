@@ -1,0 +1,16 @@
+<%= javascript_include_tag :defaults, 'app/photos/map' %>
+<% content_for :title do %>Mapped photos<% end %>
+
+<% sandwich do %>
+<h1>Mapped photos</h1>
+
+<div id="map_canvas"></div>
+
+<p>Photos that were guessed recently are marked with darker colors;
+photos that were guessed less recently are marked with lighter colors.
+Photos that are not mapped are not shown or counted on this page.</p>
+
+<% end %>
+<script type="text/javascript">
+  GWW.config = '<%= @json %>'.evalJSON(true);
+</script>
