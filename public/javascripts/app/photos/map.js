@@ -59,7 +59,7 @@ GWW.photosMap = (function () {
 
   var loadInfoWindow = function (marker, photo) {
     return function () {
-      new Ajax.Request(window.location + '/' + photo.id, {
+      new Ajax.Request('/people/0/map/' + photo.id + '/post', {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
         onSuccess: openInfoWindow(marker)
