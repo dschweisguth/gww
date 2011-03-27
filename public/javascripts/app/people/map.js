@@ -1,7 +1,6 @@
 GWW.personMap = (function () {
   var guesses = [];
   var posts = [];
-  var infoWindow = null;
 
   var publicMethods = {
 
@@ -13,7 +12,7 @@ GWW.personMap = (function () {
       GWW.map.mapsAPIIsLoadedCallback();
 
       var photos = GWW.config;
-      infoWindow = new google.maps.InfoWindow();
+      GWW.map.infoWindow = new google.maps.InfoWindow();
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
         var marker = new google.maps.Marker({
@@ -48,8 +47,8 @@ GWW.personMap = (function () {
 
   var openInfoWindow = function(marker) {
     return function (transport) {
-      infoWindow.setContent(transport.responseText);
-      infoWindow.open(GWW.map.map, marker);
+      GWW.map.infoWindow.setContent(transport.responseText);
+      GWW.map.infoWindow.open(GWW.map.map, marker);
     }
   };
 

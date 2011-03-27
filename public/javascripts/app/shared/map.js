@@ -1,6 +1,7 @@
 GWW = {};
 GWW.map = {
   map: null,
+  infoWindow: null,
 
   registerOnLoad: function (callbackName) {
     Event.observe(window, 'load', function() {
