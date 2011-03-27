@@ -90,8 +90,9 @@ GWW.userMap = (function () {
 
   var toggle = function (markers) {
     return function (event) {
+      var markerParent = this.checked ? map : null;
       for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(this.checked ? map : null);
+        markers[i].setMap(markerParent);
       }
     }
   };
