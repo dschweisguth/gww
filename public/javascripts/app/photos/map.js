@@ -12,7 +12,7 @@ GWW.photosMap = (function () {
 
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
-        GWW.map.createMarker(photos[i].photo, '+', loadInfoWindow, infoWindowContentPath);
+        GWW.map.createMarker(photos[i].photo, '+', infoWindowContentPath);
       }
 
     }
@@ -21,16 +21,6 @@ GWW.photosMap = (function () {
 
   var infoWindowContentPath = function (photo) {
     return '/photos/' + photo.id + '/map_post';
-  };
-
-  var loadInfoWindow = function (photo, marker, infoWindowContentPath) {
-    return function () {
-      new Ajax.Request(infoWindowContentPath(photo), {
-        method: 'get',
-        requestHeaders: { Accept: 'application/json' },
-        onSuccess: GWW.map.openInfoWindow(marker)
-      });
-    };
   };
 
   return publicMethods;

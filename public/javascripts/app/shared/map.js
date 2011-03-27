@@ -40,14 +40,24 @@ GWW.map = {
 
   },
 
-  createMarker: function (photo, symbol, loadInfoWindow, infoWindowContentPath) {
+  createMarker: function (photo, symbol, infoWindowContentPath) {
     var marker = new google.maps.Marker({
       map: this.map,
       position: new google.maps.LatLng(photo.latitude, photo.longitude),
       icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + symbol + '|' + photo.pin_color + '|000000'
     });
-    google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker, infoWindowContentPath));
+    google.maps.event.addListener(marker, 'click', this.loadInfoWindow(photo, marker, infoWindowContentPath));
     return marker;
+  },
+
+  loadInfoWindow: function (photo, marker, infoWindowContentPath) {
+    return function () {
+      new Ajax.Request(infoWindowContentPath(photo), {
+        method: 'get',
+        requestHeaders: { Accept: 'application/json' },
+        onSuccess: GWW.map.openInfoWindow(marker)
+      });
+    };
   },
 
   openInfoWindow: function (marker) {
