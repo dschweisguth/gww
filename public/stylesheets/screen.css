@@ -22,6 +22,12 @@ img {
   margin: 0 3px;
 }
 
+.new-list-item {
+  color: red;
+  display: inline-block;
+  padding-left: 10px;
+}
+
 /* Tables */
 
 table {
@@ -80,18 +86,6 @@ th {
 }
 
 .error {
-  color: red;
-}
-
-.new-list-item {
-  color: red;
-  display: inline-block;
-  padding-left: 10px;
-}
-
-/* /bookmarklet */
-
-.new {
   color: red;
 }
 
