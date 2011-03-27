@@ -395,7 +395,7 @@ describe PeopleController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'input[id=posts]'
-      response.should have_tag 'label', :text => '1 mapped post (?)'
+      response.should have_tag 'label', :text => '1 mapped post (?, -)'
       response.should have_tag 'input[id=guesses]'
       response.should have_tag 'label', :text => '1 mapped guess (!)'
       response.should have_text /GWW\.config = \[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\];/

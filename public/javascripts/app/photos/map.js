@@ -6,7 +6,7 @@ GWW.photosMap = (function () {
 
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
-        GWW.map.createMarker(photos[i].photo, '+');
+        GWW.map.createMarker(photos[i].photo);
       }
 
     }

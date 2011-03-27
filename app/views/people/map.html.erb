@@ -6,7 +6,7 @@
 
 <p><% if @posts_count > 0 && @guesses_count > 0 -%>Show:<% end %>
   <% if @posts_count > 0 -%>
-    <% label_text = "#{pluralize @posts_count, 'mapped post'} (?)" -%>
+    <% label_text = "#{pluralize @posts_count, 'mapped post'} (?, -)" -%>
     <% if @guesses_count > 0 -%>
       <%= check_box_tag 'posts', '', true %>
       <%= label_tag 'posts', label_text %>

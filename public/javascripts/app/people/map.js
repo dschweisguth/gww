@@ -10,7 +10,7 @@ GWW.personMap = (function () {
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
-        var marker = GWW.map.createMarker(photo, photo.pin_type == 'guess' ? '!' : '?');
+        var marker = GWW.map.createMarker(photo);
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
