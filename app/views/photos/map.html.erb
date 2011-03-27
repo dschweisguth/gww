@@ -11,6 +11,4 @@ photos that were guessed less recently are marked with lighter colors.
 Photos that are not mapped are not shown or counted on this page.</p>
 
 <% end %>
-<script type="text/javascript">
-  GWW.config = <%= @json %>;
-</script>
+<%= render 'shared/config' %>
