@@ -398,7 +398,7 @@ describe PeopleController do
       response.should have_tag 'label', :text => '1 mapped post (?)'
       response.should have_tag 'input[id=guesses]'
       response.should have_tag 'label', :text => '1 mapped guess (!)'
-      response.should have_text /GWW\.config = '\[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\]'/
+      response.should have_text /GWW\.config = \[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\];/
 
       json = decode_json
       json.length.should == 2

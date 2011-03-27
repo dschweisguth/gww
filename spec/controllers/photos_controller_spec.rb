@@ -37,6 +37,8 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
+      response.should have_text /GWW\.config = \[\{"photo":\{.*?\}\}\];/
+
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 1
       post_out = json[0]['photo']
