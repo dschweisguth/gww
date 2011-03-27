@@ -11,15 +11,17 @@ class PhotosController < ApplicationController
   caches_page :map
   def map
     posts = Photo.all :conditions => 'accuracy >= 12', :order => 'dateadded'
+    first_dateadded = posts.first.dateadded
+    last_dateadded = posts.last.dateadded
     posts.each do |post|
       if post.game_status == 'unfound' || post.game_status == 'unconfirmed'
         post[:color] = 'FFFF00'
         post[:symbol] = '?'
       elsif post.game_status == 'found'
-        post[:color] = scaled_green posts.first.dateadded, posts.last.dateadded, post.dateadded
+        post[:color] = scaled_green first_dateadded, last_dateadded, post.dateadded
         post[:symbol] = '!'
       else # revealed
-        post[:color] = scaled_red posts.first.dateadded, posts.last.dateadded, post.dateadded
+        post[:color] = scaled_red first_dateadded, last_dateadded, post.dateadded
         post[:symbol] = '-'
       end
     end
