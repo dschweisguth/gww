@@ -1,4 +1,3 @@
-GWW = {};
 GWW.userMap = (function () {
   var map = null;
   var guesses = [];

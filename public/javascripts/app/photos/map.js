@@ -1,4 +1,3 @@
-GWW = {};
 GWW.photosMap = (function () {
   var map = null;
   var guesses = [];
