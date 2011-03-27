@@ -54,9 +54,8 @@ GWW.userMap = (function () {
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
-      // TODO Dave fix JS error when either is absent
-      $('guesses').observe('click', toggleMarkers('guesses', guesses));
-      $('posts').observe('click', toggleMarkers('posts', posts));
+      addToggleMarkersListener('guesses', guesses);
+      addToggleMarkersListener('posts', posts);
 
     }
 
@@ -79,6 +78,13 @@ GWW.userMap = (function () {
     return function (transport) {
       infoWindow.setContent(transport.responseText);
       infoWindow.open(map, marker);
+    }
+  };
+
+  var addToggleMarkersListener = function (id, markers) {
+    var checkbox = $(id);
+    if (checkbox) {
+      checkbox.observe('click', toggleMarkers(id, markers));
     }
   };
 
