@@ -451,7 +451,7 @@ describe PeopleController do
     end
 
     def stub_post
-      post = Photo.make :id => 14, :person => @person, :game_status => 'found'
+      post = Photo.make :id => 14, :person => @person
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       post
     end
@@ -470,7 +470,7 @@ describe PeopleController do
     def decoded_post_has_expected_attrs(decoded_post, post)
       photo = decoded_post['photo']
       photo['id'].should == post.id
-      photo['color'].should == '0000FF'
+      photo['color'].should == 'FFFF00'
       photo['symbol'].should == '?'
     end
 
