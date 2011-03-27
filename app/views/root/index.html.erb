@@ -28,7 +28,8 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Active members', people_path('score', '+') %> and statistics. How do you measure up?</li>
 <li><%= link_to 'Nemeses', nemeses_people_path %>: who guesses whom the most?</li>
 <li><%= link_to 'Top guessers', top_guessers_people_path %> by day, week, month and year</li>
-<li><%= link_to 'Photos', photos_path('date-added', '+', 1) %>, sortable in many ways</li>
+<li><%= link_to 'All photos', photos_path('date-added', '+', 1) %>, sortable in many ways</li>
+<li><%= link_to 'Mapped photos', map_photos_path %>, on a map <span class="new-list-item">New!</span></li>
 <li><%= link_to 'Unfound photos', unfound_photos_path %></li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_guesses_path %></li>
 <li><%= link_to 'Longest-lived revelations', longest_revelations_path %></li>

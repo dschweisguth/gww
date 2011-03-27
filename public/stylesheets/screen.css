@@ -83,6 +83,12 @@ th {
   color: red;
 }
 
+.new-list-item {
+  color: red;
+  display: inline-block;
+  padding-left: 10px;
+}
+
 /* /bookmarklet */
 
 .new {
