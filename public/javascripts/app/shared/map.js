@@ -2,6 +2,7 @@ GWW = {};
 GWW.map = (function () {
   var map = null;
   var infoWindow = null;
+  
   var publicMethods = {
 
     registerOnLoad: function (callbackName) {
