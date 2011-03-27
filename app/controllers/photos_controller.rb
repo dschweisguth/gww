@@ -25,7 +25,7 @@ class PhotosController < ApplicationController
         post[:symbol] = '-'
       end
     end
-    @json = posts.to_json;
+    @json = posts.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
 
   caches_page :map_popup

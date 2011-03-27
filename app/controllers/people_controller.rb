@@ -171,7 +171,7 @@ class PeopleController < ApplicationController
         guess.photo[:symbol] = '!'
       end
     end
-    @json = (posts + (guesses.map &:photo)).to_json
+    @json = (posts + (guesses.map &:photo)).to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
 
   end
 

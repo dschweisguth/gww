@@ -6,7 +6,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Attempt to include only necessary properties in JSON
 Refactor scaled color methods
 Use a better system of sharing code in map Javascript
 Inline bookmarklet error page into index or admin/index
