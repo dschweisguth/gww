@@ -471,14 +471,14 @@ describe PeopleController do
       photo = decoded_post['photo']
       photo['id'].should == post.id
       photo['pin_color'].should == '0000FF'
-      # TODO Dave test symbol
+      photo['symbol'].should == '?'
     end
 
     def decoded_guessed_photo_has_expected_attrs(decoded_guessed_photo, guessed_photo)
       photo = decoded_guessed_photo['photo']
       photo['id'].should == guessed_photo.id
       photo['pin_color'].should == '008000'
-      # TODO Dave test symbol
+      photo['symbol'].should == '!'
     end
 
   end
