@@ -46,7 +46,7 @@ GWW.map = (function () {
       var marker = new google.maps.Marker({
         map: this.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.pin_color + '|000000'
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000'
       });
       google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
       return marker;

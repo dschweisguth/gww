@@ -43,7 +43,7 @@ describe PhotosController do
       json.length.should == 1
       post_out = json[0]['photo']
       post_out['id'].should == post.id
-      post_out['pin_color'].should == 'FFFF00'
+      post_out['color'].should == 'FFFF00'
       post_out['symbol'].should == '?'
 
     end

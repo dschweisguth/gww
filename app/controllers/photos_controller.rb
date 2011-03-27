@@ -12,13 +12,13 @@ class PhotosController < ApplicationController
     posts = Photo.all :conditions => 'accuracy >= 12', :order => 'dateadded'
     posts.each do |post|
       if post.game_status == 'unfound' || post.game_status == 'unconfirmed'
-        post[:pin_color] = 'FFFF00'
+        post[:color] = 'FFFF00'
         post[:symbol] = '?'
       elsif post.game_status == 'found'
-        post[:pin_color] = PhotosController.scaled_green posts.first.dateadded, posts.last.dateadded, post.dateadded
+        post[:color] = PhotosController.scaled_green posts.first.dateadded, posts.last.dateadded, post.dateadded
         post[:symbol] = '!'
       else # revealed
-        post[:pin_color] = PhotosController.scaled_red posts.first.dateadded, posts.last.dateadded, post.dateadded
+        post[:color] = PhotosController.scaled_red posts.first.dateadded, posts.last.dateadded, post.dateadded
         post[:symbol] = '-'
       end
     end

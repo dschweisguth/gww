@@ -470,14 +470,14 @@ describe PeopleController do
     def decoded_post_has_expected_attrs(decoded_post, post)
       photo = decoded_post['photo']
       photo['id'].should == post.id
-      photo['pin_color'].should == '0000FF'
+      photo['color'].should == '0000FF'
       photo['symbol'].should == '?'
     end
 
     def decoded_guessed_photo_has_expected_attrs(decoded_guessed_photo, guessed_photo)
       photo = decoded_guessed_photo['photo']
       photo['id'].should == guessed_photo.id
-      photo['pin_color'].should == '008000'
+      photo['color'].should == '008000'
       photo['symbol'].should == '!'
     end
 
