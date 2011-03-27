@@ -54,8 +54,8 @@ GWW.userMap = (function () {
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
-      addToggleMarkersHandler('guesses', guesses);
-      addToggleMarkersHandler('posts', posts);
+      addToggleHandler('guesses', guesses);
+      addToggleHandler('posts', posts);
 
     }
 
@@ -81,18 +81,17 @@ GWW.userMap = (function () {
     }
   };
 
-  var addToggleMarkersHandler = function (id, markers) {
+  var addToggleHandler = function (id, markers) {
     var checkbox = $(id);
     if (checkbox) {
-      checkbox.observe('click', toggleMarkers(id, markers));
+      checkbox.observe('click', toggle(markers));
     }
   };
 
-  var toggleMarkers = function (id, list) {
+  var toggle = function (markers) {
     return function (event) {
-      var checkboxIsChecked = $(id).checked
-      for (var i = 0; i < list.length; i++) {
-        list[i].setMap(checkboxIsChecked ? map : null);
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(this.checked ? map : null);
       }
     }
   };
