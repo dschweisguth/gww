@@ -12,20 +12,14 @@ GWW.photosMap = (function () {
 
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
-        var photo = photos[i].photo;
-        var marker = new google.maps.Marker({
-          map: GWW.map.map,
-          position: new google.maps.LatLng(photo.latitude, photo.longitude),
-          icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=+|' + photo.pin_color + '|000000'
-        });
-        google.maps.event.addListener(marker, 'click', loadInfoWindow(marker, photo));
+        GWW.map.createMarker(photos[i].photo, '+', loadInfoWindow);
       }
 
     }
 
   };
 
-  var loadInfoWindow = function (marker, photo) {
+  var loadInfoWindow = function (photo, marker) {
     return function () {
       new Ajax.Request('/photos/' + photo.id + '/map_post', {
         method: 'get',
