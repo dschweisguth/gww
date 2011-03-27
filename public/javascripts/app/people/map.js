@@ -39,16 +39,9 @@ GWW.personMap = (function () {
       new Ajax.Request(path, {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
-        onSuccess: openInfoWindow(marker)
+        onSuccess: GWW.map.openInfoWindow(marker)
       });
     };
-  };
-
-  var openInfoWindow = function(marker) {
-    return function (transport) {
-      GWW.map.infoWindow.setContent(transport.responseText);
-      GWW.map.infoWindow.open(GWW.map.map, marker);
-    }
   };
 
   var addToggleHandler = function (id, markers) {

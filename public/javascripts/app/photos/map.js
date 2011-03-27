@@ -30,16 +30,9 @@ GWW.photosMap = (function () {
       new Ajax.Request('/photos/' + photo.id + '/map_post', {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
-        onSuccess: openInfoWindow(marker)
+        onSuccess: GWW.map.openInfoWindow(marker)
       });
     };
-  };
-
-  var openInfoWindow = function(marker) {
-    return function (transport) {
-      GWW.map.infoWindow.setContent(transport.responseText);
-      GWW.map.infoWindow.open(GWW.map.map, marker);
-    }
   };
 
   return publicMethods;

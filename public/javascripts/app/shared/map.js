@@ -38,6 +38,13 @@ GWW.map = {
 
     this.infoWindow = new google.maps.InfoWindow();
 
+  },
+
+  openInfoWindow: function (marker) {
+    return function (transport) {
+      GWW.map.infoWindow.setContent(transport.responseText);
+      GWW.map.infoWindow.open(GWW.map.map, marker);
+    }
   }
 
 };
