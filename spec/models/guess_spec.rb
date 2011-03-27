@@ -260,13 +260,13 @@ describe Guess do
 
   describe '.mapped_count' do
     it "returns the person's guesses" do
-      photo = Photo.make :latitude => 37
+      photo = Photo.make :accuracy => 12
       guess = Guess.make :photo => photo
       Guess.mapped_count(guess.person.id).should == 1
     end
 
     it "ignores others' guesses" do
-      photo = Photo.make :latitude => 37
+      photo = Photo.make :accuracy => 12
       Guess.make :photo => photo
       other_person = Person.make
       Guess.mapped_count(other_person.id).should == 0
@@ -282,13 +282,13 @@ describe Guess do
 
   describe '.all_mapped' do
     it "returns the person's guesses" do
-      photo = Photo.make :latitude => 37
+      photo = Photo.make :accuracy => 12
       guess = Guess.make :photo => photo
       Guess.all_mapped(guess.person.id).should == [ guess ]
     end
 
     it "ignores others' guesses" do
-      photo = Photo.make :latitude => 37
+      photo = Photo.make :accuracy => 12
       Guess.make :photo => photo
       other_person = Person.make
       Guess.all_mapped(other_person.id).should == []

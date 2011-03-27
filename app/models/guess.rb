@@ -92,12 +92,12 @@ class Guess < ActiveRecord::Base
 
   def self.mapped_count(person_id)
     count :joins => :photo,
-      :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', person_id ]
+      :conditions => [ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]
   end
 
   def self.all_mapped(person_id)
     all :joins => :photo,
-      :conditions => [ 'guesses.person_id = ? and photos.latitude is not null', person_id ],
+      :conditions => [ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ],
       :order => 'guesses.guessed_at',
       :include => :photo
   end

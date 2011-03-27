@@ -140,12 +140,12 @@ class Photo < ActiveRecord::Base
   end
 
   def self.mapped_count(poster_id)
-    count :conditions => [ 'person_id = ? and latitude is not null', poster_id ]
+    count :conditions => [ 'person_id = ? and accuracy >= 12', poster_id ]
   end
   
   def self.all_mapped(poster_id)
     find_all_by_person_id poster_id,
-      :conditions => 'latitude is not null', :order => 'dateadded'
+      :conditions => 'accuracy >= 12', :order => 'dateadded'
   end
 
   # Used by PhotosController

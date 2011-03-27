@@ -331,12 +331,12 @@ describe Photo do
 
   describe '.mapped_count' do
     it "counts photos" do
-      photo = Photo.make :latitude => 37
+      photo = Photo.make :accuracy => 12
       Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "ignores other people's photos" do
-      Photo.make :latitude => 37
+      Photo.make :accuracy => 12
       other_person = Person.make
       Photo.mapped_count(other_person.id).should == 0
     end
@@ -350,12 +350,12 @@ describe Photo do
 
   describe '.all_mapped' do
     it "lists photos" do
-      photo = Photo.make :latitude => 37
+      photo = Photo.make :accuracy => 12
       Photo.all_mapped(photo.person.id).should == [ photo ]
     end
 
     it "ignores other people's photos" do
-      Photo.make :latitude => 37
+      Photo.make :accuracy => 12
       other_person = Person.make
       Photo.all_mapped(other_person.id).should == []
     end

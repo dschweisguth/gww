@@ -9,7 +9,7 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    posts = Photo.all :joins => :guesses, :conditions => 'latitude is not null', :order => 'dateadded'
+    posts = Photo.all :joins => :guesses, :conditions => 'accuracy >= 12', :order => 'dateadded'
     posts.each do |post|
       post[:pin_color] = PhotosController.scaled_green posts.first.dateadded, posts.last.dateadded, post.dateadded
     end
