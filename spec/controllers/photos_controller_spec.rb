@@ -80,8 +80,10 @@ describe PhotosController do
       response.should have_tag "a[href=#{photo_path photo}]" do
         with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
       end
+      response.should have_tag "a[href=#{person_path photo.person}]", :text => photo.person.username
       response.should have_text /, January  1, 2011\./
       response.should_not have_text /Guessed by/
+      response.should_not have_text /Revealed/
 
     end
 
@@ -92,15 +94,21 @@ describe PhotosController do
       stub(Photo).find { photo }
       get :map_post, :id => photo.id
 
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_tag "a[href=#{photo_path photo}]" do
-        with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
-      end
-      response.should have_tag "a[href=#{person_path guess.photo.person}]", :text => guess.photo.person.username
-      response.should have_text /, January  1, 2011\./
       response.should have_tag "a[href=#{person_path guess.person}]", :text => guess.person.username
       response.should have_text /, February  1, 2011./
+      response.should_not have_text /Revealed/
+
+    end
+
+    it "displays a revelation" do
+      photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
+      revelation = Revelation.make :photo => photo, :revealed_at => Time.local(2011, 2)
+      photo.revelation = revelation
+      stub(Photo).find { photo }
+      get :map_post, :id => photo.id
+
+      response.should_not have_text /Guessed by/
+      response.should have_text /Revealed February  1, 2011./
 
     end
 
