@@ -11,7 +11,7 @@ GWW.personMap = (function () {
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
         var marker = GWW.map.createMarker(photo);
-        (photo.pin_type === 'guess' ? guesses : posts).push(marker);
+        (photo.symbol === '!' ? guesses : posts).push(marker);
       }
 
       addToggleHandler('guesses', guesses);

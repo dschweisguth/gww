@@ -149,7 +149,6 @@ class PeopleController < ApplicationController
       first_dateadded = posts.first.dateadded
       last_dateadded = posts.last.dateadded
       posts.each do |post|
-        post[:pin_type] = 'post'
         if post.game_status == 'unfound' || post.game_status == 'unconfirmed'
           post[:pin_color] = 'FFFF00'
           post[:symbol] = '?'
@@ -167,7 +166,6 @@ class PeopleController < ApplicationController
       first_guessed_at = guesses.first.guessed_at
       last_guessed_at = guesses.last.guessed_at
       guesses.each do |guess|
-        guess.photo[:pin_type] = 'guess'
         guess.photo[:pin_color] = PeopleController.scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
         guess.photo[:symbol] = '!'
       end
