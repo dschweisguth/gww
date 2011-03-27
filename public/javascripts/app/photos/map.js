@@ -1,6 +1,4 @@
 GWW.photosMap = (function () {
-  var map = null;
-
   var publicMethods = {
 
     registerOnLoad: function () {
