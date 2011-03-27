@@ -32,7 +32,26 @@ describe PhotosController do
   describe '#map' do
     it "renders the page" do
       post = Photo.make :id => 14
-      stub(Photo).all { [ post ] }
+      map_succeeds_and_displays_photo post, 'FFFF00', '?'
+    end
+
+    it "displays an unconfirmed photo like an unfound" do
+      post = Photo.make :id => 14, :game_status => 'unconfirmed'
+      map_succeeds_and_displays_photo post, 'FFFF00', '?'
+    end
+
+    it "displays a found differently" do
+      post = Photo.make :id => 14, :game_status => 'found'
+      map_succeeds_and_displays_photo post, '008000', '!'
+    end
+
+    it "displays a revealed photo differently" do
+      post = Photo.make :id => 14, :game_status => 'revealed'
+      map_succeeds_and_displays_photo post, 'E00000', '-'
+    end
+
+    def map_succeeds_and_displays_photo(photo, color, symbol)
+      stub(Photo).all { [ photo ] }
       get :map
 
       #noinspection RubyResolve
@@ -42,51 +61,9 @@ describe PhotosController do
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 1
       post_out = json[0]['photo']
-      post_out['id'].should == post.id
-      post_out['color'].should == 'FFFF00'
-      post_out['symbol'].should == '?'
-
-    end
-
-    it "displays an unconfirmed photo like an unfound" do
-      post = Photo.make :id => 14, :game_status => 'unconfirmed'
-      stub(Photo).all { [ post ] }
-      get :map
-
-      json = ActiveSupport::JSON.decode assigns[:json]
-      json.length.should == 1
-      post_out = json[0]['photo']
-      post_out['id'].should == post.id
-      post_out['color'].should == 'FFFF00'
-      post_out['symbol'].should == '?'
-
-    end
-
-    it "displays a found differently" do
-      post = Photo.make :id => 14, :game_status => 'found'
-      stub(Photo).all { [ post ] }
-      get :map
-
-      json = ActiveSupport::JSON.decode assigns[:json]
-      json.length.should == 1
-      post_out = json[0]['photo']
-      post_out['id'].should == post.id
-      post_out['color'].should == '008000'
-      post_out['symbol'].should == '!'
-
-    end
-
-    it "displays a revealed photo differently" do
-      post = Photo.make :id => 14, :game_status => 'revealed'
-      stub(Photo).all { [ post ] }
-      get :map
-
-      json = ActiveSupport::JSON.decode assigns[:json]
-      json.length.should == 1
-      post_out = json[0]['photo']
-      post_out['id'].should == post.id
-      post_out['color'].should == 'E00000'
-      post_out['symbol'].should == '-'
+      post_out['id'].should == photo.id
+      post_out['color'].should == color
+      post_out['symbol'].should == symbol
 
     end
 
