@@ -14,7 +14,7 @@ GWW.personMap = (function () {
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
-        var marker = GWW.map.createMarker(photo, '+', loadInfoWindow);
+        var marker = GWW.map.createMarker(photo, '+', loadInfoWindow, infoWindowContentPath);
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
@@ -25,12 +25,15 @@ GWW.personMap = (function () {
 
   };
 
-  var loadInfoWindow = function (photo, marker) {
+  var infoWindowContentPath = function (photo) {
+    return photo.pin_type == 'guess'
+      ? window.location + '/' + photo.id + '/guess'
+      : '/photos/' + photo.id + '/map_post';
+  };
+  
+  var loadInfoWindow = function (photo, marker, infoWindowContentPath) {
     return function () {
-      var path = photo.pin_type == 'guess'
-        ? window.location + '/' + photo.id + '/guess'
-        : '/photos/' + photo.id + '/map_post';
-      new Ajax.Request(path, {
+      new Ajax.Request(infoWindowContentPath(photo), {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
         onSuccess: GWW.map.openInfoWindow(marker)
