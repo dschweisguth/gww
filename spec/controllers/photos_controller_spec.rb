@@ -47,6 +47,49 @@ describe PhotosController do
       post_out['symbol'].should == '?'
 
     end
+
+    it "displays an unconfirmed photo like an unfound" do
+      post = Photo.make :id => 14, :game_status => 'unconfirmed'
+      stub(Photo).all { [ post ] }
+      get :map
+
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 1
+      post_out = json[0]['photo']
+      post_out['id'].should == post.id
+      post_out['color'].should == 'FFFF00'
+      post_out['symbol'].should == '?'
+
+    end
+
+    it "displays a found differently" do
+      post = Photo.make :id => 14, :game_status => 'found'
+      stub(Photo).all { [ post ] }
+      get :map
+
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 1
+      post_out = json[0]['photo']
+      post_out['id'].should == post.id
+      post_out['color'].should == '008000'
+      post_out['symbol'].should == '!'
+
+    end
+
+    it "displays a revealed photo differently" do
+      post = Photo.make :id => 14, :game_status => 'revealed'
+      stub(Photo).all { [ post ] }
+      get :map
+
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json.length.should == 1
+      post_out = json[0]['photo']
+      post_out['id'].should == post.id
+      post_out['color'].should == 'E00000'
+      post_out['symbol'].should == '-'
+
+    end
+
   end
 
   describe '#map_post' do
