@@ -1,4 +1,4 @@
-GWW.userMap = (function () {
+GWW.personMap = (function () {
   var map = null;
   var guesses = [];
   var posts = [];
@@ -10,7 +10,7 @@ GWW.userMap = (function () {
       Event.observe(window, 'load', function() {
         var script = document.createElement('script');
         script.type = "text/javascript";
-        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.userMap.mapsAPIIsLoadedCallback';
+        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.personMap.mapsAPIIsLoadedCallback';
         document.body.appendChild(script);
       });
     },
@@ -98,4 +98,4 @@ GWW.userMap = (function () {
 
   return publicMethods;
 })();
-GWW.userMap.registerOnLoad();
+GWW.personMap.registerOnLoad();
