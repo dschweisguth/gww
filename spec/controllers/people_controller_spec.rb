@@ -457,6 +457,34 @@ describe PeopleController do
 
     end
 
+    it "displays a found differently" do
+      stub_mapped_counts 1, 1
+      post = Photo.make :id => 14, :person => @person, :game_status => 'found'
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      get :map, :id => @person.id
+
+      json = decode_json
+      json.length.should == 1
+      photo = json[0]['photo']
+      photo['color'].should == '0000FF'
+      photo['symbol'].should == '?'
+
+    end
+
+    it "displays a revealed photo differently" do
+      stub_mapped_counts 1, 1
+      post = Photo.make :id => 14, :person => @person, :game_status => 'revealed'
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      get :map, :id => @person.id
+
+      json = decode_json
+      json.length.should == 1
+      photo = json[0]['photo']
+      photo['color'].should == 'E00000'
+      photo['symbol'].should == '-'
+
+    end
+
     def stub_mapped_counts(post_count, guess_count)
       stub(Photo).mapped_count(@person.id.to_s) { post_count }
       stub(Guess).mapped_count(@person.id.to_s) { guess_count }
