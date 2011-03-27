@@ -150,7 +150,14 @@ class PeopleController < ApplicationController
       last_dateadded = posts.last.dateadded
       posts.each do |post|
         post[:pin_type] = 'post'
-        post[:pin_color] = PeopleController.scaled_blue first_dateadded, last_dateadded, post.dateadded
+        post[:pin_color] =
+          if post.game_status == 'unfound' || post.game_status == 'unconfirmed'
+            'FFFF00'
+          elsif post.game_status == 'found'
+            PeopleController.scaled_blue first_dateadded, last_dateadded, post.dateadded
+          else # revealed
+            PeopleController.scaled_red first_dateadded, last_dateadded, post.dateadded
+          end
       end
     end
     guesses = Guess.all_mapped params[:id]
@@ -186,10 +193,24 @@ class PeopleController < ApplicationController
     end_of_range = end_of_range.to_f
     fractional_position = start_of_range == end_of_range \
       ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
-    # more or less DFDFFF .. 0000FF
     others_intensity = (224.0 * (1 - fractional_position)).to_i
     others_intensity -= others_intensity % 4
     "%02X%02XFF" % [ others_intensity, others_intensity ]
+  end
+
+  def self.scaled_red(start_of_range, end_of_range, position)
+    start_of_range = start_of_range.to_f
+    end_of_range = end_of_range.to_f
+    fractional_position = start_of_range == end_of_range \
+      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
+    intensity = (256.0 * (1 - 0.125 * fractional_position)).to_i
+    intensity -= intensity % 4
+    if intensity == 256
+      intensity = 252
+    end
+    others_intensity = (192.0 * (1 - fractional_position)).to_i
+    others_intensity -= others_intensity % 4
+    "%02X%02X%02X" % [ intensity, others_intensity, others_intensity ]
   end
 
 end

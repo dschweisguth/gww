@@ -451,7 +451,7 @@ describe PeopleController do
     end
 
     def stub_post
-      post = Photo.make :id => 14, :person => @person
+      post = Photo.make :id => 14, :person => @person, :game_status => 'found'
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       post
     end
@@ -479,6 +479,21 @@ describe PeopleController do
       photo['id'].should == guessed_photo.id
       photo['pin_type'].should == 'guess'
       photo['pin_color'].should == '008000'
+    end
+
+  end
+
+  describe '.scaled_red' do
+    it "starts at FCC0C0 (more or less FFBFBF)" do
+      PeopleController.scaled_red(0, 1, 0).should == 'FCC0C0'
+    end
+
+    it "ends at E00000 (more or less DF0000)" do
+      PeopleController.scaled_red(0, 1, 1).should == 'E00000'
+    end
+
+    it "handles a single point" do
+      PeopleController.scaled_red(0, 0, 0).should == 'E00000'
     end
 
   end
