@@ -6,15 +6,11 @@ GWW.photosMap = (function () {
 
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
-        GWW.map.createMarker(photos[i].photo, '+', infoWindowContentPath);
+        GWW.map.createMarker(photos[i].photo, '+');
       }
 
     }
 
-  };
-
-  var infoWindowContentPath = function (photo) {
-    return '/photos/' + photo.id + '/map_post';
   };
 
   GWW.map.registerOnLoad('GWW.photosMap.mapsAPIIsLoadedCallback');

@@ -42,13 +42,13 @@ GWW.map = (function () {
 
     },
 
-    createMarker: function (photo, symbol, infoWindowContentPath) {
+    createMarker: function (photo, symbol) {
       var marker = new google.maps.Marker({
         map: this.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
         icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + symbol + '|' + photo.pin_color + '|000000'
       });
-      google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker, infoWindowContentPath));
+      google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
       return marker;
     },
 
@@ -61,9 +61,9 @@ GWW.map = (function () {
 
   };
 
-  var loadInfoWindow = function (photo, marker, infoWindowContentPath) {
+  var loadInfoWindow = function (photo, marker) {
     return function () {
-      new Ajax.Request(infoWindowContentPath(photo), {
+      new Ajax.Request('/photos/' + photo.id + '/map_post', {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
         onSuccess: GWW.map.openInfoWindow(marker)

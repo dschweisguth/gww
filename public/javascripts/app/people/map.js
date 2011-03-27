@@ -10,7 +10,7 @@ GWW.personMap = (function () {
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
-        var marker = GWW.map.createMarker(photo, '+', infoWindowContentPath);
+        var marker = GWW.map.createMarker(photo, '+');
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
@@ -21,10 +21,6 @@ GWW.personMap = (function () {
 
   };
 
-  var infoWindowContentPath = function (photo) {
-    return '/photos/' + photo.id + '/map_post';
-  };
-  
   var addToggleHandler = function (id, markers) {
     var checkbox = $(id);
     if (checkbox) {
