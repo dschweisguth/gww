@@ -36,6 +36,8 @@ GWW.map = {
       strokeWeight: 2
     }).setMap(this.map);
 
+    this.infoWindow = new google.maps.InfoWindow();
+
   }
 
 };

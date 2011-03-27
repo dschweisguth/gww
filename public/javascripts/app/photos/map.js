@@ -11,7 +11,6 @@ GWW.photosMap = (function () {
       GWW.map.mapsAPIIsLoadedCallback();
 
       var photos = GWW.config;
-      GWW.map.infoWindow = new google.maps.InfoWindow();
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
         var marker = new google.maps.Marker({
