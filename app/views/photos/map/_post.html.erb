@@ -5,5 +5,8 @@
     <% guesses = @post.guesses; if ! guesses.empty? -%>
       Guessed by <%= guesses.map { |guess| "#{link_to_person guess.person}, #{guess.guessed_at.getlocal.strftime '%B %e, %Y'}" }.join '; ' %>.
     <% end -%>
+    <% revelation = @post.revelation; if revelation -%>
+      Revealed <%= revelation.revealed_at.getlocal.strftime '%B %e, %Y' %>.
+    <% end -%>
   </p>
 </div>
