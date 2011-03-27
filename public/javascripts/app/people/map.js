@@ -22,9 +22,7 @@ GWW.personMap = (function () {
   };
 
   var infoWindowContentPath = function (photo) {
-    return photo.pin_type == 'guess'
-      ? window.location + '/' + photo.id + '/guess'
-      : '/photos/' + photo.id + '/map_post';
+    return '/photos/' + photo.id + '/map_post';
   };
   
   var addToggleHandler = function (id, markers) {

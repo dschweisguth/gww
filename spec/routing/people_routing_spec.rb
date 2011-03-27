@@ -42,9 +42,4 @@ describe PeopleController do
     it { should route(:get, '/people/666/comments/page/1').to :controller => 'people', :action => 'comments', :id => '666', :page => '1' }
   end
 
-  describe 'map_guess' do
-    it { should have_named_route 'person_map_guess', 666, 777, '/people/666/map/777/guess' }
-    it { should route(:get, '/people/666/map/777/guess').to :controller => 'people', :action => 'map_guess', :id => '666', :photo_id => '777' }
-  end
-
 end

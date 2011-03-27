@@ -24,7 +24,6 @@ ActionController::Routing::Routes.draw do |map|
       people.send "person_#{action}", "people/:id/#{action}", :action => action
     end
     people.person_comments 'people/:id/comments/page/:page', :action => 'comments'
-    people.person_map_guess 'people/:id/map/:photo_id/guess', :action => 'map_guess'
   end
   map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
 
