@@ -1,4 +1,5 @@
 class PeopleController < ApplicationController
+  include Color
 
   def find
     username = params[:person][:username]
@@ -153,10 +154,10 @@ class PeopleController < ApplicationController
           post[:color] = 'FFFF00'
           post[:symbol] = '?'
         elsif post.game_status == 'found'
-          post[:color] = PeopleController.scaled_blue first_dateadded, last_dateadded, post.dateadded
+          post[:color] = scaled_blue first_dateadded, last_dateadded, post.dateadded
           post[:symbol] = '?'
         else # revealed
-          post[:color] = PeopleController.scaled_red first_dateadded, last_dateadded, post.dateadded
+          post[:color] = scaled_red first_dateadded, last_dateadded, post.dateadded
           post[:symbol] = '-'
         end
       end
@@ -166,52 +167,12 @@ class PeopleController < ApplicationController
       first_guessed_at = guesses.first.guessed_at
       last_guessed_at = guesses.last.guessed_at
       guesses.each do |guess|
-        guess.photo[:color] = PeopleController.scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
+        guess.photo[:color] = scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
         guess.photo[:symbol] = '!'
       end
     end
     @json = (posts + (guesses.map &:photo)).to_json
 
-  end
-
-  def self.scaled_red(start_of_range, end_of_range, position)
-    start_of_range = start_of_range.to_f
-    end_of_range = end_of_range.to_f
-    fractional_position = start_of_range == end_of_range \
-      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
-    intensity = (256.0 * (1 - 0.125 * fractional_position)).to_i
-    intensity -= intensity % 4
-    if intensity == 256
-      intensity = 252
-    end
-    others_intensity = (192.0 * (1 - fractional_position)).to_i
-    others_intensity -= others_intensity % 4
-    "%02X%02X%02X" % [ intensity, others_intensity, others_intensity ]
-  end
-
-  def self.scaled_green(start_of_range, end_of_range, position)
-    start_of_range = start_of_range.to_f
-    end_of_range = end_of_range.to_f
-    fractional_position = start_of_range == end_of_range \
-      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
-    intensity = (256.0 * (1 - 0.5 * fractional_position)).to_i
-    intensity -= intensity % 4
-    if intensity == 256
-      intensity = 252
-    end
-    others_intensity = (224.0 * (1 - fractional_position)).to_i
-    others_intensity -= others_intensity % 4
-    "%02X%02X%02X" % [ others_intensity, intensity, others_intensity ]
-  end
-
-  def self.scaled_blue(start_of_range, end_of_range, position)
-    start_of_range = start_of_range.to_f
-    end_of_range = end_of_range.to_f
-    fractional_position = start_of_range == end_of_range \
-      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
-    others_intensity = (224.0 * (1 - fractional_position)).to_i
-    others_intensity -= others_intensity % 4
-    "%02X%02XFF" % [ others_intensity, others_intensity ]
   end
 
 end

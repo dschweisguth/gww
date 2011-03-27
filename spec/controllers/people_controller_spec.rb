@@ -523,49 +523,4 @@ describe PeopleController do
 
   end
 
-  describe '.scaled_red' do
-    it "starts at FCC0C0 (more or less FFBFBF)" do
-      PeopleController.scaled_red(0, 1, 0).should == 'FCC0C0'
-    end
-
-    it "ends at E00000 (more or less DF0000)" do
-      PeopleController.scaled_red(0, 1, 1).should == 'E00000'
-    end
-
-    it "handles a single point" do
-      PeopleController.scaled_red(0, 0, 0).should == 'E00000'
-    end
-
-  end
-
-  describe '.scaled_green' do
-    it "starts at E0FCE0 (more or less DFFFDF)" do
-      PeopleController.scaled_green(0, 1, 0).should == 'E0FCE0'
-    end
-
-    it "ends at 008000 (more or less 007F00)" do
-      PeopleController.scaled_green(0, 1, 1).should == '008000'
-    end
-
-    it "handles a single point" do
-      PeopleController.scaled_green(0, 0, 0).should == '008000'
-    end
-
-  end
-
-  describe '.scaled_blue' do
-    it "starts at E0E0FF (more or less DFDFFF)" do
-      PeopleController.scaled_blue(0, 1, 0).should == 'E0E0FF'
-    end
-
-    it "ends at 0000FF" do
-      PeopleController.scaled_blue(0, 1, 1).should == '0000FF'
-    end
-
-    it "handles a single point" do
-      PeopleController.scaled_blue(0, 0, 0).should == '0000FF'
-    end
-
-  end
-
 end
