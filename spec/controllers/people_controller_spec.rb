@@ -528,7 +528,8 @@ describe PeopleController do
       end
       response.should have_tag "a[href=#{person_path photo.person}]", :text => photo.person.username
       response.should have_text /, January  1, 2011\./;
-      response.should have_text /Guessed February  1, 2011\./;
+      response.should have_tag "a[href=#{person_path guess.person}]", :text => guess.person.username
+      response.should have_text /, February  1, 2011\./;
 
     end
   end
