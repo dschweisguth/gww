@@ -388,7 +388,7 @@ describe PeopleController do
 
     it "renders the page" do
       stub_mapped_counts 1, 1
-      post = stub_post
+      post = stub_unfound
       guessed_photo = stub_guessed_photo
       get :map, :id => @person.id
 
@@ -402,7 +402,7 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 2
-      decoded_post_has_expected_attrs json[0], post
+      decoded_unfound_has_expected_attrs json[0], post
       decoded_guessed_photo_has_expected_attrs json[1], guessed_photo
 
     end
@@ -428,7 +428,7 @@ describe PeopleController do
 
     it "shows only the post count if there are no guesses" do
       stub_mapped_counts 1, 0
-      post = stub_post
+      post = stub_unfound
       stub(Guess).all_mapped(@person.id.to_s) { [] }
       get :map, :id => @person.id
 
@@ -441,7 +441,7 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 1
-      decoded_post_has_expected_attrs json[0], post
+      decoded_unfound_has_expected_attrs json[0], post
 
     end
 
@@ -450,7 +450,7 @@ describe PeopleController do
       stub(Guess).mapped_count(@person.id.to_s) { guess_count }
     end
 
-    def stub_post
+    def stub_unfound
       post = Photo.make :id => 14, :person => @person
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       post
@@ -467,7 +467,7 @@ describe PeopleController do
       ActiveSupport::JSON.decode assigns[:json]
     end
 
-    def decoded_post_has_expected_attrs(decoded_post, post)
+    def decoded_unfound_has_expected_attrs(decoded_post, post)
       photo = decoded_post['photo']
       photo['id'].should == post.id
       photo['color'].should == 'FFFF00'
