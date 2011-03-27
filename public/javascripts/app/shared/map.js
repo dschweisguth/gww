@@ -63,7 +63,7 @@ GWW.map = (function () {
 
   var loadInfoWindow = function (photo, marker) {
     return function () {
-      new Ajax.Request('/photos/' + photo.id + '/map_post', {
+      new Ajax.Request('/photos/' + photo.id + '/map_popup', {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
         onSuccess: GWW.map.openInfoWindow(marker)

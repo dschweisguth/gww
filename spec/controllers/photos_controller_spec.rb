@@ -69,11 +69,11 @@ describe PhotosController do
 
   end
 
-  describe '#map_post' do
+  describe '#map_popup' do
     it "renders the partial" do
       photo = Photo.make :dateadded => Time.local(2011)
       stub(Photo).find { photo }
-      get :map_post, :id => photo.id
+      get :map_popup, :id => photo.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -92,7 +92,7 @@ describe PhotosController do
       guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :guessed_at => Time.local(2011, 2)
       photo.guesses << guess
       stub(Photo).find { photo }
-      get :map_post, :id => photo.id
+      get :map_popup, :id => photo.id
 
       response.should have_tag "a[href=#{person_path guess.person}]", :text => guess.person.username
       response.should have_text /, February  1, 2011./
@@ -105,7 +105,7 @@ describe PhotosController do
       revelation = Revelation.make :photo => photo, :revealed_at => Time.local(2011, 2)
       photo.revelation = revelation
       stub(Photo).find { photo }
-      get :map_post, :id => photo.id
+      get :map_popup, :id => photo.id
 
       response.should_not have_text /Guessed by/
       response.should have_text /Revealed February  1, 2011./

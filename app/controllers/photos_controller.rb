@@ -26,11 +26,11 @@ class PhotosController < ApplicationController
     @json = posts.to_json;
   end
 
-  caches_page :map_post
+  caches_page :map_popup
   #noinspection RailsParamDefResolve
-  def map_post
+  def map_popup
     @photo = Photo.find params[:id], :include => [ :person, { :guesses => :person }, :revelation ]
-    render :partial => 'photos/map/post'
+    render :partial => 'photos/map/popup'
   end
 
   caches_page :unfound

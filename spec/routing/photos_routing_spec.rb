@@ -21,9 +21,9 @@ describe PhotosController do
     it { should route(:get, '/photos/666').to :controller => 'photos', :action => 'show', :id => '666' }
   end
 
-  describe 'map_post' do
-    it { should have_named_route :map_post_photo, 666, '/photos/666/map_post' }
-    it { should route(:get, '/photos/666/map_post').to :controller => 'photos', :action => 'map_post', :id => '666' }
+  describe 'map_popup' do
+    it { should have_named_route :map_popup_photo, 666, '/photos/666/map_popup' }
+    it { should route(:get, '/photos/666/map_popup').to :controller => 'photos', :action => 'map_popup', :id => '666' }
   end
 
 end
