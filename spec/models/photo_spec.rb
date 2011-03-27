@@ -346,6 +346,11 @@ describe Photo do
       Photo.mapped_count(photo.person.id).should == 0
     end
 
+    it "ignores photos mapped with an accuracy < 12" do
+      photo = Photo.make :accuracy => 11
+      Photo.mapped_count(photo.person.id).should == 0
+    end
+
   end
 
   describe '.all_mapped' do
@@ -362,6 +367,11 @@ describe Photo do
 
     it "ignores unmapped photos" do
       photo = Photo.make
+      Photo.all_mapped(photo.person.id).should == []
+    end
+
+    it "ignores photos mapped with an accuracy < 12" do
+      photo = Photo.make :accuracy => 11
       Photo.all_mapped(photo.person.id).should == []
     end
 
