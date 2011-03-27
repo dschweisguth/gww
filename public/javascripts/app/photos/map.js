@@ -1,7 +1,5 @@
 GWW.photosMap = (function () {
   var map = null;
-  var guesses = [];
-  var posts = [];
   var infoWindow = null;
 
   var publicMethods = {
@@ -23,7 +21,6 @@ GWW.photosMap = (function () {
           icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=+|' + photo.pin_color + '|000000'
         });
         google.maps.event.addListener(marker, 'click', loadInfoWindow(marker, photo));
-        (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
     }
