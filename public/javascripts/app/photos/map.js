@@ -7,12 +7,7 @@ GWW.photosMap = (function () {
   var publicMethods = {
 
     registerOnLoad: function () {
-      Event.observe(window, 'load', function() {
-        var script = document.createElement('script');
-        script.type = "text/javascript";
-        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.photosMap.mapsAPIIsLoadedCallback';
-        document.body.appendChild(script);
-      });
+      GWW.map.registerOnLoad('GWW.photosMap.mapsAPIIsLoadedCallback');
     },
 
     mapsAPIIsLoadedCallback: function () {

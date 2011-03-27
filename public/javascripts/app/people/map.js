@@ -6,12 +6,7 @@ GWW.personMap = (function () {
   var publicMethods = {
 
     registerOnLoad: function () {
-      Event.observe(window, 'load', function() {
-        var script = document.createElement('script');
-        script.type = "text/javascript";
-        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.personMap.mapsAPIIsLoadedCallback';
-        document.body.appendChild(script);
-      });
+      GWW.map.registerOnLoad('GWW.personMap.mapsAPIIsLoadedCallback');
     },
 
     mapsAPIIsLoadedCallback: function () {

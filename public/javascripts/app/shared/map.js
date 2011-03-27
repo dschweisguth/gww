@@ -2,6 +2,15 @@ GWW = {};
 GWW.map = {
   map: null,
 
+  registerOnLoad: function (callbackName) {
+    Event.observe(window, 'load', function() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=' + callbackName;
+      document.body.appendChild(script);
+    });
+  },
+
   mapsAPIIsLoadedCallback: function () {
     this.map = new google.maps.Map($('map_canvas'), {
       zoom: 13,
