@@ -59,7 +59,8 @@ describe PhotosController do
       response.should have_tag "a[href=#{photo_path photo}]" do
         with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
       end
-      response.should have_text /Posted January  1, 2011\./
+      response.should have_tag "a[href=#{person_path guess.photo.person}]", :text => guess.photo.person.username
+      response.should have_text /, January  1, 2011\./
       response.should have_tag "a[href=#{person_path guess.person}]", :text => guess.person.username
       response.should have_text /, February  1, 2011./
 
@@ -75,7 +76,7 @@ describe PhotosController do
       response.should have_tag "a[href=#{photo_path photo}]" do
         with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
       end
-      response.should have_text /Posted January  1, 2011\./
+      response.should have_text /, January  1, 2011\./
       response.should_not have_text /Guessed by/
 
     end

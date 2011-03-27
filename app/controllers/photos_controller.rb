@@ -34,7 +34,7 @@ class PhotosController < ApplicationController
   caches_page :map_post
   def map_post
     #noinspection RailsParamDefResolve
-    @post = Photo.find params[:id], :include => { :guesses => :person }
+    @post = Photo.find params[:id], :include => [ :person, { :guesses => :person } ]
     render :partial => 'photos/map/post'
   end
 
