@@ -402,8 +402,8 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 2
-      decoded_unfound_has_expected_attrs json[0], post
-      decoded_guessed_photo_has_expected_attrs json[1], guessed_photo
+      decoded_photo_looks_unfound_or_unconfirmed json[0], post
+      decoded_photo_looks_guessed json[1], guessed_photo
 
     end
 
@@ -422,7 +422,7 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 1
-      decoded_guessed_photo_has_expected_attrs json[0], guessed_photo
+      decoded_photo_looks_guessed json[0], guessed_photo
 
     end
 
@@ -441,7 +441,19 @@ describe PeopleController do
 
       json = decode_json
       json.length.should == 1
-      decoded_unfound_has_expected_attrs json[0], post
+      decoded_photo_looks_unfound_or_unconfirmed json[0], post
+
+    end
+
+    it "displays an unconfirmed like an unfound" do
+      stub_mapped_counts 1, 1
+      post = Photo.make :id => 14, :person => @person, :game_status => 'unconfirmed'
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      get :map, :id => @person.id
+
+      json = decode_json
+      json.length.should == 1
+      decoded_photo_looks_unfound_or_unconfirmed json[0], post
 
     end
 
@@ -467,14 +479,14 @@ describe PeopleController do
       ActiveSupport::JSON.decode assigns[:json]
     end
 
-    def decoded_unfound_has_expected_attrs(decoded_post, post)
+    def decoded_photo_looks_unfound_or_unconfirmed(decoded_post, post)
       photo = decoded_post['photo']
       photo['id'].should == post.id
       photo['color'].should == 'FFFF00'
       photo['symbol'].should == '?'
     end
 
-    def decoded_guessed_photo_has_expected_attrs(decoded_guessed_photo, guessed_photo)
+    def decoded_photo_looks_guessed(decoded_guessed_photo, guessed_photo)
       photo = decoded_guessed_photo['photo']
       photo['id'].should == guessed_photo.id
       photo['color'].should == '008000'
