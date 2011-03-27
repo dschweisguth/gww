@@ -1,10 +1,6 @@
 GWW.photosMap = (function () {
   var publicMethods = {
 
-    registerOnLoad: function () {
-      GWW.map.registerOnLoad('GWW.photosMap.mapsAPIIsLoadedCallback');
-    },
-
     mapsAPIIsLoadedCallback: function () {
       GWW.map.mapsAPIIsLoadedCallback();
 
@@ -21,6 +17,6 @@ GWW.photosMap = (function () {
     return '/photos/' + photo.id + '/map_post';
   };
 
+  GWW.map.registerOnLoad('GWW.photosMap.mapsAPIIsLoadedCallback');
   return publicMethods;
 })();
-GWW.photosMap.registerOnLoad();

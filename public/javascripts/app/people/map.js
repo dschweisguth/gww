@@ -4,10 +4,6 @@ GWW.personMap = (function () {
 
   var publicMethods = {
 
-    registerOnLoad: function () {
-      GWW.map.registerOnLoad('GWW.personMap.mapsAPIIsLoadedCallback');
-    },
-
     mapsAPIIsLoadedCallback: function () {
       GWW.map.mapsAPIIsLoadedCallback();
 
@@ -47,6 +43,6 @@ GWW.personMap = (function () {
     }
   };
 
+  GWW.map.registerOnLoad('GWW.personMap.mapsAPIIsLoadedCallback');
   return publicMethods;
 })();
-GWW.personMap.registerOnLoad();
