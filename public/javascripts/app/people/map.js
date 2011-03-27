@@ -54,8 +54,8 @@ GWW.userMap = (function () {
         (photo.pin_type === 'guess' ? guesses : posts).push(marker);
       }
 
-      addToggleMarkersListener('guesses', guesses);
-      addToggleMarkersListener('posts', posts);
+      addToggleMarkersHandler('guesses', guesses);
+      addToggleMarkersHandler('posts', posts);
 
     }
 
@@ -81,7 +81,7 @@ GWW.userMap = (function () {
     }
   };
 
-  var addToggleMarkersListener = function (id, markers) {
+  var addToggleMarkersHandler = function (id, markers) {
     var checkbox = $(id);
     if (checkbox) {
       checkbox.observe('click', toggleMarkers(id, markers));
