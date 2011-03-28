@@ -207,8 +207,8 @@ describe Admin::PhotosController do
       get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
       #noinspection RubyResolve
-      response.should be_success
-      response.should have_text /Sorry/
+      response.should redirect_to admin_root_path
+      flash[:general_error].should =~ /Sorry/
 
     end
 
@@ -216,8 +216,8 @@ describe Admin::PhotosController do
       get :edit_in_gww, :from => 'http://www.notflickr.com/'
 
       #noinspection RubyResolve
-      response.should be_success
-      response.should have_text /Hmmm/
+      response.should redirect_to admin_root_path
+      flash[:general_error].should =~ /Hmmm/
 
     end
 

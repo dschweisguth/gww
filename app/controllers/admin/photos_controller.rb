@@ -102,8 +102,8 @@ class Admin::PhotosController < ApplicationController
   end
 
   def edit_in_gww
-    @from = params[:from]
-    if @from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
+    from = params[:from]
+    if from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
@@ -111,15 +111,17 @@ class Admin::PhotosController < ApplicationController
         redirect_to_edit_path photo, :load_comments => true
         return
       else
-        @message = "Sorry, Guess Where Watcher doesn't know anything about " +
+        message = "Sorry, Guess Where Watcher doesn't know anything about " +
 	  "that photo. Perhaps it hasn't been added to Guess Where SF, " +
           "or perhaps GWW hasn't updated since it was added."
       end
     else
-      @message = "Hmmm, that's strange. #{@from} isn't a Flickr photo page. " +
+      message = "Hmmm, that's strange. #{from} isn't a Flickr photo page. " +
         "How did we get here?"
     end
-    render :file => 'shared/in_gww'
+    message += " If you like, you can <a href=\"#{from}\">go back where you came from</a>.";
+    flash[:general_error] = message
+    redirect_to admin_root_path
   end
 
   def redirect_to_edit_path(id, options = {})

@@ -2,6 +2,10 @@
 <%= javascript_include_tag :defaults %>
 <h1>Guess Where Watcher</h1>
 
+<% if !flash[:general_error].nil? -%>
+  <p class="error"><%= flash[:general_error] %></p>
+<% end -%>
+
 <p>Welcome to Guess Where Watcher, the <a
 href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
 application! As well as allowing administrators to score guesses, GWW lets

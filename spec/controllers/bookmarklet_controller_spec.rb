@@ -21,9 +21,8 @@ describe BookmarkletController do
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :show, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_text /Sorry, Guess Where Watcher doesn't know anything about that photo/
+      response.should redirect_to root_path
+      flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that photo/
 
     end
 
@@ -56,9 +55,8 @@ describe BookmarkletController do
       stub(Person).find_by_flickrid('person_flickrid') { nil }
       get :show, :from => "http://www.flickr.com/people/person_flickrid/"
 
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_text /Sorry, Guess Where Watcher doesn't know anything about that person/
+      response.should redirect_to root_path
+      flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that person/
 
     end
 
@@ -76,9 +74,8 @@ describe BookmarkletController do
     it 'punts unknown URLs' do
       get :show, :from => 'http://www.notflickr.com/'
 
-      #noinspection RubyResolve
-      response.should be_success
-      response.should have_text /Hmmm/
+      response.should redirect_to root_path
+      flash[:general_error].should =~ /Hmmm/
 
     end
 
