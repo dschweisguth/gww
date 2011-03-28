@@ -466,7 +466,7 @@ describe PeopleController do
       json = decode_json
       json.length.should == 1
       photo = json[0]['photo']
-      photo['color'].should == '0000FF'
+      photo['color'].should == '0000FC'
       photo['symbol'].should == '?'
 
     end
