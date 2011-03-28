@@ -38,16 +38,16 @@ describe Color do
   end
 
   describe '#scaled_blue' do
-    it "starts at E0E0FF (more or less DFDFFF)" do
-      scaled_blue(0, 1, 0).should == 'E0E0FF'
+    it "starts at E0E0FC (more or less DFDFFF)" do
+      scaled_blue(0, 1, 0).should == 'E0E0FC'
     end
 
-    it "ends at 0000FF" do
-      scaled_blue(0, 1, 1).should == '0000FF'
+    it "ends at 0000FC" do
+      scaled_blue(0, 1, 1).should == '0000FC'
     end
 
     it "handles a single point" do
-      scaled_blue(0, 0, 0).should == '0000FF'
+      scaled_blue(0, 0, 0).should == '0000FC'
     end
 
   end
