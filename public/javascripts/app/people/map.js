@@ -1,16 +1,17 @@
 GWW.personMap = (function () {
+  var map = GWW.map();
   var guesses = [];
   var posts = [];
 
-  var publicMethods = {
+  var that = {
 
     mapsAPIIsLoadedCallback: function () {
-      GWW.map.mapsAPIIsLoadedCallback();
+      map.mapsAPIIsLoadedCallback();
 
       var photos = GWW.config;
       for (var i = 0; i < photos.length; i++) {
         var photo = photos[i].photo;
-        var marker = GWW.map.createMarker(photo);
+        var marker = map.createMarker(photo);
         (photo.symbol === '!' ? guesses : posts).push(marker);
       }
 
@@ -30,13 +31,13 @@ GWW.personMap = (function () {
 
   var toggle = function (markers) {
     return function (event) {
-      var markerParent = this.checked ? GWW.map.map : null;
+      var markerParent = this.checked ? map.map : null;
       for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(markerParent);
       }
     }
   };
 
-  GWW.map.registerOnLoad('GWW.personMap.mapsAPIIsLoadedCallback');
-  return publicMethods;
+  map.registerOnLoad('GWW.personMap.mapsAPIIsLoadedCallback');
+  return that;
 })();

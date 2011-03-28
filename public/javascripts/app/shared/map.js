@@ -1,9 +1,9 @@
 GWW = {};
-GWW.map = (function () {
-  var map = null;
+GWW.map = function () {
   var infoWindow = null;
   
-  var publicMethods = {
+  var that = {
+    map: null,
 
     registerOnLoad: function (callbackName) {
       Event.observe(window, 'load', function() {
@@ -15,7 +15,7 @@ GWW.map = (function () {
     },
 
     mapsAPIIsLoadedCallback: function () {
-      this.map = new google.maps.Map($('map_canvas'), {
+      that.map = new google.maps.Map($('map_canvas'), {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.442112),
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -36,27 +36,20 @@ GWW.map = (function () {
         strokeColor: '#FF6600',
         strokeOpacity: 1.0,
         strokeWeight: 2
-      }).setMap(this.map);
+      }).setMap(that.map);
 
-      this.infoWindow = new google.maps.InfoWindow();
+      infoWindow = new google.maps.InfoWindow();
 
     },
 
     createMarker: function (photo) {
       var marker = new google.maps.Marker({
-        map: this.map,
+        map: that.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
         icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000'
       });
       google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
       return marker;
-    },
-
-    openInfoWindow: function (marker) {
-      return function (transport) {
-        GWW.map.infoWindow.setContent(transport.responseText);
-        GWW.map.infoWindow.open(GWW.map.map, marker);
-      }
     }
 
   };
@@ -66,10 +59,17 @@ GWW.map = (function () {
       new Ajax.Request('/photos/' + photo.id + '/map_popup', {
         method: 'get',
         requestHeaders: { Accept: 'application/json' },
-        onSuccess: GWW.map.openInfoWindow(marker)
+        onSuccess: openInfoWindow(marker)
       });
     };
   };
 
-  return publicMethods;
-})();
+  var openInfoWindow = function (marker) {
+    return function (transport) {
+      infoWindow.setContent(transport.responseText);
+      infoWindow.open(that.map, marker);
+    }
+  };
+
+  return that;
+};
