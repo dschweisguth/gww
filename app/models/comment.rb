@@ -133,7 +133,7 @@ class Comment < ActiveRecord::Base
             g.person_id = p.id and p.flickrid = ? and
             g.comment_text = ?
         ],
-        comment.photo_id, comment.flickrid, comment.comment_text[0, 255]
+        comment.photo_id, comment.flickrid, comment.comment_text
       ]
       if guesses.length != 1
         raise RemoveGuessError,
@@ -157,8 +157,8 @@ class Comment < ActiveRecord::Base
 
   def is_accepted_answer
     is_by_poster \
-      ? (photo.revelation ? (photo.revelation.comment_text == comment_text[0, 255]) : false) \
-      : (! photo.guesses.detect { |g| g.person.flickrid == flickrid && g.comment_text == comment_text[0, 255] }.nil?)
+      ? (photo.revelation ? (photo.revelation.comment_text == comment_text) : false) \
+      : (! photo.guesses.detect { |g| g.person.flickrid == flickrid && g.comment_text == comment_text }.nil?)
   end
 
 end
