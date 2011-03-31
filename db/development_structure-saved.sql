@@ -8,7 +8,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=380253 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=380866 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `flickr_updates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -16,21 +16,21 @@ CREATE TABLE `flickr_updates` (
   `member_count` int(11) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1257 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1266 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `guesses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
   `person_id` int(11) NOT NULL,
-  `guess_text` text NOT NULL,
-  `guessed_at` datetime NOT NULL,
+  `comment_text` text NOT NULL,
+  `commented_at` datetime NOT NULL,
   `added_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `guesses_photo_id_fk` (`photo_id`),
   KEY `guesses_person_id_fk` (`person_id`),
   CONSTRAINT `guesses_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
   CONSTRAINT `guesses_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26571 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26618 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,7 +39,7 @@ CREATE TABLE `people` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=1200 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1203 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -63,18 +63,18 @@ CREATE TABLE `photos` (
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30116 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30286 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
-  `revelation_text` varchar(255) NOT NULL,
-  `revealed_at` datetime NOT NULL,
+  `comment_text` text NOT NULL,
+  `commented_at` datetime NOT NULL,
   `added_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=465 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=461 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE `score_reports` (
   PRIMARY KEY (`id`),
   KEY `previous_report_id_fk` (`previous_report_id`),
   CONSTRAINT `previous_report_id_fk` FOREIGN KEY (`previous_report_id`) REFERENCES `score_reports` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=566 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO schema_migrations (version) VALUES ('12');
 
@@ -125,6 +125,10 @@ INSERT INTO schema_migrations (version) VALUES ('20110305155922');
 INSERT INTO schema_migrations (version) VALUES ('20110307195223');
 
 INSERT INTO schema_migrations (version) VALUES ('20110322133223');
+
+INSERT INTO schema_migrations (version) VALUES ('20110331171121');
+
+INSERT INTO schema_migrations (version) VALUES ('20110331175257');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
