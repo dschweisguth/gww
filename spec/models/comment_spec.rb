@@ -87,8 +87,8 @@ describe Comment do
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
-        revelation.revelation_text.should == comment.comment_text
-        revelation.revealed_at.should == comment.commented_at
+        revelation.comment_text.should == comment.comment_text
+        revelation.commented_at.should == comment.commented_at
         revelation.added_at.should == @now
       end
 
@@ -143,8 +143,8 @@ describe Comment do
         guess = guesses[0]
         guess.person.flickrid.should == scorer_comment.flickrid
         guess.person.username.should == scorer_comment.username
-        guess.guess_text.should == answer_comment.comment_text
-        guess.guessed_at.should == answer_comment.commented_at
+        guess.comment_text.should == answer_comment.comment_text
+        guess.commented_at.should == answer_comment.commented_at
         guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
       end
@@ -179,8 +179,8 @@ describe Comment do
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == person
-        guess.guess_text.should == comment.comment_text
-        guess.guessed_at.should == comment.commented_at
+        guess.comment_text.should == comment.comment_text
+        guess.commented_at.should == comment.commented_at
         guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
       end
@@ -242,8 +242,8 @@ describe Comment do
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
-        revelation.revelation_text.should == answer_text
-        revelation.revealed_at.should == @now
+        revelation.comment_text.should == answer_text
+        revelation.commented_at.should == @now
         revelation.added_at.should == @now
       end
 
@@ -293,8 +293,8 @@ describe Comment do
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == person
-        guess.guess_text.should == answer_text
-        guess.guessed_at.should == @now
+        guess.comment_text.should == answer_text
+        guess.commented_at.should == @now
         guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
       end
@@ -323,7 +323,7 @@ describe Comment do
       photo = revelation.photo
       comment = Comment.make :photo => photo,
         :flickrid => photo.person.flickrid, :username => photo.person.username,
-        :comment_text => revelation.revelation_text
+        :comment_text => revelation.comment_text
       Comment.remove_revelation comment.id
       photo.reload
       photo.game_status.should == 'unfound'
@@ -331,13 +331,13 @@ describe Comment do
     end
 
     it "doesn't delete the revealer's revelation of another photo with the same comment" do
-      revelation1 = Revelation.make :revelation_text => 'identical'
+      revelation1 = Revelation.make :comment_text => 'identical'
       photo1 = revelation1.photo
       photo2 = Photo.make :person => photo1.person
-      revelation2 = Revelation.make :photo => photo2, :revelation_text => 'identical'
+      revelation2 = Revelation.make :photo => photo2, :comment_text => 'identical'
       comment = Comment.make :photo => photo1,
         :flickrid => photo1.person.flickrid, :username => photo1.person.username,
-        :comment_text => revelation1.revelation_text
+        :comment_text => revelation1.comment_text
       Comment.remove_revelation comment.id
       Revelation.all.should == [ revelation2 ]
     end
@@ -350,7 +350,7 @@ describe Comment do
       photo = guess.photo
       comment = Comment.make :photo => photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :comment_text => guess.guess_text
+        :comment_text => guess.comment_text
       Comment.remove_guess comment.id
       photo.reload
       photo.game_status.should == 'unfound'
@@ -363,11 +363,11 @@ describe Comment do
       guess1 = Guess.make 1, :photo => photo
       comment1 = Comment.make 1, :photo => photo,
         :flickrid => guess1.person.flickrid, :username => guess1.person.username,
-        :comment_text => guess1.guess_text
+        :comment_text => guess1.comment_text
       guess2 = Guess.make 2, :photo => photo
       Comment.make 2, :photo => photo,
         :flickrid => guess2.person.flickrid, :username => guess2.person.username,
-        :comment_text => guess2.guess_text
+        :comment_text => guess2.comment_text
       Comment.remove_guess comment1.id
       photo.reload
       photo.game_status.should == 'found'
@@ -375,11 +375,11 @@ describe Comment do
     end
 
     it "doesn't delete the guesser's guess of another photo with the same comment" do
-      guess1 = Guess.make 1, :guess_text => 'identical'
-      guess2 = Guess.make 2, :person => guess1.person, :guess_text => guess1.guess_text
+      guess1 = Guess.make 1, :comment_text => 'identical'
+      guess2 = Guess.make 2, :person => guess1.person, :comment_text => guess1.comment_text
       comment = Comment.make :photo => guess1.photo,
         :flickrid => guess1.person.flickrid, :username => guess1.person.username,
-        :comment_text => guess1.guess_text
+        :comment_text => guess1.comment_text
       Comment.remove_guess comment.id
       Guess.all.should == [ guess2 ]
     end
@@ -387,11 +387,11 @@ describe Comment do
     it "blows up if two guesses have the same photo, guesser and guess text" do
       photo = Photo.make :game_status => 'found'
       guesser = Person.make 'guesser'
-      guess = Guess.make 1, :photo => photo, :person => guesser, :guess_text => 'identical'
-      Guess.make 2, :photo => photo, :person => guesser, :guess_text => 'identical'
+      guess = Guess.make 1, :photo => photo, :person => guesser, :comment_text => 'identical'
+      Guess.make 2, :photo => photo, :person => guesser, :comment_text => 'identical'
       comment = Comment.make :photo => photo,
         :flickrid => guesser.flickrid, :username => guesser.username,
-        :comment_text => guess.guess_text
+        :comment_text => guess.comment_text
       lambda { Comment.remove_guess comment.id }.should raise_error Comment::RemoveGuessError
     end
 
@@ -418,7 +418,7 @@ describe Comment do
     it "returns true if a revelation was created from this comment" do
       photo = Photo.make
       comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
-      Revelation.make :photo => photo, :revelation_text => comment.comment_text
+      Revelation.make :photo => photo, :comment_text => comment.comment_text
       comment.is_accepted_answer.should == true
     end
 
@@ -426,21 +426,21 @@ describe Comment do
       photo = Photo.make
       comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
       other_photo = Photo.make 'other', :person => photo.person
-      Revelation.make :photo => other_photo, :revelation_text => comment.comment_text
+      Revelation.make :photo => other_photo, :comment_text => comment.comment_text
       comment.is_accepted_answer.should == false
     end
 
     it "returns false if the text doesn't match" do
       photo = Photo.make
       comment = Comment.make :photo => photo, :flickrid => photo.person.flickrid
-      Revelation.make :photo => photo, :revelation_text => "something else"
+      Revelation.make :photo => photo, :comment_text => "something else"
       comment.is_accepted_answer.should == false
     end
 
     it "returns true if a guess was created from this comment" do
       person = Person.make
       comment = Comment.make :flickrid => person.flickrid
-      Guess.make :photo => comment.photo, :person => person, :guess_text => comment.comment_text
+      Guess.make :photo => comment.photo, :person => person, :comment_text => comment.comment_text
       comment.is_accepted_answer.should == true
     end
 
@@ -448,21 +448,21 @@ describe Comment do
       person = Person.make
       comment = Comment.make :flickrid => person.flickrid
       other_photo = Photo.make 'other', :person => person
-      Guess.make :photo => other_photo, :person => person, :guess_text => comment.comment_text
+      Guess.make :photo => other_photo, :person => person, :comment_text => comment.comment_text
       comment.is_accepted_answer.should == false
     end
 
     it "returns false if the text doesn't match" do
       person = Person.make
       comment = Comment.make :flickrid => person.flickrid
-      Guess.make :photo => comment.photo, :person => person, :guess_text => "something else"
+      Guess.make :photo => comment.photo, :person => person, :comment_text => "something else"
       comment.is_accepted_answer.should == false
     end
 
     it "returns false if the guess is by another person" do
       person = Person.make
       comment = Comment.make :flickrid => person.flickrid
-      Guess.make :photo => comment.photo, :guess_text => comment.comment_text
+      Guess.make :photo => comment.photo, :comment_text => comment.comment_text
       comment.is_accepted_answer.should == false
     end
 

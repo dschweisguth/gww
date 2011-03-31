@@ -58,15 +58,15 @@ class Comment < ActiveRecord::Base
 
         revelation = photo.revelation
         if revelation
-          revelation.revelation_text = answer_text
-          revelation.revealed_at = answered_at
+          revelation.comment_text = answer_text
+          revelation.commented_at = answered_at
           revelation.added_at = Time.now.getutc
           revelation.save!
         else
           Revelation.create! \
             :photo => photo,
-            :revelation_text => answer_text,
-            :revealed_at => answered_at,
+            :comment_text => answer_text,
+            :commented_at => answered_at,
             :added_at => Time.now.getutc
         end
 
@@ -88,16 +88,16 @@ class Comment < ActiveRecord::Base
           guess = nil
         end
         if guess
-          guess.guessed_at = answered_at
-          guess.guess_text = answer_text
+          guess.commented_at = answered_at
+          guess.comment_text = answer_text
           guess.added_at = Time.now.getutc
           guess.save!
         else
           Guess.create! \
             :photo => photo,
             :person => guesser,
-            :guess_text => answer_text,
-            :guessed_at => answered_at,
+            :comment_text => answer_text,
+            :commented_at => answered_at,
             :added_at => Time.now.getutc
         end
 
@@ -131,7 +131,7 @@ class Comment < ActiveRecord::Base
           where
             g.photo_id = ? and
             g.person_id = p.id and p.flickrid = ? and
-            g.guess_text = ?
+            g.comment_text = ?
         ],
         comment.photo_id, comment.flickrid, comment.comment_text[0, 255]
       ]
@@ -157,8 +157,8 @@ class Comment < ActiveRecord::Base
 
   def is_accepted_answer
     is_by_poster \
-      ? (photo.revelation ? (photo.revelation.revelation_text == comment_text[0, 255]) : false) \
-      : (! photo.guesses.detect { |g| g.person.flickrid == flickrid && g.guess_text == comment_text[0, 255] }.nil?)
+      ? (photo.revelation ? (photo.revelation.comment_text == comment_text[0, 255]) : false) \
+      : (! photo.guesses.detect { |g| g.person.flickrid == flickrid && g.comment_text == comment_text[0, 255] }.nil?)
   end
 
 end

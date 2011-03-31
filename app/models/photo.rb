@@ -355,7 +355,7 @@ class Photo < ActiveRecord::Base
                 poster.flickrid != c.flickrid and
                 c.flickrid = commenter.flickrid and
                 p.id = g.photo_id and
-                c.commented_at <= g.guessed_at
+                c.commented_at <= g.commented_at
               group by c.photo_id),
             0),
         member_questions =
@@ -368,7 +368,7 @@ class Photo < ActiveRecord::Base
                 poster.flickrid != c.flickrid and
                 c.flickrid = commenter.flickrid and
                 p.id = g.photo_id and
-                c.commented_at <= g.guessed_at and
+                c.commented_at <= g.commented_at and
                 c.comment_text like '%?%'
               group by c.photo_id),
             0)

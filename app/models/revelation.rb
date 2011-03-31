@@ -2,12 +2,12 @@ class Revelation < ActiveRecord::Base
   include Answer
 
   belongs_to :photo, :inverse_of => :revelation
-  validates_presence_of :revelation_text, :revealed_at, :added_at
+  validates_presence_of :comment_text, :commented_at, :added_at
 
   #noinspection RailsParamDefResolve
   def self.longest
     all :include => { :photo => :person },
-      :order => 'unix_timestamp(revelations.revealed_at) - ' +
+      :order => 'unix_timestamp(revelations.commented_at) - ' +
         'unix_timestamp(photos.dateadded) desc',
       :limit => 10
   end
@@ -19,11 +19,11 @@ class Revelation < ActiveRecord::Base
   end
 
   def time_elapsed
-    time_elapsed_between photo.dateadded, revealed_at
+    time_elapsed_between photo.dateadded, commented_at
   end
 
   def ymd_elapsed
-    ymd_elapsed_between photo.dateadded, revealed_at
+    ymd_elapsed_between photo.dateadded, commented_at
   end
 
 end

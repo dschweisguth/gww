@@ -35,7 +35,7 @@ class Person < ActiveRecord::Base
     utc_now = now.getutc
     people = find_by_sql [ %q{
       select p.*, count(*) score from people p, guesses g
-      where p.id = g.person_id and ? < g.guessed_at and g.added_at <= ?
+      where p.id = g.person_id and ? < g.commented_at and g.added_at <= ?
       group by p.id having score > 1 order by score desc
     }, utc_now - for_the_past_n_days.days, utc_now]
     high_scorers = []
@@ -243,7 +243,7 @@ class Person < ActiveRecord::Base
 
   def self.guesses_per_day
     statistic_by_person [ %q{
-      select person_id id, count(*) / datediff(?, min(guessed_at)) statistic
+      select person_id id, count(*) / datediff(?, min(commented_at)) statistic
       from guesses group by person_id
     }, Time.now.getutc ]
   end
@@ -257,18 +257,18 @@ class Person < ActiveRecord::Base
 
   def self.guess_speeds
     statistic_by_person %q{
-      select g.person_id id, avg(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) statistic
+      select g.person_id id, avg(unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)) statistic
       from guesses g, photos p
-      where g.photo_id = p.id and unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded)
+      where g.photo_id = p.id and unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)
       group by g.person_id
     }
   end
 
   def self.be_guessed_speeds
     statistic_by_person %q{
-      select p.person_id id, avg(unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)) statistic
+      select p.person_id id, avg(unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)) statistic
       from guesses g, photos p
-      where g.photo_id = p.id and unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded)
+      where g.photo_id = p.id and unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)
       group by p.person_id
     }
   end
@@ -282,7 +282,7 @@ class Person < ActiveRecord::Base
         where g.photo_id = c.photo_id and
           g.person_id = p.id and
           p.flickrid = c.flickrid and
-          g.guessed_at >= c.commented_at group by g.id
+          g.commented_at >= c.commented_at group by g.id
       ) comment_counts
       group by id
     }
@@ -313,7 +313,7 @@ class Person < ActiveRecord::Base
           ph.id = g.photo_id and
           ph.id = c.photo_id and
           p.flickrid != c.flickrid and
-          g.guessed_at >= c.commented_at
+          g.commented_at >= c.commented_at
         group by g.id
       ) comment_counts
       group by id
@@ -376,7 +376,7 @@ class Person < ActiveRecord::Base
     months = [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
       (1 .. 12).map { |i| Period.starting_at(report_day.beginning_of_month - i.month, 1.month) }
 
-    years_of_guessing = report_day.getutc.year - Guess.first.guessed_at.year
+    years_of_guessing = report_day.getutc.year - Guess.first.commented_at.year
     years = [ Period.new(report_day.beginning_of_year, report_day + 1.day) ] +
       (1 .. years_of_guessing).map { |i| Period.starting_at(report_day.beginning_of_year - i.years, 1.year) }
 
@@ -389,7 +389,7 @@ class Person < ActiveRecord::Base
 
     guessers = Person.find_by_sql [
       "select p.*, count(*) score from people p, guesses g " +
-        "where p.id = g.person_id and ? <= g.guessed_at and g.guessed_at < ? group by p.id", 
+        "where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ? group by p.id",
       begin_date.getutc, end_date.getutc ]
     guessers.each do |guesser|
       score = guesser[:score]
@@ -494,7 +494,7 @@ class Person < ActiveRecord::Base
   def self.most_points_in(year)
     find_by_sql [ %q{
       select p.*, count(*) points from people p, guesses g
-        where p.id = g.person_id and ? <= g.guessed_at and g.guessed_at < ?
+        where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ?
 	group by p.id order by points desc limit 10
     }, Time.local(year).getutc, Time.local(year + 1).getutc ]
   end
@@ -514,11 +514,11 @@ class Person < ActiveRecord::Base
 	from people p,
 	  (select person_id, min(a.acted) joined
 	    from
-	      (select person_id, guessed_at acted from guesses union all
+	      (select person_id, commented_at acted from guesses union all
 	        select person_id, dateadded acted from photos) a
 	    group by person_id having ? <= joined and joined < ?) r,
 	  guesses g
-        where p.id = r.person_id and p.id = g.person_id and g.guessed_at < ?
+        where p.id = r.person_id and p.id = g.person_id and g.commented_at < ?
 	group by p.id order by points desc limit 10
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
@@ -532,7 +532,7 @@ class Person < ActiveRecord::Base
 	from people p,
 	  (select person_id, min(a.acted) joined
 	    from
-	      (select person_id, guessed_at acted from guesses union all
+	      (select person_id, commented_at acted from guesses union all
 	        select person_id, dateadded acted from photos) a
 	    group by person_id having ? <= joined and joined < ?) r,
 	  photos f

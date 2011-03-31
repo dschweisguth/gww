@@ -21,15 +21,15 @@ Added to the group at <%= @photo.dateadded.getlocal.strftime '%I:%M %p, %B %d, %
     <% @photo.guesses.each do |guess| -%>
       <tr>
         <td><%= link_to_person guess.person %></td>
-        <td class="when"><%= ago guess.guessed_at %></td>
-        <td><%= guess.guess_text %></td>
+        <td class="when"><%= ago guess.commented_at %></td>
+        <td><%= guess.comment_text %></td>
       </tr>
     <% end -%>
   <% else -%>
     <tr>
       <td><%= link_to_person @photo.person %></td>
-      <td class="when"><%= ago @photo.revelation.revealed_at %></td>
-      <td><%=h @photo.revelation.revelation_text %></td>
+      <td class="when"><%= ago @photo.revelation.commented_at %></td>
+      <td><%=h @photo.revelation.comment_text %></td>
     </tr>
   <% end -%>
 </table>

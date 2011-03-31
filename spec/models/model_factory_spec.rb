@@ -393,8 +393,8 @@ describe Guess do
     guess.photo.flickrid.should == 'guessed_photo_photo_flickrid'
     guess.photo.game_status.should == 'found'
     guess.person.flickrid.should == 'guesser_person_flickrid'
-    guess.guess_text.should == 'guess text'
-    guess.guessed_at.should_not be_nil
+    guess.comment_text.should == 'guess text'
+    guess.commented_at.should_not be_nil
     guess.added_at.should_not be_nil
   end
 
@@ -402,8 +402,8 @@ describe Guess do
     makes_with_custom_attributes Guess, {
       :photo => Photo.make('other_guessed_photo'),
       :person => Person.make('other_guesser'),
-      :guess_text => 'other guess text',
-      :guessed_at => Time.utc(2011),
+      :comment_text => 'other guess text',
+      :commented_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
   end
@@ -412,7 +412,7 @@ describe Guess do
     guess = Guess.make 'label'
     guess.photo.flickrid.should == 'label_guessed_photo_photo_flickrid'
     guess.person.flickrid.should == 'label_guesser_person_flickrid'
-    guess.guess_text.should == 'label_guess text'
+    guess.comment_text.should == 'label_guess text'
   end
 
 end
@@ -456,16 +456,16 @@ describe Revelation do
     revelation = Revelation.make
     revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
     revelation.photo.game_status.should == 'revealed'
-    revelation.revelation_text.should == 'revelation text'
-    revelation.revealed_at.should_not be_nil
+    revelation.comment_text.should == 'revelation text'
+    revelation.commented_at.should_not be_nil
     revelation.added_at.should_not be_nil
   end
 
   def makes_revelation_with_custom_attributes
     makes_with_custom_attributes Revelation, {
       :photo => Photo.make('other_revealed_photo'),
-      :revelation_text => 'other revelation text',
-      :revealed_at => Time.utc(2011),
+      :comment_text => 'other revelation text',
+      :commented_at => Time.utc(2011),
       :added_at => Time.utc(2012)
     }
   end
@@ -473,7 +473,7 @@ describe Revelation do
   def makes_labeled_revelation
     revelation = Revelation.make 'label'
     revelation.photo.flickrid.should == 'label_revealed_photo_photo_flickrid'
-    revelation.revelation_text.should == 'label_revelation text'
+    revelation.comment_text.should == 'label_revelation text'
   end
 
 end

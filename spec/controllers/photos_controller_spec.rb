@@ -89,7 +89,7 @@ describe PhotosController do
 
     it "displays guesses" do
       photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
-      guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :guessed_at => Time.local(2011, 2)
+      guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :commented_at => Time.local(2011, 2)
       photo.guesses << guess
       stub(Photo).find { photo }
       get :map_popup, :id => photo.id
@@ -102,7 +102,7 @@ describe PhotosController do
 
     it "displays a revelation" do
       photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
-      revelation = Revelation.make :photo => photo, :revealed_at => Time.local(2011, 2)
+      revelation = Revelation.make :photo => photo, :commented_at => Time.local(2011, 2)
       photo.revelation = revelation
       stub(Photo).find { photo }
       get :map_popup, :id => photo.id

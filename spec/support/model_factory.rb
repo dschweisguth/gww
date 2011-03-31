@@ -144,8 +144,8 @@ class Guess
   def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :guess_text => affix(label, 'guess text'),
-      :guessed_at => now,
+      :comment_text => affix(label, 'guess text'),
+      :commented_at => now,
       :added_at => now
     }
     if ! caller_attrs[:photo]
@@ -167,8 +167,8 @@ class Revelation
   def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :revelation_text => affix(label, 'revelation text'),
-      :revealed_at => now,
+      :comment_text => affix(label, 'revelation text'),
+      :commented_at => now,
       :added_at => now
     }
     if ! caller_attrs[:photo]

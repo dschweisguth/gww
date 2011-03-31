@@ -6,19 +6,19 @@ describe Revelation do
     it { should belong_to :photo }
   end
 
-  describe '#revelation_text' do
-    it { should validate_presence_of :revelation_text }
+  describe '#comment_text' do
+    it { should validate_presence_of :comment_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
-      Revelation.make :revelation_text => non_ascii_text
-      Revelation.all[0].revelation_text.should == non_ascii_text
+      Revelation.make :comment_text => non_ascii_text
+      Revelation.all[0].comment_text.should == non_ascii_text
     end
 
   end
 
-  describe '#revealed_at' do
-    it { should validate_presence_of :revealed_at }
+  describe '#commented_at' do
+    it { should validate_presence_of :commented_at }
   end
 
   describe '#added_at' do
@@ -33,9 +33,9 @@ describe Revelation do
 
     it 'sorts revelations by the time from post to revelation' do
       photo1 = Photo.make 1, :dateadded => Time.utc(2000)
-      revelation1 = Revelation.make :photo => photo1, :revealed_at => Time.utc(2001)
+      revelation1 = Revelation.make :photo => photo1, :commented_at => Time.utc(2001)
       photo2 = Photo.make 2, :dateadded => Time.utc(2002)
-      revelation2 = Revelation.make :photo => photo2, :revealed_at => Time.utc(2004)
+      revelation2 = Revelation.make :photo => photo2, :commented_at => Time.utc(2004)
       Revelation.longest.should == [ revelation2, revelation1 ]
     end
 
@@ -62,7 +62,7 @@ describe Revelation do
   describe '#time_elapsed' do
     it 'returns the duration in seconds from post to revelation in English' do
       photo = Photo.new :dateadded => Time.utc(2000)
-      revelation = Revelation.new :photo => photo, :revealed_at => Time.utc(2001, 2, 2, 1, 1, 1)
+      revelation = Revelation.new :photo => photo, :commented_at => Time.utc(2001, 2, 2, 1, 1, 1)
       revelation.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second';
     end
   end
@@ -70,7 +70,7 @@ describe Revelation do
   describe '#ymd_elapsed' do
     it 'returns the duration in days from post to revelation in English' do
       photo = Photo.new :dateadded => Time.utc(2000)
-      revelation = Revelation.new :photo => photo, :revealed_at => Time.utc(2001, 2, 2, 1, 1, 1)
+      revelation = Revelation.new :photo => photo, :commented_at => Time.utc(2001, 2, 2, 1, 1, 1)
       revelation.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
     end
   end

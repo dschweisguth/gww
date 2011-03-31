@@ -89,12 +89,12 @@ describe WheresiesController do
 
     longest_in_year_photo = Photo.make :dateadded => Time.local(year).getutc
     longest_in_year = Guess.make :photo => longest_in_year_photo,
-      :guessed_at => Time.local(year).getutc + 1.year
+      :commented_at => Time.local(year).getutc + 1.year
     stub(Guess).longest_in(year) { [ longest_in_year ] }
 
     shortest_in_year_photo = Photo.make :dateadded => Time.local(year).getutc
     shortest_in_year = Guess.make :photo => shortest_in_year_photo,
-      :guessed_at => Time.local(year).getutc + 1.second
+      :commented_at => Time.local(year).getutc + 1.second
     stub(Guess).shortest_in(year) { [ shortest_in_year ] }
 
   end

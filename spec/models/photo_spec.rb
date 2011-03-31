@@ -731,7 +731,7 @@ describe Photo do
       guess = Guess.make
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at
+        :commented_at => guess.commented_at
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_comments.should == 1
@@ -758,10 +758,10 @@ describe Photo do
       guess = Guess.make
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at - 5
+        :commented_at => guess.commented_at - 5
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at
+        :commented_at => guess.commented_at
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_comments.should == 2
@@ -771,10 +771,10 @@ describe Photo do
       guess = Guess.make
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at
+        :commented_at => guess.commented_at
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at + 5
+        :commented_at => guess.commented_at + 5
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_comments.should == 1
@@ -784,7 +784,7 @@ describe Photo do
       guess = Guess.make
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at, :comment_text => '?'
+        :commented_at => guess.commented_at, :comment_text => '?'
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_questions.should == 1
@@ -812,10 +812,10 @@ describe Photo do
       guess = Guess.make
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at - 5, :comment_text => '?'
+        :commented_at => guess.commented_at - 5, :comment_text => '?'
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at, :comment_text => '?'
+        :commented_at => guess.commented_at, :comment_text => '?'
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_questions.should == 2
@@ -825,10 +825,10 @@ describe Photo do
       guess = Guess.make
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at, :comment_text => '?'
+        :commented_at => guess.commented_at, :comment_text => '?'
       Comment.make :photo => guess.photo,
         :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.guessed_at + 5, :comment_text => '?'
+        :commented_at => guess.commented_at + 5, :comment_text => '?'
       Photo.update_statistics
       guess.photo.reload
       guess.photo.member_questions.should == 1

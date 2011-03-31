@@ -83,7 +83,7 @@ describe PeopleController do
           [ Period.new report_day.beginning_of_year, report_day + 1.day ]
       ]
       person = Person.make :id => 666
-      guess = Guess.make :person => person, :guessed_at => report_day
+      guess = Guess.make :person => person, :commented_at => report_day
       (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ person ] }
       stub(Person).top_guessers { top_guessers }
       get :top_guessers

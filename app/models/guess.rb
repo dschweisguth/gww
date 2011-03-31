@@ -4,7 +4,7 @@ class Guess < ActiveRecord::Base
   belongs_to :photo, :inverse_of => :guesses
   belongs_to :person, :inverse_of => :guesses
   #noinspection RailsParamDefResolve
-  validates_presence_of :guess_text, :guessed_at, :added_at
+  validates_presence_of :comment_text, :commented_at, :added_at
 
   def self.destroy_all_by_photo_id(photo_id)
     find_all_by_photo_id(photo_id).each do |guess|
@@ -15,18 +15,18 @@ class Guess < ActiveRecord::Base
   # GWW saves all times as UTC, but the database time zone is Pacific time.
   # unix_timestamp therefore returns the same value for all datetimes in the
   # spring daylight savings jump. This creates spurious zero-second guesses. It
-  # also means that unix_timestamp(guesses.guessed_at) -
-  # unix_timestamp(photos.dateadded) sometimes != guesses.guessed_at -
+  # also means that unix_timestamp(guesses.commented_at) -
+  # unix_timestamp(photos.dateadded) sometimes != guesses.commented_at -
   # photos.dateadded. The current solution is to use unix_timestamp everywhere
   # for consistency. Possibly setting the database timezone to UTC would be a
   # better solution.
 
   GUESS_AGE =
-    'unix_timestamp(guesses.guessed_at) - unix_timestamp(photos.dateadded)'
-  G_AGE = 'unix_timestamp(g.guessed_at) - unix_timestamp(p.dateadded)'
+    'unix_timestamp(guesses.commented_at) - unix_timestamp(photos.dateadded)'
+  G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'
   GUESS_AGE_IS_VALID =
-    'unix_timestamp(guesses.guessed_at) > unix_timestamp(photos.dateadded)'
-  G_AGE_IS_VALID = 'unix_timestamp(g.guessed_at) > unix_timestamp(p.dateadded)'
+    'unix_timestamp(guesses.commented_at) > unix_timestamp(photos.dateadded)'
+  G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
   #noinspection RailsParamDefResolve
   def self.longest
@@ -42,12 +42,12 @@ class Guess < ActiveRecord::Base
   end
 
   def self.first_by(guesser)
-    first :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
+    first :conditions => [ 'person_id = ?', guesser ], :order => 'commented_at',
       :include => :photo
   end
 
   def self.most_recent_by(guesser)
-    last :conditions => [ 'person_id = ?', guesser ], :order => 'guessed_at',
+    last :conditions => [ 'person_id = ?', guesser ], :order => 'commented_at',
       :include => :photo
   end
 
@@ -98,7 +98,7 @@ class Guess < ActiveRecord::Base
   def self.all_mapped(person_id)
     all :joins => :photo,
       :conditions => [ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ],
-      :order => 'guesses.guessed_at',
+      :order => 'guesses.commented_at',
       :include => :photo
   end
 
@@ -106,7 +106,7 @@ class Guess < ActiveRecord::Base
   def self.longest_in year
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
-	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",
+	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
 	  Time.local(year).getutc, Time.local(year + 1).getutc ],
       :order => "#{GUESS_AGE} desc", :limit => 10
   end
@@ -115,14 +115,14 @@ class Guess < ActiveRecord::Base
   def self.shortest_in year
     all :include => [ :person, { :photo => :person } ],
       :conditions =>
-	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.guessed_at and guesses.guessed_at < ?",
+	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
           Time.local(year).getutc, Time.local(year + 1).getutc ],
       :order => GUESS_AGE, :limit => 10
   end
 
   def self.all_between(from, to)
     all :conditions => [ "? < added_at and added_at <= ?", from.getutc, to.getutc ],
-      :include => [ { :photo => :person }, :person ], :order => "guessed_at"
+      :include => [ { :photo => :person }, :person ], :order => "commented_at"
   end
 
   def years_old
@@ -130,15 +130,15 @@ class Guess < ActiveRecord::Base
   end
 
   def seconds_old
-    (guessed_at - photo.dateadded).to_i
+    (commented_at - photo.dateadded).to_i
   end
 
   def time_elapsed
-    time_elapsed_between photo.dateadded, guessed_at
+    time_elapsed_between photo.dateadded, commented_at
   end
 
   def ymd_elapsed
-    ymd_elapsed_between photo.dateadded, guessed_at
+    ymd_elapsed_between photo.dateadded, commented_at
   end
 
   def star_for_age

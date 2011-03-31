@@ -116,7 +116,7 @@ class PeopleController < ApplicationController
   def guesses
     @person = Person.find params[:id]
     @guesses = Guess.find_all_by_person_id params[:id],
-      :order => "guessed_at desc", :include => { :photo => :person }
+      :order => "commented_at desc", :include => { :photo => :person }
   end
 
   caches_page :posts
@@ -164,10 +164,10 @@ class PeopleController < ApplicationController
     end
     guesses = Guess.all_mapped params[:id]
     if ! guesses.empty?
-      first_guessed_at = guesses.first.guessed_at
-      last_guessed_at = guesses.last.guessed_at
+      first_guessed_at = guesses.first.commented_at
+      last_guessed_at = guesses.last.commented_at
       guesses.each do |guess|
-        guess.photo[:color] = scaled_green first_guessed_at, last_guessed_at, guess.guessed_at
+        guess.photo[:color] = scaled_green first_guessed_at, last_guessed_at, guess.commented_at
         guess.photo[:symbol] = '!'
       end
     end
