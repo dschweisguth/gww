@@ -1,0 +1,9 @@
+#!/bin/sh
+`dirname $0`/drop_sfgis
+mysql5 -uroot -proot mysql <<EOS
+create user sfgis@localhost identified by 'sfgis';
+create database sfgis;
+grant all privileges on sfgis.* to sfgis@localhost;
+EOS
+ogr2ogr -f MySQL MYSQL:sfgis,user=sfgis,host=localhost,password=sfgis -t_srs EPSG:4326 `dirname $0`/../../sfgis/stnodes/StNodes.shp
+ogr2ogr -f MySQL MYSQL:sfgis,user=sfgis,host=localhost,password=sfgis -t_srs EPSG:4326 `dirname $0`/../../sfgis/stintersections/StIntersections.shp

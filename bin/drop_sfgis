@@ -1,0 +1,6 @@
+#!/bin/sh
+mysql5 -uroot -proot mysql <<EOS
+drop database if exists sfgis;
+drop user sfgis@localhost;
+EOS
+
