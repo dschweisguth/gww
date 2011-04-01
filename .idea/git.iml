@@ -18,7 +18,7 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="passenger" version="2.2.15" bound="EQUAL" git="false" path="false" doRequire="true" />
+        <dependency name="passenger" version="3.0.5" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
     </requirement>
