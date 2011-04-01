@@ -23,7 +23,7 @@ GEM
       file-tail
       rack
       rake (>= 0.8.1)
-    rack (1.1.0)
+    rack (1.1.2)
     rails (2.3.11)
       actionmailer (= 2.3.11)
       actionpack (= 2.3.11)
