@@ -43,8 +43,12 @@ describe WheresiesController do
         content.should have_selector 'h2', :content => "Most-commented photos of 2010"
         content.should have_selector 'td', :content => '666'
       end
-      response.should have_selector 'td', :content => '1&nbsp;year'
-      response.should have_selector 'td', :content => '1&nbsp;second'
+      response.should have_selector 'td' do |td|
+        td.should contain /1.*year/
+      end
+      response.should have_selector 'td' do |td|
+        td.should contain /1.*second/
+      end
 
     end
 
