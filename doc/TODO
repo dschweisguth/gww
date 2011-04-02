@@ -1,5 +1,9 @@
 Bugs
 
+score report has extra break tags
+autocomplete is broken
+Map popup is broken
+Fix leading zeroes in Flickr update notice
 The username of a person who has guessed but never posted is never updated
 A photo which is guessed or revealed and then removed from the group remains
   in the database but is no longer updated
@@ -12,7 +16,6 @@ Extract facades from models
 Merge revelations into guesses?
 After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
   is fixed,
-  Upgrade to passenger 3
   Upgrade to Rails 3
   See whether it's possible to test :inverse_of
   Try to remove :controller from routing specs

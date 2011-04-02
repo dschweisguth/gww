@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe WheresiesController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#show' do
@@ -12,37 +12,39 @@ describe WheresiesController do
       #noinspection RubyResolve
       response.should be_success
 
-      response.should have_tag "a[href=#{wheresies_path 2009}]", :text => '2009'
-      response.should_not have_tag "a[href=#{wheresies_path 2010}]"
+      response.should have_selector 'a', :href => wheresies_path(2009), :content => '2009'
+      response.should_not have_selector 'a', :href => wheresies_path(2010)
 
-      response.should have_tag 'h1', :text => /2010 Wheresies \(preliminary\)/
+      response.should have_selector 'h1' do |text|
+        text.should contain '2010 Wheresies (preliminary)'
+      end
 
-      response.should have_tag 'div' do
-        with_tag 'h3', :text => "Most points in 2010"
-        with_tag 'td', :text => '333'
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h3', :content => "Most points in 2010"
+        content.should have_selector 'td', :content => '333'
       end
-      response.should have_tag 'div' do
-        with_tag 'h3', :text => "Most posts in 2010"
-        with_tag 'td', :text => '444'
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h3', :content => "Most posts in 2010"
+        content.should have_selector 'td', :content => '444'
       end
-      response.should have_tag 'div' do
-        with_tag 'h3', :text => "Most points in 2010"
-        with_tag 'td', :text => '111'
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h3', :content => "Most points in 2010"
+        content.should have_selector 'td', :content => '111'
       end
-      response.should have_tag 'div' do
-        with_tag 'h3', :text => "Most posts in 2010"
-        with_tag 'td', :text => '222'
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h3', :content => "Most posts in 2010"
+        content.should have_selector 'td', :content => '222'
       end
-      response.should have_tag 'div' do
-        with_tag 'h2', :text => "Most-viewed photos of 2010"
-        with_tag 'td', :text => '555'
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h2', :content => "Most-viewed photos of 2010"
+        content.should have_selector 'td', :content => '555'
       end
-      response.should have_tag 'div' do
-        with_tag 'h2', :text => "Most-commented photos of 2010"
-        with_tag 'td', :text => '666'
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h2', :content => "Most-commented photos of 2010"
+        content.should have_selector 'td', :content => '666'
       end
-      response.should have_tag 'td', :text => '1&nbsp;year'
-      response.should have_tag 'td', :text => '1&nbsp;second'
+      response.should have_selector 'td', :content => '1&nbsp;year'
+      response.should have_selector 'td', :content => '1&nbsp;second'
 
     end
 
@@ -54,7 +56,7 @@ describe WheresiesController do
     it "doesn't says 'preliminary' if it's not for this year" do
       stub_queries 2009, 2010, 2009
       get :show, :year => '2009'
-      response.should_not have_tag 'h1', :text => /2009 Wheresies \(preliminary\)/
+      response.should_not have_selector 'h1', :content => '2009 Wheresies (preliminary)'
     end
 
   end

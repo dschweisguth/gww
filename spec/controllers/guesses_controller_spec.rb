@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe GuessesController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#longest_and_shortest' do
@@ -14,10 +14,10 @@ describe GuessesController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a', /1_guessed_photo_poster_username/
-      response.should have_tag 'a', /2_guesser_username/
-      response.should have_tag 'a', /1_guessed_photo_poster_username/
-      response.should have_tag 'a', /2_guesser_username/
+      response.should have_selector 'a', :content => '1_guessed_photo_poster_username'
+      response.should have_selector 'a', :content => '2_guesser_username'
+      response.should have_selector 'a', :content => '1_guessed_photo_poster_username'
+      response.should have_selector 'a', :content => '2_guesser_username'
 
     end
   end

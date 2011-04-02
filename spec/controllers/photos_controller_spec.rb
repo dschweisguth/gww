@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PhotosController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#list' do
@@ -22,9 +22,9 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'h1', :text => '1 photos'
-      response.should have_tag "a[href=#{photos_path 'username', '-', 1 }]", :text => 'posted by'
-      response.should have_tag "a[href=#{person_path photo.person}]", :text => 'poster_username'
+      response.should have_selector 'h1', :content => '1 photos'
+      response.should have_selector 'a', :href => photos_path('username', '-', 1), :content => 'posted by'
+      response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
 
     end
   end
@@ -56,7 +56,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /GWW\.config = \[\{"photo":\{.*?\}\}\];/
+      response.should contain /GWW\.config = \[\{"photo":\{.*?\}\}\];/
 
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 1
@@ -77,13 +77,13 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{photo_path photo}]" do
-        with_tag "img[src=#{url_for_flickr_image photo, 't'}]"
+      response.should have_selector 'a', :href => photo_path(photo) do |content|
+        content.should have_selector 'img', :src => url_for_flickr_image(photo, 't')
       end
-      response.should have_tag "a[href=#{person_path photo.person}]", :text => photo.person.username
-      response.should have_text /, January  1, 2011\./
-      response.should_not have_text /Guessed by/
-      response.should_not have_text /Revealed/
+      response.should have_selector 'a', :href => person_path(photo.person), :content => photo.person.username
+      response.should contain ', January 1, 2011.'
+      response.should_not contain 'Guessed by'
+      response.should_not contain 'Revealed'
 
     end
 
@@ -94,9 +94,9 @@ describe PhotosController do
       stub(Photo).find { photo }
       get :map_popup, :id => photo.id
 
-      response.should have_tag "a[href=#{person_path guess.person}]", :text => guess.person.username
-      response.should have_text /, February  1, 2011./
-      response.should_not have_text /Revealed/
+      response.should have_selector 'a', :href => person_path(guess.person), :content => guess.person.username
+      response.should contain ', February 1, 2011.'
+      response.should_not contain 'Revealed'
 
     end
 
@@ -107,8 +107,8 @@ describe PhotosController do
       stub(Photo).find { photo }
       get :map_popup, :id => photo.id
 
-      response.should_not have_text /Guessed by/
-      response.should have_text /Revealed February  1, 2011./
+      response.should_not contain 'Guessed by'
+      response.should contain 'Revealed February 1, 2011.'
 
     end
 
@@ -122,9 +122,9 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{url_for_flickr_photo photo}]", :text => 'Flickr'
-      response.should have_tag "a[href=#{photo_path photo}]", :text => 'GWW'
-      response.should have_tag "a[href=#{person_path photo.person}]", :text => 'poster_username'
+      response.should have_selector 'a', :href => url_for_flickr_photo(photo), :content => 'Flickr'
+      response.should have_selector 'a', :href => photo_path(photo), :content => 'GWW'
+      response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
 
     end
   end
@@ -137,8 +137,8 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'photos[updated_at=1293840000]' do
-        with_tag 'photo[posted_by=poster_username]'
+      response.should have_selector 'photos', :updated_at => '1293840000' do |content|
+        content.should have_selector 'photo', :posted_by => 'poster_username'
       end
 
     end
@@ -156,17 +156,17 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{url_for_flickr_photo photo}]" do
-        with_tag "img[src=#{url_for_flickr_image photo}]"
+      response.should have_selector 'a', :href => url_for_flickr_photo(photo) do |content|
+        content.should have_selector 'img', :src => url_for_flickr_image(photo)
       end
-      response.should have_text /Added to the group at 12:00 AM, January 01, 2010/
-      response.should have_text /This photo is unfound./
-      response.should have_tag 'table' do
-        with_tag 'td', :text => 'guesser_username'
-        with_tag 'td', :text => 'guess text'
+      response.should contain 'Added to the group at 12:00 AM, January 01, 2010'
+      response.should contain 'This photo is unfound.'
+      response.should have_selector 'table' do |content|
+        content.should have_selector 'td', :content => 'guesser_username'
+        content.should have_selector 'td', :content => 'guess text'
       end
-      response.should have_tag 'strong', :text => 'commenter_username'
-      response.should have_text /comment text/
+      response.should have_selector 'strong', :content => 'commenter_username'
+      response.should contain 'comment text'
 
     end
   end

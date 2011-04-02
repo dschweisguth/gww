@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PeopleController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#find' do
@@ -47,8 +47,8 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{people_path 'score', '-'}]", :text => 'Score'
-      response.should have_tag "a[href=#{person_path person}]", :text => 'username'
+      response.should have_selector 'a', :href => people_path('score', '-'), :content => 'Score'
+      response.should have_selector 'a', :href => person_path(person), :content => 'username'
 
     end
   end
@@ -64,9 +64,9 @@ describe PeopleController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{person_path guesser}]", "guesser_username"
-      response.should have_tag "a[href=#{person_path poster}]", "poster_username"
-      response.should have_tag 'td', '%.3f' % guesser[:bias].to_s
+      response.should have_selector 'a', :href => person_path(guesser), :content => 'guesser_username'
+      response.should have_selector 'a', :href => person_path(poster), :content => 'poster_username'
+      response.should have_selector 'td', :content => '%.3f' % guesser[:bias].to_s
 
     end
   end
@@ -98,11 +98,11 @@ describe PeopleController do
     end
 
     def response_has_table(title, guess)
-      response.should have_tag "table" do
-        with_tag "th", :text => title
-        with_tag "tr" do
-          with_tag "td.opening-number", :text => "1"
-          with_tag "a[href=#{person_path guess.person}]", :text => 'username'
+      response.should have_selector 'table' do |table|
+        table.should have_selector 'th', :content => title
+        table.should have_selector 'tr' do |tr|
+          tr.should have_selector "td.opening-number", :content => "1"
+          tr.should have_selector 'a', :href => person_path(guess.person), :content => 'username'
         end
       end
     end
@@ -111,7 +111,7 @@ describe PeopleController do
 
   describe '#old_show' do
     it "redirects to the new show" do
-      get :old_show, :id => 666
+      get :old_show, :id => '666'
       #noinspection RubyResolve
       response.should redirect_to person_path(666)
     end
@@ -134,11 +134,11 @@ describe PeopleController do
     it "renders the page" do
       stub_guesses
       stub_posts
-      get :show, :id => @person.id
+      get :show, :id => @person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{person_map_path @person}]"
+      response.should have_selector 'a', :href => person_map_path(@person)
       renders_bits_for_user_who_has_guessed
       renders_bits_for_user_who_has_posted
 
@@ -160,18 +160,18 @@ describe PeopleController do
 
       stub_posts
       
-      get :show, :id => @person.id
+      get :show, :id => @person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{person_map_path @person}]"
+      response.should have_selector 'a', :href => person_map_path(@person)
 
-      response.should have_text /username has never made a correct guess/
-      response.should_not have_text /username scored the most points in the last week/
-      response.should_not have_text /username scored the most points in the last month/
-      response.should have_text /username has correctly guessed 0 photos/
-      response.should_not have_text /Of the photos that username has guessed,/
-      response.should_not have_text /username is the nemesis of/
+      response.should contain 'username has never made a correct guess'
+      response.should_not contain 'username scored the most points in the last week'
+      response.should_not contain 'username scored the most points in the last month'
+      response.should contain 'username has correctly guessed 0 photos'
+      response.should_not contain 'Of the photos that username has guessed,'
+      response.should_not contain 'username is the nemesis of'
 
       renders_bits_for_user_who_has_posted
 
@@ -195,22 +195,22 @@ describe PeopleController do
       stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
 
-      get :show, :id => @person.id
+      get :show, :id => @person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{person_map_path @person}]"
+      response.should have_selector 'a', :href => person_map_path(@person)
 
       renders_bits_for_user_who_has_guessed
 
-      response.should have_text /username has never posted a photo to the group/
-      response.should_not have_text /username posted the most photos in the last week/
-      response.should_not have_text /username posted the most photos in the last month/
-      response.should have_tag 'h2', :text => /username has posted 0 photos/
-      response.should_not have_text /Of the photos that username has posted/
-      response.should_not have_text /remains unfound/
-      response.should_not have_text /was revealed/
-      response.should_not have_text /username's nemesis is/
+      response.should contain 'username has never posted a photo to the group'
+      response.should_not contain 'username posted the most photos in the last week'
+      response.should_not contain 'username posted the most photos in the last month'
+      response.should have_selector 'h2', :content => 'username has posted 0 photos'
+      response.should_not contain 'Of the photos that username has posted'
+      response.should_not contain 'remains unfound'
+      response.should_not contain 'was revealed'
+      response.should_not contain "username's nemesis is"
 
     end
 
@@ -297,22 +297,22 @@ describe PeopleController do
     end
 
     def renders_bits_for_user_who_has_guessed
-      response.should have_text /username is in 1st place with a score of 2./
-      response.should have_text /username scored the most points in the last week/
-      response.should have_text /username scored the most points in the last month/
-      response.should have_tag 'h2', :text => /username has correctly guessed 2 photos/
-      response.should have_text /Of the photos that username has guessed,/
-      response.should have_tag 'p', :text => /username is the nemesis of favorite_poster_username \(2.5\)/
+      response.should contain 'username is in 1st place with a score of 2.'
+      response.should contain 'username scored the most points in the last week'
+      response.should contain 'username scored the most points in the last month'
+      response.should have_selector 'h2', :content => 'username has correctly guessed 2 photos'
+      response.should contain 'Of the photos that username has guessed,'
+      response.should have_selector 'a', :content => 'favorite_poster_username'
     end
 
     def renders_bits_for_user_who_has_posted
-      response.should have_text /username has posted 2 photos to the group, the most/
-      response.should have_text /username posted the most photos in the last week/
-      response.should have_text /username posted the most photos in the last month/
-      response.should have_tag 'h2', :text => /username has posted 2 photos/
-      response.should have_text /1 remains unfound/
-      response.should have_text /1 was revealed/
-      response.should have_tag 'p', :text => /username's nemesis is favorite_poster_of_username \(3.6\)/
+      response.should contain 'username has posted 2 photos to the group, the most'
+      response.should contain 'username posted the most photos in the last week'
+      response.should contain 'username posted the most photos in the last month'
+      response.should have_selector 'h2', :content => 'username has posted 2 photos'
+      response.should contain '1 remains unfound'
+      response.should contain '1 was revealed'
+      response.should have_selector 'a', :content => 'favorite_poster_of_username'
     end
 
   end
@@ -323,12 +323,12 @@ describe PeopleController do
       stub(Person).find(person.id.to_s) { person }
       #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make :person => person ] }
-      get :guesses, :id => person.id
+      get :guesses, :id => person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'h1', :text => '1 guess by username'
-      response.should have_tag 'a', :text => 'guessed_photo_poster_username'
+      response.should have_tag 'h1', :content => '1 guess by username'
+      response.should have_tag 'a', :content => 'guessed_photo_poster_username'
 
     end
   end
@@ -340,15 +340,15 @@ describe PeopleController do
       photo = Photo.make :person => person
       #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ photo ] }
-      get :posts, :id => person.id
+      get :posts, :id => person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'h1', :text => '1 photo posted by username'
-      response.should have_tag "a[href=#{person_path person}]"
-      response.should have_tag "img[src=#{url_for_flickr_image photo, 't'}]"
-      response.should have_tag 'td', :text => 'false'
-      response.should have_tag 'td', :text => 'unfound'
+      response.should have_tag 'h1', :content => '1 photo posted by username'
+      response.should have_tag 'a', :href => person_path(person)
+      response.should have_tag 'img', :src => url_for_flickr_image(photo, 't')
+      response.should have_tag 'td', :content => 'false'
+      response.should have_tag 'td', :content => 'unfound'
 
     end
   end
@@ -368,14 +368,14 @@ describe PeopleController do
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).paginate { paginated_photos }
 
-      get :comments, :id => person.id, :page => "2"
+      get :comments, :id => person.id.to_s, :page => "2"
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'h1', :text => '1 photo commented on by username'
-      response.should have_tag "a[href=#{url_for_flickr_photo photo}]", :text => 'Flickr'
-      response.should have_tag "a[href=#{photo_path photo}]", :text => 'GWW'
-      response.should have_tag "a[href=#{person_path photo.person}]", :text => 'poster_username'
+      response.should have_selector 'h1', :content => '1 photo commented on by username'
+      response.should have_selector 'a', :href => url_for_flickr_photo(photo), :content => 'Flickr'
+      response.should have_selector 'a', :href => photo_path(photo), :content => 'GWW'
+      response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
 
     end
   end
@@ -390,15 +390,15 @@ describe PeopleController do
       stub_mapped_counts 1, 1
       post = stub_unfound
       guessed_photo = stub_guessed_photo
-      get :map, :id => @person.id
+      get :map, :id => @person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'input[id=posts]'
-      response.should have_tag 'label', :text => '1 mapped post (?, -)'
-      response.should have_tag 'input[id=guesses]'
-      response.should have_tag 'label', :text => '1 mapped guess (!)'
-      response.should have_text /GWW\.config = \[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\];/
+      response.should have_selector 'input', :id => 'posts'
+      response.should have_selector 'label', :content => '1 mapped post (?, -)'
+      response.should have_selector 'input', :id => 'guesses'
+      response.should have_selector 'label', :content => '1 mapped guess (!)'
+      response.should contain /GWW\.config = \[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\];/
 
       json = decode_json
       json.length.should == 2
@@ -411,14 +411,14 @@ describe PeopleController do
       stub_mapped_counts 0, 1
       stub(Photo).all_mapped(@person.id.to_s) { [] }
       guessed_photo = stub_guessed_photo
-      get :map, :id => @person.id
+      get :map, :id => @person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should_not have_tag 'input[id=posts]'
-      response.should_not have_text /mapped post/
-      response.should_not have_tag 'input[id=guesses]'
-      response.should have_text /1 mapped guess/
+      response.should_not have_selector 'input', :id => 'posts'
+      response.should_not contain 'mapped post'
+      response.should_not have_selector 'input', :id => 'guesses'
+      response.should contain '1 mapped guess'
 
       json = decode_json
       json.length.should == 1
@@ -430,14 +430,14 @@ describe PeopleController do
       stub_mapped_counts 1, 0
       post = stub_unfound
       stub(Guess).all_mapped(@person.id.to_s) { [] }
-      get :map, :id => @person.id
+      get :map, :id => @person.id.to_s
 
       #noinspection RubyResolve
       response.should be_success
-      response.should_not have_tag 'input[id=posts]'
-      response.should have_text /1 mapped post/
-      response.should_not have_tag 'input[id=guesses]'
-      response.should_not have_text /mapped guess/
+      response.should_not have_selector 'input', :id => 'posts'
+      response.should contain '1 mapped post'
+      response.should_not have_selector 'input', :id => 'guesses'
+      response.should_not contain 'mapped guess'
 
       json = decode_json
       json.length.should == 1
@@ -449,7 +449,7 @@ describe PeopleController do
       stub_mapped_counts 1, 1
       post = Photo.make :id => 14, :person => @person, :game_status => 'unconfirmed'
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      get :map, :id => @person.id
+      get :map, :id => @person.id.to_s
 
       json = decode_json
       json.length.should == 1
@@ -461,7 +461,7 @@ describe PeopleController do
       stub_mapped_counts 1, 1
       post = Photo.make :id => 14, :person => @person, :game_status => 'found'
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      get :map, :id => @person.id
+      get :map, :id => @person.id.to_s
 
       json = decode_json
       json.length.should == 1
@@ -475,7 +475,7 @@ describe PeopleController do
       stub_mapped_counts 1, 1
       post = Photo.make :id => 14, :person => @person, :game_status => 'revealed'
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      get :map, :id => @person.id
+      get :map, :id => @person.id.to_s
 
       json = decode_json
       json.length.should == 1

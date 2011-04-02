@@ -1,4 +1,4 @@
-require 'helpers/score_reports_helper'
+require 'score_reports_helper'
 
 module Admin::ScoreReportsHelper
   include ScoreReportsHelper

@@ -1,4 +1,4 @@
-require 'helpers/photos_helper'
+require 'photos_helper'
 
 module Admin::PhotosHelper
   include PhotosHelper

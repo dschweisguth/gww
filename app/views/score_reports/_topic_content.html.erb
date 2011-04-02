@@ -10,14 +10,14 @@
     :change_name => 'photo', :change_verb => ' revealed',
     :changes => @revelations, :people => @revealers -%>
 <%= render 'score_reports/high_scorers',
-    :object => @weekly_high_scorers, :period => 'week' -%>
+    :high_scorers => @weekly_high_scorers, :period => 'week' -%>
 <%= render 'score_reports/high_scorers',
-    :object => @monthly_high_scorers, :period => 'month' -%>
+    :high_scorers => @monthly_high_scorers, :period => 'month' -%>
 
 <%= render 'score_reports/top_posters',
-    :object => @weekly_top_posters, :period => 'week' -%>
+    :top_posters => @weekly_top_posters, :period => 'week' -%>
 <%= render 'score_reports/top_posters',
-    :object => @monthly_top_posters, :period => 'month' -%>
+    :top_posters => @monthly_top_posters, :period => 'month' -%>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the previous report. There are still <a href="http://anythreewords.com/gwsf/"><%= @unfound_count %> unfound photos</a> in the pool.
 
@@ -27,5 +27,5 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 
 <% @people_by_score.keys.sort { |a, b| b <=> a }.each do |score| -%>
 <% next if score <= 1 -%>
-<strong><%= score %></strong> - <% @people_by_score[score].each_with_index do |person, i| %><%= link_to_person person %> (<%= person[:posts] %>)<% if i < @people_by_score[score].length - 1 %>, <% end %><% end %>
+<strong><%= score %></strong> - <% @people_by_score[score].each_with_index do |person, i| %><%= link_to_person_url person %> (<%= person[:posts] %>)<% if i < @people_by_score[score].length - 1 %>, <% end %><% end %>
 <% end -%>

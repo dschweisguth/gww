@@ -147,7 +147,7 @@ describe ScoreReport do
 
   def makes_score_report_with_custom_attributes
     makes_with_custom_attributes ScoreReport, {
-      :previous_report => ScoreReport.make(:created_at => 2010),
+      :previous_report => ScoreReport.make(:created_at => Time.utc(2010)),
       :created_at => Time.utc(2011)
     }
   end

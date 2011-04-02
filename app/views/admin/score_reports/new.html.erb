@@ -1,10 +1,10 @@
 <% content_for :title do %>New score report<% end %>
-<% sandwich 'admin/score_reports/breadcrumbs' do %>
+<%= sandwich 'admin/score_reports/breadcrumbs' do %>
 <h1>New score report</h1>
 
 <p><a href="#preview">Preview</a> - <a href="<%= FlickrCredentials::SCORE_TOPIC_URL %>">GWSF Scores discussion topic</a></p>
 
-<% form_tag admin_score_reports_path do %>
+<%= form_tag admin_score_reports_path do %>
   <%= submit_tag 'Remember that the score report below was published' %>
     Be sure to push this button after publishing to tell GWW where to start counting for the next score report!
 <% end -%>

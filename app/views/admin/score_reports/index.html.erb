@@ -1,5 +1,5 @@
 <% content_for :title do %>Score reports<% end %>
-<% sandwich 'shared/admin/breadcrumbs' do %>
+<%= sandwich 'shared/admin/breadcrumbs' do %>
 <h1>Score reports</h1>
 
 <p><%= link_to 'New score report', new_admin_score_report_path %></p>
@@ -19,7 +19,7 @@
     <td class="number"><%= @revelation_counts[report.id] || 0 %></td>
     <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago -%>
       <td class="forget">
-        <% form_tag admin_score_report_path(report), :method => :delete, :class => 'inline' do %>
+        <%= form_tag admin_score_report_path(report), :method => :delete, :class => 'inline' do %>
           <%= submit_tag 'Forget', :confirm => 'Are you sure?' %>
         <% end -%>
         (Do this if you just published, maybe scored another photo, changed your mind and want to republish. This can't be undone!)

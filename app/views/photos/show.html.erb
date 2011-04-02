@@ -1,5 +1,5 @@
 <% content_for :title do %>Photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
-<% sandwich do %>
+<%= sandwich do %>
 <%= render 'image_and_status' %>
 
 <p id="comments-header">Comments</p>

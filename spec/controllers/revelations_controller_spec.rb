@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RevelationsController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#longest' do
@@ -11,7 +11,7 @@ describe RevelationsController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a', :text => 'revealed_photo_poster_username'
+      response.should have_selector 'a', :content => 'revealed_photo_poster_username'
 
     end
   end

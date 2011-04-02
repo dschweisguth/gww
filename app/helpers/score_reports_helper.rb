@@ -11,12 +11,11 @@ module ScoreReportsHelper
     end
   end
 
-  # This overrides the version in ApplicationHelper
-  def link_to_person(person)
+  def link_to_person_url(person)
     link_to h(escape_username(person.username)), person_url(person)
   end
 
-  def image_for_star(star)
+  def image_url_for_star(star)
     star_images = {
       :bronze => '/images/star-padded-bronze.gif',
       :silver => '/images/star-padded-silver.gif',

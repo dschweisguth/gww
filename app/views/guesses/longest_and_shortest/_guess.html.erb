@@ -2,7 +2,7 @@
   <td class="thumbnail"><%= thumbnail guess.photo %></td>
   <td><%= link_to_person guess.photo.person %></td>
   <td><%= link_to_person guess.person %></td>
-  <td><%= guess.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
-  <td><%= guess.commented_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
-  <td><%= guess.time_elapsed %></td>
+  <td><%= raw guess.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+  <td><%= raw guess.commented_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+  <td><%= raw guess.time_elapsed %></td>
 </tr>

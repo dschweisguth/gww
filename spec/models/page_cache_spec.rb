@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PageCache do
   describe '#clear' do
-    CACHE_DIR = RAILS_ROOT + "/public/cache"
+    CACHE_DIR = Rails.root.to_s + "/public/cache"
 
     it 'deletes public/cache if it exists' do
       stub(File).exist?(CACHE_DIR) { true }

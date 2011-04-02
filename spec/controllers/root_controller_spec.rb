@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RootController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#index' do
@@ -12,8 +12,8 @@ describe RootController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes./
-      response.should have_tag "a[href=#{wheresies_path 2011}]", :text => '2011'
+      response.should contain /The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes./
+      response.should have_selector 'a', :href => wheresies_path(2011), :content => '2011'
 
     end
 
@@ -24,7 +24,7 @@ describe RootController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /The most recent update from Flickr began Saturday, January 01, 00:00 PST and completed at Monday, January 01, 00:06 PST./
+      response.should contain 'The most recent update from Flickr began Saturday, January 01, 00:00 PST and completed at Monday, January 01, 00:06 PST.'
 
     end
 
@@ -35,7 +35,7 @@ describe RootController do
       get :about
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'a[href=http://www.flickr.com/people/tma/]', :text => 'Tomas Apodaca'
+      response.should have_selector 'a', :href => 'http://www.flickr.com/people/tma/', :content => 'Tomas Apodaca'
     end
   end
 
@@ -44,7 +44,7 @@ describe RootController do
       get :bookmarklet
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'h2', :text => 'To add "View in GWW" to your bookmarks,'
+      response.should have_selector 'h2', :content => 'To add "View in GWW" to your bookmarks,'
     end
   end
 

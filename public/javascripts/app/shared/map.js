@@ -58,7 +58,6 @@ GWW.map = function () {
     return function () {
       new Ajax.Request('/photos/' + photo.id + '/map_popup', {
         method: 'get',
-        requestHeaders: { Accept: 'application/json' },
         onSuccess: openInfoWindow(marker)
       });
     };

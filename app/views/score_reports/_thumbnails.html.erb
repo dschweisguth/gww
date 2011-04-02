@@ -2,7 +2,7 @@
 <%= pluralize changes.length, change_name %><%= change_verb %> by ...
 
 <% people.each do |entry| -%>
-<strong><%= link_to_person entry[0] %></strong> <%=h entry[0][:change_in_standing] %>
+<strong><%= link_to_person_url entry[0] %></strong> <%= entry[0][:change_in_standing] -%>
 <% entry[1].each do |change| -%>
 <%= link_to \
       titled_image_tag(
@@ -14,12 +14,12 @@
 <% if change.respond_to? :star_for_age then -%>
 <%= star = change.star_for_age
     if star then
-      titled_image_tag image_for_star(star), "Unfound for #{pluralize(change.years_old, 'year')}!", :size => '15x50'
+      titled_image_tag image_url_for_star(star), "Unfound for #{pluralize(change.years_old, 'year')}!", :size => '15x50'
     end
 -%>
 <%= star = change.star_for_speed;
     if star then
-      titled_image_tag image_for_star(star), "Guessed in #{pluralize(change.seconds_old, 'second')}!", :size => '15x50';
+      titled_image_tag image_url_for_star(star), "Guessed in #{pluralize(change.seconds_old, 'second')}!", :size => '15x50';
     end
 -%>
 <% end -%>

@@ -1,67 +1,77 @@
-ActionController::Routing::Routes.draw do |map|
+# TODO Dave refactor
+GWW::Application.routes.draw do
+  match '/auto_complete_for_person_username' => 'root#auto_complete_for_person_username', :via => :post
+  match '/' => 'root#index', :as => :root, :via => :get
+  match 'about' => 'root#about', :as => :root_about, :via => :get
+  match 'bookmarklet' => 'root#bookmarklet', :as => :root_bookmarklet, :via => :get
+  
+  resources :score_reports, :only => [ :index, :show ]
 
-  map.with_options :controller => 'root' do |root|
+  match 'people/find' => 'people#find', :as => :find_person, :via => :get
+  match 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people, :via => :get
+  # TODO Dave remove after first score report after 3/21/2011
+  match 'people/show/:id' => 'people#old_show', :via => :get
+  match 'people/:id/guesses' => 'people#guesses', :as => :person_guesses, :via => :get
+  match 'people/:id/posts' => 'people#posts', :as => :person_posts, :via => :get
+  match 'people/:id/map' => 'people#map', :as => :person_map, :via => :get
+  match 'people/:id/comments/page/:page' => 'people#comments', :as => :person_comments, :via => :get
+  resources :people, :only => [ :show ] do
+    collection do
+      get :nemeses
+      get :top_guessers
+    end
+  end
 
-    map.connect '/auto_complete_for_person_username',
-      :controller => 'root', :action => 'auto_complete_for_person_username', :conditions => { :method => :post }
+  match 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', :as => :photos, :via => :get
+  resources :photos, :only => [ :show ] do
+    member do
+      get :map_popup
+    end
+    collection do
+      get :map
+      get :unfound
+      get :unfound_data
+    end
+  end
 
-    root.with_options :conditions => { :method => :get } do |root_get|
-      root_get.root
-      %w{ about bookmarklet }.each do |action|
-        root_get.send "root_#{action}", action, :action => action
+  resources :guesses, :only => [] do
+    collection do
+      get :longest_and_shortest
+    end
+  end
+
+  resources :revelations, :only => [] do
+    collection do
+      get :longest
+    end
+  end
+
+  match 'wheresies/:year' => 'wheresies#show', :as => :wheresies, :via => :get
+
+  match 'bookmarklet/show' => 'bookmarklet#show', :as => :bookmarklet, :via => :get
+
+  match 'admin' => 'admin/root#index', :as => :admin_root, :via => :get
+  match 'admin/bookmarklet' => 'admin/root#bookmarklet', :as => :admin_root_bookmarklet, :via => :get
+
+  match 'admin/photos/edit_in_gww' => 'admin/photos#edit_in_gww', :as => :edit_in_gww, :via => :get
+  match '/admin/photos/auto_complete_for_person_username' => 'admin/photos#auto_complete_for_person_username', :via => :post
+  match 'admin/photos/update_all_from_flickr' => 'admin/photos#update_all_from_flickr', :as => :update_all_from_flickr, :via => :post
+  match 'admin/photos/update_statistics' => 'admin/photos#update_statistics', :as => :update_statistics, :via => :post
+  match 'admin/photos/:id/change_game_status' => 'admin/photos#change_game_status', :as => :change_game_status, :via => :post
+  match 'admin/photos/:id/add_selected_answer' => 'admin/photos#add_selected_answer', :as => :add_selected_answer, :via => :post
+  match 'admin/photos/:id/add_entered_answer' => 'admin/photos#add_entered_answer', :as => :add_entered_answer, :via => :post
+  match 'admin/photos/:id/remove_revelation' => 'admin/photos#remove_revelation', :as => :remove_revelation, :via => :post
+  match 'admin/photos/:id/remove_guess' => 'admin/photos#remove_guess', :as => :remove_guess, :via => :post
+  match 'admin/photos/:id/reload_comments' => 'admin/photos#reload_comments', :as => :reload_comments, :via => :post
+  namespace :admin do
+    resources :photos, :only => [ :edit, :destroy ] do
+      collection do
+	get :inaccessible
+	get :multipoint
+	get :unfound
       end
     end
-
-  end
-
-  map.resources :score_reports, :only => [ :index, :show ]
-
-  map.with_options :controller => 'people', :conditions => { :method => :get } do |people|
-    people.find_person 'people/find', :action => 'find'
-    people.people 'people/sorted-by/:sorted_by/order/:order', :action => 'index'
-    people.connect 'people/show/:id', :action => 'old_show' # TODO Dave remove after first score report after 3/21/2011
-    %w{ guesses posts map }.each do |action|
-      people.send "person_#{action}", "people/:id/#{action}", :action => action
-    end
-    people.person_comments 'people/:id/comments/page/:page', :action => 'comments'
-  end
-  map.resources :people, :only => [ :show ], :collection => { :nemeses => :get, :top_guessers => :get }
-
-  map.photos 'photos/sorted-by/:sorted_by/order/:order/page/:page', :controller => 'photos', :action => 'index', :conditions => { :method => :get }
-  map.resources :photos, :only => [ :show ], :member => { :map_popup => :get }, :collection => { :map => :get, :unfound => :get, :unfound_data => :get }
-
-  map.resources :guesses, :only => [], :collection => { :longest_and_shortest => :get }
-
-  map.resources :revelations, :only => [], :collection => { :longest => :get }
-
-  map.wheresies 'wheresies/:year', :controller => 'wheresies', :action => 'show', :conditions => { :method => :get }
-
-  map.bookmarklet 'bookmarklet/show', :controller => 'bookmarklet', :action => 'show', :conditions => { :method => :get }
-
-  map.with_options :controller => 'admin/root', :conditions => { :method => :get } do |admin_root|
-    admin_root.admin_root 'admin'
-    admin_root.admin_root_bookmarklet 'admin/bookmarklet', :action => 'bookmarklet'
-  end
-
-  map.with_options :controller => 'admin/photos' do |photos|
-
-    photos.edit_in_gww 'admin/photos/edit_in_gww', :action => 'edit_in_gww', :conditions => { :method => :get }
-
-    photos.with_options :conditions => { :method => :post } do |photos_post|
-      photos_post.connect '/admin/photos/auto_complete_for_person_username', :action => 'auto_complete_for_person_username'
-      %w{ update_all_from_flickr update_statistics }.each do |action|
-        photos_post.send action, "admin/photos/#{action}", :action => action
-      end
-      %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
-        photos_post.send action, "admin/photos/:id/#{action}", :action => action
-      end
-    end
-
-  end
-
-  map.namespace :admin do |admin|
-    admin.resources :photos, :only => [ :edit, :destroy ], :collection => { :unfound => :get, :inaccessible => :get, :multipoint => :get }
-    admin.resources :score_reports, :only => [ :index, :new, :create, :destroy ]
+    resources :score_reports, :only => [ :index, :new, :create, :destroy ]
   end
 
 end

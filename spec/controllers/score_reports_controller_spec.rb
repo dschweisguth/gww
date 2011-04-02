@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'controllers/score_reports_controller_spec_support'
 
 describe ScoreReportsController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#index' do
@@ -15,9 +15,9 @@ describe ScoreReportsController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag 'td', :text => 'Jan  1, 2011, 12:00 AM'
-      response.should have_tag 'td', :text => '1'
-      response.should have_tag 'td', :text => '2'
+      response.should have_selector 'td', :content => 'Jan  1, 2011, 12:00 AM'
+      response.should have_selector 'td', :content => '1'
+      response.should have_selector 'td', :content => '2'
 
     end
   end
@@ -32,12 +32,12 @@ describe ScoreReportsController do
       previous_report_date = Time.local(2011).getutc
       previous_report = ScoreReport.make :created_at => previous_report_date
       stub(ScoreReport).previous(@report_date.getutc) { previous_report }
-      renders_report_for @report_date, previous_report_date, :show, :id => 1
+      renders_report_for @report_date, previous_report_date, :show, :id => '1'
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
       stub(ScoreReport).previous(@report_date.getutc) { nil }
-      renders_report_for @report_date, Time.utc(2005), :show, :id => 1
+      renders_report_for @report_date, Time.utc(2005), :show, :id => '1'
     end
 
   end

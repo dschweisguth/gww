@@ -3,7 +3,7 @@
   <p>
     Posted by <%= link_to_person @photo.person %>, <%= @photo.dateadded.getlocal.strftime '%B %e, %Y' %>.<br/>
     <% guesses = @photo.guesses; if ! guesses.empty? -%>
-      Guessed by <%= guesses.map { |guess| "#{link_to_person guess.person}, #{guess.commented_at.getlocal.strftime '%B %e, %Y'}" }.join '; ' %>.
+      Guessed by <%= raw guesses.map { |guess| "#{link_to_person guess.person}, #{guess.commented_at.getlocal.strftime '%B %e, %Y'}" }.join '; ' %>.
     <% end -%>
     <% revelation = @photo.revelation; if revelation -%>
       Revealed <%= revelation.commented_at.getlocal.strftime '%B %e, %Y' %>.

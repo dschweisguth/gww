@@ -1,7 +1,9 @@
+require 'net/http'
+require 'timeout'
 require 'xmlsimple'
 
 class FlickrCredentials
-  FILE = YAML.load_file "#{RAILS_ROOT}/config/flickr_credentials.yml"
+  FILE = YAML.load_file "#{Rails.root.to_s}/config/flickr_credentials.yml"
   CREDENTIALS = FILE['flickr_credentials']
   SECRET = CREDENTIALS['secret']
   API_KEY = CREDENTIALS['api_key']

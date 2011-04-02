@@ -17,8 +17,8 @@ describe PeopleHelper do
     end
 
     def other_people_path_returns(current_criterion, current_order, requested_criterion, expected_uri)
-      params[:sorted_by] = current_criterion
-      params[:order] = current_order
+      controller.params[:sorted_by] = current_criterion
+      controller.params[:order] = current_order
       helper.other_people_path(requested_criterion).should == expected_uri
     end
 

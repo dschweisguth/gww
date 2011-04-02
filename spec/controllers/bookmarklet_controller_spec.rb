@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe BookmarkletController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#show' do

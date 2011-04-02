@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Admin::PhotosController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#update_all_from_flickr' do
@@ -59,10 +59,10 @@ describe Admin::PhotosController do
     #noinspection RubyResolve
     def lists_photo
       response.should be_success
-      response.should have_tag "a[href=#{person_path @photo.person}]", :text => @photo.person.username
-      response.should have_tag 'td', :text => 'false'
-      response.should have_tag 'td', :text => 'unfound'
-      response.should have_tag "a[href=#{edit_admin_photo_path @photo, :load_comments => true}]", :text => 'Edit'
+      response.should have_selector 'a', :href => person_path(@photo.person), :content => @photo.person.username
+      response.should have_selector 'td', :content => 'false'
+      response.should have_selector 'td', :content => 'unfound'
+      response.should have_selector 'a', :href => edit_admin_photo_path(@photo, :load_comments => true), :content => 'Edit'
     end
 
   end
@@ -73,7 +73,7 @@ describe Admin::PhotosController do
       stub(Photo).find(photo.id.to_s, anything) { photo }
       #noinspection RubyResolve
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :id => 222 ] }
-      get :edit, :id => photo.id
+      get :edit, :id => photo.id.to_s
       renders_edit_page
     end
 
@@ -82,23 +82,23 @@ describe Admin::PhotosController do
       stub(Photo).find(photo.id.to_s, anything) { photo }
       stub(photo).load_comments { [ Comment.make :id => 222 ] }
       mock_clear_page_cache
-      get :edit, :id => photo.id, :load_comments => true
+      get :edit, :id => photo.id.to_s, :load_comments => true
       renders_edit_page
     end
 
     def renders_edit_page
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /Added to the group at 12:00 AM, January 01, 2011/
-      response.should have_text /This photo is unfound./
+      response.should contain 'Added to the group at 12:00 AM, January 01, 2011'
+      response.should contain 'This photo is unfound.'
       #noinspection RubyResolve
-      response.should have_tag "form[action=#{change_game_status_path 111}]", :text => /Change this photo's status from unfound to/ do
-        with_tag 'input[value=unconfirmed]'
+      response.should have_selector 'form', :action => change_game_status_path(111), :content => "Change this photo's status from unfound to" do |form|
+        form.should have_selector 'input', :value => 'unconfirmed'
       end
       #noinspection RubyResolve
-      response.should have_tag "form[action=#{add_selected_answer_path 111}]" do
-        with_tag 'input[type=submit][name=commit][value=Add this guess]'
-        with_tag 'input[type=hidden][name=comment_id][value=222]'
+      response.should have_selector 'form', :action => add_selected_answer_path(111) do |form|
+        form.should have_selector 'input', :type => 'submit', :name => 'commit', :value => 'Add this guess'
+        form.should have_selector 'input', :type => 'hidden', :name => 'comment_id', :value => '222'
       end
     end
 
@@ -108,7 +108,7 @@ describe Admin::PhotosController do
     it 'changes the game status and reloads the page' do
       mock(Photo).change_game_status('1', 'unconfirmed')
       mock_clear_page_cache
-      get :change_game_status, :id => 1, :commit => 'unconfirmed'
+      get :change_game_status, :id => '1', :commit => 'unconfirmed'
       redirects_to_edit_path 1
     end
   end
@@ -175,7 +175,7 @@ describe Admin::PhotosController do
 
   describe '#reload_comments' do
     it 'just redirects to the edit page with load_comments=true' do
-      get :reload_comments, :id => 1
+      get :reload_comments, :id => '1'
       redirects_to_edit_path 1, :load_comments => true
     end
   end
@@ -184,7 +184,7 @@ describe Admin::PhotosController do
     it 'destroys' do
       mock(Photo).destroy_photo_and_dependent_objects '1'
       mock_clear_page_cache
-      get :destroy, :id => 1
+      get :destroy, :id => '1'
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
     end

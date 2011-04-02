@@ -1,5 +1,5 @@
 <% content_for :title do %>Longest-lived revelations<% end %>
-<% sandwich do %>
+<%= sandwich do %>
 <h1>Longest-lived revelations</h1>
 
 <table class="dark">
@@ -14,9 +14,9 @@
     <tr>
       <td class="thumbnail"><%= thumbnail revelation.photo %></td>
       <td><%= link_to_person revelation.photo.person %></td>
-      <td><%= revelation.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
-      <td><%= revelation.commented_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
-      <td><%= revelation.time_elapsed %></td>
+      <td><%= raw revelation.photo.dateadded.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+      <td><%= raw revelation.commented_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
+      <td><%= raw revelation.time_elapsed %></td>
     </tr>
   <% end -%>
 </table>

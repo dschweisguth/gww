@@ -1,5 +1,5 @@
 <% content_for :title do %><%=h @person.username %>'s guesses<% end %>
-<% sandwich 'person_breadcrumbs' do %>
+<%= sandwich 'person_breadcrumbs' do %>
 <h1><%= pluralize @guesses.length, 'guess' %> by <%=h @person.username %></h1>
 
 <table class="dark">

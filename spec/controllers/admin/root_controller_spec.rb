@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Admin::RootController do
-  integrate_views
+  render_views
   without_transactions
 
   describe '#index' do
@@ -14,10 +14,10 @@ describe Admin::RootController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_text /The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes./
-      response.should have_text /\(111\)/
-      response.should have_text /\(222\)/
-      response.should have_text /\(2\)/
+      response.should contain 'The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes.'
+      response.should contain '(111)'
+      response.should contain '(222)'
+      response.should contain '(2)'
 
     end
 
@@ -28,7 +28,7 @@ describe Admin::RootController do
       stub(Guess).count { { 1 => 2, 2 => 2 }  }
       get :index
 
-      response.should have_text /The most recent update from Flickr began Saturday, January 01, 00:00 PST and completed at Monday, January 01, 00:06 PST./
+      response.should contain 'The most recent update from Flickr began Saturday, January 01, 00:00 PST and completed at Monday, January 01, 00:06 PST.'
 
     end
 
@@ -39,7 +39,7 @@ describe Admin::RootController do
       get :bookmarklet
       #noinspection RubyResolve
       response.should be_success
-      response.should have_tag "a[href=#{root_bookmarklet_path}]"
+      response.should have_selector 'a', :href => root_bookmarklet_path
     end
   end
 
