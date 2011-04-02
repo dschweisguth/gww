@@ -1,8 +1,8 @@
 // http://juhukinners.wordpress.com/2009/01/08/how-to-write-a-bookmarklet/
 (function () {
 
-  Event.observe(window, 'load', function() {
-    $('bookmarklet').href = 'javascript:(' + loadBookmarklet.toString() + ')();'
+  $(document).ready(function() {
+    $('#bookmarklet').attr('href', 'javascript:(' + loadBookmarklet.toString() + ')();');
   });
 
   var loadBookmarklet = function () {
