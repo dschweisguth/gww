@@ -3,7 +3,7 @@ class AddPreviousToScoreReports < ActiveRecord::Migration
     change_column :score_reports, :created_at, :datetime, :null => false
     execute 'alter table score_reports add column previous_report_id int(11) after id'
     execute 'alter table score_reports add constraint previous_report_id_fk foreign key (previous_report_id) references score_reports (id)'
-    if RAILS_ENV != 'test'
+    if ! Rails.env.test?
       execute <<EOS
         create procedure add_previous_report_ids()
         begin

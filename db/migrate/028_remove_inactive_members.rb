@@ -5,7 +5,7 @@ class RemoveInactiveMembers < ActiveRecord::Migration
   end
 
   def self.down
-    if RAILS_ENV != 'test'
+    if ! Rails.env.test?
       execute "insert into people (flickrid, username) values ('12037949663@N01', 'caterina')"
       execute "insert into people (flickrid, username) values ('26575274@N00', 'spot20')"
     end

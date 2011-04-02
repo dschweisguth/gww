@@ -3,7 +3,7 @@ class CreateScoreReports < ActiveRecord::Migration
     create_table :score_reports do |t|
       t.datetime :created_at
     end
-    if RAILS_ENV != 'test'
+    if ! Rails.env.test?
       execute <<EOS
         create procedure insert_score_reports()
         begin

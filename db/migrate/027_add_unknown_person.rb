@@ -1,6 +1,6 @@
 class AddUnknownPerson < ActiveRecord::Migration
   def self.up
-    if RAILS_ENV != 'test'
+    if ! Rails.env.test?
       execute "insert into people (flickrid, username) values('unknown', 'unknown')"
     end
     execute "update people set id = 0 where flickrid = 'unknown'"

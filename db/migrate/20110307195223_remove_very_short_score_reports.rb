@@ -13,7 +13,7 @@ class RemoveVeryShortScoreReports < ActiveRecord::Migration
   end
 
   def self.down
-    if RAILS_ENV != 'test'
+    if ! Rails.env.test?
       execute "insert into score_reports values(1, null, '2005-03-19 17:27:13')"
       execute "insert into score_reports values(137, 136, '2007-06-07 20:41:37')"
       execute "insert into score_reports values(152, 151, '2007-07-12 22:23:15')"
