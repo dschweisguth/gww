@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'support/model_factory'
 
 describe BookmarkletController do
   render_views
@@ -21,6 +22,7 @@ describe BookmarkletController do
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :show, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
+      #noinspection RubyResolve
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that photo/
 
@@ -39,7 +41,6 @@ describe BookmarkletController do
 
     it 'handles a person whose custom URL is the same as their username' do
       person = Person.make
-      #noinspection RubyResolve
       stub(Person).find_by_flickrid(person.username) { nil }
       #noinspection RubyResolve
       stub(Person).find_by_username(person.username) { person }
@@ -55,6 +56,7 @@ describe BookmarkletController do
       stub(Person).find_by_flickrid('person_flickrid') { nil }
       get :show, :from => "http://www.flickr.com/people/person_flickrid/"
 
+      #noinspection RubyResolve
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that person/
 
@@ -74,6 +76,7 @@ describe BookmarkletController do
     it 'punts unknown URLs' do
       get :show, :from => 'http://www.notflickr.com/'
 
+      #noinspection RubyResolve
       response.should redirect_to root_path
       flash[:general_error].should =~ /Hmmm/
 
