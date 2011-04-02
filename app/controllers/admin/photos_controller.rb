@@ -1,5 +1,6 @@
 class Admin::PhotosController < ApplicationController
-  auto_complete_for :person, :username
+  # TODO Dave
+#  auto_complete_for :person, :username
 
   def update_all_from_flickr
     # Expire before updating so everyone sees the in-progress message
