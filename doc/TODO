@@ -10,6 +10,7 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
+Use shoulda-matchers instead of shoulda
 Fix guess scored before the group started
   Remove checks that filter out that data?
 Extract facades from models
