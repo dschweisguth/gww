@@ -2,8 +2,9 @@ source 'http://rubygems.org/'
 source 'http://gemcutter.org'
 
 gem 'mysql2', '0.2.6'
-gem 'rails', '3.0.5' 
-gem 'will_paginate', '~> 3.0.pre2'
+gem 'rails', '3.0.5'
+gem 'jquery-rails', '0.2.7'
+gem 'will_paginate', '3.0.pre2'
 gem 'xml-simple', '1.0.14'
 
 # The following gem is in the default group
