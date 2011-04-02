@@ -25,7 +25,7 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  config.include Shoulda::ActionController::Matchers
+  config.include Shoulda::Matchers::ActionController
   config.include Webrat::HaveTagMatcher
 
   config.include GWW::Matchers::Model, :type => :model
