@@ -2,7 +2,7 @@ class PeopleController < ApplicationController
   include Color
 
   def find
-    username = params[:person][:username]
+    username = params[:username]
     person = Person.find_by_multiple_fields username
     if person
       redirect_to person_path person

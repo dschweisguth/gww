@@ -8,7 +8,7 @@ describe PeopleController do
     it 'finds a person' do
       person = Person.make
       stub(Person).find_by_multiple_fields('username') { person }
-      get :find, :person => { :username => 'username' }
+      get :find, :username => 'username'
 
       #noinspection RubyResolve
       response.should redirect_to person_path person
@@ -17,7 +17,7 @@ describe PeopleController do
 
     it 'punts back to the home page' do
       stub(Person).find_by_multiple_fields('xxx') { nil }
-      get :find, :person => { :username => 'xxx' }
+      get :find, :username => 'xxx'
       response.should redirect_to root_path
       flash[:find_person_error].should == 'xxx'
     end

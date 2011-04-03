@@ -1,6 +1,6 @@
 # TODO Dave refactor
 GWW::Application.routes.draw do
-  match '/auto_complete_for_person_username' => 'root#auto_complete_for_person_username', :via => :post
+  match 'autocomplete_person_username' => 'root#autocomplete_person_username', :as => :root_autocomplete_person_username, :via => :get
   match '/' => 'root#index', :as => :root, :via => :get
   match 'about' => 'root#about', :as => :root_about, :via => :get
   match 'bookmarklet' => 'root#bookmarklet', :as => :root_bookmarklet, :via => :get
