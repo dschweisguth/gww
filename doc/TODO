@@ -7,6 +7,7 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
+Upgrade to current gems
 Move scripts to bin
 Remove uses of h from templates
 Try to remove RubyMine warning suppressions
