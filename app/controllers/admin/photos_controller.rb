@@ -1,6 +1,5 @@
 class Admin::PhotosController < ApplicationController
-  # TODO Dave
-#  auto_complete_for :person, :username
+  autocomplete :person, :username
 
   def update_all_from_flickr
     # Expire before updating so everyone sees the in-progress message
@@ -67,7 +66,7 @@ class Admin::PhotosController < ApplicationController
 
   def add_entered_answer
     begin
-      Comment.add_entered_answer params[:id].to_i, params[:person][:username], params[:answer_text]
+      Comment.add_entered_answer params[:id].to_i, params[:username], params[:answer_text]
     rescue Comment::AddAnswerError => e
       flash[:notice] = e.message
     end

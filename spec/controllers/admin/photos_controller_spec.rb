@@ -134,13 +134,13 @@ describe Admin::PhotosController do
     it "adds an entered answer" do
       mock(Comment).add_entered_answer 1, 'username', 'answer text'
       mock_clear_page_cache
-      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
+      post :add_entered_answer, :id => '1', :username => 'username', :answer_text => 'answer text'
       redirects_to_edit_path 1
     end
 
     it "notifies the user if there was an error" do
       mock(Comment).add_entered_answer(1, 'username', 'answer text') { raise Comment::AddAnswerError, 'Sorry' }
-      post :add_entered_answer, :id => '1', :person => { :username => 'username' }, :answer_text => 'answer text'
+      post :add_entered_answer, :id => '1', :username => 'username', :answer_text => 'answer text'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end

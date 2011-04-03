@@ -54,7 +54,7 @@ GWW::Application.routes.draw do
   match 'admin/bookmarklet' => 'admin/root#bookmarklet', :as => :admin_root_bookmarklet, :via => :get
 
   match 'admin/photos/edit_in_gww' => 'admin/photos#edit_in_gww', :as => :edit_in_gww, :via => :get
-  match '/admin/photos/auto_complete_for_person_username' => 'admin/photos#auto_complete_for_person_username', :via => :post
+  match 'admin/photos/autocomplete_person_username' => 'admin/photos#autocomplete_person_username', :as => :admin_photos_autocomplete_person_username, :via => :get
   match 'admin/photos/update_all_from_flickr' => 'admin/photos#update_all_from_flickr', :as => :update_all_from_flickr, :via => :post
   match 'admin/photos/update_statistics' => 'admin/photos#update_statistics', :as => :update_statistics, :via => :post
   match 'admin/photos/:id/change_game_status' => 'admin/photos#change_game_status', :as => :change_game_status, :via => :post
