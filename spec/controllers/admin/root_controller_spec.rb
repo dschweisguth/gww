@@ -14,7 +14,7 @@ describe Admin::RootController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should contain 'The most recent update from Flickr began Saturday, January 01, 00:00 PST and is still running. An update takes about six minutes.'
+      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about six minutes.'
       response.should contain '(111)'
       response.should contain '(222)'
       response.should contain '(2)'
@@ -28,7 +28,7 @@ describe Admin::RootController do
       stub(Guess).count { { 1 => 2, 2 => 2 }  }
       get :index
 
-      response.should contain 'The most recent update from Flickr began Saturday, January 01, 00:00 PST and completed at Monday, January 01, 00:06 PST.'
+      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and completed at Monday, January 1, 0:06 PST.'
 
     end
 

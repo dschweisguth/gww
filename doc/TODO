@@ -1,6 +1,6 @@
 Bugs
 
-Fix leading zeroes in Flickr update notice
+After http://code.google.com/p/phusion-passenger/issues/detail?id=563 is fixed, reinstate page caching
 The username of a person who has guessed but never posted is never updated
 A photo which is guessed or revealed and then removed from the group remains
   in the database but is no longer updated
@@ -12,15 +12,12 @@ Fix guess scored before the group started
   Remove checks that filter out that data?
 Extract facades from models
 Merge revelations into guesses?
-After this bug http://code.google.com/p/phusion-passenger/issues/detail?id=563
-  is fixed,
-  Upgrade to Rails 3
-  See whether it's possible to test :inverse_of
-  Try to remove :controller from routing specs
-  See whether Shoulda route matcher passes when route is a :collection => { :foo => :get }
-    but spec uses :post
-  rvm
-  Upgrade to Ruby 1.9.2
+See whether it's possible to test :inverse_of
+Try to remove :controller from routing specs
+See whether Shoulda route matcher passes when route is a :collection => { :foo => :get }
+  but spec uses :post
+rvm
+Upgrade to Ruby 1.9.2
 
 Features
 
