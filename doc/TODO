@@ -2,6 +2,7 @@ Bugs
 
 autocomplete is broken
 Map popup is broken
+Fix infinity in people list
 Fix leading zeroes in Flickr update notice
 The username of a person who has guessed but never posted is never updated
 A photo which is guessed or revealed and then removed from the group remains
