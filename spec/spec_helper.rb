@@ -25,7 +25,12 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # shoulda-matchers should include itself, but the following include is
+  # necessary for rake spec to pass.
   config.include Shoulda::Matchers::ActionController
+  # shoulda-matchers should include itself, but the following include is
+  # necessary for rake spec:rcov (but not rake spec!?!) to pass.
+  config.include Shoulda::Matchers::ActiveRecord
   config.include Webrat::HaveTagMatcher
 
   config.include GWW::Matchers::Model, :type => :model
