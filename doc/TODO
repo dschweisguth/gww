@@ -7,6 +7,8 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
+Try to remove RubyMine warning suppressions
+Use shoulda more in controller specs?
 In photo edit form, move IDs from fields to forms
 Fix guess scored before the group started
   Remove checks that filter out that data?
