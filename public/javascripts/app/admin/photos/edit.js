@@ -16,7 +16,7 @@
 
   var setUpCopyUsernameFor = function (comment_id) {
     $('#submit_' + comment_id).click(function () {
-      $('#username_' + comment_id)[0].value = $('#person_username')[0].value;
+      $('#username_' + comment_id)[0].value = $('#username')[0].value;
     });
   };
 
