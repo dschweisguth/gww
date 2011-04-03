@@ -23,10 +23,7 @@ GWW.personMap = (function () {
   };
 
   var addToggleHandler = function (id, markers) {
-    var checkbox = $(id);
-    if (checkbox) {
-      checkbox.observe('click', toggle(markers));
-    }
+    $('#' + id).click(toggle(markers));
   };
 
   var toggle = function (markers) {

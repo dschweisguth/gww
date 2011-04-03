@@ -6,7 +6,7 @@ GWW.map = function () {
     map: null,
 
     registerOnLoad: function (callbackName) {
-      Event.observe(window, 'load', function() {
+      $(function() {
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=' + callbackName;
@@ -15,7 +15,7 @@ GWW.map = function () {
     },
 
     mapsAPIIsLoadedCallback: function () {
-      that.map = new google.maps.Map($('map_canvas'), {
+      that.map = new google.maps.Map($('#map_canvas')[0], {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.442112),
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -56,16 +56,16 @@ GWW.map = function () {
 
   var loadInfoWindow = function (photo, marker) {
     return function () {
-      new Ajax.Request('/photos/' + photo.id + '/map_popup', {
-        method: 'get',
-        onSuccess: openInfoWindow(marker)
+      $.ajax({
+        url: '/photos/' + photo.id + '/map_popup',
+        success: openInfoWindow(marker)
       });
     };
   };
 
   var openInfoWindow = function (marker) {
-    return function (transport) {
-      infoWindow.setContent(transport.responseText);
+    return function (data, status, response) {
+      infoWindow.setContent(data);
       infoWindow.open(that.map, marker);
     }
   };
