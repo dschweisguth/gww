@@ -66,12 +66,6 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="tzinfo" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
         <dependency name="webrat" version="0.7.3" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
