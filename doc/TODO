@@ -8,7 +8,6 @@ A photo which is guessed or revealed and then removed from the group remains
 Debt
 
 Go through yellows
-Revisit need for requires
 Upgrade to current gems
 Move scripts to bin
 Remove uses of h from templates
