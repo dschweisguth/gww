@@ -130,14 +130,17 @@ class Guess < ActiveRecord::Base
   end
 
   def seconds_old
+    #noinspection RubyResolve
     (commented_at - photo.dateadded).to_i
   end
 
   def time_elapsed
+    #noinspection RubyResolve
     time_elapsed_between photo.dateadded, commented_at
   end
 
   def ymd_elapsed
+    #noinspection RubyResolve
     ymd_elapsed_between photo.dateadded, commented_at
   end
 
