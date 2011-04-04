@@ -98,9 +98,9 @@ describe FlickrUpdate do
 
   def makes_default_flickr_update
     update = FlickrUpdate.make
-    update.created_at.should_not be_nil
+    update.created_at.should_not == nil
     update.member_count.should == 0
-    update.completed_at.should be_nil
+    update.completed_at.should == nil
   end
 
   def makes_flickr_update_with_custom_attributes
@@ -142,7 +142,7 @@ describe ScoreReport do
 
   def makes_default_score_report
     update = ScoreReport.make
-    update.created_at.should_not be_nil
+    update.created_at.should_not == nil
   end
 
   def makes_score_report_with_custom_attributes
@@ -252,9 +252,9 @@ describe Photo do
     photo.farm.should == '0'
     photo.server.should == 'server'
     photo.secret.should == 'secret'
-    photo.dateadded.should_not be_nil
-    photo.lastupdate.should_not be_nil
-    photo.seen_at.should_not be_nil
+    photo.dateadded.should_not == nil
+    photo.lastupdate.should_not == nil
+    photo.seen_at.should_not == nil
     photo.game_status.should == 'unfound'
     photo.views.should == 0
     photo.member_comments.should == 0
@@ -330,7 +330,7 @@ describe Comment do
     comment.flickrid.should == 'commenter_flickrid'
     comment.username.should == 'commenter_username'
     comment.comment_text.should == 'comment text'
-    comment.commented_at.should_not be_nil
+    comment.commented_at.should_not == nil
   end
 
   def makes_comment_with_custom_attributes
@@ -394,8 +394,8 @@ describe Guess do
     guess.photo.game_status.should == 'found'
     guess.person.flickrid.should == 'guesser_person_flickrid'
     guess.comment_text.should == 'guess text'
-    guess.commented_at.should_not be_nil
-    guess.added_at.should_not be_nil
+    guess.commented_at.should_not == nil
+    guess.added_at.should_not == nil
   end
 
   def makes_guess_with_custom_attributes
@@ -457,8 +457,8 @@ describe Revelation do
     revelation.photo.flickrid.should == 'revealed_photo_photo_flickrid'
     revelation.photo.game_status.should == 'revealed'
     revelation.comment_text.should == 'revelation text'
-    revelation.commented_at.should_not be_nil
-    revelation.added_at.should_not be_nil
+    revelation.commented_at.should_not == nil
+    revelation.added_at.should_not == nil
   end
 
   def makes_revelation_with_custom_attributes
