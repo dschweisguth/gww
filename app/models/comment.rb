@@ -39,7 +39,6 @@ class Comment < ActiveRecord::Base
         guesser_flickrid = guesser ? guesser.flickrid : nil
       end
       if !guesser_flickrid then
-        #noinspection RubyResolve
         (guesser_comment = Comment.find_by_username entered_username) &&
           guesser_flickrid = guesser_comment.flickrid
       end
