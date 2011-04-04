@@ -8,6 +8,7 @@ class PeopleController < ApplicationController
       redirect_to person_path person
     else
       flash[:find_person_error] = username
+      #noinspection RubyResolve
       redirect_to root_path
     end
   end
