@@ -30,8 +30,8 @@ RSpec.configure do |config|
   config.include Shoulda::Matchers::ActionController
   # shoulda-matchers should include itself, but the following include is
   # necessary for rake spec:rcov (but not rake spec!?!) to pass.
-  config.include Shoulda::Matchers::ActiveRecord
-  config.include Webrat::HaveTagMatcher
+  config.include Shoulda::Matchers::ActiveRecord, :type => :model
+  config.include Webrat::HaveTagMatcher, :type => :controller
 
   config.include GWW::Matchers::Model, :type => :model
   config.include GWW::Matchers::Routing, :type => :routing
