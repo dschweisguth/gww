@@ -60,11 +60,13 @@ describe Photo do
 
     %w(unfound unconfirmed found revealed).each do |value|
       it "accepts '#{value}'" do
+        #noinspection RubyResolve
         Photo.new(valid_attrs.merge({ :game_status => value })).should be_valid
       end
     end
 
     it "rejects other values" do
+      #noinspection RubyResolve
       Photo.new(valid_attrs.merge({ :game_status => 'other' })).should_not be_valid
     end
 
