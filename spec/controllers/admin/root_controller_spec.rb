@@ -37,9 +37,11 @@ describe Admin::RootController do
   describe '#bookmarklet' do
     it 'renders the page' do
       get :bookmarklet
+
       #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => root_bookmarklet_path
+
     end
   end
 

@@ -56,8 +56,8 @@ describe Admin::PhotosController do
       end
     end
 
-    #noinspection RubyResolve
     def lists_photo
+      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => person_path(@photo.person), :content => @photo.person.username
       response.should have_selector 'td', :content => 'false'
@@ -71,7 +71,6 @@ describe Admin::PhotosController do
     it 'renders the page without loading comments' do
       photo = Photo.make :id => 111, :dateadded => Time.local(2011)
       stub(Photo).find(photo.id.to_s, anything) { photo }
-      #noinspection RubyResolve
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :id => 222 ] }
       get :edit, :id => photo.id.to_s
       renders_edit_page
@@ -91,11 +90,9 @@ describe Admin::PhotosController do
       response.should be_success
       response.should contain 'Added to the group at 12:00 AM, January 01, 2011'
       response.should contain 'This photo is unfound.'
-      #noinspection RubyResolve
       response.should have_selector 'form', :action => change_game_status_path(111), :content => "Change this photo's status from unfound to" do |form|
         form.should have_selector 'input', :value => 'unconfirmed'
       end
-      #noinspection RubyResolve
       response.should have_selector 'form', :action => add_selected_answer_path(111) do |form|
         form.should have_selector 'input', :type => 'submit', :name => 'commit', :value => 'Add this guess'
         form.should have_selector 'input', :type => 'hidden', :name => 'comment_id', :value => '222'
@@ -185,7 +182,6 @@ describe Admin::PhotosController do
       mock(Photo).destroy_photo_and_dependent_objects '1'
       mock_clear_page_cache
       get :destroy, :id => '1'
-      #noinspection RubyResolve
       response.should redirect_to admin_root_path
     end
   end
@@ -193,7 +189,6 @@ describe Admin::PhotosController do
   describe '#edit_in_gww' do
     it 'redirects to the given photo' do
       photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
-      #noinspection RubyResolve
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -202,7 +197,6 @@ describe Admin::PhotosController do
     end
 
     it 'punts an unknown photo Flickr ID' do
-      #noinspection RubyResolve
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 

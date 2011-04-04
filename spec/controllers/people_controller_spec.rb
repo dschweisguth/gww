@@ -154,7 +154,6 @@ describe PeopleController do
       stub(Guess).fastest(@person)
       stub(Guess).longest_lasting(@person)
       stub(Guess).shortest_lasting(@person)
-      #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(@person.id, anything) { [] }
       stub(@person).favorite_posters { [] }
 
@@ -188,10 +187,8 @@ describe PeopleController do
       stub(Photo).oldest_unfound(@person)
       stub(Photo).most_commented(@person)
       stub(Photo).most_viewed(@person)
-      #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(@person.id, anything) { [] }
       stub(Photo).all { [] }
-      #noinspection RubyResolve
       stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
 
@@ -242,7 +239,6 @@ describe PeopleController do
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
-      #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(@person.id, anything) \
         { [ Guess.make('all1'), Guess.make('all2') ] }
 
@@ -281,14 +277,11 @@ describe PeopleController do
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
-      #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(@person.id, anything) { [ found1.photo, found2.photo ] }
 
       stub(Photo).all { [ Photo.make 'unfound' ] }
 
-      #noinspection RubyResolve
-      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') \
-        { [ Photo.make 'revealed' ] }
+      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [ Photo.make 'revealed' ] }
 
       favorite_poster_of = Person.make 'favorite_poster_of'
       favorite_poster_of[:bias] = 3.6
@@ -321,7 +314,6 @@ describe PeopleController do
     it 'renders the page' do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
-      #noinspection RubyResolve
       stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make :person => person ] }
       get :guesses, :id => person.id.to_s
 
@@ -338,7 +330,6 @@ describe PeopleController do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
       photo = Photo.make :person => person
-      #noinspection RubyResolve
       stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ photo ] }
       get :posts, :id => person.id.to_s
 
@@ -358,7 +349,6 @@ describe PeopleController do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
 
-      #noinspection RubyResolve
       photo = Photo.make
       stub(Comment).find_by_sql { [ photo ] }
 

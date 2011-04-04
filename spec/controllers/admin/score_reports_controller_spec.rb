@@ -38,17 +38,21 @@ describe Admin::ScoreReportsController do
     it "doesn't allow deletion of the last report" do
       stub(ScoreReport).all { [ ScoreReport.make :created_at => Time.now ] }
       get :index
+
       #noinspection RubyResolve
       response.should be_success
       response.should_not have_selector 'form'
+
     end
 
     it "doesn't allow deletion of a report more than a day old" do
       stub(ScoreReport).all { [ ScoreReport.make :created_at => Time.now - 1.day - 1.second ] }
       get :index
+
       #noinspection RubyResolve
       response.should be_success
       response.should_not have_selector 'form'
+
     end
 
   end
@@ -80,8 +84,10 @@ describe Admin::ScoreReportsController do
       mock(ScoreReport).create! :previous_report => previous
       mock_clear_page_cache
       post :create
+
       #noinspection RubyResolve
       response.should redirect_to admin_score_reports_path
+
     end
   end
 
@@ -90,8 +96,10 @@ describe Admin::ScoreReportsController do
       mock(ScoreReport).destroy('666')
       mock_clear_page_cache
       get :destroy, :id => '666'
+
       #noinspection RubyResolve
       response.should redirect_to admin_score_reports_path
+
     end
   end
 

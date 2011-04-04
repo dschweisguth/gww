@@ -150,7 +150,6 @@ describe PhotosController do
       guess = Guess.make :photo => photo
       photo.guesses << guess
       stub(Photo).find { photo }
-      #noinspection RubyResolve
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make :photo => photo ] }
       get :show, :id => photo.id
 
