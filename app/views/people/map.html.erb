@@ -1,8 +1,8 @@
 <%= javascript_include_tag :defaults, 'app/shared/map', 'app/people/map' %>
-<% content_for :title do %>Mapped photos posted or guessed by <%=h @person.username %><% end %>
+<% content_for :title do %>Mapped photos posted or guessed by <%= @person.username %><% end %>
 
 <%= sandwich 'person_breadcrumbs' do %>
-<h1>Mapped photos posted or guessed by <%=h @person.username %></h1>
+<h1>Mapped photos posted or guessed by <%= @person.username %></h1>
 
 <p><% if @posts_count > 0 && @guesses_count > 0 -%>Show:<% end %>
   <% if @posts_count > 0 -%>

@@ -1,17 +1,17 @@
-<% content_for :title do %><%=h @person.username %><% end %>
+<% content_for :title do %><%= @person.username %><% end %>
 <%= sandwich 'people/breadcrumbs' do %>
 
-<h1><%=h @person.username %></h1>
+<h1><%= @person.username %></h1>
 
 <p>On Flickr:
-<a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%=h @person.username %>'s profile</a> -
-<a href="http://www.flickr.com/people/<%= @person.flickrid %>/photosof/">photos of <%=h @person.username %></a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/"><%=h @person.username %>'s photostream</a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/map/"><%=h @person.username %>'s map</a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/favorites/"><%=h @person.username %>'s favorites</a></p>
+<a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%= @person.username %>'s profile</a> -
+<a href="http://www.flickr.com/people/<%= @person.flickrid %>/photosof/">photos of <%= @person.username %></a> -
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/"><%= @person.username %>'s photostream</a> -
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/map/"><%= @person.username %>'s map</a> -
+<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/favorites/"><%= @person.username %>'s favorites</a></p>
 
 <p>In Guess Where SF:
-<a href="http://anythreewords.com/gwsf/index.php?pos=<%=h @person.username %>"><%= @person.username %>'s unfounds</a> -
+<a href="http://anythreewords.com/gwsf/index.php?pos=<%= @person.username %>"><%= @person.username %>'s unfounds</a> -
 <%= link_to "#{@person.username}'s posts", person_posts_path(@person) %> -
 <%= link_to "#{@person.username}'s guesses", person_guesses_path(@person) %> -
 <%= link_to "#{@person.username}'s comments", person_comments_path(@person, 1) %> -
@@ -20,18 +20,18 @@
 <h2>Standings</h2>
 
 <% if @guesses.empty? -%>
-  <%=h @person.username %> has never made a correct guess.<br/>
+  <%= @person.username %> has never made a correct guess.<br/>
 <% else -%>
-  <%=h @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= @place.ordinal %> place with a score of <%= @guesses.length %>.<br/>
+  <%= @person.username %> is <%= @tied ? 'tied for' : 'in' %> <%= @place.ordinal %> place with a score of <%= @guesses.length %>.<br/>
   <%= render 'people/show/high_scorers', :high_scorers => @weekly_high_scorers, :period => 'week' %>
   <%= render 'people/show/high_scorers', :high_scorers => @monthly_high_scorers, :period => 'month' %>
 <% end -%>
 <br/>
 
 <% if @posts.empty? -%>
-  <%=h @person.username %> has never posted a photo to the group.<br/> 
+  <%= @person.username %> has never posted a photo to the group.<br/>
 <% else -%>
-  <%=h @person.username %> has posted <%= pluralize @posts.length, 'photo' %> to the group, <%= if @posts_tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.<br/>
+  <%= @person.username %> has posted <%= pluralize @posts.length, 'photo' %> to the group, <%= if @posts_tied then 'tied for ' end %>the <%= if @posts_place > 1 then "#{@posts_place.ordinal} " end %>most.<br/>
   <%= render 'people/show/top_posters', :top_posters => @weekly_top_posters, :period => 'week' %>
   <%= render 'people/show/top_posters', :top_posters => @monthly_top_posters, :period => 'month' %>
 <% end -%>

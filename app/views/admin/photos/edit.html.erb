@@ -41,7 +41,7 @@
         <% end %>
       <% end -%>
       <div class="comment">
-        <strong><%=h comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
+        <strong><%= comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
         <%= raw wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
       </div>
       <br/>
