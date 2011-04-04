@@ -29,6 +29,6 @@ group :test do
 end
 
 group :production do
-  #noinspection RailsParamDefResolve,GemInspection
+  #noinspection GemInspection
   gem 'passenger', '3.0.5'
 end
