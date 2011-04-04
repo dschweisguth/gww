@@ -10,6 +10,7 @@ class Admin::PhotosController < ApplicationController
     flash[:notice] = "Created #{new_photo_count} new photos and " +
       "#{new_person_count} new users. Got #{pages_gotten} pages out of " +
       "#{pages_available}."
+    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
@@ -17,6 +18,7 @@ class Admin::PhotosController < ApplicationController
     Photo.update_statistics
     PageCache.clear
     flash[:notice] = 'Updated statistics.'
+    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
@@ -91,13 +93,13 @@ class Admin::PhotosController < ApplicationController
   end
 
   def reload_comments
-    #noinspection RubyResolve
     redirect_to_edit_path params[:id], :load_comments => true
   end
 
   def destroy
     Photo.destroy_photo_and_dependent_objects params[:id]
     PageCache.clear
+    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
@@ -107,7 +109,6 @@ class Admin::PhotosController < ApplicationController
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
-        #noinspection RubyResolve
         redirect_to_edit_path photo, :load_comments => true
         return
       else
@@ -119,8 +120,9 @@ class Admin::PhotosController < ApplicationController
       message = "Hmmm, that's strange. #{from} isn't a Flickr photo page. " +
         "How did we get here?"
     end
-    message += " If you like, you can <a href=\"#{from}\">go back where you came from</a>.";
+    message += " If you like, you can <a href=\"#{from}\">go back where you came from</a>."
     flash[:general_error] = message
+    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
