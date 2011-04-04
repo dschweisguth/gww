@@ -655,17 +655,14 @@ describe Person do
       @person2 = Person.make 2, :username => username2
     end
 
-    #noinspection RubyResolve
     def stub_post_count(count1, count2)
       stub(Photo).count(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
     end
 
-    #noinspection RubyResolve
     def stub_score(count1, count2)
       stub(Guess).count(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
     end
 
-    #noinspection RubyResolve
     def puts_person2_before_person1(sorted_by)
       Person.all_sorted(sorted_by, '+').should == [ @person2, @person1 ]
     end
@@ -737,7 +734,6 @@ describe Person do
       returns_expected_map
     end
 
-    #noinspection RubyResolve
     def returns_expected_map
       Person.comments_to_guess.should == { @guess.person.id => 1 }
     end
@@ -785,7 +781,6 @@ describe Person do
       returns_expected_map
     end
 
-    #noinspection RubyResolve
     def returns_expected_map
       Person.comments_to_be_guessed.should == { @guess.photo.person.id => 1 }
     end
@@ -846,7 +841,6 @@ describe Person do
       Person.top_guessers(@report_time).should == expected
     end
 
-    #noinspection RubyResolve
     def expected_periods_for_one_guess_at_report_time
       [
         (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
