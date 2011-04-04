@@ -1,5 +1,7 @@
-<%= javascript_include_tag :defaults, 'jquery-ui.min', 'autocomplete-rails' %>
-<%= stylesheet_link_tag 'jquery-ui' %>
+<% content_for :head do %>
+  <%= javascript_include_tag :defaults, 'jquery-ui.min', 'autocomplete-rails' %>
+  <%= stylesheet_link_tag 'jquery-ui' %>
+<% end %>
 <% content_for :title do %>Home<% end %>
 <h1>Guess Where Watcher</h1>
 
