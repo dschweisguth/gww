@@ -7,7 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-File bug in :object?
 More :type in spec_helper.rb
 Go through yellows
 Revisit need for requires
