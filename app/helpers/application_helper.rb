@@ -49,13 +49,15 @@ module ApplicationHelper
 
   def head_css(*stylesheets)
     content_for :head do
-      stylesheet_link_tag stylesheets
+      stylesheet_link_tag(stylesheets) + "\n"
     end
   end
 
-  # TODO Dave inline template
   def head_javascript(*custom)
-    render 'shared/head_javascript', :custom => custom
+    content_for :head do
+      javascript_include_tag(:defaults, *custom) + "\n" +
+      csrf_meta_tag
+    end
   end
 
 end
