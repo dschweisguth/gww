@@ -47,4 +47,9 @@ module ApplicationHelper
     render :layout => 'shared/sandwich', :locals => { :breadcrumbs => breadcrumbs }, &content
   end
 
+  # TODO Dave test
+  def head_javascript(*custom)
+    render 'shared/head_javascript', :custom => custom
+  end
+
 end
