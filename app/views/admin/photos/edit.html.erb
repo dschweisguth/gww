@@ -27,16 +27,16 @@
       <% if is_accepted_answer then %>
         <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
           <div>
-            <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
+            <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
             <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
           </div>
         <% end %>
       <% else %>
         <%= form_tag add_selected_answer_path(@photo) do %>
           <div>
-            <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
-            <%= hidden_field_tag 'username', nil, :id => "username_#{comment.id}" %>
-            <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
+            <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
+            <%= hidden_field_tag 'username', nil, :id => nil %>
+            <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess') %>
           </div>
         <% end %>
       <% end %>

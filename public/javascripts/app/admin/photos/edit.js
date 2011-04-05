@@ -8,15 +8,14 @@
     var forms = $('#comments form');
     for (var i = 0; i < forms.length; i++) {
       if (/add_selected_answer/.test(forms[i].action)) {
-        var comment_id = forms[i]['comment_id'].value;
-        setUpCopyUsernameFor(comment_id);
+        setUpCopyUsernameFor(forms[i]);
       }
     }
   };
 
-  var setUpCopyUsernameFor = function (comment_id) {
-    $('#submit_' + comment_id).click(function () {
-      $('#username_' + comment_id)[0].value = $('#username')[0].value;
+  var setUpCopyUsernameFor = function (form) {
+    $(form['commit']).click(function () {
+      form['username'].value = $('#username')[0].value;
     });
   };
 
