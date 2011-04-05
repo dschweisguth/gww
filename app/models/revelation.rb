@@ -19,12 +19,10 @@ class Revelation < ActiveRecord::Base
   end
 
   def time_elapsed
-    #noinspection RubyResolve
     time_elapsed_between photo.dateadded, commented_at
   end
 
   def ymd_elapsed
-    #noinspection RubyResolve
     ymd_elapsed_between photo.dateadded, commented_at
   end
 
