@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe PhotosHelper do
-  without_transactions
 
   describe '#other_photos_path' do
     it 'returns the URI to the list sorted by the given criterion' do

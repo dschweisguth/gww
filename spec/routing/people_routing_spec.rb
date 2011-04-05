@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe PeopleController do
-  without_transactions
 
   describe 'find' do
     it { should have_named_route :find_person, '/people/find' }

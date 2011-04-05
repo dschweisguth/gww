@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe WheresiesController do
-  without_transactions
 
   describe '#show' do
     it { should have_named_route :wheresies, 2010, '/wheresies/2010' }

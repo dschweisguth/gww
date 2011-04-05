@@ -3,7 +3,6 @@ require 'controllers/score_reports_controller_spec_support'
 
 describe Admin::ScoreReportsController do
   render_views
-  without_transactions
 
   describe '#index' do
     it "renders the page" do

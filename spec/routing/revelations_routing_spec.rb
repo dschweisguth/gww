@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe RevelationsController do
-  without_transactions
 
   describe 'longest' do
     it { should have_named_route :longest_revelations, '/revelations/longest' }

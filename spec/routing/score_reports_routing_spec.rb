@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ScoreReportsController do
-  without_transactions
 
   describe '#index' do
     it { should have_named_route :score_reports, '/score_reports' }

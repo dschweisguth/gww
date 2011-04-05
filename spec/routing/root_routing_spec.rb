@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe RootController do
-  without_transactions
 
   describe 'auto_complete_for_person_username' do
     it { should have_named_route :root_autocomplete_person_username, '/autocomplete_person_username' }

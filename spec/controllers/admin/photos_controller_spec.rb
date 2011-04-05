@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Admin::PhotosController do
   render_views
-  without_transactions
 
   describe '#update_all_from_flickr' do
     it 'does some work and redirects' do

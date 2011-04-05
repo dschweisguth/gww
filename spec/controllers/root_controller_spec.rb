@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe RootController do
   render_views
-  without_transactions
 
   describe '#index' do
     it 'renders the page' do

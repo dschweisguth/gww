@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Photos do
-  without_transactions
 
   describe '#url_for_flickr_photo' do
     it "returns the URL to the given photo's Flickr page, in the GWSF pool" do

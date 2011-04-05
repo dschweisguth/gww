@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Admin::PhotosController do
-  without_transactions
 
   describe 'autocomplete_person_username' do
     it { should have_named_route :admin_photos_autocomplete_person_username, "/admin/photos/autocomplete_person_username" }

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ScoreReportsHelper do
-  without_transactions
 
   describe '#escape_username' do
     it 'surrounds the dot in a username that looks like a domain name with spaces' do

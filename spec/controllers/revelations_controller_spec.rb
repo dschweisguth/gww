@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe RevelationsController do
   render_views
-  without_transactions
 
   describe '#longest' do
     it 'renders the page' do

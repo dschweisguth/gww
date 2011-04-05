@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe GuessesController do
   render_views
-  without_transactions
 
   describe '#longest_and_shortest' do
     it 'renders the page' do

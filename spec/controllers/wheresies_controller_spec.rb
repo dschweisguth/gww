@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe WheresiesController do
   render_views
-  without_transactions
 
   describe '#show' do
     it 'renders the page' do

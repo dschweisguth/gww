@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Admin::ScoreReportsController do
-  without_transactions
 
   describe '#index, #create' do
     it { should have_named_route :admin_score_reports, '/admin/score_reports' }

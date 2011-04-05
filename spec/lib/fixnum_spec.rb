@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Fixnum do
-  without_transactions
 
   describe '#ordinal' do
     expected = {

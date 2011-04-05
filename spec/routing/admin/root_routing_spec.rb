@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Admin::RootController do
-  without_transactions
 
   describe 'index' do
     it { should have_named_route :admin_root, '/admin' }

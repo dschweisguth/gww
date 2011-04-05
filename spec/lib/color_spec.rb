@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Color do
-  without_transactions
 
   before do
     self.extend Color

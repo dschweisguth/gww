@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe ApplicationHelper do
-  without_transactions
 
   describe '#singularize' do
     it 'replaces a plural verb with a singular one' do

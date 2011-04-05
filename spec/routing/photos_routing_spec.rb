@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe PhotosController do
-  without_transactions
 
   describe 'index' do
     it { should have_named_route :photos, 'foo', 'bar', 1, '/photos/sorted-by/foo/order/bar/page/1' }

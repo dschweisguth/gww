@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe PeopleHelper do
-  without_transactions
 
   describe '#other_people_path' do
     it 'returns the URI to the list sorted by the given criterion' do

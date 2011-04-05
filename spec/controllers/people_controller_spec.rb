@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe PeopleController do
   render_views
-  without_transactions
 
   describe '#find' do
     it 'finds a person' do
