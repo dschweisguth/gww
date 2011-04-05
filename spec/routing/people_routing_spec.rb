@@ -21,10 +21,6 @@ describe PeopleController do
     end
   end
 
-  describe 'old_show' do
-    it { should route(:get, '/people/show/666').to :controller => 'people', :action => 'old_show', :id => '666' }
-  end
-
   describe 'show' do
     it { should have_named_route :person, 666, '/people/666' }
     it { should route(:get, '/people/666').to :controller => 'people', :action => 'show', :id => '666' }

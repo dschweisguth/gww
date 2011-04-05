@@ -109,14 +109,6 @@ describe PeopleController do
 
   end
 
-  describe '#old_show' do
-    it "redirects to the new show" do
-      get :old_show, :id => '666'
-      #noinspection RubyResolve
-      response.should redirect_to person_path(666)
-    end
-  end
-  
   describe '#show' do
     before do
       @person = Person.make :id => 1

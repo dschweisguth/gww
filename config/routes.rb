@@ -9,8 +9,6 @@ GWW::Application.routes.draw do
 
   match 'people/find' => 'people#find', :as => :find_person, :via => :get
   match 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people, :via => :get
-  # TODO Dave remove after first score report after 3/21/2011
-  match 'people/show/:id' => 'people#old_show', :via => :get
   match 'people/:id/guesses' => 'people#guesses', :as => :person_guesses, :via => :get
   match 'people/:id/posts' => 'people#posts', :as => :person_posts, :via => :get
   match 'people/:id/map' => 'people#map', :as => :person_map, :via => :get
