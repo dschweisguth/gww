@@ -90,4 +90,20 @@ describe ApplicationHelper do
       "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
   end
 
+  describe '#head_javascript' do
+    it "adds the default Javascript includes and the CSRF protection data to the head" do
+      helper.head_javascript
+      content_for_head = helper.content_for(:head)
+      content_for_head.should =~ /jquery.min.js/
+      content_for_head.should =~ /rails.js/
+      # Can't test that CSRF stuff is present since test controller doesn't have protect_from_forgery
+    end
+
+    it "adds additional Javascript includes to the head" do
+      helper.head_javascript 'my.js'
+      helper.content_for(:head).should =~ /my.js/
+    end
+
+  end
+
 end
