@@ -36,8 +36,6 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastthread (1.0.7)
-    file-tail (1.0.5)
-      spruz (>= 0.1.0)
     i18n (0.5.0)
     jquery-rails (0.2.7)
       rails (~> 3.0)
@@ -50,10 +48,9 @@ GEM
     mime-types (1.16)
     mysql2 (0.2.7)
     nokogiri (1.4.4)
-    passenger (3.0.5)
+    passenger (3.0.6)
       daemon_controller (>= 0.2.5)
       fastthread (>= 1.0.1)
-      file-tail
       rack
       rake (>= 0.8.1)
     polyglot (0.3.1)
@@ -95,7 +92,6 @@ GEM
       railties (~> 3.0)
       rspec (~> 2.5.0)
     shoulda-matchers (1.0.0.beta2)
-    spruz (0.2.5)
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
@@ -114,7 +110,7 @@ PLATFORMS
 DEPENDENCIES
   jquery-rails (= 0.2.7)
   mysql2 (= 0.2.7)
-  passenger (= 3.0.5)
+  passenger (= 3.0.6)
   rails (= 3.0.5)
   rails3-jquery-autocomplete (= 0.6.5)
   rcov (= 0.9.9)

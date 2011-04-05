@@ -30,5 +30,5 @@ end
 
 group :production do
   #noinspection GemInspection
-  gem 'passenger', '3.0.5'
+  gem 'passenger', '3.0.6'
 end
