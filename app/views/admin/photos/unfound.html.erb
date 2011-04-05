@@ -1,3 +1,2 @@
-<% content_for :title do %>Unfound or unconfirmed photos<% end %>
 <%= render 'admin/photos/list',
   :title => pluralize(@photos.length, 'unfound or unconfirmed photo') %>

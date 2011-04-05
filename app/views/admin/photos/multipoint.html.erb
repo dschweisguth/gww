@@ -1,3 +1,2 @@
-<% content_for :title do %>Photos worth more than one point<% end %>
 <%= render 'admin/photos/list',
   :title => pluralize(@photos.length, 'photo') + ' worth more than one point' %>
