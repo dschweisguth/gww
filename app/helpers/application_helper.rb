@@ -53,6 +53,7 @@ module ApplicationHelper
     end
   end
 
+  # TODO Dave inline template
   def head_javascript(*custom)
     render 'shared/head_javascript', :custom => custom
   end
