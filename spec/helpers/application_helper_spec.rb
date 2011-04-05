@@ -113,4 +113,12 @@ describe ApplicationHelper do
 
   end
 
+  describe '#title_and_h1' do
+    it "adds the title to the head and emits an h1 with the same text" do
+      fragment = helper.title_and_h1 'foo'
+      fragment.should have_selector 'h1', :content => 'foo';
+      helper.content_for(:title).should == 'foo'
+    end
+  end
+
 end

@@ -60,4 +60,8 @@ module ApplicationHelper
     end
   end
 
+  def title_and_h1(title)
+    render 'shared/title', :title => title
+  end
+
 end
