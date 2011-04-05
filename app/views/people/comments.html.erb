@@ -15,7 +15,7 @@
     <td><%= link_to_photo photo %></td>
     <td><%= link_to_person photo.person %></td>
     <% if photo.game_status == 'found' -%>
-    <td><%= photo.guesses.map { |guess| link_to_person guess.person }.join ', ' %></td>
+    <td><%= raw(photo.guesses.map { |guess| link_to_person guess.person }.join ', ') %></td>
     <% else -%>
     <td><strong><%= photo.game_status %></strong></td>
     <% end -%>
