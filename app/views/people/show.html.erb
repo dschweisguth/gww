@@ -1,7 +1,5 @@
-<% content_for :title do %><%= @person.username %><% end %>
 <%= sandwich 'people/breadcrumbs' do %>
-
-<h1><%= @person.username %></h1>
+<%= title_and_h1 @person.username %>
 
 <p>On Flickr:
 <a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%= @person.username %>'s profile</a> -

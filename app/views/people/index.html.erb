@@ -1,6 +1,5 @@
-<% content_for :title do %>Active members<% end %>
 <%= sandwich do %>
-<h1><%= @people.length %> active members</h1>
+<%= title_and_h1 "#{@people.length} active members" %>
 
 <table class="dark">
 <tr>

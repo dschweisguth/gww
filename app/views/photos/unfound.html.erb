@@ -1,6 +1,5 @@
-<% content_for :title do %>Unfound photos<% end %>
 <%= sandwich do %>
-<h1><%= @photos.length %> unfound photos</h1>
+<%= title_and_h1 "#{@photos.length} unfound photos" %>
 
 <table class="dark">
   <tr>

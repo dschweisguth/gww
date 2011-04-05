@@ -1,8 +1,6 @@
 <%= head_javascript 'app/shared/map', 'app/photos/map' %>
-<% content_for :title do %>Mapped photos<% end %>
-
 <%= sandwich do %>
-<h1>Mapped photos</h1>
+<%= title_and_h1 'Mapped photos' %>
 
 <div id="map_canvas"></div>
 
