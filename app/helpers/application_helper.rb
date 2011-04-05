@@ -47,6 +47,12 @@ module ApplicationHelper
     render :layout => 'shared/sandwich', :locals => { :breadcrumbs => breadcrumbs }, &content
   end
 
+  def head_css(*stylesheets)
+    content_for :head do
+      stylesheet_link_tag stylesheets
+    end
+  end
+
   def head_javascript(*custom)
     render 'shared/head_javascript', :custom => custom
   end
