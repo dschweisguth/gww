@@ -38,9 +38,11 @@ class Comment < ActiveRecord::Base
         guesser = Person.find_by_username entered_username
         guesser_flickrid = guesser ? guesser.flickrid : nil
       end
-      if !guesser_flickrid then
-        (guesser_comment = Comment.find_by_username entered_username) &&
+      if !guesser_flickrid
+        guesser_comment = Comment.find_by_username entered_username
+        if guesser_comment
           guesser_flickrid = guesser_comment.flickrid
+        end
       end
       if !guesser_flickrid
         raise AddAnswerError,
