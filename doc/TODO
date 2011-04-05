@@ -8,7 +8,7 @@ A photo which is guessed or revealed and then removed from the group remains
 Debt
 
 CSRF
-Upgrade to current gems
+Use verify method: http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrfUpgrade to current gems
 Move scripts to bin
 Use shoulda more in controller specs?
 In photo edit form, move IDs from fields to forms
