@@ -10,7 +10,7 @@
     <th>Guesses scored</th>
     <th>Revelations scored</th>
   </tr>
-<% @score_reports.each do |report| -%>
+<% @score_reports.each do |report| %>
   <tr>
     <td>
       <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), score_report_path(report.id) %>
@@ -18,7 +18,7 @@
     <td class="number"><%= @guess_counts[report.id] || 0 %></td>
     <td class="number"><%= @revelation_counts[report.id] || 0 %></td>
   </tr>
-<% end -%>
+<% end %>
 </table>
 
 <%= render 'provenance' -%>

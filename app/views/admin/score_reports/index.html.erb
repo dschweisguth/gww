@@ -9,23 +9,23 @@
     <th>Guesses scored</th>
     <th>Revelations scored</th>
   </tr>
-<% @score_reports.each_with_index do |report, i| -%>
+<% @score_reports.each_with_index do |report, i| %>
   <tr>
     <td>
       <%= link_to report.created_at.getlocal.strftime('%b %e, %Y, %l:%M %p'), score_report_path(report.id) %>
     </td>
     <td class="number"><%= @guess_counts[report.id] || 0 %></td>
     <td class="number"><%= @revelation_counts[report.id] || 0 %></td>
-    <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago -%>
+    <% if i == 0 && @score_reports.length > 1 && report.created_at > 1.day.ago %>
       <td class="forget">
         <%= form_tag admin_score_report_path(report), :method => :delete, :class => 'inline' do %>
           <%= submit_tag 'Forget', :confirm => 'Are you sure?' %>
-        <% end -%>
+        <% end %>
         (Do this if you just published, maybe scored another photo, changed your mind and want to republish. This can't be undone!)
       </td>
-    <% end -%>
+    <% end %>
   </tr>
-<% end -%>
+<% end %>
 </table>
 
 <%= render 'score_reports/provenance' -%>

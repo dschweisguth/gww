@@ -1,14 +1,14 @@
 <div class="darker"><%= heading %></div>
 
 <table class="dark">
-  <% periods.each_with_index do |period, i| -%>
-    <tr><th colspan="2">for <%= period.start.strftime format %><% if i == 0 -%> so far ...<% end -%></th></tr>
-    <% period.scores.keys.sort { |x, y| y <=> x }.each do |score| -%>
+  <% periods.each_with_index do |period, i| %>
+    <tr><th colspan="2">for <%= period.start.strftime format %><% if i == 0 %> so far ...<% end %></th></tr>
+    <% period.scores.keys.sort { |x, y| y <=> x }.each do |score| %>
       <tr>
 	<td class="opening-number"><%= score %></td>
-	<td><% period.scores[score].each_with_index do |person, j| -%><% if j > 0 -%>, <% end -%><%= link_to_person person %><% end -%></td>
+	<td><% period.scores[score].each_with_index do |person, j| %><% if j > 0 %>, <% end %><%= link_to_person person %><% end %></td>
       </tr>
-    <% end -%>
+    <% end %>
     <tr><td colspan="2" class="empty">&nbsp;</td></tr>
-  <% end -%>
+  <% end %>
 </table>

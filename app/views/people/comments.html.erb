@@ -8,19 +8,19 @@
     <th>posted by</th>
     <th>found by</th>
   </tr>  
-<% @photos.each_with_index do |photo, photo_index| -%>
+<% @photos.each_with_index do |photo, photo_index| %>
   <tr>
     <td class="row-number"><%= @photos.offset + photo_index + 1 %>.</td>
     <td><%= link_to_flickr_photo photo %></td>
     <td><%= link_to_photo photo %></td>
     <td><%= link_to_person photo.person %></td>
-    <% if photo.game_status == 'found' -%>
+    <% if photo.game_status == 'found' %>
     <td><%= raw(photo.guesses.map { |guess| link_to_person guess.person }.join ', ') %></td>
-    <% else -%>
+    <% else %>
     <td><strong><%= photo.game_status %></strong></td>
-    <% end -%>
+    <% end %>
   </tr>
-<% end -%>
+<% end %>
 </table>
 
 <br/>

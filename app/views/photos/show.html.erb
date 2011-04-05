@@ -3,19 +3,19 @@
 <%= render 'image_and_status' %>
 
 <p id="comments-header">Comments</p>
-<% if ! @comments.empty? -%>
+<% if ! @comments.empty? %>
   <div id="comments">
-    <% @comments.each do |comment| -%>
+    <% @comments.each do |comment| %>
       <div class="comment">
         <strong><%= comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
         <%= comment.comment_text %><br/>
       </div>
       <br/>
-    <% end -%>
+    <% end %>
   </div>
-<% else -%>
+<% else %>
 No comments available.
-<% end -%>
+<% end %>
 
 <br/>
 <% end %>

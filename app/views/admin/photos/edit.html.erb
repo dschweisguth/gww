@@ -4,10 +4,10 @@
 
 <%= sandwich 'shared/admin/breadcrumbs' do %>
 
-<% if !flash[:notice].nil? -%>
+<% if !flash[:notice].nil? %>
   <br/>
   <%= flash[:notice] %><br/><br/>
-<% end -%>
+<% end %>
 
 <%= render 'photos/image_and_status', :size => 'm' %>
 <br/>
@@ -20,18 +20,18 @@
 <% end %>
 
 <p id="comments-header">Comments</p>
-<% if ! @comments.empty? -%>
+<% if ! @comments.empty? %>
   <div id="comments" class="edit">
-    <% @comments.each do |comment| -%>
-      <% is_accepted_answer = comment.is_accepted_answer -%>
-      <% if is_accepted_answer then -%>
+    <% @comments.each do |comment| %>
+      <% is_accepted_answer = comment.is_accepted_answer %>
+      <% if is_accepted_answer then %>
         <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
             <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
           </div>
         <% end %>
-      <% else -%>
+      <% else %>
         <%= form_tag add_selected_answer_path(@photo) do %>
           <div>
             <%= hidden_field_tag 'comment_id', comment.id, :id => "comment_id_#{comment.id}" %>
@@ -39,13 +39,13 @@
             <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess'), :id => "submit_#{comment.id}" %>
           </div>
         <% end %>
-      <% end -%>
+      <% end %>
       <div class="comment">
         <strong><%= comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
         <%= raw wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
       </div>
       <br/>
-    <% end -%>
+    <% end %>
   </div><br/>
 
   <%= form_tag(add_entered_answer_path(@photo), :id => 'username_form') do %>
@@ -58,9 +58,9 @@
     </div>
   <% end %>
 
-<% else -%>
+<% else %>
   No comments available.
-<% end -%>
+<% end %>
 <br/><br/>
 
 <%= button_to 'Reload comments', reload_comments_path(@photo) %>

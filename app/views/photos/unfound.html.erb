@@ -10,7 +10,7 @@
     <th>last updated</th>
     <th>unconfirmed</th>
   </tr>  
-<% @photos.each_with_index do |photo, photo_index| -%>
+<% @photos.each_with_index do |photo, photo_index| %>
   <tr>
     <td class="row-number"><%= photo_index + 1 %>.</td>
     <td><%= link_to_flickr_photo photo %></td>

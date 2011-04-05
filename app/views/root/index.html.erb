@@ -3,9 +3,9 @@
 <% content_for :title do %>Home<% end %>
 <h1>Guess Where Watcher</h1>
 
-<% if !flash[:general_error].nil? -%>
+<% if !flash[:general_error].nil? %>
   <p class="error"><%= flash[:general_error] %></p>
-<% end -%>
+<% end %>
 
 <p>Welcome to Guess Where Watcher, the <a
 href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
@@ -28,7 +28,7 @@ Comment Searchr</a>.</p>
   <% if flash[:find_person_error] %><br/>
     <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.
       You could try again, or scan the <%= link_to 'Active members', people_path('score', '+') %> page.</span>
-  <% end -%>
+  <% end %>
 </li>
 <li><%= link_to 'Active members', people_path('score', '+') %> and statistics. How do you measure up?</li>
 <li><%= link_to 'Nemeses', nemeses_people_path %>: who guesses whom the most?</li>

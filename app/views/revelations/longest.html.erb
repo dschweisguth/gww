@@ -9,7 +9,7 @@
     <th>revealed on</th>
     <th>time elapsed</th>
   </tr>
-  <% @longest.each do |revelation| -%>
+  <% @longest.each do |revelation| %>
     <tr>
       <td class="thumbnail"><%= thumbnail revelation.photo %></td>
       <td><%= link_to_person revelation.photo.person %></td>
@@ -17,7 +17,7 @@
       <td><%= raw revelation.commented_at.getlocal.strftime '%Y/%m/%d %I:%M:%S&nbsp;%p' %></td>
       <td><%= raw revelation.time_elapsed %></td>
     </tr>
-  <% end -%>
+  <% end %>
 </table>
 
 <% end %>

@@ -10,16 +10,16 @@
   <% did_2_5 = false %>
   <% did_1 = false %>
   <% @nemeses.each do |nemesis| %>
-    <% if nemesis[:bias] < 2.5 && ! did_2_5 then did_2_5 = true -%>
+    <% if nemesis[:bias] < 2.5 && ! did_2_5 then did_2_5 = true %>
       <tr>
         <td colspan="3">Above this line, the guesser is the poster's nemesis, and they appear on each other's pages.</td>
       </tr>
-    <% end -%>
-    <% if nemesis[:bias] < 1 && ! did_1 then did_1 = true -%>
+    <% end %>
+    <% if nemesis[:bias] < 1 && ! did_1 then did_1 = true %>
       <tr>
         <td colspan="3">Below this line, the guesser guesses the poster less often than expected.</td>
       </tr>
-    <% end -%>
+    <% end %>
     <tr>
       <td><%= link_to_person nemesis %></td>
       <td><%= link_to_person nemesis[:poster] %></td>

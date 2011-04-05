@@ -1,35 +1,35 @@
 <h2><%= @person.username %> has posted <%= pluralize @posts.length, 'photo' %></h2>
 
-<% if ! @favorite_posters_of.empty? -%>
-<p><%= @person.username %>'s <%= link_to (@favorite_posters_of.length == 1 ? 'nemesis' : 'nemeses'), nemeses_people_path, :class => 'normal' %> <%= singularize 'are', @favorite_posters_of.length %> <% -%>
-<% @favorite_posters_of.each_with_index do |favorite_poster_of, i| -%>
-<% if 0 < i && i < @favorite_posters_of.length - 1 %>, <% elsif 0 < i %> and <% end -%><%= link_to_person favorite_poster_of %> (<%= '%.1f' % favorite_poster_of[:bias] %>)<% -%>
+<% if ! @favorite_posters_of.empty? %>
+<p><%= @person.username %>'s <%= link_to (@favorite_posters_of.length == 1 ? 'nemesis' : 'nemeses'), nemeses_people_path, :class => 'normal' %> <%= singularize 'are', @favorite_posters_of.length %> <%= -%>
+<% @favorite_posters_of.each_with_index do |favorite_poster_of, i| %>
+<% if 0 < i && i < @favorite_posters_of.length - 1 %>, <% elsif 0 < i %> and <% end %><%= link_to_person favorite_poster_of %> (<%= '%.1f' % favorite_poster_of[:bias] %>)<%= -%>
 <% end %></p>
-<% end -%>
+<% end %>
 
-<% if ! @posts.empty? -%>
+<% if ! @posts.empty? %>
 Of the photos that <%= @person.username %> has posted,<br/><br/>
-<% end -%>
-<% if ! @unfound_photos.empty? -%>
+<% end %>
+<% if ! @unfound_photos.empty? %>
 <%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<% if @unfound_photos.any? { |p| p.game_status == 'unconfirmed' } %> or <span class="unconfirmed">unconfirmed</span><% end %>:
-<%   @unfound_photos.each_with_index do |photo, photo_index| -%>
+<%   @unfound_photos.each_with_index do |photo, photo_index| %>
 <% if photo.game_status == 'unconfirmed' %><span class="unconfirmed"><% end %><%= link_to photo_index + 1, photo_path(photo) %><% if photo.game_status == 'unconfirmed' %></span><% end %>
-<%   end -%>
+<%   end %>
 <br/><br/>
-<% end -%>
+<% end %>
 
-<% if ! @revealed_photos.empty? -%>
+<% if ! @revealed_photos.empty? %>
 <%= @revealed_photos.length %> <%= singularize 'were', @revealed_photos.length %> revealed:
-<%   @revealed_photos.each_with_index do |photo, photo_index| -%>
+<%   @revealed_photos.each_with_index do |photo, photo_index| %>
 <%= link_to photo_index + 1, photo_path(photo) %>
-<%   end -%>
+<%   end %>
 <br/><br/>
-<% end -%>
+<% end %>
 
-<% @guessers.each do |entry| -%>
+<% @guessers.each do |entry| %>
 <%=  entry[1].length %> <%= singularize 'were', entry[1].length %> guessed by <%= link_to_person entry[0] %>:
-<%   entry[1].each_with_index do |photo, photo_index| -%>
+<%   entry[1].each_with_index do |photo, photo_index| %>
 <%=    link_to photo_index + 1, photo_path(photo) %>
-<%   end -%>
+<%   end %>
 <br/>
-<% end -%>
+<% end %>

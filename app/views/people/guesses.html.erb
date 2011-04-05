@@ -9,20 +9,20 @@
     <th>date added</th>
     <th>date guessed</th>
   </tr>  
-<% @guesses.each_with_index do |guess, guess_index| -%>
+<% @guesses.each_with_index do |guess, guess_index| %>
   <tr>
     <td class="row-number"><%= guess_index + 1 %>.</td>
-    <% if guess.photo.person_id != 0 -%>
+    <% if guess.photo.person_id != 0 %>
     <td class="thumbnail"><%= thumbnail guess.photo %></td>
     <td><%= link_to_person guess.photo.person %></td>
-    <% else -%>
+    <% else %>
     <td><strong>unknown</strong></td>
     <td><strong>unknown</strong></td>
-    <% end -%>
+    <% end %>
     <td><%= local_date guess.photo.dateadded %></td>
     <td><%= local_date guess.commented_at %></td>
   </tr>
-<% end -%>
+<% end %>
 </table>
 
 <% end %>
