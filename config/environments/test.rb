@@ -28,7 +28,6 @@ GWW::Application.configure do
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
   # like if you have constraints or database-specific column types
-  # TODO Dave should this be uncommented?
   # config.active_record.schema_format = :sql
 
   # Print deprecation notices to the stderr
