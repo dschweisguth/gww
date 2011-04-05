@@ -1,4 +1,6 @@
-<%= javascript_include_tag :defaults, 'app/shared/map', 'app/photos/map' %>
+<% content_for :head do %>
+  <%= javascript_include_tag :defaults, 'app/shared/map', 'app/photos/map' %>
+<% end %>
 <% content_for :title do %>Mapped photos<% end %>
 
 <%= sandwich do %>
