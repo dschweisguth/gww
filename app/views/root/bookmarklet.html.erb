@@ -1,5 +1,7 @@
-<%= javascript_include_tag :defaults, 'app/bookmarklet' %>
-<%= csrf_meta_tag %>
+<% content_for :head do %>
+  <%= javascript_include_tag :defaults, 'app/bookmarklet' %>
+  <%= csrf_meta_tag %>
+<% end %>
 <% content_for :title do %>"View in GWW" bookmarklet<% end %>
 <h1>"View in GWW" bookmarklet</h1>
 
