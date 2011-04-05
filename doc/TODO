@@ -8,7 +8,6 @@ A photo which is guessed or revealed and then removed from the group remains
 Debt
 
 Upgrade to current gems
-Move scripts to bin
 Use shoulda more in controller specs?
 In photo edit form, move IDs from fields to forms
 Use Rails 3 nested layouts
