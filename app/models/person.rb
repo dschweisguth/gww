@@ -513,15 +513,15 @@ class Person < ActiveRecord::Base
     find_by_sql [
       %q{
         select p.*, count(*) points
-	from people p,
-	  (select person_id, min(a.acted) joined
-	    from
-	      (select person_id, commented_at acted from guesses union all
-	        select person_id, dateadded acted from photos) a
-	    group by person_id having ? <= joined and joined < ?) r,
-	  guesses g
+        from people p,
+          (select person_id, min(a.acted) joined
+            from
+              (select person_id, commented_at acted from guesses union all
+                select person_id, dateadded acted from photos) a
+            group by person_id having ? <= joined and joined < ?) r,
+          guesses g
         where p.id = r.person_id and p.id = g.person_id and g.commented_at < ?
-	group by p.id order by points desc limit 10
+        group by p.id order by points desc limit 10
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
@@ -531,15 +531,15 @@ class Person < ActiveRecord::Base
     find_by_sql [
       %q{
         select p.*, count(*) posts
-	from people p,
-	  (select person_id, min(a.acted) joined
-	    from
-	      (select person_id, commented_at acted from guesses union all
-	        select person_id, dateadded acted from photos) a
-	    group by person_id having ? <= joined and joined < ?) r,
-	  photos f
+        from people p,
+          (select person_id, min(a.acted) joined
+            from
+              (select person_id, commented_at acted from guesses union all
+                select person_id, dateadded acted from photos) a
+            group by person_id having ? <= joined and joined < ?) r,
+          photos f
         where p.id = r.person_id and p.id = f.person_id and f.dateadded < ?
-	group by p.id order by posts desc limit 10
+        group by p.id order by posts desc limit 10
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
