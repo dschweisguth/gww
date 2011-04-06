@@ -278,6 +278,12 @@ describe Guess do
       Guess.mapped_count(guess.person.id).should == 0
     end
 
+    it "ignores guesses of photos mapped with insufficient accuracy" do
+      photo = Photo.make :accuracy => 11
+      guess = Guess.make :photo => photo
+      Guess.mapped_count(guess.person.id).should == 0
+    end
+
   end
 
   describe '.all_mapped' do
@@ -296,6 +302,12 @@ describe Guess do
 
     it "ignores guesses of unmapped photos" do
       photo = Photo.make
+      guess = Guess.make :photo => photo
+      Guess.all_mapped(guess.person.id).should == []
+    end
+
+    it "ignores guesses of photos mapped with insufficient accuracy" do
+      photo = Photo.make :accuracy => 11
       guess = Guess.make :photo => photo
       Guess.all_mapped(guess.person.id).should == []
     end
