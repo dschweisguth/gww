@@ -192,12 +192,8 @@ class Photo < ActiveRecord::Base
   # Used by WheresiesController
 
   def self.most_viewed_in(year)
-    find :all,
-      :conditions => [ '? <= dateadded and dateadded < ?',
-        Time.local(year).getutc, Time.local(year + 1).getutc ],
-      :order => 'views desc',
-      :limit => 10,
-      :include => :person
+    where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc) \
+      .order('views desc').limit(10).includes(:person)
   end
 
   def self.most_commented_in(year)
@@ -216,7 +212,7 @@ class Photo < ActiveRecord::Base
   # Used by Admin::RootController
 
   def self.unfound_or_unconfirmed_count
-    count :conditions => "game_status in ('unfound', 'unconfirmed')"
+    where("game_status in ('unfound', 'unconfirmed')").count
   end
 
   # Used by Admin::PhotosController
@@ -371,16 +367,13 @@ class Photo < ActiveRecord::Base
   end
 
   def self.inaccessible
-    all \
-      :conditions =>
-        [ "seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
-          FlickrUpdate.latest.created_at ],
-      :include => :person, :order => "lastupdate desc"
+    where("seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
+      FlickrUpdate.latest.created_at).order('lastupdate desc').includes(:person)
   end
 
   def self.multipoint
-    photo_ids = Guess.count(:group => :photo_id).
-      to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
+    photo_ids = Guess.group(:photo_id).count \
+      .to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
     Photo.find_all_by_id photo_ids,
       :include => :person, :order => "lastupdate desc"
   end
