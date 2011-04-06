@@ -31,10 +31,9 @@ class Guess < ActiveRecord::Base
     includes([ :person, { :photo => :person } ]).where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10)
   end
 
-  #noinspection RailsParamDefResolve
   def self.shortest
-    all :include => [ :person, { :photo => :person } ],
-      :conditions => GUESS_AGE_IS_VALID, :order => GUESS_AGE, :limit => 10
+    #noinspection RailsParamDefResolve
+    includes([ :person, { :photo => :person } ]).where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10)
   end
 
   def self.first_by(guesser)
