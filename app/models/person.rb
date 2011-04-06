@@ -413,6 +413,7 @@ class Person < ActiveRecord::Base
   def self.standing(person)
     place = 1
     tied = false
+    # TODO redo this in the new query syntax
     scores_by_person = Guess.count :group => :person_id
     people_by_score = scores_by_person.keys.group_by \
       { |person_id| scores_by_person[person_id] }
