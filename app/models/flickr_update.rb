@@ -5,7 +5,7 @@ class FlickrUpdate < ActiveRecord::Base
   attr_readonly :member_count
 
   def self.latest
-    find :first, :order => "id desc"
+    order("id desc").first
   end
 
 end
