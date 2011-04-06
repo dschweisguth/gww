@@ -14,34 +14,21 @@ GWW::Application.routes.draw do
   end
   get 'people/:id/comments/page/:page' => 'people#comments', :as => :person_comments
   resources :people, :only => [ :show ] do
-    collection do
-      get :nemeses
-      get :top_guessers
-    end
+    get :nemeses, :top_guessers, :on => :collection
   end
 
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', :as => :photos
   resources :photos, :only => [ :show ] do
-    member do
-      get :map_popup
-    end
-    collection do
-      get :map
-      get :unfound
-      get :unfound_data
-    end
+    get :map_popup, :on => :member
+    get :map, :unfound, :unfound_data, :on => :collection
   end
 
   resources :guesses, :only => [] do
-    collection do
-      get :longest_and_shortest
-    end
+    get :longest_and_shortest, :on => :collection
   end
 
   resources :revelations, :only => [] do
-    collection do
-      get :longest
-    end
+    get :longest, :on => :collection
   end
 
   get 'wheresies/:year' => 'wheresies#show', :as => :wheresies
@@ -63,11 +50,7 @@ GWW::Application.routes.draw do
   post 'admin/photos/:id/reload_comments' => 'admin/photos#reload_comments', :as => :reload_comments
   namespace :admin do
     resources :photos, :only => [ :edit, :destroy ] do
-      collection do
-        get :inaccessible
-        get :multipoint
-        get :unfound
-      end
+      get :unfound, :inaccessible, :multipoint, :on => :collection
     end
     resources :score_reports, :only => [ :index, :new, :create, :destroy ]
   end
