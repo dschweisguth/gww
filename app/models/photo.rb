@@ -141,8 +141,7 @@ class Photo < ActiveRecord::Base
   end
   
   def self.all_mapped(poster_id)
-    find_all_by_person_id poster_id,
-      :conditions => 'accuracy >= 12', :order => 'dateadded'
+    where('person_id = ? and accuracy >= 12', poster_id).order(:dateadded)
   end
 
   # Used by PhotosController
