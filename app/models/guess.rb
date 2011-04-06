@@ -7,9 +7,7 @@ class Guess < ActiveRecord::Base
   validates_presence_of :comment_text, :commented_at, :added_at
 
   def self.destroy_all_by_photo_id(photo_id)
-    find_all_by_photo_id(photo_id).each do |guess|
-      guess.destroy
-    end
+    where(:photo_id => photo_id).destroy_all
   end
 
   # GWW saves all times as UTC, but the database time zone is Pacific time.
