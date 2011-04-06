@@ -412,8 +412,7 @@ class Person < ActiveRecord::Base
   def self.standing(person)
     place = 1
     tied = false
-    # TODO redo this in the new query syntax
-    scores_by_person = Guess.count :group => :person_id
+    scores_by_person = Guess.group(:person_id).count
     people_by_score = scores_by_person.keys.group_by \
       { |person_id| scores_by_person[person_id] }
     scores = people_by_score.keys.sort { |a, b| b <=> a }
@@ -432,8 +431,7 @@ class Person < ActiveRecord::Base
   def self.posts_standing(person)
     place = 1
     tied = false
-    # TODO redo this in the new query syntax
-    posts_by_person = Photo.count :group => :person_id
+    posts_by_person = Photo.group(:person_id).count
     people_by_post_count = posts_by_person.keys.group_by \
       { |person_id| posts_by_person[person_id] }
     post_counts = people_by_post_count.keys.sort { |a, b| b <=> a }
