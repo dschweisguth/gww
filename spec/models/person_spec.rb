@@ -364,8 +364,8 @@ describe Person do
 
   describe '.all_sorted' do
     before do
-      stub(Photo).count(:group => 'person_id') { {} }
-      stub(Guess).count(:group => 'person_id') { {} }
+      stub(Photo).group(:person_id).stub!.count { {} }
+      stub(Guess).group(:person_id).stub!.count { {} }
       stub(Person).guesses_per_day { {} }
       stub(Person).posts_per_day { {} }
       stub(Person).guess_speeds { {} }
@@ -656,11 +656,11 @@ describe Person do
     end
 
     def stub_post_count(count1, count2)
-      stub(Photo).count(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
+      stub(Photo).group(:person_id).stub!.count { { @person1.id => count1, @person2.id => count2 } }
     end
 
     def stub_score(count1, count2)
-      stub(Guess).count(:group => 'person_id') { { @person1.id => count1, @person2.id => count2 } }
+      stub(Guess).group(:person_id).stub!.count { { @person1.id => count1, @person2.id => count2 } }
     end
 
     def puts_person2_before_person1(sorted_by)
