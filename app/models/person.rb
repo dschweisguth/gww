@@ -548,8 +548,7 @@ class Person < ActiveRecord::Base
   # Used in Admin::PhotosController
 
   def destroy_if_has_no_dependents
-    if Photo.count(:conditions => [ 'person_id = ?', id ]) == 0 &&
-      Guess.count(:conditions => [ 'person_id = ?', id ]) == 0
+    if ! Photo.where(:person_id => id).exists? && ! Guess.where(:person_id => id).exists?
       destroy
     end
   end
