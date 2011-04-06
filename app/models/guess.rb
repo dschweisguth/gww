@@ -28,12 +28,12 @@ class Guess < ActiveRecord::Base
 
   def self.longest
     #noinspection RailsParamDefResolve
-    includes(:person, { :photo => :person }).where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10)
+    where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10).includes(:person, { :photo => :person })
   end
 
   def self.shortest
     #noinspection RailsParamDefResolve
-    includes(:person, { :photo => :person }).where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10)
+    where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10).includes(:person, { :photo => :person })
   end
 
   def self.first_by(guesser)
