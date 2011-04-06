@@ -68,8 +68,8 @@ class Guess < ActiveRecord::Base
 	      "where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
   end
 
-  #noinspection RailsParamDefResolve
   def self.first_guess_with_place(person, conditions, order, place_conditions)
+    #noinspection RailsParamDefResolve
     guess = includes([ :person, { :photo => :person } ]) \
       .where([ "#{conditions} and #{GUESS_AGE_IS_VALID}", person.id ]).order("#{GUESS_AGE} #{order}").first
     if ! guess
@@ -88,27 +88,27 @@ class Guess < ActiveRecord::Base
     includes(:photo).where([ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]).order('guesses.commented_at')
   end
 
-  #noinspection RailsParamDefResolve
   def self.longest_in year
-    all :include => [ :person, { :photo => :person } ],
-      :conditions =>
-	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-	  Time.local(year).getutc, Time.local(year + 1).getutc ],
-      :order => "#{GUESS_AGE} desc", :limit => 10
+    #noinspection RailsParamDefResolve
+    includes([ :person, { :photo => :person } ]) \
+      .where(	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
+	      Time.local(year).getutc, Time.local(year + 1).getutc ]) \
+      .order("#{GUESS_AGE} desc").limit(10)
   end
 
-  #noinspection RailsParamDefResolve
   def self.shortest_in year
-    all :include => [ :person, { :photo => :person } ],
-      :conditions =>
-	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-          Time.local(year).getutc, Time.local(year + 1).getutc ],
-      :order => GUESS_AGE, :limit => 10
+    #noinspection RailsParamDefResolve
+    includes([ :person, { :photo => :person } ]) \
+      .where([ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
+        Time.local(year).getutc, Time.local(year + 1).getutc ]) \
+      .order(GUESS_AGE).limit(10)
   end
 
   def self.all_between(from, to)
-    all :conditions => [ "? < added_at and added_at <= ?", from.getutc, to.getutc ],
-      :include => [ { :photo => :person }, :person ], :order => "commented_at"
+    #noinspection RailsParamDefResolve
+    includes([ { :photo => :person }, :person ]) \
+      .where([ "? < added_at and added_at <= ?", from.getutc, to.getutc ]) \
+      .order(:commented_at)
   end
 
   def years_old
