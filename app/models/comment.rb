@@ -142,7 +142,7 @@ class Comment < ActiveRecord::Base
       end
       guesses[0].destroy
       photo = comment.photo
-      if (Guess.count :conditions => [ "photo_id = ?", photo.id ]) == 0
+      if Guess.where(:photo_id => photo.id).count == 0
         photo.game_status = 'unfound'
         photo.save!
       end
