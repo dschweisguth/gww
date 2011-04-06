@@ -1,16 +1,17 @@
 GWW::Application.routes.draw do
   get 'autocomplete_person_username' => 'root#autocomplete_person_username', :as => :root_autocomplete_person_username
   get '/' => 'root#index', :as => :root
-  get 'about' => 'root#about', :as => :root_about
-  get 'bookmarklet' => 'root#bookmarklet', :as => :root_bookmarklet
-  
+  %w(about bookmarklet).each do |action|
+    get action => "root##{action}", :as => "root_#{action}"
+  end
+
   resources :score_reports, :only => [ :index, :show ]
 
   get 'people/find' => 'people#find', :as => :find_person
   get 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people
-  get 'people/:id/guesses' => 'people#guesses', :as => :person_guesses
-  get 'people/:id/posts' => 'people#posts', :as => :person_posts
-  get 'people/:id/map' => 'people#map', :as => :person_map
+  %w(guesses posts map).each do |action|
+    get "people/:id/#{action}" => "people##{action}", :as => "person_#{action}"
+  end
   get 'people/:id/comments/page/:page' => 'people#comments', :as => :person_comments
   resources :people, :only => [ :show ] do
     collection do
