@@ -27,7 +27,7 @@ class ScoreReport < ActiveRecord::Base
   private_class_method :answer_counts
 
   def self.previous(date)
-    first :conditions => [ 'created_at < ?', date.getutc ], :order => 'created_at desc'
+    where('created_at < ?', date.getutc).order('created_at desc').first
   end
 
 end
