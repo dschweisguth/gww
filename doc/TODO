@@ -12,8 +12,6 @@ Fix guess scored before the group started
 Extract facades from models
 Merge revelations into guesses?
 Try to remove :controller from routing specs
-See whether Shoulda route matcher passes when route is a :collection => { :foo => :get }
-  but spec uses :post
 rvm
 Upgrade to Ruby 1.9.2
 
