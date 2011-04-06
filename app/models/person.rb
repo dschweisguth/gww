@@ -195,6 +195,7 @@ class Person < ActiveRecord::Base
       raise ArgumentError, "#{order} is not a valid sort direction"
     end
 
+    # TODO redo these in the new query syntax
     post_counts = Photo.count :group => 'person_id'
     guess_counts = Guess.count :group => 'person_id'
     guesses_per_days = Person.guesses_per_day
