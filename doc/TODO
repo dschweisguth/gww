@@ -7,12 +7,10 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Fix guess scored before the group started
-  Remove checks that filter out that data?
-Extract facades from models
-Merge revelations into guesses?
 rvm
 Upgrade to Ruby 1.9.2
+Extract facades from models
+Merge revelations into guesses?
 
 Features
 
