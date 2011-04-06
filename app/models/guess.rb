@@ -28,12 +28,12 @@ class Guess < ActiveRecord::Base
 
   def self.longest
     #noinspection RailsParamDefResolve
-    includes([ :person, { :photo => :person } ]).where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10)
+    includes(:person, { :photo => :person }).where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10)
   end
 
   def self.shortest
     #noinspection RailsParamDefResolve
-    includes([ :person, { :photo => :person } ]).where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10)
+    includes(:person, { :photo => :person }).where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10)
   end
 
   def self.first_by(guesser)
@@ -70,44 +70,44 @@ class Guess < ActiveRecord::Base
 
   def self.first_guess_with_place(person, conditions, order, place_conditions)
     #noinspection RailsParamDefResolve
-    guess = includes([ :person, { :photo => :person } ]) \
-      .where([ "#{conditions} and #{GUESS_AGE_IS_VALID}", person.id ]).order("#{GUESS_AGE} #{order}").first
+    guess = includes(:person, { :photo => :person }) \
+      .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person.id).order("#{GUESS_AGE} #{order}").first
     if ! guess
       return nil
     end
-    guess[:place] = joins(:photo).where([ "#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id ]).count + 1
+    guess[:place] = joins(:photo).where("#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id).count + 1
     guess
   end
   private_class_method :first_guess_with_place
 
   def self.mapped_count(person_id)
-    joins(:photo).where([ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]).count
+    joins(:photo).where('guesses.person_id = ? and photos.accuracy >= 12', person_id).count
   end
 
   def self.all_mapped(person_id)
-    includes(:photo).where([ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]).order('guesses.commented_at')
+    includes(:photo).where('guesses.person_id = ? and photos.accuracy >= 12', person_id).order('guesses.commented_at')
   end
 
   def self.longest_in year
     #noinspection RailsParamDefResolve
-    includes([ :person, { :photo => :person } ]) \
-      .where(	[ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-	      Time.local(year).getutc, Time.local(year + 1).getutc ]) \
+    includes(:person, { :photo => :person }) \
+      .where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
+	      Time.local(year).getutc, Time.local(year + 1).getutc) \
       .order("#{GUESS_AGE} desc").limit(10)
   end
 
   def self.shortest_in year
     #noinspection RailsParamDefResolve
-    includes([ :person, { :photo => :person } ]) \
-      .where([ "#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-        Time.local(year).getutc, Time.local(year + 1).getutc ]) \
+    includes(:person, { :photo => :person }) \
+      .where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
+        Time.local(year).getutc, Time.local(year + 1).getutc) \
       .order(GUESS_AGE).limit(10)
   end
 
   def self.all_between(from, to)
     #noinspection RailsParamDefResolve
-    includes([ { :photo => :person }, :person ]) \
-      .where([ "? < added_at and added_at <= ?", from.getutc, to.getutc ]) \
+    includes(:person, { :photo => :person }) \
+      .where("? < added_at and added_at <= ?", from.getutc, to.getutc) \
       .order(:commented_at)
   end
 
