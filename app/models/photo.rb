@@ -384,7 +384,7 @@ class Photo < ActiveRecord::Base
       comments_xml = parsed_xml['comments'][0]
       if comments_xml['comment'] && ! comments_xml['comment'].empty?
         transaction do
-          Comment.delete_all 'photo_id = ' + id.to_s
+          Comment.where(:photo_id => id).delete_all
 	        comments_xml['comment'].each do |comment_xml|
             comments << Comment.create!(
               :photo_id => id,
@@ -403,7 +403,7 @@ class Photo < ActiveRecord::Base
   def self.change_game_status(id, status)
     transaction do
       Guess.destroy_all_by_photo_id id
-      Revelation.delete_all [ "photo_id = ?", id ]
+      Revelation.where(:photo_id => id).delete_all
       photo = find id
       photo.game_status = status
       photo.save!
@@ -412,10 +412,10 @@ class Photo < ActiveRecord::Base
 
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
-      photo = find photo_id, :include => [ :revelation, :person ]
+      photo = includes(:revelation, :person).find photo_id
       photo.revelation.destroy if photo.revelation
       Guess.destroy_all_by_photo_id photo.id
-      Comment.delete_all [ 'photo_id = ?', photo.id ]
+      Comment.where(:photo_id => photo).delete_all
       photo.destroy
     end
   end
