@@ -7,16 +7,17 @@
   var setUpCopyUsername = function () {
     var forms = $('#comments form');
     for (var i = 0; i < forms.length; i++) {
-      if (/add_selected_answer/.test(forms[i].action)) {
-        setUpCopyUsernameFor(forms[i]);
+      var form = forms[i];
+      if (/add_selected_answer/.test(form.action)) {
+        $(form['commit']).click(copyUsernameFor(form));
       }
     }
   };
 
-  var setUpCopyUsernameFor = function (form) {
-    $(form['commit']).click(function () {
+  var copyUsernameFor = function (form) {
+    return function () {
       form['username'].value = $('#username')[0].value;
-    });
+    }
   };
 
   var preventSubmitPartialUsernameForm = function () {
