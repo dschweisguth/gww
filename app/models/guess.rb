@@ -26,11 +26,9 @@ class Guess < ActiveRecord::Base
     'unix_timestamp(guesses.commented_at) > unix_timestamp(photos.dateadded)'
   G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
-  #noinspection RailsParamDefResolve
   def self.longest
-    all :include => [ :person, { :photo => :person } ],
-      :conditions => GUESS_AGE_IS_VALID,
-      :order => "#{GUESS_AGE} desc", :limit => 10
+    #noinspection RailsParamDefResolve
+    includes([ :person, { :photo => :person } ]).where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10)
   end
 
   #noinspection RailsParamDefResolve
