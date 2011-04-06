@@ -53,19 +53,19 @@ class Guess < ActiveRecord::Base
   def self.longest_lasting(poster)
     first_guess_with_place poster, 'photos.person_id = ?', 'desc',
       "#{GUESS_AGE} > (select max(#{G_AGE}) from guesses g, photos p " +
-	'where g.photo_id = p.id and p.person_id = ?)'
+	      'where g.photo_id = p.id and p.person_id = ?)'
   end
 
   def self.fastest(guesser)
     first_guess_with_place guesser, 'guesses.person_id = ?', 'asc',
       "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
-	"where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})"
+	      "where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})"
   end
 
   def self.shortest_lasting(poster)
     first_guess_with_place poster, 'photos.person_id = ?', 'asc',
       "#{GUESS_AGE} < (select min(#{G_AGE}) from guesses g, photos p " +
-	"where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
+	      "where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
   end
 
   #noinspection RailsParamDefResolve
