@@ -65,7 +65,8 @@ class Person < ActiveRecord::Base
   end
 
   def self.by_score(people, to_date)
-    scores = Guess.count :conditions => [ 'added_at <= ?', to_date.getutc ], :group => :person_id
+    #noinspection RailsParamDefResolve
+    scores = Guess.where([ 'added_at <= ?', to_date.getutc ]).group(:person_id).count
     people_by_score = {}
     people.each do |person|
       score = scores[person.id] || 0
