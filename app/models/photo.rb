@@ -23,7 +23,7 @@ class Photo < ActiveRecord::Base
   # Used by ScoreReportsController
 
   def self.count_between(from, to)
-    count :conditions => [ "? < dateadded and dateadded <= ?", from.getutc, to.getutc ]
+    where('? < dateadded and dateadded <= ?', from.getutc, to.getutc).count
   end
 
   def self.unfound_or_unconfirmed_count_before(date)
@@ -40,8 +40,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.add_posts(people, to_date, attr_name)
-    posts_per_person = Photo.count \
-      :conditions => [ 'dateadded <= ?', to_date.getutc ], :group => :person_id
+    posts_per_person = where('dateadded <= ?', to_date.getutc).group(:person_id).count
     people.each do |person|
       person[attr_name] = posts_per_person[person.id] || 0
     end
@@ -50,11 +49,11 @@ class Photo < ActiveRecord::Base
   # Used by PeopleController
 
   def self.first_by(poster)
-    first :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
+    where(:person_id => poster).order(:dateadded).first
   end
 
   def self.most_recent_by(poster)
-    last :conditions => [ 'person_id = ?', poster ], :order => 'dateadded'
+    where(:person_id => poster).order(:dateadded).last
   end
 
   def self.oldest_unfound(poster)
