@@ -81,15 +81,11 @@ class Guess < ActiveRecord::Base
   private_class_method :first_guess_with_place
 
   def self.mapped_count(person_id)
-    count :joins => :photo,
-      :conditions => [ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]
+    joins(:photo).where([ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]).count
   end
 
   def self.all_mapped(person_id)
-    all :joins => :photo,
-      :conditions => [ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ],
-      :order => 'guesses.commented_at',
-      :include => :photo
+    includes(:photo).where([ 'guesses.person_id = ? and photos.accuracy >= 12', person_id ]).order('guesses.commented_at')
   end
 
   #noinspection RailsParamDefResolve
