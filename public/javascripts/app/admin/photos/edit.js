@@ -22,12 +22,7 @@
 
   var preventSubmitPartialUsernameForm = function () {
     $('#username_form').submit(function (event) {
-      if (this['answer_text'].value === '') {
-        event.preventDefault();
-        return false;
-      } else {
-        return true;
-      }
+      return this['answer_text'].value !== '';
     });
   }
 
