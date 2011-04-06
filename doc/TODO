@@ -8,7 +8,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Use Rails 3 nested layouts
 Arel
 Fix guess scored before the group started
   Remove checks that filter out that data?
