@@ -186,7 +186,7 @@ class Photo < ActiveRecord::Base
   private_class_method :order_by
 
   def self.unfound_or_unconfirmed
-    includes(:person).where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc')
+    where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person)
   end
 
   # Used by WheresiesController
