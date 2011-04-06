@@ -177,7 +177,7 @@ class Photo < ActiveRecord::Base
     terms = term_names.map do |term_name|
       term = SORTED_BY[term_name][:column]
       if SORTED_BY[term_name][:default_order] != order
-	term += ' desc'
+        term += ' desc'
       end
       term
     end
