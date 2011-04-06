@@ -374,8 +374,7 @@ class Photo < ActiveRecord::Base
   def self.multipoint
     photo_ids = Guess.group(:photo_id).count \
       .to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
-    Photo.find_all_by_id photo_ids,
-      :include => :person, :order => "lastupdate desc"
+    Photo.order('lastupdate desc').includes(:person).find photo_ids
   end
 
   def load_comments
