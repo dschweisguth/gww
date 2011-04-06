@@ -13,8 +13,7 @@ class Person < ActiveRecord::Base
   # Used by RootController
 
   def self.find_by_multiple_fields(username)
-    Person.find_by_username(username) || Person.find_by_flickrid(username) ||
-      (username =~ /\d+/ && Person.find_by_id(username))
+    find_by_username(username) || find_by_flickrid(username) || (username =~ /\d+/ && find_by_id(username))
   end
 
   # Used by ScoreReportsController
