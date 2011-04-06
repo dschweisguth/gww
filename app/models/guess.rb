@@ -70,15 +70,12 @@ class Guess < ActiveRecord::Base
 
   #noinspection RailsParamDefResolve
   def self.first_guess_with_place(person, conditions, order, place_conditions)
-    guess = first :include => [ :person, { :photo => :person } ],
-      :conditions => [ "#{conditions} and #{GUESS_AGE_IS_VALID}", person.id ],
-      :order => "#{GUESS_AGE} #{order}"
+    guess = includes([ :person, { :photo => :person } ]) \
+      .where([ "#{conditions} and #{GUESS_AGE_IS_VALID}", person.id ]).order("#{GUESS_AGE} #{order}").first
     if ! guess
       return nil
     end
-    guess[:place] = count(:include => :photo,
-      :conditions =>
-        [ "#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id ]) + 1
+    guess[:place] = joins(:photo).where([ "#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id ]).count + 1
     guess
   end
   private_class_method :first_guess_with_place
