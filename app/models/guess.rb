@@ -71,7 +71,7 @@ class Guess < ActiveRecord::Base
   def self.first_guess_with_place(person, conditions, order, place_conditions)
     #noinspection RailsParamDefResolve
     guess = includes(:person, { :photo => :person }) \
-      .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person.id).order("#{GUESS_AGE} #{order}").first
+      .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person).order("#{GUESS_AGE} #{order}").first
     if ! guess
       return nil
     end
