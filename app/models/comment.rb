@@ -4,7 +4,7 @@ class Comment < ActiveRecord::Base
   attr_readonly :flickrid, :username, :comment_text, :commented_at
 
   def self.add_selected_answer(comment_id, username)
-    comment = Comment.includes(:photo => [ :person, :revelation ]).find comment_id
+    comment = includes(:photo => [ :person, :revelation ]).find comment_id
     add_answer comment.photo, comment.username, comment.flickrid, username,
       comment.comment_text, comment.commented_at
   end
