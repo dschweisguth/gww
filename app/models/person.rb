@@ -326,8 +326,7 @@ class Person < ActiveRecord::Base
   end
   
   def self.statistic_by_person(sql)
-    Person.find_by_sql(sql).each_with_object({}) \
-      { |person, statistic| statistic[person.id] = person[:statistic].to_f }
+    find_by_sql(sql).each_with_object({}) { | person, statistic| statistic[person.id] = person[:statistic].to_f }
   end
   private_class_method :statistic_by_person
 
