@@ -157,7 +157,7 @@ describe PhotosController do
       response.should have_selector 'a', :href => url_for_flickr_photo(photo) do |content|
         content.should have_selector 'img', :src => url_for_flickr_image(photo)
       end
-      response.should contain 'Added to the group at 12:00 AM, January 01, 2010'
+      response.should contain 'Added to the group at 12:00 AM, January 1, 2010'
       response.should contain 'This photo is unfound.'
       response.should have_selector 'table' do |content|
         content.should have_selector 'td', :content => 'guesser_username'

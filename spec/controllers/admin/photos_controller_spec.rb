@@ -87,7 +87,7 @@ describe Admin::PhotosController do
     def renders_edit_page
       #noinspection RubyResolve
       response.should be_success
-      response.should contain 'Added to the group at 12:00 AM, January 01, 2011'
+      response.should contain 'Added to the group at 12:00 AM, January 1, 2011'
       response.should contain 'This photo is unfound.'
       response.should have_selector 'form', :action => change_game_status_path(111), :content => "Change this photo's status from unfound to" do |form|
         form.should have_selector 'input', :value => 'unconfirmed'
