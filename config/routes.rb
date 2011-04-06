@@ -40,19 +40,20 @@ GWW::Application.routes.draw do
 
   get 'admin/photos/edit_in_gww' => 'admin/photos#edit_in_gww', :as => :edit_in_gww
   get 'admin/photos/autocomplete_person_username' => 'admin/photos#autocomplete_person_username', :as => :admin_photos_autocomplete_person_username
-  post 'admin/photos/update_all_from_flickr' => 'admin/photos#update_all_from_flickr', :as => :update_all_from_flickr
-  post 'admin/photos/update_statistics' => 'admin/photos#update_statistics', :as => :update_statistics
-  post 'admin/photos/:id/change_game_status' => 'admin/photos#change_game_status', :as => :change_game_status
-  post 'admin/photos/:id/add_selected_answer' => 'admin/photos#add_selected_answer', :as => :add_selected_answer
-  post 'admin/photos/:id/add_entered_answer' => 'admin/photos#add_entered_answer', :as => :add_entered_answer
-  post 'admin/photos/:id/remove_revelation' => 'admin/photos#remove_revelation', :as => :remove_revelation
-  post 'admin/photos/:id/remove_guess' => 'admin/photos#remove_guess', :as => :remove_guess
-  post 'admin/photos/:id/reload_comments' => 'admin/photos#reload_comments', :as => :reload_comments
+  %w(update_all_from_flickr update_statistics).each do |action|
+    post "admin/photos/#{action}" => "admin/photos##{action}", :as => action
+  end
+  %w(change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments).each do |action|
+    post "admin/photos/:id/#{action}" => "admin/photos##{action}", :as => action
+  end
+
   namespace :admin do
     resources :photos, :only => [ :edit, :destroy ] do
       get :unfound, :inaccessible, :multipoint, :on => :collection
     end
+
     resources :score_reports, :only => [ :index, :new, :create, :destroy ]
+
   end
 
 end
