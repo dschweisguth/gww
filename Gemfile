@@ -2,7 +2,7 @@ source 'http://rubygems.org/'
 source 'http://gemcutter.org'
 
 gem 'mysql2', '0.2.7'
-gem 'rails', '3.0.5'
+gem 'rails', '3.0.6'
 gem 'jquery-rails', '0.2.7'
 gem 'rails3-jquery-autocomplete', '0.6.5'
 gem 'will_paginate', '3.0.pre2'
