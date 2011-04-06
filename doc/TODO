@@ -11,7 +11,6 @@ Fix guess scored before the group started
   Remove checks that filter out that data?
 Extract facades from models
 Merge revelations into guesses?
-Try to remove :controller from routing specs
 rvm
 Upgrade to Ruby 1.9.2
 
