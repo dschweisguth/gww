@@ -5,12 +5,12 @@ class Revelation < ActiveRecord::Base
   validates_presence_of :comment_text, :commented_at, :added_at
 
   def self.longest
-    includes(:photo => :person) \
-      .order('unix_timestamp(revelations.commented_at) - unix_timestamp(photos.dateadded) desc').limit(10)
+    order('unix_timestamp(revelations.commented_at) - unix_timestamp(photos.dateadded) desc').limit(10) \
+      .includes(:photo => :person)
   end
 
   def self.all_between(from, to)
-    includes(:photo => :person).where('? < added_at and added_at <= ?', from.getutc, to.getutc)
+    where('? < added_at and added_at <= ?', from.getutc, to.getutc).includes(:photo => :person)
   end
 
   def time_elapsed

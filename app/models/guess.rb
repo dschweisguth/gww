@@ -85,30 +85,24 @@ class Guess < ActiveRecord::Base
   end
 
   def self.all_mapped(person_id)
-    includes(:photo).where('guesses.person_id = ? and photos.accuracy >= 12', person_id).order('guesses.commented_at')
+    where('guesses.person_id = ? and photos.accuracy >= 12', person_id).order('guesses.commented_at').includes(:photo)
   end
 
   def self.longest_in year
-    #noinspection RailsParamDefResolve
-    includes(:person, { :photo => :person }) \
-      .where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-	      Time.local(year).getutc, Time.local(year + 1).getutc) \
-      .order("#{GUESS_AGE} desc").limit(10)
+   where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
+      Time.local(year).getutc, Time.local(year + 1).getutc) \
+      .order("#{GUESS_AGE} desc").limit(10).includes(:person, { :photo => :person })
   end
 
   def self.shortest_in year
-    #noinspection RailsParamDefResolve
-    includes(:person, { :photo => :person }) \
-      .where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-        Time.local(year).getutc, Time.local(year + 1).getutc) \
-      .order(GUESS_AGE).limit(10)
+    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
+      Time.local(year).getutc, Time.local(year + 1).getutc) \
+      .order(GUESS_AGE).limit(10).includes(:person, { :photo => :person })
   end
 
   def self.all_between(from, to)
-    #noinspection RailsParamDefResolve
-    includes(:person, { :photo => :person }) \
-      .where("? < added_at and added_at <= ?", from.getutc, to.getutc) \
-      .order(:commented_at)
+    where("? < added_at and added_at <= ?", from.getutc, to.getutc) \
+      .order(:commented_at).includes(:person, { :photo => :person })
   end
 
   def years_old
