@@ -37,13 +37,11 @@ class Guess < ActiveRecord::Base
   end
 
   def self.first_by(guesser)
-    first :conditions => [ 'person_id = ?', guesser ], :order => 'commented_at',
-      :include => :photo
+    includes(:photo).where(:person_id => guesser).order(:commented_at).first
   end
 
   def self.most_recent_by(guesser)
-    last :conditions => [ 'person_id = ?', guesser ], :order => 'commented_at',
-      :include => :photo
+    includes(:photo).where(:person_id => guesser).order(:commented_at).last
   end
 
   def self.oldest(guesser)
