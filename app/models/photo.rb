@@ -57,9 +57,8 @@ class Photo < ActiveRecord::Base
   end
 
   def self.oldest_unfound(poster)
-    oldest_unfound = first \
-      :conditions => [ "person_id = ? and game_status in ('unfound', 'unconfirmed')", poster ],
-      :order => 'dateadded'
+    oldest_unfound =
+      where("person_id = ? and game_status in ('unfound', 'unconfirmed')", poster).order(:dateadded).first
     if oldest_unfound
       oldest_unfound[:place] = count_by_sql([
         %q{
@@ -119,8 +118,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_viewed(poster)
-    most_viewed = first :conditions => [ 'person_id = ?', poster ],
-      :order => 'views desc'
+    most_viewed = where(:person_id => poster).order('views desc').first
     if most_viewed then
       most_viewed[:place] = count_by_sql([
         %q[
@@ -139,7 +137,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.mapped_count(poster_id)
-    count :conditions => [ 'person_id = ? and accuracy >= 12', poster_id ]
+    where('person_id = ? and accuracy >= 12', poster_id).count
   end
   
   def self.all_mapped(poster_id)
