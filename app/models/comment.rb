@@ -115,7 +115,7 @@ class Comment < ActiveRecord::Base
   def self.remove_revelation(comment_id)
     transaction do
       #noinspection RailsParamDefResolve
-      comment = Comment.find comment_id, :include => { :photo => :revelation }
+      comment = Comment.includes(:photo => :revelation).find comment_id
       photo = comment.photo
       photo.revelation.destroy
       photo.game_status = 'unfound'
@@ -125,7 +125,7 @@ class Comment < ActiveRecord::Base
 
   def self.remove_guess(comment_id)
     transaction do
-      comment = Comment.find comment_id, :include => :photo
+      comment = Comment.includes(:photo).find comment_id
       guesses = Guess.find_by_sql [
         %q[
           select g.* from guesses g, people p
