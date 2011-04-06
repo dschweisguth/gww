@@ -433,6 +433,7 @@ class Person < ActiveRecord::Base
   def self.posts_standing(person)
     place = 1
     tied = false
+    # TODO redo this in the new query syntax
     posts_by_person = Photo.count :group => :person_id
     people_by_post_count = posts_by_person.keys.group_by \
       { |person_id| posts_by_person[person_id] }
