@@ -367,7 +367,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.inaccessible
-    where("seen_at < ? AND game_status in ('unfound', 'unconfirmed')",
+    where("seen_at < ? and game_status in ('unfound', 'unconfirmed')",
       FlickrUpdate.latest.created_at).order('lastupdate desc').includes(:person)
   end
 
