@@ -31,7 +31,7 @@ class PhotosController < ApplicationController
   caches_page :map_popup
   #noinspection RailsParamDefResolve
   def map_popup
-    @photo = Photo.find params[:id], :include => [ :person, { :guesses => :person }, :revelation ]
+    @photo = Photo.includes(:person, { :guesses => :person }, :revelation).find params[:id]
     render :partial => 'photos/map/popup'
   end
 

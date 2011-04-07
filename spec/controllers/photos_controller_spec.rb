@@ -71,7 +71,7 @@ describe PhotosController do
   describe '#map_popup' do
     it "renders the partial" do
       photo = Photo.make :dateadded => Time.local(2011)
-      stub(Photo).find { photo }
+      stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, :id => photo.id
 
       #noinspection RubyResolve
@@ -90,7 +90,7 @@ describe PhotosController do
       photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
       guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :commented_at => Time.local(2011, 2)
       photo.guesses << guess
-      stub(Photo).find { photo }
+      stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, :id => photo.id
 
       response.should have_selector 'a', :href => person_path(guess.person), :content => guess.person.username
@@ -103,7 +103,7 @@ describe PhotosController do
       photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
       revelation = Revelation.make :photo => photo, :commented_at => Time.local(2011, 2)
       photo.revelation = revelation
-      stub(Photo).find { photo }
+      stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, :id => photo.id
 
       response.should_not contain 'Guessed by'
