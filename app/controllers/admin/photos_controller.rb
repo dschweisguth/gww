@@ -39,13 +39,12 @@ class Admin::PhotosController < ApplicationController
 
   #noinspection RailsParamDefResolve
   def edit
-    @photo = Photo.find params[:id],
-      :include => [ :person, :revelation, { :guesses => :person } ]
+    @photo = Photo.includes(:person, :revelation, { :guesses => :person }).find params[:id]
     if params[:load_comments]
       @comments = @photo.load_comments
       PageCache.clear
     else
-      @comments = Comment.find_all_by_photo_id(@photo)
+      @comments = Comment.find_all_by_photo_id @photo
     end
     @comments.each { |comment| comment.photo = @photo }
   end
