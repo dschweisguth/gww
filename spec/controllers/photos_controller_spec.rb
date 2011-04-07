@@ -50,7 +50,7 @@ describe PhotosController do
     end
 
     def map_succeeds_and_displays_photo(photo, color, symbol)
-      stub(Photo).all { [ photo ] }
+      stub(Photo).where.stub!.order { [ photo ] }
       get :map
 
       #noinspection RubyResolve
