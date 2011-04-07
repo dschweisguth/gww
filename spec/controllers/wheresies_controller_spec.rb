@@ -65,7 +65,7 @@ describe WheresiesController do
   end
 
   def stub_queries(first_year, current_year, year)
-    stub(ScoreReport).first { ScoreReport.make :created_at => Time.local(first_year).getutc }
+    stub(ScoreReport).order.stub!.first { ScoreReport.make :created_at => Time.local(first_year).getutc }
     stub(Time).now { Time.local(current_year) }
 
     most_points_in_year = Person.make
