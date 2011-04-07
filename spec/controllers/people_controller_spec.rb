@@ -145,7 +145,7 @@ describe PeopleController do
       stub(Guess).fastest(@person)
       stub(Guess).longest_lasting(@person)
       stub(Guess).shortest_lasting(@person)
-      stub(Guess).find_all_by_person_id(@person.id, anything) { [] }
+      stub(Guess).where.stub!.includes { [] }
       stub(@person).favorite_posters { [] }
 
       stub_posts
@@ -178,7 +178,7 @@ describe PeopleController do
       stub(Photo).oldest_unfound(@person)
       stub(Photo).most_commented(@person)
       stub(Photo).most_viewed(@person)
-      stub(Photo).find_all_by_person_id(@person.id, anything) { [] }
+      stub(Photo).where.stub!.includes { [] }
       stub(Photo).all { [] }
       stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
@@ -230,8 +230,7 @@ describe PeopleController do
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
-      stub(Guess).find_all_by_person_id(@person.id, anything) \
-        { [ Guess.make('all1'), Guess.make('all2') ] }
+      stub(Guess).where.stub!.includes { [ Guess.make('all1'), Guess.make('all2') ] }
 
       favorite_poster = Person.make 'favorite_poster'
       favorite_poster[:bias] = 2.5
@@ -268,7 +267,7 @@ describe PeopleController do
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
-      stub(Photo).find_all_by_person_id(@person.id, anything) { [ found1.photo, found2.photo ] }
+      stub(Photo).where.stub!.includes { [ found1.photo, found2.photo ] }
 
       stub(Photo).all { [ Photo.make('unfound') ] }
 

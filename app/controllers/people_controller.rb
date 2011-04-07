@@ -69,8 +69,7 @@ class PeopleController < ApplicationController
     @most_commented = Photo.most_commented @person
     @most_viewed = Photo.most_viewed @person
 
-    @guesses =
-      Guess.find_all_by_person_id @person.id, :include => { :photo => :person }
+    @guesses = Guess.where(:person_id => @person).includes(:photo => :person)
     @favorite_posters = @person.favorite_posters
     @posters = @guesses.group_by { |guess| guess.photo.person }.sort \
       do |x,y|
@@ -78,7 +77,7 @@ class PeopleController < ApplicationController
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
-    @posts = Photo.find_all_by_person_id @person.id, :include => { :guesses => :person }
+    @posts = Photo.where(:person_id => @person).includes(:guesses => :person)
     @favorite_posters_of = @person.favorite_posters_of
     @unfound_photos = Photo.all :conditions =>
       [ "person_id = ? AND game_status in ('unfound', 'unconfirmed')",
