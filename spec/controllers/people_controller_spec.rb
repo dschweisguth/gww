@@ -75,11 +75,11 @@ describe PeopleController do
       report_day = Time.utc(2011, 1, 3)
       top_guessers = [
         (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
-          [ Period.new report_day.beginning_of_week - 1.day, report_day + 1.day ] +
+          [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
             (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-          [ Period.new report_day.beginning_of_month, report_day + 1.day ] +
-            (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
-          [ Period.new report_day.beginning_of_year, report_day + 1.day ]
+          [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+            (0 .. 11).map { |i| Period.starting_at(report_day.beginning_of_month - (i + 1).months, 1.month) },
+          [ Period.new(report_day.beginning_of_year, report_day + 1.day) ]
       ]
       person = Person.make :id => 666
       guess = Guess.make :person => person, :commented_at => report_day
@@ -270,9 +270,9 @@ describe PeopleController do
       found2.photo.guesses << found2
       stub(Photo).find_all_by_person_id(@person.id, anything) { [ found1.photo, found2.photo ] }
 
-      stub(Photo).all { [ Photo.make 'unfound' ] }
+      stub(Photo).all { [ Photo.make('unfound') ] }
 
-      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [ Photo.make 'revealed' ] }
+      stub(Photo).find_all_by_person_id_and_game_status(@person.id, 'revealed') { [ Photo.make('revealed') ] }
 
       favorite_poster_of = Person.make 'favorite_poster_of'
       favorite_poster_of[:bias] = 3.6
@@ -305,7 +305,7 @@ describe PeopleController do
     it 'renders the page' do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
-      stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make :person => person ] }
+      stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make(:person => person) ] }
       get :guesses, :id => person.id.to_s
 
       #noinspection RubyResolve

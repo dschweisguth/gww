@@ -3,7 +3,7 @@ class Admin::ScoreReportsController < ApplicationController
   
   caches_page :index
   def index
-    @score_reports = ScoreReport.all :order => 'id desc'
+    @score_reports = ScoreReport.order('id desc')
     @guess_counts = ScoreReport.guess_counts
     @revelation_counts = ScoreReport.revelation_counts
   end

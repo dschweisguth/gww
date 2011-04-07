@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 describe Person do
@@ -844,20 +845,20 @@ describe Person do
     def expected_periods_for_one_guess_at_report_time
       [
         (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
-        [ Period.new @report_day.beginning_of_week - 1.day, @report_day + 1.day ] +
+        [ Period.new(@report_day.beginning_of_week - 1.day, @report_day + 1.day) ] +
           (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new @report_day.beginning_of_month, @report_day + 1.day ] +
+        [ Period.new(@report_day.beginning_of_month, @report_day + 1.day) ] +
           (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new @report_day.beginning_of_year, @report_day + 1.day ]
+        [ Period.new(@report_day.beginning_of_year, @report_day + 1.day) ]
       ]
     end
 
     it 'handles previous years' do
       expected = [
         (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
-        [ Period.new @report_day.beginning_of_week - 1.day, @report_day + 1.day ] +
+        [ Period.new(@report_day.beginning_of_week - 1.day, @report_day + 1.day) ] +
           (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new @report_day.beginning_of_month, @report_day + 1.day ] +
+        [ Period.new(@report_day.beginning_of_month, @report_day + 1.day) ] +
           (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
         [ Period.new(@report_day.beginning_of_year, @report_day + 1.day),
           Period.starting_at(@report_day.beginning_of_year - 1.year, 1.year) ]
