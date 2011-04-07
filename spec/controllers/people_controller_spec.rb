@@ -304,7 +304,7 @@ describe PeopleController do
     it 'renders the page' do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
-      stub(Guess).find_all_by_person_id(person.id.to_s, anything) { [ Guess.make(:person => person) ] }
+      stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(:person => person) ] }
       get :guesses, :id => person.id.to_s
 
       #noinspection RubyResolve

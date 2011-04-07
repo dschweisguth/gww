@@ -109,8 +109,8 @@ class PeopleController < ApplicationController
   caches_page :guesses
   def guesses
     @person = Person.find params[:id]
-    @guesses = Guess.find_all_by_person_id params[:id],
-      :order => "commented_at desc", :include => { :photo => :person }
+    @guesses = Guess.where(:person_id => params[:id]) \
+      .order('commented_at desc').includes(:photo => :person)
   end
 
   caches_page :posts
