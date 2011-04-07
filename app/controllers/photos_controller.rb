@@ -29,8 +29,8 @@ class PhotosController < ApplicationController
   end
 
   caches_page :map_popup
-  #noinspection RailsParamDefResolve
   def map_popup
+    #noinspection RailsParamDefResolve
     @photo = Photo.includes(:person, { :guesses => :person }, :revelation).find params[:id]
     render :partial => 'photos/map/popup'
   end
@@ -48,10 +48,9 @@ class PhotosController < ApplicationController
   end
 
   caches_page :show
-  #noinspection RailsParamDefResolve
   def show
-    @photo = Photo.find params[:id],
-      :include => [ :person, :revelation, { :guesses => :person } ]
+    #noinspection RailsParamDefResolve
+    @photo = Photo.includes(:person, :revelation, { :guesses => :person }).find params[:id]
     @comments = Comment.find_all_by_photo_id @photo
   end
 
