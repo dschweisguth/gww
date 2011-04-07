@@ -116,8 +116,8 @@ class PeopleController < ApplicationController
   caches_page :posts
   def posts
     @person = Person.find params[:id]
-    @photos = Photo.find_all_by_person_id params[:id],
-      :order => "dateadded desc", :include => :person
+    #noinspection RailsParamDefResolve
+    @photos = Photo.where(:person_id => params[:id]).order('dateadded desc').includes(:person)
   end
   
   caches_page :comments

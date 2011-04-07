@@ -320,7 +320,7 @@ describe PeopleController do
       person = Person.make :id => 1
       stub(Person).find(person.id.to_s) { person }
       photo = Photo.make :person => person
-      stub(Photo).find_all_by_person_id(person.id.to_s, anything) { [ photo ] }
+      stub(Photo).where.stub!.order.stub!.includes { [ photo ] }
       get :posts, :id => person.id.to_s
 
       #noinspection RubyResolve
