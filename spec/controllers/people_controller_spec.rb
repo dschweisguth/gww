@@ -178,8 +178,8 @@ describe PeopleController do
       stub(Photo).oldest_unfound(@person)
       stub(Photo).most_commented(@person)
       stub(Photo).most_viewed(@person)
-      stub(Photo).where.stub!.includes { [] }
-      stub(Photo).all { [] }
+      stub(Photo).where(:person_id => @person).stub!.includes { [] }
+      stub(Photo).where(is_a(String), @person) { [] }
       stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
 
@@ -267,9 +267,9 @@ describe PeopleController do
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
-      stub(Photo).where.stub!.includes { [ found1.photo, found2.photo ] }
+      stub(Photo).where(:person_id => @person).stub!.includes { [ found1.photo, found2.photo ] }
 
-      stub(Photo).all { [ Photo.make('unfound') ] }
+      stub(Photo).where(is_a(String), @person) { [ Photo.make('unfound') ] }
 
       stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [ Photo.make('revealed') ] }
 
