@@ -7,7 +7,7 @@ describe ScoreReportsController do
   describe '#index' do
     it "renders the page" do
       report = ScoreReport.make :created_at => Time.local(2011)
-      stub(ScoreReport).all { [ report ] }
+      stub(ScoreReport).order { [ report ] }
       stub(ScoreReport).guess_counts { { report.id => 1 } }
       stub(ScoreReport).revelation_counts { { report.id => 2 } }
       get :index
