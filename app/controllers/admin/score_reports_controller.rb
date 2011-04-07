@@ -13,7 +13,7 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def create
-    previous = ScoreReport.first :order => 'id desc'
+    previous = ScoreReport.order('id desc').first
     ScoreReport.create! :previous_report => previous
     PageCache.clear
     #noinspection RubyResolve
