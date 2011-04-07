@@ -37,8 +37,8 @@ class Admin::PhotosController < ApplicationController
     @photos = Photo.multipoint
   end
 
-  #noinspection RailsParamDefResolve
   def edit
+    #noinspection RailsParamDefResolve
     @photo = Photo.includes(:person, :revelation, { :guesses => :person }).find params[:id]
     if params[:load_comments]
       @comments = @photo.load_comments
