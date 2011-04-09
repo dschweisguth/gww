@@ -428,7 +428,7 @@ class Photo < ActiveRecord::Base
   def self.infer_geocodes
     logger.info 'Inferring geocodes ...'
     parser = LocationParser.new Stcline.street_names
-    guesses = Guess.limit 10
+    guesses = Guess.limit 100
     start = Time.now
     guess_count = 0
     location_count = 0
@@ -453,9 +453,9 @@ class Photo < ActiveRecord::Base
     end
     finish = Time.now
     logger.info "Examined #{guess_count} photos " +
-      "(#{'%.3f' % ((finish - start).to_f / 1000)} s, #{(finish - start) / guess_count} ms/photo); " +
-      "found #{location_count} locations; " +
-      "inferred #{inferred_count} geocodes (#{'#.1f' % (100.0 * inferred_count / guess_count)}% success)"
+      "(#{finish - start} s, #{(finish - start) / guess_count} s/photo); " +
+      "found #{location_count} candidate locations; " +
+      "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / guess_count)}% success)"
   end
 
   def years_old
