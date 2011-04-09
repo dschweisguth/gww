@@ -9,7 +9,6 @@ class LocationParser
       end
     end
     @regexp = /(#{street_name_regexp})\s*and\s*(#{street_name_regexp})/i
-    p @regexp
   end
 
   def parse(comment)
