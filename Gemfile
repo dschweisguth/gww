@@ -2,6 +2,7 @@ source 'http://rubygems.org/'
 source 'http://gemcutter.org'
 
 gem 'mysql2', '0.2.7'
+gem 'activerecord-mysql2spatial-adapter', '0.3.1'
 gem 'rails', '3.0.6'
 gem 'jquery-rails', '0.2.7'
 gem 'rails3-jquery-autocomplete', '0.6.5'

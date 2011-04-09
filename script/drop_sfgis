@@ -1,6 +1,8 @@
 #!/bin/sh
-mysql5 -uroot -proot mysql <<EOS
-drop database if exists sfgis;
-drop user sfgis@localhost;
+mysql5 -u$2 -p$3 $1 <<EOS
+drop table if exists geometry_columns;
+drop table if exists spatial_ref_sys;
+drop table if exists stclines;
+drop table if exists stnodes;
+drop table if exists stintersections;
 EOS
-

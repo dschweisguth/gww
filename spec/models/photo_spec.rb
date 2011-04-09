@@ -988,6 +988,24 @@ describe Photo do
     end
   end
 
+  describe '#infer_geocodes' do
+    it "attempts to guess each photo's lat+long from its guess" do
+      guess = Guess.make :comment_text => 'A parseable guess'
+      street_names = %w{ 26TH VALENCIA }
+      stub(Stcline).street_names { street_names }
+      parser = Object.new
+      stub(LocationParser).new(street_names) { parser }
+      location = Location.make_valid '26th', 'Valencia'
+      stub(parser).parse(guess.comment_text) { location }
+      factory = RGeo::Cartesian.preferred_factory()
+      point = factory.point(37, -122)
+      stub(Stnode).geocode(location) { point }
+      Photo.infer_geocodes
+      guess.photo.reload
+      guess.photo.inferred_latitude.should == BigDecimal.new("37.0")
+    end
+  end
+
   describe '#years_old' do
     it "returns 0 for a photo posted moments ago" do
       Photo.make(:dateadded => Time.now).years_old.should == 0

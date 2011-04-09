@@ -425,6 +425,39 @@ class Photo < ActiveRecord::Base
     person.destroy_if_has_no_dependents
   end
 
+  def self.infer_geocodes
+    logger.info 'Inferring geocodes ...'
+    parser = LocationParser.new Stcline.street_names
+    guesses = Guess.limit 10
+    start = Time.now
+    guess_count = 0
+    location_count = 0
+    inferred_count = 0
+    guesses.each do |guess|
+      guess_count += 1
+      logger.info "Inferring geocode for \"#{guess.comment_text}\" ..."
+      location = parser.parse guess.comment_text
+      if location.valid
+        location_count += 1
+        shape = Stnode.geocode location
+        if shape
+          inferred_count += 1
+          photo = guess.photo
+          photo.inferred_latitude = shape.x
+          photo.inferred_longitude = shape.y
+          photo.save!
+        end
+      else
+        logger.info "Found no location."
+      end
+    end
+    finish = Time.now
+    logger.info "Examined #{guess_count} photos " +
+      "(#{'%.3f' % ((finish - start).to_f / 1000)} s, #{(finish - start) / guess_count} ms/photo); " +
+      "found #{location_count} locations; " +
+      "inferred #{inferred_count} geocodes (#{'#.1f' % (100.0 * inferred_count / guess_count)}% success)"
+  end
+
   def years_old
     ((Time.now - dateadded).to_i / (365 * 24 * 60 * 60)).truncate
   end

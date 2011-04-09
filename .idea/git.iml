@@ -12,6 +12,30 @@
   <component name="GemRequirementsHolder" version="3">
     <requirement>
       <requirement>
+        <dependency name="activerecord" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="activerecord-mysql2spatial-adapter" version="0.3.1" bound="EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="activerecord-mysql2spatial-adapter" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="arel" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="jquery-rails" version="0.2.7" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
@@ -21,6 +45,12 @@
         <dependency name="mysql2" version="0.2.7" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="mysql2" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
@@ -45,6 +75,18 @@
         <dependency name="rcov" version="0.9.9" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="rgeo" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="rgeo-activerecord" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
@@ -135,6 +177,9 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/activesupport-3.0.6)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] rails (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/rails-3.0.6)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] railties (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/railties-3.0.6)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord-mysql2spatial-adapter (v0.3.1, /opt/local/lib/ruby/gems/1.8/gems/activerecord-mysql2spatial-adapter-0.3.1)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rgeo (v0.2.6, /opt/local/lib/ruby/gems/1.8/gems/rgeo-0.2.6)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rgeo-activerecord (v0.3.2, /opt/local/lib/ruby/gems/1.8/gems/rgeo-activerecord-0.3.2)" level="application" />
   </component>
 </module>
 
