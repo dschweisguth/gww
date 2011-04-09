@@ -1003,7 +1003,24 @@ describe Photo do
       Photo.infer_geocodes
       guess.photo.reload
       guess.photo.inferred_latitude.should == BigDecimal.new("37.0")
+      guess.photo.inferred_longitude.should == BigDecimal.new("-122.0")
     end
+
+    it "removes an existing inferred geocode if the location can't be geocoded" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
+      street_names = %w{ 26TH VALENCIA }
+      stub(Stcline).street_names { street_names }
+      parser = Object.new
+      stub(LocationParser).new(street_names) { parser }
+      location = Location.make_invalid
+      stub(parser).parse(guess.comment_text) { location }
+      Photo.infer_geocodes
+      guess.photo.reload
+      guess.photo.inferred_latitude.should == nil
+      guess.photo.inferred_longitude.should == nil
+    end
+
   end
 
   describe '#years_old' do

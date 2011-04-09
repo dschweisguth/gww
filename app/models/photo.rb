@@ -437,19 +437,21 @@ class Photo < ActiveRecord::Base
       guess_count += 1
       logger.info "Inferring geocode for \"#{guess.comment_text}\" ..."
       location = parser.parse guess.comment_text
+      photo = guess.photo
       if location.valid
         location_count += 1
         shape = Stnode.geocode location
         if shape
           inferred_count += 1
-          photo = guess.photo
           photo.inferred_latitude = shape.x
           photo.inferred_longitude = shape.y
-          photo.save!
         end
       else
         logger.info "Found no location."
+        photo.inferred_latitude = nil
+        photo.inferred_longitude = nil
       end
+      photo.save!
     end
     finish = Time.now
     logger.info "Examined #{guess_count} photos " +
