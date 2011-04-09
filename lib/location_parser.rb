@@ -1,10 +1,15 @@
 class LocationParser
   
   def initialize(known_street_names)
-    @known_street_names = known_street_names
-    @known_street_names = @known_street_names.select { |name| name !~ /^UNNAMED / }
     street_name_regexp = "[A-Za-z0-9']+"
-    @regexp = /(#{street_name_regexp})\s*and\s*(#{street_name_regexp})/
+    known_street_names = known_street_names.select { |name| name !~ /^UNNAMED / }
+    known_street_names.each do |name|
+      if name.include? ' '
+        street_name_regexp = "(?:#{name})|" + street_name_regexp
+      end
+    end
+    @regexp = /(#{street_name_regexp})\s*and\s*(#{street_name_regexp})/i
+    p @regexp
   end
 
   def parse(comment)
