@@ -27,11 +27,7 @@ class LocationParser
   end
 
   def parse(comment)
-    if comment =~ @regexp
-      [ Location.new Regexp.last_match(1), Regexp.last_match(2) ]
-    else
-      []
-    end
+    comment.scan(@regexp).map { |match| Location.new match[0], match[1] }
   end
 
 end
