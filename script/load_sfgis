@@ -1,5 +1,11 @@
 #!/bin/sh
 `dirname $0`/drop_sfgis $1 $2 $3
-ogr2ogr -f MySQL MYSQL:$1,user=$2,host=localhost,password=$3 -t_srs EPSG:4326 `dirname $0`/../../sfgis/stclines/StClines.shp
-ogr2ogr -f MySQL MYSQL:$1,user=$2,host=localhost,password=$3 -t_srs EPSG:4326 `dirname $0`/../../sfgis/stnodes/StNodes.shp
-ogr2ogr -f MySQL MYSQL:$1,user=$2,host=localhost,password=$3 -t_srs EPSG:4326 `dirname $0`/../../sfgis/stintersections/StIntersections.shp
+
+for shapefile in StClines StIntersections; do
+  ogr2ogr -f MySQL MYSQL:$1,user=$2,host=localhost,password=$3 -t_srs EPSG:4326 `dirname $0`/../../sfgis/*/$shapefile.shp
+done
+
+mysql5 -u$2 -p$3 $1 <<EOS
+create index stintersections_cnn_index on stintersections (cnn);
+create index stintersections_st_name_index on stintersections (st_name);
+EOS
