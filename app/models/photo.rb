@@ -436,18 +436,25 @@ class Photo < ActiveRecord::Base
     guesses.each do |guess|
       guess_count += 1
       logger.info "Inferring geocode for \"#{guess.comment_text}\" ..."
-      location = parser.parse guess.comment_text
-      shape = nil
-      if location.valid
-        location_count += 1
-        shape = Stintersection.geocode location
-        if shape
-          inferred_count += 1
-        end
-      else
+      locations = parser.parse guess.comment_text
+      if locations.empty?
         logger.info "Found no location."
+      else
+        location_count += 1
+        shapes = []
+        locations.each do |location|
+          shape = Stintersection.geocode location
+          shapes << shape if shape
+        end
+        if shapes.length != 1
+          logger.info "Found #{shapes.length} intersections."
+          inferred_latitude, inferred_longitude = nil, nil
+        else
+          inferred_count += 1
+          inferred_latitude, inferred_longitude = shapes[0].x, shapes[0].y
+        end
       end
-      inferred_latitude, inferred_longitude = shape ? [ shape.x, shape.y ] : [ nil, nil ]
+      # TODO Dave extract method
       photo = guess.photo
       if photo.inferred_latitude != inferred_latitude ||
           photo.inferred_longitude != inferred_longitude

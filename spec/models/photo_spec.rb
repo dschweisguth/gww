@@ -999,7 +999,7 @@ describe Photo do
     it "attempts to guess each photo's lat+long from its guess" do
       guess = Guess.make :comment_text => 'A parseable guess'
       location = Location.make_valid '26th', 'Valencia'
-      stub(@parser).parse(guess.comment_text) { location }
+      stub(@parser).parse(guess.comment_text) { [ location ] }
       factory = RGeo::Cartesian.preferred_factory()
       stub(Stintersection).geocode(location) { factory.point(37, -122) }
       Photo.infer_geocodes
@@ -1013,7 +1013,7 @@ describe Photo do
     it "removes an existing inferred geocode if the comment can't be parsed" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
       guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
-      stub(@parser).parse(guess.comment_text) { Location.make_invalid }
+      stub(@parser).parse(guess.comment_text) { [] }
       Photo.infer_geocodes
 
       guess.photo.reload
@@ -1026,7 +1026,7 @@ describe Photo do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
       guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
       location = Location.make_valid '26th', 'Valencia'
-      stub(@parser).parse(guess.comment_text) { location }
+      stub(@parser).parse(guess.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { nil }
       Photo.infer_geocodes
 
