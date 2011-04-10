@@ -459,7 +459,7 @@ class Photo < ActiveRecord::Base
     finish = Time.now
     logger.info "Examined #{guess_count} photos " +
       "(#{finish - start} s, #{(finish - start) / guess_count} s/photo); " +
-      "found #{location_count} candidate locations; " +
+      "found #{location_count} candidate locations (#{'%.1f' % (100.0 * location_count / guess_count)}% success); " +
       "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / guess_count)}% success)"
   end
 
