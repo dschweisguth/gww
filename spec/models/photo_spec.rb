@@ -1005,8 +1005,8 @@ describe Photo do
       Photo.infer_geocodes
 
       guess.photo.reload
-      guess.photo.inferred_latitude.should == BigDecimal.new("37.0")
-      guess.photo.inferred_longitude.should == BigDecimal.new("-122.0")
+      guess.photo.inferred_latitude.should == BigDecimal.new('37.0')
+      guess.photo.inferred_longitude.should == BigDecimal.new('-122.0')
 
     end
 
