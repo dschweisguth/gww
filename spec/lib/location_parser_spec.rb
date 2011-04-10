@@ -21,5 +21,5 @@ describe LocationParser do
     parser = LocationParser.new [ 'UNNAMED 1' ]
     parser.parse('Unnamed 1 and Valencia').should == Location.make_valid('1', 'Valencia')
   end
-  
+
 end
