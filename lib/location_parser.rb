@@ -28,7 +28,7 @@ class LocationParser
 
   def parse(comment)
     if comment =~ @regexp
-      [ Location.make_valid Regexp.last_match(1), Regexp.last_match(2) ]
+      [ Location.new Regexp.last_match(1), Regexp.last_match(2) ]
     else
       []
     end
