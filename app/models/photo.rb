@@ -448,20 +448,14 @@ class Photo < ActiveRecord::Base
         end
         if shapes.length != 1
           logger.info "Found #{shapes.length} intersections."
-          inferred_latitude, inferred_longitude = nil, nil
+          point = nil
         else
           inferred_count += 1
-          inferred_latitude, inferred_longitude = shapes[0].x, shapes[0].y
+          point = shapes[0]
         end
       end
-      # TODO Dave extract method
-      photo = guess.photo
-      if photo.inferred_latitude != inferred_latitude ||
-          photo.inferred_longitude != inferred_longitude
-        photo.inferred_latitude = inferred_latitude
-        photo.inferred_longitude = inferred_longitude
-        photo.save!
-      end
+      #noinspection RubyScope
+      guess.photo.save_geocode point
     end
     finish = Time.now
     logger.info "Examined #{guess_count} photos " +
@@ -469,6 +463,16 @@ class Photo < ActiveRecord::Base
       "found #{location_count} candidate locations (#{'%.1f' % (100.0 * location_count / guess_count)}% success); " +
       "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / guess_count)}% success)"
   end
+
+  def save_geocode(point)
+    lat, long = point.nil? ? [ nil, nil ] : [ point.x, point.y ]
+    if inferred_latitude != lat || inferred_longitude != long
+      self.inferred_latitude = lat
+      self.inferred_longitude = long
+      save!
+    end
+  end
+  private :save_geocode
 
   def years_old
     ((Time.now - dateadded).to_i / (365 * 24 * 60 * 60)).truncate
