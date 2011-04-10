@@ -1,8 +1,12 @@
 class LocationParser
+
+  UNWANTED_STREET_NAMES = [ /^UNNAMED/ ]
   
   def initialize(known_street_names)
     street_name_regexp = "[A-Za-z0-9']+"
-    known_street_names = known_street_names.select { |name| name !~ /^UNNAMED / }
+    known_street_names = known_street_names.reject do |name|
+      UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted }
+    end
     known_street_names.each do |name|
       if name.include? ' '
         street_name_regexp = "(?:#{name})|" + street_name_regexp
