@@ -989,52 +989,51 @@ describe Photo do
   end
 
   describe '#infer_geocodes' do
-    it "attempts to guess each photo's lat+long from its guess" do
-      guess = Guess.make :comment_text => 'A parseable guess'
+    before do
       street_names = %w{ 26TH VALENCIA }
       stub(Stcline).street_names { street_names }
-      parser = Object.new
-      stub(LocationParser).new(street_names) { parser }
+      @parser = Object.new
+      stub(LocationParser).new(street_names) { @parser }
+    end
+
+    it "attempts to guess each photo's lat+long from its guess" do
+      guess = Guess.make :comment_text => 'A parseable guess'
       location = Location.make_valid '26th', 'Valencia'
-      stub(parser).parse(guess.comment_text) { location }
+      stub(@parser).parse(guess.comment_text) { location }
       factory = RGeo::Cartesian.preferred_factory()
-      point = factory.point(37, -122)
-      stub(Stnode).geocode(location) { point }
+      stub(Stnode).geocode(location) { factory.point(37, -122) }
       Photo.infer_geocodes
+
       guess.photo.reload
       guess.photo.inferred_latitude.should == BigDecimal.new("37.0")
       guess.photo.inferred_longitude.should == BigDecimal.new("-122.0")
+
     end
 
     it "removes an existing inferred geocode if the comment can't be parsed" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
       guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
-      street_names = %w{ 26TH VALENCIA }
-      stub(Stcline).street_names { street_names }
-      parser = Object.new
-      stub(LocationParser).new(street_names) { parser }
-      location = Location.make_invalid
-      stub(parser).parse(guess.comment_text) { location }
+      stub(@parser).parse(guess.comment_text) { Location.make_invalid }
       Photo.infer_geocodes
+
       guess.photo.reload
       guess.photo.inferred_latitude.should == nil
       guess.photo.inferred_longitude.should == nil
+
     end
 
     it "removes an existing inferred geocode if the location can't be geocoded" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
       guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
-      street_names = %w{ 26TH VALENCIA }
-      stub(Stcline).street_names { street_names }
-      parser = Object.new
-      stub(LocationParser).new(street_names) { parser }
       location = Location.make_valid '26th', 'Valencia'
-      stub(parser).parse(guess.comment_text) { location }
+      stub(@parser).parse(guess.comment_text) { location }
       stub(Stnode).geocode(location) { nil }
       Photo.infer_geocodes
+
       guess.photo.reload
       guess.photo.inferred_latitude.should == nil
       guess.photo.inferred_longitude.should == nil
+
     end
 
   end
