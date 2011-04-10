@@ -1001,7 +1001,7 @@ describe Photo do
       location = Location.make_valid '26th', 'Valencia'
       stub(@parser).parse(guess.comment_text) { location }
       factory = RGeo::Cartesian.preferred_factory()
-      stub(Stnode).geocode(location) { factory.point(37, -122) }
+      stub(Stintersection).geocode(location) { factory.point(37, -122) }
       Photo.infer_geocodes
 
       guess.photo.reload
@@ -1027,7 +1027,7 @@ describe Photo do
       guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
       location = Location.make_valid '26th', 'Valencia'
       stub(@parser).parse(guess.comment_text) { location }
-      stub(Stnode).geocode(location) { nil }
+      stub(Stintersection).geocode(location) { nil }
       Photo.infer_geocodes
 
       guess.photo.reload

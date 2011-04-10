@@ -1,10 +1,10 @@
-class Stnode < ActiveRecord::Base
+class Stintersection < ActiveRecord::Base
 
   def self.geocode(location)
     nodes = find_by_sql [
       %q[
-        select * from stnodes n, stintersections i1, stintersections i2
-        where n.cnn = i1.cnn and n.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ?
+        select i1.* from stintersections i1, stintersections i2
+        where i1.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ?
       ],
       location.street1, location.street2
     ]

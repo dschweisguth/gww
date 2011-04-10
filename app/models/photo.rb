@@ -440,7 +440,7 @@ class Photo < ActiveRecord::Base
       shape = nil
       if location.valid
         location_count += 1
-        shape = Stnode.geocode location
+        shape = Stintersection.geocode location
         if shape
           inferred_count += 1
         end
