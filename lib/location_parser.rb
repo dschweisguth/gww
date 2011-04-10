@@ -16,13 +16,13 @@ class LocationParser
   ]
   
   def initialize(known_street_names)
-    street_name_regexp = "[A-Za-z0-9']+"
-    known_street_names.each do |name|
-      next if UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted }
-      if name.include? ' '
-        street_name_regexp = "(?:#{name})|" + street_name_regexp
-      end
+    street_name_regexp = known_street_names.select { |name| name.include? ' ' } \
+      .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
+      .map { |name| "(?:#{name})" }.join '|'
+    if ! street_name_regexp.empty?
+      street_name_regexp += '|'
     end
+    street_name_regexp += "[A-Za-z0-9']+"
     @regexp = /(#{street_name_regexp})\s*and\s*(#{street_name_regexp})/i
   end
 
