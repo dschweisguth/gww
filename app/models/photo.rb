@@ -441,11 +441,7 @@ class Photo < ActiveRecord::Base
         logger.info "Found no location."
       else
         location_count += 1
-        shapes = []
-        locations.each do |location|
-          shape = Stintersection.geocode location
-          shapes << shape if shape
-        end
+        shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
         if shapes.length != 1
           logger.info "Found #{shapes.length} intersections."
           point = nil
@@ -472,7 +468,6 @@ class Photo < ActiveRecord::Base
       save!
     end
   end
-  private :save_geocode
 
   def years_old
     ((Time.now - dateadded).to_i / (365 * 24 * 60 * 60)).truncate
