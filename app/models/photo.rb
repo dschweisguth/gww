@@ -445,6 +445,9 @@ class Photo < ActiveRecord::Base
           inferred_count += 1
           photo.inferred_latitude = shape.x
           photo.inferred_longitude = shape.y
+        else
+          photo.inferred_latitude = nil
+          photo.inferred_longitude = nil
         end
       else
         logger.info "Found no location."
