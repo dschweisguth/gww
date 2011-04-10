@@ -437,27 +437,36 @@ class Photo < ActiveRecord::Base
       guess_count += 1
       logger.info "Inferring geocode for \"#{guess.comment_text}\" ..."
       photo = guess.photo
-      photo.inferred_latitude = nil
-      photo.inferred_longitude = nil
       location = parser.parse guess.comment_text
       if location.valid
         location_count += 1
         shape = Stnode.geocode location
         if shape
           inferred_count += 1
-          photo.inferred_latitude = shape.x
-          photo.inferred_longitude = shape.y
+          set_inferred_geocode photo, shape
+        else
+          set_inferred_geocode photo, nil
         end
       else
         logger.info "Found no location."
+        set_inferred_geocode photo, nil
       end
-      photo.save!
     end
     finish = Time.now
     logger.info "Examined #{guess_count} photos " +
       "(#{finish - start} s, #{(finish - start) / guess_count} s/photo); " +
       "found #{location_count} candidate locations; " +
       "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / guess_count)}% success)"
+  end
+
+  def self.set_inferred_geocode(photo, point)
+    inferred_latitude, inferred_longitude = point ? [ point.x, point.y ] : [ nil, nil ]
+    if photo.inferred_latitude != inferred_latitude ||
+        photo.inferred_longitude != inferred_longitude
+      photo.inferred_latitude = inferred_latitude
+      photo.inferred_longitude = inferred_longitude
+      photo.save!
+    end
   end
 
   def years_old
