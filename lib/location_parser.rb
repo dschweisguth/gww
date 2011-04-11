@@ -24,7 +24,7 @@ class LocationParser
     end
     street_name_regexp += "[A-Za-z0-9']+"
     @regexps = [
-      /(#{street_name_regexp})\s+between\s+(#{street_name_regexp})\s+(?:and|&amp;)\s+(#{street_name_regexp})/i,
+      /(#{street_name_regexp})\s+(?:between|bet\.)\s+(#{street_name_regexp})\s+(?:and|&amp;)\s+(#{street_name_regexp})/i,
       /(#{street_name_regexp})\s+(?:and|&amp;|at|@|by|near)\s+(#{street_name_regexp})/i
     ]
   end
