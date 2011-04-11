@@ -28,13 +28,15 @@ class LocationParser
     unmatched_street = "#{streets}[A-Za-z0-9']+(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
 
     space = '[\s.,]+'
-    intersecting =
+    and_intersecting =
       '(?:and|&amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
+    between = '(?:between|betw?\.?)'
+    and_other_intersecting = '(?:and|&amp;)'
 
     @regexps = [
-      /#{street}#{space}#{intersecting}#{space}#{street}/i,
-      /#{street}#{space}(?:between|betw?\.?)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
-      /(\d+)\s+#{street}(?:#{space}(?:between|betw?\.?)#{space}#{unmatched_street}#{space}(?:and|&amp;)#{space}#{unmatched_street})?/i
+      /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
+      /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
+      /(\d+)\s+#{street}(?:#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street})?/i
     ]
 
   end
