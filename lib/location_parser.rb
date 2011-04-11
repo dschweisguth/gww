@@ -1,4 +1,8 @@
 # TODO Dave handle street addresses
+# TODO Dave handle "Vallejo and... Taylor"
+# TODO Dave handle "looking onto", "looking towards"?
+# TODO Dave handle "X end of Y"
+# TODO Dave handle "just X of", "just past"
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
