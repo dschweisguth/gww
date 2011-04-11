@@ -7,6 +7,14 @@ class Stintersection < ActiveRecord::Base
         return nil
       end
       point2 = geocode_intersection location.street, location.between2
+      if point2
+        midpoint = RGeo::Cartesian.preferred_factory.point(
+          (point1.x + point2.x) / 2, (point1.y + point2.y) / 2)
+        logger.info "Found midpoint of #{location.street} " +
+          "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
+      else
+        nil
+      end
       point2 \
         ? RGeo::Cartesian.preferred_factory.point(
           (point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
