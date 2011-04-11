@@ -26,10 +26,10 @@ class Stintersection < ActiveRecord::Base
     ]
     if nodes.length == 1
       point = nodes[0].SHAPE
-      logger.info "Found geocode #{point.x}, #{point.y}"
+      logger.info "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
       point
     else
-      logger.info "Found #{nodes.length} intersections of #{location.street1} and #{location.street2}."
+      logger.info "Found #{nodes.length} intersections of #{street1} and #{street2}."
       nil
     end
   end
