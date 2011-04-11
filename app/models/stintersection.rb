@@ -41,5 +41,6 @@ class Stintersection < ActiveRecord::Base
       nil
     end
   end
+  private_class_method :geocode_intersection
 
 end
