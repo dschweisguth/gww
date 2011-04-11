@@ -1,7 +1,26 @@
 class Street < Struct.new :name, :type
 
   CANONICAL_TYPE = {
-    'STREET' => 'ST'
+    'ALLEY' => 'ALY',
+    'AVENUE' => 'AVE',
+    'BOULEVARD' => 'BLVD',
+    'CIRCLE' => 'CIR',
+    'COURT' => 'CT',
+    'DRIVE' => 'DR',
+    'EXPRESSWAY' => 'EXPY',
+    'HILL' => 'HL',
+    'HIGHWAY' => 'HWY',
+    'LANE' => 'LN',
+    'PLACE' => 'PL',
+    'PLAZA' => 'PLZ',
+    'ROAD' => 'RD',
+    'STEPS' => 'STPS',
+    'STAIRS' => 'STWY',
+    'STAIRWAY' => 'STWY',
+    'STREET' => 'ST',
+    'TERRACE' => 'TER',
+    'TUNNEL' => 'TUNL',
+    'WY' => 'WAY'
   }
 
   def initialize(name, type)
