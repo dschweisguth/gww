@@ -1,2 +1,2 @@
-class Intersection < Struct.new :street1, :street2
+class Intersection < Struct.new :text, :street1, :street2
 end

@@ -30,7 +30,15 @@ class LocationParser
   end
 
   def parse(comment)
-    comment = comment.strip
+    locations = find_locations comment.strip
+    locations.reject do |location|
+      locations.find do |other|
+        other.text != location.text && other.text.include?(location.text)
+      end
+    end
+  end
+
+  def find_locations(comment)
     locations = []
     @regexps.each do |regexp|
       remaining_comment = comment
@@ -38,12 +46,13 @@ class LocationParser
         match = regexp.match remaining_comment
         break if ! match
         locations << (match.size == 3 \
-          ? Intersection.new(match[1], match[2]) \
-          : Block.new(match[1], match[2], match[3]))
+          ? Intersection.new(*match[0 .. 2]) \
+          : Block.new(*match[0 .. 3]))
         remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
       end
     end
     locations
   end
+  private :find_locations
 
 end
