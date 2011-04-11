@@ -26,10 +26,11 @@ class LocationParser
       street += '|'
     end
     street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
+    space = '[\s.,]+'
 
     @regexps = [
-      /#{street}[\s\.,]+(?:between|bet\.)[\s\.,]+#{street}[\s\.,]+(?:and|&amp;)[\s\.,]+#{street}/i,
-      /#{street}[\s\.,]+(?:and|&amp;|at|@|by|looking\s+(?:at|towards)|near)[\s\.,]+#{street}/i
+      /#{street}#{space}(?:between|bet\.)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
+      /#{street}#{space}(?:and|&amp;|at|@|by|looking\s+(?:at|towards)|near)#{space}#{street}/i
     ]
   end
 
