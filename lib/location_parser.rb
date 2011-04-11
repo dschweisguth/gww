@@ -31,8 +31,9 @@ class LocationParser
       '(?:and|&amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
 
     @regexps = [
+      /#{street}#{space}#{intersecting}#{space}#{street}/i,
       /#{street}#{space}(?:between|betw?\.?)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
-      /#{street}#{space}#{intersecting}#{space}#{street}/i
+      /(\d+)\s+#{street}/i
     ]
 
   end

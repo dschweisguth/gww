@@ -28,6 +28,11 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
   end
 
+  it "finds an address" do
+    text = '555 California'
+    LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil ]
+  end
+
   it "finds a location with a street with more than one word in its name" do
     text = '26th and San Jose'
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', nil, 'San Jose', nil ]
