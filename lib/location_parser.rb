@@ -18,14 +18,15 @@ class LocationParser
   ]
 
   def initialize(known_street_names)
-    streets = known_street_names.select { |name| name.include? ' ' } \
+    name = known_street_names.select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
       .map { |name| "(?:#{name})" }.join '|'
-    if ! streets.empty?
-      streets += '|'
+    if ! name.empty?
+      name += '|'
     end
-    street = "(#{streets}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
-    unmatched_street = "#{streets}[A-Za-z0-9']+(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
+    name += "[A-Za-z0-9']+"
+    street = "(#{name})((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
+    unmatched_street = "#{name}(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
 
     space = '[\s.,]+'
     and_intersecting =
