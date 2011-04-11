@@ -1,6 +1,5 @@
 # TODO Dave handle street addresses
 # TODO Dave handle "X end of Y"
-# TODO Dave handle "just X of"
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -27,10 +26,12 @@ class LocationParser
     end
     street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
     space = '[\s.,]+'
+    at_its_intersection_with =
+      '(?:and|&amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
 
     @regexps = [
-      /#{street}#{space}(?:between|bet\.)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
-      /#{street}#{space}(?:and|&amp;|at|@|by|just past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)#{space}#{street}/i
+      /#{street}#{space}(?:between|betw?\.?)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
+      /#{street}#{space}#{at_its_intersection_with}#{space}#{street}/i
     ]
   end
 
