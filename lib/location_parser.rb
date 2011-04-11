@@ -1,6 +1,5 @@
 # TODO Dave handle street addresses
 # TODO Dave handle "Vallejo and... Taylor"
-# TODO Dave handle "looking onto", "looking towards"?
 # TODO Dave handle "X end of Y"
 # TODO Dave handle "just X of", "just past"
 class LocationParser
@@ -31,7 +30,7 @@ class LocationParser
 
     @regexps = [
       /#{street}\s+(?:between|bet\.)\s+#{street}\s+(?:and|&amp;)\s+#{street}/i,
-      /#{street}\s+(?:and|&amp;|at|@|by|near)\s+#{street}/i
+      /#{street}\s+(?:and|&amp;|at|@|by|looking\s+(?:at|towards)|near)\s+#{street}/i
     ]
   end
 
