@@ -38,12 +38,7 @@ class LocationParser
   end
 
   def parse(comment)
-    locations = find_locations comment.strip
-    locations.reject do |location|
-      locations.find do |other|
-        other.text != location.text && other.text.include?(location.text)
-      end
-    end
+    remove_subsets find_locations comment.strip
   end
 
   def find_locations(comment)
@@ -60,5 +55,11 @@ class LocationParser
     end
   end
   private :find_locations
+
+  def remove_subsets(locations)
+    locations.reject { |location| locations.find \
+      { |other| other.text != location.text && other.text.include?(location.text) } }
+  end
+  private :remove_subsets
 
 end
