@@ -7,7 +7,7 @@ describe Stintersection do
       point = RGeo::Cartesian.preferred_factory.point(37, -122)
       Stintersection.create! :cnn => 1, :st_name => '26th', :SHAPE => point
       Stintersection.create! :cnn => 1, :st_name => 'Valencia', :SHAPE => point
-      location = Location.new '26th', 'Valencia'
+      location = Intersection.new '26th', 'Valencia'
       Stintersection.geocode(location).should == point
     end
 

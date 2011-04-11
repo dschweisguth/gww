@@ -32,7 +32,7 @@ class LocationParser
     while true
       match = @regexp.match comment
       break if ! match
-      locations << Location.new(match[1], match[2])
+      locations << Intersection.new(match[1], match[2])
       comment = comment[match.end(1) + 1, comment.length]
     end
     locations
