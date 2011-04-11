@@ -8,4 +8,6 @@ done
 mysql5 -u$2 -p$3 $1 <<EOS
 create index stintersections_cnn_index on stintersections (cnn);
 create index stintersections_st_name_index on stintersections (st_name);
+update stclines set street = replace(street, '0', '') where street like '0%';
+update stintersections set st_name = replace(st_name, '0', '') where st_name like '0%';
 EOS
