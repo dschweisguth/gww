@@ -7,7 +7,7 @@ class Stintersection < ActiveRecord::Base
         return nil
       end
       point2 = geocode_intersection location.street, location.between2
-      return point2 \
+      point2 \
         ? RGeo::Cartesian.preferred_factory.point(
           (point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
         : nil
