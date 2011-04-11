@@ -1,7 +1,6 @@
 class Stintersection < ActiveRecord::Base
 
   # TODO Dave handle alternate names for streets
-  # TODO Dave handle 'street' etc. and abbreviations
   def self.geocode(location)
     if location.respond_to? :on
       point1 = geocode_intersection location.on, location.between1
@@ -31,11 +30,11 @@ class Stintersection < ActiveRecord::Base
     args = [ sql, street1.name.upcase, street2.name.upcase ]
     if street1.type
       sql << ' and i1.st_type = ?'
-      args << street1.type
+      args << street1.canonical_type.upcase
     end
     if street2.type
       sql << ' and i2.st_type = ?'
-      args << street2.type
+      args << street2.canonical_type.upcase
     end
     nodes = find_by_sql args
     if nodes.length == 1
