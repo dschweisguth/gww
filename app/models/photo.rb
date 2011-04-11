@@ -443,7 +443,7 @@ class Photo < ActiveRecord::Base
         location_count += 1
         shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
         if shapes.length != 1
-          logger.info "Found #{shapes.length} intersections."
+          logger.info "Found #{shapes.length} geocodes."
           point = nil
         else
           inferred_count += 1
