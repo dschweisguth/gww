@@ -39,8 +39,7 @@ class LocationParser
   end
 
   def find_locations(comment)
-    locations = []
-    @regexps.each do |regexp|
+    @regexps.each_with_object([]) do |regexp, locations|
       remaining_comment = comment
       while true
         match = regexp.match remaining_comment
@@ -51,7 +50,6 @@ class LocationParser
         remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
       end
     end
-    locations
   end
   private :find_locations
 
