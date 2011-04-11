@@ -1,5 +1,52 @@
 class Street < Struct.new :name, :type
 
+  TYPES = %w{
+    ALY
+    ALLEY
+    AVE
+    AVENUE
+    BLVD
+    BOULEVARD
+    CIR
+    CIRCLE
+    CT
+    COURT
+    DR
+    DRIVE
+    EXPY
+    EXPRESSWAY
+    HL
+    HILL
+    HWY
+    HIGHWAY
+    LN
+    LANE
+    LOOP
+    PARK
+    PATH
+    PL
+    PLACE
+    PLZ
+    PLAZA
+    RAMP
+    RD
+    ROAD
+    ROW
+    ST
+    STREET
+    STPS
+    STEPS
+    STWY
+    STAIRS
+    STAIRWAY
+    TER
+    TERRACE
+    TUNL
+    TUNNEL
+    WALK
+    WAY
+  }
+
   CANONICAL_TYPE = {
     'ALLEY' => 'ALY',
     'AVENUE' => 'AVE',

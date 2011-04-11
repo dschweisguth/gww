@@ -20,53 +20,6 @@ class LocationParser
     /^UNNAMED/
   ]
 
-  STREET_TYPES = %w{
-    ALY
-    ALLEY
-    AVE
-    AVENUE
-    BLVD
-    BOULEVARD
-    CIR
-    CIRCLE
-    CT
-    COURT
-    DR
-    DRIVE
-    EXPY
-    EXPRESSWAY
-    HL
-    HILL
-    HWY
-    HIGHWAY
-    LN
-    LANE
-    LOOP
-    PARK
-    PATH
-    PL
-    PLACE
-    PLZ
-    PLAZA
-    RAMP
-    RD
-    ROAD
-    ROW
-    ST
-    STREET
-    STPS
-    STEPS
-    STWY
-    STAIRS
-    STAIRWAY
-    TER
-    TERRACE
-    TUNL
-    TUNNEL
-    WALK
-    WAY
-  }
-
   def initialize(known_street_names)
     street = known_street_names.select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
@@ -74,7 +27,7 @@ class LocationParser
     if ! street.empty?
       street += '|'
     end
-    street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{STREET_TYPES.join('|')})\\.?)?)"
+    street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
 
     @regexps = [
       /#{street}\s+(?:between|bet\.)\s+#{street}\s+(?:and|&amp;)\s+#{street}/i,
