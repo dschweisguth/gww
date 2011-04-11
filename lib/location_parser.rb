@@ -47,9 +47,15 @@ class LocationParser
       while true
         match = regexp.match remaining_comment
         break if ! match
-        locations << (match.size == 5 \
-          ? Intersection.new(*match[0 .. 4]) \
-          : Block.new(*match[0 .. 6]))
+        locations <<
+          case match.size
+            when 4
+              Address.new *match
+            when 5
+              Intersection.new *match
+            when 7
+              Block.new *match
+          end
         remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
       end
     end
