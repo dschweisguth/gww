@@ -1,11 +1,12 @@
-class Intersection < Struct.new :text, :street1, :type1, :street2, :type2
-
-  def initialize(text, street1, type1, street2, type2)
-    super text, street1, trim(type1), street2, trim(type2)
+class Intersection < Struct.new :text, :street1, :street2
+  def initialize(*args)
+    if args.length == 3
+      super
+    elsif args.length == 5
+      super args[0], Street.new(args[1], args[2]), Street.new(args[3], args[4])
+    else
+      raise ArgumentError,
+        "Expected String, Street x 2 or String x 5, but got #{args.length} args"
+    end
   end
-
-  def trim(type)
-    type && ! type.empty? ? type.strip : nil
-  end
-
 end
