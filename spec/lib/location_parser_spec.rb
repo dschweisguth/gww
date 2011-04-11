@@ -28,8 +28,13 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
   end
 
-  it "finds an address" do
+  it "finds an address without adjacent streets" do
     text = '555 California'
+    LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil ]
+  end
+
+  it "finds an address with adjacent streets" do
+    text = '555 California between Montgomery and Kearny'
     LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil ]
   end
 

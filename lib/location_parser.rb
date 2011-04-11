@@ -18,13 +18,14 @@ class LocationParser
   ]
 
   def initialize(known_street_names)
-    street = known_street_names.select { |name| name.include? ' ' } \
+    streets = known_street_names.select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
       .map { |name| "(?:#{name})" }.join '|'
-    if ! street.empty?
-      street += '|'
+    if ! streets.empty?
+      streets += '|'
     end
-    street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
+    street = "(#{streets}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
+    unmatched_street = "#{streets}[A-Za-z0-9']+(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
 
     space = '[\s.,]+'
     intersecting =
@@ -33,7 +34,7 @@ class LocationParser
     @regexps = [
       /#{street}#{space}#{intersecting}#{space}#{street}/i,
       /#{street}#{space}(?:between|betw?\.?)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
-      /(\d+)\s+#{street}/i
+      /(\d+)\s+#{street}(?:#{space}(?:between|betw?\.?)#{space}#{unmatched_street}#{space}(?:and|&amp;)#{space}#{unmatched_street})?/i
     ]
 
   end
