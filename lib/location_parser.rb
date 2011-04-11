@@ -1,6 +1,6 @@
 # TODO Dave handle street addresses
 # TODO Dave handle "X end of Y"
-# TODO Dave handle "just X of", "just past"
+# TODO Dave handle "just X of"
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -30,7 +30,7 @@ class LocationParser
 
     @regexps = [
       /#{street}#{space}(?:between|bet\.)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
-      /#{street}#{space}(?:and|&amp;|at|@|by|looking\s+(?:at|towards)|near)#{space}#{street}/i
+      /#{street}#{space}(?:and|&amp;|at|@|by|just past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)#{space}#{street}/i
     ]
   end
 
