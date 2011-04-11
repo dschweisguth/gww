@@ -435,7 +435,7 @@ class Photo < ActiveRecord::Base
     inferred_count = 0
     guesses.each do |guess|
       guess_count += 1
-      logger.info "Inferring geocode for \"#{guess.comment_text}\" ..."
+      logger.info "\nInferring geocode for \"#{guess.comment_text}\" ..."
       locations = parser.parse guess.comment_text
       if locations.empty?
         logger.info "Found no location."

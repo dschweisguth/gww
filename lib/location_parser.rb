@@ -23,9 +23,10 @@ class LocationParser
       street_name_regexp += '|'
     end
     street_name_regexp += "[A-Za-z0-9']+"
-    @regexp = /(#{street_name_regexp})\s*and\s*(#{street_name_regexp})/i
+    @regexp = /(#{street_name_regexp})\s+(?:and|&amp;|at|@|by|near)\s+(#{street_name_regexp})/i
   end
 
+  # TODO Dave deal with overlapping locations, like "foo @ X and Y"
   def parse(comment)
     comment.scan(@regexp).map { |match| Location.new match[0], match[1] }
   end
