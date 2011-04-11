@@ -10,16 +10,14 @@ class Stintersection < ActiveRecord::Base
       end
       point2 = geocode_intersection location.on, location.between2
       if point2
-        midpoint = RGeo::Cartesian.preferred_factory.point(
-          (point1.x + point2.x) / 2, (point1.y + point2.y) / 2)
+        midpoint = point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2)
         logger.info "Found midpoint of #{location.on} " +
           "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
       else
         nil
       end
       point2 \
-        ? RGeo::Cartesian.preferred_factory.point(
-          (point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
+        ? point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
         : nil
     else
       geocode_intersection location.at1, location.at2
@@ -27,13 +25,19 @@ class Stintersection < ActiveRecord::Base
   end
 
   def self.geocode_intersection(street1, street2)
-    nodes = find_by_sql [
-      %q[
-        select i1.* from stintersections i1, stintersections i2
-        where i1.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ?
-      ],
-      street1.name, street2.name
-    ]
+    sql = %q[
+      select i1.* from stintersections i1, stintersections i2
+      where i1.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ? ]
+    args = [ sql, street1.name.upcase, street2.name.upcase ]
+    if street1.type
+      sql << ' and i1.st_type = ?'
+      args << street1.type
+    end
+    if street2.type
+      sql << ' and i2.st_type = ?'
+      args << street2.type
+    end
+    nodes = find_by_sql args
     if nodes.length == 1
       point = nodes[0].SHAPE
       logger.info "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
@@ -44,5 +48,10 @@ class Stintersection < ActiveRecord::Base
     end
   end
   private_class_method :geocode_intersection
+
+  def self.point(x, y)
+    RGeo::Cartesian.preferred_factory.point(x, y)
+  end
+  private_class_method :point
 
 end
