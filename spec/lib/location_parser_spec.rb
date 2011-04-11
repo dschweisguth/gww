@@ -13,7 +13,7 @@ describe LocationParser do
 
   it "finds a block" do
     text = 'Valencia between 25th and 26th'
-    LocationParser.new([]).parse(text).should == [Block.new(text, 'Valencia', nil, '25th', nil, '26th', nil) ]
+    LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
   end
 
   it "finds a location with a street with more than one word in its name" do
