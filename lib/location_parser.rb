@@ -26,12 +26,12 @@ class LocationParser
     end
     street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
     space = '[\s.,]+'
-    at_its_intersection_with =
+    intersecting =
       '(?:and|&amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
 
     @regexps = [
       /#{street}#{space}(?:between|betw?\.?)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
-      /#{street}#{space}#{at_its_intersection_with}#{space}#{street}/i
+      /#{street}#{space}#{intersecting}#{space}#{street}/i
     ]
   end
 
