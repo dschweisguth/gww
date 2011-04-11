@@ -7,7 +7,7 @@ describe Stintersection do
       point = RGeo::Cartesian.preferred_factory.point(37, -122)
       Stintersection.create! :cnn => 1, :st_name => '26th', :SHAPE => point
       Stintersection.create! :cnn => 1, :st_name => 'Valencia', :SHAPE => point
-      location = Intersection.new '26th and Valencia', '26th', 'Valencia'
+      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       Stintersection.geocode(location).should == point
     end
 
@@ -18,7 +18,7 @@ describe Stintersection do
       point2 = RGeo::Cartesian.preferred_factory.point(37, -122)
       Stintersection.create! :cnn => 2, :st_name => '26th', :SHAPE => point2
       Stintersection.create! :cnn => 2, :st_name => 'Valencia', :SHAPE => point2
-      location = Block.new 'Valencia between 25th and 26th', 'Valencia', '25th', '26th'
+      location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
       Stintersection.geocode(location).should == RGeo::Cartesian.preferred_factory.point(37.5, -121.5)
     end
 

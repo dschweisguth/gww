@@ -14,18 +14,69 @@ class LocationParser
     /^JUNIPERO SERRA\s+BLVD (ON|OFF)/,
     /^UNNAMED/
   ]
-  
+
+  STREET_TYPES = %w{
+    ALY
+    ALLEY
+    AVE
+    AVENUE
+    BLVD
+    BOULEVARD
+    CIR
+    CIRCLE
+    CT
+    COURT
+    DR
+    DRIVE
+    EXPY
+    EXPRESSWAY
+    HL
+    HILL
+    HWY
+    HIGHWAY
+    LN
+    LANE
+    LOOP
+    PARK
+    PATH
+    PL
+    PLACE
+    PLZ
+    PLAZA
+    RAMP
+    RD
+    ROAD
+    ROW
+    ST
+    STREET
+    STPS
+    STEPS
+    STWY
+    STAIRS
+    STAIRWAY
+    TER
+    TERRACE
+    TUNL
+    TUNNEL
+    WALK
+    WAY
+  }
+
   def initialize(known_street_names)
-    street_name_regexp = known_street_names.select { |name| name.include? ' ' } \
+    # TODO Dave move parens to name, merge name and type
+    name = known_street_names.select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
       .map { |name| "(?:#{name})" }.join '|'
-    if ! street_name_regexp.empty?
-      street_name_regexp += '|'
+    if ! name.empty?
+      name += '|'
     end
-    street_name_regexp += "[A-Za-z0-9']+"
+    name += "[A-Za-z0-9']+"
+
+    type = "((?:\\s+(?:#{STREET_TYPES.join('|')})\\.?)?)"
+
     @regexps = [
-      /(#{street_name_regexp})\s+(?:between|bet\.)\s+(#{street_name_regexp})\s+(?:and|&amp;)\s+(#{street_name_regexp})/i,
-      /(#{street_name_regexp})\s+(?:and|&amp;|at|@|by|near)\s+(#{street_name_regexp})/i
+      /(#{name})#{type}\s+(?:between|bet\.)\s+(#{name})#{type}\s+(?:and|&amp;)\s+(#{name})#{type}/i,
+      /(#{name})#{type}\s+(?:and|&amp;|at|@|by|near)\s+(#{name})#{type}/i
     ]
   end
 
@@ -44,9 +95,9 @@ class LocationParser
       while true
         match = regexp.match remaining_comment
         break if ! match
-        locations << (match.size == 3 \
-          ? Intersection.new(*match[0 .. 2]) \
-          : Block.new(*match[0 .. 3]))
+        locations << (match.size == 5 \
+          ? Intersection.new(*match[0 .. 4]) \
+          : Block.new(*match[0 .. 6]))
         remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
       end
     end
