@@ -63,20 +63,20 @@ class LocationParser
   }
 
   def initialize(known_street_names)
-    # TODO Dave move parens to name, merge name and type
+    # TODO Dave merge name and type
     name = known_street_names.select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
       .map { |name| "(?:#{name})" }.join '|'
     if ! name.empty?
       name += '|'
     end
-    name += "[A-Za-z0-9']+"
+    name = "(#{name}[A-Za-z0-9']+)"
 
     type = "((?:\\s+(?:#{STREET_TYPES.join('|')})\\.?)?)"
 
     @regexps = [
-      /(#{name})#{type}\s+(?:between|bet\.)\s+(#{name})#{type}\s+(?:and|&amp;)\s+(#{name})#{type}/i,
-      /(#{name})#{type}\s+(?:and|&amp;|at|@|by|near)\s+(#{name})#{type}/i
+      /#{name}#{type}\s+(?:between|bet\.)\s+#{name}#{type}\s+(?:and|&amp;)\s+#{name}#{type}/i,
+      /#{name}#{type}\s+(?:and|&amp;|at|@|by|near)\s+#{name}#{type}/i
     ]
   end
 
