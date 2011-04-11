@@ -25,8 +25,9 @@ class LocationParser
       name += '|'
     end
     name += "[A-Za-z0-9']+"
-    street = "(#{name})((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
-    unmatched_street = "#{name}(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
+    type = "(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
+    street = "(#{name})(#{type})"
+    unmatched_street = "#{name}#{type}"
 
     space = '[\s.,]+'
     and_intersecting =
