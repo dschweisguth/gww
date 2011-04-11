@@ -9,8 +9,9 @@ class Street < Struct.new :name, :type
   end
 
   def canonical_type
-    canonical_type = CANONICAL_TYPE[type.upcase]
-    canonical_type ? canonical_type : type
+    sanitized_type = type.chomp('.').upcase
+    canonical_type = CANONICAL_TYPE[sanitized_type]
+    canonical_type ? canonical_type : sanitized_type
   end
 
 end

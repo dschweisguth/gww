@@ -37,6 +37,14 @@ describe Stintersection do
       Stintersection.geocode(location).should == point
     end
 
+    it "ignores any trailing period in street type" do
+      point = point(37, -122)
+      Stintersection.create! :cnn => 1, :st_name => '26TH', :st_type => 'ST', :SHAPE => point
+      Stintersection.create! :cnn => 1, :st_name => 'VALENCIA', :st_type => 'ST', :SHAPE => point
+      location = Intersection.new '26th and Valencia', '26th', 'St.', 'Valencia', nil
+      Stintersection.geocode(location).should == point
+    end
+
     it "canonicalizes street type" do
       point = point(37, -122)
       Stintersection.create! :cnn => 1, :st_name => '26TH', :st_type => 'ST', :SHAPE => point
