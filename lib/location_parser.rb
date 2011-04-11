@@ -25,6 +25,7 @@ class LocationParser
       street += '|'
     end
     street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
+
     space = '[\s.,]+'
     intersecting =
       '(?:and|&amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
@@ -33,6 +34,7 @@ class LocationParser
       /#{street}#{space}(?:between|betw?\.?)#{space}#{street}#{space}(?:and|&amp;)#{space}#{street}/i,
       /#{street}#{space}#{intersecting}#{space}#{street}/i
     ]
+
   end
 
   def parse(comment)
