@@ -27,4 +27,9 @@ describe LocationParser do
       [ Location.new('25th', 'Valencia'), Location.new('26th', 'Valencia') ]
   end
 
+  it "finds overlapping locations" do
+    LocationParser.new([]).parse('lions and tigers and bears').should ==
+      [ Location.new('lions', 'tigers'), Location.new('tigers', 'bears') ]
+  end
+
 end
