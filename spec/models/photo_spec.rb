@@ -988,6 +988,7 @@ describe Photo do
     end
   end
 
+  # TODO Dave infer from revelations, too
   describe '#infer_geocodes' do
     before do
       street_names = %w{ 26TH VALENCIA }
