@@ -3,6 +3,10 @@ require 'spec_helper'
 describe Stintersection do
 
   describe '.geocode' do
+    before :all do
+      clear_stintersections
+    end
+
     it "converts an intersection to a lat + long" do
       point = RGeo::Cartesian.preferred_factory.point(37, -122)
       Stintersection.create! :cnn => 1, :st_name => '26TH', :st_type => 'ST', :SHAPE => point
@@ -23,6 +27,10 @@ describe Stintersection do
     end
 
     after do
+      clear_stintersections
+    end
+
+    def clear_stintersections
       Stintersection.connection.execute 'delete from stintersections' # stupid MyISAM
     end
 
