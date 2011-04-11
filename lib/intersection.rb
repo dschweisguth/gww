@@ -1,4 +1,4 @@
-class Intersection < Struct.new :text, :street1, :street2
+class Intersection < Struct.new :text, :at1, :at2
   def initialize(*args)
     if args.length == 3
       super

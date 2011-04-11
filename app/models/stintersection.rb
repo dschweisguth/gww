@@ -22,7 +22,7 @@ class Stintersection < ActiveRecord::Base
           (point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
         : nil
     else
-      geocode_intersection location.street1.name, location.street2.name
+      geocode_intersection location.at1.name, location.at2.name
     end
   end
 
