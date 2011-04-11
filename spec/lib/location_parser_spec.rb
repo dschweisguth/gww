@@ -11,7 +11,12 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', 'Valencia' ]
   end
 
-  it "finds an intersection with a street with more than one word in its name" do
+  it "finds a block" do
+    text = 'Valencia between 25th and 26th'
+    LocationParser.new([]).parse(text).should == [Block.new(text, 'Valencia', '25th', '26th') ]
+  end
+
+  it "finds a location with a street with more than one word in its name" do
     text = '26th and San Jose'
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', 'San Jose' ]
   end
@@ -33,11 +38,6 @@ describe LocationParser do
   it "finds overlapping locations" do
     LocationParser.new([]).parse('lions and tigers and bears').should ==
       [ Intersection.new('lions and tigers', 'lions', 'tigers'), Intersection.new('tigers and bears', 'tigers', 'bears') ]
-  end
-
-  it "finds a block" do
-    text = 'Valencia between 25th and 26th'
-    LocationParser.new([]).parse(text).should == [Block.new(text, 'Valencia', '25th', '26th') ]
   end
 
 end
