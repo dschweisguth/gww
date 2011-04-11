@@ -994,14 +994,16 @@ describe Photo do
       stub(Stcline).street_names { street_names }
       @parser = Object.new
       stub(LocationParser).new(street_names) { @parser }
+
+      @factory = RGeo::Cartesian.preferred_factory()
+
     end
 
     it "attempts to guess each photo's lat+long from its guess" do
       guess = Guess.make :comment_text => 'A parseable guess'
       location = Location.new '26th', 'Valencia'
       stub(@parser).parse(guess.comment_text) { [ location ] }
-      factory = RGeo::Cartesian.preferred_factory()
-      stub(Stintersection).geocode(location) { factory.point(37, -122) }
+      stub(Stintersection).geocode(location) { @factory.point(37, -122) }
       Photo.infer_geocodes
 
       guess.photo.reload
@@ -1024,10 +1026,26 @@ describe Photo do
 
     it "removes an existing inferred geocode if the location can't be geocoded" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
+      guess = Guess.make :photo => photo, :comment_text => 'A parseable but not geocodable guess'
       location = Location.new '26th', 'Valencia'
       stub(@parser).parse(guess.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { nil }
+      Photo.infer_geocodes
+
+      guess.photo.reload
+      guess.photo.inferred_latitude.should == nil
+      guess.photo.inferred_longitude.should == nil
+
+    end
+
+    it "removes an existing inferred geocode if the guess has multiple geocodable locations" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      guess = Guess.make :photo => photo, :comment_text => 'A guess with multiple gecodable locations'
+      location1 = Location.new '26th', 'Valencia'
+      location2 = Location.new '26th', 'Valencia'
+      stub(@parser).parse(guess.comment_text) { [ location1, location2 ] }
+      stub(Stintersection).geocode(location1) { @factory.point(37, -122) }
+      stub(Stintersection).geocode(location2) { @factory.point(38, -122) }
       Photo.infer_geocodes
 
       guess.photo.reload
