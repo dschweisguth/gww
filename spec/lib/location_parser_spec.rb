@@ -11,8 +11,18 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', nil, 'Valencia', nil ]
   end
 
+  it "tolerates periods and commas around an intersection's connecting word(s)" do
+    text = '26th ., and ., Valencia'
+    LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', nil, 'Valencia', nil ]
+  end
+
   it "finds a block" do
     text = 'Valencia between 25th and 26th'
+    LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
+  end
+
+  it "tolerates periods and commas around a block's connecting words" do
+    text = 'Valencia ., between ., 25th ., and ., 26th'
     LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
   end
 

@@ -1,5 +1,4 @@
 # TODO Dave handle street addresses
-# TODO Dave handle "Vallejo and... Taylor"
 # TODO Dave handle "X end of Y"
 # TODO Dave handle "just X of", "just past"
 class LocationParser
@@ -29,8 +28,8 @@ class LocationParser
     street = "(#{street}[A-Za-z0-9']+)((?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?)"
 
     @regexps = [
-      /#{street}\s+(?:between|bet\.)\s+#{street}\s+(?:and|&amp;)\s+#{street}/i,
-      /#{street}\s+(?:and|&amp;|at|@|by|looking\s+(?:at|towards)|near)\s+#{street}/i
+      /#{street}[\s\.,]+(?:between|bet\.)[\s\.,]+#{street}[\s\.,]+(?:and|&amp;)[\s\.,]+#{street}/i,
+      /#{street}[\s\.,]+(?:and|&amp;|at|@|by|looking\s+(?:at|towards)|near)[\s\.,]+#{street}/i
     ]
   end
 
