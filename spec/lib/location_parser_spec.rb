@@ -6,11 +6,11 @@ describe LocationParser do
     LocationParser.new([]).parse('').should == []
   end
 
-  it "finds a location" do
+  it "finds an intersection" do
     LocationParser.new([]).parse('26th and Valencia').should == [ Intersection.new '26th', 'Valencia' ]
   end
 
-  it "finds a location with a street with more than one word in its name" do
+  it "finds an intersection with a street with more than one word in its name" do
     LocationParser.new([ 'SAN JOSE' ]).parse('26th and San Jose').should == [ Intersection.new '26th', 'San Jose' ]
   end
 
@@ -22,7 +22,7 @@ describe LocationParser do
     LocationParser.new([ 'UNNAMED 1' ]).parse('Unnamed 1 and Valencia').should == [ Intersection.new '1', 'Valencia' ]
   end
 
-  it "finds all locations" do
+  it "finds multiple locations" do
     LocationParser.new([]).parse('25th and Valencia 26th and Valencia').should ==
       [ Intersection.new('25th', 'Valencia'), Intersection.new('26th', 'Valencia') ]
   end
@@ -30,6 +30,12 @@ describe LocationParser do
   it "finds overlapping locations" do
     LocationParser.new([]).parse('lions and tigers and bears').should ==
       [ Intersection.new('lions', 'tigers'), Intersection.new('tigers', 'bears') ]
+  end
+
+  it "finds a block" do
+    # TODO Dave drop locations which are subsets of other locations
+    LocationParser.new([]).parse('Valencia between 25th and 26th').should ==
+      [ Block.new('Valencia', '25th', '26th'), Intersection.new('25th', '26th') ]
   end
 
 end

@@ -23,17 +23,25 @@ class LocationParser
       street_name_regexp += '|'
     end
     street_name_regexp += "[A-Za-z0-9']+"
-    @regexp = /(#{street_name_regexp})\s+(?:and|&amp;|at|@|by|near)\s+(#{street_name_regexp})/i
+    @regexps = [
+      /(#{street_name_regexp})\s+between\s+(#{street_name_regexp})\s+(?:and|&amp;)\s+(#{street_name_regexp})/i,
+      /(#{street_name_regexp})\s+(?:and|&amp;|at|@|by|near)\s+(#{street_name_regexp})/i
+    ]
   end
 
   def parse(comment)
     comment = comment.strip
     locations = []
-    while true
-      match = @regexp.match comment
-      break if ! match
-      locations << Intersection.new(match[1], match[2])
-      comment = comment[match.end(1) + 1, comment.length]
+    @regexps.each do |regexp|
+      remaining_comment = comment
+      while true
+        match = regexp.match remaining_comment
+        break if ! match
+        locations << (match.size == 3 \
+          ? Intersection.new(match[1], match[2]) \
+          : Block.new(match[1], match[2], match[3]))
+        remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
+      end
     end
     locations
   end
