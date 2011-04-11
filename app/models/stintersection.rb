@@ -1,5 +1,6 @@
 class Stintersection < ActiveRecord::Base
 
+  # TODO Dave handle alternate names for streets
   def self.geocode(location)
     if location.respond_to? :street
       point1 = geocode_intersection location.street, location.between1
