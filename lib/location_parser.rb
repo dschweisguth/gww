@@ -41,7 +41,7 @@ class LocationParser
       /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
       /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}/i,
       /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{and_intersecting}#{space}#{unmatched_street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street}/i
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i
     ]
 
   end
@@ -64,6 +64,8 @@ class LocationParser
               Intersection.new *match
             when 7
               Block.new *match
+            when 8
+              Address.new *match
           end
         remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
       end

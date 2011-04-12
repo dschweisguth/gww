@@ -40,7 +40,7 @@ describe LocationParser do
 
   it "finds an address with adjacent streets" do
     text = '555 California between Montgomery and Kearny'
-    LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil ]
+    LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil, 'Montgomery', '', 'Kearny', '']
   end
 
   it "ignores a potential address number not on a word boundary" do
