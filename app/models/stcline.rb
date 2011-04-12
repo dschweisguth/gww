@@ -8,7 +8,9 @@ class Stcline < ActiveRecord::Base
   def self.geocode(address)
     number = address.number.to_i
     clines = where(:street => address.street.name.upcase) \
-      .where('(lf_fadd <= ? and ? <= lf_toadd) or (rt_fadd <= ? and ? <= rt_toadd)',
+      .where(
+        "(lf_fadd % 2 = #{number % 2} and lf_fadd <= ? and ? <= lf_toadd) or " +
+          "(rt_fadd % 2 = #{number % 2} and rt_fadd <= ? and ? <= rt_toadd)",
         number, number, number, number)
     if clines.length != 1
       logger.info "Found #{clines.length} centerlines for #{address}"
