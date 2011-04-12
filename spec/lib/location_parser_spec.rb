@@ -47,6 +47,11 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Address.new text, '393', 'Valencia', nil ]
   end
 
+  it "finds an address with a letter" do
+    text = '393A Valencia'
+    LocationParser.new([]).parse(text).should == [ Address.new text, '393', 'Valencia', nil ]
+  end
+
   it "finds a location with a street with more than one word in its name" do
     text = '26th and San Jose'
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', nil, 'San Jose', nil ]

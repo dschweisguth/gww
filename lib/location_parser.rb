@@ -38,7 +38,7 @@ class LocationParser
     @regexps = [
       /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
       /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+)?\s+#{street}(?:#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street})?/i
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}(?:#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street})?/i
     ]
 
   end
