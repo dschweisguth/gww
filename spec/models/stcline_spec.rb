@@ -52,6 +52,16 @@ describe Stcline do
       Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil)).should == nil
     end
 
+    it "declines to geocode an address which matches two centerlines" do
+      Stcline.create! :street => 'CALIFORNIA', :st_type => 'ST',
+        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
+        :SHAPE => RGeo::Cartesian.preferred_factory.line(point(1, 4), point(3, 6))
+      Stcline.create! :street => 'CALIFORNIA', :st_type => 'ST',
+        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
+        :SHAPE => RGeo::Cartesian.preferred_factory.line(point(11, 14), point(13, 16))
+      Stcline.geocode(Address.new('555 California', '555', 'California', nil)).should == nil
+    end
+
   end
 
   def point(x, y)
