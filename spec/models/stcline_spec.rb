@@ -12,8 +12,7 @@ describe Stcline do
     end
 
     it "consolidates duplicates" do
-      Stcline.create! :street => 'VALENCIA', :SHAPE => point(1, 1)
-      Stcline.create! :street => 'VALENCIA', :SHAPE => point(1, 1)
+      2.times { Stcline.create! :street => 'VALENCIA', :SHAPE => point(1, 1) }
       Stcline.street_names.should == [ 'VALENCIA' ]
     end
 
