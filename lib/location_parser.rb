@@ -1,6 +1,5 @@
 # TODO Dave handle "X end of Y"
 # TODO Dave handle "123 X near Y" (679 Clay)
-# TODO Dave start address number on word boundary
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -39,7 +38,7 @@ class LocationParser
     @regexps = [
       /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
       /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
-      /(\d+)\s+#{street}(?:#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street})?/i
+      /(\b\d+)(?:\s*-\s*\d+)?\s+#{street}(?:#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street})?/i
     ]
 
   end

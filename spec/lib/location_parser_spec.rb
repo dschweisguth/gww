@@ -38,6 +38,15 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil ]
   end
 
+  it "ignores a potential address number not on a word boundary" do
+    LocationParser.new([]).parse('A1 Steak Sauce').should == []
+  end
+
+  it "finds an address with multiple address numbers" do
+    text = '393-399 Valencia'
+    LocationParser.new([]).parse(text).should == [ Address.new text, '393', 'Valencia', nil ]
+  end
+
   it "finds a location with a street with more than one word in its name" do
     text = '26th and San Jose'
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', nil, 'San Jose', nil ]
