@@ -1,4 +1,3 @@
-# TODO Dave handle "X end of Y"
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
