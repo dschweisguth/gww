@@ -1,7 +1,7 @@
 class Stcline < ActiveRecord::Base
 
   def self.street_names
-    (order(:street).map &:street).uniq
+    order(:street).select('distinct(street)').map &:street
   end
 
   # TODO Dave consider the street type
