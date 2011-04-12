@@ -1,5 +1,4 @@
 # TODO Dave handle "X end of Y"
-# TODO Dave handle "123 X near Y" (679 Clay)
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -27,7 +26,7 @@ class LocationParser
     name += "[A-Za-z0-9']+"
     type = "(?:\\s+(?:#{Street::TYPES.join('|')})\\b\\.?)?"
     street = "(#{name})(#{type})"
-    unmatched_street = "#{name}#{type}"
+    unmatched_street = "(?:#{name})#{type}"
 
     space = '[\s.,]+'
     and_intersecting =
@@ -38,7 +37,7 @@ class LocationParser
     @regexps = [
       /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
       /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}(?:#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street})?/i
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}(?:#{space}(?:#{and_intersecting}|#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting})#{space}#{unmatched_street})?/i
     ]
 
   end
@@ -70,7 +69,7 @@ class LocationParser
 
   def remove_subsets(locations)
     locations.reject { |location| locations.find \
-      { |other| other.text != location.text && other.text.include?(location.text) } }
+      { |other| ! other.equal?(location) && other.text.include?(location.text) } }
   end
   private :remove_subsets
 
