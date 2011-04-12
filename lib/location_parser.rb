@@ -1,5 +1,8 @@
 # TODO Dave handle street addresses
 # TODO Dave handle "X end of Y"
+# TODO Dave 1 bus stop
+# TODO Dave handle "123 X near Y"
+# TODO Dave handle "2525 16th St."
 class LocationParser
 
   UNWANTED_STREET_NAMES = [

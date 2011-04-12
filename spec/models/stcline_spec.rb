@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Stcline do
+  # TODO Dave test street_names
+
   describe '.geocode' do
     before :all do
       clear_stclines
@@ -13,6 +15,8 @@ describe Stcline do
       geocode.x.should be_within(0.001).of(2.02)
       geocode.y.should be_within(0.001).of(5.02)
     end
+
+    # TODO Dave test non-matching centerlines
 
     def point(x, y)
       RGeo::Cartesian.preferred_factory.point(x, y)
