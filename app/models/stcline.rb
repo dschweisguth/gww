@@ -6,7 +6,7 @@ class Stcline < ActiveRecord::Base
 
   def self.geocode(address)
     number = address.number.to_i
-    clines = where(:street => address.street.name.upcase) \
+    clines = where(:street => address.street.name) \
       .where(
         "(lf_fadd % 2 = #{number % 2} and lf_fadd <= ? and ? <= lf_toadd) or " +
           "(rt_fadd % 2 = #{number % 2} and rt_fadd <= ? and ? <= rt_toadd)",
