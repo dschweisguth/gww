@@ -428,15 +428,16 @@ class Photo < ActiveRecord::Base
   def self.infer_geocodes
     logger.info 'Inferring geocodes ...'
     start = Time.now
-    guesses = Guess.includes(:photo).limit 100
+    # TODO Dave remove limits
+    answers = Guess.includes(:photo).limit(100) + Revelation.includes(:photo).limit(100)
     parser = LocationParser.new Stcline.street_names
-    guess_count = 0
+    answer_count = 0
     location_count = 0
     inferred_count = 0
-    guesses.each do |guess|
-      guess_count += 1
-      logger.info "\nInferring geocode for \"#{guess.comment_text}\" ..."
-      locations = parser.parse guess.comment_text
+    answers.each do |answer|
+      answer_count += 1
+      logger.info "\nInferring geocode for \"#{answer.comment_text}\" ..."
+      locations = parser.parse answer.comment_text
       if locations.empty?
         logger.info "Found no location."
       else
@@ -451,13 +452,13 @@ class Photo < ActiveRecord::Base
         end
       end
       #noinspection RubyScope
-      guess.photo.save_geocode point
+      answer.photo.save_geocode point
     end
     finish = Time.now
-    logger.info "Examined #{guess_count} photos " +
-      "(#{finish - start} s, #{(finish - start) / guess_count} s/photo); " +
-      "found #{location_count} candidate locations (#{'%.1f' % (100.0 * location_count / guess_count)}% success); " +
-      "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / guess_count)}% success)"
+    logger.info "Examined #{answer_count} photos " +
+      "(#{finish - start} s, #{(finish - start) / answer_count} s/photo); " +
+      "found #{location_count} candidate locations (#{'%.1f' % (100.0 * location_count / answer_count)}% success); " +
+      "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / answer_count)}% success)"
   end
 
   def save_geocode(point)

@@ -988,7 +988,6 @@ describe Photo do
     end
   end
 
-  # TODO Dave infer from revelations, too
   describe '#infer_geocodes' do
     before do
       street_names = %w{ 26TH VALENCIA }
@@ -1000,58 +999,71 @@ describe Photo do
 
     end
 
-    it "attempts to guess each photo's lat+long from its guess" do
-      guess = Guess.make :comment_text => 'A parseable guess'
+    it "infers each guessed photo's lat+long from its guess" do
+      answer = Guess.make :comment_text => 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(guess.comment_text) { [ location ] }
+      stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { @factory.point(37, -122) }
       Photo.infer_geocodes
 
-      guess.photo.reload
-      guess.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      guess.photo.inferred_longitude.should == BigDecimal.new('-122.0')
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
+      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
+
+    end
+
+    it "infers each revealed photo's lat+long from its revelation" do
+      answer = Revelation.make :comment_text => 'A parseable comment'
+      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
+      stub(@parser).parse(answer.comment_text) { [ location ] }
+      stub(Stintersection).geocode(location) { @factory.point(37, -122) }
+      Photo.infer_geocodes
+
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
+      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
 
     end
 
     it "removes an existing inferred geocode if the comment can't be parsed" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      guess = Guess.make :photo => photo, :comment_text => 'An unparseable guess'
-      stub(@parser).parse(guess.comment_text) { [] }
+      answer = Guess.make :photo => photo, :comment_text => 'An unparseable comment'
+      stub(@parser).parse(answer.comment_text) { [] }
       Photo.infer_geocodes
 
-      guess.photo.reload
-      guess.photo.inferred_latitude.should == nil
-      guess.photo.inferred_longitude.should == nil
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == nil
+      answer.photo.inferred_longitude.should == nil
 
     end
 
     it "removes an existing inferred geocode if the location can't be geocoded" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      guess = Guess.make :photo => photo, :comment_text => 'A parseable but not geocodable guess'
+      answer = Guess.make :photo => photo, :comment_text => 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(guess.comment_text) { [ location ] }
+      stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { nil }
       Photo.infer_geocodes
 
-      guess.photo.reload
-      guess.photo.inferred_latitude.should == nil
-      guess.photo.inferred_longitude.should == nil
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == nil
+      answer.photo.inferred_longitude.should == nil
 
     end
 
-    it "removes an existing inferred geocode if the guess has multiple geocodable locations" do
+    it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
       photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      guess = Guess.make :photo => photo, :comment_text => 'A guess with multiple gecodable locations'
+      answer = Guess.make :photo => photo, :comment_text => 'A comment with multiple gecodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(guess.comment_text) { [ location1, location2 ] }
+      stub(@parser).parse(answer.comment_text) { [ location1, location2 ] }
       stub(Stintersection).geocode(location1) { @factory.point(37, -122) }
       stub(Stintersection).geocode(location2) { @factory.point(38, -122) }
       Photo.infer_geocodes
 
-      guess.photo.reload
-      guess.photo.inferred_latitude.should == nil
-      guess.photo.inferred_longitude.should == nil
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == nil
+      answer.photo.inferred_longitude.should == nil
 
     end
 

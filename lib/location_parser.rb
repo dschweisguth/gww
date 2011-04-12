@@ -1,3 +1,5 @@
+# TODO Dave 510 Stockton, at the intersection of Stockton and Bush.
+# Bryant and Dore Alley. Note that st_type includes period.
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -29,9 +31,9 @@ class LocationParser
 
     space = '[\s.,]+'
     and_intersecting =
-      '(?:and|&amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
-    between = '(?:between|betw?\.?)'
-    and_other_intersecting = '(?:and|&amp;)'
+      '(?:and|&amp;|&amp;amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
+    between = '(?:between|(?:betw?|btwn)\.?)'
+    and_other_intersecting = '(?:and|&amp;|&amp;amp;)'
 
     @regexps = [
       /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
