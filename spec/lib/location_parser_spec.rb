@@ -35,7 +35,7 @@ describe LocationParser do
 
   it "finds an address at an intersection" do
     text = '555 California near Kearny'
-    LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil ]
+    LocationParser.new([]).parse(text).should == [ Address.new text, '555', 'California', nil, 'Kearny', nil ]
   end
 
   it "finds an address with adjacent streets" do

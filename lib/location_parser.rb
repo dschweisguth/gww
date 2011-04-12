@@ -28,7 +28,6 @@ class LocationParser
     name += "[A-Za-z0-9']+"
     type = "(?:\\s+(?:#{StreetType.regexp}))?"
     street = "(#{name})(#{type})"
-    unmatched_street = "(?:#{name})#{type}"
 
     space = '[\s.,]+'
     and_intersecting =
@@ -40,7 +39,7 @@ class LocationParser
       /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
       /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
       /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{and_intersecting}#{space}#{unmatched_street}/i,
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{and_intersecting}#{space}#{street}/i,
       /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i
     ]
 
@@ -58,13 +57,11 @@ class LocationParser
         break if ! match
         locations <<
           case match.size
-            when 4
-              Address.new *match
             when 5
               Intersection.new *match
             when 7
               Block.new *match
-            when 8
+            else # luckily, an address has 4, 6 or 8 parts
               Address.new *match
           end
         remaining_comment = remaining_comment[match.end(1) + 1, remaining_comment.length]
