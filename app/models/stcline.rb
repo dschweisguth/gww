@@ -12,7 +12,7 @@ class Stcline < ActiveRecord::Base
           "(rt_fadd % 2 = #{number % 2} and rt_fadd <= ? and ? <= rt_toadd)",
         number, number, number, number)
     if address.street.type
-      clines = clines.where :st_type => address.street.canonical_type
+      clines = clines.where :st_type => address.street.canonical_type.upcase
     end
     if clines.length != 1
       logger.info "Found #{clines.length} centerlines for #{address}"
