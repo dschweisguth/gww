@@ -32,11 +32,11 @@ class Stintersection < ActiveRecord::Base
     args = [ sql, street1.name.upcase, street2.name.upcase ]
     if street1.type
       sql << ' and i1.st_type = ?'
-      args << street1.canonical_type.upcase
+      args << street1.type.name
     end
     if street2.type
       sql << ' and i2.st_type = ?'
-      args << street2.canonical_type.upcase
+      args << street2.type.name
     end
     nodes = find_by_sql args
     if nodes.length == 1

@@ -32,6 +32,9 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
   ]
 
   def self.get(name)
+    if ! name
+      return nil
+    end
     sanitized_name = name.chomp('.').upcase
     INSTANCES.find { |type| type.name == sanitized_name ||
       type.synonyms.find { |synonym| synonym.name == sanitized_name } }
