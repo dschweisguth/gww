@@ -1,14 +1,18 @@
-class Address < Struct.new :text, :number, :street, :between1, :between2
+class Address < Struct.new :text, :number, :street, :at, :between1, :between2
 
   def initialize(text, number, street_name, street_type,
-      between1_name = nil, between1_type = nil, between2_name = nil, between2_type = nil)
-    if between1_name.nil? ^ between2_name.nil?
-      raise ArgumentError, "between1_name and between2_name must both be nil or non-nil, but " +
-        "between1_name == #{between1_name} and between2_name == #{between2_name}"
+      near1_name = nil, near1_type = nil, near2_name = nil, near2_type = nil)
+    if ! near1_name && near2_name
+      raise ArgumentError, "near1_name must be non-nil if near2_name is non-nil, but " +
+        "near1_name was nil and near2_name was #{near2_name}"
     end
-    between1, between2 = between1_name.nil? ? [ nil, nil ] : \
-      [ Street.new(between1_name, between1_type), Street.new(between2_name, between2_type) ]
-    super text, number, Street.new(street_name, street_type), between1, between2
+    near1 = near1_name ? Street.new(near1_name, near1_type) : nil
+    near2 = near2_name ? Street.new(near2_name, near2_type) : nil
+    if near1 && ! near2
+      super text, number, Street.new(street_name, street_type), near1, nil, nil
+    else
+      super text, number, Street.new(street_name, street_type), nil, near1, near2
+    end
   end
 
 end
