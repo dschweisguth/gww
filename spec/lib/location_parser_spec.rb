@@ -88,14 +88,4 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', 'St', 'Valencia', nil ]
   end
 
-  it "finds a location with a street type followed by a period" do
-    text = '26th St. and Valencia'
-    LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', 'St.', 'Valencia', nil ]
-  end
-
-  it "ignores a street type not on a word boundary" do
-    LocationParser.new([]).parse('26th Stop and Valencia').should ==
-      [ Intersection.new 'Stop and Valencia', 'Stop', nil, 'Valencia', nil ]
-  end
-
 end

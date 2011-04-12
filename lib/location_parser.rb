@@ -1,5 +1,4 @@
 # TODO Dave 510 Stockton, at the intersection of Stockton and Bush.
-# Bryant and Dore Alley. Note that st_type includes period.
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -25,7 +24,7 @@ class LocationParser
       name += '|'
     end
     name += "[A-Za-z0-9']+"
-    type = "(?:\\s+(?:#{Street::TYPES.join('|')})\\b\\.?)?"
+    type = "(?:\\s+(?:#{StreetType.regexp}))?"
     street = "(#{name})(#{type})"
     unmatched_street = "(?:#{name})#{type}"
 
