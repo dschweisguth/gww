@@ -21,7 +21,7 @@ class Stcline < ActiveRecord::Base
     cline = clines[0]
     first = cline.SHAPE.points.first
     last = cline.SHAPE.points.last
-    from_address, to_address = number % 2 == cline.lf_fadd % 2 \
+    from_address, to_address = cline.lf_fadd != 0 && number % 2 == cline.lf_fadd % 2 \
       ? [cline.lf_fadd, cline.lf_toadd ] : [ cline.rt_fadd, cline.rt_toadd ]
     pos = (number - from_address) / (to_address - from_address)
     point = RGeo::Cartesian.preferred_factory.point \

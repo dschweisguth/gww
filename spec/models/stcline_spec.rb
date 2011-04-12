@@ -74,6 +74,14 @@ describe Stcline do
       geocode.y.should be_within(0.001).of(5.102)
     end
 
+    it "handles missing odd address numbers when looking up an even address number" do
+      Stcline.create! :street => 'VALENCIA', :lf_fadd => 0, :lf_toadd => 0, :rt_fadd => 1400, :rt_toadd => 1498,
+        :SHAPE => line(point(1, 4), point(3, 6))
+      geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
+      geocode.x.should be_within(0.001).of(2.02)
+      geocode.y.should be_within(0.001).of(5.02)
+    end
+
   end
 
   def point(x, y)
