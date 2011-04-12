@@ -4,7 +4,6 @@ class Stcline < ActiveRecord::Base
     order(:street).select('distinct(street)').map &:street
   end
 
-  # TODO Dave consider the street type
   def self.geocode(address)
     number = address.number.to_i
     clines = where(:street => address.street.name.upcase) \
@@ -12,6 +11,9 @@ class Stcline < ActiveRecord::Base
         "(lf_fadd % 2 = #{number % 2} and lf_fadd <= ? and ? <= lf_toadd) or " +
           "(rt_fadd % 2 = #{number % 2} and rt_fadd <= ? and ? <= rt_toadd)",
         number, number, number, number)
+    if address.street.type
+      clines = clines.where :st_type => address.street.canonical_type
+    end
     if clines.length != 1
       logger.info "Found #{clines.length} centerlines for #{address}"
       return nil

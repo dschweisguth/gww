@@ -62,6 +62,18 @@ describe Stcline do
       Stcline.geocode(Address.new('555 California', '555', 'California', nil)).should == nil
     end
 
+    it "considers street type" do
+      Stcline.create! :street => 'CALIFORNIA', :st_type => 'ST',
+        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
+        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! :street => 'CALIFORNIA', :st_type => 'AVE',
+        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
+        :SHAPE => line(point(11, 14), point(13, 16))
+      geocode = Stcline.geocode Address.new('555 California Street', '555', 'California', 'Street')
+      geocode.x.should be_within(0.001).of(2.102)
+      geocode.y.should be_within(0.001).of(5.102)
+    end
+
   end
 
   def point(x, y)
