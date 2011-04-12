@@ -1,5 +1,4 @@
 # TODO Dave handle "X end of Y"
-# TODO Dave 1 bus stop
 # TODO Dave handle "123 X near Y" (679 Clay)
 # TODO Dave start address number on word boundary
 class LocationParser
@@ -27,7 +26,7 @@ class LocationParser
       name += '|'
     end
     name += "[A-Za-z0-9']+"
-    type = "(?:\\s+(?:#{Street::TYPES.join('|')})\\.?)?"
+    type = "(?:\\s+(?:#{Street::TYPES.join('|')})\\b\\.?)?"
     street = "(#{name})(#{type})"
     unmatched_street = "#{name}#{type}"
 
