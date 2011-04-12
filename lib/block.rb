@@ -1,13 +1,6 @@
 class Block < Struct.new :text, :on, :between1, :between2
-  def initialize(*args)
-    if args.length == 4
-      super
-    elsif args.length == 7
-      super args[0], Street.new(args[1], args[2]), Street.new(args[3], args[4]),
-        Street.new(args[5], args[6])
-    else
-      raise ArgumentError,
-        "Expected String, Street, Street x 2 or String x 7, but got #{args.length} args"
-    end
+  def initialize(text, on_name, on_type, between1_name, between1_type, between2_name, between2_type)
+    super text, Street.new(on_name, on_type),
+      Street.new(between1_name, between1_type), Street.new(between2_name, between2_type)
   end
 end

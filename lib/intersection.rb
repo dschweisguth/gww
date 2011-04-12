@@ -1,12 +1,5 @@
 class Intersection < Struct.new :text, :at1, :at2
-  def initialize(*args)
-    if args.length == 3
-      super
-    elsif args.length == 5
-      super args[0], Street.new(args[1], args[2]), Street.new(args[3], args[4])
-    else
-      raise ArgumentError,
-        "Expected String, Street x 2 or String x 5, but got #{args.length} args"
-    end
+  def initialize(text, at1_name, at1_type, at2_name, at2_type)
+    super text, Street.new(at1_name, at1_type), Street.new(at2_name, at2_type)
   end
 end
