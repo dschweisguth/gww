@@ -54,4 +54,12 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
     regexp << '\.?' if type.is_abbr
   end
 
+  def to_s
+    "#<StreetType:#{name}>"
+  end
+
+  def inspect
+    to_s
+  end
+
 end

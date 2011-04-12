@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe StreetType do
-  describe '#get' do
+  describe '.get' do
     it "finds the type with the given name" do
       StreetType.get('St').should == StreetType.new('ST', true, [ StreetType::Synonym.new('STREET', false) ])
     end
@@ -16,7 +16,7 @@ describe StreetType do
 
   end
 
-  describe '#regexp' do
+  describe '.regexp' do
     it "matches a type" do
       /^#{StreetType.regexp}/i.should match 'St'
     end
@@ -49,6 +49,23 @@ describe StreetType do
       /^#{StreetType.regexp}/i.should_not match 'Wyoming'
     end
 
+  end
+
+  class StructSubclass < Struct.new :name
+
+  end
+
+  describe '#to_s' do
+    it "returns a nice string" do
+      StreetType.get('St').to_s.should == '#<StreetType:ST>'
+    end
+  end
+
+  describe '#inspect' do
+    it "returns the same nice string as to_s" do
+      type = StreetType.get('St')
+      type.inspect.should == type.to_s
+    end
   end
 
 end
