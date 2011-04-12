@@ -26,6 +26,13 @@ describe Stintersection do
       Stintersection.geocode(location).should == point(37.5, -121.5)
     end
 
+    it "converts an address to a lat + long" do
+      location = Address.new '555 California', '555', 'California', nil
+      point = point(1, 2)
+      stub(Stcline).geocode(location) { point }
+      Stintersection.geocode(location).should == point
+    end
+
     it "uses street type when present" do
       point = point(37, -122)
       Stintersection.create! :cnn => 1, :st_name => '26TH', :st_type => 'ST', :SHAPE => point

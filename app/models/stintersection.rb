@@ -18,6 +18,8 @@ class Stintersection < ActiveRecord::Base
       point2 \
         ? point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
         : nil
+    elsif location.respond_to? :number
+      Stcline.geocode location
     else
       geocode_intersection location.at1, location.at2
     end
