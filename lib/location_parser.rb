@@ -1,4 +1,3 @@
-# TODO Dave 510 Stockton, at the intersection of Stockton and Bush.
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
