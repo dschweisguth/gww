@@ -30,17 +30,20 @@ class LocationParser
     street = "(#{name})(#{type})"
 
     space = '[\s.,]+'
-    and_intersecting =
-      '(?:and|&amp;|&amp;amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)'
-    between = '(?:between|(?:betw?|btwn)\.?)'
-    and_other_intersecting = '(?:and|&amp;|&amp;amp;)'
+    
+    at_a_street =
+      '(?:and|&amp;|&amp;amp;|at|@|by|just\s+(?:\w+)?\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)' +
+        "#{space}#{street}"
+    between_streets =
+      "(?:between|(?:betw?|btwn)\\.?)#{space}#{street}#{space}(?:and|&amp;|&amp;amp;)#{space}#{street}"
+    address = '(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+' + street
 
     @regexps = [
-      /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
-      /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{and_intersecting}#{space}#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i
+      /#{street}#{space}#{at_a_street}/i,
+      /#{street}#{space}#{between_streets}/i,
+      /#{address}/i,
+      /#{address}#{space}#{at_a_street}/i,
+      /#{address}#{space}#{between_streets}/i
     ]
 
   end
