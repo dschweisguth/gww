@@ -1,3 +1,8 @@
+# TODO Dave Market between Gough and Valencia
+# TODO Dave Myrtle Alley between Polk and Larkin
+# TODO Dave consider breaking up the address regexp
+# TODO Dave make use of X and Y in "# #TH between X and Y"
+# TODO Dave single-block streets
 class LocationParser
 
   UNWANTED_STREET_NAMES = [
@@ -15,6 +20,7 @@ class LocationParser
     /^UNNAMED/
   ]
 
+  # TODO Dave move selection of street names to Stcline
   def initialize(known_street_names)
     name = known_street_names.select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
