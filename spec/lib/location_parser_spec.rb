@@ -18,7 +18,7 @@ describe LocationParser do
 
   %w{ between bet bet. betw betw. btwn btwn. }.each do |between|
     it "finds a block delimited with '#{between}'" do
-      text = 'Valencia bet 25th and 26th'
+      text = "Valencia #{between} 25th and 26th"
       LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
     end
   end
