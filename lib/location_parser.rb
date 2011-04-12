@@ -39,7 +39,9 @@ class LocationParser
     @regexps = [
       /#{street}#{space}#{and_intersecting}#{space}#{street}/i,
       /#{street}#{space}#{between}#{space}#{street}#{space}#{and_other_intersecting}#{space}#{street}/i,
-      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}(?:#{space}(?:#{and_intersecting}|#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting})#{space}#{unmatched_street})?/i
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}/i,
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{and_intersecting}#{space}#{unmatched_street}/i,
+      /(\b\d+)(?:\s*-\s*\d+|[a-z])?\s+#{street}#{space}#{between}#{space}#{unmatched_street}#{space}#{and_other_intersecting}#{space}#{unmatched_street}/i
     ]
 
   end
@@ -70,6 +72,7 @@ class LocationParser
   private :find_locations
 
   def remove_subsets(locations)
+    # This algorithm assumes that no two locations will have the same text
     locations.reject { |location| locations.find \
       { |other| ! other.equal?(location) && other.text.include?(location.text) } }
   end
