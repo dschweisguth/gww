@@ -85,6 +85,7 @@ class Street < Struct.new :name, :type
   def initialize(name, type=nil)
     # TODO Dave canonicalize whitespace
     # TODO Dave remove commas
+    # TODO Dave canonicalize all of the flexibiity added by regexp
     sanitized_name = name.gsub(/['.]/, '').upcase
     super SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
   end

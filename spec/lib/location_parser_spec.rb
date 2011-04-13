@@ -62,49 +62,6 @@ describe LocationParser do
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', nil, 'San Jose', nil ]
   end
 
-  it "accepts any whitespace within multiword names" do
-    text = "Charles \n J \n Brenham and Market"
-    LocationParser.new([ 'CHARLES J BRENHAM' ]).parse(text).should ==
-      [ Intersection.new text, "Charles \n J \n Brenham", nil, 'Market', nil ]
-  end
-
-  %w{ Saint St St. }.each do |title|
-    it "accepts #{title}" do
-      LocationParser.new([ 'SAINT FRANCIS', ]).parse("#{title} Francis and Sloat").should ==
-        [ Intersection.new "#{title} Francis and Sloat", "#{title} Francis", nil, 'Sloat', nil ]
-    end
-  end
-
-  %w{ San S S. }.each do |title|
-    it "accepts #{title}" do
-      text = "#{title} Jacinto and Monterey"
-      LocationParser.new([ 'SAN JACINTO' ]).parse(text).should ==
-        [ Intersection.new text, "#{title} Jacinto", nil, 'Monterey', nil ]
-    end
-  end
-
-  %w{ Santa Sta Sta. }.each do |title|
-    it "accepts #{title}" do
-      text = "#{title} Clara and Portola"
-      LocationParser.new([ 'SANTA CLARA' ]).parse(text).should ==
-        [ Intersection.new text, "#{title} Clara", nil, 'Portola', nil ]
-    end
-  end
-
-  it "accepts a period after an apparent middle initial" do
-    text = 'Charles J. Brenham and Market'
-    LocationParser.new([ 'CHARLES J BRENHAM' ]).parse(text).should ==
-      [ Intersection.new text, 'Charles J. Brenham', nil, 'Market', nil ]
-  end
-
-  [ ' Jr', ', Jr', ' Junior', ', Junior' ].each do |title|
-    it "accepts #{title}" do
-      text = "Colin P Kelly#{title} at Townsend"
-      LocationParser.new([ 'COLIN P KELLY JR' ]).parse(text).should ==
-        [ Intersection.new text, "Colin P Kelly#{title}", nil, 'Townsend', nil ]
-    end
-  end
-
   it "treats an unknown multi-word name as a series of single words" do
     LocationParser.new([]).parse('26th and San Jose').should == [ Intersection.new '26th and San', '26th', nil, 'San', nil ]
   end
