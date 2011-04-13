@@ -11,12 +11,10 @@ class Stintersection < ActiveRecord::Base
         midpoint = point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2)
         logger.info "Found midpoint of #{location.on} " +
           "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
+        midpoint
       else
         nil
       end
-      point2 \
-        ? point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2) \
-        : nil
     elsif location.respond_to? :number
       Stcline.geocode location
     else
