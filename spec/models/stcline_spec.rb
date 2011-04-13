@@ -52,6 +52,14 @@ describe Stcline do
       Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil)).should == nil
     end
 
+    it "handles missing odd address numbers when looking up an even address number" do
+      Stcline.create! :street => 'VALENCIA', :lf_fadd => 0, :lf_toadd => 0, :rt_fadd => 1400, :rt_toadd => 1498,
+        :SHAPE => line(point(1, 4), point(3, 6))
+      geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
+      geocode.x.should be_within(0.001).of(2.02)
+      geocode.y.should be_within(0.001).of(5.02)
+    end
+
     it "declines to geocode an address which matches two centerlines" do
       Stcline.create! :street => 'CALIFORNIA', :st_type => 'ST',
         :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
@@ -72,14 +80,6 @@ describe Stcline do
       geocode = Stcline.geocode Address.new('555 California Street', '555', 'California', 'Street')
       geocode.x.should be_within(0.001).of(2.102)
       geocode.y.should be_within(0.001).of(5.102)
-    end
-
-    it "handles missing odd address numbers when looking up an even address number" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 0, :lf_toadd => 0, :rt_fadd => 1400, :rt_toadd => 1498,
-        :SHAPE => line(point(1, 4), point(3, 6))
-      geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
-      geocode.x.should be_within(0.001).of(2.02)
-      geocode.y.should be_within(0.001).of(5.02)
     end
 
   end
