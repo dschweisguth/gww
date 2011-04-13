@@ -1,5 +1,13 @@
 class Stcline < ActiveRecord::Base
 
+  STREET_NAME_SYNONYMS = [
+    'DIRK DIRKSEN',
+    'S VAN NESS',
+    'SGT JOHN V YOUNG',
+    'SO VAN NESS',
+    'TIMOTHY PFLUEGER'
+  ]
+
   UNWANTED_STREET_NAMES = [
     /^FORT MASON /,
     /^FORT MILEY /,
@@ -13,11 +21,10 @@ class Stcline < ActiveRecord::Base
   ]
 
   def self.multiword_street_names
-    names = (order(:street).select('distinct(street)').map &:street) \
+    (order(:street).select('distinct(street)').map &:street) \
       .select { |name| name.include? ' ' } \
-      .reject { |name| UNWANTED_STREET_NAMES.find { |pattern| pattern =~ name } }
-    names << 'TIMOTHY PFLUEGER'
-    names
+      .reject { |name| UNWANTED_STREET_NAMES.find { |pattern| pattern =~ name } } +
+      STREET_NAME_SYNONYMS
   end
 
   def self.geocode(address)

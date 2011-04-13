@@ -1,9 +1,5 @@
 class Street < Struct.new :name, :type
 
-  # TODO Dave that alley near Geary & Fillmore, Grover?
-  # TODO Dave need aliases in the other direction so we can find multi-word names that need massaging
-  # TODO Dave when we have that, handle different versions of SVN
-
   SYNONYM = {
     '1' => '1ST',
     '2' => '2ND',
@@ -52,13 +48,27 @@ class Street < Struct.new :name, :type
     '45' => '45TH',
     '47' => '47TH',
     '48' => '48TH',
+    'ADELAIDE' => 'ISADORA DUNCAN',
+    'ADLER' => 'JACK KEROUAC',
+    'ALDRICH' => 'AMBROSE BIERCE',
     'DEHARO' => 'DE HARO',
+    'DIRK DIRKSEN' => 'ROWLAND',
     'DIVIS' => 'DIVISADERO',
+    'GRANDVIEW' => 'GRAND VIEW',
+    'GROVER' => 'VIA BUFANO',
+    'HARWOOD' => 'BOB KAUFMAN',
     'JFK' => 'JOHN F KENNEDY',
+    'MONROE' => 'DASHIELL HAMMETT',
+    'PARDEE' => 'JACK MICHELINE',
     'PFLUEGER' => 'CHELSEA',
     'MLK' => 'MARTIN LUTHER KING JR',
     'SACTO' => 'SACRAMENTO',
-    'TIMOTHY PFLUEGER' => 'CHELSEA'
+    'S VAN NESS' => 'SOUTH VAN NESS',
+    'SGT JOHN V YOUNG' => 'SERGEANT JOHN V YOUNG',
+    'SO VAN NESS' => 'SOUTH VAN NESS',
+    'TIMOTHY PFLUEGER' => 'CHELSEA',
+    'TRACY' => 'KENNETH REXROTH',
+    'VERMEHR' => 'VER MEHR'
   }
 
   def initialize(name, type=nil)

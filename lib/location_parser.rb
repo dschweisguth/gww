@@ -2,6 +2,7 @@
 class LocationParser
 
   def initialize(multiword_street_names)
+    # TODO Dave expand middle initials and 'Saint' into regexps
     name = multiword_street_names.join '|'
     if ! name.empty?
       name += '|'
@@ -54,6 +55,7 @@ class LocationParser
   end
   private :find_locations
 
+  # TODO Dave remove identical locations, e.g. those arising from synonym
   def remove_subsets(locations)
     # This algorithm assumes that no two locations will have the same text
     locations.reject { |location| locations.find \
