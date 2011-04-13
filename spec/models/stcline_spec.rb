@@ -8,22 +8,22 @@ describe Stcline do
   describe '.street_names' do
     it "lists multiword street names" do
       Stcline.create! :street => 'SAN JOSE', :SHAPE => point(1, 1)
-      Stcline.multiword_street_names.should == [ 'SAN JOSE' ]
+      Stcline.multiword_street_names.should == [ 'SAN JOSE', 'TIMOTHY PFLUEGER' ]
     end
 
     it "consolidates duplicates" do
       2.times { Stcline.create! :street => 'SAN JOSE', :SHAPE => point(1, 1) }
-      Stcline.multiword_street_names.should == [ 'SAN JOSE' ]
+      Stcline.multiword_street_names.should == [ 'SAN JOSE', 'TIMOTHY PFLUEGER' ]
     end
 
     it "ignores one-word street names" do
       Stcline.create! :street => 'VALENCIA', :SHAPE => point(1, 1)
-      Stcline.multiword_street_names.should == []
+      Stcline.multiword_street_names.should == [ 'TIMOTHY PFLUEGER' ]
     end
 
     it "ignores unwanted names" do
       Stcline.create! :street => 'UNNAMED 001', :SHAPE => point(1, 1)
-      Stcline.multiword_street_names.should == []
+      Stcline.multiword_street_names.should == [ 'TIMOTHY PFLUEGER' ]
     end
 
   end

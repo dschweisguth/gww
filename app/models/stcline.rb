@@ -13,9 +13,11 @@ class Stcline < ActiveRecord::Base
   ]
 
   def self.multiword_street_names
-    (order(:street).select('distinct(street)').map &:street) \
+    names = (order(:street).select('distinct(street)').map &:street) \
       .select { |name| name.include? ' ' } \
       .reject { |name| UNWANTED_STREET_NAMES.find { |pattern| pattern =~ name } }
+    names << 'TIMOTHY PFLUEGER'
+    names
   end
 
   def self.geocode(address)

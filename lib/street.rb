@@ -1,7 +1,6 @@
 class Street < Struct.new :name, :type
 
-  # TODO Dave Timothy Pflueger, that alley near Geary & Fillmore, Grover?
-  # TODO Dave just remove punctuation from names when searching
+  # TODO Dave that alley near Geary & Fillmore, Grover?
   # TODO Dave need aliases in the other direction so we can find multi-word names that need massaging
   # TODO Dave when we have that, handle different versions of SVN
 
@@ -56,8 +55,10 @@ class Street < Struct.new :name, :type
     'DEHARO' => 'DE HARO',
     'DIVIS' => 'DIVISADERO',
     'JFK' => 'JOHN F KENNEDY',
+    'PFLUEGER' => 'CHELSEA',
     'MLK' => 'MARTIN LUTHER KING JR',
     'SACTO' => 'SACRAMENTO',
+    'TIMOTHY PFLUEGER' => 'CHELSEA'
   }
 
   def initialize(name, type=nil)
