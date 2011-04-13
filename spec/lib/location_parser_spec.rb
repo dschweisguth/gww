@@ -57,9 +57,19 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Address.new text, '393', 'Valencia', nil ]
   end
 
-  it "finds a location with a street with more than one word in its name" do
+  it "finds a location with a street with a multiword name" do
     text = '26th and San Jose'
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', nil, 'San Jose', nil ]
+  end
+
+  it "isn't picky about whitespace within multiword names" do
+    LocationParser.new([ 'CHARLES J BRENHAM' ]).parse("Charles \n J \n Brenham and Market").should ==
+      [ Intersection.new "Charles \n J \n Brenham and Market", "Charles \n J \n Brenham", nil, 'Market', nil ]
+  end
+
+  it "ignores a period after an apparent middle initial" do
+    LocationParser.new([ 'CHARLES J BRENHAM' ]).parse('Charles J. Brenham and Market').should ==
+      [ Intersection.new 'Charles J. Brenham and Market', 'Charles J. Brenham', nil, 'Market', nil ]
   end
 
   it "treats an unknown multi-word name as a series of single words" do
