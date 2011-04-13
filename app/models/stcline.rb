@@ -3,6 +3,7 @@ class Stcline < ActiveRecord::Base
   STREET_NAME_SYNONYMS = [
     'DIRK DIRKSEN',
     'S VAN NESS',
+    "SAINT MARY'S",
     'SGT JOHN V YOUNG',
     'SO VAN NESS',
     'TIMOTHY PFLUEGER'
