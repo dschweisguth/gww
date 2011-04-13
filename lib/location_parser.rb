@@ -1,4 +1,3 @@
-# TODO Dave make use of X and Y in "# #TH between X and Y"
 # TODO Dave single-block streets
 class LocationParser
 
