@@ -62,8 +62,9 @@ class Street < Struct.new :name, :type
     'PARDEE' => 'JACK MICHELINE',
     'PFLUEGER' => 'CHELSEA',
     'MLK' => 'MARTIN LUTHER KING JR',
-    'SACTO' => 'SACRAMENTO',
     'S VAN NESS' => 'SOUTH VAN NESS',
+    'SACTO' => 'SACRAMENTO',
+    'SAINT MARYS' => "SAINT MARY'?S", # TODO Dave test
     'SGT JOHN V YOUNG' => 'SERGEANT JOHN V YOUNG',
     'SO VAN NESS' => 'SOUTH VAN NESS',
     'TIMOTHY PFLUEGER' => 'CHELSEA',

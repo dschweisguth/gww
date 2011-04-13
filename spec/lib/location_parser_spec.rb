@@ -67,6 +67,23 @@ describe LocationParser do
       [ Intersection.new "Charles \n J \n Brenham and Market", "Charles \n J \n Brenham", nil, 'Market', nil ]
   end
 
+  it "accepts Saint" do
+    LocationParser.new([ 'SAINT FRANCIS', ]).parse('Saint Francis and Sloat').should ==
+      [ Intersection.new 'Saint Francis and Sloat', 'Saint Francis', nil, 'Sloat', nil ]
+  end
+
+  it "accepts St" do
+    LocationParser.new([ 'SAINT FRANCIS', ]).parse('St Francis and Sloat').should ==
+      [ Intersection.new 'St Francis and Sloat', 'St Francis', nil, 'Sloat', nil ]
+  end
+
+  it "accepts St." do
+    LocationParser.new([ 'SAINT FRANCIS', ]).parse('St. Francis and Sloat').should ==
+      [ Intersection.new 'St. Francis and Sloat', 'St. Francis', nil, 'Sloat', nil ]
+  end
+
+  # TODO Dave extract duplicate text
+
   it "accepts a period after an apparent middle initial" do
     LocationParser.new([ 'CHARLES J BRENHAM' ]).parse('Charles J. Brenham and Market').should ==
       [ Intersection.new 'Charles J. Brenham and Market', 'Charles J. Brenham', nil, 'Market', nil ]
