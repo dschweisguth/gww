@@ -27,14 +27,16 @@ class LocationParser
 
   end
 
-  def add_flexibility(names)
-    names \
-      .map { |a_name| a_name.gsub /\bSAINT\b/, '(?:SAINT|ST\.?)' } \
-      .map { |a_name| a_name.gsub /\bSAN\b/, '(?:SAN|S\.?)' } \
-      .map { |a_name| a_name.gsub /\bSANTA\b/, '(?:SANTA|STA\.?)' } \
-      .map { |a_name| a_name.gsub /([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2' } \
-      .map { |a_name| a_name.gsub /(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)' } \
-      .map { |a_name| a_name.gsub /\s+/, '\s+' }
+  def add_flexibility(multiword_street_names)
+    multiword_street_names.map do |name|
+      name \
+        .gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)') \
+        .gsub(/\bSAN\b/, '(?:SAN|S\.?)') \
+        .gsub(/\bSANTA\b/, '(?:SANTA|STA\.?)') \
+        .gsub(/([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2') \
+        .gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)') \
+        .gsub(/\s+/, '\s+')
+    end
   end
   private :add_flexibility
 
