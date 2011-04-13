@@ -54,4 +54,24 @@ class Stintersection < ActiveRecord::Base
   end
   private_class_method :point
 
+  def self.street_type(street_name, cross_street)
+    sql = %q[
+      select i1.* from stintersections i1, stintersections i2
+      where i1.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ? ]
+    args = [ sql, street_name, cross_street.name ]
+    if cross_street.type
+      sql << ' and i2.st_type = ?'
+      args << cross_street.type.name
+    end
+    intersections = find_by_sql args
+    if intersections.length == 1
+      street_type = intersections[0].st_type
+      logger.info "The #{street_name} that crosses #{cross_street} is a(n) #{street_type}."
+      street_type
+    else
+      logger.info "Found #{intersections.length} intersections of #{street_name} and #{cross_street}."
+      nil
+    end
+  end
+
 end

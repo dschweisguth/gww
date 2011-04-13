@@ -13,6 +13,17 @@ class Stcline < ActiveRecord::Base
         number, number, number, number)
     if address.street.type
       clines = clines.where :st_type => address.street.type.name
+    else
+      cross_street = address.at || address.between1
+      if cross_street
+        street_type = Stintersection.street_type address.street.name, cross_street
+        if ! street_type && address.between2
+          street_type = Stintersection.street_type address.street.name, address.between2
+        end
+        if street_type
+          clines = clines.where :st_type => street_type
+        end
+      end
     end
     if clines.length != 1
       logger.info "Found #{clines.length} centerlines for #{address}"
