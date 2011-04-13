@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe Stintersection do
 
+  before :all do
+    clear_stintersections
+  end
+
   describe '.geocode' do
-    before :all do
-      clear_stintersections
-    end
 
     it "converts an intersection to a lat + long" do
       point = point(37, -122)
@@ -60,18 +61,43 @@ describe Stintersection do
       Stintersection.geocode(location).should == point
     end
 
-    def point(x, y)
-      RGeo::Cartesian.preferred_factory.point(x, y)
+  end
+
+  describe '.street_type' do
+    it "finds the type of an untyped street with a cross street" do
+      Stintersection.create! :cnn => 1, :st_name => '20TH', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.street_type('20TH', Street.new('Guerrero')).should == 'ST'
     end
 
-    after do
-      clear_stintersections
+    it "uses the cross street's type if present" do
+      Stintersection.create! :cnn => 1, :st_name => '20TH', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 2, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(3, 6)
+      Stintersection.create! :cnn => 2, :st_name => 'GUERRERO', :st_type => 'AVE', :SHAPE => point(3, 6)
+      Stintersection.street_type('20TH', Street.new('Guerrero', 'ST')).should == 'ST'
     end
 
-    def clear_stintersections
-      Stintersection.connection.execute 'delete from stintersections' # stupid MyISAM
+    it "returns nil if there is more than one possible street type" do
+      Stintersection.create! :cnn => 1, :st_name => '20TH', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 2, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(3, 6)
+      Stintersection.create! :cnn => 2, :st_name => 'GUERRERO', :st_type => 'AVE', :SHAPE => point(3, 6)
+      Stintersection.street_type('20TH', Street.new('Guerrero')).should == nil
     end
 
+  end
+
+  def point(x, y)
+    RGeo::Cartesian.preferred_factory.point(x, y)
+  end
+
+  after do
+    clear_stintersections
+  end
+
+  def clear_stintersections
+    Stintersection.connection.execute 'delete from stintersections' # stupid MyISAM
   end
 
 end
