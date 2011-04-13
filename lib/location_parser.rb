@@ -2,11 +2,11 @@
 class LocationParser
 
   def initialize(multiword_street_names)
-    name = add_flexibility(multiword_street_names).join '|'
-    if ! name.empty?
-      name += '|'
+    names = multiword_street_names.map { |name| add_flexibility name }.join '|'
+    if ! names.empty?
+      names += '|'
     end
-    street = "(#{name}[A-Za-z0-9']+)((?:\\s+(?:#{StreetType.regexp}))?)"
+    street = "(#{names}[A-Za-z0-9']+)((?:\\s+(?:#{StreetType.regexp}))?)"
 
     space = '[\s.,]+'
     
@@ -27,16 +27,14 @@ class LocationParser
 
   end
 
-  def add_flexibility(multiword_street_names)
-    multiword_street_names.map do |name|
-      name \
-        .gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)') \
-        .gsub(/\bSAN\b/, '(?:SAN|S\.?)') \
-        .gsub(/\bSANTA\b/, '(?:SANTA|STA\.?)') \
-        .gsub(/([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2') \
-        .gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)') \
-        .gsub(/\s+/, '\s+')
-    end
+  def add_flexibility(multiword_street_name)
+    multiword_street_name \
+      .gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)') \
+      .gsub(/\bSAN\b/, '(?:SAN|S\.?)') \
+      .gsub(/\bSANTA\b/, '(?:SANTA|STA\.?)') \
+      .gsub(/([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2') \
+      .gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)') \
+      .gsub(/\s+/, '\s+')
   end
   private :add_flexibility
 
