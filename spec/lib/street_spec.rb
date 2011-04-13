@@ -12,18 +12,6 @@ describe Street do
       end
     end
 
-    %w{ San S S. }.each do |title|
-      it "accepts #{title} as an abbreviation for San" do
-        matches 'SAN JACINTO', "#{title} Jacinto"
-      end
-    end
-
-    %w{ Santa Sta Sta. }.each do |title|
-      it "accepts #{title} as an abbreviation for Santa" do
-        matches 'SANTA CLARA', "#{title} Clara"
-      end
-    end
-
     %w{ J J. }.each do |initial|
       it "accepts #{initial} as a middle initial" do
         matches 'CHARLES J BRENHAM', "Charles #{initial} Brenham"
