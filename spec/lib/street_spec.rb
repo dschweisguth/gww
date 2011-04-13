@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Street do
   describe '#initialize' do
-    it "upcases its name" do
-      Street.new('Valencia').name.should == 'VALENCIA'
+    it "removes punctuation and upcases its name" do
+      Street.new("John F. O'Kennedy").name.should == 'JOHN F OKENNEDY'
     end
 
     it "canonicalizes a synonym" do
