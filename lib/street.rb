@@ -81,7 +81,6 @@ class Street < Struct.new :name, :type
   end
 
   def initialize(name, type=nil)
-    # TODO Dave canonicalize all of the flexibiity added by regexp
     sanitized_name = name.upcase \
       .gsub(/\s+/, ' ') \
       .gsub(/['.,]/, '') \
