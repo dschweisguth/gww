@@ -21,7 +21,8 @@ describe Stcline do
   describe '.geocode' do
 
     it "finds the lat + long of an address" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
+      Stcline.create! :street => 'VALENCIA',
+        :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
         :SHAPE => line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
       geocode.x.should be_within(0.001).of(2.02)
@@ -29,31 +30,36 @@ describe Stcline do
     end
 
     it "ignores a too-high address range on the left side of the street" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 1451, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
+      Stcline.create! :street => 'VALENCIA',
+        :lf_fadd => 1451, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
         :SHAPE => line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1449 Valencia', '1449', 'Valencia', nil)).should == nil
     end
 
     it "ignores a too-low address range on the left side of the street" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 1401, :lf_toadd => 1449, :rt_fadd => 1400, :rt_toadd => 1498,
+      Stcline.create! :street => 'VALENCIA',
+        :lf_fadd => 1401, :lf_toadd => 1449, :rt_fadd => 1400, :rt_toadd => 1498,
         :SHAPE => line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1451 Valencia', '1451', 'Valencia', nil)).should == nil
     end
 
     it "ignores a too-high address range on the right side of the street" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1450, :rt_toadd => 1498,
+      Stcline.create! :street => 'VALENCIA',
+        :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1450, :rt_toadd => 1498,
         :SHAPE => line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1448 Valencia', '1448', 'Valencia', nil)).should == nil
     end
 
     it "ignores a too-low address range on the right side of the street" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1450,
+      Stcline.create! :street => 'VALENCIA',
+        :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1450,
         :SHAPE => line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil)).should == nil
     end
 
     it "handles missing odd address numbers when looking up an even address number" do
-      Stcline.create! :street => 'VALENCIA', :lf_fadd => 0, :lf_toadd => 0, :rt_fadd => 1400, :rt_toadd => 1498,
+      Stcline.create! :street => 'VALENCIA',
+        :lf_fadd => 0, :lf_toadd => 0, :rt_fadd => 1400, :rt_toadd => 1498,
         :SHAPE => line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
       geocode.x.should be_within(0.001).of(2.02)
