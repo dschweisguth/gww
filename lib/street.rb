@@ -1,6 +1,5 @@
 class Street < Struct.new :name, :type
 
-  # TODO Dave deal with '25TH NORTH', '3RD TI' etc. Fix in database?
   # TODO Dave Timothy Pflueger, that alley near Geary & Fillmore, Grover?
   # TODO Dave just remove punctuation from names when searching
   # TODO Dave need aliases in the other direction so we can find multi-word names that need massaging
