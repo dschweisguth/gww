@@ -72,6 +72,11 @@ describe LocationParser do
       [ Intersection.new 'Charles J. Brenham and Market', 'Charles J. Brenham', nil, 'Market', nil ]
   end
 
+  it "isn't picky about whitespace when inserting a period" do
+    LocationParser.new([ 'CHARLES J BRENHAM' ]).parse("Charles \n J. \n Brenham and Market").should ==
+      [ Intersection.new "Charles \n J. \n Brenham and Market", "Charles \n J. \n Brenham", nil, 'Market', nil ]
+  end
+
   it "treats an unknown multi-word name as a series of single words" do
     LocationParser.new([]).parse('26th and San Jose').should == [ Intersection.new '26th and San', '26th', nil, 'San', nil ]
   end
