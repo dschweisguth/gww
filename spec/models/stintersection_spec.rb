@@ -27,6 +27,32 @@ describe Stintersection do
       Stintersection.geocode(location).should == point(37.5, -121.5)
     end
 
+    it "returns nil if the block's first intersection isn't found" do
+      point2 = point(37, -122)
+      Stintersection.create! :cnn => 2, :st_name => '26TH', :st_type => 'ST', :SHAPE => point2
+      Stintersection.create! :cnn => 2, :st_name => 'VALENCIA', :st_type => 'ST', :SHAPE => point2
+      location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
+      Stintersection.geocode(location).should == nil
+    end
+
+    it "returns nil if the block's second intersection isn't found" do
+      point1 = point(38, -121)
+      Stintersection.create! :cnn => 1, :st_name => '25TH', :st_type => 'ST', :SHAPE => point1
+      Stintersection.create! :cnn => 1, :st_name => 'VALENCIA', :st_type => 'ST', :SHAPE => point1
+      location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
+      Stintersection.geocode(location).should == nil
+    end
+
+    it "returns nil if an intersection is ambiguous" do
+      Stintersection.create! :cnn => 1, :st_name => '20TH', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
+      Stintersection.create! :cnn => 11, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(11, 14)
+      Stintersection.create! :cnn => 11, :st_name => 'GUERRERO', :st_type => 'AVE', :SHAPE => point(11, 14)
+      Stintersection.create! :cnn => 2, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(3, 6)
+      Stintersection.create! :cnn => 2, :st_name => 'GUERRERO', :st_type => 'AVE', :SHAPE => point(3, 6)
+      Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == nil
+    end
+
     it "converts an address to a lat + long" do
       location = Address.new '555 California', '555', 'California', nil
       point = point(1, 2)
@@ -34,7 +60,7 @@ describe Stintersection do
       Stintersection.geocode(location).should == point
     end
 
-    it "uses street type when present" do
+    it "uses cross street type when present" do
       point = point(37, -122)
       Stintersection.create! :cnn => 1, :st_name => '26TH', :st_type => 'ST', :SHAPE => point
       Stintersection.create! :cnn => 1, :st_name => 'VALENCIA', :st_type => 'ST', :SHAPE => point
@@ -54,7 +80,7 @@ describe Stintersection do
       Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == 'ST'
     end
 
-    it "uses the cross street's type if present" do
+    it "uses the cross street's type when present" do
       Stintersection.create! :cnn => 1, :st_name => '20TH', :st_type => 'ST', :SHAPE => point(1, 4)
       Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
       Stintersection.create! :cnn => 2, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(3, 6)
