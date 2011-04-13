@@ -47,11 +47,11 @@ describe Street do
       Street.new('St Francis').name.should == 'SAINT FRANCIS'
     end
 
-    it "doesn't clobber Junior (Terrace)" do
+    it "converts JUNIOR to JR" do
       Street.new('MARTIN LUTHER KING JUNIOR').name.should == 'MARTIN LUTHER KING JR'
     end
 
-    it "converts JUNIOR to JR" do
+    it "doesn't clobber Junior (Terrace)" do
       Street.new('JUNIOR').name.should == 'JUNIOR'
     end
 
