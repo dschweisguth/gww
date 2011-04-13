@@ -31,6 +31,14 @@ describe Street do
   end
 
   describe '#initialize' do
+    it "upcases the name" do
+      Street.new('Valencia').name.should == 'VALENCIA'
+    end
+
+    it "converts each run of whitespace in the name to a single space" do
+      Street.new("Willard \n North").name.should == 'WILLARD NORTH'
+    end
+
     it "removes punctuation from and upcases the name" do
       Street.new("John F. O'Kennedy, Jr.").name.should == 'JOHN F OKENNEDY JR'
     end
