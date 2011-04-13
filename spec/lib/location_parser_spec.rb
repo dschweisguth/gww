@@ -82,6 +82,24 @@ describe LocationParser do
       [ Intersection.new 'St. Francis and Sloat', 'St. Francis', nil, 'Sloat', nil ]
   end
 
+  it "accepts Santa" do
+    text = 'Santa Clara and Portola'
+    LocationParser.new([ 'SANTA CLARA' ]).parse(text).should ==
+      [ Intersection.new text, 'Santa Clara', nil, 'Portola', nil ]
+  end
+
+  it "accepts Sta" do
+    text = 'Sta Clara and Portola'
+    LocationParser.new([ 'SANTA CLARA' ]).parse(text).should ==
+      [ Intersection.new text, 'Sta Clara', nil, 'Portola', nil ]
+  end
+
+  it "accepts Sta." do
+    text = 'Sta. Clara and Portola'
+    LocationParser.new([ 'SANTA CLARA' ]).parse(text).should ==
+      [ Intersection.new text, 'Sta. Clara', nil, 'Portola', nil ]
+  end
+
   # TODO Dave extract duplicate text
 
   it "accepts a period after an apparent middle initial" do
