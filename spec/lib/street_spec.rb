@@ -43,6 +43,10 @@ describe Street do
       Street.new("John F. O'Kennedy, Jr.").name.should == 'JOHN F OKENNEDY JR'
     end
 
+    it "converts ST to SAINT" do
+      Street.new('St Francis').name.should == 'SAINT FRANCIS'
+    end
+
     it "canonicalizes a synonym" do
       Street.new('DeHaro').name.should == 'DE HARO'
     end

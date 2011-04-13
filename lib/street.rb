@@ -84,7 +84,8 @@ class Street < Struct.new :name, :type
     # TODO Dave canonicalize all of the flexibiity added by regexp
     sanitized_name = name.upcase \
       .gsub(/\s+/, ' ') \
-      .gsub(/['.,]/, '')
+      .gsub(/['.,]/, '') \
+      .sub(/^ST\b/, 'SAINT')
     super SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
   end
 
