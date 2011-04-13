@@ -6,7 +6,7 @@ class LocationParser
     if ! name.empty?
       name += '|'
     end
-    name += "[A-Za-z0-9']+" # TODO Dave include .
+    name += "[A-Za-z0-9']+"
     type = "(?:\\s+(?:#{StreetType.regexp}))?"
     street = "(#{name})(#{type})"
 
