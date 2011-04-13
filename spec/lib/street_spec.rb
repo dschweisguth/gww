@@ -47,6 +47,14 @@ describe Street do
       Street.new('St Francis').name.should == 'SAINT FRANCIS'
     end
 
+    it "doesn't clobber Junior (Terrace)" do
+      Street.new('MARTIN LUTHER KING JUNIOR').name.should == 'MARTIN LUTHER KING JR'
+    end
+
+    it "converts JUNIOR to JR" do
+      Street.new('JUNIOR').name.should == 'JUNIOR'
+    end
+
     it "canonicalizes a synonym" do
       Street.new('DeHaro').name.should == 'DE HARO'
     end

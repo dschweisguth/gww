@@ -85,7 +85,8 @@ class Street < Struct.new :name, :type
     sanitized_name = name.upcase \
       .gsub(/\s+/, ' ') \
       .gsub(/['.,]/, '') \
-      .sub(/^ST\b/, 'SAINT')
+      .sub(/^ST\b/, 'SAINT') \
+      .sub(/ JUNIOR$/, ' JR')
     super SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
   end
 
