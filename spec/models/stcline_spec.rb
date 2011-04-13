@@ -89,9 +89,39 @@ describe Stcline do
       Stcline.create! :street => '19TH', :st_type => 'AVE',
         :lf_fadd => 3600, :lf_toadd => 3698, :rt_fadd => 0, :rt_toadd => 0,
         :SHAPE => line(point(11, 14), point(13, 16))
+      address = Address.new('3620 19th near Guerrero', '3620', '19th', nil, 'Guerrero', nil)
+      stub(Stintersection).street_type(address.street.name, address.at) { 'ST' }
+      geocode = Stcline.geocode address
+      geocode.x.should be_within(0.001).of(1.714)
+      geocode.y.should be_within(0.001).of(4.714)
+    end
+
+    it "uses the first adjacent street to disambiguate the street, given an address on a block" do
+      Stcline.create! :street => '19TH', :st_type => 'ST',
+        :lf_fadd => 3601, :lf_toadd => 3661, :rt_fadd => 3600, :rt_toadd => 3656,
+        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! :street => '19TH', :st_type => 'AVE',
+        :lf_fadd => 3600, :lf_toadd => 3698, :rt_fadd => 0, :rt_toadd => 0,
+        :SHAPE => line(point(11, 14), point(13, 16))
       address = Address.new(
         '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
       stub(Stintersection).street_type(address.street.name, address.between1) { 'ST' }
+      geocode = Stcline.geocode address
+      geocode.x.should be_within(0.001).of(1.714)
+      geocode.y.should be_within(0.001).of(4.714)
+    end
+
+    it "uses the second adjacent street to disambiguate the street if necessary, given an address on a block" do
+      Stcline.create! :street => '19TH', :st_type => 'ST',
+        :lf_fadd => 3601, :lf_toadd => 3661, :rt_fadd => 3600, :rt_toadd => 3656,
+        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! :street => '19TH', :st_type => 'AVE',
+        :lf_fadd => 3600, :lf_toadd => 3698, :rt_fadd => 0, :rt_toadd => 0,
+        :SHAPE => line(point(11, 14), point(13, 16))
+      address = Address.new(
+        '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
+      stub(Stintersection).street_type(address.street.name, address.between1) { nil }
+      stub(Stintersection).street_type(address.street.name, address.between2) { 'ST' }
       geocode = Stcline.geocode address
       geocode.x.should be_within(0.001).of(1.714)
       geocode.y.should be_within(0.001).of(4.714)
