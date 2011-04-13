@@ -82,7 +82,7 @@ describe Stcline do
       geocode.y.should be_within(0.001).of(5.102)
     end
 
-    it "uses the first adjacent street to disambiguate the street, given an address on a block" do
+    it "uses the cross street to disambiguate the street, given an address at an intersection" do
       Stcline.create! :street => '19TH', :st_type => 'ST',
         :lf_fadd => 3601, :lf_toadd => 3661, :rt_fadd => 3600, :rt_toadd => 3656,
         :SHAPE => line(point(1, 4), point(3, 6))
