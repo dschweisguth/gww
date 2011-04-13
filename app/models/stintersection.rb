@@ -37,13 +37,13 @@ class Stintersection < ActiveRecord::Base
       sql << ' and i2.st_type = ?'
       args << street2.type.name
     end
-    nodes = find_by_sql args
-    if nodes.length == 1
-      point = nodes[0].SHAPE
+    intersections = find_by_sql args
+    if intersections.length == 1
+      point = intersections[0].SHAPE
       logger.info "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
       point
     else
-      logger.info "Found #{nodes.length} intersections of #{street1} and #{street2}."
+      logger.info "Found #{intersections.length} intersections of #{street1} and #{street2}."
       nil
     end
   end
