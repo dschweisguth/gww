@@ -9,31 +9,31 @@ describe Stintersection do
   describe '.geocode' do
 
     it "converts an intersection to a lat + long" do
-      create_intersection 1, '26TH', 'ST', point(1, 2)
-      create_intersection 1, 'VALENCIA', 'ST', point(1, 2)
+      make_intersection 1, '26TH', 'ST', point(1, 2)
+      make_intersection 1, 'VALENCIA', 'ST', point(1, 2)
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       Stintersection.geocode(location).should == point(1, 2)
     end
 
     it "converts a block to a lat + long" do
-      create_intersection 1, '25TH', 'ST', point(1, 3)
-      create_intersection 1, 'VALENCIA', 'ST', point(1, 3)
-      create_intersection 2, '26TH', 'ST', point(2, 4)
-      create_intersection 2, 'VALENCIA', 'ST', point(2, 4)
+      make_intersection 1, '25TH', 'ST', point(1, 3)
+      make_intersection 1, 'VALENCIA', 'ST', point(1, 3)
+      make_intersection 2, '26TH', 'ST', point(2, 4)
+      make_intersection 2, 'VALENCIA', 'ST', point(2, 4)
       location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
       Stintersection.geocode(location).should == point(1.5, 3.5)
     end
 
     it "returns nil if the block's first intersection isn't found" do
-      create_intersection 2, '26TH', 'ST', point(1, 3)
-      create_intersection 2, 'VALENCIA', 'ST', point(1, 3)
+      make_intersection 2, '26TH', 'ST', point(1, 3)
+      make_intersection 2, 'VALENCIA', 'ST', point(1, 3)
       location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
       Stintersection.geocode(location).should == nil
     end
 
     it "returns nil if the block's second intersection isn't found" do
-      create_intersection 1, '25TH', 'ST', point(2, 4)
-      create_intersection 1, 'VALENCIA', 'ST', point(2, 4)
+      make_intersection 1, '25TH', 'ST', point(2, 4)
+      make_intersection 1, 'VALENCIA', 'ST', point(2, 4)
       location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
       Stintersection.geocode(location).should == nil
     end
@@ -46,28 +46,28 @@ describe Stintersection do
     end
 
     it "returns nil if an intersection is ambiguous" do
-      create_intersection 1, '26TH', 'ST', point(1, 2)
-      create_intersection 1, 'VALENCIA', 'ST', point(1, 2)
-      create_intersection 2, '26TH', 'AVE', point(3, 4)
-      create_intersection 2, 'VALENCIA', 'ST', point(3, 4)
+      make_intersection 1, '26TH', 'ST', point(1, 2)
+      make_intersection 1, 'VALENCIA', 'ST', point(1, 2)
+      make_intersection 2, '26TH', 'AVE', point(3, 4)
+      make_intersection 2, 'VALENCIA', 'ST', point(3, 4)
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', 'St'
       Stintersection.geocode(location).should == nil
     end
 
     it "uses the street's type when present" do
-      create_intersection 1, '26TH', 'ST', point(1, 2)
-      create_intersection 1, 'VALENCIA', 'ST', point(1, 2)
-      create_intersection 2, '26TH', 'AVE', point(3, 4)
-      create_intersection 2, 'VALENCIA', 'ST', point(3, 4)
+      make_intersection 1, '26TH', 'ST', point(1, 2)
+      make_intersection 1, 'VALENCIA', 'ST', point(1, 2)
+      make_intersection 2, '26TH', 'AVE', point(3, 4)
+      make_intersection 2, 'VALENCIA', 'ST', point(3, 4)
       location = Intersection.new '26th and Valencia', '26th', 'St', 'Valencia', nil
       Stintersection.geocode(location).should == point(1, 2)
     end
 
     it "uses the cross street's type when present" do
-      create_intersection 1, '26TH', 'ST', point(1, 2)
-      create_intersection 1, 'VALENCIA', 'ST', point(1, 2)
-      create_intersection 2, '26TH', 'ST', point(3, 4)
-      create_intersection 2, 'VALENCIA', 'AVE', point(3, 4)
+      make_intersection 1, '26TH', 'ST', point(1, 2)
+      make_intersection 1, 'VALENCIA', 'ST', point(1, 2)
+      make_intersection 2, '26TH', 'ST', point(3, 4)
+      make_intersection 2, 'VALENCIA', 'AVE', point(3, 4)
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', 'St'
       Stintersection.geocode(location).should == point(1, 2)
     end
@@ -76,24 +76,24 @@ describe Stintersection do
 
   describe '.street_type' do
     it "finds the type of an untyped street with a cross street" do
-      create_intersection 1, '20TH', 'ST', point(1, 2)
-      create_intersection 1, 'GUERRERO', 'ST', point(1, 2)
+      make_intersection 1, '20TH', 'ST', point(1, 2)
+      make_intersection 1, 'GUERRERO', 'ST', point(1, 2)
       Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == 'ST'
     end
 
     it "returns nil if the intersection is ambiguous" do
-      create_intersection 1, '20TH', 'ST', point(1, 2)
-      create_intersection 1, 'GUERRERO', 'ST', point(1, 2)
-      create_intersection 2, '20TH', 'AVE', point(3, 4)
-      create_intersection 2, 'GUERRERO', 'AVE', point(3, 4)
+      make_intersection 1, '20TH', 'ST', point(1, 2)
+      make_intersection 1, 'GUERRERO', 'ST', point(1, 2)
+      make_intersection 2, '20TH', 'AVE', point(3, 4)
+      make_intersection 2, 'GUERRERO', 'AVE', point(3, 4)
       Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == nil
     end
 
     it "uses the cross street's type when present" do
-      create_intersection 1, '20TH', 'ST', point(1, 2)
-      create_intersection 1, 'GUERRERO', 'ST', point(1, 2)
-      create_intersection 2, '20TH', 'AVE', point(3, 4)
-      create_intersection 2, 'GUERRERO', 'AVE', point(3, 4)
+      make_intersection 1, '20TH', 'ST', point(1, 2)
+      make_intersection 1, 'GUERRERO', 'ST', point(1, 2)
+      make_intersection 2, '20TH', 'AVE', point(3, 4)
+      make_intersection 2, 'GUERRERO', 'AVE', point(3, 4)
       Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero', 'ST')).should == 'ST'
     end
 
@@ -103,7 +103,7 @@ describe Stintersection do
     RGeo::Cartesian.preferred_factory.point(x, y)
   end
 
-  def create_intersection(cnn, street_name, street_type, point)
+  def make_intersection(cnn, street_name, street_type, point)
     Stintersection.create! :cnn => cnn, :st_name => street_name, :st_type => street_type, :SHAPE => point
   end
 
