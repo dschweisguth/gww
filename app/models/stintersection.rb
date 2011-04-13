@@ -42,12 +42,13 @@ class Stintersection < ActiveRecord::Base
 
   def self.street_type(street, cross_street)
     intersections = intersections street, cross_street
-    if intersections.length == 1
-      street_type = intersections[0].st_type
+    street_types = (intersections.map &:st_type).uniq
+    if street_types.length == 1
+      street_type = street_types[0]
       logger.info "The #{street.name} that crosses #{cross_street} is a(n) #{street_type}."
       street_type
     else
-      logger.info "Found #{intersections.length} intersections of #{street.name} and #{cross_street}."
+      logger.info "Found #{street_types.length} intersections of #{street.name} and #{cross_street}."
       nil
     end
   end
