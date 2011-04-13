@@ -1,7 +1,21 @@
 class Stcline < ActiveRecord::Base
 
-  def self.street_names
-    order(:street).select('distinct(street)').map &:street
+  UNWANTED_STREET_NAMES = [
+    /^FORT MASON /,
+    /^FORT MILEY /,
+    /^HWY /, # excludes both HWY 1 and HWY 101
+    /^I-/,
+    /^UNNAMED/,
+    /\bOFF$/,
+    /\bON$/,
+    / HP$/,
+    / TI$/
+  ]
+
+  def self.multiword_street_names
+    (order(:street).select('distinct(street)').map &:street) \
+      .select { |name| name.include? ' ' } \
+      .reject { |name| UNWANTED_STREET_NAMES.find { |pattern| pattern =~ name } }
   end
 
   def self.geocode(address)

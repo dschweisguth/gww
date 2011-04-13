@@ -991,7 +991,7 @@ describe Photo do
   describe '#infer_geocodes' do
     before do
       street_names = %w{ 26TH VALENCIA }
-      stub(Stcline).street_names { street_names }
+      stub(Stcline).multiword_street_names { street_names }
       @parser = Object.new
       stub(LocationParser).new(street_names) { @parser }
 

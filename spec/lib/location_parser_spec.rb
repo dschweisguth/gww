@@ -66,11 +66,6 @@ describe LocationParser do
     LocationParser.new([]).parse('26th and San Jose').should == [ Intersection.new '26th and San', '26th', nil, 'San', nil ]
   end
 
-  it "treats an unwanted multi-word name as a series of single words" do
-    LocationParser.new([ 'UNNAMED 1' ]).parse('Unnamed 1 and Valencia').should ==
-      [ Intersection.new '1 and Valencia', '1', nil, 'Valencia', nil ]
-  end
-
   it "finds multiple locations" do
     LocationParser.new([]).parse('25th and Valencia 26th and Valencia').should ==
       [ Intersection.new('25th and Valencia', '25th', nil, 'Valencia', nil),

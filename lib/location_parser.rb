@@ -1,30 +1,12 @@
 # TODO Dave single-block streets
 class LocationParser
 
-  UNWANTED_STREET_NAMES = [
-    /^\d\d(RD|TH) TI/,
-    /^ALEMANY BLVD OFF/,
-    /^BAY SHORE BLVD (ON|OFF)/,
-    /^CESAR CHAVEZ ON/,
-    /^FORT MASON /,
-    /^FORT MILEY /,
-    /^HWY 1/, # excludes both HWY 1 and HWY 101
-    /^I-280/,
-    /^I-80/,
-    /^INDUSTRIAL ST (ON|OFF)/,
-    /^JUNIPERO SERRA\s+BLVD (ON|OFF)/,
-    /^UNNAMED/
-  ]
-
-  # TODO Dave move selection of street names to Stcline
-  def initialize(known_street_names)
-    name = known_street_names.select { |name| name.include? ' ' } \
-      .reject { |name| UNWANTED_STREET_NAMES.any? { |unwanted| name =~ unwanted } } \
-      .map { |name| "(?:#{name})" }.join '|'
+  def initialize(multiword_street_names)
+    name = multiword_street_names.join '|'
     if ! name.empty?
       name += '|'
     end
-    name += "[A-Za-z0-9']+"
+    name += "[A-Za-z0-9']+" # TODO Dave include .
     type = "(?:\\s+(?:#{StreetType.regexp}))?"
     street = "(#{name})(#{type})"
 
