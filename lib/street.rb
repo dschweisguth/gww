@@ -72,6 +72,16 @@ class Street < Struct.new :name, :type
     'VERMEHR' => 'VER MEHR'
   }
 
+  def self.regexp(multiword_street_name)
+    multiword_street_name \
+      .gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)') \
+      .gsub(/\bSAN\b/, '(?:SAN|S\.?)') \
+      .gsub(/\bSANTA\b/, '(?:SANTA|STA\.?)') \
+      .gsub(/([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2') \
+      .gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)') \
+      .gsub(/\s+/, '\s+')
+  end
+
   def initialize(name, type=nil)
     # TODO Dave canonicalize whitespace
     # TODO Dave remove commas
