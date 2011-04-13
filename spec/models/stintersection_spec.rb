@@ -89,6 +89,14 @@ describe Stintersection do
       Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == nil
     end
 
+    it "succeeds if the intersection is ambiguous but the street type is not" do
+      make_intersection 1, '20TH', 'ST', point(1, 2)
+      make_intersection 1, 'GUERRERO', 'ST', point(1, 2)
+      make_intersection 2, '20TH', 'ST', point(3, 4)
+      make_intersection 2, 'GUERRERO', 'AVE', point(3, 4)
+      Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == 'ST'
+    end
+
     it "uses the cross street's type when present" do
       make_intersection 1, '20TH', 'ST', point(1, 2)
       make_intersection 1, 'GUERRERO', 'ST', point(1, 2)
