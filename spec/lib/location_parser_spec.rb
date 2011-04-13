@@ -66,6 +66,11 @@ describe LocationParser do
     LocationParser.new([]).parse('26th and San Jose').should == [ Intersection.new '26th and San', '26th', nil, 'San', nil ]
   end
 
+  it "finds a location with a street type" do
+    text = '26th St and Valencia'
+    LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', 'St', 'Valencia', nil ]
+  end
+
   it "finds multiple locations" do
     LocationParser.new([]).parse('25th and Valencia 26th and Valencia').should ==
       [ Intersection.new('25th and Valencia', '25th', nil, 'Valencia', nil),
@@ -76,11 +81,6 @@ describe LocationParser do
     LocationParser.new([]).parse('lions and tigers and bears').should ==
       [ Intersection.new('lions and tigers', 'lions', nil, 'tigers', nil),
         Intersection.new('tigers and bears', 'tigers', nil, 'bears', nil) ]
-  end
-
-  it "finds a location with a street type" do
-    text = '26th St and Valencia'
-    LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', 'St', 'Valencia', nil ]
   end
 
 end
