@@ -11,7 +11,7 @@ describe LocationParser do
     LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', nil, 'Valencia', nil ]
   end
 
-  it "tolerates periods and commas around an intersection's connecting word(s)" do
+  it "accepts periods and commas around an intersection's connecting word(s)" do
     text = '26th ., and ., Valencia'
     LocationParser.new([]).parse(text).should == [ Intersection.new text, '26th', nil, 'Valencia', nil ]
   end
@@ -23,7 +23,7 @@ describe LocationParser do
     end
   end
 
-  it "tolerates periods and commas around a block's connecting words" do
+  it "accepts periods and commas around a block's connecting words" do
     text = 'Valencia ., between ., 25th ., and ., 26th'
     LocationParser.new([]).parse(text).should == [ Block.new text, 'Valencia', nil, '25th', nil, '26th', nil ]
   end
@@ -62,14 +62,34 @@ describe LocationParser do
     LocationParser.new([ 'SAN JOSE' ]).parse(text).should == [ Intersection.new text, '26th', nil, 'San Jose', nil ]
   end
 
-  it "isn't picky about whitespace within multiword names" do
+  it "accepts any whitespace within multiword names" do
     LocationParser.new([ 'CHARLES J BRENHAM' ]).parse("Charles \n J \n Brenham and Market").should ==
       [ Intersection.new "Charles \n J \n Brenham and Market", "Charles \n J \n Brenham", nil, 'Market', nil ]
   end
 
-  it "ignores a period after an apparent middle initial" do
+  it "accepts a period after an apparent middle initial" do
     LocationParser.new([ 'CHARLES J BRENHAM' ]).parse('Charles J. Brenham and Market').should ==
       [ Intersection.new 'Charles J. Brenham and Market', 'Charles J. Brenham', nil, 'Market', nil ]
+  end
+
+  it "accepts a comma before Jr" do
+    LocationParser.new([ 'COLIN P KELLY JR' ]).parse('Colin P Kelly, Jr at Townsend').should ==
+      [ Intersection.new 'Colin P Kelly, Jr at Townsend', 'Colin P Kelly, Jr', nil, 'Townsend', nil ]
+  end
+
+  it "accepts a period after Jr" do
+    LocationParser.new([ 'COLIN P KELLY JR' ]).parse('Colin P Kelly Jr. at Townsend').should ==
+      [ Intersection.new 'Colin P Kelly Jr. at Townsend', 'Colin P Kelly Jr.', nil, 'Townsend', nil ]
+  end
+
+  it "accepts Junior" do
+    LocationParser.new([ 'COLIN P KELLY JR' ]).parse('Colin P Kelly Junior at Townsend').should ==
+      [ Intersection.new 'Colin P Kelly Junior at Townsend', 'Colin P Kelly Junior', nil, 'Townsend', nil ]
+  end
+
+  it "accepts a comma before Junior" do
+    LocationParser.new([ 'COLIN P KELLY JR' ]).parse('Colin P Kelly, Junior at Townsend').should ==
+      [ Intersection.new 'Colin P Kelly, Junior at Townsend', 'Colin P Kelly, Junior', nil, 'Townsend', nil ]
   end
 
   it "treats an unknown multi-word name as a series of single words" do

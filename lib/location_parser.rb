@@ -2,12 +2,12 @@
 class LocationParser
 
   def initialize(multiword_street_names)
-    # TODO Dave expand 'Jr' and 'Saint' into regexps
-    name = multiword_street_names.each_with_object([]) do |a_name, names|
-      append names, a_name
-      a_name_with_period = a_name.gsub /([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2'
-      append(names, a_name_with_period) if a_name_with_period != a_name
-    end.join '|'
+    # TODO Dave expand 'Saint' into regexp
+    name = multiword_street_names \
+      .map { |a_name| a_name.gsub /([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2' } \
+      .map { |a_name| a_name.gsub /(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)' } \
+      .map { |a_name| a_name.gsub /\s+/, '\s+' } \
+      .join '|'
     if ! name.empty?
       name += '|'
     end
@@ -32,10 +32,6 @@ class LocationParser
       /#{address}#{space}#{between_streets}/i
     ]
 
-  end
-
-  def append(names, name)
-    names << name.gsub(/\s+/, '\s+')
   end
 
   def parse(comment)
