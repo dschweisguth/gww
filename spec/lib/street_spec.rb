@@ -31,8 +31,8 @@ describe Street do
   end
 
   describe '#initialize' do
-    it "removes punctuation and upcases its name" do
-      Street.new("John F. O'Kennedy").name.should == 'JOHN F OKENNEDY'
+    it "removes punctuation from and upcases the name" do
+      Street.new("John F. O'Kennedy, Jr.").name.should == 'JOHN F OKENNEDY JR'
     end
 
     it "canonicalizes a synonym" do
