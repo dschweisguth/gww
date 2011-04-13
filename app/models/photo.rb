@@ -428,7 +428,7 @@ class Photo < ActiveRecord::Base
   def self.infer_geocodes
     logger.info 'Inferring geocodes ...'
     start = Time.now
-    answers = Guess.includes(:photo).limit(100)
+    answers = Guess.includes(:photo) + Revelation.includes(:photo)
     parser = LocationParser.new Stcline.multiword_street_names
     answer_count = 0
     location_count = 0
