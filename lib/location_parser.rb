@@ -4,6 +4,7 @@ class LocationParser
   def initialize(multiword_street_names)
     name = multiword_street_names \
       .map { |a_name| a_name.gsub /\bSAINT\b/, '(?:SAINT|ST\.?)' } \
+      .map { |a_name| a_name.gsub /\bSAN\b/, '(?:SAN|S\.?)' } \
       .map { |a_name| a_name.gsub /\bSANTA\b/, '(?:SANTA|STA\.?)' } \
       .map { |a_name| a_name.gsub /([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2' } \
       .map { |a_name| a_name.gsub /(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)' } \

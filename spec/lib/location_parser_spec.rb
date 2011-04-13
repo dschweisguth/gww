@@ -82,6 +82,24 @@ describe LocationParser do
       [ Intersection.new 'St. Francis and Sloat', 'St. Francis', nil, 'Sloat', nil ]
   end
 
+  it "accepts San" do
+    text = 'San Jacinto and Monterey'
+    LocationParser.new([ 'SAN JACINTO' ]).parse(text).should ==
+      [ Intersection.new text, 'San Jacinto', nil, 'Monterey', nil ]
+  end
+
+  it "accepts S" do
+    text = 'S Jacinto and Monterey'
+    LocationParser.new([ 'SAN JACINTO' ]).parse(text).should ==
+      [ Intersection.new text, 'S Jacinto', nil, 'Monterey', nil ]
+  end
+
+  it "accepts S." do
+    text = 'S. Jacinto and Monterey'
+    LocationParser.new([ 'SAN JACINTO' ]).parse(text).should ==
+      [ Intersection.new text, 'S. Jacinto', nil, 'Monterey', nil ]
+  end
+
   it "accepts Santa" do
     text = 'Santa Clara and Portola'
     LocationParser.new([ 'SANTA CLARA' ]).parse(text).should ==
