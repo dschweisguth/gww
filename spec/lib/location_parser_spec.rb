@@ -83,4 +83,17 @@ describe LocationParser do
         Intersection.new('tigers and bears', 'tigers', nil, 'bears', nil) ]
   end
 
+  it "eliminates locations which will have the same geocode" do
+    LocationParser.new([ 'DIRK DIRKSEN' ]).parse('Rowland at Broadway Dirk Dirksen at Broadway').length.should == 1
+  end
+
+  it "eliminates blocks which will have the same geocode" do
+    LocationParser.new([ 'DIRK DIRKSEN' ]).parse(
+      'Broadway between Rowland and Kearny Broadway between Dirk Dirksen and Kearny').length.should == 1
+  end
+
+  it "eliminates addresses which will have the same geocode" do
+    LocationParser.new([ 'DIRK DIRKSEN' ]).parse('100 Rowland 100 Dirk Dirksen').length.should == 1
+  end
+
 end

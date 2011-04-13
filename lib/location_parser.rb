@@ -28,7 +28,7 @@ class LocationParser
   end
 
   def parse(comment)
-    remove_subsets find_locations comment.strip
+    remove_duplicates remove_subsets find_locations comment.strip
   end
 
   def find_locations(comment)
@@ -52,12 +52,17 @@ class LocationParser
   end
   private :find_locations
 
-  # TODO Dave remove identical locations, e.g. those arising from synonym
   def remove_subsets(locations)
     # This algorithm assumes that no two locations will have the same text
     locations.reject { |location| locations.find \
       { |other| ! other.equal?(location) && other.text.include?(location.text) } }
   end
   private :remove_subsets
+
+  def remove_duplicates(locations)
+    locations.reject { |location| locations.find \
+      { |other| other.object_id < location.object_id && other.will_have_same_geocode_as(location) } }
+  end
+  private :remove_duplicates
 
 end

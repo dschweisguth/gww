@@ -15,4 +15,9 @@ class Address < Struct.new :text, :number, :street, :at, :between1, :between2
     end
   end
 
+  # TODO this ignores the possibility that the between streets will disambiguate a missing street type
+  def will_have_same_geocode_as(other)
+    other.is_a?(Address) && other.number == number && other.street == street
+  end
+
 end
