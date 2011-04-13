@@ -16,9 +16,9 @@ class Stcline < ActiveRecord::Base
     else
       cross_street = address.at || address.between1
       if cross_street
-        street_type = Stintersection.street_type address.street.name, cross_street
+        street_type = Stintersection.street_type address.street, cross_street
         if ! street_type && address.between2
-          street_type = Stintersection.street_type address.street.name, address.between2
+          street_type = Stintersection.street_type address.street, address.between2
         end
         if street_type
           clines = clines.where :st_type => street_type

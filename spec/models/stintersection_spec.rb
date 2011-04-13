@@ -67,7 +67,7 @@ describe Stintersection do
     it "finds the type of an untyped street with a cross street" do
       Stintersection.create! :cnn => 1, :st_name => '20TH', :st_type => 'ST', :SHAPE => point(1, 4)
       Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
-      Stintersection.street_type('20TH', Street.new('Guerrero')).should == 'ST'
+      Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == 'ST'
     end
 
     it "uses the cross street's type if present" do
@@ -75,7 +75,7 @@ describe Stintersection do
       Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
       Stintersection.create! :cnn => 2, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(3, 6)
       Stintersection.create! :cnn => 2, :st_name => 'GUERRERO', :st_type => 'AVE', :SHAPE => point(3, 6)
-      Stintersection.street_type('20TH', Street.new('Guerrero', 'ST')).should == 'ST'
+      Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero', 'ST')).should == 'ST'
     end
 
     it "returns nil if there is more than one possible street type" do
@@ -83,7 +83,7 @@ describe Stintersection do
       Stintersection.create! :cnn => 1, :st_name => 'GUERRERO', :st_type => 'ST', :SHAPE => point(1, 4)
       Stintersection.create! :cnn => 2, :st_name => '20TH', :st_type => 'AVE', :SHAPE => point(3, 6)
       Stintersection.create! :cnn => 2, :st_name => 'GUERRERO', :st_type => 'AVE', :SHAPE => point(3, 6)
-      Stintersection.street_type('20TH', Street.new('Guerrero')).should == nil
+      Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero')).should == nil
     end
 
   end
