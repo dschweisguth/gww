@@ -1,5 +1,11 @@
 class Street < Struct.new :name, :type
 
+  # TODO Dave deal with '25TH NORTH', '3RD TI' etc. Fix in database?
+  # TODO Dave Timothy Pflueger, that alley near Geary & Fillmore, Grover?
+  # TODO Dave just remove punctuation from names when searching
+  # TODO Dave need aliases in the other direction so we can find multi-word names that need massaging
+  # TODO Dave when we have that, handle different versions of SVN
+
   SYNONYM = {
     '1' => '1ST',
     '2' => '2ND',
@@ -51,12 +57,10 @@ class Street < Struct.new :name, :type
     'DEHARO' => 'DE HARO',
     'DIVIS' => 'DIVISADERO',
     "DUNNE'S" => 'DUNNES',
+    'JFK' => 'JOHN F KENNEDY',
+    'MLK' => 'MARTIN LUTHER KING JR',
     "O'FARRELL" => 'OFARRELL',
     'SACTO' => 'SACRAMENTO',
-    'S VAN NESS' => 'SOUTH VAN NESS',
-    'S. VAN NESS' => 'SOUTH VAN NESS',
-    'SO VAN NESS' => 'SOUTH VAN NESS',
-    'SO. VAN NESS' => 'SOUTH VAN NESS'
   }
 
   def initialize(name, type=nil)
