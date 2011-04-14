@@ -343,7 +343,7 @@ describe Photo do
     end
 
     it "ignores other people's photos" do
-      Photo.make :accuracy => 12, :inferred_latitude => 37
+      Photo.make :accuracy => 12
       other_person = Person.make
       Photo.all_mapped_count(other_person.id).should == 0
     end
