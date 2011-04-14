@@ -470,7 +470,7 @@ class Photo < ActiveRecord::Base
   end
 
   def save_geocode(point)
-    lat, long = point.nil? ? [ nil, nil ] : [ point.x, point.y ]
+    lat, long = point.nil? ? [ nil, nil ] : [ point.y, point.x ]
     if inferred_latitude != lat || inferred_longitude != long
       self.inferred_latitude = lat
       self.inferred_longitude = long

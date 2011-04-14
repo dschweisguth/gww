@@ -1003,7 +1003,7 @@ describe Photo do
       answer = Guess.make :comment_text => 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { @factory.point(37, -122) }
+      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
       Photo.infer_geocodes
 
       answer.photo.reload
@@ -1016,7 +1016,7 @@ describe Photo do
       answer = Revelation.make :comment_text => 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { @factory.point(37, -122) }
+      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
       Photo.infer_geocodes
 
       answer.photo.reload
