@@ -137,11 +137,11 @@ class Photo < ActiveRecord::Base
   end
 
   def self.mapped_count(poster_id)
-    where('person_id = ? and accuracy >= 12', poster_id).count
+    where(:person_id => poster_id).where('accuracy >= 12').count
   end
   
   def self.all_mapped(poster_id)
-    where('person_id = ? and accuracy >= 12', poster_id).order(:dateadded)
+    where(:person_id => poster_id).where('accuracy >= 12').order(:dateadded)
   end
 
   # Used by PhotosController
