@@ -81,17 +81,17 @@ class Guess < ActiveRecord::Base
   private_class_method :first_guess_with_place
 
   def self.all_mapped_count(person_id)
-    all_mapped_base(includes(:photo), person_id).count
+    where_by_and_mapped(includes(:photo), person_id).count
   end
 
   def self.all_mapped(person_id)
-    all_mapped_base(joins(:photo), person_id).order('guesses.commented_at')
+    where_by_and_mapped(joins(:photo), person_id).order('guesses.commented_at')
   end
 
-  def self.all_mapped_base(photos, person_id)
+  def self.where_by_and_mapped(photos, person_id)
     photos.where('guesses.person_id = ? and photos.accuracy >= 12', person_id)
   end
-  private_class_method :all_mapped_base
+  private_class_method :where_by_and_mapped
 
   def self.longest_in year
    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
