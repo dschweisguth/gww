@@ -136,14 +136,12 @@ class Photo < ActiveRecord::Base
     most_viewed
   end
 
-  # TODO Dave test
-
   def self.all_mapped_count(poster_id)
-    where(:person_id => poster_id).where('accuracy >= 12 || inferred_latitude is not null').count
+    all_mapped_base(poster_id).count
   end
 
   def self.all_mapped(poster_id)
-    posts = where(:person_id => poster_id).where('accuracy >= 12 || inferred_latitude is not null').order(:dateadded)
+    posts = all_mapped_base(poster_id).order(:dateadded)
     posts.each do |post|
       if ! post.latitude
         post.latitude = post.inferred_latitude
@@ -152,6 +150,11 @@ class Photo < ActiveRecord::Base
     end
     posts
   end
+
+  def self.all_mapped_base(poster_id)
+    where(:person_id => poster_id).where('accuracy >= 12 || inferred_latitude is not null')
+  end
+  private_class_method :all_mapped_base
 
   # Used by PhotosController
 
