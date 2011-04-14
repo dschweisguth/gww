@@ -7,7 +7,7 @@ describe Admin::PhotosController do
     it { should route(:get, '/admin/photos/autocomplete_person_username').to :controller => 'admin/photos', :action => 'autocomplete_person_username' }
   end
 
-  %w{ update_all_from_flickr update_statistics }.each do |action|
+  %w{ update_all_from_flickr update_statistics_and_maps }.each do |action|
     describe action do
       it { should have_named_route action, "/admin/photos/#{action}" }
       it { should route(:post, "/admin/photos/#{action}").to :controller => 'admin/photos', :action => action }

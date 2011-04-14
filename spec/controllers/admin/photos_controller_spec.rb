@@ -15,14 +15,15 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '#update_statistics' do
+  describe '#update_statistics_and_maps' do
     it 'does some work and redirects' do
       mock(Photo).update_statistics
+      mock(Photo).infer_geocodes
       mock_clear_page_cache
-      get :update_statistics
+      get :update_statistics_and_maps
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
-      flash[:notice].should == 'Updated statistics.'
+      flash[:notice].should == 'Updated statistics and maps.'
     end
   end
 

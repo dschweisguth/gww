@@ -40,7 +40,7 @@ GWW::Application.routes.draw do
 
   get 'admin/photos/edit_in_gww' => 'admin/photos#edit_in_gww', :as => :edit_in_gww
   get 'admin/photos/autocomplete_person_username' => 'admin/photos#autocomplete_person_username', :as => :admin_photos_autocomplete_person_username
-  %w(update_all_from_flickr update_statistics).each do |action|
+  %w(update_all_from_flickr update_statistics_and_maps).each do |action|
     post "admin/photos/#{action}" => "admin/photos##{action}", :as => action
   end
   %w(change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments).each do |action|

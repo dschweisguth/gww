@@ -14,10 +14,11 @@ class Admin::PhotosController < ApplicationController
     redirect_to admin_root_path
   end
 
-  def update_statistics
+  def update_statistics_and_maps
     Photo.update_statistics
+    Photo.infer_geocodes
     PageCache.clear
-    flash[:notice] = 'Updated statistics.'
+    flash[:notice] = 'Updated statistics and maps.'
     #noinspection RubyResolve
     redirect_to admin_root_path
   end
