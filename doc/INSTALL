@@ -12,7 +12,7 @@ Mac
     > sudo port load mysql5-server # as directed by the previous command
     > sudo -u _mysql mysql_install_db5
     > /opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
-    > ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp
+    > ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp/mysql.sock # for ogr2ogr
     Create the following file:
     > cat /opt/local/etc/mysql5/my.cnf 
     [mysqld]
@@ -29,6 +29,7 @@ Mac
 
 Linux
     TODO
+    > sudo ln -s /var/lib/mysql/mysql.sock /tmp
     Edit /etc/my.cnf (which on Linux, unlike on Mac OS, will exist on a new
     installation) and add each of the settings above in the appropriate
     section.
@@ -67,6 +68,19 @@ Install bundler
     > gem list
     bundler (1.0.10)
     rubygems-update (1.5.2)
+
+Install GDAL 1.8
+----------------
+
+Mac
+    Get the GDAL 1.8 Complete installer from
+	http://www.kyngchaos.com/software/frameworks and run it.
+
+Linux
+    > wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
+    > configure
+    > make
+    > make install
 
 Get and configure GWW
 ---------------------
