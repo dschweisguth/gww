@@ -1,0 +1,2 @@
+#!/bin/sh
+grep -v SQL $1 | grep -v AREL | grep -v Stcline | grep -v Stintersection | grep -v 'select i1' | grep -v 'where i1' | grep -v '^  *$'
