@@ -39,6 +39,15 @@ describe Stcline do
       geocode.y.should be_within(0.001).of(5.02)
     end
 
+    it "handles a centerline with a single address" do
+      Stcline.create! :street => '18TH',
+        :lf_fadd => 3553, :lf_toadd => 3561, :rt_fadd => 3560, :rt_toadd => 3560,
+        :SHAPE => line(point(1, 4), point(3, 6))
+      geocode = Stcline.geocode Address.new('3560 18th', '3560', '18th', nil)
+      geocode.x.should be_within(0.001).of(2)
+      geocode.y.should be_within(0.001).of(5)
+    end
+
     it "ignores a too-high address range on the left side of the street" do
       Stcline.create! :street => 'VALENCIA',
         :lf_fadd => 1451, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
