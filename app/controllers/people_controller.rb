@@ -33,7 +33,7 @@ class PeopleController < ApplicationController
     @person = Person.find params[:id]
 
     @mapped_post_and_guess_count =
-      Photo.all_mapped_count(@person.id) + Guess.mapped_count(@person.id)
+      Photo.all_mapped_count(@person.id) + Guess.all_mapped_count(@person.id)
 
     @place, @tied = Person.standing @person
     @posts_place, @posts_tied = Person.posts_standing @person
@@ -137,7 +137,7 @@ class PeopleController < ApplicationController
     person_id = params[:id]
     @person = Person.find person_id
     @posts_count = Photo.all_mapped_count person_id
-    @guesses_count = Guess.mapped_count person_id
+    @guesses_count = Guess.all_mapped_count person_id
 
     posts = Photo.all_mapped params[:id]
     if ! posts.empty?

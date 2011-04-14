@@ -136,7 +136,7 @@ describe PeopleController do
     end
 
     it "handles a person who has never guessed" do
-      stub(Guess).mapped_count { 0 }
+      stub(Guess).all_mapped_count { 0 }
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
       stub(Guess).first_by(@person)
@@ -203,7 +203,7 @@ describe PeopleController do
     end
 
     def stub_guesses
-      stub(Guess).mapped_count { 1 }
+      stub(Guess).all_mapped_count { 1 }
 
       stub(Person).high_scorers(@now, 7) { [ @person ] }
       stub(Person).high_scorers(@now, 30) { [ @person ] }
@@ -467,7 +467,7 @@ describe PeopleController do
 
     def stub_mapped_counts(post_count, guess_count)
       stub(Photo).all_mapped_count(@person.id.to_s) { post_count }
-      stub(Guess).mapped_count(@person.id.to_s) { guess_count }
+      stub(Guess).all_mapped_count(@person.id.to_s) { guess_count }
     end
 
     def stub_unfound
