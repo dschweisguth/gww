@@ -78,7 +78,7 @@ Mac
 
 Linux
     > wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
-    > configure
+    > configure --with-mysql
     > make
     > make install
 
