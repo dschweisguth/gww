@@ -170,7 +170,7 @@ describe PeopleController do
     it "handles a person who has never posted" do
       stub_guesses
 
-      stub(Photo).mapped_count { 0 }
+      stub(Photo).all_mapped_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
       stub(Photo).first_by(@person)
@@ -239,7 +239,7 @@ describe PeopleController do
     end
 
     def stub_posts
-      stub(Photo).mapped_count { 1 }
+      stub(Photo).all_mapped_count { 1 }
 
       stub(Person).top_posters(@now, 7) { [ @person ] }
       stub(Person).top_posters(@now, 30) { [ @person ] }
@@ -466,7 +466,7 @@ describe PeopleController do
     end
 
     def stub_mapped_counts(post_count, guess_count)
-      stub(Photo).mapped_count(@person.id.to_s) { post_count }
+      stub(Photo).all_mapped_count(@person.id.to_s) { post_count }
       stub(Guess).mapped_count(@person.id.to_s) { guess_count }
     end
 

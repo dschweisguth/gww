@@ -331,26 +331,26 @@ describe Photo do
 
   end
 
-  describe '.mapped_count' do
+  describe '.all_mapped_count' do
     it "counts photos" do
       photo = Photo.make :accuracy => 12
-      Photo.mapped_count(photo.person.id).should == 1
+      Photo.all_mapped_count(photo.person.id).should == 1
     end
 
     it "ignores other people's photos" do
       Photo.make :accuracy => 12
       other_person = Person.make
-      Photo.mapped_count(other_person.id).should == 0
+      Photo.all_mapped_count(other_person.id).should == 0
     end
 
     it "ignores unmapped photos" do
       photo = Photo.make
-      Photo.mapped_count(photo.person.id).should == 0
+      Photo.all_mapped_count(photo.person.id).should == 0
     end
 
     it "ignores photos mapped with an accuracy < 12" do
       photo = Photo.make :accuracy => 11
-      Photo.mapped_count(photo.person.id).should == 0
+      Photo.all_mapped_count(photo.person.id).should == 0
     end
 
   end

@@ -138,7 +138,7 @@ class Photo < ActiveRecord::Base
 
   # TODO Dave test
 
-  def self.mapped_count(poster_id)
+  def self.all_mapped_count(poster_id)
     where(:person_id => poster_id).where('accuracy >= 12 || inferred_latitude is not null').count
   end
 
