@@ -85,11 +85,11 @@ class Guess < ActiveRecord::Base
   end
 
   def self.all_mapped(person_id)
-    where_by_and_mapped(joins(:photo), person_id).order('guesses.commented_at')
+    where_by_and_mapped(joins(:photo), person_id).order(:commented_at)
   end
 
   def self.where_by_and_mapped(photos, person_id)
-    photos.where('guesses.person_id = ? and photos.accuracy >= 12', person_id)
+    photos.where(:person_id => person_id).where('photos.accuracy >= 12')
   end
   private_class_method :where_by_and_mapped
 
