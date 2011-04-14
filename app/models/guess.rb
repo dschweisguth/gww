@@ -89,7 +89,8 @@ class Guess < ActiveRecord::Base
   end
 
   def self.where_by_and_mapped(photos, person_id)
-    photos.where(:person_id => person_id).where('photos.accuracy >= 12')
+    photos.where(:person_id => person_id) \
+      .where('photos.accuracy >= 12 || photos.inferred_latitude is not null')
   end
   private_class_method :where_by_and_mapped
 

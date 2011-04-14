@@ -141,14 +141,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.all_mapped(poster_id)
-    posts = all_mapped_base(poster_id).order(:dateadded)
-    posts.each do |post|
-      if ! post.latitude
-        post.latitude = post.inferred_latitude
-        post.longitude = post.inferred_longitude
-      end
-    end
-    posts
+    all_mapped_base(poster_id).order(:dateadded)
   end
 
   def self.all_mapped_base(poster_id)

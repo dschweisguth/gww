@@ -260,8 +260,14 @@ describe Guess do
   end
 
   describe '.all_mapped_count' do
-    it "returns the person's guesses" do
+    it "counts the person's guesses of mapped photos" do
       photo = Photo.make :accuracy => 12
+      guess = Guess.make :photo => photo
+      Guess.all_mapped_count(guess.person.id).should == 1
+    end
+
+    it "counts the person's guesses of auto-mapped photos" do
+      photo = Photo.make :inferred_latitude => 37
       guess = Guess.make :photo => photo
       Guess.all_mapped_count(guess.person.id).should == 1
     end
@@ -288,8 +294,14 @@ describe Guess do
   end
 
   describe '.all_mapped' do
-    it "returns the person's guesses" do
+    it "returns the person's guesses of mapped photos" do
       photo = Photo.make :accuracy => 12
+      guess = Guess.make :photo => photo
+      Guess.all_mapped(guess.person.id).should == [ guess ]
+    end
+
+    it "returns the person's guesses of auto-mapped photos" do
+      photo = Photo.make :inferred_latitude => 37
       guess = Guess.make :photo => photo
       Guess.all_mapped(guess.person.id).should == [ guess ]
     end

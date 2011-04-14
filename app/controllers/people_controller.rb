@@ -156,6 +156,7 @@ class PeopleController < ApplicationController
         end
       end
     end
+
     guesses = Guess.all_mapped params[:id]
     if ! guesses.empty?
       first_guessed_at = guesses.first.commented_at
@@ -165,7 +166,16 @@ class PeopleController < ApplicationController
         guess.photo[:symbol] = '!'
       end
     end
-    @json = (posts + (guesses.map &:photo)).to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+
+    photos = posts + (guesses.map &:photo)
+    photos.each do |photo|
+      if ! photo.latitude
+        photo.latitude = photo.inferred_latitude
+        photo.longitude = photo.inferred_longitude
+      end
+    end
+
+    @json = photos.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
 
   end
 
