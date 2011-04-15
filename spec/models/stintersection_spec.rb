@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'rgeo'
 
 describe Stintersection do
 

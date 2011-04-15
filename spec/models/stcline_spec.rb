@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'rgeo'
 
 describe Stcline do
   before :all do
