@@ -77,6 +77,10 @@ Mac
 	http://www.kyngchaos.com/software/frameworks and run it.
 
 Linux
+    > wget http://download.osgeo.org/proj/proj-4.7.0.tar.gz
+    > configure
+    > make
+    > make install
     > wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
     > configure --with-mysql
     > make
