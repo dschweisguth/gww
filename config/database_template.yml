@@ -1,7 +1,7 @@
 # Copy this file to database.yml in the same directory, and
 
 defaults: &defaults
-  adapter:   mysql2
+  adapter:   mysql2spatial
   host:      localhost
 
 development:
