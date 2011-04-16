@@ -16,7 +16,7 @@ class Admin::PhotosController < ApplicationController
 
   def update_statistics_and_maps
     Photo.update_statistics
-#    Photo.infer_geocodes
+    Photo.infer_geocodes
     PageCache.clear
     flash[:notice] = 'Updated statistics and maps.'
     #noinspection RubyResolve
