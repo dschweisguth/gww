@@ -8,7 +8,7 @@
     <% @comments.each do |comment| %>
       <div class="comment">
         <strong><%= comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
-        <%= comment.comment_text %><br/>
+        <%= raw comment.comment_text %><br/>
       </div>
       <br/>
     <% end %>
