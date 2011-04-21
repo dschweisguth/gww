@@ -9,10 +9,14 @@ RewriteEngine On
 RewriteCond %{ENV:REDIRECT_STATUS} ^$
 RewriteRule ^cache - [F,L]
 
-RewriteCond %{REQUEST_METHOD} GET
-RewriteCond %{DOCUMENT_ROOT}/cache/index.html -f
-RewriteRule ^$ cache/index.html [L]
+# TODO Dave reenable the following redirects after
+# http://code.google.com/p/phusion-passenger/issues/detail?id=563 is fixed
+# and GWW is upgraded to the new version
 
-RewriteCond %{REQUEST_METHOD} GET
-RewriteCond %{DOCUMENT_ROOT}/cache%{REQUEST_URI}.html -f
-RewriteRule ^(.+)$ cache/$1.html [L]
+#RewriteCond %{REQUEST_METHOD} GET
+#RewriteCond %{DOCUMENT_ROOT}/cache/index.html -f
+#RewriteRule ^$ cache/index.html [L]
+
+#RewriteCond %{REQUEST_METHOD} GET
+#RewriteCond %{DOCUMENT_ROOT}/cache%{REQUEST_URI}.html -f
+#RewriteRule ^(.+)$ cache/$1.html [L]
