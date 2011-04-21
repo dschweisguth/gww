@@ -1107,6 +1107,102 @@ describe Person do
 
   end
 
+  describe '.update_statistics' do
+    it 'initializes statistics to nil or 0' do
+      person = Person.make :comments_to_guess => 1, :comments_per_post => 1, :comments_to_be_guessed => 1
+      Person.update_statistics
+      person.reload
+      person.comments_to_guess.should == nil
+      person.comments_per_post.should == 0
+      person.comments_to_be_guessed.should == nil
+    end
+
+    describe 'when updating comments_to_guess' do
+      it 'sets the attribute to average # of comments/guess' do
+        guess = make_guess
+        guesser_attribute_is_1 guess
+      end
+
+      it 'ignores comments made after the guess' do
+        guess = make_guess
+        Comment.make 'chitchat', :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username
+        guesser_attribute_is_1 guess
+      end
+
+      it 'ignores comments made by someone other than the guesser' do
+        guess = make_guess
+        Comment.make "someone else's guess",
+          :photo => guess.photo, :commented_at => 11.seconds.ago
+        guesser_attribute_is_1 guess
+      end
+
+      def make_guess
+        commented_at = 10.seconds.ago
+        guess = Guess.make :commented_at => commented_at
+        Comment.make 'guess', :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => commented_at
+        guess
+      end
+
+      def guesser_attribute_is_1(guess)
+        Person.update_statistics
+        guess.person.reload
+        guess.person.comments_to_guess.should == 1
+      end
+
+    end
+
+#    describe 'when updating comments_per_post' do
+#      it 'returns a map of person ID to average # of comments on their post' do
+#        comment = Comment.make
+#        Person.comments_per_post.should == { comment.photo.person.id => 1 }
+#      end
+#
+#      it 'ignores comments made by the poster' do
+#        photo = Photo.make
+#        Comment.make :photo => photo, :flickrid => photo.person.flickrid,
+#          :username => photo.person.username
+#        Person.comments_per_post.should == {}
+#      end
+#
+#    end
+#
+#    describe 'when updating comments_to_be_guessed' do
+#      before do
+#        commented_at = 10.seconds.ago
+#        @guess = Guess.make :commented_at => commented_at
+#        Comment.make 'guess', :photo => @guess.photo,
+#          :flickrid => @guess.person.flickrid, :username => @guess.person.username,
+#          :commented_at => commented_at
+#      end
+#
+#      it 'returns a map of person ID to average # of comments for their photos to be guessed' do
+#        returns_expected_map
+#      end
+#
+#      it 'ignores comments made after the guess' do
+#        Comment.make 'chitchat', :photo => @guess.photo,
+#          :flickrid => @guess.person.flickrid, :username => @guess.person.username
+#        returns_expected_map
+#      end
+#
+#      it 'ignores comments made by the poster' do
+#        Comment.make 'poster', :photo => @guess.photo,
+#          :flickrid => @guess.photo.person.flickrid, :username => @guess.photo.person.username,
+#          :commented_at => 11.seconds.ago
+#        returns_expected_map
+#      end
+#
+#      def returns_expected_map
+#        Person.comments_to_be_guessed.should == { @guess.photo.person.id => 1 }
+#      end
+#
+#    end
+
+  end
+
   describe '#destroy_if_has_no_dependents' do
     it 'destroys the person' do
       person = Person.make
