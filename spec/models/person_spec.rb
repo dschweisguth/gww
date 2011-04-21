@@ -1118,38 +1118,34 @@ describe Person do
     end
 
     describe 'when updating comments_to_guess' do
+      before do
+        commented_at = 10.seconds.ago
+        @guess = Guess.make :commented_at => commented_at
+        Comment.make 'guess', :photo => @guess.photo,
+          :flickrid => @guess.person.flickrid, :username => @guess.person.username,
+          :commented_at => commented_at
+      end
+
       it 'sets the attribute to average # of comments/guess' do
-        guess = make_guess
-        guesser_attribute_is_1 guess
+        guesser_attribute_is_1
       end
 
       it 'ignores comments made after the guess' do
-        guess = make_guess
-        Comment.make 'chitchat', :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username
-        guesser_attribute_is_1 guess
+        Comment.make 'chitchat', :photo => @guess.photo,
+          :flickrid => @guess.person.flickrid, :username => @guess.person.username
+        guesser_attribute_is_1
       end
 
       it 'ignores comments made by someone other than the guesser' do
-        guess = make_guess
         Comment.make "someone else's guess",
-          :photo => guess.photo, :commented_at => 11.seconds.ago
-        guesser_attribute_is_1 guess
+          :photo => @guess.photo, :commented_at => 11.seconds.ago
+        guesser_attribute_is_1
       end
 
-      def make_guess
-        commented_at = 10.seconds.ago
-        guess = Guess.make :commented_at => commented_at
-        Comment.make 'guess', :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => commented_at
-        guess
-      end
-
-      def guesser_attribute_is_1(guess)
+      def guesser_attribute_is_1
         Person.update_statistics
-        guess.person.reload
-        guess.person.comments_to_guess.should == 1
+        @guess.person.reload
+        @guess.person.comments_to_guess.should == 1
       end
 
     end
