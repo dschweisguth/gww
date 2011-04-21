@@ -12,7 +12,7 @@
   <component name="GemRequirementsHolder" version="3">
     <requirement>
       <requirement>
-        <dependency name="activerecord-mysql2spatial-adapter" version="0.3.1" bound="EQUAL" git="false" path="false" doRequire="true" />
+        <dependency name="activerecord-mysql2spatial-adapter" version="0.3.2" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
     </requirement>
@@ -30,19 +30,19 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="passenger" version="3.0.6" bound="EQUAL" git="false" path="false" doRequire="true" />
+        <dependency name="passenger" version="3.0.7" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rails" version="3.0.6" bound="EQUAL" git="false" path="false" doRequire="true" />
+        <dependency name="rails" version="3.0.7" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rails3-jquery-autocomplete" version="0.6.5" bound="EQUAL" git="false" path="false" doRequire="true" />
+        <dependency name="rails3-jquery-autocomplete" version="0.6.6" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
     </requirement>
@@ -105,7 +105,6 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] webrat (v0.7.3, /opt/local/lib/ruby/gems/1.8/gems/webrat-0.7.3)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] rspec-rails (v2.5.0, /opt/local/lib/ruby/gems/1.8/gems/rspec-rails-2.5.0)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] will_paginate (v3.0.pre2, /opt/local/lib/ruby/gems/1.8/gems/will_paginate-3.0.pre2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] mail (v2.2.15, /opt/local/lib/ruby/gems/1.8/gems/mail-2.2.15)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] nokogiri (v1.4.4, /opt/local/lib/ruby/gems/1.8/gems/nokogiri-1.4.4)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] mime-types (v1.16, /opt/local/lib/ruby/gems/1.8/gems/mime-types-1.16)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] polyglot (v0.3.1, /opt/local/lib/ruby/gems/1.8/gems/polyglot-0.3.1)" level="application" />
@@ -128,22 +127,26 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] shoulda-matchers (v1.0.0.beta2, /opt/local/lib/ruby/gems/1.8/gems/shoulda-matchers-1.0.0.beta2)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] jquery-rails (v0.2.7, /opt/local/lib/ruby/gems/1.8/gems/jquery-rails-0.2.7)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] tzinfo (v0.3.26, /opt/local/lib/ruby/gems/1.8/gems/tzinfo-0.3.26)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] bundler (v1.0.11, /opt/local/lib/ruby/gems/1.8/gems/bundler-1.0.11)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] mysql2 (v0.2.7, /opt/local/lib/ruby/gems/1.8/gems/mysql2-0.2.7)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] rails3-jquery-autocomplete (v0.6.5, /opt/local/lib/ruby/gems/1.8/gems/rails3-jquery-autocomplete-0.6.5)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] yajl-ruby (v0.8.2, /opt/local/lib/ruby/gems/1.8/gems/yajl-ruby-0.8.2)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] xml-simple (v1.0.15, /opt/local/lib/ruby/gems/1.8/gems/xml-simple-1.0.15)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] actionmailer (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/actionmailer-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] actionpack (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/actionpack-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activemodel (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/activemodel-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/activerecord-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activeresource (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/activeresource-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/activesupport-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] rails (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/rails-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] railties (v3.0.6, /opt/local/lib/ruby/gems/1.8/gems/railties-3.0.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord-mysql2spatial-adapter (v0.3.1, /opt/local/lib/ruby/gems/1.8/gems/activerecord-mysql2spatial-adapter-0.3.1)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] rgeo (v0.2.6, /opt/local/lib/ruby/gems/1.8/gems/rgeo-0.2.6)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] rgeo-activerecord (v0.3.2, /opt/local/lib/ruby/gems/1.8/gems/rgeo-activerecord-0.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] linecache (v0.43, /Users/dave/.gem/ruby/1.8/gems/linecache-0.43)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] ruby-debug-base (v0.10.5.jb2, /Users/dave/.gem/ruby/1.8/gems/ruby-debug-base-0.10.5.jb2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] ruby-debug-ide (v0.4.16, /opt/local/lib/ruby/gems/1.8/gems/ruby-debug-ide-0.4.16)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rubygems-update (v1.7.2, /opt/local/lib/ruby/gems/1.8/gems/rubygems-update-1.7.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord-mysql2spatial-adapter (v0.3.2, /opt/local/lib/ruby/gems/1.8/gems/activerecord-mysql2spatial-adapter-0.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rgeo (v0.2.8, /opt/local/lib/ruby/gems/1.8/gems/rgeo-0.2.8)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rgeo-activerecord (v0.3.3, /opt/local/lib/ruby/gems/1.8/gems/rgeo-activerecord-0.3.3)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] actionmailer (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/actionmailer-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] actionpack (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/actionpack-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activemodel (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/activemodel-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/activerecord-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activeresource (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/activeresource-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/activesupport-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] bundler (v1.0.12, /opt/local/lib/ruby/gems/1.8/gems/bundler-1.0.12)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] mail (v2.2.17, /opt/local/lib/ruby/gems/1.8/gems/mail-2.2.17)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rails (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/rails-3.0.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] railties (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/railties-3.0.7)" level="application" />
   </component>
 </module>
 
