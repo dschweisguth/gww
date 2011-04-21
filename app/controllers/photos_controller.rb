@@ -11,6 +11,7 @@ class PhotosController < ApplicationController
   caches_page :map
   def map
     posts = Photo.where('accuracy >= 12').order('dateadded')
+    posts.to_a # force the query we'll run later anyway so first and last can use the results
     first_dateadded = posts.first.dateadded
     last_dateadded = posts.last.dateadded
     posts.each do |post|
