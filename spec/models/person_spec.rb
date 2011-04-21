@@ -1150,21 +1150,25 @@ describe Person do
 
     end
 
-#    describe 'when updating comments_per_post' do
-#      it 'returns a map of person ID to average # of comments on their post' do
-#        comment = Comment.make
-#        Person.comments_per_post.should == { comment.photo.person.id => 1 }
-#      end
-#
-#      it 'ignores comments made by the poster' do
-#        photo = Photo.make
-#        Comment.make :photo => photo, :flickrid => photo.person.flickrid,
-#          :username => photo.person.username
-#        Person.comments_per_post.should == {}
-#      end
-#
-#    end
-#
+    describe 'when updating comments_per_post' do
+      it 'sets the attribute to average # of comments on their post' do
+        comment = Comment.make
+        Person.update_statistics
+        comment.photo.person.reload
+        comment.photo.person.comments_per_post.should == 1
+      end
+
+      it 'ignores comments made by the poster' do
+        photo = Photo.make
+        Comment.make :photo => photo, :flickrid => photo.person.flickrid,
+          :username => photo.person.username
+        Person.update_statistics
+        photo.person.reload
+        photo.person.comments_per_post.should == 0
+      end
+
+    end
+
 #    describe 'when updating comments_to_be_guessed' do
 #      before do
 #        commented_at = 10.seconds.ago
