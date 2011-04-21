@@ -15,6 +15,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def update_statistics_and_maps
+    Person.update_statistics
     Photo.update_statistics
     Photo.infer_geocodes
     PageCache.clear

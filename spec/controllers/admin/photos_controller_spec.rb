@@ -17,6 +17,7 @@ describe Admin::PhotosController do
 
   describe '#update_statistics_and_maps' do
     it 'does some work and redirects' do
+      mock(Person).update_statistics
       mock(Photo).update_statistics
       mock(Photo).infer_geocodes
       mock_clear_page_cache
