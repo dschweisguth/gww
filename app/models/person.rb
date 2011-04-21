@@ -547,9 +547,9 @@ class Person < ActiveRecord::Base
   def self.update_statistics
     connection.execute 'update people set comments_to_guess = null, comments_per_post = 0, comments_to_be_guessed = null'
     update_statistic :comments_to_guess, %q{
-      select *, avg(comment_count) statistic
+      select id, avg(comment_count) statistic
       from (
-        select p.*, count(*) comment_count
+        select p.id, count(*) comment_count
         from guesses g, people p, comments c
         where g.photo_id = c.photo_id and
           g.person_id = p.id and
