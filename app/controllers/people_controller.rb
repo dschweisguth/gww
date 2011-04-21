@@ -140,6 +140,7 @@ class PeopleController < ApplicationController
     @guesses_count = Guess.all_mapped_count person_id
 
     posts = Photo.all_mapped params[:id]
+    posts.to_a
     if ! posts.empty?
       first_dateadded = posts.first.dateadded
       last_dateadded = posts.last.dateadded
@@ -158,6 +159,7 @@ class PeopleController < ApplicationController
     end
 
     guesses = Guess.all_mapped params[:id]
+    guesses.to_a
     if ! guesses.empty?
       first_guessed_at = guesses.first.commented_at
       last_guessed_at = guesses.last.commented_at
