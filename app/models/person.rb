@@ -546,19 +546,7 @@ class Person < ActiveRecord::Base
 
   def self.update_statistics
     connection.execute 'update people set comments_to_guess = null, comments_per_post = 0, comments_to_be_guessed = null'
-    comments_to_guess2.each do |person|
-      person.update_attribute :comments_to_guess, person[:statistic]
-    end
-    comments_per_post2.each do |person|
-      person.update_attribute :comments_per_post, person[:statistic]
-    end
-    comments_to_be_guessed2.each do |person|
-      person.update_attribute :comments_to_be_guessed, person[:statistic]
-    end
-  end
-
-  def self.comments_to_guess2
-    find_by_sql %q{
+    update_statistic :comments_to_guess, %q{
       select *, avg(comment_count) statistic
       from (
         select p.*, count(*) comment_count
@@ -570,10 +558,7 @@ class Person < ActiveRecord::Base
       ) comment_counts
       group by id
     }
-  end
-
-  def self.comments_per_post2
-    find_by_sql %q{
+    update_statistic :comments_per_post, %q{
       select person_id id, avg(comment_count) statistic
       from (
         select f.person_id, count(*) comment_count
@@ -585,10 +570,7 @@ class Person < ActiveRecord::Base
       ) comment_counts
       group by id
     }
-  end
-
-  def self.comments_to_be_guessed2
-    find_by_sql %q{
+    update_statistic :comments_to_be_guessed, %q{
       select id, avg(comment_count) statistic
       from (
         select p.id, count(*) comment_count
@@ -604,10 +586,11 @@ class Person < ActiveRecord::Base
     }
   end
 
-  def self.statistic_by_person2(sql)
-    find_by_sql(sql).each_with_object({}) { | person, statistic| statistic[person.id] = person[:statistic].to_f }
+  def self.update_statistic(attribute, sql)
+    find_by_sql(sql).each do |person|
+      person.update_attribute attribute, person[:statistic]
+    end
   end
-  private_class_method :statistic_by_person
 
   def destroy_if_has_no_dependents
     if ! Photo.where(:person_id => id).exists? && ! Guess.where(:person_id => id).exists?
