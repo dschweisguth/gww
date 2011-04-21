@@ -258,6 +258,8 @@ describe Photo do
     photo.farm.should == '0'
     photo.server.should == 'server'
     photo.secret.should == 'secret'
+    photo.latitude.should == nil
+    photo.longitude.should == nil
     photo.dateadded.should_not == nil
     photo.lastupdate.should_not == nil
     photo.seen_at.should_not == nil
@@ -265,7 +267,8 @@ describe Photo do
     photo.views.should == 0
     photo.member_comments.should == 0
     photo.member_questions.should == 0
-    # TODO Dave add latitude etc.
+    photo.inferred_latitude.should == nil
+    photo.inferred_longitude.should == nil
   end
 
   def makes_photo_with_custom_attributes
