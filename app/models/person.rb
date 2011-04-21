@@ -544,6 +544,71 @@ class Person < ActiveRecord::Base
 
   # Used in Admin::PhotosController
 
+  def self.update_statistics
+    connection.execute 'update people set comments_to_guess = null, comments_per_post = 0, comments_to_be_guessed = null'
+    comments_to_guess2.each do |person|
+      person.update_attribute :comments_to_guess, person[:statistic]
+    end
+    comments_per_post2.each do |person|
+      person.update_attribute :comments_per_post, person[:statistic]
+    end
+    comments_to_be_guessed2.each do |person|
+      person.update_attribute :comments_to_be_guessed, person[:statistic]
+    end
+  end
+
+  def self.comments_to_guess2
+    find_by_sql %q{
+      select *, avg(comment_count) statistic
+      from (
+        select p.*, count(*) comment_count
+        from guesses g, people p, comments c
+        where g.photo_id = c.photo_id and
+          g.person_id = p.id and
+          p.flickrid = c.flickrid and
+          g.commented_at >= c.commented_at group by g.id
+      ) comment_counts
+      group by id
+    }
+  end
+
+  def self.comments_per_post2
+    find_by_sql %q{
+      select person_id id, avg(comment_count) statistic
+      from (
+        select f.person_id, count(*) comment_count
+        from photos f, people p, comments c
+        where f.id = c.photo_id and
+          f.person_id = p.id and
+          p.flickrid != c.flickrid
+        group by f.id
+      ) comment_counts
+      group by id
+    }
+  end
+
+  def self.comments_to_be_guessed2
+    find_by_sql %q{
+      select id, avg(comment_count) statistic
+      from (
+        select p.id, count(*) comment_count
+        from people p, photos ph, guesses g, comments c
+        where p.id = ph.person_id and
+          ph.id = g.photo_id and
+          ph.id = c.photo_id and
+          p.flickrid != c.flickrid and
+          g.commented_at >= c.commented_at
+        group by g.id
+      ) comment_counts
+      group by id
+    }
+  end
+
+  def self.statistic_by_person2(sql)
+    find_by_sql(sql).each_with_object({}) { | person, statistic| statistic[person.id] = person[:statistic].to_f }
+  end
+  private_class_method :statistic_by_person
+
   def destroy_if_has_no_dependents
     if ! Photo.where(:person_id => id).exists? && ! Guess.where(:person_id => id).exists?
       destroy

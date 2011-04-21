@@ -193,12 +193,18 @@ describe Person do
     person = Person.make
     person.flickrid.should == 'person_flickrid'
     person.username.should == 'username'
+    person.comments_to_guess.should == nil
+    person.comments_per_post.should == 0
+    person.comments_to_be_guessed.should == nil
   end
 
   def makes_person_with_custom_attributes
     makes_with_custom_attributes Person, {
       :flickrid => 'other_person_flickrid',
-      :username => 'other_username'
+      :username => 'other_username',
+      :comments_to_guess => 1,
+      :comments_per_post => 1,
+      :comments_to_be_guessed => 1
     }
   end
 
@@ -259,6 +265,7 @@ describe Photo do
     photo.views.should == 0
     photo.member_comments.should == 0
     photo.member_questions.should == 0
+    # TODO Dave add latitude etc.
   end
 
   def makes_photo_with_custom_attributes

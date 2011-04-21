@@ -84,7 +84,8 @@ class Person
   def self.attrs(method, label, caller_attrs)
     {
       :flickrid => affix(label, 'person_flickrid'),
-      :username => affix(label, 'username')
+      :username => affix(label, 'username'),
+      :comments_per_post => 0
     }
   end
   private_class_method :attrs
