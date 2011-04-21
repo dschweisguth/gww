@@ -1169,37 +1169,39 @@ describe Person do
 
     end
 
-#    describe 'when updating comments_to_be_guessed' do
-#      before do
-#        commented_at = 10.seconds.ago
-#        @guess = Guess.make :commented_at => commented_at
-#        Comment.make 'guess', :photo => @guess.photo,
-#          :flickrid => @guess.person.flickrid, :username => @guess.person.username,
-#          :commented_at => commented_at
-#      end
-#
-#      it 'returns a map of person ID to average # of comments for their photos to be guessed' do
-#        returns_expected_map
-#      end
-#
-#      it 'ignores comments made after the guess' do
-#        Comment.make 'chitchat', :photo => @guess.photo,
-#          :flickrid => @guess.person.flickrid, :username => @guess.person.username
-#        returns_expected_map
-#      end
-#
-#      it 'ignores comments made by the poster' do
-#        Comment.make 'poster', :photo => @guess.photo,
-#          :flickrid => @guess.photo.person.flickrid, :username => @guess.photo.person.username,
-#          :commented_at => 11.seconds.ago
-#        returns_expected_map
-#      end
-#
-#      def returns_expected_map
-#        Person.comments_to_be_guessed.should == { @guess.photo.person.id => 1 }
-#      end
-#
-#    end
+    describe 'when updating comments_to_be_guessed' do
+      before do
+        commented_at = 10.seconds.ago
+        @guess = Guess.make :commented_at => commented_at
+        Comment.make 'guess', :photo => @guess.photo,
+          :flickrid => @guess.person.flickrid, :username => @guess.person.username,
+          :commented_at => commented_at
+      end
+
+      it 'sets the attribute to average # of comments for their photos to be guessed' do
+        poster_attribute_is_1
+      end
+
+      it 'ignores comments made after the guess' do
+        Comment.make 'chitchat', :photo => @guess.photo,
+          :flickrid => @guess.person.flickrid, :username => @guess.person.username
+        poster_attribute_is_1
+      end
+
+      it 'ignores comments made by the poster' do
+        Comment.make 'poster', :photo => @guess.photo,
+          :flickrid => @guess.photo.person.flickrid, :username => @guess.photo.person.username,
+          :commented_at => 11.seconds.ago
+        poster_attribute_is_1
+      end
+
+      def poster_attribute_is_1
+        Person.update_statistics
+        @guess.photo.person.reload
+        @guess.photo.person.comments_to_be_guessed.should == 1
+      end
+
+    end
 
   end
 
