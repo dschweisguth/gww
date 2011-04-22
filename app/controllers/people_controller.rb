@@ -138,11 +138,11 @@ class PeopleController < ApplicationController
     @person = Person.find person_id
     @posts_count = Photo.all_mapped_count person_id
     @guesses_count = Guess.all_mapped_count person_id
-    @json = photos_for_map(params[:id]).to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    @json = photos_for_map(params[:id]).to_json
   end
 
   def map_json
-    render :json => photos_for_map(params[:id]), :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    render :json => photos_for_map(params[:id])
   end
 
   def photos_for_map(person_id)
@@ -184,7 +184,7 @@ class PeopleController < ApplicationController
       end
     end
 
-    photos
+    photos.as_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
   private :photos_for_map
 
