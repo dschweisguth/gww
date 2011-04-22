@@ -27,7 +27,7 @@ class PhotosController < ApplicationController
     end
     all_posts = all_posts.to_a # Force the query we'll run later anyway so first and last can use the results
     all_posts_length = all_posts.length
-    posts = thin all_posts
+    posts = thin all_posts, 1000, 20
     first_dateadded = all_posts.first.dateadded
     last_dateadded = all_posts.last.dateadded
     posts.each do |post|
@@ -46,15 +46,14 @@ class PhotosController < ApplicationController
   end
   private :posts_for_map
 
-  def thin(photos)
-    if photos.length <= 1000
+  def thin(photos, too_many, bins_per_axis)
+    if photos.length <= too_many
       return photos
     end
-
     binnable_photos, thinned_photos = photos.partition { |photo| is_more_or_less_in_mainland_san_francisco photo }
     min_latitude, max_latitude = (binnable_photos.map &:latitude).minmax
     min_longitude, max_longitude = (binnable_photos.map &:longitude).minmax
-    binned_photos = binnable_photos.group_by { |photo| bin min_latitude, max_latitude, min_longitude, max_longitude, photo }
+    binned_photos = binnable_photos.group_by { |photo| bin photo, bins_per_axis, min_latitude, max_latitude, min_longitude, max_longitude }
     binned_photos.each_value do |bin|
       if bin.length > 5
         bin = bin.sort { |a, b| b.dateadded <=> a.dateadded }
@@ -70,8 +69,8 @@ class PhotosController < ApplicationController
   end
   private :is_more_or_less_in_mainland_san_francisco
 
-  def bin(min_latitude, max_latitude, min_longitude, max_longitude, photo)
-    latitude_bin = ((photo.latitude - min_latitude) / (max_latitude - min_latitude) * 20).to_i
+  def bin(photo, bins_per_axis, min_latitude, max_latitude, min_longitude, max_longitude)
+    latitude_bin = ((photo.latitude - min_latitude) / (max_latitude - min_latitude) * bins_per_axis).to_i
     longitude_bin = ((photo.longitude - min_longitude) / (max_longitude - min_longitude) * 20).to_i
     [ latitude_bin, longitude_bin ]
   end
