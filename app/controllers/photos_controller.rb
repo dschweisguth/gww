@@ -30,18 +30,7 @@ class PhotosController < ApplicationController
     posts = thin all_posts, 1000, 20
     first_dateadded = all_posts.first.dateadded
     last_dateadded = all_posts.last.dateadded
-    posts.each do |post|
-      if post.game_status == 'unfound' || post.game_status == 'unconfirmed'
-        post[:color] = 'FFFF00'
-        post[:symbol] = '?'
-      elsif post.game_status == 'found'
-        post[:color] = scaled_green first_dateadded, last_dateadded, post.dateadded
-        post[:symbol] = '!'
-      else # revealed
-        post[:color] = scaled_red first_dateadded, last_dateadded, post.dateadded
-        post[:symbol] = '-'
-      end
-    end
+    posts.each { |post| add_display_attributes post, first_dateadded, last_dateadded }
     { :partial => (all_posts_length != posts.length), :photos => posts.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
   end
   private :posts_for_map
@@ -75,6 +64,20 @@ class PhotosController < ApplicationController
     [ latitude_bin, longitude_bin ]
   end
   private :bin
+
+  def add_display_attributes(photo, first_dateadded, last_dateadded)
+    if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
+      photo[:color] = 'FFFF00'
+      photo[:symbol] = '?'
+    elsif photo.game_status == 'found'
+      photo[:color] = scaled_green first_dateadded, last_dateadded, photo.dateadded
+      photo[:symbol] = '!'
+    else # revealed
+      photo[:color] = scaled_red first_dateadded, last_dateadded, photo.dateadded
+      photo[:symbol] = '-'
+    end
+  end
+  private :add_display_attributes
 
   caches_page :map_popup
   def map_popup
