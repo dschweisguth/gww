@@ -13,6 +13,7 @@ class PhotosController < ApplicationController
     @json = posts_for_map.to_json
   end
 
+  # TODO Dave test
   def map_json
     render :json => posts_for_map
   end
@@ -34,7 +35,7 @@ class PhotosController < ApplicationController
         post[:symbol] = '-'
       end
     end
-    posts.as_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    { :partial => false, :photos => posts.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
   end
   private :posts_for_map
 

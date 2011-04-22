@@ -14,9 +14,10 @@ GWW.personMap = (function () {
   };
 
   var showMarkers = function (photos) {
+    map.jsonIncludedAllMarkers = ! photos.partial;
     map.removeMarkers(guesses);
     map.removeMarkers(posts);
-    $.each(photos, function (i, photo) {
+    $.each(photos.photos, function (i, photo) {
       (photo.symbol === '!' ? guesses : posts).push(map.createMarker(photo));
     });
   };

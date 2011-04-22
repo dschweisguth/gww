@@ -11,8 +11,9 @@ GWW.photosMap = (function () {
   };
 
   var showMarkers = function (photos) {
+    map.jsonIncludedAllMarkers = ! photos.partial;
     map.removeMarkers(markers);
-    $.each(photos, function (i, photo) {
+    $.each(photos.photos, function (i, photo) {
       markers.push(map.createMarker(photo));
     })
   };

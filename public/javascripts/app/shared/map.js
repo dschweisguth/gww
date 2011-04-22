@@ -7,6 +7,8 @@ GWW.map = function () {
   var that = {
     map: null,
 
+    jsonIncludedAllMarkers: false,
+
     registerOnLoad: function (callbackName) {
       $(function() {
         var script = document.createElement('script');
@@ -51,7 +53,7 @@ GWW.map = function () {
         if (loadMarkersFromPage) {
           showMarkers(GWW.config);
           loadMarkersFromPage = false;
-        } else {
+        } else if (! that.jsonIncludedAllMarkers) {
           $.getJSON(window.location + '_json', showMarkers);
         }
       };

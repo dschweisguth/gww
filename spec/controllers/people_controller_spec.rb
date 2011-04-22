@@ -378,12 +378,12 @@ describe PeopleController do
       response.should have_selector 'label', :content => '1 mapped post (?, -)'
       response.should have_selector 'input', :id => 'guesses'
       response.should have_selector 'label', :content => '1 mapped guess (!)'
-      response.should contain /GWW\.config = \[\{.*?\},\{.*?\}\];/
+      response.should contain /GWW\.config = \{.*\};/
 
-      json = decode_json
-      json.length.should == 2
-      decoded_photo_looks_unfound_or_unconfirmed json[0], post
-      decoded_photo_looks_guessed json[1], guessed_photo
+      photos = get_photos_from_json
+      photos.length.should == 2
+      decoded_photo_looks_unfound_or_unconfirmed photos[0], post
+      decoded_photo_looks_guessed photos[1], guessed_photo
 
     end
 
@@ -400,9 +400,9 @@ describe PeopleController do
       response.should_not have_selector 'input', :id => 'guesses'
       response.should contain '1 mapped guess'
 
-      json = decode_json
-      json.length.should == 1
-      decoded_photo_looks_guessed json[0], guessed_photo
+      photos = get_photos_from_json
+      photos.length.should == 1
+      decoded_photo_looks_guessed photos[0], guessed_photo
 
     end
 
@@ -419,9 +419,9 @@ describe PeopleController do
       response.should_not have_selector 'input', :id => 'guesses'
       response.should_not contain 'mapped guess'
 
-      json = decode_json
-      json.length.should == 1
-      decoded_photo_looks_unfound_or_unconfirmed json[0], post
+      photos = get_photos_from_json
+      photos.length.should == 1
+      decoded_photo_looks_unfound_or_unconfirmed photos[0], post
 
     end
 
@@ -431,9 +431,9 @@ describe PeopleController do
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       get :map, :id => @person.id.to_s
 
-      json = decode_json
-      json.length.should == 1
-      decoded_photo_looks_unfound_or_unconfirmed json[0], post
+      photos = get_photos_from_json
+      photos.length.should == 1
+      decoded_photo_looks_unfound_or_unconfirmed photos[0], post
 
     end
 
@@ -443,9 +443,9 @@ describe PeopleController do
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       get :map, :id => @person.id.to_s
 
-      json = decode_json
-      json.length.should == 1
-      photo = json[0]['photo']
+      photos = get_photos_from_json
+      photos.length.should == 1
+      photo = photos[0]
       photo['color'].should == '0000FC'
       photo['symbol'].should == '?'
 
@@ -457,9 +457,9 @@ describe PeopleController do
       stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
       get :map, :id => @person.id.to_s
 
-      json = decode_json
-      json.length.should == 1
-      photo = json[0]['photo']
+      photos = get_photos_from_json
+      photos.length.should == 1
+      photo = photos[0]
       photo['color'].should == 'E00000'
       photo['symbol'].should == '-'
 
@@ -483,8 +483,10 @@ describe PeopleController do
       guessed_photo
     end
 
-    def decode_json
-      ActiveSupport::JSON.decode assigns[:json]
+    def get_photos_from_json
+      json = ActiveSupport::JSON.decode assigns[:json]
+      json['partial'].should == false
+      json['photos']
     end
 
     def decoded_photo_looks_unfound_or_unconfirmed(decoded_post, post)

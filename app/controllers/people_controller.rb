@@ -141,13 +141,13 @@ class PeopleController < ApplicationController
     @json = photos_for_map(params[:id]).to_json
   end
 
+  # TODO Dave test
   def map_json
     render :json => photos_for_map(params[:id])
   end
 
   def photos_for_map(person_id)
-    posts = Photo.all_mapped person_id
-    posts.to_a
+    posts = Photo.all_mapped(person_id).to_a
     if ! posts.empty?
       first_dateadded = posts.first.dateadded
       last_dateadded = posts.last.dateadded
@@ -165,8 +165,7 @@ class PeopleController < ApplicationController
       end
     end
 
-    guesses = Guess.all_mapped person_id
-    guesses.to_a
+    guesses = Guess.all_mapped(person_id).to_a
     if ! guesses.empty?
       first_guessed_at = guesses.first.commented_at
       last_guessed_at = guesses.last.commented_at
@@ -184,7 +183,7 @@ class PeopleController < ApplicationController
       end
     end
 
-    photos.as_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    { :partial => false, :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
   end
   private :photos_for_map
 
