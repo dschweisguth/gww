@@ -10,12 +10,11 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    # TODO Dave deal with duplication, possibly by moving to as_json
-    @json = posts_for_map.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    @json = posts_for_map.to_json
   end
 
   def map_json
-    render :json => posts_for_map, :root => false, :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    render :json => posts_for_map
   end
 
   def posts_for_map
@@ -35,7 +34,7 @@ class PhotosController < ApplicationController
         post[:symbol] = '-'
       end
     end
-    posts
+    posts.as_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
   private :posts_for_map
 
