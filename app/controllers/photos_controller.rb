@@ -65,7 +65,7 @@ class PhotosController < ApplicationController
 
   def bin(photo, bins_per_axis, min_latitude, max_latitude, min_longitude, max_longitude)
     latitude_bin = ((photo.latitude - min_latitude) / (max_latitude - min_latitude) * bins_per_axis).to_i
-    longitude_bin = ((photo.longitude - min_longitude) / (max_longitude - min_longitude) * 20).to_i
+    longitude_bin = ((photo.longitude - min_longitude) / (max_longitude - min_longitude) * bins_per_axis).to_i
     [ latitude_bin, longitude_bin ]
   end
   private :bin
