@@ -1,5 +1,6 @@
 Bugs
 
+Review performance of people/#
 After http://code.google.com/p/phusion-passenger/issues/detail?id=563 is fixed, reinstate page caching
 The username of a person who has guessed but never posted is never updated
 A photo which is guessed or revealed and then removed from the group remains
