@@ -54,7 +54,11 @@ GWW.map = function () {
           showMarkers(GWW.config);
           loadMarkersFromPage = false;
         } else if (! that.jsonIncludedAllMarkers) {
-          $.getJSON(window.location + '_json', showMarkers);
+          var bounds = that.map.getBounds();
+          var url = window.location + '_json?' +
+            'sw=' + bounds.getSouthWest().lat() + ',' + bounds.getSouthWest().lng() + '&' +
+            'ne=' + bounds.getNorthEast().lat() + ',' + bounds.getNorthEast().lng();
+          $.getJSON(url, showMarkers);
         }
       };
     },
