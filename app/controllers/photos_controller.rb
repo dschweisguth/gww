@@ -23,7 +23,7 @@ class PhotosController < ApplicationController
     photos_count = photos.length # Call length before first and last so the latter don't issue their own queries
     first_dateadded = photos.first.dateadded
     last_dateadded = photos.last.dateadded
-    photos = thin photos, 1000, 20
+    photos = thin photos, 1000, 20, 5
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
     { :partial => (photos_count != photos.length), :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
   end
@@ -40,7 +40,7 @@ class PhotosController < ApplicationController
   end
   private :photos_within_bounds
 
-  def thin(photos, too_many, bins_per_axis)
+  def thin(photos, too_many, bins_per_axis, photos_per_bin)
     if photos.length <= too_many
       return photos
     end
@@ -49,10 +49,10 @@ class PhotosController < ApplicationController
     min_longitude, max_longitude = (binnable_photos.map &:longitude).minmax
     binned_photos = binnable_photos.group_by { |photo| bin photo, bins_per_axis, min_latitude, max_latitude, min_longitude, max_longitude }
     binned_photos.each_value do |bin|
-      if bin.length > 5
+      if bin.length > photos_per_bin
         bin = bin.sort { |a, b| b.dateadded <=> a.dateadded }
       end
-      thinned_photos += bin.first 5
+      thinned_photos += bin.first photos_per_bin
     end
     thinned_photos
   end
