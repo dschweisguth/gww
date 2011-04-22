@@ -6,20 +6,20 @@ GWW.personMap = (function () {
   var that = {
 
     mapsAPIIsLoadedCallback: function () {
-      map.mapsAPIIsLoadedCallback();
-
-      var photos = GWW.config;
-      for (var i = 0; i < photos.length; i++) {
-        var photo = photos[i].photo;
-        var marker = map.createMarker(photo);
-        (photo.symbol === '!' ? guesses : posts).push(marker);
-      }
-
+      map.mapsAPIIsLoadedCallback(showMarkers);
       addToggleHandler('guesses', guesses);
       addToggleHandler('posts', posts);
-
     }
 
+  };
+
+  var showMarkers = function (photos) {
+    map.removeMarkers(guesses);
+    map.removeMarkers(posts);
+    $.each(photos, function (i, photoRef) {
+      var photo = photoRef.photo;
+      (photo.symbol === '!' ? guesses : posts).push(map.createMarker(photo));
+    });
   };
 
   var addToggleHandler = function (id, markers) {
@@ -29,9 +29,9 @@ GWW.personMap = (function () {
   var toggle = function (markers) {
     return function (event) {
       var markerParent = this.checked ? map.map : null;
-      for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(markerParent);
-      }
+      $.each(markers, function (i, marker) {
+        marker.setMap(markerParent);
+      });
     }
   };
 

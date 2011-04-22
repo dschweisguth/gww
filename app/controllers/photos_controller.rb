@@ -10,8 +10,17 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    posts = Photo.where('accuracy >= 12').order('dateadded')
-    posts.to_a # force the query we'll run later anyway so first and last can use the results
+    # TODO Dave deal with duplication, possibly by moving to as_json
+    @json = posts_for_map.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+  end
+
+  def map_json
+    render :json => posts_for_map, :only => [ :id, :latitude, :longitude, :color, :symbol ]
+  end
+
+  def posts_for_map
+    # Force the query we'll run later anyway so first and last can use the results
+    posts = Photo.where('accuracy >= 12').order('dateadded').to_a
     first_dateadded = posts.first.dateadded
     last_dateadded = posts.last.dateadded
     posts.each do |post|
@@ -26,8 +35,9 @@ class PhotosController < ApplicationController
         post[:symbol] = '-'
       end
     end
-    @json = posts.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    posts
   end
+  private :posts_for_map
 
   caches_page :map_popup
   def map_popup

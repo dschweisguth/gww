@@ -138,8 +138,15 @@ class PeopleController < ApplicationController
     @person = Person.find person_id
     @posts_count = Photo.all_mapped_count person_id
     @guesses_count = Guess.all_mapped_count person_id
+    @json = photos_for_map(params[:id]).to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+  end
 
-    posts = Photo.all_mapped params[:id]
+  def map_json
+    render :json => photos_for_map(params[:id]), :only => [ :id, :latitude, :longitude, :color, :symbol ]
+  end
+
+  def photos_for_map(person_id)
+    posts = Photo.all_mapped person_id
     posts.to_a
     if ! posts.empty?
       first_dateadded = posts.first.dateadded
@@ -158,7 +165,7 @@ class PeopleController < ApplicationController
       end
     end
 
-    guesses = Guess.all_mapped params[:id]
+    guesses = Guess.all_mapped person_id
     guesses.to_a
     if ! guesses.empty?
       first_guessed_at = guesses.first.commented_at
@@ -177,8 +184,8 @@ class PeopleController < ApplicationController
       end
     end
 
-    @json = photos.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
-
+    photos
   end
+  private :photos_for_map
 
 end

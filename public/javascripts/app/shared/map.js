@@ -1,5 +1,7 @@
 GWW = {};
+
 GWW.map = function () {
+  var loadMarkersFromPage = true;
   var infoWindow = null;
   
   var that = {
@@ -14,7 +16,7 @@ GWW.map = function () {
       });
     },
 
-    mapsAPIIsLoadedCallback: function () {
+    mapsAPIIsLoadedCallback: function (showMarkers) {
       that.map = new google.maps.Map($('#map_canvas')[0], {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.442112),
@@ -38,8 +40,21 @@ GWW.map = function () {
         strokeWeight: 2
       }).setMap(that.map);
 
+      google.maps.event.addListener(that.map, 'idle', this.loadMarkers(showMarkers));
+
       infoWindow = new google.maps.InfoWindow();
 
+    },
+
+    loadMarkers: function (showMarkers) {
+      return function () {
+        if (loadMarkersFromPage) {
+          showMarkers(GWW.config);
+          loadMarkersFromPage = false;
+        } else {
+          $.getJSON(window.location + '_json', showMarkers);
+        }
+      };
     },
 
     createMarker: function (photo) {
@@ -50,6 +65,13 @@ GWW.map = function () {
       });
       google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
       return marker;
+    },
+
+    removeMarkers: function (markers) {
+      $.each(markers, function (i, marker) {
+        marker.setMap(null);
+      });
+      markers.length = 0;
     }
 
   };
@@ -64,8 +86,8 @@ GWW.map = function () {
   };
 
   var openInfoWindow = function (marker) {
-    return function (data, status, response) {
-      infoWindow.setContent(data);
+    return function (html) {
+      infoWindow.setContent(html);
       infoWindow.open(that.map, marker);
     }
   };
