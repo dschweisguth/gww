@@ -378,7 +378,7 @@ describe PeopleController do
       response.should have_selector 'label', :content => '1 mapped post (?, -)'
       response.should have_selector 'input', :id => 'guesses'
       response.should have_selector 'label', :content => '1 mapped guess (!)'
-      response.should contain /GWW\.config = \[\{"photo":\{.*?\}\},\{"photo":\{.*?\}\}\];/
+      response.should contain /GWW\.config = \[\{.*?\},\{.*?\}\];/
 
       json = decode_json
       json.length.should == 2
@@ -488,17 +488,15 @@ describe PeopleController do
     end
 
     def decoded_photo_looks_unfound_or_unconfirmed(decoded_post, post)
-      photo = decoded_post['photo']
-      photo['id'].should == post.id
-      photo['color'].should == 'FFFF00'
-      photo['symbol'].should == '?'
+      decoded_post['id'].should == post.id
+      decoded_post['color'].should == 'FFFF00'
+      decoded_post['symbol'].should == '?'
     end
 
     def decoded_photo_looks_guessed(decoded_guessed_photo, guessed_photo)
-      photo = decoded_guessed_photo['photo']
-      photo['id'].should == guessed_photo.id
-      photo['color'].should == '008000'
-      photo['symbol'].should == '!'
+      decoded_guessed_photo['id'].should == guessed_photo.id
+      decoded_guessed_photo['color'].should == '008000'
+      decoded_guessed_photo['symbol'].should == '!'
     end
 
   end

@@ -13,7 +13,7 @@ GWW.photosMap = (function () {
   var showMarkers = function (photos) {
     map.removeMarkers(markers);
     $.each(photos, function (i, photo) {
-      markers.push(map.createMarker(photo.photo));
+      markers.push(map.createMarker(photo));
     })
   };
 

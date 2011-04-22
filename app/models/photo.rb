@@ -1,6 +1,8 @@
 class Photo < ActiveRecord::Base
   include Answer
 
+  self.include_root_in_json = false
+
   belongs_to :person, :inverse_of => :photos
   has_many :guesses, :inverse_of => :photo
   has_many :comments, :inverse_of => :photo

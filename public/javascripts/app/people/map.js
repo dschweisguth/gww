@@ -16,8 +16,7 @@ GWW.personMap = (function () {
   var showMarkers = function (photos) {
     map.removeMarkers(guesses);
     map.removeMarkers(posts);
-    $.each(photos, function (i, photoRef) {
-      var photo = photoRef.photo;
+    $.each(photos, function (i, photo) {
       (photo.symbol === '!' ? guesses : posts).push(map.createMarker(photo));
     });
   };

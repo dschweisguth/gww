@@ -15,7 +15,7 @@ class PhotosController < ApplicationController
   end
 
   def map_json
-    render :json => posts_for_map, :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    render :json => posts_for_map, :root => false, :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
 
   def posts_for_map

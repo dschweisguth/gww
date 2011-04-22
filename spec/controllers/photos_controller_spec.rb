@@ -55,11 +55,11 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should contain /GWW\.config = \[\{"photo":\{.*?\}\}\];/
+      response.should contain /GWW\.config = \[\{.*?\}\];/
 
       json = ActiveSupport::JSON.decode assigns[:json]
       json.length.should == 1
-      post_out = json[0]['photo']
+      post_out = json[0]
       post_out['id'].should == photo.id
       post_out['color'].should == color
       post_out['symbol'].should == symbol
