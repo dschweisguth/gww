@@ -19,7 +19,7 @@ class PhotosController < ApplicationController
   end
 
   def posts_for_map
-    photos = photos_within_bounds
+    photos = photos_within_bounds bounds
     photos_count = photos.length # Call length before first and last so the latter don't issue their own queries
     first_dateadded = photos.first.dateadded
     last_dateadded = photos.last.dateadded
@@ -29,12 +29,20 @@ class PhotosController < ApplicationController
   end
   private :posts_for_map
 
-  def photos_within_bounds
-    posts = Photo.where('accuracy >= 12').order('dateadded')
+  def bounds
     if params[:sw]
       sw = params[:sw].split(',').map &:to_f
       ne = params[:ne].split(',').map &:to_f
-      posts = posts.where('? < latitude and latitude < ? and ? < longitude and longitude < ?', sw[0], ne[0], sw[1], ne[1])
+      Bounds.new :sw[0], ne[0], sw[1], ne[1]
+    end
+  end
+  private :bounds
+
+  def photos_within_bounds(bounds)
+    posts = Photo.where('accuracy >= 12').order('dateadded')
+    if bounds
+      posts = posts.where '? < latitude and latitude < ? and ? < longitude and longitude < ?',
+        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long
     end
     posts
   end
