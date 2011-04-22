@@ -19,21 +19,26 @@ class PhotosController < ApplicationController
   end
 
   def posts_for_map
-    all_posts = Photo.where('accuracy >= 12').order('dateadded')
+    photos = photos_within_bounds
+    photos_count = photos.length # Call length before first and last so the latter don't issue their own queries
+    first_dateadded = photos.first.dateadded
+    last_dateadded = photos.last.dateadded
+    photos = thin photos, 1000, 20
+    photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
+    { :partial => (photos_count != photos.length), :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
+  end
+  private :posts_for_map
+
+  def photos_within_bounds
+    posts = Photo.where('accuracy >= 12').order('dateadded')
     if params[:sw]
       sw = params[:sw].split(',').map &:to_f
       ne = params[:ne].split(',').map &:to_f
-      all_posts = all_posts.where('? < latitude and latitude < ? and ? < longitude and longitude < ?', sw[0], ne[0], sw[1], ne[1])
+      posts = posts.where('? < latitude and latitude < ? and ? < longitude and longitude < ?', sw[0], ne[0], sw[1], ne[1])
     end
-    all_posts = all_posts.to_a # Force the query we'll run later anyway so first and last can use the results
-    all_posts_length = all_posts.length
-    posts = thin all_posts, 1000, 20
-    first_dateadded = all_posts.first.dateadded
-    last_dateadded = all_posts.last.dateadded
-    posts.each { |post| add_display_attributes post, first_dateadded, last_dateadded }
-    { :partial => (all_posts_length != posts.length), :photos => posts.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
+    posts
   end
-  private :posts_for_map
+  private :photos_within_bounds
 
   def thin(photos, too_many, bins_per_axis)
     if photos.length <= too_many
