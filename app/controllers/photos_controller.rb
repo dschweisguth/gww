@@ -19,7 +19,7 @@ class PhotosController < ApplicationController
   end
 
   def posts_for_map
-    photos = photos_within_bounds bounds
+    photos = photos_within bounds
     photos_count = photos.length # Call length before first and last so the latter don't issue their own queries
     first_dateadded = photos.first.dateadded
     last_dateadded = photos.last.dateadded
@@ -38,7 +38,7 @@ class PhotosController < ApplicationController
   end
   private :bounds
 
-  def photos_within_bounds(bounds)
+  def photos_within(bounds)
     posts = Photo.where('accuracy >= 12').order('dateadded')
     if bounds
       posts = posts.where '? < latitude and latitude < ? and ? < longitude and longitude < ?',
@@ -46,7 +46,7 @@ class PhotosController < ApplicationController
     end
     posts
   end
-  private :photos_within_bounds
+  private :photos_within
 
   def thin(photos, too_many, bins_per_axis, photos_per_bin)
     if photos.length <= too_many
