@@ -371,9 +371,6 @@ describe Person do
       stub(Person).posts_per_day { {} }
       stub(Person).guess_speeds { {} }
       stub(Person).be_guessed_speeds { {} }
-      stub(Person).comments_to_guess { {} }
-      stub(Person).comments_per_post { {} }
-      stub(Person).comments_to_be_guessed { {} }
       stub(Person).views_per_post { {} }
     end
 
@@ -564,63 +561,72 @@ describe Person do
 
     it 'sorts by comments-to-guess' do
       create_people_named 'a', 'z'
-      stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 2 } }
+      @person1.update_attribute :comments_to_guess, 1
+      @person2.update_attribute :comments_to_guess, 2
       stub_score 2, 1
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-guess, score' do
       create_people_named 'a', 'z'
-      stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 1 } }
+      @person1.update_attribute :comments_to_guess, 1
+      @person2.update_attribute :comments_to_guess, 1
       stub_score 1, 2
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-guess, score, username' do
       create_people_named 'z', 'a'
-      stub(Person).comments_to_guess { { @person1.id => 1, @person2.id => 1 } }
+      @person1.update_attribute :comments_to_guess, 1
+      @person2.update_attribute :comments_to_guess, 1
       stub_score 1, 1
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-per-post' do
       create_people_named 'a', 'z'
-      stub(Person).comments_per_post { { @person1.id => 1, @person2.id => 2 } }
+      @person1.update_attribute :comments_per_post, 1
+      @person2.update_attribute :comments_per_post, 2
       stub_post_count 2, 1
       puts_person2_before_person1 'comments-per-post'
     end
 
     it 'sorts by comments-per-post, post count' do
       create_people_named 'a', 'z'
-      stub(Person).comments_per_post { { @person1.id => 1, @person2.id => 1 } }
+      @person1.update_attribute :comments_per_post, 1
+      @person2.update_attribute :comments_per_post, 1
       stub_post_count 1, 2
       puts_person2_before_person1 'comments-per-post'
     end
 
     it 'sorts by comments-per-post, post count, username' do
       create_people_named 'z', 'a'
-      stub(Person).comments_per_post { { @person1.id => 1, @person2.id => 1 } }
+      @person1.update_attribute :comments_per_post, 1
+      @person2.update_attribute :comments_per_post, 1
       stub_post_count 1, 1
       puts_person2_before_person1 'comments-per-post'
     end
 
     it 'sorts by comments-to-be-guessed' do
       create_people_named 'a', 'z'
-      stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 2 } }
+      @person1.update_attribute :comments_to_be_guessed, 1
+      @person2.update_attribute :comments_to_be_guessed, 2
       stub_post_count 2, 1
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts by comments-to-be-guessed, post count' do
       create_people_named 'a', 'z'
-      stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 1 } }
+      @person1.update_attribute :comments_to_be_guessed, 1
+      @person2.update_attribute :comments_to_be_guessed, 1
       stub_post_count 1, 2
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts by comments-to-be-guessed, post count, username' do
       create_people_named 'z', 'a'
-      stub(Person).comments_to_be_guessed { { @person1.id => 1, @person2.id => 1 } }
+      @person1.update_attribute :comments_to_be_guessed, 1
+      @person2.update_attribute :comments_to_be_guessed, 1
       stub_post_count 1, 1
       puts_person2_before_person1 'comments-to-be-guessed'
     end
@@ -708,84 +714,6 @@ describe Person do
       Guess.make :photo => photo, :commented_at => now - 1
       Person.be_guessed_speeds.should == { photo.person.id => 4 }
     end
-  end
-
-  describe '.comments_to_guess' do
-    before do
-      commented_at = 10.seconds.ago
-      @guess = Guess.make :commented_at => commented_at
-      Comment.make 'guess', :photo => @guess.photo,
-        :flickrid => @guess.person.flickrid, :username => @guess.person.username,
-        :commented_at => commented_at
-    end
-
-    it 'returns a map of person ID to average # of comments/guess' do
-      returns_expected_map
-    end
-
-    it 'ignores comments made after the guess' do
-      Comment.make 'chitchat', :photo => @guess.photo,
-        :flickrid => @guess.person.flickrid, :username => @guess.person.username
-      returns_expected_map
-    end
-
-    it 'ignores comments made by someone other than the guesser' do
-      Comment.make "someone else's guess",
-        :photo => @guess.photo, :commented_at => 11.seconds.ago
-      returns_expected_map
-    end
-
-    def returns_expected_map
-      Person.comments_to_guess.should == { @guess.person.id => 1 }
-    end
-
-  end
-
-  describe '.comments_per_post' do
-    it 'returns a map of person ID to average # of comments on their post' do
-      comment = Comment.make
-      Person.comments_per_post.should == { comment.photo.person.id => 1 }
-    end
-
-    it 'ignores comments made by the poster' do
-      photo = Photo.make
-      Comment.make :photo => photo, :flickrid => photo.person.flickrid,
-        :username => photo.person.username
-      Person.comments_per_post.should == {}
-    end
-
-  end
-
-  describe '.comments_to_be_guessed' do
-    before do
-      commented_at = 10.seconds.ago
-      @guess = Guess.make :commented_at => commented_at
-      Comment.make 'guess', :photo => @guess.photo,
-        :flickrid => @guess.person.flickrid, :username => @guess.person.username,
-        :commented_at => commented_at
-    end
-
-    it 'returns a map of person ID to average # of comments for their photos to be guessed' do
-      returns_expected_map
-    end
-
-    it 'ignores comments made after the guess' do
-      Comment.make 'chitchat', :photo => @guess.photo,
-        :flickrid => @guess.person.flickrid, :username => @guess.person.username
-      returns_expected_map
-    end
-
-    it 'ignores comments made by the poster' do
-      Comment.make 'poster', :photo => @guess.photo,
-        :flickrid => @guess.photo.person.flickrid, :username => @guess.photo.person.username,
-        :commented_at => 11.seconds.ago
-      returns_expected_map
-    end
-
-    def returns_expected_map
-      Person.comments_to_be_guessed.should == { @guess.photo.person.id => 1 }
-    end
-
   end
 
   describe '.views_per_post' do

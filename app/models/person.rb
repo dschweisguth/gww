@@ -201,9 +201,6 @@ class Person < ActiveRecord::Base
     posts_per_days = Person.posts_per_day
     guess_speeds = Person.guess_speeds
     be_guessed_speeds = Person.be_guessed_speeds
-    comments_to_guess = Person.comments_to_guess
-    comments_per_post = Person.comments_per_post
-    comments_to_be_guessed = Person.comments_to_be_guessed
     views_per_post = Person.views_per_post
 
     people = all
@@ -217,9 +214,8 @@ class Person < ActiveRecord::Base
       person[:posts_per_guess] = person[:post_count].to_f / person[:guess_count]
       person[:guess_speed] = guess_speeds[person.id] || INFINITY
       person[:be_guessed_speed] = be_guessed_speeds[person.id] || INFINITY
-      person[:comments_to_guess] = comments_to_guess[person.id] || INFINITY
-      person[:comments_per_post] = comments_per_post[person.id] || 0.0
-      person[:comments_to_be_guessed] = comments_to_be_guessed[person.id] || INFINITY
+      person.comments_to_guess ||= INFINITY
+      person.comments_to_be_guessed ||= INFINITY
       person[:views_per_post] = views_per_post[person.id] || 0.0
     end
 
@@ -270,53 +266,6 @@ class Person < ActiveRecord::Base
       from guesses g, photos p
       where g.photo_id = p.id and unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)
       group by p.person_id
-    }
-  end
-
-  def self.comments_to_guess
-    statistic_by_person %q{
-      select id, avg(comment_count) statistic
-      from (
-        select g.person_id id, count(*) comment_count
-        from guesses g, people p, comments c
-        where g.photo_id = c.photo_id and
-          g.person_id = p.id and
-          p.flickrid = c.flickrid and
-          g.commented_at >= c.commented_at group by g.id
-      ) comment_counts
-      group by id
-    }
-  end
-
-  def self.comments_per_post
-    statistic_by_person %q{
-      select person_id id, avg(comment_count) statistic
-      from (
-        select f.person_id, count(*) comment_count
-        from photos f, people p, comments c
-        where f.id = c.photo_id and
-          f.person_id = p.id and
-          p.flickrid != c.flickrid
-        group by f.id
-      ) comment_counts
-      group by id
-    }
-  end
-
-  def self.comments_to_be_guessed
-    statistic_by_person %q{
-      select id, avg(comment_count) statistic
-      from (
-        select p.id, count(*) comment_count
-        from people p, photos ph, guesses g, comments c
-        where p.id = ph.person_id and
-          ph.id = g.photo_id and
-          ph.id = c.photo_id and
-          p.flickrid != c.flickrid and
-          g.commented_at >= c.commented_at
-        group by g.id
-      ) comment_counts
-      group by id
     }
   end
 
