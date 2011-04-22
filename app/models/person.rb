@@ -540,6 +540,7 @@ class Person < ActiveRecord::Base
       person.update_attribute attribute, person[:statistic]
     end
   end
+  private_class_method :update_statistic
 
   def destroy_if_has_no_dependents
     if ! Photo.where(:person_id => id).exists? && ! Guess.where(:person_id => id).exists?
