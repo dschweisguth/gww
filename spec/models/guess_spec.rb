@@ -319,8 +319,40 @@ describe Guess do
       ignores({})
     end
 
-    it "ignores guesses of photos mapped with insufficient accuracy" do
+    it "ignores guesses of mapped photos with accuracy < 12" do
       ignores :accuracy => 11, :latitude => 37, :longitude => -122
+    end
+
+    it "ignores guesses of mapped photos south of the minimum latitude" do
+      ignores :accuracy => 12, :latitude => 35, :longitude => -122
+    end
+
+    it "ignores guesses of mapped photos north of the maximum latitude" do
+      ignores :accuracy => 12, :latitude => 39, :longitude => -122
+    end
+
+    it "ignores guesses of mapped photos west of the minimum longitude" do
+      ignores :accuracy => 12, :latitude => 37, :longitude => -124
+    end
+
+    it "ignores guesses of mapped photos east of the maximum latitude" do
+      ignores :accuracy => 12, :latitude => 37, :longitude => -120
+    end
+
+    it "ignores guesses of auto-mapped photos south of the minimum latitude" do
+      ignores :inferred_latitude => 35, :inferred_longitude => -122
+    end
+
+    it "ignores guesses of auto-mapped photos north of the maximum latitude" do
+      ignores :inferred_latitude => 39, :inferred_longitude => -122
+    end
+
+    it "ignores guesses of auto-mapped photos west of the minimum longitude" do
+      ignores :inferred_latitude => 37, :inferred_longitude => -124
+    end
+
+    it "ignores guesses of auto-mapped photos east of the maximum latitude" do
+      ignores :inferred_latitude => 37, :inferred_longitude => -120
     end
 
     def ignores(attributes)
@@ -328,8 +360,6 @@ describe Guess do
       guess = Guess.make :photo => photo
       Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
-
-    # TODO Dave more tests
 
   end
 
