@@ -6,6 +6,8 @@ describe MapSupport do
     self.extend MapSupport
   end
 
+  # TODO Dave test more stuff directly
+
   describe '#scaled_red' do
     it "starts at FCC0C0 (more or less FFBFBF)" do
       scaled_red(0, 1, 0).should == 'FCC0C0'
