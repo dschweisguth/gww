@@ -441,7 +441,7 @@ describe PeopleController do
     it "echos non-default bounds" do
       controller.params[:sw] = '1,2'
       controller.params[:ne] = '3,4'
-      returns_post Bounds.new(1, 3, 2, 4), 'revealed', 'E00000', '-'
+      returns_post Bounds.new(1, 3, 2, 4), 'unfound', 'FFFF00', '?'
     end
 
     def returns_post(bounds, game_status, color, symbol)
