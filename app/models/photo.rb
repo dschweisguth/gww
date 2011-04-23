@@ -145,17 +145,12 @@ class Photo < ActiveRecord::Base
   def self.all_mapped(poster_id, bounds)
     where(:person_id => poster_id) \
       .where(
-        '(accuracy >= 12 and ? < latitude and latitude < ? and ? < longitude and longitude < ?) or ' +
-          '(? < inferred_latitude and inferred_latitude < ? and ? < inferred_longitude and inferred_longitude < ?)',
+        '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
+          '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
         bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
         bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
       .order(:dateadded)
   end
-
-  def self.all_mapped_base(poster_id)
-    where(:person_id => poster_id).where('accuracy >= 12 || inferred_latitude is not null')
-  end
-  private_class_method :all_mapped_base
 
   # Used by PhotosController
 
