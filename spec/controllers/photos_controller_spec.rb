@@ -98,21 +98,15 @@ describe PhotosController do
     end
 
     it "thins out photos in dense areas of the map" do
-      photo1 = Photo.make :id => 14,
-        :latitude => PhotosController::INITIAL_MAP_BOUNDS.min_lat,
-        :longitude => PhotosController::INITIAL_MAP_BOUNDS.min_long,
-        :dateadded => 1.day.ago
-      photo2 = Photo.make :id => 15,
-        :latitude => PhotosController::INITIAL_MAP_BOUNDS.min_lat,
-        :longitude => PhotosController::INITIAL_MAP_BOUNDS.min_long,
-        :dateadded => 2.days.ago
+      bounds = PhotosController::INITIAL_MAP_BOUNDS
+      photo1 = Photo.make :id => 1, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 1.day.ago
+      photo2 = Photo.make :id => 2, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 2.days.ago
       stub(Photo).within { [ photo1, photo2 ] }
-      stub(controller).too_many { 0 }
-      stub(controller).photos_per_bin { 1 }
+      stub(controller).thin([ photo1, photo2 ], bounds, 20) { [ photo1 ] }
       map_photos = controller.map_photos
 
       map_photos[:partial].should == true
-      map_photos[:photos].map { |photo| photo['id'] }.should == [ 14 ]
+      map_photos[:photos].map { |photo| photo['id'] }.should == [ photo1.id ]
 
     end
 
