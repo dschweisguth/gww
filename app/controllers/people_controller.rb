@@ -149,38 +149,34 @@ class PeopleController < ApplicationController
     bounds = get_bounds
 
     posts = Photo.all_mapped(person_id, bounds).to_a
-    if ! posts.empty?
-      first_dateadded = posts.first.dateadded
-      last_dateadded = posts.last.dateadded
-      posts.each do |post|
-        if post.game_status == 'unfound' || post.game_status == 'unconfirmed'
-          post[:color] = 'FFFF00'
-          post[:symbol] = '?'
-        elsif post.game_status == 'found'
-          post[:color] = scaled_blue first_dateadded, last_dateadded, post.dateadded
-          post[:symbol] = '?'
-        else # revealed
-          post[:color] = scaled_red first_dateadded, last_dateadded, post.dateadded
-          post[:symbol] = '-'
-        end
-      end
-    end
+    first_dateadded, last_dateadded =
+      posts.empty? ? [ nil, nil ] : [ posts.first.dateadded, posts.last.dateadded ]
 
     guesses = Guess.all_mapped(person_id, bounds).to_a
-    if ! guesses.empty?
-      first_guessed_at = guesses.first.commented_at
-      last_guessed_at = guesses.last.commented_at
-      guesses.each do |guess|
-        guess.photo[:color] = scaled_green first_guessed_at, last_guessed_at, guess.commented_at
-        guess.photo[:symbol] = '!'
-      end
-    end
+    first_guessed_at, last_guessed_at =
+      guesses.empty? ? [ nil, nil ] : [ guesses.first.commented_at, guesses.last.commented_at ]
+    guesses.each { |guess| guess.photo[:guessed_at] = guess.commented_at }
 
     photos = posts + (guesses.map &:photo)
     photos.each do |photo|
       if ! photo.latitude
         photo.latitude = photo.inferred_latitude
         photo.longitude = photo.inferred_longitude
+      end
+      if photo[:guessed_at]
+        photo[:color] = scaled_green first_guessed_at, last_guessed_at, photo[:guessed_at]
+        photo[:symbol] = '!'
+      else
+        if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
+          photo[:color] = 'FFFF00'
+          photo[:symbol] = '?'
+        elsif photo.game_status == 'found'
+          photo[:color] = scaled_blue first_dateadded, last_dateadded, photo.dateadded
+          photo[:symbol] = '?'
+        else # revealed
+          photo[:color] = scaled_red first_dateadded, last_dateadded, photo.dateadded
+          photo[:symbol] = '-'
+        end
       end
     end
 
