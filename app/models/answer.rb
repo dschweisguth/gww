@@ -1,5 +1,4 @@
 module Answer
-  extend self
 
   def time_elapsed_between(from, to)
     formatted_age_by_period from, to,
