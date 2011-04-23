@@ -162,12 +162,8 @@ class PeopleController < ApplicationController
     use_inferred_geocode_if_necessary(photos)
     photos = thin photos, bounds, 20
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded, first_guessed_at, last_guessed_at }
+    as_json photos_count != photos.length, bounds, photos
 
-    {
-      :partial => (photos_count != photos.length),
-      :bounds => bounds,
-      :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
-    }
   end
 
   def use_inferred_geocode_if_necessary(photos)

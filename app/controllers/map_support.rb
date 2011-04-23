@@ -70,4 +70,12 @@ module MapSupport
   end
   private :scaled
 
+  def as_json(partial, bounds, photos)
+    {
+      :partial => partial,
+      :bounds => bounds,
+      :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
+    }
+  end
+
 end
