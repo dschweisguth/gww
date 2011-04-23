@@ -494,7 +494,7 @@ class Person < ActiveRecord::Base
   # Used in Admin::PhotosController
 
   def self.update_statistics
-    connection.execute 'update people set comments_to_guess = null, comments_per_post = 0, comments_to_be_guessed = null'
+    update_all :comments_to_guess => nil, :comments_per_post => 0, :comments_to_be_guessed => nil
     update_statistic :comments_to_guess, %q{
       select id, avg(comment_count) statistic
       from (
