@@ -12,7 +12,6 @@ class PhotosController < ApplicationController
     @json = map_photos.to_json
   end
 
-  # TODO Dave test
   def map_json
     render :json => map_photos
   end

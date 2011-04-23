@@ -42,7 +42,19 @@ describe PhotosController do
       json_out.should == json
 
     end
+  end
 
+  describe '#map_json' do
+    it "renders the page" do
+      json = { 'property' => 'value' }
+      stub(controller).map_photos { json }
+      get :map_json
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.body.should == json.to_json
+
+    end
   end
 
   describe '#map_photos' do
