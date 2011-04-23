@@ -99,6 +99,28 @@ describe PhotosController do
 
     end
 
+    it "thins out excessively dense photos" do
+      photo1 = Photo.make :id => 14,
+        :latitude => PhotosController::INITIAL_MAP_BOUNDS.min_lat,
+        :longitude => PhotosController::INITIAL_MAP_BOUNDS.min_long,
+        :dateadded => 1.day.ago
+      photo2 = Photo.make :id => 15,
+        :latitude => PhotosController::INITIAL_MAP_BOUNDS.min_lat,
+        :longitude => PhotosController::INITIAL_MAP_BOUNDS.min_long,
+        :dateadded => 2.days.ago
+
+      stub(Photo).within { [ photo1, photo2 ] }
+      stub(controller).too_many { 0 }
+      stub(controller).photos_per_bin { 1 }
+      map_photos = controller.map_photos
+
+      map_photos[:partial].should == true
+      photos = map_photos[:photos]
+      photos.length.should == 1
+      photos[0]['id'].should == 14
+
+    end
+
   end
 
   describe '#map_popup' do
