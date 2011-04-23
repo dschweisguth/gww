@@ -178,7 +178,7 @@ class PeopleController < ApplicationController
 
     photos = posts + (guesses.map &:photo)
     photos.each do |photo|
-      if ! photo.latitude # TODO Dave check accuracy
+      if ! photo.latitude
         photo.latitude = photo.inferred_latitude
         photo.longitude = photo.inferred_longitude
       end
