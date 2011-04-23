@@ -463,6 +463,22 @@ describe PeopleController do
       }
     end
 
+    it "thins out photos in dense areas of the map" do
+      bounds = PhotosController::INITIAL_MAP_BOUNDS
+      post = Photo.make :id => 14, :person => @person, :latitude => bounds.min_lat, :longitude => bounds.min_long,
+        :dateadded => 1.day.ago
+      stub(Photo).all_mapped(@person.id, bounds) { [ post ] }
+      guessed_photo = Photo.make :id => 15, :person => @person, :latitude => bounds.min_lat, :longitude => bounds.min_long,
+        :dateadded => 2.days.ago
+      guess = Guess.make :photo => guessed_photo, :person => @person
+      stub(Guess).all_mapped(@person.id, bounds) { [ guess ] }
+      stub(controller).thin([ post, guessed_photo ], bounds, 20) { [ post ] }
+      map_photos = controller.map_photos @person.id
+
+      map_photos[:partial].should == true
+      map_photos[:photos].map { |photo| photo['id'] }.should == [ post.id ]
+
+    end
   end
 
 end
