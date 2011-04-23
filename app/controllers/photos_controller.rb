@@ -18,8 +18,8 @@ class PhotosController < ApplicationController
 
   def map_photos
     bounds = get_bounds
-    photos = Photo.within bounds
-    photos_count = photos.length # Call length before first and last so the latter don't issue their own queries
+    photos = Photo.within(bounds).to_a
+    photos_count = photos.length
     first_dateadded = photos.first.dateadded
     last_dateadded = photos.last.dateadded
     photos = thin photos, bounds, 20
