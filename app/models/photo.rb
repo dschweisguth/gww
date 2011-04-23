@@ -192,6 +192,14 @@ class Photo < ActiveRecord::Base
   end
   private_class_method :order_by
 
+  # TODO Dave test
+  def self.within(bounds)
+    Photo.where('accuracy >= 12') \
+      .where('? < latitude and latitude < ? and ? < longitude and longitude < ?',
+        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
+      .order('dateadded')
+  end
+
   def self.unfound_or_unconfirmed
     where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person)
   end

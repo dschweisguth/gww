@@ -4,58 +4,48 @@ class PhotosController < ApplicationController
   caches_page :index
   def index
     @photo_count = Photo.count
-    @photos = Photo.all_sorted_and_paginated params[:sorted_by], params[:order],
-      params[:page], 30
+    @photos = Photo.all_sorted_and_paginated params[:sorted_by], params[:order], params[:page], 30
   end
 
   caches_page :map
   def map
-    @json = posts_for_map.to_json
+    @json = map_photos.to_json
   end
 
   # TODO Dave test
   def map_json
-    render :json => posts_for_map
+    render :json => map_photos
   end
 
-  def posts_for_map
-    photos = photos_within bounds
+  def map_photos
+    bounds = get_bounds
+    photos = Photo.within bounds
     photos_count = photos.length # Call length before first and last so the latter don't issue their own queries
     first_dateadded = photos.first.dateadded
     last_dateadded = photos.last.dateadded
-    photos = thin photos, 1000, 20, 5
+    photos = thin photos, 1000, bounds, 20, 6
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
     { :partial => (photos_count != photos.length), :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
   end
-  private :posts_for_map
+  private :map_photos
 
-  def bounds
+  def get_bounds
     if params[:sw]
       sw = params[:sw].split(',').map &:to_f
       ne = params[:ne].split(',').map &:to_f
-      Bounds.new :sw[0], ne[0], sw[1], ne[1]
+      Bounds.new sw[0], ne[0], sw[1], ne[1]
+    else
+      Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
     end
   end
-  private :bounds
+  private :get_bounds
 
-  def photos_within(bounds)
-    posts = Photo.where('accuracy >= 12').order('dateadded')
-    if bounds
-      posts = posts.where '? < latitude and latitude < ? and ? < longitude and longitude < ?',
-        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long
-    end
-    posts
-  end
-  private :photos_within
-
-  def thin(photos, too_many, bins_per_axis, photos_per_bin)
+  def thin(photos, too_many, bounds, bins_per_axis, photos_per_bin)
     if photos.length <= too_many
       return photos
     end
-    binnable_photos, thinned_photos = photos.partition { |photo| is_more_or_less_in_mainland_san_francisco photo }
-    min_latitude, max_latitude = (binnable_photos.map &:latitude).minmax
-    min_longitude, max_longitude = (binnable_photos.map &:longitude).minmax
-    binned_photos = binnable_photos.group_by { |photo| bin photo, bins_per_axis, min_latitude, max_latitude, min_longitude, max_longitude }
+    binned_photos = photos.group_by { |photo| bin photo, bounds, bins_per_axis }
+    thinned_photos = []
     binned_photos.each_value do |bin|
       if bin.length > photos_per_bin
         bin = bin.sort { |a, b| b.dateadded <=> a.dateadded }
@@ -66,14 +56,9 @@ class PhotosController < ApplicationController
   end
   private :thin
 
-  def is_more_or_less_in_mainland_san_francisco(photo)
-    37.708333 < photo.latitude && photo.latitude < 37.810869 && -122.514381 < photo.longitude && photo.longitude < -122.356625
-  end
-  private :is_more_or_less_in_mainland_san_francisco
-
-  def bin(photo, bins_per_axis, min_latitude, max_latitude, min_longitude, max_longitude)
-    latitude_bin = ((photo.latitude - min_latitude) / (max_latitude - min_latitude) * bins_per_axis).to_i
-    longitude_bin = ((photo.longitude - min_longitude) / (max_longitude - min_longitude) * bins_per_axis).to_i
+  def bin(photo, bounds, bins_per_axis )
+    latitude_bin = ((photo.latitude - bounds.min_lat) / (bounds.max_lat - bounds.min_lat) * bins_per_axis).to_i
+    longitude_bin = ((photo.longitude - bounds.min_long) / (bounds.max_long - bounds.min_long) * bins_per_axis).to_i
     [ latitude_bin, longitude_bin ]
   end
   private :bin
