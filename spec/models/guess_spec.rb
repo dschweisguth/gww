@@ -295,13 +295,15 @@ describe Guess do
 
   describe '.all_mapped' do
     it "returns the person's guesses of mapped photos" do
-      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
-      guess = Guess.make :photo => photo
-      Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == [ guess ]
+      returns :accuracy => 12, :latitude => 37, :longitude => -122
     end
 
     it "returns the person's guesses of auto-mapped photos" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      returns :inferred_latitude => 37, :inferred_longitude => -122
+    end
+
+    def returns(attributes)
+      photo = Photo.make attributes
       guess = Guess.make :photo => photo
       Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == [ guess ]
     end
@@ -314,19 +316,20 @@ describe Guess do
     end
 
     it "ignores guesses of unmapped photos" do
-      photo = Photo.make
-      guess = Guess.make :photo => photo
-      Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == []
+      ignores({})
     end
 
     it "ignores guesses of photos mapped with insufficient accuracy" do
-      photo = Photo.make :accuracy => 11, :latitude => 37, :longitude => -122
+      ignores :accuracy => 11, :latitude => 37, :longitude => -122
+    end
+
+    def ignores(attributes)
+      photo = Photo.make attributes
       guess = Guess.make :photo => photo
       Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
 
     # TODO Dave more tests
-    # TODO Dave refactor
 
   end
 
