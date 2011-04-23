@@ -166,23 +166,7 @@ class PeopleController < ApplicationController
       end
     end
     photos = thin photos, bounds, 20
-    photos.each do |photo|
-      if photo[:guessed_at]
-        photo[:color] = scaled_green first_guessed_at, last_guessed_at, photo[:guessed_at]
-        photo[:symbol] = '!'
-      else
-        if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
-          photo[:color] = 'FFFF00'
-          photo[:symbol] = '?'
-        elsif photo.game_status == 'found'
-          photo[:color] = scaled_blue first_dateadded, last_dateadded, photo.dateadded
-          photo[:symbol] = '?'
-        else # revealed
-          photo[:color] = scaled_red first_dateadded, last_dateadded, photo.dateadded
-          photo[:symbol] = '-'
-        end
-      end
-    end
+    photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded, first_guessed_at, last_guessed_at }
 
     {
       :partial => (photos_count != photos.length),
@@ -190,5 +174,24 @@ class PeopleController < ApplicationController
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end
+
+  def add_display_attributes(photo, first_dateadded, last_dateadded, first_guessed_at, last_guessed_at)
+    if photo[:guessed_at]
+      photo[:color] = scaled_green first_guessed_at, last_guessed_at, photo[:guessed_at]
+      photo[:symbol] = '!'
+    else
+      if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
+        photo[:color] = 'FFFF00'
+        photo[:symbol] = '?'
+      elsif photo.game_status == 'found'
+        photo[:color] = scaled_blue first_dateadded, last_dateadded, photo.dateadded
+        photo[:symbol] = '?'
+      else # revealed
+        photo[:color] = scaled_red first_dateadded, last_dateadded, photo.dateadded
+        photo[:symbol] = '-'
+      end
+    end
+  end
+  private :add_display_attributes
 
 end
