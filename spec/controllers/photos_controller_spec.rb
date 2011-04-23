@@ -58,31 +58,38 @@ describe PhotosController do
 
   describe '#map_photos' do
     it "returns an unfound photo" do
-      post = Photo.make :id => 14
-      map_photos_returns post, 'FFFF00', '?'
+      photo = Photo.make :id => 14
+      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, 'FFFF00', '?'
     end
 
     it "configures an unconfirmed photo like an unfound" do
-      post = Photo.make :id => 14, :game_status => 'unconfirmed'
-      map_photos_returns post, 'FFFF00', '?'
+      photo = Photo.make :id => 14, :game_status => 'unconfirmed'
+      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, 'FFFF00', '?'
     end
 
     it "configures a found differently" do
-      post = Photo.make :id => 14, :game_status => 'found'
-      map_photos_returns post, '008000', '!'
+      photo = Photo.make :id => 14, :game_status => 'found'
+      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, '008000', '!'
     end
 
     it "configures a revealed photo differently" do
-      post = Photo.make :id => 14, :game_status => 'revealed'
-      map_photos_returns post, 'E00000', '-'
+      photo = Photo.make :id => 14, :game_status => 'revealed'
+      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, 'E00000', '-'
     end
 
-    def map_photos_returns(photo, color, symbol)
+    it "echos non-default bounds" do
+      photo = Photo.make :id => 14
+      controller.params[:sw] = '1,2'
+      controller.params[:ne] = '3,4'
+      map_photos_returns Bounds.new(1, 3, 2, 4), photo, 'FFFF00', '?'
+    end
+
+    def map_photos_returns(bounds, photo, color, symbol)
       stub(Photo).within { [ photo ] }
       map_photos = controller.map_photos
 
       map_photos[:partial].should == false
-      map_photos[:bounds].should == PhotosController::INITIAL_MAP_BOUNDS
+      map_photos[:bounds].should == bounds
       photos = map_photos[:photos]
       photos.length.should == 1
       photo_out = photos[0]
