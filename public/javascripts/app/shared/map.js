@@ -19,7 +19,7 @@ GWW.map = function () {
       });
     },
 
-    mapsAPIIsLoadedCallback: function (showMarkers) {
+    mapsAPIIsLoadedCallback: function () {
       that.map = new google.maps.Map($('#map_canvas')[0], {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.435),
@@ -43,63 +43,50 @@ GWW.map = function () {
         strokeWeight: 2
       }).setMap(that.map);
 
-      google.maps.event.addListener(that.map, 'idle', this.loadMarkers(showMarkers));
+      google.maps.event.addListener(that.map, 'idle', loadMarkers);
 
       infoWindow = new google.maps.InfoWindow();
 
-    },
-
-    loadMarkers: function () {
-      return function () {
-        if (loadMarkersFromPage) {
-          that.showMarkers(GWW.config);
-          loadMarkersFromPage = false;
-        } else if (! jsonIncludedAllMarkers || ! contains(jsonBounds, that.map.getBounds())) {
-          var bounds = that.map.getBounds();
-          var url = window.location + '_json?' +
-            'sw=' + bounds.getSouthWest().lat() + ',' + bounds.getSouthWest().lng() + '&' +
-            'ne=' + bounds.getNorthEast().lat() + ',' + bounds.getNorthEast().lng();
-          $.getJSON(url, that.showMarkers);
-        }
-      };
-    },
-
-    showMarkers: function (photos) {
-      jsonIncludedAllMarkers = ! photos.partial;
-      jsonBounds = photos.bounds;
-      that.removeMarkers(that.markers);
-      $.each(photos.photos, function (i, photo) {
-        var marker = that.createMarker(photo);
-        marker.symbol = photo.symbol; // Subclasses may use this to manage markers by photo type
-        that.markers.push(marker);
-      })
-    },
-
-    createMarker: function (photo) {
-      var marker = new google.maps.Marker({
-        map: that.map,
-        position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000'
-      });
-      google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
-      return marker;
-    },
-
-    removeMarkers: function (markers) {
-      $.each(markers, function (i, marker) {
-        marker.setMap(null);
-      });
-      markers.length = 0;
     }
 
+  };
+
+  var loadMarkers = function () {
+    if (loadMarkersFromPage) {
+      showMarkers(GWW.config);
+      loadMarkersFromPage = false;
+    } else if (! jsonIncludedAllMarkers || ! contains(jsonBounds, that.map.getBounds())) {
+      var bounds = that.map.getBounds();
+      var url = window.location + '_json?' +
+        'sw=' + bounds.getSouthWest().lat() + ',' + bounds.getSouthWest().lng() + '&' +
+        'ne=' + bounds.getNorthEast().lat() + ',' + bounds.getNorthEast().lng();
+      $.getJSON(url, showMarkers);
+    }
   };
 
   var contains = function(jsonBounds, mapBounds) {
     return(
       jsonBounds.min_lat <= mapBounds.getSouthWest().lat() && mapBounds.getNorthEast().lat() <= jsonBounds.max_lat &&
       jsonBounds.min_long <= mapBounds.getSouthWest().lng() && mapBounds.getNorthEast().lng() <= jsonBounds.max_long);
-  }
-  
+  };
+
+  var showMarkers = function (photos) {
+    jsonIncludedAllMarkers = ! photos.partial;
+    jsonBounds = photos.bounds;
+    $.each(that.markers, function (i, marker) { marker.setMap(null); });
+    that.markers.length = 0;
+    $.each(photos.photos, function (i, photo) {
+      var marker = new google.maps.Marker({
+        map: that.map,
+        position: new google.maps.LatLng(photo.latitude, photo.longitude),
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000'
+      });
+      marker.symbol = photo.symbol; // Subclasses may use this to manage markers by photo type
+      google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
+      that.markers.push(marker);
+    })
+  };
+
   var loadInfoWindow = function (photo, marker) {
     return function () {
       $.ajax({
