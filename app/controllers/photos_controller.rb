@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  include Color
+  include MapSupport
 
   caches_page :index
   def index

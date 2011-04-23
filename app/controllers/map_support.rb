@@ -1,4 +1,4 @@
-module Color
+module MapSupport
   def scaled_red(start_of_range, end_of_range, position)
     scaled(start_of_range, end_of_range, position, [ [ 256, 224 ], [ 192, 0 ], [ 192, 0 ]  ])
   end

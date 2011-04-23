@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Color do
+describe MapSupport do
 
   before do
-    self.extend Color
+    self.extend MapSupport
   end
 
   describe '#scaled_red' do

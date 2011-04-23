@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  include Color
+  include MapSupport
 
   def find
     username = params[:username]
