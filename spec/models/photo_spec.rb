@@ -381,7 +381,7 @@ describe Photo do
     end
 
     it "ignores unmapped photos" do
-      ignores {}
+      ignores({})
     end
 
     it "ignores photos mapped with an accuracy < 12" do
@@ -420,7 +420,7 @@ describe Photo do
       ignores :inferred_latitude => 37, :inferred_longitude => -120
     end
 
-    def ignores(attributes = {})
+    def ignores(attributes)
       photo = Photo.make attributes
       Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
