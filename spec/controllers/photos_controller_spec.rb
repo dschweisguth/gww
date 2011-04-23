@@ -34,12 +34,11 @@ describe PhotosController do
       stub(controller).map_photos { json }
       get :map
 
+      assigns[:json].should == json.to_json
+
       #noinspection RubyResolve
       response.should be_success
       response.should contain /GWW\.config = \{.*\};/
-
-      json_out = ActiveSupport::JSON.decode assigns[:json]
-      json_out.should == json
 
     end
   end
