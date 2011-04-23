@@ -183,7 +183,11 @@ class PeopleController < ApplicationController
       end
     end
 
-    { :partial => false, :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
+    {
+      :partial => false,
+      :bounds => Bounds.new(-90, 90, -180, 180),
+      :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
+    }
   end
   private :photos_for_map
 

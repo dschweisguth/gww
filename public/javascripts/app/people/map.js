@@ -15,6 +15,7 @@ GWW.personMap = (function () {
 
   var showMarkers = function (photos) {
     map.jsonIncludedAllMarkers = ! photos.partial;
+    map.jsonBounds = photos.bounds;
     // TODO Dave use a single list and push up to shared map
     map.removeMarkers(guesses);
     map.removeMarkers(posts);

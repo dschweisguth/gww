@@ -25,7 +25,11 @@ class PhotosController < ApplicationController
     last_dateadded = photos.last.dateadded
     photos = thin photos, 1000, bounds, 20, 6
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
-    { :partial => (photos_count != photos.length), :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ]) }
+    {
+      :partial => (photos_count != photos.length),
+      :bounds => bounds, # TODO Dave test
+      :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
+    }
   end
   private :map_photos
 

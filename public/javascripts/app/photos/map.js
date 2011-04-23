@@ -12,6 +12,7 @@ GWW.photosMap = (function () {
 
   var showMarkers = function (photos) {
     map.jsonIncludedAllMarkers = ! photos.partial;
+    map.jsonBounds = photos.bounds;
     map.removeMarkers(markers);
     $.each(photos.photos, function (i, photo) {
       markers.push(map.createMarker(photo));

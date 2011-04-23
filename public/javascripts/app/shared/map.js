@@ -6,8 +6,8 @@ GWW.map = function () {
   
   var that = {
     map: null,
-
     jsonIncludedAllMarkers: false,
+    jsonBounds: null,
 
     registerOnLoad: function (callbackName) {
       $(function() {
@@ -53,7 +53,7 @@ GWW.map = function () {
         if (loadMarkersFromPage) {
           showMarkers(GWW.config);
           loadMarkersFromPage = false;
-        } else if (! that.jsonIncludedAllMarkers) {
+        } else if (! that.jsonIncludedAllMarkers || ! contains(that.jsonBounds, that.map.getBounds())) {
           var bounds = that.map.getBounds();
           var url = window.location + '_json?' +
             'sw=' + bounds.getSouthWest().lat() + ',' + bounds.getSouthWest().lng() + '&' +
@@ -82,6 +82,12 @@ GWW.map = function () {
 
   };
 
+  var contains = function(jsonBounds, mapBounds) {
+    return(
+      jsonBounds.min_lat <= mapBounds.getSouthWest().lat() && mapBounds.getNorthEast().lat() <= jsonBounds.max_lat &&
+      jsonBounds.min_long <= mapBounds.getSouthWest().lng() && mapBounds.getNorthEast().lng() <= jsonBounds.max_long);
+  }
+  
   var loadInfoWindow = function (photo, marker) {
     return function () {
       $.ajax({
