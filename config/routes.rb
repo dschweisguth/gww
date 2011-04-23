@@ -9,7 +9,7 @@ GWW::Application.routes.draw do
 
   get 'people/find' => 'people#find', :as => :find_person
   get 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people
-  %w(guesses posts map map_json).each do |action| # TODO Dave test
+  %w(guesses posts map map_json).each do |action|
     get "people/:id/#{action}" => "people##{action}", :as => "person_#{action}"
   end
   get 'people/:id/comments/page/:page' => 'people#comments', :as => :person_comments
@@ -20,7 +20,7 @@ GWW::Application.routes.draw do
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', :as => :photos
   resources :photos, :only => [ :show ] do
     get :map_popup, :on => :member
-    get :map, :map_json, :unfound, :unfound_data, :on => :collection # TODO Dave test
+    get :map, :map_json, :unfound, :unfound_data, :on => :collection
   end
 
   resources :guesses, :only => [] do

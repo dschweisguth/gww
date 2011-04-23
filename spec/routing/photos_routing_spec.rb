@@ -8,7 +8,7 @@ describe PhotosController do
       :action => 'index', :sorted_by => 'foo', :order => 'bar', :page => '1') }
   end
 
-  %w{ map unfound unfound_data }.each do |action|
+  %w{ map map_json unfound unfound_data }.each do |action|
     describe action do
       it { should have_named_route "#{action}_photos", "/photos/#{action}" }
       it { should route(:get, "/photos/#{action}").to :action => action }
