@@ -8,6 +8,7 @@ GWW.map = function () {
     map: null,
     jsonIncludedAllMarkers: false,
     jsonBounds: null,
+    markers: [],
 
     registerOnLoad: function (callbackName) {
       $(function() {
@@ -48,19 +49,30 @@ GWW.map = function () {
 
     },
 
-    loadMarkers: function (showMarkers) {
+    loadMarkers: function () {
       return function () {
         if (loadMarkersFromPage) {
-          showMarkers(GWW.config);
+          that.showMarkers(GWW.config);
           loadMarkersFromPage = false;
         } else if (! that.jsonIncludedAllMarkers || ! contains(that.jsonBounds, that.map.getBounds())) {
           var bounds = that.map.getBounds();
           var url = window.location + '_json?' +
             'sw=' + bounds.getSouthWest().lat() + ',' + bounds.getSouthWest().lng() + '&' +
             'ne=' + bounds.getNorthEast().lat() + ',' + bounds.getNorthEast().lng();
-          $.getJSON(url, showMarkers);
+          $.getJSON(url, that.showMarkers);
         }
       };
+    },
+
+    showMarkers: function (photos) {
+      that.map.jsonIncludedAllMarkers = ! photos.partial;
+      that.map.jsonBounds = photos.bounds;
+      that.removeMarkers(that.markers);
+      $.each(photos.photos, function (i, photo) {
+        var marker = that.createMarker(photo);
+        marker.symbol = photo.symbol; // Subclasses may use this to manage markers by photo type
+        that.markers.push(marker);
+      })
     },
 
     createMarker: function (photo) {
