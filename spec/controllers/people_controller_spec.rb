@@ -406,15 +406,15 @@ describe PeopleController do
       returns_post PeopleController::INITIAL_MAP_BOUNDS, 'unfound', 'FFFF00', '?'
     end
 
-    it "displays an unconfirmed like an unfound" do
+    it "configures an unconfirmed post like an unfound" do
       returns_post PeopleController::INITIAL_MAP_BOUNDS, 'unconfirmed', 'FFFF00', '?'
     end
 
-    it "displays a found differently" do
+    it "configures a found differently" do
       returns_post PeopleController::INITIAL_MAP_BOUNDS, 'found', '0000FC', '?'
     end
 
-    it "displays a revealed photo differently" do
+    it "configures a revealed post differently" do
       returns_post PeopleController::INITIAL_MAP_BOUNDS, 'revealed', 'E00000', '-'
     end
 
