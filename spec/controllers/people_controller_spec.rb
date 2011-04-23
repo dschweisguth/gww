@@ -65,7 +65,7 @@ describe PeopleController do
       response.should be_success
       response.should have_selector 'a', :href => person_path(guesser), :content => 'guesser_username'
       response.should have_selector 'a', :href => person_path(poster), :content => 'poster_username'
-      response.should have_selector 'td', :content => '%.3f' % guesser[:bias].to_s
+      response.should have_selector 'td', :content => '%.3f' % guesser[:bias]
 
     end
   end
