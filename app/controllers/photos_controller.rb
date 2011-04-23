@@ -31,7 +31,6 @@ class PhotosController < ApplicationController
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end
-  private :map_photos
 
   def get_bounds
     if params[:sw]

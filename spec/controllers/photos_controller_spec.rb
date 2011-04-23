@@ -70,6 +70,43 @@ describe PhotosController do
 
   end
 
+  describe '#map_photos' do
+    it "returns a found photo" do
+      post = Photo.make :id => 14
+      map_photos_returns post, 'FFFF00', '?'
+    end
+
+    it "configures an unconfirmed photo like an unfound" do
+      post = Photo.make :id => 14, :game_status => 'unconfirmed'
+      map_photos_returns post, 'FFFF00', '?'
+    end
+
+    it "configures a found differently" do
+      post = Photo.make :id => 14, :game_status => 'found'
+      map_photos_returns post, '008000', '!'
+    end
+
+    it "configures a revealed photo differently" do
+      post = Photo.make :id => 14, :game_status => 'revealed'
+      map_photos_returns post, 'E00000', '-'
+    end
+
+    def map_photos_returns(photo, color, symbol)
+      stub(Photo).within { [ photo ] }
+      map_photos = controller.map_photos
+
+      map_photos[:partial].should == false
+      photos = map_photos[:photos]
+      photos.length.should == 1
+      photo_out = photos[0]
+      photo_out['id'].should == photo.id
+      photo_out['color'].should == color
+      photo_out['symbol'].should == symbol
+
+    end
+
+  end
+
   describe '#map_popup' do
     it "renders the partial" do
       photo = Photo.make :dateadded => Time.local(2011)
