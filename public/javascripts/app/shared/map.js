@@ -79,11 +79,11 @@ GWW.map = function () {
       var marker = new google.maps.Marker({
         map: that.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000'
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
+        symbol: photo.symbol // Subclasses may use this to manage markers by photo type
       });
-      marker.symbol = photo.symbol; // Subclasses may use this to manage markers by photo type
-      google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
       that.markers.push(marker);
+      google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
     })
   };
 
