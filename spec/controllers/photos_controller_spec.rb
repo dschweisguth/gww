@@ -38,7 +38,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should contain /GWW\.config = \{.*\};/
+      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
   end
