@@ -472,7 +472,7 @@ describe PeopleController do
         :dateadded => 2.days.ago
       guess = Guess.make :photo => guessed_photo, :person => @person
       stub(Guess).all_mapped(@person.id, bounds) { [ guess ] }
-      stub(controller).thin([ post, guessed_photo ], bounds, 20) { [ post ] }
+      stub(controller).thin([ post, guessed_photo ], bounds) { [ post ] }
       map_photos = controller.map_photos @person.id
 
       map_photos[:partial].should == true

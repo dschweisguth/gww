@@ -13,7 +13,7 @@ describe MapSupport do
       photo2 = Photo.make :id => 2, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 2.days.ago
       stub(self).too_many { 0 }
       stub(self).photos_per_bin { 1 }
-      thin([ photo1, photo2 ], bounds, 20).should == [ photo1 ]
+      thin([ photo1, photo2 ], bounds).should == [ photo1 ]
     end
 
     it "does nothing if the number of photos is below a threshold" do
@@ -22,7 +22,7 @@ describe MapSupport do
       photo2 = Photo.make :id => 2, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 2.days.ago
       stub(self).too_many { 2 }
       stub(self).photos_per_bin { 1 }
-      thin([ photo1, photo2 ], bounds, 20).should == [ photo1, photo2 ]
+      thin([ photo1, photo2 ], bounds).should == [ photo1, photo2 ]
     end
 
   end

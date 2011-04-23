@@ -1,6 +1,7 @@
 module MapSupport
 
   INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
+  BINS_PER_AXIS = 20
 
   def get_bounds
     if params[:sw]
@@ -12,11 +13,11 @@ module MapSupport
     end
   end
 
-  def thin(photos, bounds, bins_per_axis)
+  def thin(photos, bounds)
     if photos.length <= too_many
       return photos
     end
-    binned_photos = photos.group_by { |photo| bin photo, bounds, bins_per_axis }
+    binned_photos = photos.group_by { |photo| bin photo, bounds }
     thinned_photos = []
     binned_photos.each_value do |bin|
       if bin.length > photos_per_bin
@@ -35,9 +36,9 @@ module MapSupport
     6
   end
 
-  def bin(photo, bounds, bins_per_axis)
-    [ ((photo.latitude - bounds.min_lat) / (bounds.max_lat - bounds.min_lat) * bins_per_axis).to_i,
-      ((photo.longitude - bounds.min_long) / (bounds.max_long - bounds.min_long) * bins_per_axis).to_i ]
+  def bin(photo, bounds)
+    [ ((photo.latitude - bounds.min_lat) / (bounds.max_lat - bounds.min_lat) * BINS_PER_AXIS).to_i,
+      ((photo.longitude - bounds.min_long) / (bounds.max_long - bounds.min_long) * BINS_PER_AXIS).to_i ]
   end
   private :bin
 

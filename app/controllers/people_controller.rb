@@ -160,7 +160,7 @@ class PeopleController < ApplicationController
     photos = posts + (guesses.map &:photo)
     photos_count = photos.length
     use_inferred_geocode_if_necessary(photos)
-    photos = thin photos, bounds, 20
+    photos = thin photos, bounds
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded, first_guessed_at, last_guessed_at }
     as_json photos_count != photos.length, bounds, photos
 

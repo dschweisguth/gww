@@ -102,7 +102,7 @@ describe PhotosController do
       photo1 = Photo.make :id => 1, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 1.day.ago
       photo2 = Photo.make :id => 2, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 2.days.ago
       stub(Photo).within { [ photo1, photo2 ] }
-      stub(controller).thin([ photo1, photo2 ], bounds, 20) { [ photo1 ] }
+      stub(controller).thin([ photo1, photo2 ], bounds) { [ photo1 ] }
       map_photos = controller.map_photos
 
       map_photos[:partial].should == true

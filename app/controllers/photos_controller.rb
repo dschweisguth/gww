@@ -22,7 +22,7 @@ class PhotosController < ApplicationController
     photos_count = photos.length
     first_dateadded = photos.first.dateadded
     last_dateadded = photos.last.dateadded
-    photos = thin photos, bounds, 20
+    photos = thin photos, bounds
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
     as_json photos_count != photos.length, bounds, photos
   end
