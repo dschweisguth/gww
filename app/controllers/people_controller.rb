@@ -158,11 +158,15 @@ class PeopleController < ApplicationController
     guesses.each { |guess| guess.photo[:guessed_at] = guess.commented_at }
 
     photos = posts + (guesses.map &:photo)
+    photos_count = photos.length
     photos.each do |photo|
       if ! photo.latitude
         photo.latitude = photo.inferred_latitude
         photo.longitude = photo.inferred_longitude
       end
+    end
+    photos = thin photos, bounds, 20
+    photos.each do |photo|
       if photo[:guessed_at]
         photo[:color] = scaled_green first_guessed_at, last_guessed_at, photo[:guessed_at]
         photo[:symbol] = '!'
@@ -181,7 +185,7 @@ class PeopleController < ApplicationController
     end
 
     {
-      :partial => false,
+      :partial => (photos_count != photos.length),
       :bounds => bounds,
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
