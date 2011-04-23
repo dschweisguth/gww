@@ -2,12 +2,12 @@ GWW = {};
 
 GWW.map = function () {
   var loadMarkersFromPage = true;
+  var jsonIncludedAllMarkers = false;
+  var jsonBounds = null;
   var infoWindow = null;
   
   var that = {
     map: null,
-    jsonIncludedAllMarkers: false,
-    jsonBounds: null,
     markers: [],
 
     registerOnLoad: function (callbackName) {
@@ -54,7 +54,7 @@ GWW.map = function () {
         if (loadMarkersFromPage) {
           that.showMarkers(GWW.config);
           loadMarkersFromPage = false;
-        } else if (! that.jsonIncludedAllMarkers || ! contains(that.jsonBounds, that.map.getBounds())) {
+        } else if (! jsonIncludedAllMarkers || ! contains(jsonBounds, that.map.getBounds())) {
           var bounds = that.map.getBounds();
           var url = window.location + '_json?' +
             'sw=' + bounds.getSouthWest().lat() + ',' + bounds.getSouthWest().lng() + '&' +
@@ -65,8 +65,8 @@ GWW.map = function () {
     },
 
     showMarkers: function (photos) {
-      that.map.jsonIncludedAllMarkers = ! photos.partial;
-      that.map.jsonBounds = photos.bounds;
+      jsonIncludedAllMarkers = ! photos.partial;
+      jsonBounds = photos.bounds;
       that.removeMarkers(that.markers);
       $.each(photos.photos, function (i, photo) {
         var marker = that.createMarker(photo);
