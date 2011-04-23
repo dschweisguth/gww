@@ -192,7 +192,6 @@ class Photo < ActiveRecord::Base
   end
   private_class_method :order_by
 
-  # TODO Dave test
   def self.within(bounds)
     Photo.where('accuracy >= 12') \
       .where('? < latitude and latitude < ? and ? < longitude and longitude < ?',

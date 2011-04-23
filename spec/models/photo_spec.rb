@@ -496,6 +496,39 @@ describe Photo do
 
   end
 
+  describe '.within' do
+    it "returns photos within the given bounds" do
+      photo = Photo.make :latitude => 1, :longitude => 4, :accuracy => 12
+      Photo.within(Bounds.new 0, 2, 3, 5).should == [ photo ]
+    end
+
+    it "ignores photos with insufficent accuracy" do
+      Photo.make :latitude => 1, :longitude => 4, :accuracy => 11
+      Photo.within(Bounds.new 0, 2, 3, 5).should == []
+    end
+
+    it "ignores photos with latitude below the minimum" do
+      Photo.make :latitude => -1, :longitude => 4, :accuracy => 12
+      Photo.within(Bounds.new 0, 2, 3, 5).should == []
+    end
+
+    it "ignores photos with latitude above the maximum" do
+      Photo.make :latitude => 3, :longitude => 4, :accuracy => 12
+      Photo.within(Bounds.new 0, 2, 3, 5).should == []
+    end
+
+    it "ignores photos with longitude below the minimum" do
+      Photo.make :latitude => 1, :longitude => 2, :accuracy => 12
+      Photo.within(Bounds.new 0, 2, 3, 5).should == []
+    end
+
+    it "ignores photos with longitude above the maximum" do
+      Photo.make :latitude => 1, :longitude => 6, :accuracy => 12
+      Photo.within(Bounds.new 0, 2, 3, 5).should == []
+    end
+
+  end
+
   describe '.unfound_or_unconfirmed' do
     %w(unfound unconfirmed).each do |game_status|
       it "returns #{game_status} photos" do
