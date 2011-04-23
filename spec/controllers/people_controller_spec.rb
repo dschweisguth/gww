@@ -503,4 +503,67 @@ describe PeopleController do
 
   end
 
+  describe '#map_photos' do
+    before do
+      @person = Person.make :id => 1
+      stub(Person).find(@person.id.to_s) { @person }
+    end
+
+    it "returns a post" do
+      returns_post 'unfound', 'FFFF00', '?'
+    end
+
+    it "displays an unconfirmed like an unfound" do
+      returns_post 'unconfirmed', 'FFFF00', '?'
+    end
+
+    it "displays a found differently" do
+      returns_post 'found', '0000FC', '?'
+    end
+
+    it "displays a revealed photo differently" do
+      returns_post 'revealed', 'E00000', '-'
+    end
+
+    def returns_post(game_status, color, symbol)
+      post = Photo.make :id => 14, :person => @person, :game_status => game_status
+      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
+      stub(Guess).all_mapped(@person.id.to_s) { [] }
+      controller.map_photos(@person.id.to_s).should == {
+        :partial => false,
+        :bounds => Bounds.new(-90, 90, -180, 180),
+        :photos => [
+          {
+            'id' => post.id,
+            'latitude' => post.latitude,
+            'longitude' => post.longitude,
+            'color' => color,
+            'symbol' => symbol
+          }
+        ]
+      }
+    end
+
+    it "returns a guess" do
+      stub(Photo).all_mapped(@person.id.to_s) { [] }
+      guessed_photo = Photo.make :id => 15
+      guess = Guess.make :photo => guessed_photo, :person => @person
+      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      controller.map_photos(@person.id.to_s).should == {
+        :partial => false,
+        :bounds => Bounds.new(-90, 90, -180, 180),
+        :photos => [
+          {
+            'id' => guessed_photo.id,
+            'latitude' => guessed_photo.latitude,
+            'longitude' => guessed_photo.longitude,
+            'color' => '008000',
+            'symbol' => '!'
+          }
+        ]
+      }
+    end
+
+  end
+
 end

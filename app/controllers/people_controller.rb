@@ -189,6 +189,5 @@ class PeopleController < ApplicationController
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end
-  private :map_photos
 
 end
