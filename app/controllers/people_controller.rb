@@ -141,7 +141,6 @@ class PeopleController < ApplicationController
     @json = map_photos(params[:id]).to_json
   end
 
-  # TODO Dave test
   def map_json
     render :json => map_photos(params[:id])
   end

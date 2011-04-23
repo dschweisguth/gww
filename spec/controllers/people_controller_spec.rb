@@ -503,6 +503,19 @@ describe PeopleController do
 
   end
 
+  describe '#map_json' do
+    it "renders the page" do
+      json = { 'property' => 'value' }
+      stub(controller).map_photos(1) { json }
+      get :map_json, :id => 1
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.body.should == json.to_json
+
+    end
+  end
+
   describe '#map_photos' do
     before do
       @person = Person.make :id => 1
