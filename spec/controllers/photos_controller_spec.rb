@@ -58,34 +58,29 @@ describe PhotosController do
 
   describe '#map_photos' do
     it "returns an unfound photo" do
-      photo = Photo.make :id => 14
-      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, 'FFFF00', '?'
+      returns PhotosController::INITIAL_MAP_BOUNDS, 'unfound', 'FFFF00', '?'
     end
 
     it "configures an unconfirmed photo like an unfound" do
-      photo = Photo.make :id => 14, :game_status => 'unconfirmed'
-      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, 'FFFF00', '?'
+      returns PhotosController::INITIAL_MAP_BOUNDS, 'unconfirmed', 'FFFF00', '?'
     end
 
     it "configures a found differently" do
-      photo = Photo.make :id => 14, :game_status => 'found'
-      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, '008000', '!'
+      returns PhotosController::INITIAL_MAP_BOUNDS, 'found', '008000', '!'
     end
 
     it "configures a revealed photo differently" do
-      photo = Photo.make :id => 14, :game_status => 'revealed'
-      map_photos_returns PhotosController::INITIAL_MAP_BOUNDS, photo, 'E00000', '-'
+      returns PhotosController::INITIAL_MAP_BOUNDS, 'revealed', 'E00000', '-'
     end
 
     it "echos non-default bounds" do
-      photo = Photo.make :id => 14
       controller.params[:sw] = '1,2'
       controller.params[:ne] = '3,4'
-      map_photos_returns Bounds.new(1, 3, 2, 4), photo, 'FFFF00', '?'
+      returns Bounds.new(1, 3, 2, 4), 'unfound', 'FFFF00', '?'
     end
 
-    def map_photos_returns(bounds, photo, color, symbol)
-      # TODO Dave move photo creation here
+    def returns(bounds, game_status, color, symbol)
+      photo = Photo.make :id => 14, :game_status => game_status
       stub(Photo).within { [ photo ] }
       controller.map_photos.should == {
         :partial => false,
@@ -102,7 +97,7 @@ describe PhotosController do
       }
     end
 
-    it "thins out excessively dense photos" do
+    it "thins out photos in dense areas of the map" do
       photo1 = Photo.make :id => 14,
         :latitude => PhotosController::INITIAL_MAP_BOUNDS.min_lat,
         :longitude => PhotosController::INITIAL_MAP_BOUNDS.min_long,
@@ -111,7 +106,6 @@ describe PhotosController do
         :latitude => PhotosController::INITIAL_MAP_BOUNDS.min_lat,
         :longitude => PhotosController::INITIAL_MAP_BOUNDS.min_long,
         :dateadded => 2.days.ago
-
       stub(Photo).within { [ photo1, photo2 ] }
       stub(controller).too_many { 0 }
       stub(controller).photos_per_bin { 1 }
