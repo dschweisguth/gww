@@ -48,9 +48,9 @@ class PhotosController < ApplicationController
     thinned_photos = []
     binned_photos.each_value do |bin|
       if bin.length > photos_per_bin
-        bin = bin.sort { |a, b| b.dateadded <=> a.dateadded }
+        bin = bin.sort { |a, b| b.dateadded <=> a.dateadded }.first photos_per_bin
       end
-      thinned_photos += bin.first photos_per_bin
+      thinned_photos += bin
     end
     thinned_photos
   end
