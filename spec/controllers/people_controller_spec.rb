@@ -113,7 +113,7 @@ describe PeopleController do
       @person = Person.make :id => 1
       @person[:score] = 1 # for the high_scorers methods
       @person[:posts] = 1 # for the top_posters methods
-      stub(Person).find(@person.id.to_s) { @person }
+      stub(Person).find(@person.id) { @person }
       stub(Person).standing { [ 1, false ] }
       stub(Person).posts_standing { [ 1, false ] }
 
@@ -125,7 +125,7 @@ describe PeopleController do
     it "renders the page" do
       stub_guesses
       stub_posts
-      get :show, :id => @person.id.to_s
+      get :show, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -150,7 +150,7 @@ describe PeopleController do
 
       stub_posts
       
-      get :show, :id => @person.id.to_s
+      get :show, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -183,7 +183,7 @@ describe PeopleController do
       stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
 
-      get :show, :id => @person.id.to_s
+      get :show, :id => @person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -303,9 +303,9 @@ describe PeopleController do
   describe '#guesses' do
     it 'renders the page' do
       person = Person.make :id => 1
-      stub(Person).find(person.id.to_s) { person }
+      stub(Person).find(person.id) { person }
       stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(:person => person) ] }
-      get :guesses, :id => person.id.to_s
+      get :guesses, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -318,10 +318,10 @@ describe PeopleController do
   describe '#posts' do
     it 'renders the page' do
       person = Person.make :id => 1
-      stub(Person).find(person.id.to_s) { person }
+      stub(Person).find(person.id) { person }
       photo = Photo.make :person => person
       stub(Photo).where.stub!.order.stub!.includes { [ photo ] }
-      get :posts, :id => person.id.to_s
+      get :posts, :id => person.id
 
       #noinspection RubyResolve
       response.should be_success
@@ -337,7 +337,7 @@ describe PeopleController do
   describe '#comments' do
     it 'renders the page' do
       person = Person.make :id => 1
-      stub(Person).find(person.id.to_s) { person }
+      stub(Person).find(person.id) { person }
 
       photo = Photo.make
       stub(Comment).find_by_sql { [ photo ] }
@@ -348,7 +348,7 @@ describe PeopleController do
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).paginate { paginated_photos }
 
-      get :comments, :id => person.id.to_s, :page => "2"
+      get :comments, :id => person.id, :page => "2"
 
       #noinspection RubyResolve
       response.should be_success
@@ -399,7 +399,7 @@ describe PeopleController do
   describe '#map_photos' do
     before do
       @person = Person.make :id => 1
-      stub(Person).find(@person.id.to_s) { @person }
+      stub(Person).find(@person.id) { @person }
     end
 
     it "returns a post" do
@@ -419,11 +419,11 @@ describe PeopleController do
     end
 
     it "returns a guess" do
-      stub(Photo).all_mapped(@person.id.to_s, PeopleController::INITIAL_MAP_BOUNDS) { [] }
+      stub(Photo).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS) { [] }
       guessed_photo = Photo.make :id => 15
       guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id.to_s, PeopleController::INITIAL_MAP_BOUNDS) { [ guess ] }
-      controller.map_photos(@person.id.to_s).should == {
+      stub(Guess).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS) { [ guess ] }
+      controller.map_photos(@person.id).should == {
         :partial => false,
         :bounds => PeopleController::INITIAL_MAP_BOUNDS,
         :photos => [
@@ -446,9 +446,9 @@ describe PeopleController do
 
     def returns_post(bounds, game_status, color, symbol)
       post = Photo.make :id => 14, :person => @person, :game_status => game_status
-      stub(Photo).all_mapped(@person.id.to_s, bounds) { [ post ] }
-      stub(Guess).all_mapped(@person.id.to_s, bounds) { [] }
-      controller.map_photos(@person.id.to_s).should == {
+      stub(Photo).all_mapped(@person.id, bounds) { [ post ] }
+      stub(Guess).all_mapped(@person.id, bounds) { [] }
+      controller.map_photos(@person.id).should == {
         :partial => false,
         :bounds => bounds,
         :photos => [
