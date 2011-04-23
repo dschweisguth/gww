@@ -146,7 +146,9 @@ class PeopleController < ApplicationController
   end
 
   def map_photos(person_id)
-    posts = Photo.all_mapped(person_id).to_a
+    bounds = get_bounds
+
+    posts = Photo.all_mapped(person_id, bounds).to_a
     if ! posts.empty?
       first_dateadded = posts.first.dateadded
       last_dateadded = posts.last.dateadded
@@ -164,7 +166,7 @@ class PeopleController < ApplicationController
       end
     end
 
-    guesses = Guess.all_mapped(person_id).to_a
+    guesses = Guess.all_mapped(person_id, bounds).to_a
     if ! guesses.empty?
       first_guessed_at = guesses.first.commented_at
       last_guessed_at = guesses.last.commented_at
@@ -184,7 +186,7 @@ class PeopleController < ApplicationController
 
     {
       :partial => false,
-      :bounds => Bounds.new(-90, 90, -180, 180),
+      :bounds => bounds,
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end

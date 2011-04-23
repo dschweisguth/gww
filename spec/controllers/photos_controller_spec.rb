@@ -85,6 +85,7 @@ describe PhotosController do
     end
 
     def map_photos_returns(bounds, photo, color, symbol)
+      # TODO Dave move photo creation here
       stub(Photo).within { [ photo ] }
       controller.map_photos.should == {
         :partial => false,

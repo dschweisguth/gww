@@ -403,48 +403,29 @@ describe PeopleController do
     end
 
     it "returns a post" do
-      returns_post 'unfound', 'FFFF00', '?'
+      returns_post PeopleController::INITIAL_MAP_BOUNDS, 'unfound', 'FFFF00', '?'
     end
 
     it "displays an unconfirmed like an unfound" do
-      returns_post 'unconfirmed', 'FFFF00', '?'
+      returns_post PeopleController::INITIAL_MAP_BOUNDS, 'unconfirmed', 'FFFF00', '?'
     end
 
     it "displays a found differently" do
-      returns_post 'found', '0000FC', '?'
+      returns_post PeopleController::INITIAL_MAP_BOUNDS, 'found', '0000FC', '?'
     end
 
     it "displays a revealed photo differently" do
-      returns_post 'revealed', 'E00000', '-'
-    end
-
-    def returns_post(game_status, color, symbol)
-      post = Photo.make :id => 14, :person => @person, :game_status => game_status
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      stub(Guess).all_mapped(@person.id.to_s) { [] }
-      controller.map_photos(@person.id.to_s).should == {
-        :partial => false,
-        :bounds => Bounds.new(-90, 90, -180, 180),
-        :photos => [
-          {
-            'id' => post.id,
-            'latitude' => post.latitude,
-            'longitude' => post.longitude,
-            'color' => color,
-            'symbol' => symbol
-          }
-        ]
-      }
+      returns_post PeopleController::INITIAL_MAP_BOUNDS, 'revealed', 'E00000', '-'
     end
 
     it "returns a guess" do
-      stub(Photo).all_mapped(@person.id.to_s) { [] }
+      stub(Photo).all_mapped(@person.id.to_s, PeopleController::INITIAL_MAP_BOUNDS) { [] }
       guessed_photo = Photo.make :id => 15
       guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
+      stub(Guess).all_mapped(@person.id.to_s, PeopleController::INITIAL_MAP_BOUNDS) { [ guess ] }
       controller.map_photos(@person.id.to_s).should == {
         :partial => false,
-        :bounds => Bounds.new(-90, 90, -180, 180),
+        :bounds => PeopleController::INITIAL_MAP_BOUNDS,
         :photos => [
           {
             'id' => guessed_photo.id,
@@ -452,6 +433,31 @@ describe PeopleController do
             'longitude' => guessed_photo.longitude,
             'color' => '008000',
             'symbol' => '!'
+          }
+        ]
+      }
+    end
+
+    it "echos non-default bounds" do
+      controller.params[:sw] = '1,2'
+      controller.params[:ne] = '3,4'
+      returns_post Bounds.new(1, 3, 2, 4), 'revealed', 'E00000', '-'
+    end
+
+    def returns_post(bounds, game_status, color, symbol)
+      post = Photo.make :id => 14, :person => @person, :game_status => game_status
+      stub(Photo).all_mapped(@person.id.to_s, bounds) { [ post ] }
+      stub(Guess).all_mapped(@person.id.to_s, bounds) { [] }
+      controller.map_photos(@person.id.to_s).should == {
+        :partial => false,
+        :bounds => bounds,
+        :photos => [
+          {
+            'id' => post.id,
+            'latitude' => post.latitude,
+            'longitude' => post.longitude,
+            'color' => color,
+            'symbol' => symbol
           }
         ]
       }

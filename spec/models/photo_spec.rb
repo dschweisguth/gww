@@ -362,29 +362,74 @@ describe Photo do
 
   describe '.all_mapped' do
     it "lists photos" do
-      photo = Photo.make :accuracy => 12
-      Photo.all_mapped(photo.person.id).should == [ photo ]
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == [ photo ]
     end
 
     it "lists auto-mapped photos" do
-      photo = Photo.make :inferred_latitude => 37
-      Photo.all_mapped(photo.person.id).should == [ photo ]
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == [ photo ]
     end
 
     it "ignores other people's photos" do
-      Photo.make :accuracy => 12, :inferred_latitude => 37
+      Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       other_person = Person.make
-      Photo.all_mapped(other_person.id).should == []
+      Photo.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
 
     it "ignores unmapped photos" do
       photo = Photo.make
-      Photo.all_mapped(photo.person.id).should == []
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
 
     it "ignores photos mapped with an accuracy < 12" do
-      photo = Photo.make :accuracy => 11
-      Photo.all_mapped(photo.person.id).should == []
+      photo = Photo.make :accuracy => 11, :latitude => 37, :longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores mapped photos south of the minimum latitude" do
+      photo = Photo.make :accuracy => 12, :latitude => 35, :longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores mapped photos north of the maximum latitude" do
+      photo = Photo.make :accuracy => 12, :latitude => 39, :longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores mapped photos west of the minimum longitude" do
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -124
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores mapped photos east of the maximum longitude" do
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -120
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores photos mapped with an accuracy < 12" do
+      photo = Photo.make :accuracy => 11, :latitude => 37, :longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores auto-mapped photos south of the minimum latitude" do
+      photo = Photo.make :inferred_latitude => 35, :inferred_longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores auto-mapped photos north of the maximum latitude" do
+      photo = Photo.make :inferred_latitude => 39, :inferred_longitude => -122
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores auto-mapped photos west of the minimum longitude" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -124
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+    end
+
+    it "ignores auto-mapped photos east of the maximum longitude" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -120
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
 
   end

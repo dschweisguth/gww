@@ -1,4 +1,46 @@
 module MapSupport
+
+  INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
+
+  def get_bounds
+    if params[:sw]
+      sw = params[:sw].split(',').map &:to_f
+      ne = params[:ne].split(',').map &:to_f
+      Bounds.new sw[0], ne[0], sw[1], ne[1]
+    else
+      INITIAL_MAP_BOUNDS
+    end
+  end
+
+  def thin(photos, bounds, bins_per_axis)
+    if photos.length <= too_many
+      return photos
+    end
+    binned_photos = photos.group_by { |photo| bin photo, bounds, bins_per_axis }
+    thinned_photos = []
+    binned_photos.each_value do |bin|
+      if bin.length > photos_per_bin
+        bin = bin.sort { |a, b| b.dateadded <=> a.dateadded }.first photos_per_bin
+      end
+      thinned_photos += bin
+    end
+    thinned_photos
+  end
+
+  def too_many
+    1000
+  end
+
+  def photos_per_bin
+    6
+  end
+
+  def bin(photo, bounds, bins_per_axis)
+    [ ((photo.latitude - bounds.min_lat) / (bounds.max_lat - bounds.min_lat) * bins_per_axis).to_i,
+      ((photo.longitude - bounds.min_long) / (bounds.max_long - bounds.min_long) * bins_per_axis).to_i ]
+  end
+  private :bin
+
   def scaled_red(start_of_range, end_of_range, position)
     scaled(start_of_range, end_of_range, position, [ [ 256, 224 ], [ 192, 0 ], [ 192, 0 ]  ])
   end

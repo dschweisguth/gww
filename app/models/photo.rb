@@ -139,11 +139,17 @@ class Photo < ActiveRecord::Base
   end
 
   def self.all_mapped_count(poster_id)
-    all_mapped_base(poster_id).count
+    where(:person_id => poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
   end
 
-  def self.all_mapped(poster_id)
-    all_mapped_base(poster_id).order(:dateadded)
+  def self.all_mapped(poster_id, bounds)
+    where(:person_id => poster_id) \
+      .where(
+        '(accuracy >= 12 and ? < latitude and latitude < ? and ? < longitude and longitude < ?) or ' +
+          '(? < inferred_latitude and inferred_latitude < ? and ? < inferred_longitude and inferred_longitude < ?)',
+        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
+        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
+      .order(:dateadded)
   end
 
   def self.all_mapped_base(poster_id)

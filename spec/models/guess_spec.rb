@@ -295,35 +295,38 @@ describe Guess do
 
   describe '.all_mapped' do
     it "returns the person's guesses of mapped photos" do
-      photo = Photo.make :accuracy => 12
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       guess = Guess.make :photo => photo
-      Guess.all_mapped(guess.person.id).should == [ guess ]
+      Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == [ guess ]
     end
 
     it "returns the person's guesses of auto-mapped photos" do
-      photo = Photo.make :inferred_latitude => 37
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
       guess = Guess.make :photo => photo
-      Guess.all_mapped(guess.person.id).should == [ guess ]
+      Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == [ guess ]
     end
 
     it "ignores others' guesses" do
-      photo = Photo.make :accuracy => 12
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       Guess.make :photo => photo
       other_person = Person.make
-      Guess.all_mapped(other_person.id).should == []
+      Guess.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
 
     it "ignores guesses of unmapped photos" do
       photo = Photo.make
       guess = Guess.make :photo => photo
-      Guess.all_mapped(guess.person.id).should == []
+      Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
 
     it "ignores guesses of photos mapped with insufficient accuracy" do
-      photo = Photo.make :accuracy => 11
+      photo = Photo.make :accuracy => 11, :latitude => 37, :longitude => -122
       guess = Guess.make :photo => photo
-      Guess.all_mapped(guess.person.id).should == []
+      Guess.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121)).should == []
     end
+
+    # TODO Dave more tests
+    # TODO Dave refactor
 
   end
 
