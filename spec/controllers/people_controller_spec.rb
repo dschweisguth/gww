@@ -361,16 +361,16 @@ describe PeopleController do
   end
 
   describe '#map' do
-    before do
-      @person = Person.make :id => 1
-      stub(Person).find(@person.id.to_s) { @person }
-    end
-
     it "renders the page" do
-      stub_mapped_counts 1, 1
-      post = stub_unfound
-      guessed_photo = stub_guessed_photo
-      get :map, :id => @person.id.to_s
+      person = Person.make :id => 1
+      stub(Person).find(person.id) { person }
+      stub(Photo).all_mapped_count(person.id) { 1 }
+      stub(Guess).all_mapped_count(person.id) { 1 }
+      json = { 'property' => 'value' }
+      stub(controller).map_photos(person.id) { json }
+      get :map, :id => person.id
+
+      assigns[:json].should == json.to_json
 
       #noinspection RubyResolve
       response.should be_success
@@ -378,129 +378,9 @@ describe PeopleController do
       response.should have_selector 'label', :content => '1 mapped post (?, -)'
       response.should have_selector 'input', :id => 'guesses'
       response.should have_selector 'label', :content => '1 mapped guess (!)'
-      response.should contain /GWW\.config = \{.*\};/
-
-      photos = get_photos_from_json
-      photos.length.should == 2
-      decoded_photo_looks_unfound_or_unconfirmed photos[0], post
-      decoded_photo_looks_guessed photos[1], guessed_photo
+      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
-
-    it "shows only the guess count if there are no posts" do
-      stub_mapped_counts 0, 1
-      stub(Photo).all_mapped(@person.id.to_s) { [] }
-      guessed_photo = stub_guessed_photo
-      get :map, :id => @person.id.to_s
-
-      #noinspection RubyResolve
-      response.should be_success
-      response.should_not have_selector 'input', :id => 'posts'
-      response.should_not contain 'mapped post'
-      response.should_not have_selector 'input', :id => 'guesses'
-      response.should contain '1 mapped guess'
-
-      photos = get_photos_from_json
-      photos.length.should == 1
-      decoded_photo_looks_guessed photos[0], guessed_photo
-
-    end
-
-    it "shows only the post count if there are no guesses" do
-      stub_mapped_counts 1, 0
-      post = stub_unfound
-      stub(Guess).all_mapped(@person.id.to_s) { [] }
-      get :map, :id => @person.id.to_s
-
-      #noinspection RubyResolve
-      response.should be_success
-      response.should_not have_selector 'input', :id => 'posts'
-      response.should contain '1 mapped post'
-      response.should_not have_selector 'input', :id => 'guesses'
-      response.should_not contain 'mapped guess'
-
-      photos = get_photos_from_json
-      photos.length.should == 1
-      decoded_photo_looks_unfound_or_unconfirmed photos[0], post
-
-    end
-
-    it "displays an unconfirmed like an unfound" do
-      stub_mapped_counts 1, 1
-      post = Photo.make :id => 14, :person => @person, :game_status => 'unconfirmed'
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      get :map, :id => @person.id.to_s
-
-      photos = get_photos_from_json
-      photos.length.should == 1
-      decoded_photo_looks_unfound_or_unconfirmed photos[0], post
-
-    end
-
-    it "displays a found differently" do
-      stub_mapped_counts 1, 1
-      post = Photo.make :id => 14, :person => @person, :game_status => 'found'
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      get :map, :id => @person.id.to_s
-
-      photos = get_photos_from_json
-      photos.length.should == 1
-      photo = photos[0]
-      photo['color'].should == '0000FC'
-      photo['symbol'].should == '?'
-
-    end
-
-    it "displays a revealed photo differently" do
-      stub_mapped_counts 1, 1
-      post = Photo.make :id => 14, :person => @person, :game_status => 'revealed'
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      get :map, :id => @person.id.to_s
-
-      photos = get_photos_from_json
-      photos.length.should == 1
-      photo = photos[0]
-      photo['color'].should == 'E00000'
-      photo['symbol'].should == '-'
-
-    end
-
-    def stub_mapped_counts(post_count, guess_count)
-      stub(Photo).all_mapped_count(@person.id.to_s) { post_count }
-      stub(Guess).all_mapped_count(@person.id.to_s) { guess_count }
-    end
-
-    def stub_unfound
-      post = Photo.make :id => 14, :person => @person
-      stub(Photo).all_mapped(@person.id.to_s) { [ post ] }
-      post
-    end
-
-    def stub_guessed_photo
-      guessed_photo = Photo.make :id => 15
-      guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id.to_s) { [ guess ] }
-      guessed_photo
-    end
-
-    def get_photos_from_json
-      json = ActiveSupport::JSON.decode assigns[:json]
-      json['partial'].should == false
-      json['photos']
-    end
-
-    def decoded_photo_looks_unfound_or_unconfirmed(decoded_post, post)
-      decoded_post['id'].should == post.id
-      decoded_post['color'].should == 'FFFF00'
-      decoded_post['symbol'].should == '?'
-    end
-
-    def decoded_photo_looks_guessed(decoded_guessed_photo, guessed_photo)
-      decoded_guessed_photo['id'].should == guessed_photo.id
-      decoded_guessed_photo['color'].should == '008000'
-      decoded_guessed_photo['symbol'].should == '!'
-    end
-
   end
 
   describe '#map_json' do
