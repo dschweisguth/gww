@@ -86,17 +86,19 @@ describe PhotosController do
 
     def map_photos_returns(bounds, photo, color, symbol)
       stub(Photo).within { [ photo ] }
-      map_photos = controller.map_photos
-
-      map_photos[:partial].should == false
-      map_photos[:bounds].should == bounds
-      photos = map_photos[:photos]
-      photos.length.should == 1
-      photo_out = photos[0]
-      photo_out['id'].should == photo.id
-      photo_out['color'].should == color
-      photo_out['symbol'].should == symbol
-
+      controller.map_photos.should == {
+        :partial => false,
+        :bounds => bounds,
+        :photos => [
+          {
+            'id' => photo.id,
+            'latitude' => photo.latitude,
+            'longitude' => photo.longitude,
+            'color' => color,
+            'symbol' => symbol
+          }
+        ]
+      }
     end
 
     it "thins out excessively dense photos" do
@@ -115,9 +117,7 @@ describe PhotosController do
       map_photos = controller.map_photos
 
       map_photos[:partial].should == true
-      photos = map_photos[:photos]
-      photos.length.should == 1
-      photos[0]['id'].should == 14
+      map_photos[:photos].map { |photo| photo['id'] }.should == [ 14 ]
 
     end
 
