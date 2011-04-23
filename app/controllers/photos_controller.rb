@@ -26,10 +26,12 @@ class PhotosController < ApplicationController
     photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
     {
       :partial => (photos_count != photos.length),
-      :bounds => bounds, # TODO Dave test
+      :bounds => bounds,
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end
+
+  INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
 
   def get_bounds
     if params[:sw]
@@ -37,7 +39,7 @@ class PhotosController < ApplicationController
       ne = params[:ne].split(',').map &:to_f
       Bounds.new sw[0], ne[0], sw[1], ne[1]
     else
-      Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
+      INITIAL_MAP_BOUNDS
     end
   end
   private :get_bounds

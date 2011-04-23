@@ -82,7 +82,7 @@ describe PhotosController do
       map_photos = controller.map_photos
 
       map_photos[:partial].should == false
-      # TODO Dave bounds
+      map_photos[:bounds].should == PhotosController::INITIAL_MAP_BOUNDS
       photos = map_photos[:photos]
       photos.length.should == 1
       photo_out = photos[0]
