@@ -1,4 +1,4 @@
-GWW = {};
+var GWW = {};
 
 GWW.map = function () {
   var loadMarkersFromPage = true;
@@ -84,7 +84,7 @@ GWW.map = function () {
       });
       that.markers.push(marker);
       google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
-    })
+    });
   };
 
   var loadInfoWindow = function (photo, marker) {
@@ -100,7 +100,7 @@ GWW.map = function () {
     return function (html) {
       infoWindow.setContent(html);
       infoWindow.open(that.map, marker);
-    }
+    };
   };
 
   return that;
