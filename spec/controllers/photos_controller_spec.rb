@@ -57,20 +57,25 @@ describe PhotosController do
   end
 
   describe '#map_photos' do
+    before do
+      @initial_bounds = PhotosController::INITIAL_MAP_BOUNDS
+      @default_max_photos = PhotosController.max_photos
+    end
+
     it "returns an unfound photo" do
-      returns PhotosController::INITIAL_MAP_BOUNDS, 'unfound', 'FFFF00', '?'
+      returns @initial_bounds, 'unfound', 'FFFF00', '?'
     end
 
     it "configures an unconfirmed photo like an unfound" do
-      returns PhotosController::INITIAL_MAP_BOUNDS, 'unconfirmed', 'FFFF00', '?'
+      returns @initial_bounds, 'unconfirmed', 'FFFF00', '?'
     end
 
     it "configures a found differently" do
-      returns PhotosController::INITIAL_MAP_BOUNDS, 'found', '008000', '!'
+      returns @initial_bounds, 'found', '008000', '!'
     end
 
     it "configures a revealed photo differently" do
-      returns PhotosController::INITIAL_MAP_BOUNDS, 'revealed', 'E00000', '-'
+      returns @initial_bounds, 'revealed', 'E00000', '-'
     end
 
     it "echos non-default bounds" do
@@ -81,7 +86,7 @@ describe PhotosController do
 
     def returns(bounds, game_status, color, symbol)
       photo = Photo.make :game_status => game_status
-      stub(Photo).within(bounds, PhotosController.max_photos + 1) { [ photo ] }
+      stub(Photo).within(bounds, @default_max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos.should == {
         :partial => false,
@@ -100,14 +105,13 @@ describe PhotosController do
 
     it "returns no more than a maximum number of photos" do
       stub(PhotosController).max_photos { 1 }
-      bounds = PhotosController::INITIAL_MAP_BOUNDS
       photo = Photo.make
       oldest_photo = Photo.make :dateadded => 1.day.ago
-      stub(Photo).within(bounds, PhotosController.max_photos + 1) { [ photo, oldest_photo ] }
+      stub(Photo).within(@initial_bounds, 2) { [ photo, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos.should == {
         :partial => true,
-        :bounds => bounds,
+        :bounds => @initial_bounds,
         :photos => [
           {
             'id' => photo.id,
@@ -121,12 +125,11 @@ describe PhotosController do
     end
 
     it "handles no photos" do
-      bounds = PhotosController::INITIAL_MAP_BOUNDS
-      stub(Photo).within(bounds, PhotosController.max_photos + 1) { [] }
+      stub(Photo).within(@initial_bounds, @default_max_photos + 1) { [] }
       stub(Photo).oldest { nil }
       controller.map_photos.should == {
         :partial => false,
-        :bounds => bounds,
+        :bounds => @initial_bounds,
         :photos => []
       }
     end
