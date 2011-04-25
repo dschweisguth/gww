@@ -333,7 +333,6 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
-  # TODO Dave test other_user_comments
   # TODO Dave photos f
   def self.update_statistics
     connection.execute %q{

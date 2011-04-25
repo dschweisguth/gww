@@ -890,6 +890,31 @@ describe Photo do
   end
 
   describe '.update_statistics' do
+    describe "when updating other user comments" do
+      it "counts comments" do
+        comment = Comment.make
+        Photo.update_statistics
+        comment.photo.reload
+        comment.photo.other_user_comments.should == 1
+      end
+
+      it "ignores comments by the poster" do
+        photo = Photo.make
+        Comment.make :photo => photo, :flickrid => photo.person.flickrid, :username => photo.person.username
+        Photo.update_statistics
+        photo.reload
+        photo.other_user_comments.should == 0
+      end
+
+      it "handles photos which go from nonzero to zero comments" do
+        photo = Photo.make :other_user_comments => 1
+        Photo.update_statistics
+        photo.reload
+        photo.other_user_comments.should == 0
+      end
+
+    end
+
     describe "when updating member comments" do
       it 'counts comments on guessed photos' do
         guess = Guess.make
