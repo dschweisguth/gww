@@ -152,10 +152,10 @@ class PeopleController < ApplicationController
     if (partial)
       photos.pop
     end
-    first_dateadded = Photo.oldest.dateadded
-    if first_dateadded
+    first_photo = Photo.oldest
+    if first_photo
       use_inferred_geocode_if_necessary(photos)
-      photos.each { |photo| add_display_attributes photo, person_id, first_dateadded }
+      photos.each { |photo| add_display_attributes photo, person_id, first_photo.dateadded }
     end
     as_json partial, bounds, photos
   end
