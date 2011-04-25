@@ -969,6 +969,17 @@ describe Photo do
         guess.photo.member_comments.should == 1
       end
 
+      # This shouldn't happen in the future, since if the poster deletes all of a photo's comments after it's guessed,
+      # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
+      # didn't work that way
+      it "handles photos which go from nonzero to zero comments" do
+        photo = Photo.make :member_comments => 1
+        Guess.make :photo => photo
+        Photo.update_statistics
+        photo.reload
+        photo.member_comments.should == 0
+      end
+
     end
 
     describe "when updating member questions" do
@@ -1024,6 +1035,17 @@ describe Photo do
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 1
+      end
+
+      # This shouldn't happen in the future, since if the poster deletes all of a photo's comments after it's guessed,
+      # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
+      # didn't work that way
+      it "handles photos which go from nonzero to zero comments" do
+        photo = Photo.make :member_questions => 1
+        Guess.make :photo => photo
+        Photo.update_statistics
+        photo.reload
+        photo.member_questions.should == 0
       end
 
     end
