@@ -146,7 +146,6 @@ class PeopleController < ApplicationController
   end
 
   def map_photos(person_id)
-    bounds = get_bounds
     photos = Photo.all_mapped(person_id, bounds, PeopleController.max_photos + 1).to_a
     partial = photos.length == PeopleController.max_photos + 1
     if (partial)
@@ -157,7 +156,7 @@ class PeopleController < ApplicationController
       use_inferred_geocode_if_necessary(photos)
       photos.each { |photo| add_display_attributes photo, person_id, first_photo.dateadded }
     end
-    as_json partial, bounds, photos
+    as_json partial, photos
   end
 
   def self.max_photos

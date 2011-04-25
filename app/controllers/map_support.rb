@@ -3,7 +3,7 @@ module MapSupport
   INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
   BINS_PER_AXIS = 20
 
-  def get_bounds
+  def bounds
     if params[:sw]
       sw = params[:sw].split(',').map &:to_f
       ne = params[:ne].split(',').map &:to_f
@@ -42,7 +42,7 @@ module MapSupport
   end
   private :scaled
 
-  def as_json(partial, bounds, photos)
+  def as_json(partial, photos)
     {
       :partial => partial,
       :bounds => bounds,

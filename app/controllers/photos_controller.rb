@@ -17,7 +17,6 @@ class PhotosController < ApplicationController
   end
 
   def map_photos
-    bounds = get_bounds
     photos = Photo.within(bounds, PhotosController.max_photos + 1).to_a
     partial = photos.length == PhotosController.max_photos + 1
     if (partial)
@@ -27,7 +26,7 @@ class PhotosController < ApplicationController
     if first_photo
       photos.each { |photo| add_display_attributes photo, first_photo.dateadded }
     end
-    as_json partial, bounds, photos
+    as_json partial, photos
   end
 
   def add_display_attributes(photo, first_dateadded)
