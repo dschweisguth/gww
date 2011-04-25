@@ -17,7 +17,7 @@ class ScoreReport < ActiveRecord::Base
         from score_reports current
           left join(score_reports previous) on (current.previous_report_id = previous.id),
           #{answer_table_name} a
-        where ifnull(previous.created_at, ?) < a.added_at and a.added_at <= current.created_at
+        where a.added_at between ifnull(previous.created_at, ?) and current.created_at
         group by current.id
       ],
       Time.local(2005).getutc
