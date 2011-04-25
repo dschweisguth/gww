@@ -361,30 +361,34 @@ describe Photo do
   end
 
   describe '.posted_or_guessed_by_and_mapped' do
-    it "lists photos posted by the person" do
-      returns_post :accuracy => 12, :latitude => 37, :longitude => -122
+    before do
+      @bounds = Bounds.new(36, 38, -123, -121)
+    end
+
+    it "returns photos posted by the person" do
+      returns_post :latitude => 37, :longitude => -122, :accuracy => 12
     end
 
     it "ignores other people's posts" do
-      Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+      Photo.make :latitude => 37, :longitude => -122, :accuracy => 12
       other_person = Person.make
-      Photo.posted_or_guessed_by_and_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.posted_or_guessed_by_and_mapped(other_person.id, @bounds, 1).should == []
     end
 
-    it "lists photos guessed by the person" do
-      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+    it "returns photos guessed by the person" do
+      photo = Photo.make :latitude => 37, :longitude => -122, :accuracy => 12
       guess = Guess.make :photo => photo
-      Photo.posted_or_guessed_by_and_mapped(guess.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+      Photo.posted_or_guessed_by_and_mapped(guess.person.id, @bounds, 1).should == [ photo ]
     end
 
     it "ignores other people's guesses" do
-      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+      photo = Photo.make :latitude => 37, :longitude => -122, :accuracy => 12
       Guess.make :photo => photo
       other_person = Person.make
-      Photo.posted_or_guessed_by_and_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.posted_or_guessed_by_and_mapped(other_person.id, @bounds, 1).should == []
     end
 
-    it "lists auto-mapped photos" do
+    it "returns auto-mapped photos" do
       returns_post :inferred_latitude => 37, :inferred_longitude => -122
     end
 
@@ -392,24 +396,24 @@ describe Photo do
       ignores_post({})
     end
 
-    it "ignores photos mapped with an accuracy < 12" do
-      ignores_post :accuracy => 11, :latitude => 37, :longitude => -122
+    it "ignores mapped photos with accuracy < 12" do
+      ignores_post :latitude => 37, :longitude => -122, :accuracy => 11
     end
 
     it "ignores mapped photos south of the minimum latitude" do
-      ignores_post :accuracy => 12, :latitude => 35, :longitude => -122
+      ignores_post :latitude => 35, :longitude => -122, :accuracy => 12
     end
 
     it "ignores mapped photos north of the maximum latitude" do
-      ignores_post :accuracy => 12, :latitude => 39, :longitude => -122
+      ignores_post :latitude => 39, :longitude => -122, :accuracy => 12
     end
 
     it "ignores mapped photos west of the minimum longitude" do
-      ignores_post :accuracy => 12, :latitude => 37, :longitude => -124
+      ignores_post :latitude => 37, :longitude => -124, :accuracy => 12
     end
 
     it "ignores mapped photos east of the maximum longitude" do
-      ignores_post :accuracy => 12, :latitude => 37, :longitude => -120
+      ignores_post :latitude => 37, :longitude => -120, :accuracy => 12
     end
 
     it "ignores auto-mapped photos south of the minimum latitude" do
@@ -428,14 +432,20 @@ describe Photo do
       ignores_post :inferred_latitude => 37, :inferred_longitude => -120
     end
 
+    it "returns only the youngest n photos" do
+      photo = Photo.make 1, :latitude => 37, :longitude => -122, :accuracy => 12
+      Photo.make 2, :latitude => 37, :longitude => -122, :dateadded => 1.day.ago, :accuracy => 12
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == [ photo ]
+    end
+
     def returns_post(attributes)
       photo = Photo.make attributes
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == [ photo ]
     end
 
     def ignores_post(attributes)
       photo = Photo.make attributes
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == []
     end
 
   end
@@ -548,40 +558,74 @@ describe Photo do
   end
 
   describe '.mapped' do
-    it "returns photos mapped the given bounds" do
+    before do
+      @bounds = Bounds.new(0, 2, 3, 5)
+    end
+
+    it "returns photos" do
       photo = Photo.make :latitude => 1, :longitude => 4, :accuracy => 12
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == [ photo ]
+      Photo.mapped(@bounds, 1).should == [ photo ]
     end
 
-    it "ignores photos with insufficent accuracy" do
+    it "returns auto-mapped photos" do
+      photo = Photo.make :inferred_latitude => 1, :inferred_longitude => 4, :accuracy => 12
+      Photo.mapped(@bounds, 1).should == [ photo ]
+    end
+
+    it "ignores unmapped photos" do
+      Photo.make
+      Photo.mapped(@bounds, 1).should == []
+    end
+
+    it "ignores mapped photos with accuracy < 12" do
       Photo.make :latitude => 1, :longitude => 4, :accuracy => 11
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(@bounds, 1).should == []
     end
 
-    it "ignores photos with latitude below the minimum" do
+    it "ignores mapped photos south of the minimum latitude" do
       Photo.make :latitude => -1, :longitude => 4, :accuracy => 12
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(@bounds, 1).should == []
     end
 
-    it "ignores photos with latitude above the maximum" do
+    it "ignores mapped photos north of the maximum latitude" do
       Photo.make :latitude => 3, :longitude => 4, :accuracy => 12
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(@bounds, 1).should == []
     end
 
-    it "ignores photos with longitude below the minimum" do
+    it "ignores mapped photos west of the minimum longitude" do
       Photo.make :latitude => 1, :longitude => 2, :accuracy => 12
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(@bounds, 1).should == []
     end
 
-    it "ignores photos with longitude above the maximum" do
+    it "ignores mapped photos east of the maximum longitude" do
       Photo.make :latitude => 1, :longitude => 6, :accuracy => 12
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(@bounds, 1).should == []
     end
 
-    it "returns the youngest n photos" do
+    it "ignores auto-mapped photos south of the minimum latitude" do
+      Photo.make :inferred_latitude => -1, :inferred_longitude => 4
+      Photo.mapped(@bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos north of the maximum latitude" do
+      Photo.make :inferred_latitude => 3, :inferred_longitude => 4
+      Photo.mapped(@bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos west of the minimum longitude" do
+      Photo.make :inferred_latitude => 1, :inferred_longitude => 2
+      Photo.mapped(@bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos east of the maximum longitude" do
+      Photo.make :inferred_latitude => 1, :inferred_longitude => 6
+      Photo.mapped(@bounds, 1).should == []
+    end
+
+    it "returns only the youngest n photos" do
       photo = Photo.make 1, :latitude => 1, :longitude => 4, :accuracy => 12
       Photo.make 2, :latitude => 1, :longitude => 4, :accuracy => 12, :dateadded => 1.day.ago
-      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == [ photo ]
+      Photo.mapped(@bounds, 1).should == [ photo ]
     end
 
   end

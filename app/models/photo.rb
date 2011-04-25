@@ -143,14 +143,8 @@ class Photo < ActiveRecord::Base
   end
 
   def self.posted_or_guessed_by_and_mapped(person_id, bounds, limit)
-    joins('left join guesses on guesses.photo_id = photos.id') \
-      .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id) \
-      .where(
-        '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
-          '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
-        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
-        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
-      .order('dateadded desc').limit(limit)
+    mapped(bounds, limit).joins('left join guesses on guesses.photo_id = photos.id') \
+      .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id)
   end
 
   # Used by PhotosController
@@ -195,9 +189,12 @@ class Photo < ActiveRecord::Base
   private_class_method :order_by
 
   def self.mapped(bounds, limit)
-    Photo.where('accuracy >= 12') \
-      .where('latitude between ? and ? and longitude between ? and ?',
-        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
+    Photo \
+      .where(
+        '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
+          '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
+          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
+          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
       .order('dateadded desc').limit(limit)
   end
 
