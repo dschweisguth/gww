@@ -17,7 +17,7 @@ class PhotosController < ApplicationController
   end
 
   def map_photos
-    photos = Photo.within(bounds, max_map_photos + 1).to_a
+    photos = Photo.mapped(bounds, max_map_photos + 1).to_a
     partial = photos.length == max_map_photos + 1
     if (partial)
       photos.pop

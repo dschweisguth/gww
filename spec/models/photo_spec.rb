@@ -547,41 +547,41 @@ describe Photo do
 
   end
 
-  describe '.within' do
-    it "returns photos within the given bounds" do
+  describe '.mapped' do
+    it "returns photos mapped the given bounds" do
       photo = Photo.make :latitude => 1, :longitude => 4, :accuracy => 12
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == [ photo ]
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == [ photo ]
     end
 
     it "ignores photos with insufficent accuracy" do
       Photo.make :latitude => 1, :longitude => 4, :accuracy => 11
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
     end
 
     it "ignores photos with latitude below the minimum" do
       Photo.make :latitude => -1, :longitude => 4, :accuracy => 12
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
     end
 
     it "ignores photos with latitude above the maximum" do
       Photo.make :latitude => 3, :longitude => 4, :accuracy => 12
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
     end
 
     it "ignores photos with longitude below the minimum" do
       Photo.make :latitude => 1, :longitude => 2, :accuracy => 12
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
     end
 
     it "ignores photos with longitude above the maximum" do
       Photo.make :latitude => 1, :longitude => 6, :accuracy => 12
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == []
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == []
     end
 
     it "returns the youngest n photos" do
       photo = Photo.make 1, :latitude => 1, :longitude => 4, :accuracy => 12
       Photo.make 2, :latitude => 1, :longitude => 4, :accuracy => 12, :dateadded => 1.day.ago
-      Photo.within(Bounds.new(0, 2, 3, 5), 1).should == [ photo ]
+      Photo.mapped(Bounds.new(0, 2, 3, 5), 1).should == [ photo ]
     end
 
   end

@@ -86,7 +86,7 @@ describe PhotosController do
 
     def returns(bounds, game_status, color, symbol)
       photo = Photo.make :game_status => game_status
-      stub(Photo).within(bounds, @default_max_photos + 1) { [ photo ] }
+      stub(Photo).mapped(bounds, @default_max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos.should == {
         :partial => false,
@@ -107,7 +107,7 @@ describe PhotosController do
       stub(controller).max_map_photos { 1 }
       photo = Photo.make
       oldest_photo = Photo.make :dateadded => 1.day.ago
-      stub(Photo).within(@initial_bounds, 2) { [ photo, oldest_photo ] }
+      stub(Photo).mapped(@initial_bounds, 2) { [ photo, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos.should == {
         :partial => true,
@@ -125,7 +125,7 @@ describe PhotosController do
     end
 
     it "handles no photos" do
-      stub(Photo).within(@initial_bounds, @default_max_photos + 1) { [] }
+      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [] }
       stub(Photo).oldest { nil }
       controller.map_photos.should == {
         :partial => false,
