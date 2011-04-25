@@ -259,36 +259,36 @@ describe Guess do
 
   end
 
-  describe '.all_mapped_count' do
+  describe '.mapped_count' do
     it "counts the person's guesses of mapped photos" do
       photo = Photo.make :accuracy => 12
       guess = Guess.make :photo => photo
-      Guess.all_mapped_count(guess.person.id).should == 1
+      Guess.mapped_count(guess.person.id).should == 1
     end
 
     it "counts the person's guesses of auto-mapped photos" do
       photo = Photo.make :inferred_latitude => 37
       guess = Guess.make :photo => photo
-      Guess.all_mapped_count(guess.person.id).should == 1
+      Guess.mapped_count(guess.person.id).should == 1
     end
 
     it "ignores others' guesses" do
       photo = Photo.make :accuracy => 12
       Guess.make :photo => photo
       other_person = Person.make
-      Guess.all_mapped_count(other_person.id).should == 0
+      Guess.mapped_count(other_person.id).should == 0
     end
 
     it "ignores guesses of unmapped photos" do
       photo = Photo.make
       guess = Guess.make :photo => photo
-      Guess.all_mapped_count(guess.person.id).should == 0
+      Guess.mapped_count(guess.person.id).should == 0
     end
 
     it "ignores guesses of photos mapped with insufficient accuracy" do
       photo = Photo.make :accuracy => 11
       guess = Guess.make :photo => photo
-      Guess.all_mapped_count(guess.person.id).should == 0
+      Guess.mapped_count(guess.person.id).should == 0
     end
 
   end

@@ -136,7 +136,7 @@ describe PeopleController do
     end
 
     it "handles a person who has never guessed" do
-      stub(Guess).all_mapped_count { 0 }
+      stub(Guess).mapped_count { 0 }
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
       stub(Guess).first_by(@person)
@@ -170,7 +170,7 @@ describe PeopleController do
     it "handles a person who has never posted" do
       stub_guesses
 
-      stub(Photo).all_mapped_count { 0 }
+      stub(Photo).mapped_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
       stub(Photo).first_by(@person)
@@ -203,7 +203,7 @@ describe PeopleController do
     end
 
     def stub_guesses
-      stub(Guess).all_mapped_count { 1 }
+      stub(Guess).mapped_count { 1 }
 
       stub(Person).high_scorers(@now, 7) { [ @person ] }
       stub(Person).high_scorers(@now, 30) { [ @person ] }
@@ -239,7 +239,7 @@ describe PeopleController do
     end
 
     def stub_posts
-      stub(Photo).all_mapped_count { 1 }
+      stub(Photo).mapped_count { 1 }
 
       stub(Person).top_posters(@now, 7) { [ @person ] }
       stub(Person).top_posters(@now, 30) { [ @person ] }
@@ -364,8 +364,8 @@ describe PeopleController do
     it "renders the page" do
       person = Person.make :id => 1
       stub(Person).find(person.id) { person }
-      stub(Photo).all_mapped_count(person.id) { 1 }
-      stub(Guess).all_mapped_count(person.id) { 1 }
+      stub(Photo).mapped_count(person.id) { 1 }
+      stub(Guess).mapped_count(person.id) { 1 }
       json = { 'property' => 'value' }
       stub(controller).map_photos(person.id) { json }
       get :map, :id => person.id
@@ -422,7 +422,7 @@ describe PeopleController do
 
     it "returns a guess" do
       photo = Photo.make :id => 15, :person_id => 2
-      stub(Photo).all_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ photo ] }
+      stub(Photo).mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
         :partial => false,
@@ -447,7 +447,7 @@ describe PeopleController do
 
     def returns_post(bounds, game_status, color, symbol)
       post = Photo.make :id => 14, :person_id => @person.id, :game_status => game_status
-      stub(Photo).all_mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }
+      stub(Photo).mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
         :partial => false,
@@ -468,7 +468,7 @@ describe PeopleController do
       stub(controller).max_map_photos { 1 }
       post = Photo.make :id => 14, :person_id => @person.id
       oldest_photo = Photo.make :dateadded => 1.day.ago
-      stub(Photo).all_mapped(@person.id, @initial_bounds, 2) { [ post, oldest_photo ] }
+      stub(Photo).mapped(@person.id, @initial_bounds, 2) { [ post, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos(@person.id).should == {
         :partial => true,
@@ -486,7 +486,7 @@ describe PeopleController do
     end
 
     it "handles no photos" do
-      stub(Photo).all_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [] }
+      stub(Photo).mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [] }
       stub(Photo).oldest { nil }
       controller.map_photos(@person.id).should == {
         :partial => false,

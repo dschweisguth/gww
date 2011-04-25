@@ -331,36 +331,36 @@ describe Photo do
 
   end
 
-  describe '.all_mapped_count' do
+  describe '.mapped_count' do
     it "counts mapped photos" do
       photo = Photo.make :accuracy => 12
-      Photo.all_mapped_count(photo.person.id).should == 1
+      Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "counts auto-mapped photos" do
       photo = Photo.make :inferred_latitude => 37
-      Photo.all_mapped_count(photo.person.id).should == 1
+      Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "ignores other people's photos" do
       Photo.make :accuracy => 12
       other_person = Person.make
-      Photo.all_mapped_count(other_person.id).should == 0
+      Photo.mapped_count(other_person.id).should == 0
     end
 
     it "ignores unmapped photos" do
       photo = Photo.make
-      Photo.all_mapped_count(photo.person.id).should == 0
+      Photo.mapped_count(photo.person.id).should == 0
     end
 
     it "ignores photos mapped with an accuracy < 12" do
       photo = Photo.make :accuracy => 11
-      Photo.all_mapped_count(photo.person.id).should == 0
+      Photo.mapped_count(photo.person.id).should == 0
     end
 
   end
 
-  describe '.all_mapped2' do
+  describe '.mapped' do
     it "lists photos posted by the person" do
       returns_post :accuracy => 12, :latitude => 37, :longitude => -122
     end
@@ -368,20 +368,20 @@ describe Photo do
     it "ignores other people's posts" do
       Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       other_person = Person.make
-      Photo.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
     it "lists photos guessed by the person" do
       photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       guess = Guess.make :photo => photo
-      Photo.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+      Photo.mapped(guess.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
     end
 
     it "ignores other people's guesses" do
       photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       Guess.make :photo => photo
       other_person = Person.make
-      Photo.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
     it "lists auto-mapped photos" do
@@ -430,12 +430,12 @@ describe Photo do
 
     def returns_post(attributes)
       photo = Photo.make attributes
-      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+      Photo.mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
     end
 
     def ignores_post(attributes)
       photo = Photo.make attributes
-      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
   end

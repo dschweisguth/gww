@@ -33,7 +33,7 @@ class PeopleController < ApplicationController
     @person = Person.find params[:id]
 
     @mapped_post_and_guess_count =
-      Photo.all_mapped_count(@person.id) + Guess.all_mapped_count(@person.id)
+      Photo.mapped_count(@person.id) + Guess.mapped_count(@person.id)
 
     @place, @tied = Person.standing @person
     @posts_place, @posts_tied = Person.posts_standing @person
@@ -136,8 +136,8 @@ class PeopleController < ApplicationController
   def map
     person_id = params[:id].to_i
     @person = Person.find person_id
-    @posts_count = Photo.all_mapped_count person_id
-    @guesses_count = Guess.all_mapped_count person_id
+    @posts_count = Photo.mapped_count person_id
+    @guesses_count = Guess.mapped_count person_id
     @json = map_photos(person_id).to_json
   end
 
@@ -146,7 +146,7 @@ class PeopleController < ApplicationController
   end
 
   def map_photos(person_id)
-    photos = Photo.all_mapped(person_id, bounds, max_map_photos + 1).to_a
+    photos = Photo.mapped(person_id, bounds, max_map_photos + 1).to_a
     partial = photos.length == max_map_photos + 1
     if (partial)
       photos.pop

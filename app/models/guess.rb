@@ -80,7 +80,7 @@ class Guess < ActiveRecord::Base
   end
   private_class_method :first_guess_with_place
 
-  def self.all_mapped_count(person_id)
+  def self.mapped_count(person_id)
     where(:person_id => person_id) \
       .joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null') \
       .count

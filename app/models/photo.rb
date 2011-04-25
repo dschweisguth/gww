@@ -138,11 +138,11 @@ class Photo < ActiveRecord::Base
     most_viewed
   end
 
-  def self.all_mapped_count(poster_id)
+  def self.mapped_count(poster_id)
     where(:person_id => poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
   end
 
-  def self.all_mapped(person_id, bounds, limit)
+  def self.mapped(person_id, bounds, limit)
     joins('left join guesses on guesses.photo_id = photos.id') \
       .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id) \
       .where(
