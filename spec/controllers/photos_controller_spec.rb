@@ -120,6 +120,17 @@ describe PhotosController do
       }
     end
 
+    it "handles no photos" do
+      bounds = PhotosController::INITIAL_MAP_BOUNDS
+      stub(Photo).within(bounds, PhotosController.max_photos + 1) { [] }
+      stub(Photo).oldest { nil }
+      controller.map_photos.should == {
+        :partial => false,
+        :bounds => bounds,
+        :photos => []
+      }
+    end
+
   end
 
   describe '#map_popup' do
