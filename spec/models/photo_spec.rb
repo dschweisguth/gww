@@ -261,7 +261,7 @@ describe Photo do
       Comment.make :photo => first
       most_commented = Photo.most_commented poster
       most_commented.should == first
-      most_commented[:other_user_comments].should == 1
+      most_commented.other_user_comments.should == 1
       most_commented[:place].should == 1
     end
 
@@ -274,7 +274,7 @@ describe Photo do
       Comment.make 12, :photo => first
       most_commented = Photo.most_commented poster
       most_commented.should == first
-      most_commented[:other_user_comments].should == 2
+      most_commented.other_user_comments.should == 2
       most_commented[:place].should == 1
     end
 
