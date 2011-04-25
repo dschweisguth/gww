@@ -890,111 +890,117 @@ describe Photo do
   end
 
   describe '.update_statistics' do
-    it 'counts comments on guessed photos' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_comments.should == 1
+    describe "when updating member comments" do
+      it 'counts comments on guessed photos' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_comments.should == 1
+      end
+
+      it 'ignores comments by the poster' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_comments.should == 0
+      end
+
+      it 'ignores comments by non-members' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_comments.should == 0
+      end
+
+      it 'counts comments other than the guess' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at - 5
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_comments.should == 2
+      end
+
+      it 'ignores comments after the guess' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at + 5
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_comments.should == 1
+      end
+
     end
 
-    it 'ignores comments by the poster' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_comments.should == 0
-    end
+    describe "when updating member questions" do
+      it 'counts questions on guessed photos' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at, :comment_text => '?'
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_questions.should == 1
+      end
 
-    it 'ignores comments by non-members' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_comments.should == 0
-    end
+      it 'ignores questions by the poster' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username,
+          :comment_text => '?'
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_questions.should == 0
+      end
 
-    it 'counts comments other than the guess' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at - 5
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_comments.should == 2
-    end
+      it 'ignores questions by non-members' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo, :comment_text => '?'
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_questions.should == 0
+      end
 
-    it 'ignores comments after the guess' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at + 5
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_comments.should == 1
-    end
+      it 'counts questions other than the guess' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at - 5, :comment_text => '?'
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at, :comment_text => '?'
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_questions.should == 2
+      end
 
-    it 'counts questions on guessed photos' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at, :comment_text => '?'
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_questions.should == 1
-    end
+      it 'ignores questions after the guess' do
+        guess = Guess.make
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at, :comment_text => '?'
+        Comment.make :photo => guess.photo,
+          :flickrid => guess.person.flickrid, :username => guess.person.username,
+          :commented_at => guess.commented_at + 5, :comment_text => '?'
+        Photo.update_statistics
+        guess.photo.reload
+        guess.photo.member_questions.should == 1
+      end
 
-    it 'ignores questions by the poster' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username,
-        :comment_text => '?'
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_questions.should == 0
-    end
-
-    it 'ignores questions by non-members' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo, :comment_text => '?'
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_questions.should == 0
-    end
-
-    it 'counts questions other than the guess' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at - 5, :comment_text => '?'
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at, :comment_text => '?'
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_questions.should == 2
-    end
-
-    it 'ignores questions after the guess' do
-      guess = Guess.make
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at, :comment_text => '?'
-      Comment.make :photo => guess.photo,
-        :flickrid => guess.person.flickrid, :username => guess.person.username,
-        :commented_at => guess.commented_at + 5, :comment_text => '?'
-      Photo.update_statistics
-      guess.photo.reload
-      guess.photo.member_questions.should == 1
     end
 
   end
