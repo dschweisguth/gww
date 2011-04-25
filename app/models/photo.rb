@@ -337,11 +337,6 @@ class Photo < ActiveRecord::Base
   # TODO Dave photos f
   # TODO Dave is commenter clause necessary?
   def self.update_statistics
-#  select p.id, count(*) comment_count from photos f, people p, comments c
-#  where f.person_id = p.id and
-#    f.id = c.photo_id and
-#    p.flickrid != c.flickrid
-#  group by f.id
     connection.execute %q{
       update photos p set
         other_user_comments =
