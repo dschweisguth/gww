@@ -32,8 +32,7 @@ class PeopleController < ApplicationController
   def show
     @person = Person.find params[:id]
 
-    @mapped_post_and_guess_count =
-      Photo.mapped_count(@person.id) + Guess.mapped_count(@person.id)
+    @mapped_post_and_guess_count = Photo.mapped_count(@person.id) + Guess.mapped_count(@person.id)
 
     @place, @tied = Person.standing @person
     @posts_place, @posts_tied = Person.posts_standing @person
