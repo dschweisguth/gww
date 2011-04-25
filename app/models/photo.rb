@@ -333,17 +333,16 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
-  # TODO Dave photos f
   def self.update_statistics
     connection.execute %q{
-      update photos p set
+      update photos f set
         other_user_comments =
           ifnull(
             (select count(*)
               from people poster, comments c
               where
-                p.person_id = poster.id and
-                p.id = c.photo_id and
+                f.person_id = poster.id and
+                f.id = c.photo_id and
                 poster.flickrid != c.flickrid
               group by c.photo_id),
             0),
@@ -352,11 +351,11 @@ class Photo < ActiveRecord::Base
             (select count(*)
               from people poster, comments c, people commenter, guesses g
               where
-                p.person_id = poster.id and
-                p.id = c.photo_id and
+                f.person_id = poster.id and
+                f.id = c.photo_id and
                 poster.flickrid != c.flickrid and
                 c.flickrid = commenter.flickrid and
-                p.id = g.photo_id and
+                f.id = g.photo_id and
                 c.commented_at <= g.commented_at
               group by c.photo_id),
             0),
@@ -365,11 +364,11 @@ class Photo < ActiveRecord::Base
             (select count(*)
               from people poster, comments c, people commenter, guesses g
               where
-                p.person_id = poster.id and
-                p.id = c.photo_id and
+                f.person_id = poster.id and
+                f.id = c.photo_id and
                 poster.flickrid != c.flickrid and
                 c.flickrid = commenter.flickrid and
-                p.id = g.photo_id and
+                f.id = g.photo_id and
                 c.commented_at <= g.commented_at and
                 c.comment_text like '%?%'
               group by c.photo_id),
