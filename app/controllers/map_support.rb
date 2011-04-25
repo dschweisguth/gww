@@ -12,7 +12,9 @@ module MapSupport
       INITIAL_MAP_BOUNDS
     end
   end
+  private :bounds
 
+  # public only for testing
   def max_map_photos
     2000
   end
@@ -25,6 +27,9 @@ module MapSupport
       end
     end
   end
+  private :use_inferred_geocode_if_necessary
+
+  # public only for testing
 
   def scaled_red(start_of_range, end_of_range, position)
     scaled(start_of_range, end_of_range, position, [ [ 256, 224 ], [ 192, 0 ], [ 192, 0 ]  ])
@@ -62,5 +67,6 @@ module MapSupport
       :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end
+  private :as_json
 
 end
