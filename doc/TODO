@@ -29,8 +29,7 @@ Track photosurl
   Generate URLs using it when possible
   Use it in the front-page person search
   Use it in the view bookmarklet
-Determine photo locations from correct guess comments
-  Determine most-posted locations
+Determine most-posted locations
 Determine neighborhoods from locations and geocodes
   Identify mayors (most posts), tycoons (most guesses) and bosses (both) of
   neighborhoods
