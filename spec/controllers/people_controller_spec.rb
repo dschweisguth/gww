@@ -401,7 +401,7 @@ describe PeopleController do
       @person = Person.make :id => 1
       stub(Person).find(@person.id) { @person }
       @initial_bounds = PeopleController::INITIAL_MAP_BOUNDS
-      @default_max_photos = PeopleController.max_photos
+      @default_max_photos = controller.max_map_photos
     end
 
     it "returns a post" do
@@ -465,7 +465,7 @@ describe PeopleController do
     end
 
     it "returns no more than a maximum number of photos" do
-      stub(PeopleController).max_photos { 1 }
+      stub(controller).max_map_photos { 1 }
       post = Photo.make :id => 14, :person_id => @person.id
       oldest_photo = Photo.make :dateadded => 1.day.ago
       stub(Photo).all_mapped(@person.id, @initial_bounds, 2) { [ post, oldest_photo ] }

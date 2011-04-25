@@ -17,8 +17,8 @@ class PhotosController < ApplicationController
   end
 
   def map_photos
-    photos = Photo.within(bounds, PhotosController.max_photos + 1).to_a
-    partial = photos.length == PhotosController.max_photos + 1
+    photos = Photo.within(bounds, max_map_photos + 1).to_a
+    partial = photos.length == max_map_photos + 1
     if (partial)
       photos.pop
     end
@@ -43,10 +43,6 @@ class PhotosController < ApplicationController
     end
   end
   private :add_display_attributes
-
-  def self.max_photos
-    2000
-  end
 
   caches_page :map_popup
   def map_popup

@@ -13,6 +13,10 @@ module MapSupport
     end
   end
 
+  def max_map_photos
+    2000
+  end
+
   def scaled_red(start_of_range, end_of_range, position)
     scaled(start_of_range, end_of_range, position, [ [ 256, 224 ], [ 192, 0 ], [ 192, 0 ]  ])
   end

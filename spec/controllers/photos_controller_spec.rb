@@ -59,7 +59,7 @@ describe PhotosController do
   describe '#map_photos' do
     before do
       @initial_bounds = PhotosController::INITIAL_MAP_BOUNDS
-      @default_max_photos = PhotosController.max_photos
+      @default_max_photos = controller.max_map_photos
     end
 
     it "returns an unfound photo" do
@@ -104,7 +104,7 @@ describe PhotosController do
     end
 
     it "returns no more than a maximum number of photos" do
-      stub(PhotosController).max_photos { 1 }
+      stub(controller).max_map_photos { 1 }
       photo = Photo.make
       oldest_photo = Photo.make :dateadded => 1.day.ago
       stub(Photo).within(@initial_bounds, 2) { [ photo, oldest_photo ] }
