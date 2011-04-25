@@ -360,7 +360,7 @@ describe Photo do
 
   end
 
-  describe '.mapped' do
+  describe '.posted_or_guessed_by_and_mapped' do
     it "lists photos posted by the person" do
       returns_post :accuracy => 12, :latitude => 37, :longitude => -122
     end
@@ -368,20 +368,20 @@ describe Photo do
     it "ignores other people's posts" do
       Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       other_person = Person.make
-      Photo.mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.posted_or_guessed_by_and_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
     it "lists photos guessed by the person" do
       photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       guess = Guess.make :photo => photo
-      Photo.mapped(guess.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+      Photo.posted_or_guessed_by_and_mapped(guess.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
     end
 
     it "ignores other people's guesses" do
       photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
       Guess.make :photo => photo
       other_person = Person.make
-      Photo.mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.posted_or_guessed_by_and_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
     it "lists auto-mapped photos" do
@@ -430,12 +430,12 @@ describe Photo do
 
     def returns_post(attributes)
       photo = Photo.make attributes
-      Photo.mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
     end
 
     def ignores_post(attributes)
       photo = Photo.make attributes
-      Photo.mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
   end

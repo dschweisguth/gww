@@ -146,7 +146,7 @@ class PeopleController < ApplicationController
   end
 
   def map_photos(person_id)
-    photos = Photo.mapped(person_id, bounds, max_map_photos + 1).to_a
+    photos = Photo.posted_or_guessed_by_and_mapped(person_id, bounds, max_map_photos + 1).to_a
     partial = photos.length == max_map_photos + 1
     if (partial)
       photos.pop
