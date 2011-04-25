@@ -142,14 +142,15 @@ class Photo < ActiveRecord::Base
     where(:person_id => poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
   end
 
-  def self.all_mapped(poster_id, bounds)
-    where(:person_id => poster_id) \
+  def self.all_mapped(person_id, bounds, limit)
+    joins('left join guesses on guesses.photo_id = photos.id') \
+      .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id) \
       .where(
         '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
           '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
         bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
         bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
-      .order(:dateadded)
+      .order('dateadded desc').limit(limit)
   end
 
   # Used by PhotosController

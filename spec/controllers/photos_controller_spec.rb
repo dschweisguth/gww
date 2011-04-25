@@ -82,8 +82,7 @@ describe PhotosController do
     def returns(bounds, game_status, color, symbol)
       photo = Photo.make :game_status => game_status
       stub(Photo).within(bounds, PhotosController.max_photos + 1) { [ photo ] }
-      oldest_photo = Photo.make :dateadded => 1.day.ago
-      stub(Photo).oldest { oldest_photo }
+      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos.should == {
         :partial => false,
         :bounds => bounds,

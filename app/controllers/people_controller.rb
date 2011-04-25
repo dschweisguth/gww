@@ -134,36 +134,34 @@ class PeopleController < ApplicationController
 
   caches_page :map
   def map
-    person_id = params[:id]
+    person_id = params[:id].to_i
     @person = Person.find person_id
     @posts_count = Photo.all_mapped_count person_id
     @guesses_count = Guess.all_mapped_count person_id
-    @json = map_photos(params[:id]).to_json
+    @json = map_photos(person_id).to_json
   end
 
   def map_json
-    render :json => map_photos(params[:id])
+    render :json => map_photos(params[:id].to_i)
   end
 
   def map_photos(person_id)
     bounds = get_bounds
+    photos = Photo.all_mapped(person_id, bounds, PeopleController.max_photos + 1).to_a
+    partial = photos.length == PeopleController.max_photos + 1
+    if (partial)
+      photos.pop
+    end
+    first_dateadded = Photo.oldest.dateadded
+    if first_dateadded
+      use_inferred_geocode_if_necessary(photos)
+      photos.each { |photo| add_display_attributes photo, person_id, first_dateadded }
+    end
+    as_json partial, bounds, photos
+  end
 
-    posts = Photo.all_mapped(person_id, bounds).to_a
-    first_dateadded, last_dateadded =
-      posts.empty? ? [ nil, nil ] : [ posts.first.dateadded, posts.last.dateadded ]
-
-    guesses = Guess.all_mapped(person_id, bounds).to_a
-    first_guessed_at, last_guessed_at =
-      guesses.empty? ? [ nil, nil ] : [ guesses.first.commented_at, guesses.last.commented_at ]
-    guesses.each { |guess| guess.photo[:guessed_at] = guess.commented_at }
-
-    photos = posts + (guesses.map &:photo)
-    photos_count = photos.length
-    use_inferred_geocode_if_necessary(photos)
-    photos = thin photos, bounds
-    photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded, first_guessed_at, last_guessed_at }
-    as_json photos_count != photos.length, bounds, photos
-
+  def self.max_photos
+    2000
   end
 
   def use_inferred_geocode_if_necessary(photos)
@@ -176,21 +174,22 @@ class PeopleController < ApplicationController
   end
   private :use_inferred_geocode_if_necessary
 
-  def add_display_attributes(photo, first_dateadded, last_dateadded, first_guessed_at, last_guessed_at)
-    if photo[:guessed_at]
-      photo[:color] = scaled_green first_guessed_at, last_guessed_at, photo[:guessed_at]
-      photo[:symbol] = '!'
-    else
+  def add_display_attributes(photo, person_id, first_dateadded)
+    now = Time.now
+    if photo.person_id == person_id
       if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
         photo[:color] = 'FFFF00'
         photo[:symbol] = '?'
       elsif photo.game_status == 'found'
-        photo[:color] = scaled_blue first_dateadded, last_dateadded, photo.dateadded
+        photo[:color] = scaled_blue first_dateadded, now, photo.dateadded
         photo[:symbol] = '?'
       else # revealed
-        photo[:color] = scaled_red first_dateadded, last_dateadded, photo.dateadded
+        photo[:color] = scaled_red first_dateadded, now, photo.dateadded
         photo[:symbol] = '-'
       end
+    else
+      photo[:color] = scaled_green first_dateadded, now, photo.dateadded
+      photo[:symbol] = '!'
     end
   end
   private :add_display_attributes

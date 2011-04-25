@@ -18,6 +18,7 @@ class PhotosController < ApplicationController
 
   def map_photos
     bounds = get_bounds
+    # TODO Dave test no photos
     photos = Photo.within(bounds, PhotosController.max_photos + 1).to_a
     partial = photos.length == PhotosController.max_photos + 1
     if (partial)

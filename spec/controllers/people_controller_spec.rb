@@ -419,18 +419,17 @@ describe PeopleController do
     end
 
     it "returns a guess" do
-      stub(Photo).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS) { [] }
-      guessed_photo = Photo.make :id => 15
-      guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS) { [ guess ] }
+      photo = Photo.make :id => 15, :person_id => 2
+      stub(Photo).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS, PhotosController.max_photos + 1) { [ photo ] }
+      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
         :partial => false,
         :bounds => PeopleController::INITIAL_MAP_BOUNDS,
         :photos => [
           {
-            'id' => guessed_photo.id,
-            'latitude' => guessed_photo.latitude,
-            'longitude' => guessed_photo.longitude,
+            'id' => photo.id,
+            'latitude' => photo.latitude,
+            'longitude' => photo.longitude,
             'color' => '008000',
             'symbol' => '!'
           }
@@ -445,9 +444,9 @@ describe PeopleController do
     end
 
     def returns_post(bounds, game_status, color, symbol)
-      post = Photo.make :id => 14, :person => @person, :game_status => game_status
-      stub(Photo).all_mapped(@person.id, bounds) { [ post ] }
-      stub(Guess).all_mapped(@person.id, bounds) { [] }
+      post = Photo.make :id => 14, :person_id => @person.id, :game_status => game_status
+      stub(Photo).all_mapped(@person.id, bounds, PhotosController.max_photos + 1) { [ post ] }
+      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
         :partial => false,
         :bounds => bounds,
@@ -463,22 +462,28 @@ describe PeopleController do
       }
     end
 
-    it "thins out photos in dense areas of the map" do
+    it "returns no more than a maximum number of photos" do
+      stub(PeopleController).max_photos { 1 }
       bounds = PhotosController::INITIAL_MAP_BOUNDS
-      post = Photo.make :id => 14, :person => @person, :latitude => bounds.min_lat, :longitude => bounds.min_long,
-        :dateadded => 1.day.ago
-      stub(Photo).all_mapped(@person.id, bounds) { [ post ] }
-      guessed_photo = Photo.make :id => 15, :person => @person, :latitude => bounds.min_lat, :longitude => bounds.min_long,
-        :dateadded => 2.days.ago
-      guess = Guess.make :photo => guessed_photo, :person => @person
-      stub(Guess).all_mapped(@person.id, bounds) { [ guess ] }
-      stub(controller).thin([ post, guessed_photo ], bounds) { [ post ] }
-      map_photos = controller.map_photos @person.id
-
-      map_photos[:partial].should == true
-      map_photos[:photos].map { |photo| photo['id'] }.should == [ post.id ]
-
+      post = Photo.make :id => 14, :person_id => @person.id
+      oldest_photo = Photo.make :dateadded => 1.day.ago
+      stub(Photo).all_mapped(@person.id, bounds, 2) { [ post, oldest_photo ] }
+      stub(Photo).oldest { oldest_photo }
+      controller.map_photos(@person.id).should == {
+        :partial => true,
+        :bounds => bounds,
+        :photos => [
+          {
+            'id' => post.id,
+            'latitude' => post.latitude,
+            'longitude' => post.longitude,
+            'color' => 'FFFF00',
+            'symbol' => '?'
+          }
+        ]
+      }
     end
+
   end
 
 end

@@ -360,69 +360,82 @@ describe Photo do
 
   end
 
-  describe '.all_mapped' do
-    it "lists photos" do
-      returns :accuracy => 12, :latitude => 37, :longitude => -122
+  describe '.all_mapped2' do
+    it "lists photos posted by the person" do
+      returns_post :accuracy => 12, :latitude => 37, :longitude => -122
+    end
+
+    it "ignores other people's posts" do
+      Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+      other_person = Person.make
+      Photo.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
+    end
+
+    it "lists photos guessed by the person" do
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+      guess = Guess.make :photo => photo
+      Photo.all_mapped(guess.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+    end
+
+    it "ignores other people's guesses" do
+      photo = Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
+      Guess.make :photo => photo
+      other_person = Person.make
+      Photo.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
     it "lists auto-mapped photos" do
-      returns :inferred_latitude => 37, :inferred_longitude => -122
-    end
-
-    def returns(attributes)
-      photo = Photo.make attributes
-      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == [ photo ]
-    end
-
-    it "ignores other people's photos" do
-      Photo.make :accuracy => 12, :latitude => 37, :longitude => -122
-      other_person = Person.make
-      Photo.all_mapped(other_person.id, Bounds.new(36, 38, -123, -121)).should == []
+      returns_post :inferred_latitude => 37, :inferred_longitude => -122
     end
 
     it "ignores unmapped photos" do
-      ignores({})
+      ignores_post({})
     end
 
     it "ignores photos mapped with an accuracy < 12" do
-      ignores :accuracy => 11, :latitude => 37, :longitude => -122
+      ignores_post :accuracy => 11, :latitude => 37, :longitude => -122
     end
 
     it "ignores mapped photos south of the minimum latitude" do
-      ignores :accuracy => 12, :latitude => 35, :longitude => -122
+      ignores_post :accuracy => 12, :latitude => 35, :longitude => -122
     end
 
     it "ignores mapped photos north of the maximum latitude" do
-      ignores :accuracy => 12, :latitude => 39, :longitude => -122
+      ignores_post :accuracy => 12, :latitude => 39, :longitude => -122
     end
 
     it "ignores mapped photos west of the minimum longitude" do
-      ignores :accuracy => 12, :latitude => 37, :longitude => -124
+      ignores_post :accuracy => 12, :latitude => 37, :longitude => -124
     end
 
     it "ignores mapped photos east of the maximum longitude" do
-      ignores :accuracy => 12, :latitude => 37, :longitude => -120
+      ignores_post :accuracy => 12, :latitude => 37, :longitude => -120
     end
 
     it "ignores auto-mapped photos south of the minimum latitude" do
-      ignores :inferred_latitude => 35, :inferred_longitude => -122
+      ignores_post :inferred_latitude => 35, :inferred_longitude => -122
     end
 
     it "ignores auto-mapped photos north of the maximum latitude" do
-      ignores :inferred_latitude => 39, :inferred_longitude => -122
+      ignores_post :inferred_latitude => 39, :inferred_longitude => -122
     end
 
     it "ignores auto-mapped photos west of the minimum longitude" do
-      ignores :inferred_latitude => 37, :inferred_longitude => -124
+      ignores_post :inferred_latitude => 37, :inferred_longitude => -124
     end
 
     it "ignores auto-mapped photos east of the maximum longitude" do
-      ignores :inferred_latitude => 37, :inferred_longitude => -120
+      ignores_post :inferred_latitude => 37, :inferred_longitude => -120
     end
 
-    def ignores(attributes)
+    def returns_post(attributes)
       photo = Photo.make attributes
-      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121)).should == []
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == [ photo ]
+    end
+
+    def ignores_post(attributes)
+      photo = Photo.make attributes
+      Photo.all_mapped(photo.person.id, Bounds.new(36, 38, -123, -121), 1).should == []
     end
 
   end

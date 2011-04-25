@@ -86,16 +86,6 @@ class Guess < ActiveRecord::Base
       .count
   end
 
-  def self.all_mapped(person_id, bounds)
-    where(:person_id => person_id) \
-      .includes(:photo).where(
-        '(photos.accuracy >= 12 and photos.latitude between ? and ? and photos.longitude between ? and ?) or ' +
-          '(photos.inferred_latitude between ? and ? and photos.inferred_longitude between ? and ?)',
-        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
-        bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
-      .order(:commented_at)
-  end
-
   def self.longest_in year
    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
       Time.local(year).getutc, Time.local(year + 1).getutc) \
