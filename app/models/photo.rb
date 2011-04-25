@@ -335,7 +335,6 @@ class Photo < ActiveRecord::Base
 
   # TODO Dave test other_user_comments
   # TODO Dave photos f
-  # TODO Dave is commenter clause necessary?
   def self.update_statistics
     connection.execute %q{
       update photos p set
