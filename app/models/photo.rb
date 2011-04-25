@@ -94,24 +94,26 @@ class Photo < ActiveRecord::Base
       ],
       poster.id, poster.flickrid
     ]
+    # TODO Dave calculate comments_per_photo in update_statistics
     if ! most_commented.empty? then
       most_commented = most_commented[0]
       most_commented[:place] = count_by_sql([
         %q[
-        select count(*)
-        from (
-          select max(comment_count) max_comment_count
+          select count(*)
           from (
-            select p.id, count(*) comment_count from photos f, people p, comments c
-            where f.person_id = p.id and
-              f.id = c.photo_id and
-              p.flickrid != c.flickrid
-            group by f.id
-          ) comment_counts
-          group by id
-        ) max_comment_counts
-        where max_comment_count > ?
-      ], most_commented[:comment_count]
+            select max(comment_count) max_comment_count
+            from (
+              select p.id, count(*) comment_count from photos f, people p, comments c
+              where f.person_id = p.id and
+                f.id = c.photo_id and
+                p.flickrid != c.flickrid
+              group by f.id
+            ) comment_counts
+            group by id
+          ) max_comment_counts
+          where max_comment_count > ?
+        ],
+        most_commented[:comment_count]
       ]) + 1
       most_commented
     else
