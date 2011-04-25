@@ -420,8 +420,27 @@ describe PeopleController do
       returns_post @initial_bounds, 'revealed', 'E00000', '-'
     end
 
+    it "copies an inferred geocode to the stated one" do
+      post = Photo.make :id => 14, :person_id => @person.id, :inferred_latitude => 37, :inferred_longitude => -122
+      stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ post ] }
+      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
+      controller.map_photos(@person.id).should == {
+        :partial => false,
+        :bounds => @initial_bounds,
+        :photos => [
+          {
+            'id' => post.id,
+            'latitude' => post.inferred_latitude,
+            'longitude' => post.inferred_longitude,
+            'color' => 'FFFF00',
+            'symbol' => '?'
+          }
+        ]
+      }
+    end
+
     it "returns a guess" do
-      photo = Photo.make :id => 15, :person_id => 2
+      photo = Photo.make :id => 15, :person_id => 2, :latitude => 37, :longitude => -122
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
@@ -446,7 +465,7 @@ describe PeopleController do
     end
 
     def returns_post(bounds, game_status, color, symbol)
-      post = Photo.make :id => 14, :person_id => @person.id, :game_status => game_status
+      post = Photo.make :id => 14, :person_id => @person.id, :latitude => 37, :longitude => -122, :game_status => game_status
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
@@ -466,7 +485,7 @@ describe PeopleController do
 
     it "returns no more than a maximum number of photos" do
       stub(controller).max_map_photos { 1 }
-      post = Photo.make :id => 14, :person_id => @person.id
+      post = Photo.make :id => 14, :person_id => @person.id, :latitude => 37, :longitude => -122
       oldest_photo = Photo.make :dateadded => 1.day.ago
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, 2) { [ post, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
