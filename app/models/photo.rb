@@ -82,7 +82,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_commented(poster)
-    most_commented = includes(:person).where(:person_id => poster.id).order('other_user_comments desc').first
+    most_commented = includes(:person).where(:person_id => poster).order('other_user_comments desc').first
     if most_commented
       most_commented[:place] = count_by_sql([
         %q[
