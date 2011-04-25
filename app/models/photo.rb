@@ -196,7 +196,7 @@ class Photo < ActiveRecord::Base
 
   def self.mapped(bounds, limit)
     Photo.where('accuracy >= 12') \
-      .where('? < latitude and latitude < ? and ? < longitude and longitude < ?',
+      .where('latitude between ? and ? and longitude between ? and ?',
         bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
       .order('dateadded desc').limit(limit)
   end
