@@ -80,8 +80,10 @@ describe PhotosController do
     end
 
     def returns(bounds, game_status, color, symbol)
-      photo = Photo.make :id => 14, :game_status => game_status
-      stub(Photo).within { [ photo ] }
+      photo = Photo.make :game_status => game_status
+      stub(Photo).within(bounds, PhotosController.max_photos + 1) { [ photo ] }
+      oldest_photo = Photo.make :dateadded => 1.day.ago
+      stub(Photo).oldest { oldest_photo }
       controller.map_photos.should == {
         :partial => false,
         :bounds => bounds,
@@ -97,17 +99,26 @@ describe PhotosController do
       }
     end
 
-    it "thins out photos in dense areas of the map" do
+    it "returns no more than a maximum number of photos" do
+      stub(PhotosController).max_photos { 1 }
       bounds = PhotosController::INITIAL_MAP_BOUNDS
-      photo1 = Photo.make :id => 1, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 1.day.ago
-      photo2 = Photo.make :id => 2, :latitude => bounds.min_lat, :longitude => bounds.min_long, :dateadded => 2.days.ago
-      stub(Photo).within { [ photo1, photo2 ] }
-      stub(controller).thin([ photo1, photo2 ], bounds) { [ photo1 ] }
-      map_photos = controller.map_photos
-
-      map_photos[:partial].should == true
-      map_photos[:photos].map { |photo| photo['id'] }.should == [ photo1.id ]
-
+      photo = Photo.make
+      oldest_photo = Photo.make :dateadded => 1.day.ago
+      stub(Photo).within(bounds, PhotosController.max_photos + 1) { [ photo, oldest_photo ] }
+      stub(Photo).oldest { oldest_photo }
+      controller.map_photos.should == {
+        :partial => true,
+        :bounds => bounds,
+        :photos => [
+          {
+            'id' => photo.id,
+            'latitude' => photo.latitude,
+            'longitude' => photo.longitude,
+            'color' => 'FFFF00',
+            'symbol' => '?'
+          }
+        ]
+      }
     end
 
   end

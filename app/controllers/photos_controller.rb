@@ -18,28 +18,34 @@ class PhotosController < ApplicationController
 
   def map_photos
     bounds = get_bounds
-    photos = Photo.within(bounds).to_a
-    photos_count = photos.length
-    first_dateadded = photos.first.dateadded
-    last_dateadded = photos.last.dateadded
-    photos = thin photos, bounds
-    photos.each { |photo| add_display_attributes photo, first_dateadded, last_dateadded }
-    as_json photos_count != photos.length, bounds, photos
+    photos = Photo.within(bounds, PhotosController.max_photos + 1).to_a
+    partial = photos.length == PhotosController.max_photos + 1
+    if (partial)
+      photos.pop
+    end
+    first_dateadded = Photo.oldest.dateadded
+    photos.each { |photo| add_display_attributes photo, first_dateadded }
+    as_json partial, bounds, photos
   end
 
-  def add_display_attributes(photo, first_dateadded, last_dateadded)
+  def add_display_attributes(photo, first_dateadded)
+    now = Time.now
     if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
       photo[:color] = 'FFFF00'
       photo[:symbol] = '?'
     elsif photo.game_status == 'found'
-      photo[:color] = scaled_green first_dateadded, last_dateadded, photo.dateadded
+      photo[:color] = scaled_green first_dateadded, now, photo.dateadded
       photo[:symbol] = '!'
     else # revealed
-      photo[:color] = scaled_red first_dateadded, last_dateadded, photo.dateadded
+      photo[:color] = scaled_red first_dateadded, now, photo.dateadded
       photo[:symbol] = '-'
     end
   end
   private :add_display_attributes
+
+  def self.max_photos
+    2000
+  end
 
   caches_page :map_popup
   def map_popup

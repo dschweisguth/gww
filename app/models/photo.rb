@@ -193,11 +193,15 @@ class Photo < ActiveRecord::Base
   end
   private_class_method :order_by
 
-  def self.within(bounds)
+  def self.within(bounds, limit)
     Photo.where('accuracy >= 12') \
       .where('? < latitude and latitude < ? and ? < longitude and longitude < ?',
         bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
-      .order('dateadded')
+      .order('dateadded desc').limit(limit)
+  end
+
+  def self.oldest
+    Photo.order('dateadded').first
   end
 
   def self.unfound_or_unconfirmed
