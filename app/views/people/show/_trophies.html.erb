@@ -48,7 +48,7 @@
   <% if @longest_lasting_guess %><td>Guessed after <%= raw @longest_lasting_guess.ymd_elapsed %></td><% end %>
   <% if @shortest_lasting_guess %><td>Guessed in <%= raw @shortest_lasting_guess.time_elapsed %></td><% end %>
   <% if @oldest_unfound %><td><%= raw @oldest_unfound.ymd_elapsed %> old</td><% end %>
-  <% if @most_commented %><td><%= raw pluralize @most_commented[:comment_count], 'comment' %></td><% end %>
+  <% if @most_commented %><td><%= raw pluralize @most_commented.other_user_comments, 'comment' %></td><% end %>
   <% if @most_viewed %><td><%= raw pluralize @most_viewed.views, 'view' %></td><% end %>
 </tr>
 <tr class="trophies-places">

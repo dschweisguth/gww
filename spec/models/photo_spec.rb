@@ -77,6 +77,11 @@ describe Photo do
     it { should validate_non_negative_integer :views }
   end
 
+  describe '#other_user_comments' do
+    it { should validate_presence_of :other_user_comments }
+    it { should validate_non_negative_integer :other_user_comments }
+  end
+
   describe '#member_comments' do
     it { should validate_presence_of :member_comments }
     it { should validate_non_negative_integer :member_comments }
@@ -249,47 +254,51 @@ describe Photo do
   end
 
   describe '.most_commented' do
-    it "returns the poster's most-commented unfound" do
+    it "returns the poster's most-commented photo" do
       poster = Person.make
       Photo.make 'second', :person => poster
-      first = Photo.make 'first', :person => poster
+      first = Photo.make 'first', :person => poster, :other_user_comments => 1
       Comment.make :photo => first
       most_commented = Photo.most_commented poster
       most_commented.should == first
-      most_commented[:comment_count].should == 1
+      most_commented[:other_user_comments].should == 1
       most_commented[:place].should == 1
     end
 
     it "counts comments" do
       poster = Person.make
-      second = Photo.make 'second', :person => poster
+      second = Photo.make 'second', :person => poster, :other_user_comments => 1
       Comment.make 21, :photo => second
-      first = Photo.make 'first', :person => poster
+      first = Photo.make 'first', :person => poster, :other_user_comments => 2
       Comment.make 11, :photo => first
       Comment.make 12, :photo => first
       most_commented = Photo.most_commented poster
       most_commented.should == first
-      most_commented[:comment_count].should == 2
+      most_commented[:other_user_comments].should == 2
       most_commented[:place].should == 1
     end
 
     it "ignores other posters' photos" do
-      Comment.make
+      photo = Photo.make :other_user_comments => 1
+      Comment.make :photo => photo
       Photo.most_commented(Person.make).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
-      other_posters_photo = Photo.make 'other_posters'
+      other_posters_photo = Photo.make 'other_posters', :other_user_comments => 2
       Comment.make 'o1', :photo => other_posters_photo
       Comment.make 'o2', :photo => other_posters_photo
-      comment = Comment.make
-      Photo.most_commented(comment.photo.person)[:place].should == 2
+      photo = Photo.make :other_user_comments => 1
+      Comment.make :photo => photo
+      Photo.most_commented(photo.person)[:place].should == 2
     end
 
     it "ignores other posters' equally commented photos when calculating place" do
-      Comment.make 'on_other_posters_photo'
-      comment = Comment.make
-      Photo.most_commented(comment.photo.person)[:place].should == 1
+      other_posters_photo = Photo.make 'other_posters', :other_user_comments => 1
+      Comment.make 'other', :photo => other_posters_photo
+      photo = Photo.make :other_user_comments => 1
+      Comment.make :photo => photo
+      Photo.most_commented(photo.person)[:place].should == 1
     end
 
     it "handles a person with no photos" do
@@ -299,7 +308,7 @@ describe Photo do
   end
 
   describe '.most_viewed' do
-    it "returns the poster's most-viewed unfound" do
+    it "returns the poster's most-viewed photo" do
       poster = Person.make
       Photo.make 'second', :person => poster
       first = Photo.make 'first', :person => poster, :views => 1
@@ -1261,11 +1270,11 @@ describe Photo do
 
   describe '#star_for_comments' do
     expected = { 0 => nil, 20 => :silver, 30 => :gold }
-    expected.keys.sort.each do |comment_count|
-      it "returns a #{expected[comment_count]} star for a photo with #{comment_count} comments" do
+    expected.keys.sort.each do |other_user_comments|
+      it "returns a #{expected[other_user_comments]} star for a photo with #{other_user_comments} comments" do
         photo = Photo.new
-        photo[:comment_count] = comment_count
-        photo.star_for_comments.should == expected[comment_count]
+        photo.other_user_comments = other_user_comments
+        photo.star_for_comments.should == expected[other_user_comments]
       end
     end
   end

@@ -265,6 +265,7 @@ describe Photo do
     photo.seen_at.should_not == nil
     photo.game_status.should == 'unfound'
     photo.views.should == 0
+    photo.other_user_comments.should == 0
     photo.member_comments.should == 0
     photo.member_questions.should == 0
     photo.inferred_latitude.should == nil
@@ -286,6 +287,7 @@ describe Photo do
       :seen_at => Time.utc(2012),
       :game_status => 'found',
       :views => 1,
+      :other_user_comments => 1,
       :member_comments => 1,
       :member_questions => 1,
       :inferred_latitude => 37,

@@ -8,7 +8,7 @@ class Photo < ActiveRecord::Base
   has_many :comments, :inverse_of => :photo
   has_one :revelation, :inverse_of => :photo
   validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
-    :game_status, :views, :member_comments, :member_questions
+    :game_status, :views, :other_user_comments, :member_comments, :member_questions
   attr_readonly :person, :flickrid
   validates_numericality_of :latitude, :allow_nil => true
   validates_numericality_of :longitude, :allow_nil => true
@@ -16,6 +16,8 @@ class Photo < ActiveRecord::Base
     :only_integer => true, :greater_than_or_equal_to => 0
   validates_inclusion_of :game_status, :in => %w(unfound unconfirmed found revealed)
   validates_numericality_of :views, :only_integer => true,
+    :greater_than_or_equal_to => 0
+  validates_numericality_of :other_user_comments, :only_integer => true,
     :greater_than_or_equal_to => 0
   validates_numericality_of :member_comments, :only_integer => true,
     :greater_than_or_equal_to => 0
@@ -80,40 +82,19 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_commented(poster)
-    most_commented = find_by_sql [
-      %q[
-          select f.*, count(*) comment_count
-          from photos f, comments c
-          where
-            f.person_id = ? and
-            f.id = c.photo_id and
-            c.flickrid != ?
-          group by f.id
-          order by comment_count desc 
-          limit 1
-      ],
-      poster.id, poster.flickrid
-    ]
-    # TODO Dave calculate comments_per_photo in update_statistics
-    if ! most_commented.empty? then
-      most_commented = most_commented[0]
+    most_commented = includes(:person).where(:person_id => poster.id).order('other_user_comments desc').first
+    if most_commented
       most_commented[:place] = count_by_sql([
         %q[
           select count(*)
           from (
-            select max(comment_count) max_comment_count
-            from (
-              select p.id, count(*) comment_count from photos f, people p, comments c
-              where f.person_id = p.id and
-                f.id = c.photo_id and
-                p.flickrid != c.flickrid
-              group by f.id
-            ) comment_counts
-            group by id
-          ) max_comment_counts
-          where max_comment_count > ?
+            select max(other_user_comments) max_other_user_comments
+            from photos
+            group by person_id
+          ) max_comments
+          where max_other_user_comments > ?
         ],
-        most_commented[:comment_count]
+        most_commented.other_user_comments
       ]) + 1
       most_commented
     else
@@ -123,7 +104,7 @@ class Photo < ActiveRecord::Base
 
   def self.most_viewed(poster)
     most_viewed = includes(:person).where(:person_id => poster).order('views desc').first
-    if most_viewed then
+    if most_viewed
       most_viewed[:place] = count_by_sql([
         %q[
           select count(*)
@@ -352,9 +333,27 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
+  # TODO Dave test other_user_comments
+  # TODO Dave photos f
+  # TODO Dave is commenter clause necessary?
   def self.update_statistics
+#  select p.id, count(*) comment_count from photos f, people p, comments c
+#  where f.person_id = p.id and
+#    f.id = c.photo_id and
+#    p.flickrid != c.flickrid
+#  group by f.id
     connection.execute %q{
       update photos p set
+        other_user_comments =
+          ifnull(
+            (select count(*)
+              from people poster, comments c
+              where
+                p.person_id = poster.id and
+                p.id = c.photo_id and
+                poster.flickrid != c.flickrid
+              group by c.photo_id),
+            0),
         member_comments =
           ifnull(
             (select count(*)
@@ -514,9 +513,9 @@ class Photo < ActiveRecord::Base
   end
 
   def star_for_comments
-    if self[:comment_count] >= 30
+    if other_user_comments >= 30
       :gold
-    elsif self[:comment_count] >= 20
+    elsif other_user_comments >= 20
       :silver
     else
       nil

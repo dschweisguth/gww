@@ -254,8 +254,7 @@ describe PeopleController do
       oldest_unfound[:place] = 1
       stub(Photo).oldest_unfound(@person) { oldest_unfound }
 
-      most_commented = Photo.make 'most_commented'
-      most_commented[:comment_count] = 1
+      most_commented = Photo.make 'most_commented', :other_user_comments => 1
       most_commented[:place] = 1
       stub(Photo).most_commented(@person) { most_commented }
 
