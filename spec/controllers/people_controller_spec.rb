@@ -420,7 +420,7 @@ describe PeopleController do
 
     it "returns a guess" do
       photo = Photo.make :id => 15, :person_id => 2
-      stub(Photo).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS, PhotosController.max_photos + 1) { [ photo ] }
+      stub(Photo).all_mapped(@person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController.max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
         :partial => false,
@@ -445,7 +445,7 @@ describe PeopleController do
 
     def returns_post(bounds, game_status, color, symbol)
       post = Photo.make :id => 14, :person_id => @person.id, :game_status => game_status
-      stub(Photo).all_mapped(@person.id, bounds, PhotosController.max_photos + 1) { [ post ] }
+      stub(Photo).all_mapped(@person.id, bounds, PeopleController.max_photos + 1) { [ post ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos(@person.id).should == {
         :partial => false,
@@ -464,7 +464,7 @@ describe PeopleController do
 
     it "returns no more than a maximum number of photos" do
       stub(PeopleController).max_photos { 1 }
-      bounds = PhotosController::INITIAL_MAP_BOUNDS
+      bounds = PeopleController::INITIAL_MAP_BOUNDS
       post = Photo.make :id => 14, :person_id => @person.id
       oldest_photo = Photo.make :dateadded => 1.day.ago
       stub(Photo).all_mapped(@person.id, bounds, 2) { [ post, oldest_photo ] }
@@ -481,6 +481,17 @@ describe PeopleController do
             'symbol' => '?'
           }
         ]
+      }
+    end
+
+    it "handles no photos" do
+      bounds = PeopleController::INITIAL_MAP_BOUNDS
+      stub(Photo).all_mapped(@person.id, bounds, PeopleController.max_photos + 1) { [] }
+      stub(Photo).oldest { nil }
+      controller.map_photos(@person.id).should == {
+        :partial => false,
+        :bounds => bounds,
+        :photos => []
       }
     end
 
