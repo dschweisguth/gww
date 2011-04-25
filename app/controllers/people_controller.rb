@@ -159,16 +159,6 @@ class PeopleController < ApplicationController
     as_json partial, photos
   end
 
-  def use_inferred_geocode_if_necessary(photos)
-    photos.each do |photo|
-      if !photo.latitude
-        photo.latitude = photo.inferred_latitude
-        photo.longitude = photo.inferred_longitude
-      end
-    end
-  end
-  private :use_inferred_geocode_if_necessary
-
   def add_display_attributes(photo, person_id, first_dateadded)
     now = Time.now
     if photo.person_id == person_id

@@ -24,6 +24,7 @@ class PhotosController < ApplicationController
     end
     first_photo = Photo.oldest
     if first_photo
+      use_inferred_geocode_if_necessary(photos)
       photos.each { |photo| add_display_attributes photo, first_photo.dateadded }
     end
     as_json partial, photos

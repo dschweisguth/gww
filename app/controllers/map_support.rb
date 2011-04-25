@@ -17,6 +17,15 @@ module MapSupport
     2000
   end
 
+  def use_inferred_geocode_if_necessary(photos)
+    photos.each do |photo|
+      if !photo.latitude
+        photo.latitude = photo.inferred_latitude
+        photo.longitude = photo.inferred_longitude
+      end
+    end
+  end
+
   def scaled_red(start_of_range, end_of_range, position)
     scaled(start_of_range, end_of_range, position, [ [ 256, 224 ], [ 192, 0 ], [ 192, 0 ]  ])
   end
