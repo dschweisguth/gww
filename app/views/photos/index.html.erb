@@ -12,6 +12,7 @@
     <th><%= link_to 'last updated', other_photos_path('last-updated') %></th>
     <th>game status</th>
     <th><%= link_to 'views', other_photos_path('views') %></th>
+    <th><%= link_to 'comments', other_photos_path('comments') %></th>
     <th><%= link_to '# of comments by members while unfound', other_photos_path('member-comments') %></th>
     <th><%= link_to '# of comments with ? by members while unfound', other_photos_path('member-questions') %></th>
   </tr>  
@@ -24,6 +25,7 @@
     <td><%= local_date photo.lastupdate %></td>
     <td><%= photo.game_status %></td>
     <td><%= photo.views %></td>
+    <td><%= photo.other_user_comments %></td>
     <td><%= photo[:member_comments] %></td>
     <td><%= photo[:member_questions] %></td>
   </tr>

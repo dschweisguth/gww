@@ -517,6 +517,18 @@ describe Photo do
         { :username => 'a' }, { :views => 0 })
     end
 
+    it 'returns photos sorted by comments' do
+      all_sorted_and_paginated_reverses_photos('comments',
+        { :username => 'a' }, { :other_user_comments => 0 },
+        { :username => 'z' }, { :other_user_comments => 1 })
+    end
+
+    it 'returns photos sorted by comments, username' do
+      all_sorted_and_paginated_reverses_photos('comments',
+        { :username => 'z' }, { :other_user_comments => 0 },
+        { :username => 'a' }, { :other_user_comments => 0 })
+    end
+
     it 'returns photos sorted by member_comments' do
       all_sorted_and_paginated_reverses_photos('member-comments',
         { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
