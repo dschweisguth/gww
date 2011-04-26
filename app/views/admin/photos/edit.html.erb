@@ -11,13 +11,12 @@
 
 <div id="photo">
 <%= render 'photos/image_and_status', :size => 'm' %>
-<br/>
 
 <%= form_tag change_game_status_path(@photo) do %>
-<div>Change this photo's status from <%= @photo.game_status %> to
+<p>Change this photo's status from <%= @photo.game_status %> to
 <% if @photo.game_status != 'unfound' %><%= submit_tag 'unfound' %><% end %>
 <% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
-(removes any guesses or revelation)</div>
+(removes any guesses or revelation)</p>
 <% end %>
 
 <p id="comments-header">Comments</p>
