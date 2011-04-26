@@ -10,7 +10,7 @@
         render('shared/alt', :photo => change.photo),
         :size => '50x50'
       ),
-      url_for_flickr_photo(change.photo) -%>
+      url_for_flickr_photo_in_pool(change.photo) -%>
 <% if change.respond_to? :star_for_age then %>
 <%= star = change.star_for_age
     if star then

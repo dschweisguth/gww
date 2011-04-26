@@ -50,7 +50,7 @@ describe ApplicationHelper do
     it "returns a link to the given photo's Flickr page, in the GWSF pool" do
       photo = Photo.make
       helper.link_to_flickr_photo(photo).should ==
-        "<a href=\"#{url_for_flickr_photo photo}\">Flickr</a>";
+        "<a href=\"#{url_for_flickr_photo_in_pool photo}\">Flickr</a>";
     end
   end
 

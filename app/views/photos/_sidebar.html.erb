@@ -14,8 +14,8 @@
         <% end %>
       </p>
     <% end %>
-    <div id="statistics"><%= link_to @photo.views.to_s + ' views', url_for_flickr_photo_not_in_group(@photo) + 'stats/' %> &#183;
-      <%= link_to @photo.other_user_comments.to_s + ' comments', url_for_flickr_photo(@photo) + '#comments' %></div>
+    <div id="statistics"><%= link_to @photo.views.to_s + ' views', url_for_flickr_photo(@photo) + 'stats/' %> &#183;
+      <%= link_to @photo.other_user_comments.to_s + ' comments', url_for_flickr_photo_in_pool(@photo) + '#comments' %></div>
   </div>
   <hr/>
 </div>

@@ -1,10 +1,10 @@
 module Photos
-  def url_for_flickr_photo_not_in_group(photo)
+  def url_for_flickr_photo(photo)
     "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/"
   end
 
-  def url_for_flickr_photo(photo)
-    "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/"
+  def url_for_flickr_photo_in_pool(photo)
+    url_for_flickr_photo(photo) + "in/pool-guesswheresf/"
   end
 
   def url_for_flickr_image(photo, size = nil)

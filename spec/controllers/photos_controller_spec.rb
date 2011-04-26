@@ -208,7 +208,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_selector 'a', :href => url_for_flickr_photo(photo), :content => 'Flickr'
+      response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo), :content => 'Flickr'
       response.should have_selector 'a', :href => photo_path(photo), :content => 'GWW'
       response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
 
@@ -241,7 +241,7 @@ describe PhotosController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should have_selector 'a', :href => url_for_flickr_photo(photo) do |content|
+      response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo) do |content|
         content.should have_selector 'img', :src => url_for_flickr_image(photo, 'z')
       end
       response.should contain 'This photo is unfound.'

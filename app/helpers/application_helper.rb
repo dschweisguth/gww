@@ -31,7 +31,7 @@ module ApplicationHelper
   end
 
   def link_to_flickr_photo(photo)
-    link_to 'Flickr', url_for_flickr_photo(photo)
+    link_to 'Flickr', url_for_flickr_photo_in_pool(photo)
   end
 
   def titled_image_tag(src, alt_and_title, options = {})

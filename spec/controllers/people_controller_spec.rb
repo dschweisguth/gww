@@ -352,7 +352,7 @@ describe PeopleController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'h1', :content => '1 photo commented on by username'
-      response.should have_selector 'a', :href => url_for_flickr_photo(photo), :content => 'Flickr'
+      response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo), :content => 'Flickr'
       response.should have_selector 'a', :href => photo_path(photo), :content => 'GWW'
       response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
 

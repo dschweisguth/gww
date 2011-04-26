@@ -1,4 +1,4 @@
-<%= link_to titled_image_tag(url_for_flickr_image(@photo, (defined?(size) ? size : nil)), ""), url_for_flickr_photo(@photo) %><br/><br/>
+<%= link_to titled_image_tag(url_for_flickr_image(@photo, (defined?(size) ? size : nil)), ""), url_for_flickr_photo_in_pool(@photo) %><br/><br/>
 
 <% if @photo.game_status == 'found' %>
   This photo was correctly guessed by ...
