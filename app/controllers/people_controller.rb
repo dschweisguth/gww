@@ -152,12 +152,12 @@ class PeopleController < ApplicationController
     first_photo = Photo.oldest
     if first_photo
       use_inferred_geocode_if_necessary(photos)
-      photos.each { |photo| add_display_attributes photo, person_id, first_photo.dateadded }
+      photos.each { |photo| prepare_for_display_for_person photo, person_id, first_photo.dateadded }
     end
     as_json partial, photos
   end
 
-  def add_display_attributes(photo, person_id, first_dateadded)
+  def prepare_for_display_for_person(photo, person_id, first_dateadded)
     now = Time.now
     if photo.person_id == person_id
       if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
@@ -175,6 +175,6 @@ class PeopleController < ApplicationController
       photo[:symbol] = '!'
     end
   end
-  private :add_display_attributes
+  private :prepare_for_display_for_person
 
 end
