@@ -48,7 +48,14 @@
       <br/>
     <% end %>
   </div><br/>
+  <% else %>
+    No comments available.
+  <% end %>
+</div>
 
+<%= render 'photos/sidebar' %>
+
+<% if ! @comments.empty? %>
   <%= form_tag(add_entered_answer_path(@photo), :id => 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here
@@ -58,18 +65,12 @@
       To delete a guess or revelation created with either of these options, change the photo's status to unfound or unconfirmed, or accept the poster's revelation.
     </div>
   <% end %>
-
-<% else %>
-  No comments available.
 <% end %>
-<br/><br/>
+
+<br/>
 
 <%= button_to 'Reload comments', reload_comments_path(@photo) %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
-</div>
 
-<%= render 'photos/sidebar' %>
-
-<br class="clear"/>
 <% end %>
