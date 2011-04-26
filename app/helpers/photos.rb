@@ -1,4 +1,8 @@
 module Photos
+  def url_for_flickr_photo_not_in_group(photo)
+    "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/"
+  end
+
   def url_for_flickr_photo(photo)
     "http://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/"
   end
