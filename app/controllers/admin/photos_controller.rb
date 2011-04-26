@@ -53,27 +53,12 @@ class Admin::PhotosController < ApplicationController
     if @photo.mapped_or_automapped?
       first_photo = Photo.oldest
       use_inferred_geocode_if_necessary([ @photo ]) # TODO Dave *
-      add_display_attributes @photo, first_photo.dateadded
+      prepare_for_display @photo, first_photo.dateadded
       @json = @photo.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
     else
       @json = '{}'
     end
   end
-
-  def add_display_attributes(photo, first_dateadded)
-    now = Time.now
-    if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
-      photo[:color] = 'FFFF00'
-      photo[:symbol] = '?'
-    elsif photo.game_status == 'found'
-      photo[:color] = scaled_green first_dateadded, now, photo.dateadded
-      photo[:symbol] = '!'
-    else # revealed
-      photo[:color] = scaled_red first_dateadded, now, photo.dateadded
-      photo[:symbol] = '-'
-    end
-  end
-  private :add_display_attributes
 
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]
