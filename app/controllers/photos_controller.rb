@@ -69,6 +69,12 @@ class PhotosController < ApplicationController
     #noinspection RailsParamDefResolve
     @photo = Photo.includes(:person, :revelation, { :guesses => :person }).find params[:id]
     @comments = Comment.find_all_by_photo_id @photo
+    first_photo = Photo.oldest
+    if first_photo
+      use_inferred_geocode_if_necessary([ @photo ]) # TODO Dave *
+      add_display_attributes @photo, first_photo.dateadded
+    end
+    @json = @photo.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
 
 end

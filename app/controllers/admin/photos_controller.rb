@@ -1,4 +1,5 @@
 class Admin::PhotosController < ApplicationController
+  include MapSupport
   autocomplete :person, :username
 
   def update_all_from_flickr
@@ -49,7 +50,28 @@ class Admin::PhotosController < ApplicationController
       @comments = Comment.find_all_by_photo_id @photo
     end
     @comments.each { |comment| comment.photo = @photo }
+    first_photo = Photo.oldest
+    if first_photo
+      use_inferred_geocode_if_necessary([ @photo ]) # TODO Dave *
+      add_display_attributes @photo, first_photo.dateadded
+    end
+    @json = @photo.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
+
+  def add_display_attributes(photo, first_dateadded)
+    now = Time.now
+    if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
+      photo[:color] = 'FFFF00'
+      photo[:symbol] = '?'
+    elsif photo.game_status == 'found'
+      photo[:color] = scaled_green first_dateadded, now, photo.dateadded
+      photo[:symbol] = '!'
+    else # revealed
+      photo[:color] = scaled_red first_dateadded, now, photo.dateadded
+      photo[:symbol] = '-'
+    end
+  end
+  private :add_display_attributes
 
   def change_game_status
     Photo.change_game_status params[:id], params[:commit]

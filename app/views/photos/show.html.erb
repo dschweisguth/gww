@@ -1,3 +1,4 @@
+<%= head_javascript 'app/shared/single-photo-map' %>
 <% content_for :title do %>Photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 <%= sandwich do %>
 <div id="photo">
@@ -22,3 +23,4 @@ No comments available.
 <%= render 'photos/sidebar' %>
 
 <% end %>
+<%= render 'shared/config' %>

@@ -232,7 +232,7 @@ describe PhotosController do
 
   describe '#show' do
     it 'renders the page' do
-      photo = Photo.make :id => 1, :dateadded => Time.local(2010)
+      photo = Photo.make :id => 1, :dateadded => Time.local(2010), :other_user_comments => 11, :views => 22
       guess = Guess.make :photo => photo
       photo.guesses << guess
       stub(Photo).includes.stub!.find(photo.id) { photo }
@@ -242,9 +242,8 @@ describe PhotosController do
       #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => url_for_flickr_photo(photo) do |content|
-        content.should have_selector 'img', :src => url_for_flickr_image(photo)
+        content.should have_selector 'img', :src => url_for_flickr_image(photo, 'z')
       end
-      response.should contain 'Added to the group at 12:00 AM, January 1, 2010'
       response.should contain 'This photo is unfound.'
       response.should have_selector 'table' do |content|
         content.should have_selector 'td', :content => 'guesser_username'
@@ -252,6 +251,10 @@ describe PhotosController do
       end
       response.should have_selector 'strong', :content => 'commenter_username'
       response.should contain 'comment text'
+      response.should contain 'This photo was added to the group at 12:00 AM, January 1, 2010.'
+      response.should contain "This photo hasn't been found or revealed yet"
+      response.should contain '11 comments'
+      response.should contain '22 views'
 
     end
   end

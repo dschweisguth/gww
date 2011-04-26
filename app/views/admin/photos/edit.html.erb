@@ -1,5 +1,5 @@
 <%= head_css 'jquery-ui' %>
-<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/admin/photos/edit' %>
+<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/admin/photos/edit', 'app/shared/single-photo-map' %>
 <% content_for :title do %>Editing photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 
 <%= sandwich 'shared/admin/breadcrumbs' do %>
@@ -73,3 +73,4 @@
 <%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
 
 <% end %>
+<%= render 'shared/config' %>

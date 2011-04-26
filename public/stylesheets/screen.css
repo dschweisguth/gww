@@ -187,14 +187,31 @@ a.normal {
   width: 640px;
 }
 
-#sidebar {
+#sidebar, #map {
   width: 300px;
+}
+
+#sidebar {
   margin-left: 35px;
 }
 
 #story {
   font-size: 12px;
   color: #666666;
+}
+
+#map, #no-map {
+  margin: 10px 0;
+}
+
+#map {
+  height: 100px;
+}
+
+#no-map {
+  width: 238px;
+  padding: 30px;
+  border: 1px solid #666666;
 }
 
 .when {
