@@ -98,7 +98,7 @@ describe Admin::PhotosController do
         form.should have_selector 'input', :type => 'hidden', :name => 'comment_id', :value => '222'
       end
       response.should contain 'This photo was added to the group at 12:00 AM, January 1, 2011.'
-      # See the spec for PhotosController#show for more on the sidebar
+      # See admin/photos_controller_spec for more on the sidebar
     end
 
   end
