@@ -1,0 +1,10 @@
+<div id="sidebar">
+  By <%= link_to_person @photo.person %>
+  <hr/>
+  <div id="story">
+  This photo was added to the group at <%= @photo.dateadded.getlocal.strftime '%l:%M %p, %B %e, %Y' %>.<br/>
+  <%= @photo.views %> views &#183; <%= @photo.other_user_comments %> comments
+  </div>
+  <hr/>
+</div>
+<br class="clear"/>

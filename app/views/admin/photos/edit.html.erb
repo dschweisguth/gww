@@ -9,6 +9,7 @@
   <%= flash[:notice] %><br/><br/>
 <% end %>
 
+<div id="photo">
 <%= render 'photos/image_and_status', :size => 'm' %>
 <br/>
 
@@ -66,5 +67,9 @@
 <%= button_to 'Reload comments', reload_comments_path(@photo) %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
+</div>
 
+<%= render 'photos/sidebar' %>
+
+<br class="clear"/>
 <% end %>

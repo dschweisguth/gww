@@ -179,6 +179,24 @@ a.normal {
 
 /* /photos/#, /admin/photos/#/edit */
 
+#photo, #sidebar {
+  float: left;
+}
+
+#photo {
+  width: 640px;
+}
+
+#sidebar {
+  width: 300px;
+  margin-left: 35px;
+}
+
+#story {
+  font-size: 12px;
+  color: #666666;
+}
+
 .when {
   width: 100px;
 }
@@ -194,7 +212,7 @@ a.normal {
 }
 
 .comment {
-  width: 500px;
+  width: 640px;
 }
 
 .comment strong {
@@ -227,6 +245,10 @@ a.normal {
 
 #comments form {
   width: 150px;
+}
+
+.edit .comment {
+  width: 486px;
 }
 
 .poster {
