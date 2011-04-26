@@ -27,7 +27,7 @@ class PhotosController < ApplicationController
       use_inferred_geocode_if_necessary(photos)
       photos.each { |photo| prepare_for_display photo, first_photo.dateadded }
     end
-    as_json partial, photos
+    photos_as_json partial, photos
   end
 
   caches_page :map_popup
