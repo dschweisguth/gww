@@ -10,43 +10,43 @@
 <% end %>
 
 <div id="photo">
-<%= render 'photos/image_and_status', :size => 'm' %>
+  <%= render 'photos/image_and_status', :size => 'm' %>
 
-<%= form_tag change_game_status_path(@photo) do %>
-<p>Change this photo's status from <%= @photo.game_status %> to
-<% if @photo.game_status != 'unfound' %><%= submit_tag 'unfound' %><% end %>
-<% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
-(removes any guesses or revelation)</p>
-<% end %>
+  <%= form_tag change_game_status_path(@photo) do %>
+    <p>Change this photo's status from <%= @photo.game_status %> to
+    <% if @photo.game_status != 'unfound' %><%= submit_tag 'unfound' %><% end %>
+    <% if @photo.game_status != 'unconfirmed' %><%= submit_tag 'unconfirmed' %><% end %>
+    (removes any guesses or revelation)</p>
+  <% end %>
 
-<p id="comments-header">Comments</p>
-<% if ! @comments.empty? %>
-  <div id="comments" class="edit">
-    <% @comments.each do |comment| %>
-      <% is_accepted_answer = comment.is_accepted_answer %>
-      <% if is_accepted_answer then %>
-        <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
-          <div>
-            <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
-            <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
-          </div>
+  <p id="comments-header">Comments</p>
+  <% if ! @comments.empty? %>
+    <div id="comments" class="edit">
+      <% @comments.each do |comment| %>
+        <% is_accepted_answer = comment.is_accepted_answer %>
+        <% if is_accepted_answer then %>
+          <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
+            <div>
+              <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
+              <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
+            </div>
+          <% end %>
+        <% else %>
+          <%= form_tag add_selected_answer_path(@photo) do %>
+            <div>
+              <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
+              <%= hidden_field_tag 'username', nil, :id => nil %>
+              <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess') %>
+            </div>
+          <% end %>
         <% end %>
-      <% else %>
-        <%= form_tag add_selected_answer_path(@photo) do %>
-          <div>
-            <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
-            <%= hidden_field_tag 'username', nil, :id => nil %>
-            <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess') %>
-          </div>
-        <% end %>
+        <div class="comment">
+          <strong><%= comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
+          <%= raw wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
+        </div>
+        <br/>
       <% end %>
-      <div class="comment">
-        <strong><%= comment.username %></strong> <span class="ago">(<%= ago comment.commented_at %>)</span><br/>
-        <%= raw wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
-      </div>
-      <br/>
-    <% end %>
-  </div><br/>
+    </div><br/>
   <% else %>
     No comments available.
   <% end %>
