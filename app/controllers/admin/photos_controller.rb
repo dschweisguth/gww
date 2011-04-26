@@ -50,12 +50,14 @@ class Admin::PhotosController < ApplicationController
       @comments = Comment.find_all_by_photo_id @photo
     end
     @comments.each { |comment| comment.photo = @photo }
-    first_photo = Photo.oldest
-    if first_photo
+    if @photo.mapped_or_automapped?
+      first_photo = Photo.oldest
       use_inferred_geocode_if_necessary([ @photo ]) # TODO Dave *
       add_display_attributes @photo, first_photo.dateadded
+      @json = @photo.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
+    else
+      @json = '{}'
     end
-    @json = @photo.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
   end
 
   def add_display_attributes(photo, first_dateadded)

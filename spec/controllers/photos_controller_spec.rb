@@ -231,7 +231,7 @@ describe PhotosController do
   end
 
   describe '#show' do
-    it 'renders the page' do
+    it "renders the page" do
       photo = Photo.make :id => 1, :dateadded => Time.local(2010), :other_user_comments => 11, :views => 22
       guess = Guess.make :photo => photo
       photo.guesses << guess
@@ -255,8 +255,33 @@ describe PhotosController do
       response.should contain "This photo hasn't been found or revealed yet"
       response.should contain '11 comments'
       response.should contain '22 views'
+      response.should contain 'GWW.config = {}'
 
     end
+
+    it "includes a map if the photo is mapped" do
+      photo = Photo.make :id => 1, :latitude => 37, :longitude => -122, :accuracy => 12
+      stub(Photo).includes.stub!.find(photo.id) { photo }
+      oldest = Photo.make :dateadded => 1.day.ago
+      stub(Photo).oldest { oldest }
+      get :show, :id => photo.id
+
+      json = {
+        'id' => photo.id,
+        'latitude' => photo.latitude,
+        'longitude' => photo.longitude,
+        'color' => 'FFFF00',
+        'symbol' => '?'
+      }
+      assigns[:json].should == json.to_json
+
+      #noinspection RubyResolve
+      response.should be_success
+      response.should have_selector '#map'
+      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
+
+    end
+
   end
 
 end
