@@ -187,6 +187,33 @@ a.normal {
   width: 640px;
 }
 
+.when {
+  width: 100px;
+}
+
+#comments-header {
+  font-size: 16px;
+}
+
+#comments form, .comment {
+  display: inline-block;
+  vertical-align: top;
+  margin: 2px 0;
+}
+
+.comment {
+  width: 640px;
+}
+
+.comment strong {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.ago {
+  color: #bbbbbb;
+}
+
 #sidebar, #map {
   width: 300px;
 }
@@ -214,31 +241,9 @@ a.normal {
   border: 1px solid #666666;
 }
 
-.when {
-  width: 100px;
-}
-
-#comments-header {
-  font-size: 16px;
-}
-
-#comments form, .comment {
-  display: inline-block;
-  vertical-align: top;
-  margin: 2px 0;
-}
-
-.comment {
-  width: 640px;
-}
-
-.comment strong {
-  display: inline-block;
-  margin-bottom: 2px;
-}
-
-.ago {
-  color: #bbbbbb;
+#statistics {
+  width: 300px;
+  text-align: center;
 }
 
 /* /wheresies/# */

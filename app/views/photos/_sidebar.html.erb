@@ -2,19 +2,19 @@
   By <%= link_to_person @photo.person %>
   <hr/>
   <div id="story">
-  This photo was added to the group at <%= @photo.dateadded.getlocal.strftime '%l:%M %p, %B %e, %Y' %>.
-  <% if @photo.mapped_or_automapped? %>
-    <div id="map"></div>
-  <% else %>
-    <p id="no-map">
-      <% if @photo.game_status == 'unfound' || @photo.game_status == 'unconfirmed' %>
-        This photo hasn't been found or revealed yet, so GWW doesn't know where it is.
-      <% else %>
-        This photo hasn't been mapped by its poster and GWW can't tell where it is from the guess or revelation.
-      <% end %>
-    </p>
-  <% end %>
-  <%= @photo.views %> views &#183; <%= @photo.other_user_comments %> comments
+    This photo was added to the group at <%= @photo.dateadded.getlocal.strftime '%l:%M %p, %B %e, %Y' %>.
+    <% if @photo.mapped_or_automapped? %>
+      <div id="map"></div>
+    <% else %>
+      <p id="no-map">
+        <% if @photo.game_status == 'unfound' || @photo.game_status == 'unconfirmed' %>
+          This photo hasn't been found or revealed yet, so GWW doesn't know where it is.
+        <% else %>
+          This photo hasn't been mapped by its poster and GWW can't tell where it is from the guess or revelation.
+        <% end %>
+      </p>
+    <% end %>
+    <div id="statistics"><%= @photo.views %> views &#183; <%= @photo.other_user_comments %> comments</div>
   </div>
   <hr/>
 </div>
