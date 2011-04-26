@@ -146,8 +146,17 @@ a.normal {
   font-weight: normal;
 }
 
+.photo-links a {
+  display: inline-block;
+  padding: 0 2px;
+}
+
 .unconfirmed {
   background-color: #ffcc33;
+}
+
+.unmapped {
+  background-color: #e7e7e7;
 }
 
 /* /people/#/map */
