@@ -248,7 +248,17 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is mapped" do
-      photo = Photo.make :id => 1, :latitude => 37, :longitude => -122, :accuracy => 12
+      includes_a_map Photo.make(:id => 1, :latitude => 37, :longitude => -122, :accuracy => 12)
+    end
+
+    it "includes a map if the photo is auto-mapped" do
+      photo = Photo.make(:id => 1, :inferred_latitude => 37, :inferred_longitude => -122)
+      includes_a_map photo
+      photo.latitude.should == photo.inferred_latitude
+      photo.longitude.should == photo.inferred_longitude
+    end
+
+    def includes_a_map(photo)
       stub(Photo).includes.stub!.find(photo.id) { photo }
       oldest = Photo.make :dateadded => 1.day.ago
       stub(Photo).oldest { oldest }
@@ -260,13 +270,13 @@ describe PhotosController do
         'longitude' => photo.longitude,
         'color' => 'FFFF00',
         'symbol' => '?'
-      }
-      assigns[:json].should == json.to_json
+      }.to_json
+      assigns[:json].should == json
 
       #noinspection RubyResolve
       response.should be_success
       response.should have_selector '#map'
-      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
+      response.should contain /GWW\.config = #{Regexp.escape json};/
 
     end
 
