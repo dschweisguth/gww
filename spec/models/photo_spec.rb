@@ -1354,4 +1354,23 @@ describe Photo do
     end
   end
 
+  describe '#mapped_or_automapped' do
+    it "returns false if the photo is not mapped" do
+      Photo.make.mapped_or_automapped?.should == false
+    end
+
+    it "returns true if the photo is mapped at sufficient accuracy" do
+      Photo.make(:latitude => 37, :longitude => -122, :accuracy => 12).mapped_or_automapped?.should == true
+    end
+
+    it "returns false if the photo is mapped at insufficient accuracy" do
+      Photo.make(:latitude => 37, :longitude => -122, :accuracy => 11).mapped_or_automapped?.should == false
+    end
+
+    it "returns true if the photo is auto-mapped" do
+      Photo.make(:inferred_latitude => 37, :inferred_longitude => -122).mapped_or_automapped?.should == true
+    end
+
+  end
+
 end
