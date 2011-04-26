@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  include MapSupport
+  include MultiPhotoMapSupport
 
   def find
     username = params[:username]
@@ -154,7 +154,7 @@ class PeopleController < ApplicationController
       use_inferred_geocode_if_necessary(photos)
       photos.each { |photo| prepare_for_display_for_person photo, person_id, first_photo.dateadded }
     end
-    photos_as_json partial, photos
+    as_json partial, photos
   end
 
   def prepare_for_display_for_person(photo, person_id, first_dateadded)

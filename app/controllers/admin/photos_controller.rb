@@ -1,5 +1,6 @@
 class Admin::PhotosController < ApplicationController
-  include MapSupport
+  include SinglePhotoMapSupport
+  
   autocomplete :person, :username
 
   def update_all_from_flickr

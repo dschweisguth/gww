@@ -1,24 +1,5 @@
 module MapSupport
 
-  INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
-  BINS_PER_AXIS = 20
-
-  def bounds
-    if params[:sw]
-      sw = params[:sw].split(',').map &:to_f
-      ne = params[:ne].split(',').map &:to_f
-      Bounds.new sw[0], ne[0], sw[1], ne[1]
-    else
-      INITIAL_MAP_BOUNDS
-    end
-  end
-  private :bounds
-
-  # public only for testing
-  def max_map_photos
-    2000
-  end
-
   def use_inferred_geocode_if_necessary(photos)
     photos.each do |photo|
       if !photo.latitude
@@ -74,26 +55,5 @@ module MapSupport
     "%02X%02X%02X" % intensities
   end
   private :scaled
-
-  def photos_as_json(partial, photos)
-    {
-      :partial => partial,
-      :bounds => bounds,
-      :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
-    }
-  end
-  private :photos_as_json
-
-  def set_config_to(photo)
-    if photo.mapped_or_automapped?
-      first_photo = Photo.oldest
-      use_inferred_geocode_if_necessary([ photo ]) # TODO Dave *
-      prepare_for_display photo, first_photo.dateadded
-      @json = photo.to_json :only => [ :id, :latitude, :longitude, :color, :symbol ]
-    else
-      @json = '{}'
-    end
-  end
-  private :set_config_to
 
 end
