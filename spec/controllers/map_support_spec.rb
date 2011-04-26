@@ -6,6 +6,37 @@ describe MapSupport do
     self.extend MapSupport
   end
 
+  describe '#prepare_for_display' do
+    it "gives an unfound yellow and ?" do
+      photo = Photo.make
+      prepare_for_display photo, 1.day.ago
+      photo[:color].should == 'FFFF00'
+      photo[:symbol].should == '?'
+    end
+
+    it "prepares an unconfirmed like an unfound" do
+      photo = Photo.make :game_status => 'unconfirmed'
+      prepare_for_display photo, 1.day.ago
+      photo[:color].should == 'FFFF00'
+      photo[:symbol].should == '?'
+    end
+
+    it "gives a found green and !" do
+      photo = Photo.make :game_status => 'found'
+      prepare_for_display photo, 1.day.ago
+      photo[:color].should == scaled_green(0, 1, 1)
+      photo[:symbol].should == '!'
+    end
+
+    it "gives a revealed red and -" do
+      photo = Photo.make :game_status => 'revealed'
+      prepare_for_display photo, 1.day.ago
+      photo[:color].should == scaled_red(0, 1, 1)
+      photo[:symbol].should == '-'
+    end
+
+  end
+
   describe '#scaled_red' do
     it "starts at FCC0C0 (more or less FFBFBF)" do
       scaled_red(0, 1, 0).should == 'FCC0C0'
