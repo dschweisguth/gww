@@ -63,19 +63,7 @@ describe PhotosController do
     end
 
     it "returns an unfound photo" do
-      returns @initial_bounds, 'unfound', 'FFFF00', '?'
-    end
-
-    it "configures an unconfirmed photo like an unfound" do
-      returns @initial_bounds, 'unconfirmed', 'FFFF00', '?'
-    end
-
-    it "configures a found differently" do
-      returns @initial_bounds, 'found', '008000', '!'
-    end
-
-    it "configures a revealed photo differently" do
-      returns @initial_bounds, 'revealed', 'E00000', '-'
+      returns @initial_bounds
     end
 
     it "copies an inferred geocode to the stated one" do
@@ -100,11 +88,11 @@ describe PhotosController do
     it "echos non-default bounds" do
       controller.params[:sw] = '1,2'
       controller.params[:ne] = '3,4'
-      returns Bounds.new(1, 3, 2, 4), 'unfound', 'FFFF00', '?'
+      returns Bounds.new(1, 3, 2, 4)
     end
 
-    def returns(bounds, game_status, color, symbol)
-      photo = Photo.make :id => 1, :latitude => 37, :longitude => -122, :game_status => game_status
+    def returns(bounds)
+      photo = Photo.make :id => 1, :latitude => 37, :longitude => -122
       stub(Photo).mapped(bounds, @default_max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
       controller.map_photos.should == {
@@ -115,8 +103,8 @@ describe PhotosController do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => color,
-            'symbol' => symbol
+            'color' => 'FFFF00',
+            'symbol' => '?'
           }
         ]
       }
