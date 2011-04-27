@@ -3,6 +3,11 @@
   <hr/>
   <div id="story">
     This photo was added to the group at <%= @photo.dateadded.getlocal.strftime '%l:%M %p, %B %e, %Y' %>.
+    <% if @photo.mapped? %>
+      It was mapped by the photographer.
+    <% elsif @photo.mapped_or_automapped? %>
+      It was auto-mapped.
+    <% end %>
     <% if @photo.mapped_or_automapped? %>
       <div id="map"></div>
     <% else %>

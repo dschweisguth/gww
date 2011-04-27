@@ -241,6 +241,8 @@ describe PhotosController do
       response.should contain 'comment text'
       response.should contain 'This photo was added to the group at 12:00 AM, January 1, 2010.'
       response.should contain "This photo hasn't been found or revealed yet"
+      response.should_not contain 'It was mapped by the photographer'
+      response.should_not contain 'It was auto-mapped'
       response.should contain '11 comments'
       response.should contain '22 views'
       response.should contain 'GWW.config = {}'
@@ -249,6 +251,9 @@ describe PhotosController do
 
     it "includes a map if the photo is mapped" do
       includes_a_map Photo.make(:id => 1, :latitude => 37, :longitude => -122, :accuracy => 12)
+      response.should contain 'It was mapped by the photographer'
+      response.should_not contain "This photo hasn't been found or revealed yet"
+      response.should_not contain 'It was auto-mapped'
     end
 
     it "includes a map if the photo is auto-mapped" do
@@ -256,6 +261,9 @@ describe PhotosController do
       includes_a_map photo
       photo.latitude.should == photo.inferred_latitude
       photo.longitude.should == photo.inferred_longitude
+      response.should contain 'It was auto-mapped'
+      response.should_not contain "This photo hasn't been found or revealed yet"
+      response.should_not contain 'It was mapped by the photographer'
     end
 
     def includes_a_map(photo)

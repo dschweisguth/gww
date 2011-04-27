@@ -528,8 +528,12 @@ class Photo < ActiveRecord::Base
     end
   end
 
+  def mapped?
+    (accuracy && accuracy >= 12) ? true : false
+  end
+
   def mapped_or_automapped?
-    accuracy && accuracy >= 12 || ! inferred_latitude.nil?
+    mapped? || ! inferred_latitude.nil?
   end
 
 end
