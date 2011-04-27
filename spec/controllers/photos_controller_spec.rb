@@ -250,20 +250,55 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is mapped" do
-      includes_a_map Photo.make(:id => 1, :latitude => 37, :longitude => -122, :accuracy => 12)
+      photo = Photo.make(:id => 1, :latitude => 37, :longitude => -122, :accuracy => 12)
+      stub(Photo).includes.stub!.find(photo.id) { photo }
+      oldest = Photo.make :dateadded => 1.day.ago
+      stub(Photo).oldest { oldest }
+      get :show, :id => photo.id
+
+      json = {
+        'id' => photo.id,
+        'latitude' => photo.latitude,
+        'longitude' => photo.longitude,
+        'color' => 'FFFF00',
+        'symbol' => '?'
+      }.to_json
+      assigns[:json].should == json
+
+      #noinspection RubyResolve
+      response.should be_success
       response.should contain 'It was mapped by the photographer'
       response.should_not contain "This photo hasn't been found or revealed yet"
       response.should_not contain 'It was auto-mapped'
+      response.should have_selector '#map'
+      response.should contain /GWW\.config = #{Regexp.escape json};/
+
     end
 
     it "includes a map if the photo is auto-mapped" do
       photo = Photo.make(:id => 1, :inferred_latitude => 37, :inferred_longitude => -122)
-      includes_a_map photo
-      photo.latitude.should == photo.inferred_latitude
-      photo.longitude.should == photo.inferred_longitude
+      stub(Photo).includes.stub!.find(photo.id) { photo }
+      oldest = Photo.make :dateadded => 1.day.ago
+      stub(Photo).oldest { oldest }
+      get :show, :id => photo.id
+
+      json = {
+        'id' => photo.id,
+        'latitude' => photo.inferred_latitude,
+        'longitude' => photo.inferred_longitude,
+        'color' => 'FFFF00',
+        'symbol' => '?'
+      }.to_json
+      assigns[:json].should == json
+
+      #noinspection RubyResolve
+      response.should be_success
       response.should contain 'It was auto-mapped'
       response.should_not contain "This photo hasn't been found or revealed yet"
       response.should_not contain 'It was mapped by the photographer'
+      response.should have_selector '#map'
+      response.should contain /GWW\.config = #{Regexp.escape json};/
+
     end
 
     def includes_a_map(photo)
