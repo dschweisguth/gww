@@ -19,4 +19,9 @@ describe RootController do
     end
   end
 
+  describe 'about-auto-mapping' do
+    it { should have_named_route "root_about_auto_mapping", "/about-auto-mapping" }
+    it { should route(:get, "/about-auto-mapping").to :action => 'about_auto_mapping' }
+  end
+
 end

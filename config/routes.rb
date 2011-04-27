@@ -1,6 +1,7 @@
 GWW::Application.routes.draw do
   get 'autocomplete_person_username' => 'root#autocomplete_person_username', :as => :root_autocomplete_person_username
   get '/' => 'root#index', :as => :root
+  get 'about-auto-mapping' => 'root#about_auto_mapping', :as => 'root_about_auto_mapping'
   %w(about bookmarklet).each do |action|
     get action => "root##{action}", :as => "root_#{action}"
   end

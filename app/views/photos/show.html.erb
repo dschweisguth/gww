@@ -1,4 +1,4 @@
-<%= head_javascript 'app/shared/single-photo-map' %>
+<%= head_javascript 'app/shared/single-photo-map', 'app/shared/about-auto-mapping' %>
 <% content_for :title do %>Photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 <%= sandwich do %>
 <div id="photo">

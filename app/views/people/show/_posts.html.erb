@@ -36,9 +36,11 @@ Of the photos that <%= @person.username %> has posted,<br/><br/>
 </span><br/>
 <% end %>
 
-<p>A post linked to with a <span class="unmapped">gray</span> background is not mapped, and GWW can't tell where it is
-from the comment that guessed or revealed it. If you're the poster, and you'd like to see all of your photos on
-<%= link_to 'your map', person_map_path(@person) %>, these are the ones to catch up on.
+<p>A post linked to with a <span class="unmapped">gray</span> background is not mapped, and
+<%= link_to "GWW can't tell where it is from the comment that guessed or revealed it", root_about_auto_mapping_path,
+  :id => 'about-auto-mapping', :class => 'normal' %>.
+If you're the poster, and you'd like to see all of your photos on <%= link_to 'your map', person_map_path(@person) %>,
+these are the ones to catch up on.
 If you don't feel like mapping, don't worry about it; mapping is an extra, not the point of the game.</p>
 
 <% end %>

@@ -47,4 +47,12 @@ describe RootController do
     end
   end
 
+  describe '#about_auto_mapping' do
+    it 'renders the page' do
+      get :about_auto_mapping
+      #noinspection RubyResolve
+      response.should be_success
+    end
+  end
+
 end

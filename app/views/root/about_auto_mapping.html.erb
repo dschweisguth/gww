@@ -1,0 +1,34 @@
+<% content_for :title do %>About auto-mapping<% end %>
+<p>When someone comments on a photo to guess or reveal it, Guess Where Watcher can sometimes turn the comment into
+a location on its maps. That isn't essential to playing Guess Where SF, but it's nice to see everyone's guesses and posts
+on GWW's maps, so you might want keep in mind, when you guess or reveal a photo, what comments GWW can and can't understand.</p>
+
+<p>Here are some examples of comments that it does understand:</p>
+
+<ul>
+  <li>An intersection: "24th & Mission?"</li>
+  <li>A block: "I just saw this on 9th between Irving and Judah!" (GWW will map this in the center of the block.)</li>
+  <li>A street address: "50 Geary"</li>
+  <li>A street address on a block: "MoMA, 151 3rd btwn Mission & Howard, correct?"</li>
+</ul>
+
+<p>As you can see, GWW</p>
+<ul>
+  <li>can find locations in surrounding text</li>
+  <li>doesn't care much about punctuation</li>
+  <li>tries to be open-minded about little words like "and" and "between"</li>
+  <li>can manage without "Street" or "Avenue" if the name of the street or of intersecting streets provides enough information</li>
+</ul>
+
+<p>Here are some examples of comments that it can't understand:</p>
+
+<ul>
+  <li>"Fort Point!" Sorry, GWW doesn't know landmarks or business names. If anyone knows of a good database, let dschweisguth know.</li>
+  <li>"Clarion Alley?" One-block streets are unambiguous to humans, but GWW doesn't know how to recognize them in comments. It might learn eventually.</li>
+  <li>"Sarcamento at Hyde?" GWW's not that flexible about spelling. It does know "Divis", but that's about it.</li>
+  <li>"MoMA, 151 3rd?" Might be 3rd St., might be 3rd Ave. GWW gives up. "6600 3rd" would be fine, though, since 3rd Ave. doesn't have that address.</li>
+  <li>"That's not at McAllister & Broderick, it's at McAllister & Baker." GWW doesn't know how to choose between two locations in the same comment.</li>
+</ul>
+
+<p>And remember, none of this affects the actual game in any way, so if you'd rather just post and guess photos and not
+worry about any of this you're more than welcome to!</p>

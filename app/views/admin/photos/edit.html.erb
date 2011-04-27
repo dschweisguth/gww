@@ -1,5 +1,5 @@
 <%= head_css 'jquery-ui' %>
-<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/admin/photos/edit', 'app/shared/single-photo-map' %>
+<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/admin/photos/edit', 'app/shared/single-photo-map', 'app/shared/about-auto-mapping' %>
 <% content_for :title do %>Editing photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 
 <%= sandwich 'shared/admin/breadcrumbs' do %>
