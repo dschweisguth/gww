@@ -68,7 +68,7 @@ class PeopleController < ApplicationController
     @most_commented = Photo.most_commented @person
     @most_viewed = Photo.most_viewed @person
 
-    @guesses = Guess.where(:person_id => @person).includes(:photo => :person).to_a
+    @guesses = Guess.where(:person_id => @person).includes(:photo => :person)
     @favorite_posters = @person.favorite_posters
     @posters = @guesses.group_by { |guess| guess.photo.person }.sort \
       do |x,y|
