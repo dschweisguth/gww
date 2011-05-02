@@ -147,6 +147,7 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] mail (v2.2.17, /opt/local/lib/ruby/gems/1.8/gems/mail-2.2.17)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] rails (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/rails-3.0.7)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] railties (v3.0.7, /opt/local/lib/ruby/gems/1.8/gems/railties-3.0.7)" level="application" />
+    <orderEntry type="library" name="jQuery" level="application" />
   </component>
 </module>
 
