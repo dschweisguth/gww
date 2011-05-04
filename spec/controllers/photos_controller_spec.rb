@@ -245,7 +245,7 @@ describe PhotosController do
       response.should_not contain 'It was auto-mapped'
       response.should contain '11 comments'
       response.should contain '22 views'
-      response.should contain 'GWW.config = {}'
+      response.should_not contain 'GWW.config'
 
     end
 
