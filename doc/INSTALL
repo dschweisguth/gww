@@ -121,6 +121,10 @@ Create dev database
     mysql> grant all privileges on gww_dev.* to gww_dev@localhost;
     > rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
+    > mkdir ../sfgis
+    > wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip http://gispub02.sfgov.org/website/sfshare/catalog/stnodes.zip
+    > unzip *.zip
+    > script/load_sfgis . gww_dev gww_dev gww_dev
 Create test database
     mysql> grant all privileges on gww_test.* to gww_dev@localhost;
     > rake RAILS_ENV=test db:create
