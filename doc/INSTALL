@@ -122,7 +122,7 @@ Create dev database
     > rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
     > mkdir ../sfgis
-    > wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip http://gispub02.sfgov.org/website/sfshare/catalog/stnodes.zip
+    > wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip
     > unzip *.zip
     > script/load_sfgis . gww_dev gww_dev gww_dev
 Create test database
