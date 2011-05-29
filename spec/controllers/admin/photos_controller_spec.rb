@@ -71,7 +71,7 @@ describe Admin::PhotosController do
   describe '#edit' do
     it 'renders the page without loading comments' do
       photo = Photo.make :id => 111, :dateadded => Time.local(2011)
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find_with_associations(photo.id) { photo }
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make(:id => 222) ] }
       get :edit, :id => photo.id
       renders_edit_page
@@ -79,7 +79,7 @@ describe Admin::PhotosController do
 
     it 'loads comments and renders the page' do
       photo = Photo.make :id => 111, :dateadded => Time.local(2011)
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find_with_associations(photo.id) { photo }
       stub(photo).load_comments { [ Comment.make(:id => 222) ] }
       mock_clear_page_cache
       get :edit, :id => photo.id, :load_comments => true

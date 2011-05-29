@@ -43,7 +43,7 @@ class Admin::PhotosController < ApplicationController
 
   def edit
     #noinspection RailsParamDefResolve
-    @photo = Photo.includes(:person, :revelation, { :guesses => :person }).find params[:id]
+    @photo = Photo.find_with_associations params[:id]
     if params[:load_comments]
       @comments = @photo.load_comments
       PageCache.clear

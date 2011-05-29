@@ -390,6 +390,11 @@ class Photo < ActiveRecord::Base
     order('lastupdate desc').includes(:person).find photo_ids
   end
 
+  def self.find_with_associations(id)
+    #noinspection RailsParamDefResolve
+    includes(:person, :revelation, { :guesses => :person }).find id
+  end
+
   def load_comments
     comments = []
     parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
