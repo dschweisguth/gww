@@ -2,9 +2,9 @@
 <%# Briefly, newlines are treated as <br/>s and only some tags and attributes can be used. %>
 <%# Also, the entire report must be < 40,756 characters (as tested by Octoferret). %>
 <%# Usually reports are bigger than that, which Octoferret deals with by splitting them in half. %>
-<%# In any case, it's important to avoid unnecessary bulk, which is why b instead of strong. alt and title are considered necessary for now. %>
+<%# In any case, it's important to avoid unnecessary bulk, which is why we use b instead of strong and no img height or width. %>
+<%# alt and title are considered necessary for now. %>
 <%# In the future we might try removing http://www.flickr.com from URLs in the posted version. %>
-<%# Another possibility: remove width and height from the image tags. %>
 <%# Test by pasting it in to a Flickr discusion topic, e.g in the Guess Where SF Test group. %>
 <b>updated <%= @report_date.strftime '%A, %B %e, %l %p' %></b>
 

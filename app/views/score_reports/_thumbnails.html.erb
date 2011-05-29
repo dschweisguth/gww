@@ -7,19 +7,18 @@
 <%= link_to \
       titled_image_tag(
         url_for_flickr_image(change.photo, 's'),
-        render('shared/alt', :photo => change.photo),
-        :size => '50x50'
+        render('shared/alt', :photo => change.photo)
       ),
       url_for_flickr_photo_in_pool(change.photo) -%>
 <% if change.respond_to? :star_for_age then %>
 <%= star = change.star_for_age
     if star then
-      titled_image_tag image_url_for_star(star), "Unfound for #{pluralize(change.years_old, 'year')}!", :size => '15x50'
+      titled_image_tag image_url_for_star(star), "Unfound for #{pluralize(change.years_old, 'year')}!", :size => '23x75'
     end
 -%>
 <%= star = change.star_for_speed;
     if star then
-      titled_image_tag image_url_for_star(star), "Guessed in #{pluralize(change.seconds_old, 'second')}!", :size => '15x50';
+      titled_image_tag image_url_for_star(star), "Guessed in #{pluralize(change.seconds_old, 'second')}!", :size => '23x75';
     end
 -%>
 <% end %>
