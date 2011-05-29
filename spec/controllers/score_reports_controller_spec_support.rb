@@ -46,7 +46,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
 
   #noinspection RubyResolve
   response.should be_success
-  response.should have_selector 'strong', :content => 'updated Wednesday, January  5, 12 AM'
+  response.should have_selector 'b', :content => 'updated Wednesday, January  5, 12 AM'
   response.should contain /3 new guesses by .../
   response.should contain /guessed their first point/
   response.should contain /#{person2[:change_in_standing]}/
