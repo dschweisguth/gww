@@ -329,6 +329,7 @@ class Photo < ActiveRecord::Base
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
   end
 
+  # Public only for testing
   def self.update_seen_at(flickrids, time)
     joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
     update_all "seen_at = '#{time.getutc.strftime '%Y-%m-%d %H:%M:%S'}'",
