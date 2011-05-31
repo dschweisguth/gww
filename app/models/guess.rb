@@ -103,6 +103,10 @@ class Guess < ActiveRecord::Base
       .order(:commented_at).includes(:person, { :photo => :person })
   end
 
+  def self.find_with_associations(person)
+    where(:person_id => person).includes(:photo => :person)
+  end
+
   def years_old
     (seconds_old / (365 * 24 * 60 * 60)).truncate
   end

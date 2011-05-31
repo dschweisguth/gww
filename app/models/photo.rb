@@ -121,6 +121,10 @@ class Photo < ActiveRecord::Base
     most_viewed
   end
 
+  def self.find_with_guesses(person)
+    where(:person_id => person).includes(:guesses => :person)
+  end
+
   def self.mapped_count(poster_id)
     where(:person_id => poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
   end

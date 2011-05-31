@@ -230,7 +230,7 @@ describe PeopleController do
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
-      stub(Guess).where.stub!.includes { [ Guess.make('all1'), Guess.make('all2') ] }
+      stub(Guess).find_with_associations(@person) { [ Guess.make('all1'), Guess.make('all2') ] }
 
       favorite_poster = Person.make 'favorite_poster'
       favorite_poster[:bias] = 2.5
@@ -266,7 +266,7 @@ describe PeopleController do
       found1.photo.guesses << found1
       found2 = Guess.make 'found2'
       found2.photo.guesses << found2
-      stub(Photo).where(:person_id => @person).stub!.includes { [ found1.photo, found2.photo ] }
+      stub(Photo).find_with_guesses(@person) { [ found1.photo, found2.photo ] }
 
       stub(Photo).where(is_a(String), @person) { [ Photo.make('unfound') ] }
 
