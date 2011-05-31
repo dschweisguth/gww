@@ -223,7 +223,7 @@ describe PhotosController do
       photo = Photo.make :id => 1, :dateadded => Time.local(2010), :other_user_comments => 11, :views => 22
       guess = Guess.make :photo => photo
       photo.guesses << guess
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find(photo.id) { photo }
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make(:photo => photo) ] }
       get :show, :id => photo.id
 
@@ -251,7 +251,7 @@ describe PhotosController do
 
     it "includes a map if the photo is mapped" do
       photo = Photo.make(:id => 1, :latitude => 37, :longitude => -122, :accuracy => 12)
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find(photo.id) { photo }
       oldest = Photo.make :dateadded => 1.day.ago
       stub(Photo).oldest { oldest }
       get :show, :id => photo.id
@@ -277,7 +277,7 @@ describe PhotosController do
 
     it "includes a map if the photo is auto-mapped" do
       photo = Photo.make(:id => 1, :inferred_latitude => 37, :inferred_longitude => -122)
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find(photo.id) { photo }
       oldest = Photo.make :dateadded => 1.day.ago
       stub(Photo).oldest { oldest }
       get :show, :id => photo.id
