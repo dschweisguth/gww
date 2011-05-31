@@ -1157,6 +1157,26 @@ describe Photo do
 
   end
 
+  describe '.find_with_associations' do
+    it "returns a revealed photo with all of its associated objects" do
+      photo_in = Photo.make
+      revelation = Revelation.make :photo => photo_in
+      photo_out = Photo.find_with_associations photo_in.id
+      photo_out.person.should == photo_in.person
+      photo_out.revelation.should == revelation
+    end
+
+    it "returns a guessed photo with all of its associated objects" do
+      photo_in = Photo.make
+      guess = Guess.make :photo => photo_in
+      photo_out = Photo.find_with_associations photo_in.id
+      photo_out.person.should == photo_in.person
+      photo_out.guesses.should == [ guess ]
+      photo_out.guesses[0].person.should == guess.person
+    end
+
+  end
+
   describe '.change_game_status' do
     it "changes the photo's status" do
       photo = Photo.make
