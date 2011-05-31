@@ -257,10 +257,10 @@ describe PhotosController do
       get :show, :id => photo.id
 
       json = {
+        'color' => 'FFFF00',
         'id' => photo.id,
         'latitude' => photo.latitude,
         'longitude' => photo.longitude,
-        'color' => 'FFFF00',
         'symbol' => '?'
       }.to_json
       assigns[:json].should == json
@@ -283,10 +283,10 @@ describe PhotosController do
       get :show, :id => photo.id
 
       json = {
+        'color' => 'FFFF00',
         'id' => photo.id,
         'latitude' => photo.inferred_latitude,
         'longitude' => photo.inferred_longitude,
-        'color' => 'FFFF00',
         'symbol' => '?'
       }.to_json
       assigns[:json].should == json
@@ -308,10 +308,10 @@ describe PhotosController do
       get :show, :id => photo.id
 
       json = {
+        'color' => 'FFFF00',
         'id' => photo.id,
         'latitude' => photo.latitude,
         'longitude' => photo.longitude,
-        'color' => 'FFFF00',
         'symbol' => '?'
       }.to_json
       assigns[:json].should == json
