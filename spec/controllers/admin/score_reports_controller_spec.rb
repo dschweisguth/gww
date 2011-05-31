@@ -11,9 +11,7 @@ describe Admin::ScoreReportsController do
       stub(ScoreReport).order { [ report2, report1 ] }
       stub(ScoreReport).guess_counts { { report2.id => 4, report1.id => 3 } }
       stub(ScoreReport).revelation_counts { { report2.id => 1 } }
-      any_instance_of(ActiveSupport::Duration) do |d|
-        stub(d).ago { Time.local(2011) }
-      end
+      stub(Time).now { Time.local(2011, 1, 2) }
       get :index
 
       #noinspection RubyResolve
