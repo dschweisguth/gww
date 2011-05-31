@@ -345,6 +345,16 @@ describe Guess do
 
   end
 
+  describe '.find_with_associations' do
+    it "returns a person's guesses with their photos and the photos' people" do
+      guess = Guess.make
+      guesses = Guess.find_with_associations guess.person
+      guesses.should == [ guess ]
+      guesses[0].photo.should == guess.photo
+      guesses[0].photo.person.should == guess.photo.person
+    end
+  end
+
   describe '#years_old' do
     it 'returns the number of full years from post to guess (ignoring leap years)' do
       photo = Photo.new :dateadded => Time.utc(2010)
