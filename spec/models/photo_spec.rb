@@ -340,6 +340,16 @@ describe Photo do
 
   end
 
+  describe '.find_with_guesses' do
+    it "returns a person's photos, with their guesses and the guesses' people" do
+      guess = Guess.make
+      photos = Photo.find_with_guesses guess.photo.person
+      photos.should == [ guess.photo ]
+      photos[0].guesses.should == [ guess ]
+      photos[0].guesses[0].person.should == guess.person
+    end
+  end
+
   describe '.mapped_count' do
     it "counts mapped photos" do
       photo = Photo.make :accuracy => 12
