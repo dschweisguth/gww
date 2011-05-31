@@ -258,12 +258,12 @@ describe PhotosController do
 
       json = {
         'id' => photo.id,
-        'latitude' => photo.latitude,
-        'longitude' => photo.longitude,
+        'latitude' => photo.latitude.to_s,
+        'longitude' => photo.longitude.to_s,
         'color' => 'FFFF00',
         'symbol' => '?'
-      }.to_json
-      assigns[:json].should == json
+      }
+      ActiveSupport::JSON.decode(assigns[:json]).to_a.should =~ json.to_a # TODO Dave simplify
 
       #noinspection RubyResolve
       response.should be_success
@@ -271,7 +271,7 @@ describe PhotosController do
       response.should_not contain "This photo hasn't been found or revealed yet"
       response.should_not contain 'It was auto-mapped'
       response.should have_selector '#map'
-      response.should contain /GWW\.config = #{Regexp.escape json};/
+      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
 
@@ -284,12 +284,12 @@ describe PhotosController do
 
       json = {
         'id' => photo.id,
-        'latitude' => photo.inferred_latitude,
-        'longitude' => photo.inferred_longitude,
+        'latitude' => photo.inferred_latitude.to_s,
+        'longitude' => photo.inferred_longitude.to_s,
         'color' => 'FFFF00',
         'symbol' => '?'
-      }.to_json
-      assigns[:json].should == json
+      }
+      ActiveSupport::JSON.decode(assigns[:json]).to_a.should =~ json.to_a # TODO Dave simplify
 
       #noinspection RubyResolve
       response.should be_success
@@ -297,7 +297,7 @@ describe PhotosController do
       response.should_not contain "This photo hasn't been found or revealed yet"
       response.should_not contain 'It was mapped by the photographer'
       response.should have_selector '#map'
-      response.should contain /GWW\.config = #{Regexp.escape json};/
+      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
 
