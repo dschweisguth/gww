@@ -37,37 +37,36 @@ Linux
 Install ruby and friends
 ------------------------
 
-GWW currently requires ruby 1.8.7 (the current version of 1.9 is too new),
-rubygems and the gems listed below. The specific versions are not necessarily
-required, but they're what I have.
+GWW currently requires ruby 1.9.2 and the gems listed below. The specific
+versions are not necessarily required, but they're what I have.
 
 Install ruby
     Mac
-	> sudo port install ruby
-	> ruby --version
-        ruby 1.8.7 (2011-02-18 patchlevel 334) [i686-darwin10]
+	Install rvm for a single user per https://rvm.beginrescueend.com/
+	Edit ~/.rvm/gemsets/default.gems and ~/.rvm/gemsets/default.gems and
+	  remove rake. (We'll install rake ourselves later.)
+	> rvm install 1.9.2
+	> rvm use 1.9.2 --default
+	Using /Users/dave/.rvm/gems/ruby-1.9.2-p180
     Linux
-	Get source from http://www.ruby-lang.org/en/ and follow instructions
-	> ruby --version
-        ruby 1.8.7 (2011-02-18 patchlevel 334) [x86_64-linux]
+	Install rvm for all users per https://rvm.beginrescueend.com/
+	Edit /usr/local/rvm/gemsets/default.gems and
+	  /usr/local/rvm/gemsets/default.gems and remove rake. (We'll install
+	  rake ourselves later.)
+	# rvm install 1.9.2
+	# rvm use 1.9.2 --default
+	Using /usr/local/rvm/gems/ruby-1.9.2-p180
 
-Install gem
+Update rubygems and install bundler
     Mac
-	> sudo port install rb-rubygems
-	> sudo gem update --system
-        > gem --version
-        1.5.2
+	> gem update --system
+	> gem install bundler
+	> gem list
+	bundler (1.0.14)
+	rubygems-update (1.8.5)
     Linux
-	Get source from http://gems.rubyforge.org/ and follow instructions.
-	> sudo gem update --system
-	> gem --version
-	1.5.2
-
-Install bundler
-    > sudo gem install bundler
-    > gem list
-    bundler (1.0.10)
-    rubygems-update (1.5.2)
+	Install the same way as for Mac, but as root, thereby setting up the
+	shared rvm's Ruby.
 
 Install GDAL 1.8
 ----------------
