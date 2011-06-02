@@ -22,9 +22,9 @@ group :development do
 end
 
 group :test do
-  gem 'rcov', '0.9.9'
   gem 'rr', '1.0.2'
   gem 'shoulda-matchers', '1.0.0.beta2'
+  gem 'simplecov', '0.4.2'
   gem 'rspec-rails', '2.5.0'
   gem 'webrat', '0.7.3'
 end
