@@ -48,12 +48,6 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rcov" version="0.9.9" bound="EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source from="Gemfile" />
-    </requirement>
-    <requirement>
-      <requirement>
         <dependency name="rr" version="1.0.2" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
@@ -67,6 +61,12 @@
     <requirement>
       <requirement>
         <dependency name="shoulda-matchers" version="1.0.0.beta2" bound="EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="simplecov" version="0.4.2" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
     </requirement>
@@ -149,6 +149,8 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] will_paginate (v3.0.pre2, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/will_paginate-3.0.pre2)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] xml-simple (v1.0.15, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/xml-simple-1.0.15)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] yajl-ruby (v0.8.2, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/yajl-ruby-0.8.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] simplecov (v0.4.2, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/simplecov-0.4.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] simplecov-html (v0.4.5, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/simplecov-html-0.4.5)" level="application" />
   </component>
 </module>
 
