@@ -7,8 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
-Fix bug in rcov
-If RR is updated to support Ruby 1.9.x, upgrade to that Ruby
 Extract facades from models
 Merge revelations into guesses?
 
