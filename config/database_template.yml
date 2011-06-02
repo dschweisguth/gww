@@ -1,23 +1,25 @@
 # Copy this file to database.yml in the same directory, and
 
-defaults: &defaults
-  adapter:   mysql2spatial
-  host:      localhost
-
 development:
+  adapter: mysql2spatial
+  host:    localhost
   database: gww_dev
   username: gww_dev
   password:  # <-- put your development database password here
-  <<: *defaults
 
 test:
+  adapter: mysql2spatial
+  host:    localhost
   database: gww_test
   username: gww_dev
   password:  # <-- put your test database password here
-  <<: *defaults
 
 production:
+  adapter: mysql2spatial
+  host:    localhost
   database: gww_production
   username: gww_production
   password:  # <-- put your production database password here
-  <<: *defaults
+
+# Note that we don't use &defaults due to a Ruby 1.9.2 bug:
+# http://pivotallabs.com/users/mkocher/blog/articles/1692-yaml-psych-and-ruby-1-9-2-p180-here-there-be-dragons
