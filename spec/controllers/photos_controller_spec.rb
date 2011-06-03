@@ -263,7 +263,7 @@ describe PhotosController do
         'color' => 'FFFF00',
         'symbol' => '?'
       }
-      ActiveSupport::JSON.decode(assigns[:json]).to_a.should =~ json.to_a # TODO Dave simplify
+      ActiveSupport::JSON.decode(assigns[:json]) == json
 
       #noinspection RubyResolve
       response.should be_success
@@ -289,7 +289,7 @@ describe PhotosController do
         'color' => 'FFFF00',
         'symbol' => '?'
       }
-      ActiveSupport::JSON.decode(assigns[:json]).to_a.should =~ json.to_a # TODO Dave simplify
+      ActiveSupport::JSON.decode(assigns[:json]).should == json
 
       #noinspection RubyResolve
       response.should be_success
