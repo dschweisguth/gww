@@ -34,40 +34,6 @@ Linux
     installation) and add each of the settings above in the appropriate
     section.
 
-Install ruby and friends
-------------------------
-
-GWW currently requires ruby 1.9.2 and the gems listed below. The specific
-versions are not necessarily required, but they're what I have.
-
-Install ruby
-    Mac
-	Install rvm for a single user per https://rvm.beginrescueend.com/
-	Edit ~/.rvm/gemsets/default.gems and ~/.rvm/gemsets/default.gems and
-	  remove rake. (We'll install rake ourselves later.)
-	> rvm install 1.9.2
-	> rvm use 1.9.2 --default
-	Using /Users/dave/.rvm/gems/ruby-1.9.2-p180
-    Linux
-	Install rvm for all users per https://rvm.beginrescueend.com/
-	Edit /usr/local/rvm/gemsets/default.gems and
-	  /usr/local/rvm/gemsets/default.gems and remove rake. (We'll install
-	  rake ourselves later.)
-	# rvm install 1.9.2
-	# rvm use 1.9.2 --default
-	Using /usr/local/rvm/gems/ruby-1.9.2-p180
-
-Update rubygems and install bundler
-    Mac
-	> gem update --system
-	> gem install bundler
-	> gem list
-	bundler (1.0.14)
-	rubygems-update (1.8.5)
-    Linux
-	Install the same way as for Mac, but as root, thereby setting up the
-	shared rvm's Ruby.
-
 Install GDAL 1.8
 ----------------
 
@@ -84,6 +50,28 @@ Linux
     > configure --with-mysql
     > make
     > make install
+
+Install ruby and friends
+------------------------
+
+GWW currently requires ruby 1.9.2 and the gems listed below. The specific
+versions are not necessarily required, but they're what GWW uses at this
+writing.
+
+Mac
+    Install rvm for a single user per https://rvm.beginrescueend.com/
+    > rvm install 1.9.2
+    > rvm use 1.9.2 --default
+    Using /Users/dave/.rvm/gems/ruby-1.9.2-p180
+    > gem update --system
+    > gem install bundler
+    > gem list
+    bundler (1.0.14)
+    rake (0.8.7 ruby) # rvm installed this for us
+    rubygems-update (1.8.5)
+Linux
+    Install the same way as for Mac, but as root, thereby installing rvm
+    for all users and setting up the shared rvm's Ruby.
 
 Get and configure GWW
 ---------------------
@@ -144,7 +132,7 @@ Create production database
 Test GWW
 --------
 
-> rake spec
+> bundle exec rake spec
 
 Install Phusion Passenger and configure httpd (for Linux production only)
 -------------------------------------------------------------------------
@@ -172,7 +160,7 @@ Start GWW
 ---------
 
 Mac
-    > script/server
+    > rails s
     Browse http://localhost:3000/
 Linux
     > sudo apachectl restart
