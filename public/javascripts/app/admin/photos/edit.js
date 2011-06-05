@@ -1,8 +1,14 @@
-(function () {
-  $(function() {
-    setUpCopyUsername();
-    preventSubmitPartialUsernameForm();
-  });
+var GWW = {};
+GWW.admin = {};
+GWW.admin.photos = {};
+GWW.admin.photos.Edit = (function () {
+
+  var that = {
+    setUp: function () {
+      setUpCopyUsername();
+      preventSubmitPartialUsernameForm();
+    }
+  };
 
   var setUpCopyUsername = function () {
     var forms = $('#comments form');
@@ -24,6 +30,8 @@
     $('#username_form').submit(function (event) {
       return this['answer_text'].value !== '';
     });
-  }
+  };
 
+  return that;
 })();
+$(GWW.admin.photos.Edit.setUp);

@@ -18,6 +18,30 @@
     </requirement>
     <requirement>
       <requirement>
+        <dependency name="childprocess" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="ffi" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="jasmine" version="1.0.2.1" bound="EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="jasmine" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="jquery-rails" version="0.2.7" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
@@ -33,6 +57,12 @@
         <dependency name="passenger" version="3.0.7" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="rack" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
@@ -54,9 +84,27 @@
     </requirement>
     <requirement>
       <requirement>
+        <dependency name="rspec" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="rspec-rails" version="2.5.0" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="rubyzip" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
+        <dependency name="selenium-webdriver" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
@@ -146,6 +194,11 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] simplecov (v0.4.2, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/simplecov-0.4.2)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] simplecov-html (v0.4.5, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/simplecov-html-0.4.5)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] bundler (v1.0.14, /Users/dave/.rvm/gems/ruby-1.9.2-p180@global/gems/bundler-1.0.14)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] childprocess (vChildProcess::VERSION, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/childprocess-0.1.9)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] ffi (v1.0.9, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/ffi-1.0.9)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] jasmine (v1.0.2.1, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/jasmine-1.0.2.1)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rubyzip (v0.9.4, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/rubyzip-0.9.4)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] selenium-webdriver (v0.2.1, /Users/dave/.rvm/gems/ruby-1.9.2-p180/gems/selenium-webdriver-0.2.1)" level="application" />
   </component>
 </module>
 
