@@ -145,7 +145,6 @@ describe PeopleController do
       stub(Guess).fastest(@person)
       stub(Guess).longest_lasting(@person)
       stub(Guess).shortest_lasting(@person)
-      stub(Guess).where.stub!.includes { [] }
       stub(@person).favorite_posters { [] }
 
       stub_posts
