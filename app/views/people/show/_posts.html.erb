@@ -17,6 +17,7 @@ Of the photos that <%= @person.username %> has posted,<br/><br/>
 <%= link_to i + 1, photo_path(photo), photo.game_status == 'unconfirmed' ? { :class => 'unconfirmed' } : {} -%>
 <%   end %>
 </span><br/><br/>
+<% end %>
 
 <% if ! @revealed_photos.empty? %>
 <%= @revealed_photos.length %> <%= singularize 'were', @revealed_photos.length %> revealed:
@@ -42,5 +43,3 @@ Of the photos that <%= @person.username %> has posted,<br/><br/>
 If you're the poster, and you'd like to see all of your photos on <%= link_to 'your map', person_map_path(@person) %>,
 these are the ones to catch up on.
 If you don't feel like mapping, don't worry about it; mapping is an extra, not the point of the game.</p>
-
-<% end %>
