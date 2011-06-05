@@ -14,10 +14,10 @@
   <% if @most_recent_post %><td><%= thumbnail_with_alt @most_recent_post %></td><% end %>
 </tr>
 <tr class="trophies-text">
-  <% if @first_guess %><td><%= @first_guess.commented_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
-  <% if @first_post %><td><%= @first_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end %>
-  <% if @most_recent_guess %><td><%= @most_recent_guess.commented_at.getlocal.strftime '%B %d, %Y' %></td><% end %>
-  <% if @most_recent_post %><td><%= @most_recent_post.dateadded.getlocal.strftime '%B %d, %Y' %></td><% end %>
+  <% if @first_guess %><td><%= @first_guess.commented_at.getlocal.strftime '%B %e, %Y' %></td><% end %>
+  <% if @first_post %><td><%= @first_post.dateadded.getlocal.strftime '%B %e, %Y' %></td><% end %>
+  <% if @most_recent_guess %><td><%= @most_recent_guess.commented_at.getlocal.strftime '%B %e, %Y' %></td><% end %>
+  <% if @most_recent_post %><td><%= @most_recent_post.dateadded.getlocal.strftime '%B %e, %Y' %></td><% end %>
 </tr>
 </table>
 
