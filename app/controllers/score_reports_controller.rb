@@ -10,7 +10,9 @@ class ScoreReportsController < ApplicationController
 
   caches_page :show
   def show
-    prepare_gww_html ScoreReport.find(params[:id]).created_at
+    report_date = ScoreReport.find(params[:id]).created_at
+    prepare_gww_thumbnails_html report_date
+    prepare_gww_stats_html report_date
   end
 
 end

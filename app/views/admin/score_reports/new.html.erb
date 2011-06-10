@@ -9,9 +9,11 @@
 <% end %>
 
 <h2><label for="html">HTML for Flickr</label></h2>
-<textarea id="html" name="textfield" rows="50" cols="100" onfocus="this.select();"><%= @flickr_html %></textarea>
+<textarea id="html" name="textfield" rows="30" cols="100" onfocus="this.select();"><%= @flickr_thumbnails_html %></textarea>
+<textarea id="html" name="textfield" rows="30" cols="100" onfocus="this.select();"><%= @flickr_stats_html %></textarea>
 
 <h2><a name="preview">Preview</a></h2>
-<%= @gww_html %>
+<%= @gww_thumbnails_html %>
+<%= @gww_stats_html %>
 
 <% end %>

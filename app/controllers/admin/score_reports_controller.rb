@@ -9,7 +9,9 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def new
-    @flickr_html = CGI.escapeHTML prepare_gww_html Time.now
+    now = Time.now
+    @flickr_thumbnails_html = CGI.escapeHTML prepare_gww_thumbnails_html now
+    @flickr_stats_html = CGI.escapeHTML prepare_gww_stats_html now
   end
 
   def create
