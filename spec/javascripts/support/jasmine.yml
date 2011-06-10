@@ -18,7 +18,7 @@ src_files:
   - spec/javascripts/support/jasmine-jquery-1.2.0.js
   - public/javascripts/Player.js # TODO Dave remove these after fully testing GWW code
   - public/javascripts/Song.js
-  - public/javascripts/app/admin/photos/edit.js
+  - public/javascripts/app/admin/photos/Edit.js
 
 # stylesheets
 #

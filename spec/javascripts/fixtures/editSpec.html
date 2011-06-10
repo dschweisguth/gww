@@ -4,6 +4,8 @@
     <input name="commit" type="submit"/>
   </form>
 </div>
-<form action="/admin/photos/1/add_entered_answer">
-  <input id="username" type="text" value="the_username"/>
+<form id="username_form" action="/admin/photos/1/add_entered_answer">
+  <input id="username" name="username" type="text"/>
+  <input name="commit" type="submit" value="Reveal or guess the photo with the following text:"/>
+  <input id="answer_text" name="answer_text" type="text"/>
 </form>

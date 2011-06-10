@@ -28,7 +28,12 @@ GWW.admin.photos.Edit = (function () {
 
   var preventSubmitPartialUsernameForm = function () {
     $('#username_form').submit(function (event) {
-      return this['answer_text'].value !== '';
+      if (this['answer_text'].value === '') {
+        event.stopImmediatePropagation(); // Not necessary for functionality. Permits testing.
+        return false;
+      } else {
+        return true;
+      }
     });
   };
 
