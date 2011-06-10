@@ -5,7 +5,7 @@
 <%# In any case, it's important to avoid unnecessary bulk, which is why we use b instead of strong and no img height or width. %>
 <%# alt and title are considered necessary for now. %>
 <%# In the future we might try removing http://www.flickr.com from URLs in the posted version. %>
-<%# Test by pasting it in to a Flickr discusion topic, e.g in the Guess Where SF Test group. %>
+<%# Test by pasting it in to a Flickr discussion topic, e.g in the Guess Where SF Test group. %>
 <b>updated <%= @report_date.strftime '%A, %B %e, %l %p' %></b>
 
 <%= render 'score_reports/thumbnails',
