@@ -18,7 +18,7 @@ module ScoreReportsControllerSupport
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
 
-    raw_html = render_to_string :partial => 'score_reports/raw_thumbnails'
+    raw_html = render_to_string(:partial => 'score_reports/raw_thumbnails').chomp
     @gww_thumbnails_html = raw_html.gsub /$/, '<br/>'
     raw_html
 
@@ -51,7 +51,7 @@ module ScoreReportsControllerSupport
     @member_count = FlickrUpdate.first(:order => 'id desc').member_count
     @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
-    raw_html = render_to_string :partial => 'score_reports/raw_stats'
+    raw_html = render_to_string(:partial => 'score_reports/raw_stats').chomp
     @gww_stats_html = raw_html.gsub /$/, '<br/>'
     raw_html
 
