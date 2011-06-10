@@ -106,7 +106,7 @@ Create users
     prevents gww_dev from damaging the production database.
 Create dev database
     mysql> grant all privileges on gww_dev.* to gww_dev@localhost;
-    > rake db:create
+    > bundle exec rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
     > mkdir sfgis
     > cd sfgis
@@ -120,13 +120,13 @@ Create dev database
     > script/load_sfgis . gww_dev gww_dev gww_dev
 Create test database
     mysql> grant all privileges on gww_test.* to gww_dev@localhost;
-    > rake RAILS_ENV=test db:create
-    > rake db:test:clone_structure # Note that RAILS_ENV is default, not test
+    > bundle exec rake RAILS_ENV=test db:create
+    > bundle exec rake db:test:clone_structure # Note that RAILS_ENV is default, not test
 Create production database
     mysql> grant all privileges on gww_production.* to gww_production@localhost;
     Allow gww_dev to browse and mysqldump the production database:
     mysql> grant select, lock tables on gww_production.* to gww_dev@localhost;
-    > rake RAILS_ENV=production db:create
+    > bundle exec rake RAILS_ENV=production db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
 
 Test GWW
