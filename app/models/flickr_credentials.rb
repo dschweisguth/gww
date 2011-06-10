@@ -30,14 +30,13 @@ class FlickrCredentials
     }
     params.merge! extra_params
     params['api_sig'] = signature params
-    query_string = ''
-    params.each_pair do |name, value|
-      if ! query_string.empty?
-        query_string += '&'
+    'http://api.flickr.com/services/rest/?' +
+      params.each_with_object('') do |param, query_string|
+        if ! query_string.empty?
+          query_string << '&'
+        end
+        query_string << param[0] + '=' + param[1]
       end
-      query_string += name + '=' + value
-    end
-    'http://api.flickr.com/services/rest/?' + query_string
   end
 
   def self.signature(params)
