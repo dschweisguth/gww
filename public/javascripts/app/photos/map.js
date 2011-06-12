@@ -1,7 +1,12 @@
-GWW.photosMap = (function () {
-  var map = GWW.map();
+GWW.photos = {};
+GWW.photos.map = (function () {
+  var map = GWW.shared.createMap();
 
-  var that = {
+  return {
+
+    setUp: function () {
+      map.setUp('GWW.photos.map.mapsAPIIsLoadedCallback');
+    },
 
     mapsAPIIsLoadedCallback: function () {
       map.mapsAPIIsLoadedCallback();
@@ -9,6 +14,4 @@ GWW.photosMap = (function () {
 
   };
 
-  map.registerOnLoad('GWW.photosMap.mapsAPIIsLoadedCallback');
-  return that;
 })();

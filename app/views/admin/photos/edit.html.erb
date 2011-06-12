@@ -1,6 +1,15 @@
 <%= head_css 'jquery-ui' %>
-<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/admin/photos/Edit', 'app/shared/about-auto-mapping' %>
-<% if @json then content_for :head do javascript_include_tag 'app/shared/single-photo-map' end end %>
+<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/shared/GWW', 'app/admin/photos/edit' %>
+<% content_for :head do %>
+  <%= javascript_tag '$(GWW.admin.photos.edit.setUp);' %>
+  <% if @json %>
+    <%= javascript_include_tag 'app/shared/singlePhotoMap' %>
+    <%= javascript_tag '$(GWW.shared.singlePhotoMap.setUp);' %>
+  <% else %>
+    <%= javascript_include_tag 'app/shared/aboutAutoMapping' %>
+    <%= javascript_tag '$(GWW.shared.aboutAutoMapping.setUp);' %>
+  <% end %>
+<% end %>
 <% content_for :title do %>Editing photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 
 <%= sandwich 'shared/admin/breadcrumbs' do %>

@@ -1,7 +1,12 @@
-GWW.personMap = (function () {
-  var map = GWW.map();
+GWW.people = {};
+GWW.people.map = (function () {
+  var map = GWW.shared.createMap();
 
   var that = {
+
+    setUp: function () {
+      map.setUp('GWW.people.map.mapsAPIIsLoadedCallback');
+    },
 
     mapsAPIIsLoadedCallback: function () {
       map.mapsAPIIsLoadedCallback();
@@ -26,6 +31,5 @@ GWW.personMap = (function () {
     }
   };
 
-  map.registerOnLoad('GWW.personMap.mapsAPIIsLoadedCallback');
   return that;
 })();

@@ -1,8 +1,8 @@
-describe('Edit', function () {
+describe('edit', function () {
   describe('setUp', function() {
     beforeEach(function () {
       loadFixtures('editSpec.html');
-      GWW.admin.photos.Edit.setUp();
+      GWW.admin.photos.edit.setUp();
     });
 
     describe("re copying the username from the username form to the guess/revelation forms", function() {

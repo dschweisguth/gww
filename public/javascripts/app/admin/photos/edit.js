@@ -1,7 +1,6 @@
-var GWW = {};
 GWW.admin = {};
 GWW.admin.photos = {};
-GWW.admin.photos.Edit = (function () {
+GWW.admin.photos.edit = (function () {
 
   var that = {
     setUp: function () {
@@ -39,4 +38,3 @@ GWW.admin.photos.Edit = (function () {
 
   return that;
 })();
-$(GWW.admin.photos.Edit.setUp);

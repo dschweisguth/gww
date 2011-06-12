@@ -1,6 +1,4 @@
-var GWW = {};
-
-GWW.map = function () {
+GWW.shared.createMap = function () {
   var loadMarkersFromPage = true;
   var jsonIncludedAllMarkers = false;
   var jsonBounds = null;
@@ -10,13 +8,11 @@ GWW.map = function () {
     map: null,
     markers: [],
 
-    registerOnLoad: function (callbackName) {
-      $(function() {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=' + callbackName;
-        document.body.appendChild(script);
-      });
+    setUp: function (callbackName) {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=' + callbackName;
+      document.body.appendChild(script);
     },
 
     mapsAPIIsLoadedCallback: function () {

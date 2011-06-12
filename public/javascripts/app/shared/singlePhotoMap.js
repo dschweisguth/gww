@@ -1,16 +1,12 @@
-var GWW = {};
-
-GWW.singlePhotoMap = (function () {
-  var registerOnLoad = function () {
-    $(function() {
+GWW.shared.singlePhotoMap = (function () {
+  return {
+    setUp: function () {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.singlePhotoMap.mapsAPIIsLoadedCallback';
+      script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.shared.singlePhotoMap.mapsAPIIsLoadedCallback';
       document.body.appendChild(script);
-    });
-  };
+    },
 
-  var that = {
     mapsAPIIsLoadedCallback: function () {
       var photo = GWW.config;
       var center = new google.maps.LatLng(photo.latitude, photo.longitude);
@@ -28,8 +24,6 @@ GWW.singlePhotoMap = (function () {
         symbol: photo.symbol
       });
     }
-  };
 
-  registerOnLoad();
-  return that;
+  };
 })();

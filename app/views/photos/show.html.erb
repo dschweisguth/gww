@@ -1,5 +1,13 @@
-<%= head_javascript 'app/shared/about-auto-mapping' %>
-<% if @json then content_for :head do javascript_include_tag 'app/shared/single-photo-map' end end %>
+<%= head_javascript 'app/shared/GWW' %>
+<% content_for :head do %>
+  <% if @json then %>
+    <%= javascript_include_tag 'app/shared/singlePhotoMap' %>
+    <%= javascript_tag '$(GWW.shared.singlePhotoMap.setUp);' %>
+  <% else %>
+    <%= javascript_include_tag 'app/shared/aboutAutoMapping' %>
+    <%= javascript_tag '$(GWW.shared.aboutAutoMapping.setUp);' %>
+  <% end %>
+<% end %>
 <% content_for :title do %>Photo <%= @photo.id %>, by <%= @photo.person.username %><% end %>
 <%= sandwich do %>
 <div id="photo">
