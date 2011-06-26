@@ -1,17 +1,11 @@
 GWW.photos = {};
 GWW.photos.map = (function () {
-  var map = GWW.shared.createMap();
+  var that = GWW.shared.createMap();
 
-  return {
-
-    setUp: function () {
-      map.setUp('GWW.photos.map.mapsAPIIsLoadedCallback');
-    },
-
-    mapsAPIIsLoadedCallback: function () {
-      map.mapsAPIIsLoadedCallback();
-    }
-
+  var superSetUp = GWW.superior(that, 'setUp');
+  that.setUp = function () {
+    superSetUp('GWW.photos.map.mapsAPIIsLoadedCallback');
   };
 
+  return that;
 })();
