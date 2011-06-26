@@ -43,9 +43,13 @@ GWW.shared.createMap = function () {
 
       infoWindow = new google.maps.InfoWindow();
 
+    },
+
+    getMarkerParent: function (marker) {
+      return that.map;
     }
 
-  };
+};
 
   var loadMarkers = function () {
     if (loadMarkersFromPage) {
@@ -73,11 +77,11 @@ GWW.shared.createMap = function () {
     that.markers.length = 0;
     $.each(photos.photos, function (i, photo) {
       var marker = new google.maps.Marker({
-        map: that.map,
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
         icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
         symbol: photo.symbol // Subclasses may use this to manage markers by photo type
       });
+      marker.setMap(that.getMarkerParent(marker));
       that.markers.push(marker);
       google.maps.event.addListener(marker, 'click', loadInfoWindow(photo, marker));
     });
