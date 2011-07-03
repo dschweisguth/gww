@@ -18,9 +18,7 @@ module ScoreReportsControllerSupport
       @revelations.group_by { | revelation| revelation.photo.person } \
       .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
 
-    people = Person.all_before report_date
-    Photo.add_posts people, report_date, :posts
-    people_by_score = Person.by_score people, report_date
+    people, people_by_score = people_by_score report_date
     Person.add_change_in_standings people_by_score, people, previous_report_date, @guessers
 
     raw_html = render_to_string(:partial => 'score_reports/raw_thumbnails').chomp
@@ -45,9 +43,7 @@ module ScoreReportsControllerSupport
     @new_photos_count = Photo.count_between previous_report_date, report_date
     @unfound_count = Photo.unfound_or_unconfirmed_count_before report_date
 
-    people = Person.all_before report_date
-    Photo.add_posts people, report_date, :posts
-    @people_by_score = Person.by_score people, report_date
+    people, @people_by_score = people_by_score report_date
 
     @total_participants = people.length
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
@@ -61,5 +57,13 @@ module ScoreReportsControllerSupport
 
   end
   private :prepare_gww_stats_html
+
+  def people_by_score(report_date)
+    people = Person.all_before report_date
+    Photo.add_posts people, report_date, :posts
+    people_by_score = Person.by_score people, report_date
+    return people, people_by_score
+  end
+  private :people_by_score
 
 end
