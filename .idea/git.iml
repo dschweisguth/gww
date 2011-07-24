@@ -18,12 +18,6 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="bundler" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
         <dependency name="jasmine" version="1.0.2.1" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
