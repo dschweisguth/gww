@@ -50,7 +50,7 @@ class Stcline < ActiveRecord::Base
       end
     end
     if clines.length != 1
-      logger.info "Found #{clines.length} centerlines for #{address}"
+      logger.debug "Found #{clines.length} centerlines for #{address}"
       return nil
     end
     cline = clines[0]
@@ -61,7 +61,7 @@ class Stcline < ActiveRecord::Base
     pos = from_address == to_address ? 0.5 : (number - from_address) / (to_address - from_address)
     point = RGeo::Cartesian.preferred_factory.point \
       first.x + pos * (last.x - first.x), first.y + pos * (last.y - first.y)
-    logger.info "Found #{address} at #{point.x}, #{point.y}"
+    logger.debug "Found #{address} at #{point.x}, #{point.y}"
     point
   end
 

@@ -9,7 +9,7 @@ class Stintersection < ActiveRecord::Base
       point2 = geocode_intersection location.on, location.between2
       if point2
         midpoint = point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2)
-        logger.info "Found midpoint of #{location.on} " +
+        logger.debug "Found midpoint of #{location.on} " +
           "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
         midpoint
       else
@@ -26,10 +26,10 @@ class Stintersection < ActiveRecord::Base
     intersections = intersections street1, street2
     if intersections.length == 1
       point = intersections[0].SHAPE
-      logger.info "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
+      logger.debug "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
       point
     else
-      logger.info "Found #{intersections.length} intersections of #{street1} and #{street2}."
+      logger.debug "Found #{intersections.length} intersections of #{street1} and #{street2}."
       nil
     end
   end
@@ -45,10 +45,10 @@ class Stintersection < ActiveRecord::Base
     street_types = (intersections.map &:st_type).uniq
     if street_types.length == 1
       street_type = street_types[0]
-      logger.info "The #{street.name} that crosses #{cross_street} is a(n) #{street_type}."
+      logger.debug "The #{street.name} that crosses #{cross_street} is a(n) #{street_type}."
       street_type
     else
-      logger.info "Found #{street_types.length} intersections of #{street.name} and #{cross_street}."
+      logger.debug "Found #{street_types.length} intersections of #{street.name} and #{cross_street}."
       nil
     end
   end

@@ -457,15 +457,15 @@ class Photo < ActiveRecord::Base
     inferred_count = 0
     answers.each do |answer|
       answer_count += 1
-      logger.info "\nInferring geocode for \"#{answer.comment_text}\" ..."
+      logger.debug "\nInferring geocode for \"#{answer.comment_text}\" ..."
       locations = parser.parse answer.comment_text
       if locations.empty?
-        logger.info "Found no location."
+        logger.debug "Found no location."
       else
         location_count += 1
         shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
         if shapes.length != 1
-          logger.info "Found #{shapes.length} geocodes."
+          logger.debug "Found #{shapes.length} geocodes."
           point = nil
         else
           inferred_count += 1
