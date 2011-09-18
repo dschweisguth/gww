@@ -435,6 +435,7 @@ class Photo < ActiveRecord::Base
 
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
+      #noinspection RailsParamDefResolve
       photo = includes(:revelation, :person).find photo_id
       photo.revelation.destroy if photo.revelation
       Guess.destroy_all_by_photo_id photo.id
