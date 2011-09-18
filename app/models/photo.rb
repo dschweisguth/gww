@@ -1,6 +1,7 @@
 class Photo < ActiveRecord::Base
   include Answer
 
+  #noinspection RubyResolve
   self.include_root_in_json = false
 
   belongs_to :person, :inverse_of => :photos
