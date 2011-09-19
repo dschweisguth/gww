@@ -1,5 +1,4 @@
 source 'http://rubygems.org/'
-source 'http://gemcutter.org/'
 
 gem 'mysql2', '0.2.7'
 gem 'activerecord-mysql2spatial-adapter', '0.3.2'
