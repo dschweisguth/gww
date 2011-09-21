@@ -68,7 +68,7 @@ Mac
     > gem list
     bundler (1.0.14)
     rake (0.8.7 ruby) # rvm installed this for us
-    rubygems-update (1.8.5)
+    rubygems-update (1.8.10)
 Linux
     Install the same way as for Mac, but as root, thereby installing rvm
     for all users and setting up the shared rvm's Ruby.
