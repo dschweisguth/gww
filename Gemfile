@@ -1,6 +1,5 @@
 source 'http://rubygems.org/'
 
-gem 'rake', '0.9.2'
 # mysql2 0.3.* requires Rails 3.1. mysql 2.0.13 doesn't work for an unknown reason.
 gem 'mysql2', '0.2.13'
 gem 'activerecord-mysql2spatial-adapter', '0.4.1'
