@@ -7,6 +7,7 @@ A photo which is guessed or revealed and then removed from the group remains
 
 Debt
 
+Upgrade will_paginate
 Extract facades from models
 Merge revelations into guesses?
 

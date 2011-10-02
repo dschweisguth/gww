@@ -127,7 +127,7 @@ GEM
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
       rack-test (>= 0.5.3)
-    will_paginate (3.0.2)
+    will_paginate (3.0.pre2)
     xml-simple (1.0.15)
     yajl-ruby (0.8.2)
 
@@ -147,5 +147,5 @@ DEPENDENCIES
   shoulda-matchers (= 1.0.0.beta2)
   simplecov (= 0.4.2)
   webrat (= 0.7.3)
-  will_paginate (= 3.0.2)
+  will_paginate (= 3.0.pre2)
   xml-simple (= 1.0.15)
