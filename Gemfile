@@ -18,15 +18,15 @@ gem 'xml-simple', '1.1.0'
 #    http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks/
 #    http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks-part-ii/
 group :development do
-  gem 'rspec-rails', '2.5.0'
+  gem 'rspec-rails', '2.6.1'
 end
 
 group :test do
   gem 'jasmine', '1.0.2.1'
-  gem 'rr', '1.0.2'
+  gem 'rr', '1.0.4'
   gem 'shoulda-matchers', '1.0.0.beta2'
-  gem 'simplecov', '0.4.2'
-  gem 'rspec-rails', '2.5.0'
+  gem 'simplecov', '0.5.3'
+  gem 'rspec-rails', '2.6.1'
   gem 'webrat', '0.7.3'
 end
 
