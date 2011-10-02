@@ -1,4 +1,4 @@
-#!/bin/sh -ev
+#!/bin/sh -e
 
 # This script updates production GWW from github. It's only meant for
 # production; it does things that are only relevant in the production
@@ -13,5 +13,5 @@ git checkout `git tag | ruby -e 'puts STDIN.readlines.sort_by { |s| s[6, s.lengt
 bundle install --deployment --without test
 bundle exec rake RAILS_ENV=production db:migrate
 touch tmp/restart.txt
-rm -r public/cache
+rm -rf public/cache
 script/up
