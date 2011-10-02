@@ -1,6 +1,7 @@
 source 'http://rubygems.org/'
 
-gem 'mysql2', '0.2.13'
+# mysql2 0.3.* requires Rails 3.1
+gem 'mysql2', '0.2.7'
 gem 'activerecord-mysql2spatial-adapter', '0.3.2'
 gem 'rails', '3.0.7'
 gem 'jquery-rails', '0.2.7'
