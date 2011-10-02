@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -ev
 
 # This script updates production GWW from github. It's only meant for
 # production; it does things that are only relevant in the production
