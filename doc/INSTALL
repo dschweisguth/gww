@@ -84,6 +84,7 @@ Install gems
     Mac
 	> sudo bundle install --without production
     Linux
+        > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
 	> bundle install --deployment --without test
 Configure
     Configure database credentials
