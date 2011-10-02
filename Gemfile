@@ -3,7 +3,7 @@ source 'http://rubygems.org/'
 # mysql2 0.3.* requires Rails 3.1. mysql 2.0.13 doesn't work for an unknown reason.
 gem 'mysql2', '0.2.7'
 gem 'activerecord-mysql2spatial-adapter', '0.3.2'
-gem 'rails', '3.0.7'
+gem 'rails', '3.0.10'
 gem 'jquery-rails', '0.2.7'
 gem 'rails3-jquery-autocomplete', '0.6.6'
 gem 'will_paginate', '3.0.pre2'
