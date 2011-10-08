@@ -27,7 +27,7 @@ describe Person do
 
   end
 
-  describe '.find' do
+  describe '.find_by_multiple_fields' do
     before do
       @person = Person.make
     end
