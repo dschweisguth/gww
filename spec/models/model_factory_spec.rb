@@ -193,6 +193,7 @@ describe Person do
     person = Person.make
     person.flickrid.should == 'person_flickrid'
     person.username.should == 'username'
+    person.pathalias.should == nil
     person.comments_to_guess.should == nil
     person.comments_per_post.should == 0
     person.comments_to_be_guessed.should == nil
@@ -202,6 +203,7 @@ describe Person do
     makes_with_custom_attributes Person, {
       :flickrid => 'other_person_flickrid',
       :username => 'other_username',
+      :pathalias => 'other_pathalias',
       :comments_to_guess => 1,
       :comments_per_post => 1,
       :comments_to_be_guessed => 1
@@ -212,6 +214,7 @@ describe Person do
     person = Person.make 'label'
     person.flickrid.should == 'label_person_flickrid'
     person.username.should == 'label_username'
+    person.pathalias.should == nil
   end
 
 end

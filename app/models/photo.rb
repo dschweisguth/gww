@@ -238,7 +238,7 @@ class Photo < ActiveRecord::Base
       logger.info "Getting page #{page} ..."
       photos_xml = FlickrCredentials.request 'flickr.groups.pools.getPhotos',
         'per_page' => '500', 'page' => page.to_s,
-        'extras' => 'geo,last_update,views'
+        'extras' => 'geo,last_update,pathalias,views'
       parsed_photos = photos_xml['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
@@ -266,7 +266,9 @@ class Photo < ActiveRecord::Base
           end
           old_person_username = person.username
           person.username = parsed_photo['ownername']
-          if person.id.nil? || person.username != old_person_username
+          old_person_pathalias = person.pathalias
+          person.pathalias = parsed_photo['pathalias']
+          if person.id.nil? || person.username != old_person_username || person.pathalias != old_person_pathalias
             person.save!
           end
 

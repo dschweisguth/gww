@@ -783,6 +783,7 @@ describe Photo do
             'id' => 'incoming_photo_flickrid',
             'owner' => 'incoming_person_flickrid',
             'ownername' => 'incoming_username',
+            'pathalias' => 'incoming_pathalias',
             'farm' => '1',
             'server' => 'incoming_server',
             'secret' => 'incoming_secret',
@@ -807,6 +808,7 @@ describe Photo do
 
       person.flickrid.should == 'incoming_person_flickrid'
       person.username.should == 'incoming_username'
+      person.pathalias.should == 'incoming_pathalias'
 
       photo.flickrid.should == 'incoming_photo_flickrid'
       photo.farm.should == '1'
@@ -828,8 +830,8 @@ describe Photo do
 
     end
 
-    it 'uses an existing person, and updates their username if it changed' do
-      person_before = Person.make :flickrid => 'incoming_person_flickrid', :username => 'old_username'
+    it 'uses an existing person, and updates their information if it changed' do
+      person_before = Person.make :flickrid => 'incoming_person_flickrid', :username => 'old_username', :pathalias => 'incoming_person_pathalias'
       Photo.update_all_from_flickr.should == [ 1, 0, 1, 1 ]
       people = Person.all
       people.size.should == 1
@@ -837,6 +839,7 @@ describe Photo do
       person_after.id.should == person_before.id
       person_after.flickrid.should == person_before.flickrid
       person_after.username.should == 'incoming_username'
+      person_after.pathalias.should == 'incoming_pathalias'
     end
 
     it 'uses an existing photo, and updates attributes that changed' do
