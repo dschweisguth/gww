@@ -10,12 +10,6 @@ class Person < ActiveRecord::Base
   has_many :photos, :inverse_of => :person
   has_many :guesses, :inverse_of => :person
 
-  # Used by RootController
-
-  def self.find_by_multiple_fields(username)
-    find_by_username(username) || find_by_flickrid(username) || (username =~ /\d+/ && find_by_id(username))
-  end
-
   # Used by ScoreReportsController
 
   def self.all_before(date)
@@ -168,6 +162,10 @@ class Person < ActiveRecord::Base
   private_class_method :append
 
   # Used by PeopleController
+
+  def self.find_by_multiple_fields(username)
+    find_by_username(username) || find_by_flickrid(username) || (username =~ /\d+/ && find_by_id(username))
+  end
 
   CRITERIA = {
     'username' => [ :downcased_username ],

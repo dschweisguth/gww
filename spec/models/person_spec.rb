@@ -27,29 +27,6 @@ describe Person do
 
   end
 
-  describe '.find_by_multiple_fields' do
-    before do
-      @person = Person.make
-    end
-
-    it 'finds a person by username' do
-      Person.find_by_multiple_fields(@person.username).should == @person
-    end
-
-    it 'finds a person by flickrid' do
-      Person.find_by_multiple_fields(@person.flickrid).should == @person
-    end
-
-    it 'finds a person by GWW ID' do
-      Person.find_by_multiple_fields(@person.id.to_s).should == @person
-    end
-
-    it 'punts back to the home page' do
-      Person.find_by_multiple_fields('xxx').should be_nil
-    end
-
-  end
-
   describe '.all_before' do
     it "returns all people who posted before the given date" do
       photo = Photo.make :dateadded => Time.utc(2011)
@@ -359,6 +336,29 @@ describe Person do
       people_by_score = { 1 => [ tied1, tied2 ], 0 => [ third ] }
       Person.add_score_and_place people_by_score, :score, :place
       third[:place].should == 3
+    end
+
+  end
+
+  describe '.find_by_multiple_fields' do
+    before do
+      @person = Person.make
+    end
+
+    it 'finds a person by username' do
+      Person.find_by_multiple_fields(@person.username).should == @person
+    end
+
+    it 'finds a person by flickrid' do
+      Person.find_by_multiple_fields(@person.flickrid).should == @person
+    end
+
+    it 'finds a person by GWW ID' do
+      Person.find_by_multiple_fields(@person.id.to_s).should == @person
+    end
+
+    it 'punts back to the home page' do
+      Person.find_by_multiple_fields('xxx').should be_nil
     end
 
   end
