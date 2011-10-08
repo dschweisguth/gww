@@ -225,10 +225,6 @@ class Photo < ActiveRecord::Base
   # Used by Admin::PhotosController
 
   def self.update_all_from_flickr
-    group_info = FlickrCredentials.request 'flickr.groups.getInfo'
-    member_count = group_info['group'][0]['members'][0]
-    update = FlickrUpdate.create! :member_count => member_count
-
     page = 1
     parsed_photos = nil
     existing_people = {}
@@ -329,10 +325,6 @@ class Photo < ActiveRecord::Base
         page += 1
       end
     end
-
-    update.completed_at = Time.now.getutc
-    update.save!
-
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
   end
 

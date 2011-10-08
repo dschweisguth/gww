@@ -771,11 +771,6 @@ describe Photo do
 
   describe '.update_all_from_flickr' do
     before do
-      stub(FlickrCredentials).request('flickr.groups.getInfo') { {
-        'group'=> [ {
-          'members'=>['1492']
-        } ]
-      } }
       stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
         'photos' => [ {
           'pages' => '1',
@@ -820,13 +815,6 @@ describe Photo do
       photo.dateadded.should == Time.utc(2011)
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
-
-      updates = FlickrUpdate.all
-      updates.size.should == 1
-      update = updates[0]
-      update.member_count.should == 1492
-      #noinspection RubyResolve
-      update.completed_at.should_not be_nil
 
     end
 

@@ -8,4 +8,13 @@ class FlickrUpdate < ActiveRecord::Base
     order("id desc").first
   end
 
+  def self.create_before_and_update_after
+    group_info = FlickrCredentials.request 'flickr.groups.getInfo'
+    member_count = group_info['group'][0]['members'][0]
+    update = FlickrUpdate.create! :member_count => member_count
+    return_value = yield
+    update.update_attribute :completed_at, Time.now.getutc
+    return_value
+  end
+
 end

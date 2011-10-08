@@ -6,8 +6,17 @@ describe Admin::PhotosController do
   describe '#update_all_from_flickr' do
     it 'does some work and redirects' do
       mock_clear_page_cache 2
+      stub(FlickrCredentials).request('flickr.groups.getInfo') { {
+        'group'=> [ {
+          'members'=>['1492']
+        } ]
+      } }
+      update = FlickrUpdate.make :member_count => 1492
+      mock(FlickrUpdate).create!(:member_count => '1492') { update }
       mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
       mock(Person).update_all_from_flickr
+      stub(Time).now { Time.utc(2011) }
+      mock(update).update_attribute :completed_at, Time.utc(2011)
       get :update_all_from_flickr
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
