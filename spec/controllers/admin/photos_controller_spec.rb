@@ -7,11 +7,11 @@ describe Admin::PhotosController do
     it 'does some work and redirects' do
       mock_clear_page_cache 2
       mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
+      mock(Person).update_all_from_flickr
       get :update_all_from_flickr
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
-      flash[:notice].should ==
-        'Created 1 new photos and 2 new users. Got 3 pages out of 4.'
+      flash[:notice].should == 'Created 1 new photos and 2 new users. Got 3 pages out of 4.'
     end
   end
 

@@ -491,6 +491,21 @@ class Person < ActiveRecord::Base
 
   # Used in Admin::PhotosController
 
+  def self.update_all_from_flickr
+    Person.all(:conditions => 'id != 0').each do |person|
+      old_username = person.username
+      old_pathalias = person.pathalias
+      response = FlickrCredentials.request('flickr.people.getInfo', 'user_id' => person.flickrid)
+      next if response['stat'] == 'fail' # This happens if the account has been deleted
+      parsed_person = response['person'][0]
+      person.username = parsed_person['username'][0]
+      person.pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
+      if person.username != old_username || person.pathalias != old_pathalias
+        person.save!
+      end
+    end
+  end
+
   def self.update_statistics
     update_all :comments_to_guess => nil, :comments_per_post => 0, :comments_to_be_guessed => nil
     update_statistic :comments_to_guess, %q{
