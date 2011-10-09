@@ -389,6 +389,16 @@ class Photo < ActiveRecord::Base
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
+  def answer(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+    transaction do
+      if guesser_flickrid == self.person.flickrid
+        reveal answer_text, answered_at
+      else
+        guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+      end
+    end
+  end
+
   def reveal(answer_text, answered_at)
     self.game_status = 'revealed'
     self.save!
@@ -409,6 +419,7 @@ class Photo < ActiveRecord::Base
 
     Guess.destroy_all_by_photo_id self.id
   end
+  private :reveal
 
   def guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
     self.game_status = 'found'
@@ -442,6 +453,7 @@ class Photo < ActiveRecord::Base
 
     self.revelation.destroy if self.revelation
   end
+  private :guess
 
   def load_comments
     comments = []

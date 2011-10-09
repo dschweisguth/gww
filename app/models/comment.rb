@@ -52,13 +52,7 @@ class Comment < ActiveRecord::Base
       end
     end
 
-    Photo.transaction do
-      if guesser_flickrid == photo.person.flickrid
-        photo.reveal answer_text, answered_at
-      else
-        photo.guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
-      end
-    end
+    photo.answer(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
 
   end
   private_class_method :add_answer
