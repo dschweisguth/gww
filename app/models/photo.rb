@@ -234,7 +234,7 @@ class Photo < ActiveRecord::Base
       logger.info "Getting page #{page} ..."
       photos_xml = FlickrCredentials.request 'flickr.groups.pools.getPhotos',
         'per_page' => '500', 'page' => page.to_s,
-        'extras' => 'geo,last_update,pathalias,views'
+        'extras' => 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
