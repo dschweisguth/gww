@@ -254,12 +254,11 @@ class Photo < ActiveRecord::Base
         parsed_photos['photo'].each do |parsed_photo|
           person_flickrid = parsed_photo['owner']
           person = existing_people[person_flickrid]
-          username = parsed_photo['ownername']
-          pathalias = parsed_photo['pathalias']
+          person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
           if person
-            person.update_attributes_if_necessary! :username => username, :pathalias => pathalias
+            person.update_attributes_if_necessary! person_attrs
           else
-            person = Person.create! :flickrid => person_flickrid, :username => username, :pathalias => pathalias
+            person = Person.create! person_attrs.merge(:flickrid => person_flickrid)
             existing_people[person_flickrid] = person
             new_person_count += 1
           end
