@@ -115,6 +115,16 @@ describe Comment do
         guess_matches_and_person_is comment, guesser
       end
 
+      it "updates the guesser's username if necessary" do
+        guesser = Person.make :username => 'old_username'
+        comment = Comment.make :flickrid => guesser.flickrid,
+          :username => 'new_username', :commented_at => Time.utc(2011)
+        set_time
+        Comment.add_selected_answer comment.id, ''
+        guesser.reload
+        guesser.username.should == 'new_username'
+      end
+
       it 'creates the guesser if necessary' do
         comment = Comment.make
         set_time

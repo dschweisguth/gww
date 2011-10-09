@@ -546,7 +546,8 @@ class Photo < ActiveRecord::Base
       guesser = Person.find_by_flickrid guesser_flickrid
     end
     if guesser
-      # TODO Dave update person's username and pathalias
+      # TODO Dave update person's pathalias?
+      guesser.update_attributes_if_necessary! :username => guesser_username
       guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
     else
       guesser = Person.create! \
