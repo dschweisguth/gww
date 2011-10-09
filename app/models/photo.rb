@@ -389,6 +389,27 @@ class Photo < ActiveRecord::Base
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
+  def reveal(answer_text, answered_at)
+    self.game_status = 'revealed'
+    self.save!
+
+    revelation = self.revelation
+    if revelation
+      revelation.comment_text = answer_text
+      revelation.commented_at = answered_at
+      revelation.added_at = Time.now.getutc
+      revelation.save!
+    else
+      Revelation.create! \
+        :photo => self,
+        :comment_text => answer_text,
+        :commented_at => answered_at,
+        :added_at => Time.now.getutc
+    end
+
+    Guess.destroy_all_by_photo_id self.id
+  end
+
   def load_comments
     comments = []
     parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid

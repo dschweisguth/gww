@@ -54,25 +54,7 @@ class Comment < ActiveRecord::Base
 
     Photo.transaction do
       if guesser_flickrid == photo.person.flickrid
-        photo.game_status = 'revealed'
-        photo.save!
-
-        revelation = photo.revelation
-        if revelation
-          revelation.comment_text = answer_text
-          revelation.commented_at = answered_at
-          revelation.added_at = Time.now.getutc
-          revelation.save!
-        else
-          Revelation.create! \
-            :photo => photo,
-            :comment_text => answer_text,
-            :commented_at => answered_at,
-            :added_at => Time.now.getutc
-        end
-
-        Guess.destroy_all_by_photo_id photo.id
-
+        photo.reveal answer_text, answered_at
       else
         photo.game_status = 'found'
         photo.save!
