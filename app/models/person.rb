@@ -10,6 +10,14 @@ class Person < ActiveRecord::Base
   has_many :photos, :inverse_of => :person
   has_many :guesses, :inverse_of => :person
 
+  # Update attributes only if any have changed. update_attributes! doesn't issue an update if no attributes have
+  # changed, but it does start a transaction, which is slow.
+  def update_attributes_if_necessary!(attrs)
+    if attrs.any? { |attr| attr[1] != self[attr[0]] }
+      update_attributes! attrs
+    end
+  end
+
   # Used by ScoreReportsController
 
   def self.all_before(date)
@@ -493,16 +501,12 @@ class Person < ActiveRecord::Base
 
   def self.update_all_from_flickr
     Person.all(:conditions => 'id != 0').each do |person|
-      old_username = person.username
-      old_pathalias = person.pathalias
-      response = FlickrCredentials.request('flickr.people.getInfo', 'user_id' => person.flickrid)
+      response = FlickrCredentials.request 'flickr.people.getInfo', 'user_id' => person.flickrid
       next if response['stat'] == 'fail' # This happens if the account has been deleted
       parsed_person = response['person'][0]
-      person.username = parsed_person['username'][0]
-      person.pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
-      if person.username != old_username || person.pathalias != old_pathalias
-        person.save!
-      end
+      username = parsed_person['username'][0]
+      pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
+      person.update_attributes_if_necessary! :username => username, :pathalias => pathalias
     end
   end
 

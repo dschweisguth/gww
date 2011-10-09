@@ -243,8 +243,7 @@ class Photo < ActiveRecord::Base
         now = Time.now.getutc
         update_seen_at photo_flickrids, now
 
-        people_flickrids =
-          Set.new parsed_photos['photo'].map { |p| p['owner'] }
+        people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
         existing_people_flickrids = people_flickrids - existing_people.keys
         Person.find_all_by_flickrid(existing_people_flickrids.to_a).each do |person|
           existing_people[person.flickrid] = person
@@ -255,18 +254,14 @@ class Photo < ActiveRecord::Base
         parsed_photos['photo'].each do |parsed_photo|
           person_flickrid = parsed_photo['owner']
           person = existing_people[person_flickrid]
-          if ! person
-            person = Person.new :flickrid => person_flickrid
+          username = parsed_photo['ownername']
+          pathalias = parsed_photo['pathalias']
+          if person
+            person.update_attributes_if_necessary! :username => username, :pathalias => pathalias
+          else
+            person = Person.create! :flickrid => person_flickrid, :username => username, :pathalias => pathalias
             existing_people[person_flickrid] = person
             new_person_count += 1
-          end
-          # TODO Dave extract method
-          old_person_username = person.username
-          person.username = parsed_photo['ownername']
-          old_person_pathalias = person.pathalias
-          person.pathalias = parsed_photo['pathalias']
-          if person.id.nil? || person.username != old_person_username || person.pathalias != old_person_pathalias
-            person.save!
           end
 
           photo_flickrid = parsed_photo['id']
