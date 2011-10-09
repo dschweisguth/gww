@@ -10,11 +10,9 @@ class Comment < ActiveRecord::Base
 
   def self.remove_revelation(comment_id)
     transaction do
-      comment = includes(:photo => :revelation).find comment_id
-      photo = comment.photo
+      photo = find(comment_id).photo
       photo.revelation.destroy
-      photo.game_status = 'unfound'
-      photo.save!
+      photo.update_attribute :game_status, 'unfound'
     end
   end
 
