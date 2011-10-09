@@ -525,15 +525,14 @@ class Photo < ActiveRecord::Base
   def reveal(comment_text, commented_at)
     update_attribute :game_status, 'revealed'
 
-    revelation = self.revelation
     revelation_attrs = { :comment_text => comment_text, :commented_at => commented_at, :added_at => Time.now.getutc }
-    if revelation
-      revelation.update_attributes! revelation_attrs
+    if self.revelation
+      self.revelation.update_attributes! revelation_attrs
     else
       Revelation.create!({ :photo => self }.merge(revelation_attrs))
     end
 
-    Guess.destroy_all_by_photo_id self.id
+    self.guesses.destroy_all
 
   end
   private :reveal
