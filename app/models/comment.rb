@@ -14,6 +14,7 @@ class Comment < ActiveRecord::Base
       raise ArgumentError, 'answer_text may not be empty'
     end
 
+    #noinspection RailsParamDefResolve
     photo = Photo.includes(:person, :revelation).find photo_id
     if username.empty?
       username = photo.person.username
