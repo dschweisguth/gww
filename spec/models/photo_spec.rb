@@ -1107,6 +1107,117 @@ describe Photo do
 
   end
 
+  describe '.add_entered_answer' do
+    before do
+      @now = Time.utc(2010)
+    end
+
+    describe 'when adding a revelation' do
+      it 'needs a non-empty answer text' do
+        photo = Photo.make
+        lambda { Photo.add_entered_answer photo.id, photo.person.username, '' }.should raise_error ArgumentError
+      end
+
+      it 'adds a revelation' do
+        photo = Photo.make
+        set_time
+        Photo.add_entered_answer photo.id, photo.person.username, 'answer text'
+        is_revealed photo, 'answer text'
+      end
+
+      it "defaults to the photo's owner" do
+        photo = Photo.make
+        set_time
+        Photo.add_entered_answer photo.id, '', 'answer text'
+        is_revealed photo, 'answer text'
+      end
+
+      it 'updates an existing revelation' do
+        photo = Revelation.make.photo
+        set_time
+        Photo.add_entered_answer photo.id, photo.person.username, 'new answer text'
+        is_revealed photo, 'new answer text'
+      end
+
+      def is_revealed(photo, answer_text)
+        revelations = Revelation.find_all_by_photo_id photo
+        revelations.length.should == 1
+        revelation = revelations[0]
+        revelation.photo.game_status.should == 'revealed'
+        revelation.comment_text.should == answer_text
+        revelation.commented_at.should == @now
+        revelation.added_at.should == @now
+      end
+
+      it 'deletes an existing guess' do
+        photo = Photo.make
+        guess = Guess.make :photo => photo
+        Photo.add_entered_answer photo.id, photo.person.username, 'answer text'
+        Guess.count.should == 0
+        owner_does_not_exist guess
+      end
+
+    end
+
+    describe 'when adding a guess' do
+      it 'adds a guess' do
+        photo = Photo.make
+        guesser = Person.make
+        set_time
+        Photo.add_entered_answer photo.id, guesser.username, 'answer text'
+        is_guessed photo, guesser, 'answer text'
+      end
+
+      it 'creates the guesser if necessary' do
+        photo = Photo.make
+        comment = Comment.make
+        set_time
+        Photo.add_entered_answer photo.id, comment.username, 'answer text'
+        guess = Guess.find_by_photo_id photo, :include => :person
+        guess.person.flickrid.should == comment.flickrid
+        guess.person.username.should == comment.username
+      end
+
+      it "blows up if the username is unknown" do
+        photo = Photo.make
+        lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'answer text' }.should raise_error Photo::AddAnswerError
+      end
+
+      it 'updates an existing guess' do
+        old_guess = Guess.make
+        set_time
+        Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new answer text'
+        is_guessed old_guess.photo, old_guess.person, 'new answer text'
+      end
+
+      def is_guessed(photo, person, answer_text)
+        guesses = Guess.find_all_by_photo_id photo
+        guesses.length.should == 1
+        guess = guesses[0]
+        guess.person.should == person
+        guess.comment_text.should == answer_text
+        guess.commented_at.should == @now
+        guess.added_at.should == @now
+        guess.photo.game_status.should == 'found'
+      end
+
+      it 'deletes an existing revelation' do
+        photo = Revelation.make.photo
+        guesser = Person.make
+        Photo.add_entered_answer photo.id, guesser.username, 'answer text'
+        Revelation.count.should == 0
+      end
+
+    end
+
+    # Specs of add_entered_answer call this immediately before calling add_selected_answer so
+    # that it doesn't affect test objects' date attributes and assertions on those attributes don't pass by accident
+    def set_time
+      stub(Time).now { @now }
+    end
+
+  end
+
   describe '#load_comments' do
     before do
       @photo = Photo.make

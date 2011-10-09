@@ -5,60 +5,8 @@ class Comment < ActiveRecord::Base
 
   def self.add_selected_answer(comment_id, username)
     comment = includes(:photo => [ :person, :revelation ]).find comment_id
-    add_answer comment.photo, comment.username, comment.flickrid, username,
-      comment.comment_text, comment.commented_at
+    comment.photo.answer comment.username, comment.flickrid, username, comment.comment_text, comment.commented_at
   end
-
-  def self.add_entered_answer(photo_id, username, answer_text)
-    if answer_text.empty?
-      raise ArgumentError, 'answer_text may not be empty'
-    end
-
-    #noinspection RailsParamDefResolve
-    photo = Photo.includes(:person, :revelation).find photo_id
-    if username.empty?
-      username = photo.person.username
-    end
-    add_answer photo, nil, nil, username, answer_text, Time.now.getutc
-
-  end
-
-  def self.add_answer(photo, selected_username, selected_flickrid, entered_username, answer_text, answered_at)
-    guesser = nil
-    if entered_username.empty?
-      guesser_username = selected_username
-      guesser_flickrid = selected_flickrid
-    else
-      guesser_username = entered_username
-      guesser_flickrid = nil
-      if photo.person.username == entered_username
-        guesser_flickrid = photo.person.flickrid
-      end
-      if !guesser_flickrid
-        guesser = Person.find_by_username entered_username
-        guesser_flickrid = guesser ? guesser.flickrid : nil
-      end
-      if !guesser_flickrid
-        guesser_comment = Comment.find_by_username entered_username
-        if guesser_comment
-          guesser_flickrid = guesser_comment.flickrid
-        end
-      end
-      if !guesser_flickrid
-        raise AddAnswerError,
-          "Sorry; GWW hasn't seen any posts or comments by #{entered_username} yet, " +
-            "so doesn't know enough about them to award them a point. " +
-            "Did you spell their username correctly?"
-      end
-    end
-
-    photo.answer answer_text, answered_at, guesser_flickrid, guesser_username, guesser
-
-  end
-  private_class_method :add_answer
-
-  class AddAnswerError < StandardError
-  end 
 
   def self.remove_revelation(comment_id)
     transaction do

@@ -40,7 +40,7 @@ class Admin::PhotosController < ApplicationController
   def add_selected_answer
     begin
       Comment.add_selected_answer params[:comment_id], params[:username]
-    rescue Comment::AddAnswerError => e
+    rescue Photo::AddAnswerError => e
       flash[:notice] = e.message
     end
     PageCache.clear
@@ -49,8 +49,8 @@ class Admin::PhotosController < ApplicationController
 
   def add_entered_answer
     begin
-      Comment.add_entered_answer params[:id].to_i, params[:username], params[:answer_text]
-    rescue Comment::AddAnswerError => e
+      Photo.add_entered_answer params[:id].to_i, params[:username], params[:answer_text]
+    rescue Photo::AddAnswerError => e
       flash[:notice] = e.message
     end
     PageCache.clear
