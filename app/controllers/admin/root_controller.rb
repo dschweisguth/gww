@@ -9,7 +9,7 @@ class Admin::RootController < ApplicationController
     @multipoint_photos_count = Guess.group(:photo_id).count.values.count { |count| count > 1 }
   end
 
-  def update_all_from_flickr
+  def update_from_flickr
     # Expire before updating so everyone sees the in-progress message
     PageCache.clear
     new_photo_count, new_person_count, pages_gotten, pages_available = FlickrUpdate.create_before_and_update_after do
@@ -23,7 +23,7 @@ class Admin::RootController < ApplicationController
     redirect_to admin_root_path
   end
 
-  def update_statistics_and_maps
+  def calculate_statistics_and_maps
     Person.update_statistics
     Photo.update_statistics
     Photo.infer_geocodes

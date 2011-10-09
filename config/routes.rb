@@ -37,7 +37,7 @@ GWW::Application.routes.draw do
   get 'bookmarklet/show' => 'bookmarklet#show', :as => :bookmarklet
 
   get 'admin' => 'admin/root#index', :as => :admin_root
-  %w(update_all_from_flickr update_statistics_and_maps).each do |action|
+  %w(update_from_flickr calculate_statistics_and_maps).each do |action|
     post "admin/#{action}" => "admin/root##{action}", :as => action
   end
   get 'admin/bookmarklet' => 'admin/root#bookmarklet', :as => :admin_root_bookmarklet

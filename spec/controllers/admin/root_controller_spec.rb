@@ -33,7 +33,7 @@ describe Admin::RootController do
 
   end
 
-  describe '#update_all_from_flickr' do
+  describe '#update_from_flickr' do
     it 'does some work and redirects' do
       mock_clear_page_cache 2
       stub(FlickrCredentials).request('flickr.groups.getInfo') { {
@@ -47,20 +47,20 @@ describe Admin::RootController do
       mock(Person).update_all_from_flickr
       stub(Time).now { Time.utc(2011) }
       mock(update).update_attribute :completed_at, Time.utc(2011)
-      get :update_all_from_flickr
+      get :update_from_flickr
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should == 'Created 1 new photos and 2 new users. Got 3 pages out of 4.'
     end
   end
 
-  describe '#update_statistics_and_maps' do
+  describe '#calculate_statistics_and_maps' do
     it 'does some work and redirects' do
       mock(Person).update_statistics
       mock(Photo).update_statistics
       mock(Photo).infer_geocodes
       mock_clear_page_cache
-      get :update_statistics_and_maps
+      get :calculate_statistics_and_maps
       #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should == 'Updated statistics and maps.'
