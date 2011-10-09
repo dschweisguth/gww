@@ -383,21 +383,22 @@ class Photo < ActiveRecord::Base
       answer_count += 1
       logger.debug "\nInferring geocode for \"#{answer.comment_text}\" ..."
       locations = parser.parse answer.comment_text
-      if locations.empty?
-        logger.debug "Found no location."
-      else
-        location_count += 1
-        shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
-        if shapes.length != 1
-          logger.debug "Found #{shapes.length} geocodes."
-          point = nil
+      point =
+        if locations.empty?
+          logger.debug "Found no location."
+          nil
         else
-          inferred_count += 1
-          point = shapes[0]
+          location_count += 1
+          shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
+          if shapes.length != 1
+            logger.debug "Found #{shapes.length} geocodes."
+            nil
+          else
+            inferred_count += 1
+            shapes[0]
+          end
         end
-      end
-      #noinspection RubyScope
-      answer.photo.save_geocode point # TODO Dave should this be inside the else?
+      answer.photo.save_geocode point
     end
     finish = Time.now
     logger.info "Examined #{answer_count} photos " +
