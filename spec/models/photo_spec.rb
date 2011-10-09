@@ -1141,6 +1141,7 @@ describe Photo do
 
       def is_revealed(photo, answer_text)
         revelations = Revelation.find_all_by_photo_id photo
+        #noinspection RubyResolve
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
@@ -1192,6 +1193,7 @@ describe Photo do
 
       def is_guessed(photo, person, answer_text)
         guesses = Guess.find_all_by_photo_id photo
+        #noinspection RubyResolve
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == person
