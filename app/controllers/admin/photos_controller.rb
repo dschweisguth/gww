@@ -3,6 +3,8 @@ class Admin::PhotosController < ApplicationController
   
   autocomplete :person, :username
 
+  # TODO Dave move these to admin/root
+
   def update_all_from_flickr
     # Expire before updating so everyone sees the in-progress message
     PageCache.clear

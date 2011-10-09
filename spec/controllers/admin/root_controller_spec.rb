@@ -13,7 +13,7 @@ describe Admin::RootController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about six minutes.'
+      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about 20 minutes.'
       response.should contain '(111)'
       response.should contain '(222)'
       response.should contain '(2)'

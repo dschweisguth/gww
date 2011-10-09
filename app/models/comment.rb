@@ -80,6 +80,7 @@ class Comment < ActiveRecord::Base
           guesser = Person.find_by_flickrid guesser_flickrid
         end
         if guesser
+          # TODO Dave update person's username and pathalias
           guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
         else
           guesser = Person.create! \

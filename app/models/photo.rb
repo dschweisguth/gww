@@ -260,6 +260,7 @@ class Photo < ActiveRecord::Base
             existing_people[person_flickrid] = person
             new_person_count += 1
           end
+          # TODO Dave extract method
           old_person_username = person.username
           person.username = parsed_photo['ownername']
           old_person_pathalias = person.pathalias

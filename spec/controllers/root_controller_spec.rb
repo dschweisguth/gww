@@ -11,7 +11,7 @@ describe RootController do
 
       #noinspection RubyResolve
       response.should be_success
-      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about six minutes.'
+      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about 20 minutes.'
       response.should have_selector 'a', :href => wheresies_path(2011), :content => '2011'
 
     end
