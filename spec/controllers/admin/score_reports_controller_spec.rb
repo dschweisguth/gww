@@ -14,10 +14,8 @@ describe Admin::ScoreReportsController do
       stub(Time).now { Time.local(2011, 1, 2) }
       get :index
 
-      #noinspection RubyResolve
       response.should be_success
-      # By experiment, this doesn't actually assert that the form is in the
-      # same tr as the later date!?!
+      # By experiment, this doesn't actually assert that the form is in the same tr as the later date!?!
       response.should have_selector 'tr' do |tr|
         tr.should have_selector 'a', :content => 'Jan  2, 2011, 12:00 AM'
         tr.should have_selector 'td', :content => '4'
@@ -36,7 +34,6 @@ describe Admin::ScoreReportsController do
       stub(ScoreReport).all { [ ScoreReport.make(:created_at => Time.now) ] }
       get :index
 
-      #noinspection RubyResolve
       response.should be_success
       response.should_not have_selector 'form'
 
@@ -46,7 +43,6 @@ describe Admin::ScoreReportsController do
       stub(ScoreReport).all { [ ScoreReport.make(:created_at => Time.now - 1.day - 1.second) ] }
       get :index
 
-      #noinspection RubyResolve
       response.should be_success
       response.should_not have_selector 'form'
 
@@ -82,7 +78,6 @@ describe Admin::ScoreReportsController do
       mock_clear_page_cache
       post :create
 
-      #noinspection RubyResolve
       response.should redirect_to admin_score_reports_path
 
     end
@@ -94,7 +89,6 @@ describe Admin::ScoreReportsController do
       mock_clear_page_cache
       get :destroy, :id => '666'
 
-      #noinspection RubyResolve
       response.should redirect_to admin_score_reports_path
 
     end

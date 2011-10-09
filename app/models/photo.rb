@@ -397,7 +397,7 @@ class Photo < ActiveRecord::Base
         end
       end
       #noinspection RubyScope
-      answer.photo.save_geocode point
+      answer.photo.save_geocode point # TODO Dave should this be inside the else?
     end
     finish = Time.now
     logger.info "Examined #{answer_count} photos " +

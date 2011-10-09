@@ -12,7 +12,6 @@ describe ScoreReportsController do
       stub(ScoreReport).revelation_counts { { report.id => 2 } }
       get :index
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'td', :content => 'Jan  1, 2011, 12:00 AM'
       response.should have_selector 'td', :content => '1'

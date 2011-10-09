@@ -31,6 +31,5 @@ group :test do
 end
 
 group :production do
-  #noinspection GemInspection
   gem 'passenger', '3.0.7'
 end

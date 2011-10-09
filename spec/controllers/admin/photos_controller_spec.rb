@@ -33,7 +33,6 @@ describe Admin::PhotosController do
     end
 
     def lists_photo
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => person_path(@photo.person), :content => @photo.person.username
       response.should have_selector 'td', :content => 'false'
@@ -62,7 +61,6 @@ describe Admin::PhotosController do
     end
 
     def renders_edit_page
-      #noinspection RubyResolve
       response.should be_success
       response.should contain 'This photo is unfound.'
       response.should have_selector 'form', :action => change_game_status_path(111), :content => "Change this photo's status from unfound to" do |form|
@@ -177,7 +175,6 @@ describe Admin::PhotosController do
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
-      #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:general_error].should =~ /Sorry/
 
@@ -186,7 +183,6 @@ describe Admin::PhotosController do
     it 'punts unknown URLs' do
       get :edit_in_gww, :from => 'http://www.notflickr.com/'
 
-      #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:general_error].should =~ /Hmmm/
 
@@ -195,7 +191,6 @@ describe Admin::PhotosController do
   end
 
   def redirects_to_edit_path(photo_or_id, options = {})
-    #noinspection RubyResolve
     response.should redirect_to edit_admin_photo_path photo_or_id, options
   end
 

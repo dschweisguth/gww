@@ -8,7 +8,6 @@ describe WheresiesController do
       stub_queries 2009, 2010, 2010
       get :show, :year => '2010'
 
-      #noinspection RubyResolve
       response.should be_success
 
       response.should have_selector 'a', :href => wheresies_path(2009), :content => '2009'

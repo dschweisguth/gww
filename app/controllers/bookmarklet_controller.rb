@@ -33,7 +33,6 @@ class BookmarkletController < ApplicationController
         "How did we get here? If you like, you can <a href=\"#{from}\">go back where you came from</a>."
     end
     flash[:general_error] = message
-    #noinspection RubyResolve
     redirect_to root_path
   end
 

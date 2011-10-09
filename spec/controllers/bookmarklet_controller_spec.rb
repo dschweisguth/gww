@@ -9,7 +9,6 @@ describe BookmarkletController do
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :show, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
-      #noinspection RubyResolve
       response.should redirect_to photo_path photo
 
     end
@@ -18,7 +17,6 @@ describe BookmarkletController do
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :show, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
-      #noinspection RubyResolve
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that photo/
 
@@ -29,7 +27,6 @@ describe BookmarkletController do
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, :from => "http://www.flickr.com/people/#{person.flickrid}/"
 
-      #noinspection RubyResolve
       response.should redirect_to person_path person
 
     end
@@ -40,7 +37,6 @@ describe BookmarkletController do
       stub(Person).find_by_username(person.username) { person }
       get :show, :from => "http://www.flickr.com/people/#{person.username}/"
 
-      #noinspection RubyResolve
       response.should redirect_to person_path person
 
     end
@@ -49,7 +45,6 @@ describe BookmarkletController do
       stub(Person).find_by_flickrid('person_flickrid') { nil }
       get :show, :from => "http://www.flickr.com/people/person_flickrid/"
 
-      #noinspection RubyResolve
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that person/
 
@@ -60,7 +55,6 @@ describe BookmarkletController do
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, :from => "http://www.flickr.com/photos/#{person.flickrid}/"
 
-      #noinspection RubyResolve
       response.should redirect_to person_path person
 
     end
@@ -68,7 +62,6 @@ describe BookmarkletController do
     it 'punts unknown URLs' do
       get :show, :from => 'http://www.notflickr.com/'
 
-      #noinspection RubyResolve
       response.should redirect_to root_path
       flash[:general_error].should =~ /Hmmm/
 

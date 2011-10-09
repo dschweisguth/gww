@@ -8,7 +8,6 @@ class PeopleController < ApplicationController
       redirect_to person_path person
     else
       flash[:find_person_error] = username
-      #noinspection RubyResolve
       redirect_to root_path
     end
   end
@@ -114,7 +113,6 @@ class PeopleController < ApplicationController
   caches_page :posts
   def posts
     @person = Person.find params[:id]
-    #noinspection RailsParamDefResolve
     @photos = Photo.where(:person_id => params[:id]).order('dateadded desc').includes(:person)
   end
   

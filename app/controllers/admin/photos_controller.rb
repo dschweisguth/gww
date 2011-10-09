@@ -19,7 +19,6 @@ class Admin::PhotosController < ApplicationController
   end
 
   def edit
-    #noinspection RailsParamDefResolve
     @photo = Photo.find_with_associations params[:id]
     if params[:load_comments]
       @comments = @photo.load_comments
@@ -27,6 +26,7 @@ class Admin::PhotosController < ApplicationController
     else
       @comments = Comment.find_all_by_photo_id @photo
     end
+    #noinspection RubyResolve
     @comments.each { |comment| comment.photo = @photo }
     set_config_to @photo
   end
@@ -108,7 +108,6 @@ class Admin::PhotosController < ApplicationController
   end
 
   def redirect_to_edit_path(id, options = {})
-    #noinspection RubyResolve
     redirect_to edit_admin_photo_path id, options
   end
   private :redirect_to_edit_path

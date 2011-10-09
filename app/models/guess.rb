@@ -3,7 +3,6 @@ class Guess < ActiveRecord::Base
 
   belongs_to :photo, :inverse_of => :guesses
   belongs_to :person, :inverse_of => :guesses
-  #noinspection RailsParamDefResolve
   validates_presence_of :comment_text, :commented_at, :added_at
 
   def self.destroy_all_by_photo_id(photo_id)
@@ -27,12 +26,10 @@ class Guess < ActiveRecord::Base
   G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
   def self.longest
-    #noinspection RailsParamDefResolve
     where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10).includes(:person, { :photo => :person })
   end
 
   def self.shortest
-    #noinspection RailsParamDefResolve
     where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10).includes(:person, { :photo => :person })
   end
 
@@ -112,15 +109,15 @@ class Guess < ActiveRecord::Base
   end
 
   def seconds_old
-    (commented_at - photo.dateadded).to_i
+    (self.commented_at - self.photo.dateadded).to_i
   end
 
   def time_elapsed
-    time_elapsed_between photo.dateadded, commented_at
+    time_elapsed_between self.photo.dateadded, self.commented_at
   end
 
   def ymd_elapsed
-    ymd_elapsed_between photo.dateadded, commented_at
+    ymd_elapsed_between self.photo.dateadded, self.commented_at
   end
 
   def star_for_age

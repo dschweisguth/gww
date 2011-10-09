@@ -11,7 +11,6 @@ describe GuessesController do
       stub(Guess).shortest { shortest }
       get :longest_and_shortest
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :content => '1_guessed_photo_poster_username'
       response.should have_selector 'a', :content => '2_guesser_username'

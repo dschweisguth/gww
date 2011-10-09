@@ -19,7 +19,6 @@ describe PhotosController do
       stub(Photo).all_sorted_and_paginated(sorted_by_param, order_param, page_param, 30) { paginated_photos }
       get :index, :sorted_by => sorted_by_param, :order => order_param, :page => page_param
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'h1', :content => '1 photos'
       response.should have_selector 'a', :href => photos_path('username', '-', 1), :content => 'posted by'
@@ -36,7 +35,6 @@ describe PhotosController do
 
       assigns[:json].should == json.to_json
 
-      #noinspection RubyResolve
       response.should be_success
       response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
 
@@ -49,7 +47,6 @@ describe PhotosController do
       stub(controller).map_photos { json }
       get :map_json
 
-      #noinspection RubyResolve
       response.should be_success
       response.body.should == json.to_json
 
@@ -149,7 +146,6 @@ describe PhotosController do
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, :id => photo.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => photo_path(photo) do |content|
         content.should have_selector 'img', :src => url_for_flickr_image(photo, 't')
@@ -194,7 +190,6 @@ describe PhotosController do
       stub(Photo).unfound_or_unconfirmed { [ photo ] }
       get :unfound
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo), :content => 'Flickr'
       response.should have_selector 'a', :href => photo_path(photo), :content => 'GWW'
@@ -209,7 +204,6 @@ describe PhotosController do
       stub(Photo).unfound_or_unconfirmed { [ Photo.make ] }
       get :unfound_data
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'photos', :updated_at => '1293840000' do |content|
         content.should have_selector 'photo', :posted_by => 'poster_username'
@@ -227,7 +221,6 @@ describe PhotosController do
       stub(Comment).find_all_by_photo_id(photo) { [ Comment.make(:photo => photo) ] }
       get :show, :id => photo.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo) do |content|
         content.should have_selector 'img', :src => url_for_flickr_image(photo, 'z')
@@ -265,7 +258,6 @@ describe PhotosController do
       }
       ActiveSupport::JSON.decode(assigns[:json]) == json
 
-      #noinspection RubyResolve
       response.should be_success
       response.should contain 'It was mapped by the photographer'
       response.should_not contain "This photo hasn't been found or revealed yet"
@@ -291,7 +283,6 @@ describe PhotosController do
       }
       ActiveSupport::JSON.decode(assigns[:json]).should == json
 
-      #noinspection RubyResolve
       response.should be_success
       response.should contain 'It was auto-mapped'
       response.should_not contain "This photo hasn't been found or revealed yet"
@@ -316,7 +307,6 @@ describe PhotosController do
       }.to_json
       assigns[:json].should == json
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector '#map'
       response.should contain /GWW\.config = #{Regexp.escape json};/

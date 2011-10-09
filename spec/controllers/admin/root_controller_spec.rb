@@ -11,7 +11,6 @@ describe Admin::RootController do
       stub(Guess).group(:photo_id).stub!.count { { 1 => 2, 2 => 2 }  }
       get :index
 
-      #noinspection RubyResolve
       response.should be_success
       response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about 20 minutes.'
       response.should contain '(111)'
@@ -48,7 +47,6 @@ describe Admin::RootController do
       stub(Time).now { Time.utc(2011) }
       mock(update).update_attribute :completed_at, Time.utc(2011)
       get :update_from_flickr
-      #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should == 'Created 1 new photos and 2 new users. Got 3 pages out of 4.'
     end
@@ -61,7 +59,6 @@ describe Admin::RootController do
       mock(Photo).infer_geocodes
       mock_clear_page_cache
       get :calculate_statistics_and_maps
-      #noinspection RubyResolve
       response.should redirect_to admin_root_path
       flash[:notice].should == 'Updated statistics and maps.'
     end
@@ -71,7 +68,6 @@ describe Admin::RootController do
     it 'renders the page' do
       get :bookmarklet
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => root_bookmarklet_path
 

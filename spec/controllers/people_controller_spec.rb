@@ -9,7 +9,6 @@ describe PeopleController do
       stub(Person).find_by_multiple_fields('username') { person }
       get :find, :username => 'username'
 
-      #noinspection RubyResolve
       response.should redirect_to person_path person
 
     end
@@ -44,7 +43,6 @@ describe PeopleController do
       stub(Person).all_sorted(sorted_by_param, order_param) { [ person ] }
       get :index, :sorted_by => sorted_by_param, :order => order_param
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => people_path('score', '-'), :content => 'Score'
       response.should have_selector 'a', :href => person_path(person), :content => 'username'
@@ -61,7 +59,6 @@ describe PeopleController do
       stub(Person).nemeses { [ guesser ] }
       get :nemeses
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => person_path(guesser), :content => 'guesser_username'
       response.should have_selector 'a', :href => person_path(poster), :content => 'poster_username'
@@ -87,7 +84,6 @@ describe PeopleController do
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
 
-      #noinspection RubyResolve
       response.should be_success
       response_has_table "for Monday, January 03 so far ...", guess
       response_has_table "for the week of January 02 so far ...", guess
@@ -127,7 +123,6 @@ describe PeopleController do
       stub_posts
       get :show, :id => @person.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => person_map_path(@person)
       renders_bits_for_user_who_has_guessed
@@ -151,7 +146,6 @@ describe PeopleController do
       
       get :show, :id => @person.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => person_map_path(@person)
 
@@ -184,7 +178,6 @@ describe PeopleController do
 
       get :show, :id => @person.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'a', :href => person_map_path(@person)
 
@@ -305,7 +298,6 @@ describe PeopleController do
       stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(:person => person) ] }
       get :guesses, :id => person.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'h1', :content => '1 guess by username'
       response.should have_tag 'a', :content => 'guessed_photo_poster_username'
@@ -321,7 +313,6 @@ describe PeopleController do
       stub(Photo).where.stub!.order.stub!.includes { [ photo ] }
       get :posts, :id => person.id
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_tag 'h1', :content => '1 photo posted by username'
       response.should have_tag 'a', :href => person_path(person)
@@ -348,7 +339,6 @@ describe PeopleController do
 
       get :comments, :id => person.id, :page => "2"
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'h1', :content => '1 photo commented on by username'
       response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo), :content => 'Flickr'
@@ -370,7 +360,6 @@ describe PeopleController do
 
       assigns[:json].should == json.to_json
 
-      #noinspection RubyResolve
       response.should be_success
       response.should have_selector 'input', :id => 'posts'
       response.should have_selector 'label', :content => '1 mapped post (?, -)'
@@ -387,7 +376,6 @@ describe PeopleController do
       stub(controller).map_photos(1) { json }
       get :map_json, :id => 1
 
-      #noinspection RubyResolve
       response.should be_success
       response.body.should == json.to_json
 

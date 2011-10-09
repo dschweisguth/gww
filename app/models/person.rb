@@ -67,7 +67,6 @@ class Person < ActiveRecord::Base
   end
 
   def self.by_score(people, to_date)
-    #noinspection RailsParamDefResolve
     scores = Guess.where('added_at <= ?', to_date.getutc).group(:person_id).count
     people_by_score = {}
     people.each do |person|
@@ -302,6 +301,7 @@ class Person < ActiveRecord::Base
     ]
     poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
     posters = find_all_by_id poster_ids
+    #noinspection RubyResolve
     posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
     nemeses.each { |nemesis| nemesis[:poster] = posters_by_id[nemesis[:poster_id]] }
     nemeses

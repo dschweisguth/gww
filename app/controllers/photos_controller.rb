@@ -51,7 +51,6 @@ class PhotosController < ApplicationController
 
   caches_page :show
   def show
-    #noinspection RailsParamDefResolve
     @photo = Photo.find params[:id]
     @comments = Comment.find_all_by_photo_id @photo
     set_config_to @photo
