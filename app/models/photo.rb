@@ -513,7 +513,7 @@ class Photo < ActiveRecord::Base
       if guesser_flickrid == self.person.flickrid
         reveal answer_text, answered_at
       else
-        guess(answer_text, answered_at, guesser_flickrid, guesser_username, guesser)
+        guess answer_text, answered_at, guesser_flickrid, guesser_username, guesser
       end
     end
 
