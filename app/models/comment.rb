@@ -50,9 +50,8 @@ class Comment < ActiveRecord::Base
   end
 
   def is_accepted_answer
-    is_by_poster \
-      ? (photo.revelation ? (photo.revelation.comment_text == comment_text) : false) \
-      : (! photo.guesses.detect { |g| g.person.flickrid == flickrid && g.comment_text == comment_text }.nil?)
+    is_by_poster && photo.revelation && photo.revelation.comment_text == comment_text ||
+      photo.guesses.any? { |g| g.person.flickrid == flickrid && g.comment_text == comment_text }
   end
 
 end
