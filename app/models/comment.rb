@@ -52,7 +52,7 @@ class Comment < ActiveRecord::Base
       end
     end
 
-    photo.answer(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+    photo.answer answer_text, answered_at, guesser_flickrid, guesser_username, guesser
 
   end
   private_class_method :add_answer

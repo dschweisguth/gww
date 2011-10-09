@@ -389,12 +389,13 @@ class Photo < ActiveRecord::Base
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
-  def answer(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+  # Re guesser, see #guess.
+  def answer(answer_text, answered_at, guesser_flickrid, guesser_username, guesser)
     transaction do
       if guesser_flickrid == self.person.flickrid
         reveal answer_text, answered_at
       else
-        guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+        guess(answer_text, answered_at, guesser_flickrid, guesser_username, guesser)
       end
     end
   end
@@ -421,7 +422,9 @@ class Photo < ActiveRecord::Base
   end
   private :reveal
 
-  def guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+  # guesser is present only for performance. It may be nil.
+  # If non-nil, it has the given guesser_flickrid and guesser_username.
+  def guess(answer_text, answered_at, guesser_flickrid, guesser_username, guesser)
     self.game_status = 'found'
     self.save!
 
