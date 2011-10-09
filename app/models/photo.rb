@@ -410,6 +410,39 @@ class Photo < ActiveRecord::Base
     Guess.destroy_all_by_photo_id self.id
   end
 
+  def guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
+    self.game_status = 'found'
+    self.save!
+
+    if !guesser then
+      guesser = Person.find_by_flickrid guesser_flickrid
+    end
+    if guesser
+      # TODO Dave update person's username and pathalias
+      guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
+    else
+      guesser = Person.create! \
+        :flickrid => guesser_flickrid,
+        :username => guesser_username
+      guess = nil
+    end
+    if guess
+      guess.commented_at = answered_at
+      guess.comment_text = answer_text
+      guess.added_at = Time.now.getutc
+      guess.save!
+    else
+      Guess.create! \
+        :photo => self,
+        :person => guesser,
+        :comment_text => answer_text,
+        :commented_at => answered_at,
+        :added_at => Time.now.getutc
+    end
+
+    self.revelation.destroy if self.revelation
+  end
+
   def load_comments
     comments = []
     parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid

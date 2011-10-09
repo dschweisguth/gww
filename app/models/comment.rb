@@ -56,39 +56,10 @@ class Comment < ActiveRecord::Base
       if guesser_flickrid == photo.person.flickrid
         photo.reveal answer_text, answered_at
       else
-        photo.game_status = 'found'
-        photo.save!
-
-        if !guesser then
-          guesser = Person.find_by_flickrid guesser_flickrid
-        end
-        if guesser
-          # TODO Dave update person's username and pathalias
-          guess = Guess.find_by_photo_id_and_person_id photo.id, guesser.id
-        else
-          guesser = Person.create! \
-            :flickrid => guesser_flickrid,
-            :username => guesser_username
-          guess = nil
-        end
-        if guess
-          guess.commented_at = answered_at
-          guess.comment_text = answer_text
-          guess.added_at = Time.now.getutc
-          guess.save!
-        else
-          Guess.create! \
-            :photo => photo,
-            :person => guesser,
-            :comment_text => answer_text,
-            :commented_at => answered_at,
-            :added_at => Time.now.getutc
-        end
-
-        photo.revelation.destroy if photo.revelation
-
+        photo.guess(answer_text, answered_at, guesser, guesser_flickrid, guesser_username)
       end
     end
+
   end
   private_class_method :add_answer
 
