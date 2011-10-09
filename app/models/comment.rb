@@ -36,8 +36,7 @@ class Comment < ActiveRecord::Base
       guesses[0].destroy
       photo = comment.photo
       if ! Guess.where(:photo_id => photo.id).exists?
-        photo.game_status = 'unfound'
-        photo.save!
+        photo.update_attribute :game_status, 'unfound'
       end
     end
   end
