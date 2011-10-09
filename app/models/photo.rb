@@ -539,9 +539,8 @@ class Photo < ActiveRecord::Base
 
   # guesser is present only for performance. It may be nil.
   # If non-nil, it has the given guesser_flickrid and guesser_username.
-  def guess(answer_text, answered_at, guesser_flickrid, guesser_username, guesser)
-    self.game_status = 'found'
-    self.save!
+  def guess(comment_text, commented_at, guesser_flickrid, guesser_username, guesser)
+    update_attribute :game_status, 'found'
 
     if !guesser then
       guesser = Person.find_by_flickrid guesser_flickrid
@@ -555,18 +554,11 @@ class Photo < ActiveRecord::Base
         :username => guesser_username
       guess = nil
     end
+    guess_attrs = { :commented_at => commented_at, :comment_text => comment_text, :added_at => Time.now.getutc }
     if guess
-      guess.commented_at = answered_at
-      guess.comment_text = answer_text
-      guess.added_at = Time.now.getutc
-      guess.save!
+      guess.update_attributes! guess_attrs
     else
-      Guess.create! \
-        :photo => self,
-        :person => guesser,
-        :comment_text => answer_text,
-        :commented_at => answered_at,
-        :added_at => Time.now.getutc
+      Guess.create!({ :photo => self, :person => guesser }.merge(guess_attrs))
     end
 
     self.revelation.destroy if self.revelation
