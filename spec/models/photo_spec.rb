@@ -1292,7 +1292,7 @@ describe Photo do
     end
 
     describe 'when adding a revelation' do
-      it 'needs a non-empty answer text' do
+      it 'needs a non-empty comment text' do
         photo = Photo.make
         lambda { Photo.add_entered_answer photo.id, photo.person.username, '' }.should raise_error ArgumentError
       end
@@ -1300,31 +1300,31 @@ describe Photo do
       it 'adds a revelation' do
         photo = Photo.make
         set_time
-        Photo.add_entered_answer photo.id, photo.person.username, 'answer text'
-        is_revealed photo, 'answer text'
+        Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
+        is_revealed photo, 'comment text'
       end
 
       it "defaults to the photo's owner" do
         photo = Photo.make
         set_time
-        Photo.add_entered_answer photo.id, '', 'answer text'
-        is_revealed photo, 'answer text'
+        Photo.add_entered_answer photo.id, '', 'comment text'
+        is_revealed photo, 'comment text'
       end
 
       it 'updates an existing revelation' do
         photo = Revelation.make.photo
         set_time
-        Photo.add_entered_answer photo.id, photo.person.username, 'new answer text'
-        is_revealed photo, 'new answer text'
+        Photo.add_entered_answer photo.id, photo.person.username, 'new comment text'
+        is_revealed photo, 'new comment text'
       end
 
-      def is_revealed(photo, answer_text)
+      def is_revealed(photo, comment_text)
         revelations = Revelation.find_all_by_photo_id photo
         #noinspection RubyResolve
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
-        revelation.comment_text.should == answer_text
+        revelation.comment_text.should == comment_text
         revelation.commented_at.should == @now
         revelation.added_at.should == @now
       end
@@ -1332,7 +1332,7 @@ describe Photo do
       it 'deletes an existing guess' do
         photo = Photo.make
         guess = Guess.make :photo => photo
-        Photo.add_entered_answer photo.id, photo.person.username, 'answer text'
+        Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
         Guess.count.should == 0
         owner_does_not_exist guess
       end
@@ -1344,15 +1344,15 @@ describe Photo do
         photo = Photo.make
         guesser = Person.make
         set_time
-        Photo.add_entered_answer photo.id, guesser.username, 'answer text'
-        is_guessed photo, guesser, 'answer text'
+        Photo.add_entered_answer photo.id, guesser.username, 'comment text'
+        is_guessed photo, guesser, 'comment text'
       end
 
       it 'creates the guesser if necessary' do
         photo = Photo.make
         comment = Comment.make
         set_time
-        Photo.add_entered_answer photo.id, comment.username, 'answer text'
+        Photo.add_entered_answer photo.id, comment.username, 'comment text'
         guess = Guess.find_by_photo_id photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == comment.username
@@ -1360,23 +1360,23 @@ describe Photo do
 
       it "blows up if the username is unknown" do
         photo = Photo.make
-        lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'answer text' }.should raise_error Photo::AddAnswerError
+        lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'comment text' }.should raise_error Photo::AddAnswerError
       end
 
       it 'updates an existing guess' do
         old_guess = Guess.make
         set_time
-        Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new answer text'
-        is_guessed old_guess.photo, old_guess.person, 'new answer text'
+        Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new comment text'
+        is_guessed old_guess.photo, old_guess.person, 'new comment text'
       end
 
-      def is_guessed(photo, person, answer_text)
+      def is_guessed(photo, person, comment_text)
         guesses = Guess.find_all_by_photo_id photo
         #noinspection RubyResolve
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == person
-        guess.comment_text.should == answer_text
+        guess.comment_text.should == comment_text
         guess.commented_at.should == @now
         guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
@@ -1385,7 +1385,7 @@ describe Photo do
       it 'deletes an existing revelation' do
         photo = Revelation.make.photo
         guesser = Person.make
-        Photo.add_entered_answer photo.id, guesser.username, 'answer text'
+        Photo.add_entered_answer photo.id, guesser.username, 'comment text'
         Revelation.count.should == 0
       end
 
