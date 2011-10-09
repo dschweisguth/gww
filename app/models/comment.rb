@@ -19,16 +19,9 @@ class Comment < ActiveRecord::Base
   def self.remove_guess(comment_id)
     transaction do
       comment = includes(:photo).find comment_id
-      guesses = Guess.find_by_sql [
-        %q[
-          select g.* from guesses g, people p
-          where
-            g.photo_id = ? and
-            g.person_id = p.id and p.flickrid = ? and
-            g.comment_text = ?
-        ],
-        comment.photo_id, comment.flickrid, comment.comment_text
-      ]
+      guesses = Guess.joins(:person).where(
+        "guesses.photo_id = ? and people.flickrid = ? and guesses.comment_text = ?",
+          comment.photo_id, comment.flickrid, comment.comment_text)
       if guesses.length != 1
         raise RemoveGuessError,
           "There are #{guesses.length} guesses by the person with the Flickr ID #{comment.flickrid} with the same guess text!?!"
