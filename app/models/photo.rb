@@ -222,8 +222,6 @@ class Photo < ActiveRecord::Base
     where("game_status in ('unfound', 'unconfirmed')").count
   end
 
-  # Used by Admin::PhotosController
-
   def self.update_all_from_flickr
     page = 1
     parsed_photos = nil
@@ -373,6 +371,52 @@ class Photo < ActiveRecord::Base
     }
   end
 
+  def self.infer_geocodes
+    logger.info 'Inferring geocodes ...'
+    start = Time.now
+    answers = Guess.includes(:photo) + Revelation.includes(:photo)
+    parser = LocationParser.new Stcline.multiword_street_names
+    answer_count = 0
+    location_count = 0
+    inferred_count = 0
+    answers.each do |answer|
+      answer_count += 1
+      logger.debug "\nInferring geocode for \"#{answer.comment_text}\" ..."
+      locations = parser.parse answer.comment_text
+      if locations.empty?
+        logger.debug "Found no location."
+      else
+        location_count += 1
+        shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
+        if shapes.length != 1
+          logger.debug "Found #{shapes.length} geocodes."
+          point = nil
+        else
+          inferred_count += 1
+          point = shapes[0]
+        end
+      end
+      #noinspection RubyScope
+      answer.photo.save_geocode point
+    end
+    finish = Time.now
+    logger.info "Examined #{answer_count} photos " +
+      "(#{finish - start} s, #{(finish - start) / answer_count} s/photo); " +
+      "found #{location_count} candidate locations (#{'%.1f' % (100.0 * location_count / answer_count)}% success); " +
+      "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / answer_count)}% success)"
+  end
+
+  def save_geocode(point)
+    lat, long = point.nil? ? [ nil, nil ] : [ point.y, point.x ]
+    if inferred_latitude != lat || inferred_longitude != long
+      self.inferred_latitude = lat
+      self.inferred_longitude = long
+      save!
+    end
+  end
+
+  # Used by Admin::PhotosController
+
   def self.inaccessible
     where("seen_at < ? and game_status in ('unfound', 'unconfirmed')", FlickrUpdate.latest.created_at) \
       .order('lastupdate desc').includes(:person)
@@ -387,6 +431,39 @@ class Photo < ActiveRecord::Base
   def self.find_with_associations(id)
     #noinspection RailsParamDefResolve
     includes(:person, :revelation, { :guesses => :person }).find id
+  end
+
+  def load_comments
+    comments = []
+    parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
+    if parsed_xml['comments']
+      comments_xml = parsed_xml['comments'][0]
+      if comments_xml['comment'] && ! comments_xml['comment'].empty?
+        transaction do
+          Comment.where(:photo_id => id).delete_all
+	        comments_xml['comment'].each do |comment_xml|
+            comments << Comment.create!(
+              :photo_id => id,
+              :flickrid => comment_xml['author'],
+              :username => comment_xml['authorname'],
+              :comment_text => comment_xml['content'],
+              :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
+          end
+          return comments
+	      end
+      end
+    end
+    self.comments
+  end
+
+  def self.change_game_status(id, status)
+    transaction do
+      Guess.destroy_all_by_photo_id id
+      Revelation.where(:photo_id => id).delete_all
+      photo = find id
+      photo.game_status = status
+      photo.save!
+    end
   end
 
   def self.add_entered_answer(photo_id, username, answer_text)
@@ -503,39 +580,6 @@ class Photo < ActiveRecord::Base
   end
   private :guess
 
-  def load_comments
-    comments = []
-    parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
-    if parsed_xml['comments']
-      comments_xml = parsed_xml['comments'][0]
-      if comments_xml['comment'] && ! comments_xml['comment'].empty?
-        transaction do
-          Comment.where(:photo_id => id).delete_all
-	        comments_xml['comment'].each do |comment_xml|
-            comments << Comment.create!(
-              :photo_id => id,
-              :flickrid => comment_xml['author'],
-              :username => comment_xml['authorname'],
-              :comment_text => comment_xml['content'],
-              :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
-          end
-          return comments
-	      end
-      end
-    end
-    self.comments
-  end
-
-  def self.change_game_status(id, status)
-    transaction do
-      Guess.destroy_all_by_photo_id id
-      Revelation.where(:photo_id => id).delete_all
-      photo = find id
-      photo.game_status = status
-      photo.save!
-    end
-  end
-
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
       #noinspection RailsParamDefResolve
@@ -552,49 +596,7 @@ class Photo < ActiveRecord::Base
     person.destroy_if_has_no_dependents
   end
 
-  def self.infer_geocodes
-    logger.info 'Inferring geocodes ...'
-    start = Time.now
-    answers = Guess.includes(:photo) + Revelation.includes(:photo)
-    parser = LocationParser.new Stcline.multiword_street_names
-    answer_count = 0
-    location_count = 0
-    inferred_count = 0
-    answers.each do |answer|
-      answer_count += 1
-      logger.debug "\nInferring geocode for \"#{answer.comment_text}\" ..."
-      locations = parser.parse answer.comment_text
-      if locations.empty?
-        logger.debug "Found no location."
-      else
-        location_count += 1
-        shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
-        if shapes.length != 1
-          logger.debug "Found #{shapes.length} geocodes."
-          point = nil
-        else
-          inferred_count += 1
-          point = shapes[0]
-        end
-      end
-      #noinspection RubyScope
-      answer.photo.save_geocode point
-    end
-    finish = Time.now
-    logger.info "Examined #{answer_count} photos " +
-      "(#{finish - start} s, #{(finish - start) / answer_count} s/photo); " +
-      "found #{location_count} candidate locations (#{'%.1f' % (100.0 * location_count / answer_count)}% success); " +
-      "inferred #{inferred_count} geocodes (#{'%.1f' % (100.0 * inferred_count / answer_count)}% success)"
-  end
-
-  def save_geocode(point)
-    lat, long = point.nil? ? [ nil, nil ] : [ point.y, point.x ]
-    if inferred_latitude != lat || inferred_longitude != long
-      self.inferred_latitude = lat
-      self.inferred_longitude = long
-      save!
-    end
-  end
+  # Miscellaneous instance methods
 
   def years_old
     ((Time.now - dateadded).to_i / (365 * 24 * 60 * 60)).truncate

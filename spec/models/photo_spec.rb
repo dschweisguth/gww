@@ -767,8 +767,6 @@ describe Photo do
 
   end
 
-  # Used by Admin::PhotosController
-
   describe '.update_all_from_flickr' do
     before do
       stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
@@ -1065,6 +1063,93 @@ describe Photo do
 
   end
 
+  describe '#infer_geocodes' do
+    before do
+      street_names = %w{ 26TH VALENCIA }
+      stub(Stcline).multiword_street_names { street_names }
+      @parser = Object.new
+      stub(LocationParser).new(street_names) { @parser }
+
+      @factory = RGeo::Cartesian.preferred_factory()
+
+    end
+
+    it "infers each guessed photo's lat+long from its guess" do
+      answer = Guess.make :comment_text => 'A parseable comment'
+      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
+      stub(@parser).parse(answer.comment_text) { [ location ] }
+      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
+      Photo.infer_geocodes
+
+      answer.photo.reload
+      #noinspection RubyArgCount
+      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
+      #noinspection RubyArgCount
+      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
+
+    end
+
+    it "infers each revealed photo's lat+long from its revelation" do
+      answer = Revelation.make :comment_text => 'A parseable comment'
+      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
+      stub(@parser).parse(answer.comment_text) { [ location ] }
+      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
+      Photo.infer_geocodes
+
+      answer.photo.reload
+      #noinspection RubyArgCount
+      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
+      #noinspection RubyArgCount
+      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
+
+    end
+
+    it "removes an existing inferred geocode if the comment can't be parsed" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      answer = Guess.make :photo => photo, :comment_text => 'An unparseable comment'
+      stub(@parser).parse(answer.comment_text) { [] }
+      Photo.infer_geocodes
+
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == nil
+      answer.photo.inferred_longitude.should == nil
+
+    end
+
+    it "removes an existing inferred geocode if the location can't be geocoded" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      answer = Guess.make :photo => photo, :comment_text => 'A parseable but not geocodable comment'
+      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
+      stub(@parser).parse(answer.comment_text) { [ location ] }
+      stub(Stintersection).geocode(location) { nil }
+      Photo.infer_geocodes
+
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == nil
+      answer.photo.inferred_longitude.should == nil
+
+    end
+
+    it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
+      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
+      answer = Guess.make :photo => photo, :comment_text => 'A comment with multiple gecodable locations'
+      location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
+      location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
+      stub(@parser).parse(answer.comment_text) { [ location1, location2 ] }
+      stub(Stintersection).geocode(location1) { @factory.point(37, -122) }
+      stub(Stintersection).geocode(location2) { @factory.point(38, -122) }
+      Photo.infer_geocodes
+
+      answer.photo.reload
+      answer.photo.inferred_latitude.should == nil
+      answer.photo.inferred_longitude.should == nil
+
+    end
+
+  end
+
+  # Used by Admin::PhotosController
+
   describe '.inaccessible' do
     it "lists photos not seen since the last update" do
       FlickrUpdate.make :created_at => Time.utc(2011)
@@ -1103,6 +1188,102 @@ describe Photo do
     it 'ignores photos for which only one person got a point' do
       Guess.make
       Photo.multipoint.should == []
+    end
+
+  end
+
+  describe '.find_with_associations' do
+    it "returns a revealed photo with all of its associated objects" do
+      photo_in = Photo.make
+      revelation = Revelation.make :photo => photo_in
+      photo_out = Photo.find_with_associations photo_in.id
+      photo_out.person.should == photo_in.person
+      photo_out.revelation.should == revelation
+    end
+
+    it "returns a guessed photo with all of its associated objects" do
+      photo_in = Photo.make
+      guess = Guess.make :photo => photo_in
+      photo_out = Photo.find_with_associations photo_in.id
+      photo_out.person.should == photo_in.person
+      photo_out.guesses.should == [ guess ]
+      photo_out.guesses[0].person.should == guess.person
+    end
+
+  end
+
+  describe '#load_comments' do
+    before do
+      @photo = Photo.make
+    end
+
+    it 'loads comments from Flickr' do
+      stub_request_to_return_one_comment
+      is_the_comment_from_the_request @photo.load_comments
+    end
+
+    it 'deletes previous comments' do
+      Comment.make 'previous', :photo => @photo
+      stub_request_to_return_one_comment
+      is_the_comment_from_the_request @photo.load_comments
+    end
+
+    def stub_request_to_return_one_comment
+      parsed_xml_with_one_comment = {
+        'comments' => [ {
+          'comment' => [ {
+            'author' => 'commenter_flickrid',
+            'authorname' => 'commenter_username',
+            'content' => 'comment text'
+          } ]
+        } ]
+      }
+      stub(FlickrCredentials).request { parsed_xml_with_one_comment }
+    end
+
+    def is_the_comment_from_the_request(comments)
+      comments.length.should == 1
+      comment = comments[0]
+      comment.flickrid.should == 'commenter_flickrid'
+      comment.username.should == 'commenter_username'
+      comment.comment_text.should == 'comment text'
+    end
+
+    it 'but not if the photo currently has no comments' do
+      Comment.make 'previous', :photo => @photo
+      empty_parsed_xml = {
+        'comments' => [ {
+        } ]
+      }
+      stub(FlickrCredentials).request { empty_parsed_xml }
+      comments = @photo.load_comments
+      comments.length.should == 1
+      Comment.count.should == 1
+    end
+
+  end
+
+  describe '.change_game_status' do
+    it "changes the photo's status" do
+      photo = Photo.make
+      Photo.change_game_status photo.id, 'unconfirmed'
+      photo.reload
+      photo.game_status.should == 'unconfirmed'
+    end
+
+    it 'deletes existing guesses' do
+      photo = Photo.make
+      guess = Guess.make :photo => photo
+      Photo.change_game_status photo.id, 'unconfirmed'
+      Guess.count.should == 0
+      owner_does_not_exist guess
+    end
+
+    it 'deletes existing revelations' do
+      photo = Photo.make
+      Revelation.make :photo => photo
+      Photo.change_game_status photo.id, 'unconfirmed'
+      Revelation.count.should == 0
     end
 
   end
@@ -1220,102 +1401,6 @@ describe Photo do
 
   end
 
-  describe '#load_comments' do
-    before do
-      @photo = Photo.make
-    end
-
-    it 'loads comments from Flickr' do
-      stub_request_to_return_one_comment
-      is_the_comment_from_the_request @photo.load_comments
-    end
-
-    it 'deletes previous comments' do
-      Comment.make 'previous', :photo => @photo
-      stub_request_to_return_one_comment
-      is_the_comment_from_the_request @photo.load_comments
-    end
-
-    def stub_request_to_return_one_comment
-      parsed_xml_with_one_comment = {
-        'comments' => [ {
-          'comment' => [ {
-            'author' => 'commenter_flickrid',
-            'authorname' => 'commenter_username',
-            'content' => 'comment text'
-          } ]
-        } ]
-      }
-      stub(FlickrCredentials).request { parsed_xml_with_one_comment }
-    end
-
-    def is_the_comment_from_the_request(comments)
-      comments.length.should == 1
-      comment = comments[0]
-      comment.flickrid.should == 'commenter_flickrid'
-      comment.username.should == 'commenter_username'
-      comment.comment_text.should == 'comment text'
-    end
-
-    it 'but not if the photo currently has no comments' do
-      Comment.make 'previous', :photo => @photo
-      empty_parsed_xml = {
-        'comments' => [ {
-        } ]
-      }
-      stub(FlickrCredentials).request { empty_parsed_xml }
-      comments = @photo.load_comments
-      comments.length.should == 1
-      Comment.count.should == 1
-    end
-
-  end
-
-  describe '.find_with_associations' do
-    it "returns a revealed photo with all of its associated objects" do
-      photo_in = Photo.make
-      revelation = Revelation.make :photo => photo_in
-      photo_out = Photo.find_with_associations photo_in.id
-      photo_out.person.should == photo_in.person
-      photo_out.revelation.should == revelation
-    end
-
-    it "returns a guessed photo with all of its associated objects" do
-      photo_in = Photo.make
-      guess = Guess.make :photo => photo_in
-      photo_out = Photo.find_with_associations photo_in.id
-      photo_out.person.should == photo_in.person
-      photo_out.guesses.should == [ guess ]
-      photo_out.guesses[0].person.should == guess.person
-    end
-
-  end
-
-  describe '.change_game_status' do
-    it "changes the photo's status" do
-      photo = Photo.make
-      Photo.change_game_status photo.id, 'unconfirmed'
-      photo.reload
-      photo.game_status.should == 'unconfirmed'
-    end
-
-    it 'deletes existing guesses' do
-      photo = Photo.make
-      guess = Guess.make :photo => photo
-      Photo.change_game_status photo.id, 'unconfirmed'
-      Guess.count.should == 0
-      owner_does_not_exist guess
-    end
-
-    it 'deletes existing revelations' do
-      photo = Photo.make
-      Revelation.make :photo => photo
-      Photo.change_game_status photo.id, 'unconfirmed'
-      Revelation.count.should == 0
-    end
-
-  end
-
   describe '.destroy_photo_and_dependent_objects' do
     it 'destroys the photo and its person' do
       photo = Photo.make
@@ -1348,90 +1433,7 @@ describe Photo do
     end
   end
 
-  describe '#infer_geocodes' do
-    before do
-      street_names = %w{ 26TH VALENCIA }
-      stub(Stcline).multiword_street_names { street_names }
-      @parser = Object.new
-      stub(LocationParser).new(street_names) { @parser }
-
-      @factory = RGeo::Cartesian.preferred_factory()
-
-    end
-
-    it "infers each guessed photo's lat+long from its guess" do
-      answer = Guess.make :comment_text => 'A parseable comment'
-      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
-      Photo.infer_geocodes
-
-      answer.photo.reload
-      #noinspection RubyArgCount
-      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      #noinspection RubyArgCount
-      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
-
-    end
-
-    it "infers each revealed photo's lat+long from its revelation" do
-      answer = Revelation.make :comment_text => 'A parseable comment'
-      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
-      Photo.infer_geocodes
-
-      answer.photo.reload
-      #noinspection RubyArgCount
-      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      #noinspection RubyArgCount
-      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
-
-    end
-
-    it "removes an existing inferred geocode if the comment can't be parsed" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      answer = Guess.make :photo => photo, :comment_text => 'An unparseable comment'
-      stub(@parser).parse(answer.comment_text) { [] }
-      Photo.infer_geocodes
-
-      answer.photo.reload
-      answer.photo.inferred_latitude.should == nil
-      answer.photo.inferred_longitude.should == nil
-
-    end
-
-    it "removes an existing inferred geocode if the location can't be geocoded" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      answer = Guess.make :photo => photo, :comment_text => 'A parseable but not geocodable comment'
-      location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { nil }
-      Photo.infer_geocodes
-
-      answer.photo.reload
-      answer.photo.inferred_latitude.should == nil
-      answer.photo.inferred_longitude.should == nil
-
-    end
-
-    it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      answer = Guess.make :photo => photo, :comment_text => 'A comment with multiple gecodable locations'
-      location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
-      location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location1, location2 ] }
-      stub(Stintersection).geocode(location1) { @factory.point(37, -122) }
-      stub(Stintersection).geocode(location2) { @factory.point(38, -122) }
-      Photo.infer_geocodes
-
-      answer.photo.reload
-      answer.photo.inferred_latitude.should == nil
-      answer.photo.inferred_longitude.should == nil
-
-    end
-
-  end
+  # Miscellaneous instance methods
 
   describe '#years_old' do
     it "returns 0 for a photo posted moments ago" do
