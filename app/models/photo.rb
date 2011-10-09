@@ -522,25 +522,19 @@ class Photo < ActiveRecord::Base
   class AddAnswerError < StandardError
   end
 
-  def reveal(answer_text, answered_at)
-    self.game_status = 'revealed'
-    self.save!
+  def reveal(comment_text, commented_at)
+    update_attribute :game_status, 'revealed'
 
     revelation = self.revelation
+    revelation_attrs = { :comment_text => comment_text, :commented_at => commented_at, :added_at => Time.now.getutc }
     if revelation
-      revelation.comment_text = answer_text
-      revelation.commented_at = answered_at
-      revelation.added_at = Time.now.getutc
-      revelation.save!
+      revelation.update_attributes! revelation_attrs
     else
-      Revelation.create! \
-        :photo => self,
-        :comment_text => answer_text,
-        :commented_at => answered_at,
-        :added_at => Time.now.getutc
+      Revelation.create!({ :photo => self }.merge(revelation_attrs))
     end
 
     Guess.destroy_all_by_photo_id self.id
+
   end
   private :reveal
 
