@@ -1340,24 +1340,20 @@ describe Photo do
     end
 
     describe 'when adding a guess' do
-      it 'adds a guess' do
+      it 'adds a guess and updates the guesser if necessary' do
         photo = Photo.make
         guesser = Person.make
         set_time
+        stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
-        is_guessed photo, guesser, 'comment text'
+        photo_is_guessed_and_guesser_is_updated photo, guesser, 'comment text'
       end
 
       it 'creates the guesser if necessary' do
         photo = Photo.make
         comment = Comment.make
         set_time
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
-          'person' => [ {
-            'username' => [ 'username_from_request' ],
-            'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
-          } ]
-        } }
+        stub_person_request
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
         guess = Guess.find_by_photo_id photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
@@ -1370,32 +1366,48 @@ describe Photo do
         lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'comment text' }.should raise_error Photo::AddAnswerError
       end
 
-      it 'updates an existing guess' do
+      it 'updates an existing guess and updates the guesser if necessary' do
         old_guess = Guess.make
         set_time
+        stub_person_request
         Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new comment text'
-        is_guessed old_guess.photo, old_guess.person, 'new comment text'
+        photo_is_guessed_and_guesser_is_updated old_guess.photo, old_guess.person, 'new comment text'
       end
 
-      def is_guessed(photo, person, comment_text)
+      def photo_is_guessed_and_guesser_is_updated(photo, guesser, comment_text)
         guesses = Guess.find_all_by_photo_id photo
         #noinspection RubyResolve
         guesses.length.should == 1
         guess = guesses[0]
-        guess.person.should == person
+        guess.person.should == guesser
         guess.comment_text.should == comment_text
         guess.commented_at.should == @now
         guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
+
+        guesser.reload
+        guesser.username.should == 'username_from_request'
+        guesser.pathalias.should == 'pathalias_from_request'
+
       end
 
       it 'deletes an existing revelation' do
         photo = Revelation.make.photo
         guesser = Person.make
+        stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
         Revelation.count.should == 0
       end
 
+    end
+
+    def stub_person_request
+      stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+        'person' => [ {
+          'username' => [ 'username_from_request' ],
+          'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
+        } ]
+      } }
     end
 
     # Specs of add_entered_answer call this immediately before calling add_selected_answer so

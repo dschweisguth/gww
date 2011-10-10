@@ -111,8 +111,9 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         set_time
+        stub_person_request
         Comment.add_selected_answer comment.id, ''
-        guess_matches_and_person_is comment, guesser
+        photo_is_guessed_and_guesser_is_updated comment, guesser
       end
 
       it "updates the guesser's username if necessary" do
@@ -120,20 +121,17 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => 'new_username', :commented_at => Time.utc(2011)
         set_time
+        stub_person_request
         Comment.add_selected_answer comment.id, ''
         guesser.reload
-        guesser.username.should == 'new_username'
+        guesser.username.should == 'username_from_request'
+        guesser.pathalias.should == 'pathalias_from_request'
       end
 
       it 'creates the guesser if necessary' do
         comment = Comment.make
         set_time
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
-          'person' => [ {
-            'username' => [ 'username_from_request' ],
-            'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
-          } ]
-        } }
+        stub_person_request
         Comment.add_selected_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
@@ -146,8 +144,9 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         set_time
+        stub_person_request
         Comment.add_selected_answer comment.id, guesser.username
-        guess_matches_and_person_is comment, guesser
+        photo_is_guessed_and_guesser_is_updated comment, guesser
       end
 
       it 'gives the point to another, new user' do
@@ -155,12 +154,14 @@ describe Comment do
           :flickrid => 'scorer_flickrid', :username => 'scorer_person_username'
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         set_time
+        stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
         guesses = Guess.find_all_by_photo_id answer_comment.photo
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.flickrid.should == scorer_comment.flickrid
-        guess.person.username.should == scorer_comment.username
+        guess.person.username.should == 'username_from_request'
+        guess.person.pathalias.should == 'pathalias_from_request'
         guess.comment_text.should == answer_comment.comment_text
         guess.commented_at.should == answer_comment.commented_at
         guess.added_at.should == @now
@@ -173,8 +174,9 @@ describe Comment do
           :flickrid => scorer.flickrid, :username => scorer.username
         answer_comment = Comment.make 'answer', :commented_at => Time.utc(2011)
         set_time
+        stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
-        guess_matches_and_person_is answer_comment, scorer
+        photo_is_guessed_and_guesser_is_updated answer_comment, scorer
       end
 
       it "blows up if the username is unknown" do
@@ -188,19 +190,25 @@ describe Comment do
           :flickrid => old_guess.person.flickrid, :username => old_guess.person.username,
           :commented_at => Time.utc(2011)
         set_time
+        stub_person_request
         Comment.add_selected_answer comment.id, ''
-        guess_matches_and_person_is comment, old_guess.person
+        photo_is_guessed_and_guesser_is_updated comment, old_guess.person
       end
 
-      def guess_matches_and_person_is(comment, person)
+      def photo_is_guessed_and_guesser_is_updated(comment, guesser)
         guesses = Guess.find_all_by_photo_id comment.photo
         guesses.length.should == 1
         guess = guesses[0]
-        guess.person.should == person
+        guess.person.should == guesser
         guess.comment_text.should == comment.comment_text
         guess.commented_at.should == comment.commented_at
         guess.added_at.should == @now
         guess.photo.game_status.should == 'found'
+
+        guesser.reload
+        guesser.username.should == 'username_from_request'
+        guesser.pathalias.should == 'pathalias_from_request'
+
       end
 
       it 'deletes an existing revelation' do
@@ -208,10 +216,20 @@ describe Comment do
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         Revelation.make :photo => comment.photo
+        stub_person_request
         Comment.add_selected_answer comment.id, ''
         Revelation.count.should == 0
       end
 
+    end
+
+    def stub_person_request
+      stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+        'person' => [{
+          'username' => ['username_from_request'],
+          'photosurl' => ['http://www.flickr.com/photos/pathalias_from_request/']
+        }]
+      } }
     end
 
     # Specs of add_selected_answer call this immediately before calling add_selected_answer so
