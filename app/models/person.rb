@@ -497,7 +497,7 @@ class Person < ActiveRecord::Base
     ]
   end
 
-  # Used in Admin::PhotosController
+  # Used in Admin::RootController
 
   def self.update_all_from_flickr
     Person.all(:conditions => 'id != 0').each do |person|
@@ -558,6 +558,8 @@ class Person < ActiveRecord::Base
     end
   end
   private_class_method :update_statistic
+
+  # Used in Admin::PhotosController
 
   def destroy_if_has_no_dependents
     if ! Photo.where(:person_id => id).exists? && ! Guess.where(:person_id => id).exists?
