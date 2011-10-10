@@ -1346,7 +1346,19 @@ describe Photo do
         set_time
         stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
-        photo_is_guessed_and_guesser_is_updated photo, guesser, 'comment text'
+        is_guessed photo, guesser, 'comment text'
+        is_updated_per_flickr guesser
+      end
+
+      it "leaves the guesser alone if they can't be updated from Flickr" do
+        photo = Photo.make
+        guesser = Person.make
+        set_time
+        stub_person_request_failure
+        Photo.add_entered_answer photo.id, guesser.username, 'comment text'
+        guesser.reload
+        guesser.username.should == 'username'
+        guesser.pathalias.should == nil
       end
 
       it 'creates the guesser if necessary' do
@@ -1361,9 +1373,16 @@ describe Photo do
         guess.person.pathalias.should == 'pathalias_from_request'
       end
 
-      it "blows up if the username is unknown" do
+      it "creates the guesser from available information if they can't be updated from Flickr" do
         photo = Photo.make
-        lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'comment text' }.should raise_error Photo::AddAnswerError
+        comment = Comment.make
+        set_time
+        stub_person_request_failure
+        Photo.add_entered_answer photo.id, comment.username, 'comment text'
+        guess = Guess.find_by_photo_id photo, :include => :person
+        guess.person.flickrid.should == comment.flickrid
+        guess.person.username.should == 'commenter_username'
+        guess.person.pathalias.should == nil
       end
 
       it 'updates an existing guess and updates the guesser if necessary' do
@@ -1371,24 +1390,8 @@ describe Photo do
         set_time
         stub_person_request
         Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new comment text'
-        photo_is_guessed_and_guesser_is_updated old_guess.photo, old_guess.person, 'new comment text'
-      end
-
-      def photo_is_guessed_and_guesser_is_updated(photo, guesser, comment_text)
-        guesses = Guess.find_all_by_photo_id photo
-        #noinspection RubyResolve
-        guesses.length.should == 1
-        guess = guesses[0]
-        guess.person.should == guesser
-        guess.comment_text.should == comment_text
-        guess.commented_at.should == @now
-        guess.added_at.should == @now
-        guess.photo.game_status.should == 'found'
-
-        guesser.reload
-        guesser.username.should == 'username_from_request'
-        guesser.pathalias.should == 'pathalias_from_request'
-
+        is_guessed old_guess.photo, old_guess.person, 'new comment text'
+        is_updated_per_flickr old_guess.person
       end
 
       it 'deletes an existing revelation' do
@@ -1399,6 +1402,29 @@ describe Photo do
         Revelation.count.should == 0
       end
 
+      it "blows up if an unknown username is specified" do
+        photo = Photo.make
+        lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'comment text' }.should raise_error Photo::AddAnswerError
+      end
+
+      def is_guessed(photo, guesser, comment_text)
+        guesses = Guess.find_all_by_photo_id photo
+        #noinspection RubyResolve
+        guesses.length.should == 1
+        guess = guesses[0]
+        guess.person.should == guesser
+        guess.comment_text.should == comment_text
+        guess.commented_at.should == @now
+        guess.added_at.should == @now
+        guess.photo.game_status.should == 'found'
+      end
+
+      def is_updated_per_flickr(guesser)
+        guesser.reload
+        guesser.username.should == 'username_from_request'
+        guesser.pathalias.should == 'pathalias_from_request'
+      end
+
     end
 
     def stub_person_request
@@ -1407,6 +1433,12 @@ describe Photo do
           'username' => [ 'username_from_request' ],
           'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
         } ]
+      } }
+    end
+
+    def stub_person_request_failure
+      stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+        'stat' => 'fail'
       } }
     end
 
