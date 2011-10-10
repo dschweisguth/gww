@@ -544,15 +544,11 @@ class Photo < ActiveRecord::Base
     if !guesser then
       guesser = Person.find_by_flickrid guesser_flickrid
     end
-    response = FlickrCredentials.request 'flickr.people.getInfo', 'user_id' => guesser_flickrid
     guesser_attrs =
-      if response['stat'] == 'fail'
+      begin
+        Person.attrs_from_flickr guesser_flickrid
+      rescue Person::FlickrRequestFailedError
         { :username => guesser_username }
-      else
-        parsed_person = response['person'][0]
-        guesser_username = parsed_person['username'][0]
-        guesser_pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
-        { :username => guesser_username, :pathalias => guesser_pathalias }
       end
     if guesser
       guesser.update_attributes_if_necessary! guesser_attrs
