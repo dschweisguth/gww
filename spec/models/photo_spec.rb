@@ -1407,6 +1407,21 @@ describe Photo do
         lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'comment text' }.should raise_error Photo::AddAnswerError
       end
 
+      def stub_person_request
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+          'person' => [ {
+            'username' => [ 'username_from_request' ],
+            'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
+          } ]
+        } }
+      end
+
+      def stub_person_request_failure
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+          'stat' => 'fail'
+        } }
+      end
+
       def is_guessed(photo, guesser, comment_text)
         guesses = Guess.find_all_by_photo_id photo
         #noinspection RubyResolve
@@ -1425,21 +1440,6 @@ describe Photo do
         guesser.pathalias.should == 'pathalias_from_request'
       end
 
-    end
-
-    def stub_person_request
-      stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
-        'person' => [ {
-          'username' => [ 'username_from_request' ],
-          'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
-        } ]
-      } }
-    end
-
-    def stub_person_request_failure
-      stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
-        'stat' => 'fail'
-      } }
     end
 
     # Specs of add_entered_answer call this immediately before calling add_selected_answer so

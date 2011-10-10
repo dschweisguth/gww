@@ -85,6 +85,7 @@ describe Comment do
 
       def photo_is_revealed_and_revelation_matches(comment)
         revelations = Revelation.find_all_by_photo_id comment.photo
+        #noinspection RubyResolve
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
@@ -106,26 +107,28 @@ describe Comment do
     end
 
     describe 'when adding a guess' do
-      it 'adds a guess' do
+      it "adds a guess and updates the guesser if necessary" do
         guesser = Person.make
         comment = Comment.make :flickrid => guesser.flickrid,
           :username => guesser.username, :commented_at => Time.utc(2011)
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        photo_is_guessed_and_guesser_is_updated comment, guesser
+        photo_is_guessed comment, guesser
+        is_updated_per_flickr guesser
       end
 
-      it "updates the guesser's username if necessary" do
-        guesser = Person.make :username => 'old_username'
+      it "leaves the guesser alone if they can't be updated from Flickr" do
+        guesser = Person.make
         comment = Comment.make :flickrid => guesser.flickrid,
-          :username => 'new_username', :commented_at => Time.utc(2011)
+          :username => guesser.username, :commented_at => Time.utc(2011)
         set_time
-        stub_person_request
+        stub_person_request_failure
         Comment.add_selected_answer comment.id, ''
+        photo_is_guessed comment, guesser
         guesser.reload
-        guesser.username.should == 'username_from_request'
-        guesser.pathalias.should == 'pathalias_from_request'
+        guesser.username.should == 'username'
+        guesser.pathalias.should == nil
       end
 
       it 'creates the guesser if necessary' do
@@ -139,6 +142,17 @@ describe Comment do
         guess.person.pathalias.should == 'pathalias_from_request'
       end
 
+      it "creates the guesser from available information if they can't be updated from Flickr" do
+        comment = Comment.make
+        set_time
+        stub_person_request_failure
+        Comment.add_selected_answer comment.id, ''
+        guess = Guess.find_by_photo_id comment.photo, :include => :person
+        guess.person.flickrid.should == comment.flickrid
+        guess.person.username.should == 'commenter_username'
+        guess.person.pathalias.should == nil
+      end
+
       it 'handles a redundant username' do
         guesser = Person.make
         comment = Comment.make :flickrid => guesser.flickrid,
@@ -146,7 +160,8 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, guesser.username
-        photo_is_guessed_and_guesser_is_updated comment, guesser
+        photo_is_guessed comment, guesser
+        is_updated_per_flickr guesser
       end
 
       it 'gives the point to another, new user' do
@@ -176,12 +191,8 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
-        photo_is_guessed_and_guesser_is_updated answer_comment, scorer
-      end
-
-      it "blows up if the username is unknown" do
-        comment = Comment.make
-        lambda { Comment.add_selected_answer comment.id, 'unknown_username' }.should raise_error Photo::AddAnswerError
+        photo_is_guessed answer_comment, scorer
+        is_updated_per_flickr scorer
       end
 
       it 'updates an existing guess' do
@@ -192,23 +203,8 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        photo_is_guessed_and_guesser_is_updated comment, old_guess.person
-      end
-
-      def photo_is_guessed_and_guesser_is_updated(comment, guesser)
-        guesses = Guess.find_all_by_photo_id comment.photo
-        guesses.length.should == 1
-        guess = guesses[0]
-        guess.person.should == guesser
-        guess.comment_text.should == comment.comment_text
-        guess.commented_at.should == comment.commented_at
-        guess.added_at.should == @now
-        guess.photo.game_status.should == 'found'
-
-        guesser.reload
-        guesser.username.should == 'username_from_request'
-        guesser.pathalias.should == 'pathalias_from_request'
-
+        photo_is_guessed comment, old_guess.person
+        is_updated_per_flickr old_guess.person
       end
 
       it 'deletes an existing revelation' do
@@ -221,15 +217,44 @@ describe Comment do
         Revelation.count.should == 0
       end
 
-    end
+      it "blows up if an unknown username is specified" do
+        comment = Comment.make
+        lambda { Comment.add_selected_answer comment.id, 'unknown_username' }.should raise_error Photo::AddAnswerError
+      end
 
-    def stub_person_request
-      stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
-        'person' => [{
-          'username' => ['username_from_request'],
-          'photosurl' => ['http://www.flickr.com/photos/pathalias_from_request/']
-        }]
-      } }
+      def stub_person_request
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+          'person' => [{
+            'username' => ['username_from_request'],
+            'photosurl' => ['http://www.flickr.com/photos/pathalias_from_request/']
+          }]
+        } }
+      end
+
+      def stub_person_request_failure
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+          'stat' => 'fail'
+        } }
+      end
+
+      def photo_is_guessed(comment, guesser)
+        guesses = Guess.find_all_by_photo_id comment.photo
+        #noinspection RubyResolve
+        guesses.length.should == 1
+        guess = guesses[0]
+        guess.person.should == guesser
+        guess.comment_text.should == comment.comment_text
+        guess.commented_at.should == comment.commented_at
+        guess.added_at.should == @now
+        guess.photo.game_status.should == 'found'
+      end
+
+      def is_updated_per_flickr(guesser)
+        guesser.reload
+        guesser.username.should == 'username_from_request'
+        guesser.pathalias.should == 'pathalias_from_request'
+      end
+
     end
 
     # Specs of add_selected_answer call this immediately before calling add_selected_answer so
