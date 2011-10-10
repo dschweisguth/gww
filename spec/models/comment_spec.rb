@@ -128,10 +128,17 @@ describe Comment do
       it 'creates the guesser if necessary' do
         comment = Comment.make
         set_time
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+          'person' => [ {
+            'username' => [ 'username_from_request' ],
+            'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
+          } ]
+        } }
         Comment.add_selected_answer comment.id, ''
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
-        guess.person.username.should == comment.username
+        guess.person.username.should == 'username_from_request'
+        guess.person.pathalias.should == 'pathalias_from_request'
       end
 
       it 'handles a redundant username' do

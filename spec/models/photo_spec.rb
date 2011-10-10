@@ -1352,10 +1352,17 @@ describe Photo do
         photo = Photo.make
         comment = Comment.make
         set_time
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+          'person' => [ {
+            'username' => [ 'username_from_request' ],
+            'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
+          } ]
+        } }
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
         guess = Guess.find_by_photo_id photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
-        guess.person.username.should == comment.username
+        guess.person.username.should == 'username_from_request'
+        guess.person.pathalias.should == 'pathalias_from_request'
       end
 
       it "blows up if the username is unknown" do

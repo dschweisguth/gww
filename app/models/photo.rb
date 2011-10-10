@@ -545,13 +545,21 @@ class Photo < ActiveRecord::Base
       guesser = Person.find_by_flickrid guesser_flickrid
     end
     if guesser
-      # TODO Dave update person's pathalias?
       guesser.update_attributes_if_necessary! :username => guesser_username
       guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
     else
+      response = FlickrCredentials.request 'flickr.people.getInfo', 'user_id' => guesser_flickrid
+      if response['stat'] == 'fail'
+        guesser_pathalias = nil
+      else
+        parsed_person = response['person'][0]
+        guesser_username = parsed_person['username'][0]
+        guesser_pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
+      end
       guesser = Person.create! \
         :flickrid => guesser_flickrid,
-        :username => guesser_username
+        :username => guesser_username,
+        :pathalias => guesser_pathalias
       guess = nil
     end
     guess_attrs = { :commented_at => commented_at, :comment_text => comment_text, :added_at => Time.now.getutc }
