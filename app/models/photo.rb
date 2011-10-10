@@ -461,9 +461,7 @@ class Photo < ActiveRecord::Base
     transaction do
       Guess.destroy_all_by_photo_id id
       Revelation.where(:photo_id => id).delete_all
-      photo = find id
-      photo.game_status = status
-      photo.save!
+      find(id).update_attribute :game_status, status
     end
   end
 
