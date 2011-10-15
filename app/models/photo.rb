@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Answer
+  include Answer, UpdatableOnlyIfNecessary
 
   #noinspection RubyResolve
   self.include_root_in_json = false
@@ -250,67 +250,42 @@ class Photo < ActiveRecord::Base
         existing_photos = find_all_by_flickrid(photo_flickrids).index_by &:flickrid
 
         parsed_photos['photo'].each do |parsed_photo|
+          person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
           person_flickrid = parsed_photo['owner']
           person = existing_people[person_flickrid]
-          person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
           if person
             person.update_attributes_if_necessary! person_attrs
           else
-            person = Person.create! person_attrs.merge(:flickrid => person_flickrid)
+            person = Person.create!({ :flickrid => person_flickrid }.merge person_attrs)
             existing_people[person_flickrid] = person
             new_person_count += 1
           end
 
+          photo_attrs = {
+            :farm => parsed_photo['farm'],
+            :server => parsed_photo['server'],
+            :secret => parsed_photo['secret'],
+            :latitude => to_float_or_nil(parsed_photo['latitude']),
+            :longitude => to_float_or_nil(parsed_photo['longitude']),
+            :accuracy => to_integer_or_nil(parsed_photo['accuracy']),
+            :lastupdate => Time.at(parsed_photo['lastupdate'].to_i).getutc,
+            :views => parsed_photo['views'].to_i
+          }
           photo_flickrid = parsed_photo['id']
           photo = existing_photos[photo_flickrid]
-          if ! photo
-            photo = Photo.new \
+          if photo
+            photo.update_attributes_if_necessary! photo_attrs
+          else
+            # Set dateadded only when a photo is created, so that if a photo is added to the group,
+            # removed from the group and added to the group again it retains its original dateadded.
+            Photo.create!({
+              :person_id => person.id,
               :flickrid => photo_flickrid,
+              :dateadded => Time.at(parsed_photo['dateadded'].to_i).getutc,
               :game_status => 'unfound',
               :seen_at => now
+            }.merge photo_attrs)
             new_photo_count += 1
-          end
-          old_photo_farm = photo.farm
-          photo.farm = parsed_photo['farm']
-          old_photo_server = photo.server
-          photo.server = parsed_photo['server']
-          old_photo_secret = photo.secret
-          photo.secret = parsed_photo['secret']
-          old_photo_latitude = photo.latitude
-          photo.latitude = parsed_photo['latitude']
-          if photo.latitude == 0.0
-            photo.latitude = nil
-          end
-          old_photo_longitude = photo.longitude
-          photo.longitude = parsed_photo['longitude']
-          if photo.longitude == 0.0
-            photo.longitude = nil
-          end
-          old_photo_accuracy = photo.accuracy
-          photo.accuracy = parsed_photo['accuracy']
-          if photo.accuracy == 0.0
-            photo.accuracy = nil
-          end
-          # Don't overwrite an existing photo's dateadded, so that if a photo
-          # is added, removed and added again it retains its original dateadded.
-          if photo.id.nil? then
-            photo.dateadded = Time.at(parsed_photo['dateadded'].to_i).getutc
-          end
-          old_photo_lastupdate = photo.lastupdate
-          photo.lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
-          old_photo_views = photo.views
-          photo.views = parsed_photo['views'].to_i
-          photo.person = person
-          if photo.id.nil? ||
-            old_photo_farm != photo.farm ||
-            old_photo_server != photo.server ||
-            old_photo_secret != photo.secret ||
-            old_photo_latitude != photo.latitude ||
-            old_photo_longitude != photo.longitude ||
-            old_photo_accuracy != photo.accuracy ||
-            old_photo_lastupdate != photo.lastupdate ||
-            old_photo_views != photo.views
-            photo.save!
           end
 
         end
@@ -327,6 +302,18 @@ class Photo < ActiveRecord::Base
     update_all "seen_at = '#{time.getutc.strftime '%Y-%m-%d %H:%M:%S'}'",
       "flickrid in (#{joined_flickrids})"
   end
+
+  def self.to_float_or_nil(string)
+    number = string.to_f
+    number == 0.0 ? nil : number
+  end
+  private_class_method :to_float_or_nil
+
+  def self.to_integer_or_nil(string)
+    number = string.to_i
+    number == 0 ? nil : number
+  end
+  private_class_method :to_integer_or_nil
 
   def self.update_statistics
     connection.execute %q{
