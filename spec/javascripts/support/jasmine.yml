@@ -13,7 +13,7 @@
 src_files:
   - public/javascripts/jquery.js
   - public/javascripts/jquery-ui.js
-  - public/javascripts/rails.js
+  - public/javascripts/jquery_ujs.js
   - public/javascripts/autocomplete-rails.js
   - spec/javascripts/support/jasmine-jquery-1.2.0.js
   - public/javascripts/Player.js # TODO Dave remove these after fully testing GWW code

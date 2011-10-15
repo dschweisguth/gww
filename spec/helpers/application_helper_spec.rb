@@ -101,7 +101,7 @@ describe ApplicationHelper do
       helper.head_javascript
       content_for_head = helper.content_for(:head)
       content_for_head.should include 'jquery.min.js'
-      content_for_head.should include 'rails.js'
+      content_for_head.should include 'jquery_ujs.js'
       # Can't test that CSRF stuff is present since test controller doesn't have protect_from_forgery
     end
 
