@@ -80,9 +80,8 @@ GEM
       activesupport (= 3.0.10)
       bundler (~> 1.0)
       railties (= 3.0.10)
-    rails3-jquery-autocomplete (0.6.6)
-      rails (~> 3.0.0)
-      yajl-ruby
+    rails3-jquery-autocomplete (1.0.4)
+      rails (~> 3.0)
     railties (3.0.10)
       actionpack (= 3.0.10)
       activesupport (= 3.0.10)
@@ -132,7 +131,6 @@ GEM
       rack-test (>= 0.5.3)
     will_paginate (3.0.pre2)
     xml-simple (1.1.0)
-    yajl-ruby (0.8.2)
 
 PLATFORMS
   ruby
@@ -144,7 +142,7 @@ DEPENDENCIES
   mysql2 (= 0.2.13)
   passenger (= 3.0.7)
   rails (= 3.0.10)
-  rails3-jquery-autocomplete (= 0.6.6)
+  rails3-jquery-autocomplete (= 1.0.4)
   rr (= 1.0.4)
   rspec-rails (= 2.6.1)
   shoulda-matchers (= 1.0.0.beta2)

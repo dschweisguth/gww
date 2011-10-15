@@ -5,7 +5,7 @@ gem 'mysql2', '0.2.13'
 gem 'activerecord-mysql2spatial-adapter', '0.4.1'
 gem 'rails', '3.0.10'
 gem 'jquery-rails', '1.0.16'
-gem 'rails3-jquery-autocomplete', '0.6.6'
+gem 'rails3-jquery-autocomplete', '1.0.4'
 gem 'will_paginate', '3.0.pre2'
 gem 'xml-simple', '1.1.0'
 
