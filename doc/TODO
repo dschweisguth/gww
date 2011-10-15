@@ -26,10 +26,8 @@ Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
 and use in unfound list
-Track photosurl
-  Generate URLs using it when possible
-  Use it in the front-page person search
-  Use it in the view bookmarklet
+Use photosurl in the front-page person search
+Use photosurl in the view bookmarklet
 Determine most-posted locations
 Determine neighborhoods from locations and geocodes
   Identify mayors (most posts), tycoons (most guesses) and bosses (both) of
