@@ -9,21 +9,17 @@ class Photo < ActiveRecord::Base
   has_many :comments, :inverse_of => :photo
   has_one :revelation, :inverse_of => :photo
   validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
-    :game_status, :views, :other_user_comments, :member_comments, :member_questions
+    :game_status, :views, :faves, :other_user_comments, :member_comments, :member_questions
   attr_readonly :person, :flickrid
   validates_numericality_of :latitude, :allow_nil => true
   validates_numericality_of :longitude, :allow_nil => true
-  validates_numericality_of :accuracy, :allow_nil => true,
-    :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :accuracy, :allow_nil => true, :only_integer => true, :greater_than_or_equal_to => 0
   validates_inclusion_of :game_status, :in => %w(unfound unconfirmed found revealed)
-  validates_numericality_of :views, :only_integer => true,
-    :greater_than_or_equal_to => 0
-  validates_numericality_of :other_user_comments, :only_integer => true,
-    :greater_than_or_equal_to => 0
-  validates_numericality_of :member_comments, :only_integer => true,
-    :greater_than_or_equal_to => 0
-  validates_numericality_of :member_questions, :only_integer => true,
-    :greater_than_or_equal_to => 0
+  validates_numericality_of :views, :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :faves, :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :other_user_comments, :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :member_comments, :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :member_questions, :only_integer => true, :greater_than_or_equal_to => 0
 
   # Used by ScoreReportsController
 
@@ -282,8 +278,9 @@ class Photo < ActiveRecord::Base
               :person_id => person.id,
               :flickrid => photo_flickrid,
               :dateadded => Time.at(parsed_photo['dateadded'].to_i).getutc,
+              :seen_at => now,
               :game_status => 'unfound',
-              :seen_at => now
+              :faves => 0
             }.merge photo_attrs)
             new_photo_count += 1
           end

@@ -8,6 +8,7 @@ describe ModelFactory do
 
     @model_object = Object.new
     class << @model_object
+      #noinspection RubyResolve
       attr_accessor :id
     end
 
@@ -268,6 +269,7 @@ describe Photo do
     photo.seen_at.should_not == nil
     photo.game_status.should == 'unfound'
     photo.views.should == 0
+    photo.faves.should == 0
     photo.other_user_comments.should == 0
     photo.member_comments.should == 0
     photo.member_questions.should == 0
@@ -290,6 +292,7 @@ describe Photo do
       :seen_at => Time.utc(2012),
       :game_status => 'found',
       :views => 1,
+      :faves => 1,
       :other_user_comments => 1,
       :member_comments => 1,
       :member_questions => 1,

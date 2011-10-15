@@ -6,7 +6,7 @@ describe Photo do
     { :flickrid => 'flickrid',
       :dateadded => now, :lastupdate => now, :seen_at => now,
       :game_status => 'unfound',
-      :views => 0, :member_comments => 0, :member_questions => 0 }
+      :views => 0, :faves => 0, :member_comments => 0, :member_questions => 0 }
   end
 
   describe '#person' do
@@ -73,6 +73,11 @@ describe Photo do
   describe '#views' do
     it { should validate_presence_of :views }
     it { should validate_non_negative_integer :views }
+  end
+
+  describe '#faves' do
+    it { should validate_presence_of :faves }
+    it { should validate_non_negative_integer :faves }
   end
 
   describe '#other_user_comments' do

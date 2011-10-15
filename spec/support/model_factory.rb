@@ -107,7 +107,8 @@ class Photo
       :lastupdate => now,
       :seen_at => now,
       :game_status => 'unfound',
-      :views => 0
+      :views => 0,
+      :faves => 0
     }
     if ! caller_attrs[:person]
       attrs[:person] = Person.make affix(label, 'poster')
