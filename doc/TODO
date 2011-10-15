@@ -27,7 +27,6 @@ Add last-updated dates to photos which
 - reflect only things relevant to scoring
 - reflect only things relevant to players
 and use in unfound list
-Use photosurl in the view bookmarklet
 Determine most-posted locations
 Determine neighborhoods from locations and geocodes
   Identify mayors (most posts), tycoons (most guesses) and bosses (both) of
@@ -47,3 +46,4 @@ Write an admin page that reports on bogus data
   Guesses made before photo was added
   latitude, longitude, accuracy = 0
 Check the bogus data page in update-and-restart
+Add changes in nemeses to score reports

@@ -15,10 +15,8 @@ class BookmarkletController < ApplicationController
           "If you like, you can <a href=\"#{from}\">go back where you came from</a>."
       end
     elsif from =~ /^http:\/\/www.flickr.com\/(?:people|photos)\/([^\/]+)/
-      flickrid = Regexp.last_match[1]
-      # The URL might have the person's Flickr ID or their custom URL. We don't
-      # know their custom URL, but see if it's the same as their username.
-      person = Person.find_by_flickrid(flickrid) || Person.find_by_username(flickrid)
+      person_identifier = Regexp.last_match[1]
+      person = Person.find_by_pathalias(person_identifier) || Person.find_by_flickrid(person_identifier)
       if person
         redirect_to person_path person
         return

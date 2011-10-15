@@ -23,19 +23,19 @@ describe BookmarkletController do
     end
 
     it 'redirects to the given person' do
-      person = Person.make
-      stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :show, :from => "http://www.flickr.com/people/#{person.flickrid}/"
+      person = Person.make :pathalias => 'pathalias'
+      stub(Person).find_by_pathalias(person.pathalias) { person }
+      get :show, :from => "http://www.flickr.com/people/#{person.pathalias}/"
 
       response.should redirect_to person_path person
 
     end
 
-    it 'handles a person whose custom URL is the same as their username' do
+    it "handles a URL with a flickrid" do
       person = Person.make
-      stub(Person).find_by_flickrid(person.username) { nil }
-      stub(Person).find_by_username(person.username) { person }
-      get :show, :from => "http://www.flickr.com/people/#{person.username}/"
+      stub(Person).find_by_pathalias(person.flickrid) { nil }
+      stub(Person).find_by_flickrid(person.flickrid) { person }
+      get :show, :from => "http://www.flickr.com/people/#{person.flickrid}/"
 
       response.should redirect_to person_path person
 
