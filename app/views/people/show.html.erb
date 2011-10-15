@@ -4,11 +4,11 @@
 <%= title_and_h1 @person.username %>
 
 <p>On Flickr:
-<a href="http://www.flickr.com/people/<%= @person.flickrid %>/"><%= @person.username %>'s profile</a> -
-<a href="http://www.flickr.com/people/<%= @person.flickrid %>/photosof/">photos of <%= @person.username %></a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/"><%= @person.username %>'s photostream</a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/map/"><%= @person.username %>'s map</a> -
-<a href="http://www.flickr.com/photos/<%= @person.flickrid %>/favorites/"><%= @person.username %>'s favorites</a></p>
+<a href="http://www.flickr.com/people/<%= @person.pathalias || @person.flickrid %>/"><%= @person.username %>'s profile</a> -
+<a href="http://www.flickr.com/people/<%= @person.pathalias || @person.flickrid %>/photosof/">photos of <%= @person.username %></a> -
+<a href="http://www.flickr.com/photos/<%= @person.pathalias || @person.flickrid %>/"><%= @person.username %>'s photostream</a> -
+<a href="http://www.flickr.com/photos/<%= @person.pathalias || @person.flickrid %>/map/"><%= @person.username %>'s map</a> -
+<a href="http://www.flickr.com/photos/<%= @person.pathalias || @person.flickrid %>/favorites/"><%= @person.username %>'s favorites</a></p>
 
 <p>In Guess Where SF:
 <a href="http://anythreewords.com/gwsf/index.php?pos=<%= @person.username %>"><%= @person.username %>'s unfounds</a> -
