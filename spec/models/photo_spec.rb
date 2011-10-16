@@ -771,7 +771,7 @@ describe Photo do
   end
 
   describe '.update_all_from_flickr' do
-    before do
+    def stub_get_photos
       stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
         'photos' => [ {
           'pages' => '1',
@@ -792,6 +792,9 @@ describe Photo do
           } ]
         } ]
       } }
+    end
+
+    def stub_get_faves
       stub(FlickrCredentials).request('flickr.photos.getFavorites',
         'photo_id' => 'incoming_photo_flickrid', 'per_page' => '50', 'page' => '1') { {
         'stat' => 'ok',
@@ -804,6 +807,8 @@ describe Photo do
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
+      stub_get_photos
+      stub_get_faves
       Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
 
       photos = Photo.all :include => :person
@@ -830,6 +835,8 @@ describe Photo do
     end
 
     it 'uses an existing person, and updates their information if it changed' do
+      stub_get_photos
+      stub_get_faves
       person_before = Person.make :flickrid => 'incoming_person_flickrid', :username => 'old_username', :pathalias => 'incoming_person_pathalias'
       Photo.update_all_from_flickr.should == [ 1, 0, 1, 1 ]
       people = Person.all
@@ -842,6 +849,7 @@ describe Photo do
     end
 
     it 'uses an existing photo, and updates attributes that changed' do
+      stub_get_photos
       person = Person.make :flickrid => 'incoming_person_flickrid'
       photo_before = Photo.make \
         :person => person,
@@ -872,7 +880,7 @@ describe Photo do
       photo_after.dateadded.should == Time.utc(2010)
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
-      photo_after.faves.should == 7
+      photo_after.faves.should == 6 # because we currently update faves only for a new photo
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
@@ -895,6 +903,7 @@ describe Photo do
           } ]
         } ]
       } }
+      stub_get_faves
       Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
