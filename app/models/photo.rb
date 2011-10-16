@@ -233,69 +233,72 @@ class Photo < ActiveRecord::Base
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
       logger.info "Updating database from page #{page} ..."
-      transaction do
-        now = Time.now.getutc
-        update_seen_at photo_flickrids, now
 
-        people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
-        existing_people_flickrids = people_flickrids - existing_people.keys
-        Person.find_all_by_flickrid(existing_people_flickrids.to_a).each do |person|
-          existing_people[person.flickrid] = person
-        end
-
-        existing_photos = find_all_by_flickrid(photo_flickrids).index_by &:flickrid
-
-        parsed_photos['photo'].each do |parsed_photo|
-          person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
-          person_flickrid = parsed_photo['owner']
-          person = existing_people[person_flickrid]
-          if person
-            person.update_attributes_if_necessary! person_attrs
-          else
-            person = Person.create!({ :flickrid => person_flickrid }.merge person_attrs)
-            existing_people[person_flickrid] = person
-            new_person_count += 1
-          end
-
-          photo_flickrid = parsed_photo['id']
-          faves =
-            begin
-              faves_from_flickr(photo_flickrid)
-            rescue FlickrCredentials::FlickrRequestFailedError
-              0
-            end
-          photo_attrs = {
-            :farm => parsed_photo['farm'],
-            :server => parsed_photo['server'],
-            :secret => parsed_photo['secret'],
-            :latitude => to_float_or_nil(parsed_photo['latitude']),
-            :longitude => to_float_or_nil(parsed_photo['longitude']),
-            :accuracy => to_integer_or_nil(parsed_photo['accuracy']),
-            :lastupdate => Time.at(parsed_photo['lastupdate'].to_i).getutc,
-            :views => parsed_photo['views'].to_i,
-            :faves => faves
-          }
-          photo = existing_photos[photo_flickrid]
-          if photo
-            photo.update_attributes_if_necessary! photo_attrs
-          else
-            # Set dateadded only when a photo is created, so that if a photo is added to the group,
-            # removed from the group and added to the group again it retains its original dateadded.
-            Photo.create!({
-              :person_id => person.id,
-              :flickrid => photo_flickrid,
-              :dateadded => Time.at(parsed_photo['dateadded'].to_i).getutc,
-              :seen_at => now,
-              :game_status => 'unfound',
-              :faves => 0
-            }.merge photo_attrs)
-            new_photo_count += 1
-          end
-
-        end
-
-        page += 1
+      people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
+      existing_people_flickrids = people_flickrids - existing_people.keys
+      Person.find_all_by_flickrid(existing_people_flickrids.to_a).each do |person|
+        existing_people[person.flickrid] = person
       end
+
+      existing_photos = find_all_by_flickrid(photo_flickrids).index_by &:flickrid
+
+      now = Time.now.getutc
+
+      parsed_photos['photo'].each do |parsed_photo|
+        person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
+        person_flickrid = parsed_photo['owner']
+        person = existing_people[person_flickrid]
+        if person
+          person.update_attributes_if_necessary! person_attrs
+        else
+          person = Person.create!({ :flickrid => person_flickrid }.merge person_attrs)
+          existing_people[person_flickrid] = person
+          new_person_count += 1
+        end
+
+        photo_flickrid = parsed_photo['id']
+        faves =
+          begin
+            faves_from_flickr(photo_flickrid)
+          rescue FlickrCredentials::FlickrRequestFailedError
+            0
+          end
+        photo_attrs = {
+          :farm => parsed_photo['farm'],
+          :server => parsed_photo['server'],
+          :secret => parsed_photo['secret'],
+          :latitude => to_float_or_nil(parsed_photo['latitude']),
+          :longitude => to_float_or_nil(parsed_photo['longitude']),
+          :accuracy => to_integer_or_nil(parsed_photo['accuracy']),
+          :lastupdate => Time.at(parsed_photo['lastupdate'].to_i).getutc,
+          :views => parsed_photo['views'].to_i,
+          :faves => faves
+        }
+        photo = existing_photos[photo_flickrid]
+        if photo
+          photo.update_attributes_if_necessary! photo_attrs
+        else
+          # Set dateadded only when a photo is created, so that if a photo is added to the group,
+          # removed from the group and added to the group again it retains its original dateadded.
+          Photo.create!({
+            :person_id => person.id,
+            :flickrid => photo_flickrid,
+            :dateadded => Time.at(parsed_photo['dateadded'].to_i).getutc,
+            :seen_at => now,
+            :game_status => 'unfound',
+            :faves => 0
+          }.merge photo_attrs)
+          new_photo_count += 1
+        end
+
+      end
+
+      # Update seen_at after processing the entire page so that if there's an error seen_at won't have been updated for
+      # photos that didn't get processed. Having photos updated except for seen_at is not so bad, so we live with that
+      # chance instead of putting it all in a very long transaction.
+      update_seen_at photo_flickrids, now
+
+      page += 1
     end
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
   end
