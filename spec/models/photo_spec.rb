@@ -792,6 +792,15 @@ describe Photo do
           } ]
         } ]
       } }
+      stub(FlickrCredentials).request('flickr.photos.getFavorites',
+        'photo_id' => 'incoming_photo_flickrid', 'per_page' => '50', 'page' => '1') { {
+        'stat' => 'ok',
+        'photo' => [ {
+          'person' => [
+            {}, {}, {}, {}, {}, {}, {}
+          ]
+        } ]
+      } }
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
@@ -816,6 +825,7 @@ describe Photo do
       photo.dateadded.should == Time.utc(2011)
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
+      photo.faves.should == 7
 
     end
 
@@ -844,7 +854,8 @@ describe Photo do
         :accuracy => 16,
         :dateadded => Time.utc(2010),
         :lastupdate => Time.utc(2010, 1, 1, 1),
-        :views => 40
+        :views => 40,
+        :faves => 6
       Photo.update_all_from_flickr.should == [ 0, 0, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
@@ -861,6 +872,7 @@ describe Photo do
       photo_after.dateadded.should == Time.utc(2010)
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
+      photo_after.faves.should == 7
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do

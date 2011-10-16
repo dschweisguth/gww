@@ -62,9 +62,12 @@ class FlickrCredentials
         sleep sleep_time
         retry
       else
-        raise
+        raise FlickrRequestFailedError
       end
     end
+  end
+
+  class FlickrRequestFailedError < StandardError
   end
 
 end

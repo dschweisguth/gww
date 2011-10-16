@@ -29,7 +29,7 @@ describe FlickrCredentials do
     end
 
     def mock_get_fails(times)
-      mock(Net::HTTP).get_response.with_any_args.times(times) { raise StandardError }
+      mock(Net::HTTP).get_response.with_any_args.times(times) { raise FlickrCredentials::FlickrRequestFailedError }
     end
 
     def mock_get_succeeds

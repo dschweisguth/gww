@@ -257,6 +257,13 @@ class Photo < ActiveRecord::Base
             new_person_count += 1
           end
 
+          photo_flickrid = parsed_photo['id']
+          faves =
+            begin
+              faves_from_flickr(photo_flickrid)
+            rescue FlickrCredentials::FlickrRequestFailedError
+              0
+            end
           photo_attrs = {
             :farm => parsed_photo['farm'],
             :server => parsed_photo['server'],
@@ -265,9 +272,9 @@ class Photo < ActiveRecord::Base
             :longitude => to_float_or_nil(parsed_photo['longitude']),
             :accuracy => to_integer_or_nil(parsed_photo['accuracy']),
             :lastupdate => Time.at(parsed_photo['lastupdate'].to_i).getutc,
-            :views => parsed_photo['views'].to_i
+            :views => parsed_photo['views'].to_i,
+            :faves => faves
           }
-          photo_flickrid = parsed_photo['id']
           photo = existing_photos[photo_flickrid]
           if photo
             photo.update_attributes_if_necessary! photo_attrs
@@ -311,6 +318,23 @@ class Photo < ActiveRecord::Base
     number == 0 ? nil : number
   end
   private_class_method :to_integer_or_nil
+
+  def self.faves_from_flickr(photo_flickrid)
+    faves_count = 0
+    faves_page = 1
+    parsed_faves = nil
+    while parsed_faves.nil? || faves_page <= parsed_faves['pages'].to_i
+      faves_xml = FlickrCredentials.request 'flickr.photos.getFavorites',
+        'photo_id' => photo_flickrid, 'per_page' => '50', 'page' => faves_page.to_s
+      if faves_xml['stat'] != 'ok'
+        raise FlickrCredentials::FlickrRequestFailedError # TODO Dave move this into FlickrCredentials
+      end
+      parsed_faves = faves_xml['photo'][0]
+      faves_count += parsed_faves['person'] ? parsed_faves['person'].length : 0
+      faves_page += 1
+    end
+    faves_count
+  end
 
   def self.update_statistics
     connection.execute %q{
@@ -531,7 +555,7 @@ class Photo < ActiveRecord::Base
     guesser_attrs =
       begin
         Person.attrs_from_flickr guesser_flickrid
-      rescue Person::FlickrRequestFailedError
+      rescue FlickrCredentials::FlickrRequestFailedError
         { :username => guesser_username }
       end
     if guesser
