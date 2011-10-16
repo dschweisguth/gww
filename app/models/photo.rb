@@ -218,6 +218,7 @@ class Photo < ActiveRecord::Base
     where("game_status in ('unfound', 'unconfirmed')").count
   end
 
+  # TODO Dave count and report Flickr API calls
   def self.update_all_from_flickr
     page = 1
     parsed_photos = nil
