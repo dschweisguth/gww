@@ -21,6 +21,7 @@ class Admin::PhotosController < ApplicationController
 
   def edit
     @photo = Photo.find_with_associations params[:id]
+    # load_comments no longer describes what it does, but it's used in the edit bookmarklet so can't be changed easily.
     if params[:load_comments]
       @comments = @photo.update_from_flickr
       PageCache.clear
@@ -74,7 +75,7 @@ class Admin::PhotosController < ApplicationController
     redirect_to_edit_path params[:id]
   end
 
-  def reload_comments
+  def update_from_flickr
     redirect_to_edit_path params[:id], :load_comments => true
   end
 

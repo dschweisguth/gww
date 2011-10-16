@@ -145,9 +145,9 @@ describe Admin::PhotosController do
 
   end
 
-  describe '#reload_comments' do
+  describe '#update_from_flickr' do
     it 'just redirects to the edit page with load_comments=true' do
-      get :reload_comments, :id => '1'
+      get :update_from_flickr, :id => '1'
       redirects_to_edit_path 1, :load_comments => true
     end
   end

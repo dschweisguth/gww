@@ -44,9 +44,10 @@ GWW::Application.routes.draw do
 
   get 'admin/photos/edit_in_gww' => 'admin/photos#edit_in_gww', :as => :edit_in_gww
   get 'admin/photos/autocomplete_person_username' => 'admin/photos#autocomplete_person_username', :as => :admin_photos_autocomplete_person_username
-  %w(change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments).each do |action|
+  %w(change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess).each do |action|
     post "admin/photos/:id/#{action}" => "admin/photos##{action}", :as => action
   end
+  post "admin/photos/:id/update_from_flickr" => "admin/photos#update_from_flickr", :as => 'update_photo_from_flickr'
 
   namespace :admin do
     resources :photos, :only => [ :edit, :destroy ] do

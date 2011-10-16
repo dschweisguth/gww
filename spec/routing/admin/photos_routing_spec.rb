@@ -19,11 +19,16 @@ describe Admin::PhotosController do
     it { should route(:get, '/admin/photos/666/edit').to :controller => 'admin/photos', :action => 'edit', :id => '666' }
   end
 
-  %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess reload_comments }.each do |action|
+  %w{ change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess }.each do |action|
     describe action do
       it { should have_named_route action, 666, "/admin/photos/666/#{action}" }
       it { should route(:post, "/admin/photos/666/#{action}").to :controller => 'admin/photos', :action => action, :id => '666' }
     end
+  end
+
+  describe 'update_photo_from_flickr' do
+    it { should have_named_route 'update_photo_from_flickr', 666, "/admin/photos/666/update_from_flickr" }
+    it { should route(:post, "/admin/photos/666/update_from_flickr").to :controller => 'admin/photos', :action => 'update_from_flickr', :id => '666' }
   end
 
   describe 'destroy' do

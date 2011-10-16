@@ -70,7 +70,7 @@
       To give a point to someone other than the commenter, enter their username here
         <%= autocomplete_field_tag 'username', '', admin_photos_autocomplete_person_username_path %>
         and choose the comment above or enter one below.<br/>
-      <%= submit_tag 'Reveal or guess the photo with the following text:' %> <%= text_field_tag 'answer_text' %> (Leave the username above blank to reveal.)<br/>
+      <%= submit_tag 'Reveal or guess this photo with the following text:' %> <%= text_field_tag 'answer_text' %> (Leave the username above blank to reveal.)<br/>
       To delete a guess or revelation created with either of these options, change the photo's status to unfound or unconfirmed, or accept the poster's revelation.
     </div>
   <% end %>
@@ -78,7 +78,7 @@
 
 <br/>
 
-<%= button_to 'Reload comments', reload_comments_path(@photo) %>
+<%= button_to 'Update this photo from Flickr', update_photo_from_flickr_path(@photo) %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
 
