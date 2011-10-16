@@ -1,6 +1,7 @@
 class Admin::PhotosController < ApplicationController
   include SinglePhotoMapSupport
-  
+
+  #noinspection RubyResolve
   autocomplete :person, :username
 
   caches_page :unfound
