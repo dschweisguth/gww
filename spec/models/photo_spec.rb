@@ -1291,6 +1291,7 @@ describe Photo do
     it 'but not if the photo currently has no comments' do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
+      # TODO Dave is this really what it looks like? Is this the only possible case?
       stub(FlickrCredentials).request { {
         'comments' => [ {
         } ]
