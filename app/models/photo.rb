@@ -444,8 +444,9 @@ class Photo < ActiveRecord::Base
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
-  def load_comments
-    # Since we're updating the admin's view of the photo, get its faves, too.
+  def update_from_flickr
+    # TODO Dave update the photo and poster, too
+
     faves = Photo.faves_from_flickr self.flickrid
     if faves != self.faves
       update_attribute :faves, faves

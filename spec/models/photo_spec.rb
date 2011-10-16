@@ -1236,7 +1236,7 @@ describe Photo do
 
   end
 
-  describe '#load_comments' do
+  describe '#update_from_flickr' do
     before do
       @photo = Photo.make
     end
@@ -1244,7 +1244,7 @@ describe Photo do
     it 'loads comments from Flickr' do
       stub_get_faves
       stub_request_to_return_one_comment
-      comments = @photo.load_comments
+      comments = @photo.update_from_flickr
       @photo.faves.should == 7
       is_the_comment_from_the_request comments
     end
@@ -1253,7 +1253,7 @@ describe Photo do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
       stub_request_to_return_one_comment
-      is_the_comment_from_the_request @photo.load_comments
+      is_the_comment_from_the_request @photo.update_from_flickr
     end
 
     def stub_get_faves
@@ -1295,7 +1295,7 @@ describe Photo do
         'comments' => [ {
         } ]
       } }
-      comments = @photo.load_comments
+      comments = @photo.update_from_flickr
       comments.length.should == 1
       Comment.count.should == 1
     end

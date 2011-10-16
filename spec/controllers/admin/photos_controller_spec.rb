@@ -54,7 +54,7 @@ describe Admin::PhotosController do
     it 'loads comments and renders the page' do
       photo = Photo.make :id => 111, :dateadded => Time.local(2011)
       stub(Photo).find_with_associations(photo.id) { photo }
-      stub(photo).load_comments { [ Comment.make(:id => 222) ] }
+      stub(photo).update_from_flickr { [ Comment.make(:id => 222) ] }
       mock_clear_page_cache
       get :edit, :id => photo.id, :load_comments => true
       renders_edit_page

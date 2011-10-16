@@ -22,7 +22,7 @@ class Admin::PhotosController < ApplicationController
   def edit
     @photo = Photo.find_with_associations params[:id]
     if params[:load_comments]
-      @comments = @photo.load_comments
+      @comments = @photo.update_from_flickr
       PageCache.clear
     else
       @comments = Comment.find_all_by_photo_id @photo
