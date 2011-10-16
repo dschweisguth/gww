@@ -444,6 +444,7 @@ class Photo < ActiveRecord::Base
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
+  # TODO Dave add the comments to the photo and remove return value
   def update_from_flickr
     # TODO Dave update the photo and poster, too
 
