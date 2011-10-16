@@ -538,7 +538,7 @@ class Photo < ActiveRecord::Base
     if self.revelation
       self.revelation.update_attributes! revelation_attrs
     else
-      Revelation.create!({ :photo => self }.merge(revelation_attrs))
+      Revelation.create!({ :photo => self }.merge revelation_attrs)
     end
 
     self.guesses.destroy_all
@@ -564,14 +564,14 @@ class Photo < ActiveRecord::Base
       guesser.update_attributes_if_necessary! guesser_attrs
       guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
     else
-      guesser = Person.create!({:flickrid => guesser_flickrid }.merge(guesser_attrs))
+      guesser = Person.create!({:flickrid => guesser_flickrid }.merge guesser_attrs)
       guess = nil
     end
     guess_attrs = { :commented_at => commented_at, :comment_text => comment_text, :added_at => Time.now.getutc }
     if guess
       guess.update_attributes! guess_attrs
     else
-      Guess.create!({ :photo => self, :person => guesser }.merge(guess_attrs))
+      Guess.create!({ :photo => self, :person => guesser }.merge guess_attrs)
     end
 
     self.revelation.destroy if self.revelation
