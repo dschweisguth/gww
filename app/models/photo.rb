@@ -445,6 +445,12 @@ class Photo < ActiveRecord::Base
   end
 
   def load_comments
+    # Since we're updating the admin's view of the photo, get its faves, too.
+    faves = Photo.faves_from_flickr self.flickrid
+    if faves != self.faves
+      update_attribute :faves, faves
+    end
+
     comments = []
     parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
     if parsed_xml['comments']
@@ -465,6 +471,7 @@ class Photo < ActiveRecord::Base
       end
     end
     self.comments
+
   end
 
   def self.change_game_status(id, status)
