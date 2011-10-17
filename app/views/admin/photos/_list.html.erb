@@ -17,7 +17,7 @@
     <td><%= local_date photo.lastupdate %></td>
     <td><%= ! photo.accuracy.nil? %></td>
     <td><%= photo.game_status %></td>
-    <td><%= link_to 'Edit', edit_admin_photo_path(photo, :load_comments => true) %></td>
+    <td><%= link_to 'Edit', edit_admin_photo_path(photo, :update_from_flickr => true) %></td>
   </tr>
 <% end %>
 </table>

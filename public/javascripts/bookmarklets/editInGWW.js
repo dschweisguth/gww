@@ -10,7 +10,7 @@
     var match = /^(http:\/\/[^/]+\/)photos(\/\d+)/.exec(window.location);
     if (match != null) {
       setTimeout(function() {
-        window.location = match[1] + 'admin/photos' + match[2] + '/edit?load_comments=true' ;
+        window.location = match[1] + 'admin/photos' + match[2] + '/edit?update_from_flickr=true' ;
       }, 0);
     } else {
       alert('Try it on a Flickr or GWW photo page.');

@@ -37,7 +37,7 @@ describe Admin::PhotosController do
       response.should have_selector 'a', :href => person_path(@photo.person), :content => @photo.person.username
       response.should have_selector 'td', :content => 'false'
       response.should have_selector 'td', :content => 'unfound'
-      response.should have_selector 'a', :href => edit_admin_photo_path(@photo, :load_comments => true), :content => 'Edit'
+      response.should have_selector 'a', :href => edit_admin_photo_path(@photo, :update_from_flickr => true), :content => 'Edit'
     end
 
   end
@@ -57,7 +57,7 @@ describe Admin::PhotosController do
       stub(photo).update_from_flickr
       stub(photo).comments { [ Comment.make(:id => 222) ] }
       mock_clear_page_cache
-      get :edit, :id => photo.id, :load_comments => true
+      get :edit, :id => photo.id, :update_from_flickr => true
       renders_edit_page
     end
 
@@ -147,9 +147,9 @@ describe Admin::PhotosController do
   end
 
   describe '#update_from_flickr' do
-    it 'just redirects to the edit page with load_comments=true' do
+    it 'just redirects to the edit page with update_from_flickr=true' do
       get :update_from_flickr, :id => '1'
-      redirects_to_edit_path 1, :load_comments => true
+      redirects_to_edit_path 1, :update_from_flickr => true
     end
   end
 
@@ -168,7 +168,7 @@ describe Admin::PhotosController do
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
-      redirects_to_edit_path photo, :load_comments => true
+      redirects_to_edit_path photo, :update_from_flickr => true
 
     end
 
