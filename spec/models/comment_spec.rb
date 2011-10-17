@@ -232,9 +232,7 @@ describe Comment do
       end
 
       def stub_person_request_failure
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
-          'stat' => 'fail'
-        } }
+        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { raise FlickrCredentials::FlickrRequestFailedError }
       end
 
       def photo_is_guessed(comment, guesser)

@@ -329,9 +329,6 @@ class Photo < ActiveRecord::Base
     while parsed_faves.nil? || faves_page <= parsed_faves['pages'].to_i
       faves_xml = FlickrCredentials.request 'flickr.photos.getFavorites',
         'photo_id' => photo_flickrid, 'per_page' => '50', 'page' => faves_page.to_s
-      if faves_xml['stat'] != 'ok'
-        raise FlickrCredentials::FlickrRequestFailedError # TODO Dave move this into FlickrCredentials
-      end
       parsed_faves = faves_xml['photo'][0]
       faves_count += parsed_faves['person'] ? parsed_faves['person'].length : 0
       faves_page += 1

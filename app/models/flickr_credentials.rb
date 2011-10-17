@@ -16,7 +16,12 @@ class FlickrCredentials
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
     xml = submit url
-    XmlSimple.xml_in xml
+    parsed_xml = XmlSimple.xml_in xml
+    if parsed_xml['stat'] != 'ok'
+      # One way we get here is if we request information we don't have access to, e.g. a deleted user
+      raise FlickrRequestFailedError, "stat=\"#{parsed_xml['stat']}\""
+    end
+    parsed_xml
   end
 
   private
@@ -62,7 +67,7 @@ class FlickrCredentials
         sleep sleep_time
         retry
       else
-        raise FlickrRequestFailedError
+        raise FlickrRequestFailedError, "Request and retries failed; gave up."
       end
     end
   end

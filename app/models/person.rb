@@ -562,9 +562,6 @@ class Person < ActiveRecord::Base
 
   def self.attrs_from_flickr(person_flickrid)
     response = FlickrCredentials.request 'flickr.people.getInfo', 'user_id' => person_flickrid
-    if response['stat'] == 'fail' # This happens if the account has been deleted
-      raise FlickrCredentials::FlickrRequestFailedError
-    end
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
     pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
