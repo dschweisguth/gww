@@ -26,6 +26,7 @@ class Admin::PhotosController < ApplicationController
       @photo.update_from_flickr
       PageCache.clear
     end
+    @photo.comments.to_a
     set_config_to @photo
   end
 
