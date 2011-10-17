@@ -269,15 +269,18 @@ class Photo < ActiveRecord::Base
           :views => parsed_photo['views'].to_i
         }
         photo = existing_photos[photo_flickrid]
-        if photo
-          photo.update_attributes_if_necessary! photo_attrs
-        else
+        if photo && (photo.lastupdate < photo_attrs[:lastupdate] || photo.lastupdate > Time.now - 5.days) || ! photo
           faves =
             begin
               faves_from_flickr(photo_flickrid)
             rescue FlickrCredentials::FlickrRequestFailedError
               0
             end
+          photo_attrs.merge! :faves => faves
+        end
+        if photo
+          photo.update_attributes_if_necessary! photo_attrs
+        else
           # Set dateadded only when a photo is created, so that if a photo is added to the group,
           # removed from the group and added to the group again it retains its original dateadded.
           Photo.create!({
@@ -285,8 +288,7 @@ class Photo < ActiveRecord::Base
             :flickrid => photo_flickrid,
             :dateadded => Time.at(parsed_photo['dateadded'].to_i).getutc,
             :seen_at => now,
-            :game_status => 'unfound',
-            :faves => faves
+            :game_status => 'unfound'
           }.merge photo_attrs)
           new_photo_count += 1
         end
@@ -327,6 +329,7 @@ class Photo < ActiveRecord::Base
     faves_page = 1
     parsed_faves = nil
     while parsed_faves.nil? || faves_page <= parsed_faves['pages'].to_i
+      sleep 1.1
       faves_xml = FlickrCredentials.request 'flickr.photos.getFavorites',
         'photo_id' => photo_flickrid, 'per_page' => '50', 'page' => faves_page.to_s
       parsed_faves = faves_xml['photo'][0]
