@@ -445,7 +445,6 @@ class Photo < ActiveRecord::Base
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
-  # TODO Dave add the comments to the photo and remove return value
   def update_from_flickr
     # TODO Dave update the photo and poster, too
 
@@ -454,24 +453,20 @@ class Photo < ActiveRecord::Base
       update_attribute :faves, faves
     end
 
-    comments = []
     comments_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
     parsed_comments = comments_xml['comments'][0]['comment']
     if ! parsed_comments.blank? # This element is nil if there are no comments and an array if there are
       transaction do
         Comment.where(:photo_id => id).delete_all
         parsed_comments.each do |comment_xml|
-          comments << Comment.create!(
-            :photo_id => id,
+          self.comments.create!(
             :flickrid => comment_xml['author'],
             :username => comment_xml['authorname'],
             :comment_text => comment_xml['content'],
             :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
         end
-        return comments
       end
     end
-    self.comments
 
   end
 

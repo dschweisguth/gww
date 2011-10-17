@@ -1244,16 +1244,29 @@ describe Photo do
     it 'loads comments from Flickr' do
       stub_get_faves
       stub_request_to_return_one_comment
-      comments = @photo.update_from_flickr
+      @photo.update_from_flickr
       @photo.faves.should == 7
-      is_the_comment_from_the_request comments
+      photo_has_the_comment_from_the_request
     end
 
     it 'deletes previous comments' do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
       stub_request_to_return_one_comment
-      is_the_comment_from_the_request @photo.update_from_flickr
+      @photo.update_from_flickr
+      photo_has_the_comment_from_the_request
+    end
+
+    it 'but not if the photo currently has no comments' do
+      Comment.make 'previous', :photo => @photo
+      stub_get_faves
+      stub(FlickrCredentials).request { {
+        'comments' => [ {
+        } ]
+      } }
+      @photo.update_from_flickr
+      @photo.comments.length.should == 1
+      Comment.count.should == 1
     end
 
     def stub_get_faves
@@ -1280,24 +1293,12 @@ describe Photo do
       } }
     end
 
-    def is_the_comment_from_the_request(comments)
-      comments.length.should == 1
-      comment = comments[0]
+    def photo_has_the_comment_from_the_request
+      @photo.comments.length.should == 1
+      comment = @photo.comments[0]
       comment.flickrid.should == 'commenter_flickrid'
       comment.username.should == 'commenter_username'
       comment.comment_text.should == 'comment text'
-    end
-
-    it 'but not if the photo currently has no comments' do
-      Comment.make 'previous', :photo => @photo
-      stub_get_faves
-      stub(FlickrCredentials).request { {
-        'comments' => [ {
-        } ]
-      } }
-      comments = @photo.update_from_flickr
-      comments.length.should == 1
-      Comment.count.should == 1
     end
 
   end

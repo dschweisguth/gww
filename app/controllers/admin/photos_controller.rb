@@ -23,13 +23,9 @@ class Admin::PhotosController < ApplicationController
     @photo = Photo.find_with_associations params[:id]
     # load_comments no longer describes what it does, but it's used in the edit bookmarklet so can't be changed easily.
     if params[:load_comments]
-      @comments = @photo.update_from_flickr
+      @photo.update_from_flickr
       PageCache.clear
-    else
-      @comments = Comment.find_all_by_photo_id @photo
     end
-    #noinspection RubyResolve
-    @comments.each { |comment| comment.photo = @photo }
     set_config_to @photo
   end
 

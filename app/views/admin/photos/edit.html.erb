@@ -30,9 +30,9 @@
   <% end %>
 
   <p id="comments-header">Comments</p>
-  <% if ! @comments.empty? %>
+  <% if ! @photo.comments.empty? %>
     <div id="comments" class="edit">
-      <% @comments.each do |comment| %>
+      <% @photo.comments.each do |comment| %>
         <% is_accepted_answer = comment.is_accepted_answer %>
         <% if is_accepted_answer then %>
           <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
@@ -64,7 +64,7 @@
 
 <%= render 'photos/sidebar' %>
 
-<% if ! @comments.empty? %>
+<% if ! @photo.comments.empty? %>
   <%= form_tag(add_entered_answer_path(@photo), :id => 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here

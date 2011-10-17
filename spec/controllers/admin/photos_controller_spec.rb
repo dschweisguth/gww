@@ -46,7 +46,7 @@ describe Admin::PhotosController do
     it 'renders the page without loading comments' do
       photo = Photo.make :id => 111, :dateadded => Time.local(2011)
       stub(Photo).find_with_associations(photo.id) { photo }
-      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make(:id => 222) ] }
+      stub(photo).comments { [ Comment.make(:id => 222) ] }
       get :edit, :id => photo.id
       renders_edit_page
     end
@@ -54,7 +54,8 @@ describe Admin::PhotosController do
     it 'loads comments and renders the page' do
       photo = Photo.make :id => 111, :dateadded => Time.local(2011)
       stub(Photo).find_with_associations(photo.id) { photo }
-      stub(photo).update_from_flickr { [ Comment.make(:id => 222) ] }
+      stub(photo).update_from_flickr
+      stub(photo).comments { [ Comment.make(:id => 222) ] }
       mock_clear_page_cache
       get :edit, :id => photo.id, :load_comments => true
       renders_edit_page
