@@ -455,22 +455,20 @@ class Photo < ActiveRecord::Base
     end
 
     comments = []
-    parsed_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
-    if parsed_xml['comments']
-      comments_xml = parsed_xml['comments'][0]
-      if comments_xml['comment'] && ! comments_xml['comment'].empty?
-        transaction do
-          Comment.where(:photo_id => id).delete_all
-	        comments_xml['comment'].each do |comment_xml|
-            comments << Comment.create!(
-              :photo_id => id,
-              :flickrid => comment_xml['author'],
-              :username => comment_xml['authorname'],
-              :comment_text => comment_xml['content'],
-              :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
-          end
-          return comments
-	      end
+    comments_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
+    parsed_comments = comments_xml['comments'][0]['comment']
+    if ! parsed_comments.blank? # This element is nil if there are no comments and an array if there are
+      transaction do
+        Comment.where(:photo_id => id).delete_all
+        parsed_comments.each do |comment_xml|
+          comments << Comment.create!(
+            :photo_id => id,
+            :flickrid => comment_xml['author'],
+            :username => comment_xml['authorname'],
+            :comment_text => comment_xml['content'],
+            :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
+        end
+        return comments
       end
     end
     self.comments
