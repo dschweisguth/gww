@@ -931,7 +931,7 @@ describe Photo do
             'latitude' => '37.123456',
             'longitude' => '-122.654321',
             'accuracy' => '16',
-            'lastupdate' => Time.utc(2010).to_i.to_s,
+            'lastupdate' => Time.utc(2010, 1, 1, 1).to_i.to_s,
             'views' => '50'
           } ]
         } ]
@@ -962,68 +962,10 @@ describe Photo do
       photo_after.latitude.should == 37.123456
       photo_after.longitude.should == -122.654321
       photo_after.accuracy.should == 16
-      # Note that dateadded is not updated
       photo_after.dateadded.should == Time.utc(2010)
-      photo_after.lastupdate.should == Time.utc(2010)
+      photo_after.lastupdate.should == Time.utc(2010, 1, 1, 1)
       photo_after.views.should == 50
       photo_after.faves.should == 6
-    end
-
-    # TODO Dave remove this feature after running this code once in production
-    it "updates faves anyway if Flickr says the photo was updated in the last five days, since we haven't been updating faves consistently" do
-      now = Time.at Time.now.getutc.to_i
-      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
-        'photos' => [ {
-          'pages' => '1',
-          'photo' =>  [ {
-            'id' => 'incoming_photo_flickrid',
-            'owner' => 'incoming_person_flickrid',
-            'ownername' => 'incoming_username',
-            'pathalias' => 'incoming_pathalias',
-            'farm' => '1',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '37.123456',
-            'longitude' => '-122.654321',
-            'accuracy' => '16',
-            'lastupdate' => now.to_i.to_s,
-            'views' => '50'
-          } ]
-        } ]
-      } }
-      stub_get_faves
-      person = Person.make :flickrid => 'incoming_person_flickrid'
-      photo_before = Photo.make \
-        :person => person,
-        :flickrid => 'incoming_photo_flickrid',
-        :farm => '1',
-        :server => 'old_server',
-        :secret => 'old_secret',
-        :latitude => 37.654321,
-        :latitude => -122.123456,
-        :accuracy => 15,
-        :dateadded => Time.utc(2010),
-        :lastupdate => now,
-        :views => 40,
-        :faves => 6
-      Photo.update_all_from_flickr.should == [ 0, 0, 1, 1 ]
-      photos = Photo.all
-      photos.size.should == 1
-      photo_after = photos[0]
-      photo_after.id.should == photo_before.id
-      photo_after.flickrid.should == photo_before.flickrid
-      photo_after.farm.should == '1'
-      photo_after.server.should == 'incoming_server'
-      photo_after.secret.should == 'incoming_secret'
-      photo_after.latitude.should == 37.123456
-      photo_after.longitude.should == -122.654321
-      photo_after.accuracy.should == 16
-      # Note that dateadded is not updated
-      photo_after.dateadded.should == Time.utc(2010)
-      photo_after.lastupdate.should == now
-      photo_after.views.should == 50
-      photo_after.faves.should == 7
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do

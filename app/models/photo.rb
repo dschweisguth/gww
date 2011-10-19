@@ -272,7 +272,7 @@ class Photo < ActiveRecord::Base
           :views => parsed_photo['views'].to_i
         }
         photo = existing_photos[photo_flickrid]
-        if photo && (photo.lastupdate < photo_attrs[:lastupdate] || photo.lastupdate > Time.now - 5.days) || ! photo
+        if ! photo || photo.lastupdate != photo_attrs[:lastupdate]
           faves =
             begin
               faves_from_flickr(photo_flickrid)
