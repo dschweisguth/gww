@@ -834,6 +834,37 @@ describe Photo do
 
     end
 
+    it "replaces an empty-string pathalias with the person's flickrid" do
+      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+        'photos' => [ {
+          'pages' => '1',
+          'photo' =>  [ {
+            'id' => 'incoming_photo_flickrid',
+            'owner' => 'incoming_person_flickrid',
+            'ownername' => 'incoming_username',
+            'pathalias' => '',
+            'farm' => '1',
+            'server' => 'incoming_server',
+            'secret' => 'incoming_secret',
+            'dateadded' => Time.utc(2011).to_i.to_s,
+            'latitude' => '37.123456',
+            'longitude' => '-122.654321',
+            'accuracy' => '16',
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
+            'views' => '50'
+          } ]
+        } ]
+      } }
+      stub_get_faves
+      Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
+      people = Person.all
+      people.size.should == 1
+      person = people[0]
+      person.flickrid.should == 'incoming_person_flickrid'
+      person.username.should == 'incoming_username'
+      person.pathalias.should == 'incoming_person_flickrid'
+    end
+
     it 'uses an existing person, and updates their information if it changed' do
       stub_get_photos
       stub_get_faves

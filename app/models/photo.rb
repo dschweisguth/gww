@@ -246,8 +246,11 @@ class Photo < ActiveRecord::Base
       now = Time.now.getutc
 
       parsed_photos['photo'].each do |parsed_photo|
-        person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
         person_flickrid = parsed_photo['owner']
+        person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
+        if person_attrs[:pathalias] == ''
+          person_attrs[:pathalias] = person_flickrid
+        end
         person = existing_people[person_flickrid]
         if person
           person.update_attributes_if_necessary! person_attrs
