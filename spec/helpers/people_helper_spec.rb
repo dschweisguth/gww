@@ -97,6 +97,17 @@ describe PeopleHelper do
       end
     end
 
+    describe 'for faves' do
+      STARS.each do |star|
+        alt = PeopleHelper::ALT[:faves][star]
+        it "returns the alt '#{alt}' given the star :#{star}" do
+          photo = Object.new
+          stub(photo).star_for_faves { star }
+          helper.star_and_alt(photo, :faves).should == [ star, alt ]
+        end
+      end
+    end
+
   end
 
   describe '#position' do

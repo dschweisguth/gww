@@ -66,6 +66,7 @@ class PeopleController < ApplicationController
     @oldest_unfound = Photo.oldest_unfound @person
     @most_commented = Photo.most_commented @person
     @most_viewed = Photo.most_viewed @person
+    @most_faved = Photo.most_faved @person
 
     @guesses = Guess.find_with_associations @person
     @favorite_posters = @person.favorite_posters

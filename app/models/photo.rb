@@ -118,6 +118,25 @@ class Photo < ActiveRecord::Base
     most_viewed
   end
 
+  def self.most_faved(poster)
+    most_faved = includes(:person).where(:person_id => poster).order('faves desc').first
+    if most_faved
+      most_faved[:place] = count_by_sql([
+        %q[
+          select count(*)
+          from (
+            select max(faves) max_faves
+            from photos f
+            group by person_id
+          ) most_faved
+          where max_faves > ?
+        ],
+        most_faved.faves
+      ]) + 1
+    end
+    most_faved
+  end
+
   def self.find_with_guesses(person)
     where(:person_id => person).includes(:guesses => :person)
   end
@@ -646,6 +665,18 @@ class Photo < ActiveRecord::Base
     elsif views >= 1000
       :silver
     elsif views >= 300
+      :bronze
+    else
+      nil
+    end
+  end
+
+  def star_for_faves
+    if faves >= 100
+      :gold
+    elsif faves >= 30
+      :silver
+    elsif faves >= 10
       :bronze
     else
       nil

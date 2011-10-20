@@ -32,6 +32,7 @@
   <% if @oldest_unfound %><th>Oldest unfound post</th><% end %>
   <% if @most_commented %><th>Most-commented post</th><% end %>
   <% if @most_viewed %><th>Most-viewed post</th><% end %>
+  <% if @most_faved %><th>Most-faved post</th><% end %>
 </tr>
 <tr>
   <% if @oldest_guess %><td><%= thumbnail_with_alt @oldest_guess.photo %></td><% end %>
@@ -41,6 +42,7 @@
   <% if @oldest_unfound %><td><%= thumbnail_with_alt @oldest_unfound %></td><% end %>
   <% if @most_commented %><td><%= thumbnail_with_alt @most_commented %></td><% end %>
   <% if @most_viewed %><td><%= thumbnail_with_alt @most_viewed %></td><% end %>
+  <% if @most_faved %><td><%= thumbnail_with_alt @most_faved %></td><% end %>
 </tr>
 <tr class="trophies-text">
   <% if @oldest_guess %><td>Guessed after <%= raw @oldest_guess.ymd_elapsed %></td><% end %>
@@ -50,6 +52,7 @@
   <% if @oldest_unfound %><td><%= raw @oldest_unfound.ymd_elapsed %> old</td><% end %>
   <% if @most_commented %><td><%= raw pluralize @most_commented.other_user_comments, 'comment' %></td><% end %>
   <% if @most_viewed %><td><%= raw pluralize @most_viewed.views, 'view' %></td><% end %>
+  <% if @most_faved %><td><%= raw pluralize @most_faved.faves, 'fave' %></td><% end %>
 </tr>
 <tr class="trophies-places">
   <% if @oldest_guess %><%= place @oldest_guess, :age %><% end %>
@@ -59,5 +62,6 @@
   <% if @oldest_unfound %><%= place @oldest_unfound, :age %><% end %>
   <% if @most_commented %><%= place @most_commented, :comments %><% end %>
   <% if @most_viewed %><%= place @most_viewed, :views %><% end %>
+  <% if @most_faved %><%= place @most_faved, :faves %><% end %>
 </tr>
 </table>

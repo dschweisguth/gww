@@ -41,6 +41,11 @@ module PeopleHelper
       :bronze => '300 or more views',
       :silver => '1000 or more views',
       :gold => '3000 or more views'
+    },
+    :faves => {
+      :bronze => '10 or more faves',
+      :silver => '30 or more faves',
+      :gold => '100 or more faves'
     }
   }
 

@@ -343,6 +343,39 @@ describe Photo do
 
   end
 
+  describe '.most_faved' do
+    it "returns the poster's most-faved photo" do
+      poster = Person.make
+      Photo.make 'second', :person => poster
+      first = Photo.make 'first', :person => poster, :faves => 1
+      most_faved = Photo.most_faved poster
+      most_faved.should == first
+      most_faved[:place].should == 1
+    end
+
+    it "ignores other posters' photos" do
+      Photo.make
+      Photo.most_faved(Person.make).should be_nil
+    end
+
+    it "considers other posters' photos when calculating place" do
+      Photo.make 'other_posters', :faves => 1
+      photo = Photo.make
+      Photo.most_faved(photo.person)[:place].should == 2
+    end
+
+    it "ignores other posters' equally faved photos when calculating place" do
+      Photo.make 'other_posters'
+      photo = Photo.make
+      Photo.most_faved(photo.person)[:place].should == 1
+    end
+
+    it "handles a person with no photos" do
+      Photo.most_faved(Person.make).should be_nil
+    end
+
+  end
+
   describe '.find_with_guesses' do
     it "returns a person's photos, with their guesses and the guesses' people" do
       guess = Guess.make
@@ -1676,6 +1709,16 @@ describe Photo do
       it "returns a #{expected[views]} star for a photo with #{views} views" do
         photo = Photo.new :views => views
         photo.star_for_views.should == expected[views]
+      end
+    end
+  end
+
+  describe '#star_for_faves' do
+    expected = { 0 => nil, 10 => :bronze, 30 => :silver, 100 => :gold }
+    expected.keys.sort.each do |faves|
+      it "returns a #{expected[faves]} star for a photo with #{faves} faves" do
+        photo = Photo.new :faves => faves
+        photo.star_for_faves.should == expected[faves]
       end
     end
   end

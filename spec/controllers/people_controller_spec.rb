@@ -171,6 +171,7 @@ describe PeopleController do
       stub(Photo).oldest_unfound(@person)
       stub(Photo).most_commented(@person)
       stub(Photo).most_viewed(@person)
+      stub(Photo).most_faved(@person)
       stub(Photo).where(:person_id => @person).stub!.includes { [] }
       stub(Photo).where(is_a(String), @person) { [] }
       stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [] }
@@ -253,6 +254,10 @@ describe PeopleController do
       most_viewed = Photo.make 'most_viewed'
       most_viewed[:place] = 1
       stub(Photo).most_viewed(@person) { most_viewed }
+
+      most_faved = Photo.make 'most_faved'
+      most_faved[:place] = 1
+      stub(Photo).most_faved(@person) { most_faved }
 
       found1 = Guess.make 'found1'
       found1.photo.guesses << found1
