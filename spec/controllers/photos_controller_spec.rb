@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PhotosController do
   render_views
 
-  describe '#list' do
+  describe '#index' do
     it 'renders the page' do
       sorted_by_param = 'username'
       order_param = '+'

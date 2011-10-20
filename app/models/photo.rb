@@ -153,6 +153,8 @@ class Photo < ActiveRecord::Base
       :column => 'lastupdate', :default_order => '-' },
     'views' => { :secondary => [ 'username' ],
       :column => 'views', :default_order => '-' },
+    'faves' => { :secondary => [ 'username' ],
+      :column => 'faves', :default_order => '-' },
     'comments' => { :secondary => [ 'username' ],
       :column => 'other_user_comments', :default_order => '-' },
     'member-comments' => { :secondary => [ 'date-added', 'username' ],

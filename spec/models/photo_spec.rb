@@ -530,6 +530,18 @@ describe Photo do
         { :username => 'a' }, { :views => 0 })
     end
 
+    it 'returns photos sorted by faves' do
+      all_sorted_and_paginated_reverses_photos('faves',
+        { :username => 'a' }, { :faves => 0 },
+        { :username => 'z' }, { :faves => 1 })
+    end
+
+    it 'returns photos sorted by faves, username' do
+      all_sorted_and_paginated_reverses_photos('faves',
+        { :username => 'z' }, { :faves => 0 },
+        { :username => 'a' }, { :faves => 0 })
+    end
+
     it 'returns photos sorted by comments' do
       all_sorted_and_paginated_reverses_photos('comments',
         { :username => 'a' }, { :other_user_comments => 0 },
