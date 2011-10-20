@@ -214,7 +214,7 @@ describe PhotosController do
 
   describe '#show' do
     it "renders the page" do
-      photo = Photo.make :id => 1, :dateadded => Time.local(2010), :other_user_comments => 11, :views => 22
+      photo = Photo.make :id => 1, :dateadded => Time.local(2010), :other_user_comments => 11, :views => 22, :faves => 33
       guess = Guess.make :photo => photo
       photo.guesses << guess
       stub(Photo).find(photo.id) { photo }
@@ -238,6 +238,7 @@ describe PhotosController do
       response.should_not contain 'It was auto-mapped'
       response.should contain '11 comments'
       response.should contain '22 views'
+      response.should contain '33 faves'
       response.should_not contain 'GWW.config'
 
     end

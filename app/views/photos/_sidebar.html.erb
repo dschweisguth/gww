@@ -21,8 +21,11 @@
         <% end %>
       </p>
     <% end %>
-    <div id="statistics"><%= link_to @photo.views.to_s + ' views', url_for_flickr_photo(@photo) + 'stats/' %> &#183;
-      <%= link_to @photo.other_user_comments.to_s + ' comments', url_for_flickr_photo_in_pool(@photo) + '#comments' %></div>
+    <div id="statistics">
+      <%= link_to "#{@photo.views} views", url_for_flickr_photo(@photo) + 'stats/' %> &#183;
+      <%= link_to "#{@photo.other_user_comments} comments", url_for_flickr_photo_in_pool(@photo) + '#comments' %> &#183;
+      <%= link_to "#{@photo.faves} faves", url_for_flickr_photo(@photo) + 'favorites/' %>
+    </div>
   </div>
   <hr/>
 </div>
