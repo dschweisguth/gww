@@ -8,6 +8,8 @@ The username of a commenter on a photo which is guessed or revealed and then
 
 Debt
 
+Extract methods from update_all_from_flickr
+Display count of Flickr API calls made in ditto
 Upgrade will_paginate, shoulda-matchers
 Extract facades from models
 Merge revelations into guesses?
