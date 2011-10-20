@@ -760,6 +760,30 @@ describe Photo do
 
   end
 
+  describe '.most_faved_in_year' do
+    it 'lists photos' do
+      photo = Photo.make :dateadded => Time.local(2010).getutc
+      Photo.most_faved_in(2010).should == [ photo ]
+    end
+
+    it 'sorts by faves' do
+      photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc, :faves => 0
+      photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc, :faves => 1
+      Photo.most_faved_in(2010).should == [ photo2, photo1 ]
+    end
+
+    it 'ignores photos from before the year' do
+      Photo.make :dateadded => Time.local(2009).getutc
+      Photo.most_faved_in(2010).should == []
+    end
+
+    it 'ignores photos from after the year' do
+      Photo.make :dateadded => Time.local(2011).getutc
+      Photo.most_faved_in(2010).should == []
+    end
+
+  end
+
   describe '.most_commented_in_year' do
     it 'lists photos' do
       photo = Photo.make :dateadded => Time.local(2010).getutc

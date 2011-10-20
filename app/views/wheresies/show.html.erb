@@ -53,6 +53,13 @@
 %>
 
 <%= render 'wheresies/show/top_photos',
+      :title => "Most-faved photos of #{@year}",
+      :statistic => 'faves',
+      :photos => @most_faved_in_year,
+      :key => :faves
+%>
+
+<%= render 'wheresies/show/top_photos',
       :title => "Most-commented photos of #{@year}",
       :statistic => 'comments',
       :photos => @most_commented_in_year,

@@ -38,8 +38,12 @@ describe WheresiesController do
         content.should have_selector 'td', :content => '555'
       end
       response.should have_selector 'div' do |content|
-        content.should have_selector 'h2', :content => "Most-commented photos of 2010"
+        content.should have_selector 'h2', :content => "Most-faved photos of 2010"
         content.should have_selector 'td', :content => '666'
+      end
+      response.should have_selector 'div' do |content|
+        content.should have_selector 'h2', :content => "Most-commented photos of 2010"
+        content.should have_selector 'td', :content => '777'
       end
       response.should have_selector 'td' do |td|
         td.should contain /1.*year/
@@ -87,8 +91,12 @@ describe WheresiesController do
     most_viewed_in_year[:views] = 555
     stub(Photo).most_viewed_in(year) { [ most_viewed_in_year ] }
 
+    most_faved_in_year = Photo.make
+    most_faved_in_year[:faves] = 666
+    stub(Photo).most_faved_in(year) { [ most_faved_in_year ] }
+
     most_commented_in_year = Photo.make
-    most_commented_in_year[:comments] = 666
+    most_commented_in_year[:comments] = 777
     stub(Photo).most_commented_in(year) { [ most_commented_in_year ] }
 
     longest_in_year_photo = Photo.make :dateadded => Time.local(year).getutc

@@ -220,6 +220,11 @@ class Photo < ActiveRecord::Base
       .order('views desc').limit(10).includes(:person)
   end
 
+  def self.most_faved_in(year)
+    where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc) \
+      .order('faves desc').limit(10).includes(:person)
+  end
+
   def self.most_commented_in(year)
     find_by_sql [
       %q{
