@@ -17,6 +17,7 @@
   <th><%= link_to "Average # of comments per post", other_people_path('comments-per-post') %></th>
   <th><%= link_to 'Average # of comments for posts to be guessed', other_people_path('comments-to-be-guessed') %></th>
   <th><%= link_to 'Average # of views per post', other_people_path('views-per-post') %></th>
+  <th><%= link_to 'Average # of faves per post', other_people_path('faves-per-post') %></th>
 </tr>
 <% @people.each_with_index do |person, person_index| %>
 <tr>
@@ -34,6 +35,7 @@
   <td class="number"><%= to_4_places person[:comments_per_post] %></td>
   <td class="number"><%= raw infinity_or person[:comments_to_be_guessed] %></td>
   <td class="number"><%= to_4_places person[:views_per_post] %></td>
+  <td class="number"><%= to_4_places person[:faves_per_post] %></td>
 </tr>
 <% end %>
 </table>

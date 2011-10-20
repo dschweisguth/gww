@@ -180,11 +180,12 @@ class Person < ActiveRecord::Base
     'comments-to-guess' => [ :comments_to_guess, :guess_count, :downcased_username ],
     'comments-per-post' => [ :comments_per_post, :post_count, :downcased_username ],
     'comments-to-be-guessed' => [ :comments_to_be_guessed, :post_count, :downcased_username ],
-    'views-per-post' => [ :views_per_post, :post_count, :downcased_username ]
+    'views-per-post' => [ :views_per_post, :post_count, :downcased_username ],
+    'faves-per-post' => [ :faves_per_post, :post_count, :downcased_username ]
   }
 
   def self.all_sorted(sorted_by, order)
-    # I'd have raised Argument error in the case below to avoid duplication,
+    # I'd have raised ArgumentError in the case below to avoid duplication,
     # but when I do that something eats the raised error.
     if ! CRITERIA.has_key? sorted_by
       raise ArgumentError, "#{sorted_by} is not a valid sort order"
@@ -200,6 +201,7 @@ class Person < ActiveRecord::Base
     guess_speeds = Person.guess_speeds
     be_guessed_speeds = Person.be_guessed_speeds
     views_per_post = Person.views_per_post
+    faves_per_post = Person.faves_per_post
 
     people = all
     people.each do |person|
@@ -215,6 +217,7 @@ class Person < ActiveRecord::Base
       person.comments_to_guess ||= INFINITY
       person.comments_to_be_guessed ||= INFINITY
       person[:views_per_post] = views_per_post[person.id] || 0.0
+      person[:faves_per_post] = faves_per_post[person.id] || 0.0
     end
 
     people.sort! do |x, y|
@@ -271,6 +274,10 @@ class Person < ActiveRecord::Base
     statistic_by_person 'select person_id id, avg(views) statistic from photos group by person_id'
   end
   
+  def self.faves_per_post
+    statistic_by_person 'select person_id id, avg(faves) statistic from photos group by person_id'
+  end
+
   def self.statistic_by_person(sql)
     find_by_sql(sql).each_with_object({}) { | person, statistic| statistic[person.id] = person[:statistic].to_f }
   end

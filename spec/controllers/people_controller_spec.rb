@@ -40,6 +40,7 @@ describe PeopleController do
       person[:comments_per_post] = 1.0
       person[:comments_to_be_guessed] = 1.0
       person[:views_per_post] = 1.0
+      person[:faves_per_post] = 1.0
       stub(Person).all_sorted(sorted_by_param, order_param) { [ person ] }
       get :index, :sorted_by => sorted_by_param, :order => order_param
 

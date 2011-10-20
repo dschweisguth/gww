@@ -372,6 +372,7 @@ describe Person do
       stub(Person).guess_speeds { {} }
       stub(Person).be_guessed_speeds { {} }
       stub(Person).views_per_post { {} }
+      stub(Person).faves_per_post { {} }
     end
 
     it 'sorts by username' do
@@ -650,6 +651,27 @@ describe Person do
       stub(Person).views_per_post { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'views-per-post'
+    end
+
+    it 'sorts by faves-per-post' do
+      create_people_named 'a', 'z'
+      stub(Person).faves_per_post { { @person1.id => 1, @person2.id => 2 } }
+      stub_post_count 2, 1
+      puts_person2_before_person1 'faves-per-post'
+    end
+
+    it 'sorts by faves-per-post, post count' do
+      create_people_named 'a', 'z'
+      stub(Person).faves_per_post { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 2
+      puts_person2_before_person1 'faves-per-post'
+    end
+
+    it 'sorts by faves-per-post, post count, username' do
+      create_people_named 'z', 'a'
+      stub(Person).faves_per_post { { @person1.id => 1, @person2.id => 1 } }
+      stub_post_count 1, 1
+      puts_person2_before_person1 'faves-per-post'
     end
 
     it 'sorts the other direction, too' do
