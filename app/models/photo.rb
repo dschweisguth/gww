@@ -213,6 +213,37 @@ class Photo < ActiveRecord::Base
     where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person)
   end
 
+  # TODO Dave test
+  def self.search(path_info, page)
+    terms = terms path_info
+    if terms.keys.sort != [ 'commenter', 'comment' ].sort
+      raise "Specify exactly one each of commenter and comment"
+    end
+    Photo.paginate \
+      :include => :comments,
+      :conditions => [ "comments.username like ? and comments.comment_text like ?", "%#{terms['commenter'][0]}%", "%#{terms['comment'][0]}%" ],
+      :page => page
+  end
+
+  def self.terms(path_info)
+    path_parts = path_info.split('/')
+    terms = {}
+    while ! path_parts.empty?
+      key = path_parts.shift
+      if path_parts.empty?
+        raise "Path info #{path_info} had an odd number of parts"
+      end
+      term = terms[key]
+      if ! term
+        term = []
+        terms[key] = term
+      end
+      term << path_parts.shift
+    end
+    terms
+  end
+  private_class_method :terms
+
   # Used by WheresiesController
 
   def self.most_viewed_in(year)

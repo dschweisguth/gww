@@ -23,6 +23,8 @@ GWW::Application.routes.draw do
     get :map_popup, :on => :member
     get :map, :map_json, :unfound, :unfound_data, :on => :collection
   end
+  # TODO Dave test
+  get 'photos/search/*terms/page/:page' => 'photos#search'
 
   resources :guesses, :only => [] do
     get :longest_and_shortest, :on => :collection

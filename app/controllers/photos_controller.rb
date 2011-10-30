@@ -49,6 +49,11 @@ class PhotosController < ApplicationController
     render :action => 'unfound_data.xml.builder', :layout => false
   end
 
+  # TODO Dave test
+  def search
+    @photos = Photo.search params[:terms], params[:page]
+  end
+
   caches_page :show
   def show
     @photo = Photo.find params[:id]
