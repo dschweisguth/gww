@@ -15,12 +15,10 @@ class FlickrCredentials
 
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
-    Rails.logger.info "Requesting URL #{url} ..."
     xml = submit url
     parsed_xml = XmlSimple.xml_in xml
     if parsed_xml['stat'] != 'ok'
       # One way we get here is if we request information we don't have access to, e.g. a deleted user
-      Rails.logger.error "Call to #{api_method} was not \"ok\": #{parsed_xml.inspect}"
       raise FlickrRequestFailedError, "stat=\"#{parsed_xml['stat']}\""
     end
     parsed_xml
