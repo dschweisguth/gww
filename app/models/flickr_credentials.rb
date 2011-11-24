@@ -15,6 +15,7 @@ class FlickrCredentials
 
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
+    Rails.logger.info "Requesting URL #{url} ..."
     xml = submit url
     parsed_xml = XmlSimple.xml_in xml
     if parsed_xml['stat'] != 'ok'
