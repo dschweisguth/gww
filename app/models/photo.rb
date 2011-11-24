@@ -513,7 +513,7 @@ class Photo < ActiveRecord::Base
       if faves != self.faves
         update_attribute :faves, faves
       end
-    rescue FlickrRequestFailedError
+    rescue FlickrCredentials::FlickrRequestFailedError
       # TODO Dave figure out why this is needed
     end
 
