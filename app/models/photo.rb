@@ -518,19 +518,23 @@ class Photo < ActiveRecord::Base
       # the caller is a member. Not clear yet whether this is a bug or intended behavior.
     end
 
-    comments_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
-    parsed_comments = comments_xml['comments'][0]['comment']
-    if ! parsed_comments.blank? # This element is nil if there are no comments and an array if there are
-      transaction do
-        Comment.where(:photo_id => id).delete_all
-        parsed_comments.each do |comment_xml|
-          self.comments.create!(
-            :flickrid => comment_xml['author'],
-            :username => comment_xml['authorname'],
-            :comment_text => comment_xml['content'],
-            :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
+    begin
+      comments_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
+      parsed_comments = comments_xml['comments'][0]['comment']
+      if ! parsed_comments.blank? # This element is nil if there are no comments and an array if there are
+        transaction do
+          Comment.where(:photo_id => id).delete_all
+          parsed_comments.each do |comment_xml|
+            self.comments.create!(
+              :flickrid => comment_xml['author'],
+              :username => comment_xml['authorname'],
+              :comment_text => comment_xml['content'],
+              :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
+          end
         end
       end
+    rescue FlickrCredentials::FlickrRequestFailedError
+      # This happens when a photo has been removed from the group.
     end
 
   end
