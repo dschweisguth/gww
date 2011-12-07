@@ -508,9 +508,14 @@ class Photo < ActiveRecord::Base
   def update_from_flickr
     # TODO Dave update the photo and poster, too
 
-    faves = Photo.faves_from_flickr self.flickrid
-    if faves != self.faves
-      update_attribute :faves, faves
+    begin
+      faves = Photo.faves_from_flickr self.flickrid
+      if faves != self.faves
+        update_attribute :faves, faves
+      end
+    rescue FlickrCredentials::FlickrRequestFailedError
+      # TODO Dave this happens when a photo is private but visible to the caller because it's posted to a group of which
+      # the caller is a member. Not clear yet whether this is a bug or intended behavior.
     end
 
     comments_xml = FlickrCredentials.request 'flickr.photos.comments.getList', 'photo_id' => flickrid
