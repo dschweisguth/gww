@@ -10,6 +10,7 @@ The username of a commenter on a photo which is guessed or revealed and then
 
 Debt
 
+Migrate to OAuth http://code.flickr.com/blog/2012/01/13/farewell-flickrauth/
 Check and fix coverage
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto
