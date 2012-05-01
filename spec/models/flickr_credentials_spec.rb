@@ -29,7 +29,7 @@ describe FlickrCredentials do
 
     it 'gives up after four failures' do
       mock_get_times_out 4
-      lambda { FlickrCredentials.request 'flickr.people.findByUsername', 'username' => 'dschweisguth' }.should raise_error FlickrCredentials::FlickrRequestFailedError
+      lambda { FlickrCredentials.request 'flickr.test.login' }.should raise_error FlickrCredentials::FlickrRequestFailedError
     end
 
     def mock_get_times_out(times)
@@ -37,7 +37,7 @@ describe FlickrCredentials do
     end
 
     def mock_get_succeeds
-      mock_get_returns '<rsp stat="ok"><user nsid="26686665@N06"/></rsp>'
+      mock_get_returns '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>'
     end
 
     def mock_get_returns(body)
@@ -47,8 +47,10 @@ describe FlickrCredentials do
     end
 
     def request_succeeds
-      result = FlickrCredentials.request 'flickr.people.findByUsername', 'username' => 'dschweisguth'
-      result['user'][0]['nsid'].should == '26686665@N06'
+      # The Flickr API methods that GWW uses don't require OAuth, or work (perhaps returning less information) without it.
+      # flickr.test.login actually requires OAuth, so use it here.
+      result = FlickrCredentials.request 'flickr.test.login'
+      result['user'][0]['username'][0].should == 'dschweisguth'
     end
 
   end

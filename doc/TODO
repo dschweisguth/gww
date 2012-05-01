@@ -10,7 +10,6 @@ The username of a commenter on a photo which is guessed or revealed and then
 
 Debt
 
-Migrate to OAuth http://code.flickr.com/blog/2012/01/13/farewell-flickrauth/
 Check and fix coverage
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto
@@ -20,7 +19,7 @@ Merge revelations into guesses?
 
 Features
 
-Add 21 Club, 540 Club
+Add 21 Club, 65 Club, 540 Club
 Parse
 - "1535 7th, on the west side between Kirkham and Lawton"
 - Mount and Mt(.)

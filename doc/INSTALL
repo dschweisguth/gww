@@ -82,19 +82,19 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-	> sudo bundle install --without production
+	      > sudo bundle install --without production
     Linux
         > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
-	> bundle install --deployment --without test
+	      > bundle install --deployment --without test
 Configure
     Configure database credentials
-	> cp config/database{_template,}.yml
-	Edit, change usernames if you want different ones, and choose passwords
+	      > cp config/database{_template,}.yml
+	      Edit, change usernames if you want different ones, and choose passwords
     Configure Flickr credentials
-	> cp config/flickr_credentials{_template,}.yml
-	Construct a Flickr API secret, key and auth token manually per the
-	    API documentation
-	Edit and fill in your secret, api_key and auth_token
+	      > cp config/flickr_credentials{_template,}.yml
+	      Construct a Flickr API secret, key, oauth token and oauth token secret manually
+	      per the API documentation
+	      Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
 
 Create database user and databases
 ----------------------------------
@@ -150,8 +150,8 @@ Put the server-up .htaccess in place
 Configure basic HTTP authentication
     Create a username and password per
         http://httpd.apache.org/docs/2.2/howto/auth.html. Be sure not to put
-	the htpasswd file in a directory from which httpd serves files, such as
-	GWW's public directory.
+	      the htpasswd file in a directory from which httpd serves files, such as
+	      GWW's public directory.
     > cp public/admin/.htaccess{_template,}
     Edit and fill in
     - the full path to the htpasswd file that you just created

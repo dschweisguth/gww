@@ -6,8 +6,9 @@ class FlickrCredentials
   FILE = YAML.load_file "#{Rails.root.to_s}/config/flickr_credentials.yml"
   CREDENTIALS = FILE['flickr_credentials']
   SECRET = CREDENTIALS['secret']
-  API_KEY = CREDENTIALS['api_key']
-  AUTH_TOKEN = CREDENTIALS['auth_token']
+  OAUTH_CONSUMER_KEY = CREDENTIALS['api_key']
+  OAUTH_TOKEN = CREDENTIALS['oauth_token']
+  OAUTH_TOKEN_SECRET = CREDENTIALS['oauth_token_secret']
   SCORE_TOPIC_URL = CREDENTIALS['score_topic_url']
 
   class << self; attr_accessor :retry_quantum end
@@ -16,6 +17,9 @@ class FlickrCredentials
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
     xml = submit url
+    if xml !~ /<.*?>/m
+      raise FlickrRequestFailedError, "Response was not XML: #{xml}"
+    end
     parsed_xml = XmlSimple.xml_in xml
     if parsed_xml['stat'] != 'ok'
       # One way we get here is if we request information we don't have access to, e.g. a deleted user
@@ -28,13 +32,17 @@ class FlickrCredentials
 
   def self.api_url(api_method, extra_params = {})
     params = {
-      'api_key' => API_KEY,
-      'auth_token' => AUTH_TOKEN,
-      'group_id' => '32053327@N00',
-      'method' => api_method
+      'oauth_version' => '1.0',
+      'oauth_signature_method' => 'HMAC-SHA1',
+      'oauth_consumer_key' => OAUTH_CONSUMER_KEY,
+      'oauth_token' => OAUTH_TOKEN,
+      'oauth_timestamp' => Time.now.to_i.to_s,
+      'oauth_nonce' => rand(10 ** 8).to_s.rjust(8, '0'),
+      'method' => api_method,
+      'group_id' => '32053327@N00' # TODO Dave move this to the calls that need it
     }
     params.merge! extra_params
-    params['api_sig'] = signature params
+    params['oauth_signature'] = signature params
     'http://api.flickr.com/services/rest/?' +
       params.each_with_object('') do |param, query_string|
         if ! query_string.empty?
@@ -45,9 +53,14 @@ class FlickrCredentials
   end
 
   def self.signature(params)
-    signature = SECRET
-    params.keys.sort.each { |name| signature += name + params[name] }
-    Digest::MD5.hexdigest signature
+    key = "#{SECRET}&#{OAUTH_TOKEN_SECRET}"
+    base_string = "GET&#{oauth_encode "http://api.flickr.com/services/rest/"}&" +
+      oauth_encode(params.keys.sort.map { |name| "#{name}=#{oauth_encode params[name]}" }.join('&'))
+    Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), key, base_string)
+  end
+
+  def self.oauth_encode(string)
+    URI.encode string, /[^\w\-.~]/
   end
 
   def self.submit(url)
