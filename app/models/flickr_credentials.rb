@@ -16,6 +16,7 @@ class FlickrCredentials
 
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
+    p url
     xml = submit url
     if xml !~ /<.*?>/m
       raise FlickrRequestFailedError, "Response was not XML: #{xml}"
@@ -56,7 +57,8 @@ class FlickrCredentials
     key = "#{SECRET}&#{OAUTH_TOKEN_SECRET}"
     base_string = "GET&#{oauth_encode "http://api.flickr.com/services/rest/"}&" +
       oauth_encode(params.keys.sort.map { |name| "#{name}=#{oauth_encode params[name]}" }.join('&'))
-    Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), key, base_string)
+    signature = Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), key, base_string)
+    oauth_encode signature.chomp
   end
 
   def self.oauth_encode(string)
