@@ -9,16 +9,17 @@ class FlickrCredentials
   OAUTH_CONSUMER_KEY = CREDENTIALS['api_key']
   OAUTH_TOKEN = CREDENTIALS['oauth_token']
   OAUTH_TOKEN_SECRET = CREDENTIALS['oauth_token_secret']
+  GROUP_ID = CREDENTIALS['group_id']
   SCORE_TOPIC_URL = CREDENTIALS['score_topic_url']
 
   class << self; attr_accessor :retry_quantum end
   @retry_quantum = 30
 
-  def self.groups_get_info
-    request 'flickr.groups.getInfo'
+  def self.groups_get_info(opts)
+    request 'flickr.groups.getInfo', opts
   end
 
-  def self.groups_pools_get_photos(opts = {})
+  def self.groups_pools_get_photos(opts)
     request 'flickr.groups.pools.getPhotos', opts
   end
 
@@ -58,8 +59,7 @@ class FlickrCredentials
       'oauth_token' => OAUTH_TOKEN,
       'oauth_timestamp' => Time.now.to_i.to_s,
       'oauth_nonce' => rand(10 ** 8).to_s.rjust(8, '0'),
-      'method' => api_method,
-      'group_id' => '32053327@N00' # TODO Dave move this to the calls that need it
+      'method' => api_method
     }
     params.merge! extra_params
     params['oauth_signature'] = signature params

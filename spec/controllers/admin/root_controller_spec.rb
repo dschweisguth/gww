@@ -35,7 +35,7 @@ describe Admin::RootController do
   describe '#update_from_flickr' do
     it 'does some work and redirects' do
       mock_clear_page_cache 2
-      stub(FlickrCredentials).groups_get_info { {
+      stub(FlickrCredentials).groups_get_info(:group_id => FlickrCredentials::GROUP_ID) { {
         'group'=> [ {
           'members' => [ '1492' ]
         } ]

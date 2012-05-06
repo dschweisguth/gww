@@ -8,13 +8,13 @@ describe FlickrCredentials do
 
   describe '.groups_get_info' do
     it "gets group info" do
-      FlickrCredentials.groups_get_info['group'][0]['id'].should == '32053327@N00'
+      FlickrCredentials.groups_get_info('group_id' => FlickrCredentials::GROUP_ID)['group'][0]['id'].should == FlickrCredentials::GROUP_ID
     end
   end
 
   describe '.groups_pools_get_photos' do
     it "gets group photos" do
-      FlickrCredentials.groups_pools_get_photos['photos'].should_not be_empty
+      FlickrCredentials.groups_pools_get_photos('group_id' => FlickrCredentials::GROUP_ID)['photos'].should_not be_empty
     end
   end
 
