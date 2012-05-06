@@ -14,9 +14,30 @@ class FlickrCredentials
   class << self; attr_accessor :retry_quantum end
   @retry_quantum = 30
 
+  def self.groups_get_info
+    request 'flickr.groups.getInfo'
+  end
+
+  def self.groups_pools_get_photos(opts = {})
+    request 'flickr.groups.pools.getPhotos', opts
+  end
+
+  def self.people_get_info(opts)
+    request 'flickr.people.getInfo', opts
+  end
+
+  def self.photos_get_favorites(opts)
+    request 'flickr.photos.getFavorites', opts
+  end
+
+  def self.photos_comments_get_list(opts)
+    request 'flickr.photos.comments.getList', opts
+  end
+
+  private
+
   def self.request(api_method, extra_params = {})
     url = api_url api_method, extra_params
-    p url
     xml = submit url
     if xml !~ /<.*?>/m
       raise FlickrRequestFailedError, "Response was not XML: #{xml}"
@@ -28,8 +49,6 @@ class FlickrCredentials
     end
     parsed_xml
   end
-
-  private
 
   def self.api_url(api_method, extra_params = {})
     params = {

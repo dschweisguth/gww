@@ -18,9 +18,9 @@ describe FlickrUpdate do
 
   describe '.create_before_and_update_after' do
     it "creates an update, does something and updates the update with the time it was completed" do
-      stub(FlickrCredentials).request('flickr.groups.getInfo') { {
+      stub(FlickrCredentials).groups_get_info { {
         'group'=> [ {
-          'members'=>['1492']
+          'members' => [ '1492' ]
         } ]
       } }
       the_block_ran = false

@@ -841,7 +841,7 @@ describe Photo do
 
   describe '.update_all_from_flickr' do
     def stub_get_photos
-      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+      stub(FlickrCredentials).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -864,7 +864,7 @@ describe Photo do
     end
 
     def stub_get_faves
-      stub(FlickrCredentials).request('flickr.photos.getFavorites',
+      stub(FlickrCredentials).photos_get_favorites(
         'photo_id' => 'incoming_photo_flickrid', 'per_page' => '50', 'page' => '1') { {
         'stat' => 'ok',
         'photo' => [ {
@@ -904,7 +904,7 @@ describe Photo do
     end
 
     it "replaces an empty-string pathalias with the person's flickrid" do
-      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+      stub(FlickrCredentials).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -985,7 +985,7 @@ describe Photo do
     end
 
     it "doesn't update faves if Flickr says the photo hasn't been updated" do
-      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+      stub(FlickrCredentials).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -1038,7 +1038,7 @@ describe Photo do
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
-      stub(FlickrCredentials).request('flickr.groups.pools.getPhotos', anything) { {
+      stub(FlickrCredentials).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -1424,7 +1424,7 @@ describe Photo do
     end
 
     def stub_get_faves
-      stub(FlickrCredentials).request('flickr.photos.getFavorites',
+      stub(FlickrCredentials).photos_get_favorites(
         'photo_id' => @photo.flickrid, 'per_page' => '50', 'page' => '1') { {
         'stat' => 'ok',
         'photo' => [ {
@@ -1436,7 +1436,7 @@ describe Photo do
     end
 
     def stub_request_to_return_one_comment
-      stub(FlickrCredentials).request { {
+      stub(FlickrCredentials).photos_comments_get_list { {
         'comments' => [ {
           'comment' => [ {
             'author' => 'commenter_flickrid',
@@ -1604,7 +1604,7 @@ describe Photo do
       end
 
       def stub_person_request
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+        stub(FlickrCredentials).people_get_info { {
           'person' => [ {
             'username' => [ 'username_from_request' ],
             'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
@@ -1613,7 +1613,7 @@ describe Photo do
       end
 
       def stub_person_request_failure
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { raise FlickrCredentials::FlickrRequestFailedError }
+        stub(FlickrCredentials).people_get_info { raise FlickrCredentials::FlickrRequestFailedError }
       end
 
       def is_guessed(photo, guesser, comment_text)

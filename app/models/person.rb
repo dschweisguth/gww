@@ -114,7 +114,7 @@ class Person < ActiveRecord::Base
           if show_passed
             change << " passing #{passed.length == 1 ? passed[0].username : "#{passed.length} other players" }"
           end
-          if ties.length > 0 then
+          if ties.length > 0
             if show_passed
               change << ' and'
             end
@@ -568,7 +568,7 @@ class Person < ActiveRecord::Base
   # Miscellaneous
 
   def self.attrs_from_flickr(person_flickrid)
-    response = FlickrCredentials.request 'flickr.people.getInfo', 'user_id' => person_flickrid
+    response = FlickrCredentials.people_get_info 'user_id' => person_flickrid
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
     pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]

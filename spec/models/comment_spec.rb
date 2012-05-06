@@ -223,7 +223,7 @@ describe Comment do
       end
 
       def stub_person_request
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { {
+        stub(FlickrCredentials).people_get_info { {
           'person' => [{
             'username' => ['username_from_request'],
             'photosurl' => ['http://www.flickr.com/photos/pathalias_from_request/']
@@ -232,7 +232,7 @@ describe Comment do
       end
 
       def stub_person_request_failure
-        stub(FlickrCredentials).request('flickr.people.getInfo', anything) { raise FlickrCredentials::FlickrRequestFailedError }
+        stub(FlickrCredentials).people_get_info { raise FlickrCredentials::FlickrRequestFailedError }
       end
 
       def photo_is_guessed(comment, guesser)
