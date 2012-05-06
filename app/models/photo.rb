@@ -513,7 +513,7 @@ class Photo < ActiveRecord::Base
         update_attribute :faves, faves
       end
     rescue FlickrCredentials::FlickrRequestFailedError
-      # TODO Dave this happens when a photo is private but visible to the caller because it's posted to a group of which
+      # This happens when a photo is private but visible to the caller because it's posted to a group of which
       # the caller is a member. Not clear yet whether this is a bug or intended behavior.
     end
 
