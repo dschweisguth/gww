@@ -166,3 +166,9 @@ Mac
 Linux
     > sudo apachectl restart
     Browse http://your-production-server/
+
+Update GWW
+----------
+Add something like the following to your crontab on your production server:
+30  17 *	*	*	/bin/bash -l -c 'cd /home/dave/public_html/gww && script/rails runner -e production CronJob.update_from_flickr'
+0 21,0,3	*	*	*	/bin/bash -l -c 'cd /home/dave/public_html/gww && script/rails runner -e production CronJob.calculate_statistics_and_maps'
