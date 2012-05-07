@@ -16,7 +16,7 @@ describe CronJob do
       mock(Person).update_all_from_flickr
       stub(Time).now { Time.utc(2011) }
       mock(update).update_attribute :completed_at, Time.utc(2011)
-      CronJob.update_from_flickr
+      CronJob.update_from_flickr.should == "Created 1 new photos and 2 new users. Got 3 pages out of 4."
     end
   end
 
@@ -26,7 +26,7 @@ describe CronJob do
       mock(Photo).update_statistics
       mock(Photo).infer_geocodes
       mock_clear_page_cache
-      CronJob.calculate_statistics_and_maps
+      CronJob.calculate_statistics_and_maps.should == "Updated statistics and maps."
     end
   end
 

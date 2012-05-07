@@ -9,6 +9,18 @@ class Admin::RootController < ApplicationController
     @multipoint_photos_count = Guess.group(:photo_id).count.values.count { |count| count > 1 }
   end
 
+  def update_from_flickr
+    flash[:notice] = CronJob.update_from_flickr
+    #noinspection RubyResolve
+    redirect_to admin_root_path
+  end
+
+  def calculate_statistics_and_maps
+    flash[:notice] = CronJob.calculate_statistics_and_maps
+    #noinspection RubyResolve
+    redirect_to admin_root_path
+  end
+
   caches_page :bookmarklet
 
 end

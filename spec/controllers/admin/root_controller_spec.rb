@@ -32,6 +32,24 @@ describe Admin::RootController do
 
   end
 
+  describe '#update_from_flickr' do
+    it 'calls the equivalent CronJob method and redirects' do
+      mock(CronJob).update_from_flickr { "The message" }
+      get :update_from_flickr
+      response.should redirect_to admin_root_path
+      flash[:notice].should == "The message"
+    end
+  end
+
+  describe '#calculate_statistics_and_maps' do
+    it 'calls the equivalent CronJob method and redirects' do
+      mock(CronJob).calculate_statistics_and_maps { "The message" }
+      get :calculate_statistics_and_maps
+      response.should redirect_to admin_root_path
+      flash[:notice].should == "The message"
+    end
+  end
+
   describe '#bookmarklet' do
     it 'renders the page' do
       get :bookmarklet

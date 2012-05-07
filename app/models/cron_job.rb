@@ -8,8 +8,10 @@ class CronJob
       Photo.update_all_from_flickr
     end
     PageCache.clear
-    puts "Created #{new_photo_count} new photos and #{new_person_count} new users. " +
+    message = "Created #{new_photo_count} new photos and #{new_person_count} new users. " +
       "Got #{pages_gotten} pages out of #{pages_available}."
+    puts message
+    return message
   end
 
   def self.calculate_statistics_and_maps
@@ -17,7 +19,9 @@ class CronJob
     Photo.update_statistics
     Photo.infer_geocodes
     PageCache.clear
-    puts 'Updated statistics and maps.'
+    message = "Updated statistics and maps."
+    puts message
+    return message
   end
 
 end
