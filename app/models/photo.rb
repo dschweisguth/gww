@@ -284,7 +284,7 @@ class Photo < ActiveRecord::Base
     new_person_count = 0
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       logger.info "Getting page #{page} ..."
-      photos_xml = FlickrCredentials.groups_pools_get_photos :group_id => FlickrCredentials::GROUP_ID,
+      photos_xml = FlickrCredentials.groups_pools_get_photos 'group_id' => FlickrCredentials::GROUP_ID,
         'per_page' => '500', 'page' => page.to_s, 'extras' => 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }

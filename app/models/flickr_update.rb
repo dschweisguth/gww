@@ -9,7 +9,7 @@ class FlickrUpdate < ActiveRecord::Base
   end
 
   def self.create_before_and_update_after
-    group_info = FlickrCredentials.groups_get_info :group_id => FlickrCredentials::GROUP_ID
+    group_info = FlickrCredentials.groups_get_info 'group_id' => FlickrCredentials::GROUP_ID
     member_count = group_info['group'][0]['members'][0]
     update = FlickrUpdate.create! :member_count => member_count
     return_value = yield
