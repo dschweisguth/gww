@@ -1,0 +1,4 @@
+#!/bin/bash -el
+# This script is used in cron to initialize rvm before running something
+cd `dirname $0`/..
+exec script/runner $*
