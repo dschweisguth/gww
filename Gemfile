@@ -6,7 +6,7 @@ gem 'activerecord-mysql2spatial-adapter', '0.4.2'
 gem 'rails', '3.0.12'
 gem 'jquery-rails', '1.0.19'
 gem 'rails3-jquery-autocomplete', '1.0.7'
-gem 'will_paginate', '3.0.pre2'
+gem 'will_paginate', '3.0.3'
 gem 'xml-simple', '1.1.0'
 
 # The following gem is in the default group
