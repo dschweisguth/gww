@@ -18,7 +18,7 @@ gem 'xml-simple', '1.1.1'
 #    http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks/
 #    http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks-part-ii/
 group :development do
-  gem 'rspec-rails', '2.6.1'
+  gem 'rspec-rails', '2.10.1'
 end
 
 group :test do
@@ -26,7 +26,7 @@ group :test do
   gem 'rr', '1.0.4'
   gem 'shoulda-matchers', '1.0.0.beta2'
   gem 'simplecov', '0.5.3'
-  gem 'rspec-rails', '2.6.1'
+  gem 'rspec-rails', '2.10.1'
   gem 'webrat', '0.7.3'
 end
 
