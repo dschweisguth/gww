@@ -6,7 +6,7 @@ module GWW
         ValidateNonNegativeInteger.new(attr)
       end
 
-      class ValidateNonNegativeInteger < Shoulda::Matchers::ActiveRecord::ValidationMatcher
+      class ValidateNonNegativeInteger < Shoulda::Matchers::ActiveModel::ValidationMatcher
         def matches?(subject)
           super(subject)
           disallows_value_of('abcd', :not_a_number) &&
