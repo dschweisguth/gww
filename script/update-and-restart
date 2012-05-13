@@ -1,11 +1,11 @@
-#!/bin/sh -e
+#!/bin/sh -el
+# The above line makes this a login shell so that rvm is available
 
 # This script updates production GWW from github. It's only meant for
 # production; it does things that are only relevant in the production
 # environment.
 
 cd `dirname $0`/..
-env
 script/down
 git fetch --tags
 git checkout `git tag | ruby -e 'puts STDIN.readlines.sort_by { |s| s[6, s.length - 6].to_i }.last'`
