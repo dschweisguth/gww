@@ -2,8 +2,8 @@ source 'http://rubygems.org/'
 
 # mysql2 0.3.* requires Rails 3.1
 gem 'mysql2', '0.2.18'
-gem 'activerecord-mysql2spatial-adapter', '0.4.1'
-gem 'rails', '3.0.10'
+gem 'activerecord-mysql2spatial-adapter', '0.4.2'
+gem 'rails', '3.0.12'
 gem 'jquery-rails', '1.0.16'
 gem 'rails3-jquery-autocomplete', '1.0.4'
 gem 'will_paginate', '3.0.pre2'
