@@ -7,7 +7,7 @@ gem 'rails', '3.0.12'
 gem 'jquery-rails', '1.0.19'
 gem 'rails3-jquery-autocomplete', '1.0.7'
 gem 'will_paginate', '3.0.3'
-gem 'xml-simple', '1.1.0'
+gem 'xml-simple', '1.1.1'
 
 # The following gem is in the default group
 # 1) because we
