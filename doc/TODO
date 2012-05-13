@@ -10,7 +10,6 @@ The username of a commenter on a photo which is guessed or revealed and then
 
 Debt
 
-Is JSON gem necessary? If so, would GWW run faster with the non-pure JSON gem?
 Update ruby, rails, etc. and see whether YAML defaults bug is still present
 Dump schema.rb when migrating, rolling back etc.
 Check and fix coverage
