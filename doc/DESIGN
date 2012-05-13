@@ -1,3 +1,6 @@
+Database
+--------
+
 To help protect the GWW database from programmer error and other potential
 damage, the GWW schema and its migrations use SQL features which are not
 natively supported by Active Record, such as foreign key constraints and the
@@ -12,3 +15,9 @@ enum column type. Therefore,
 Note that some of the indexes which support the GWW schema's foreign keys are
 essential for performance, although non-foreign key indexes would serve that
 purpose equally well.
+
+
+Javascript
+----------
+
+GWW uses jQuery UI's smoothness theme.
