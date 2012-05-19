@@ -10,8 +10,6 @@ The username of a commenter on a photo which is guessed or revealed and then
 
 Debt
 
-Upgrade passenger
-Get rvm or rbenv working on scharlach
 Update ruby and see whether YAML defaults bug is still present
 Dump schema.rb when migrating, rolling back etc.
 Check and fix coverage

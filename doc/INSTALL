@@ -54,24 +54,20 @@ Linux
 Install ruby and friends
 ------------------------
 
-GWW currently requires ruby 1.9.2 and the gems listed below. The specific
+GWW currently requires ruby 1.9.3 and the gems listed below. The specific
 versions are not necessarily required, but they're what GWW uses at this
 writing.
 
-Mac
-    Install rvm for a single user per https://rvm.beginrescueend.com/
-    > rvm install 1.9.2
-    > rvm use 1.9.2 --default
-    Using /Users/dave/.rvm/gems/ruby-1.9.2-p180
-    > gem update --system
-    > gem install bundler
-    > gem list
-    bundler (1.1.3)
-    rake (0.8.7 ruby) # rvm installed this for us
-    rubygems-update (1.8.24)
-Linux
-    Install the same way as for Mac, but as root, thereby installing rvm
-    for all users and setting up the shared rvm's Ruby.
+Install rbenv per https://github.com/sstephenson/rbenv
+Install ruby-build per https://github.com/sstephenson/ruby-build
+> rbenv install 1.9.3-p194
+> rbenv global 1.9.3-p194
+> gem update --system
+> gem install bundler
+> gem list
+bundler (1.1.3)
+rubygems-update (1.8.24)
+# plus other gems that come with Ruby
 
 Get and configure GWW
 ---------------------
@@ -82,19 +78,19 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-	      > sudo bundle install --without production
+	    > bundle install --without production
     Linux
         > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
-	      > bundle install --deployment --without test
+	    > bundle install --deployment --without test
 Configure
     Configure database credentials
-	      > cp config/database{_template,}.yml
-	      Edit, change usernames if you want different ones, and choose passwords
+        > cp config/database{_template,}.yml
+        Edit, change usernames if you want different ones, and choose passwords
     Configure Flickr credentials
-	      > cp config/flickr_credentials{_template,}.yml
-	      Construct a Flickr API secret, key, oauth token and oauth token secret manually
-	      per the API documentation
-	      Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
+	    Construct a Flickr API secret, key, oauth token and oauth token secret manually
+	    per the API documentation
+	    > cp config/flickr_credentials{_template,}.yml
+	    Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
 
 Create database user and databases
 ----------------------------------
@@ -150,8 +146,8 @@ Put the server-up .htaccess in place
 Configure basic HTTP authentication
     Create a username and password per
         http://httpd.apache.org/docs/2.2/howto/auth.html. Be sure not to put
-	      the htpasswd file in a directory from which httpd serves files, such as
-	      GWW's public directory.
+	    the htpasswd file in a directory from which httpd serves files, such as
+	    GWW's public directory.
     > cp public/admin/.htaccess{_template,}
     Edit and fill in
     - the full path to the htpasswd file that you just created
