@@ -1,5 +1,4 @@
 class RootController < ApplicationController
-  #noinspection RubyResolve
   autocomplete :person, :username
 
   def index

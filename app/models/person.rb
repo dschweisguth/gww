@@ -300,7 +300,6 @@ class Person < ActiveRecord::Base
     ]
     poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
     posters = find_all_by_id poster_ids
-    #noinspection RubyResolve
     posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
     nemeses.each { |nemesis| nemesis[:poster] = posters_by_id[nemesis[:poster_id]] }
     nemeses

@@ -500,7 +500,6 @@ class Photo < ActiveRecord::Base
   end
 
   def self.find_with_associations(id)
-    #noinspection RailsParamDefResolve
     includes(:person, :revelation, { :guesses => :person }).find id
   end
 
@@ -551,7 +550,6 @@ class Photo < ActiveRecord::Base
       raise ArgumentError, 'answer_text may not be empty'
     end
 
-    #noinspection RailsParamDefResolve
     photo = Photo.includes(:person, :revelation).find photo_id
     if username.empty?
       username = photo.person.username
@@ -652,7 +650,6 @@ class Photo < ActiveRecord::Base
 
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
-      #noinspection RailsParamDefResolve
       photo = includes(:revelation, :person).find photo_id
       photo.revelation.destroy if photo.revelation
       Guess.destroy_all_by_photo_id photo.id

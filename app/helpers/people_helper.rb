@@ -24,28 +24,28 @@ module PeopleHelper
   end
 
   ALT = {
-    :age => {
-      :bronze => 'Unfound for 1 year or more',
-      :silver => 'Unfound for 2 years or more',
-      :gold => 'Unfound for 3 years or more'
+    age: {
+      bronze: 'Unfound for 1 year or more',
+      silver: 'Unfound for 2 years or more',
+      gold: 'Unfound for 3 years or more'
     },
-    :speed => {
-      :silver => 'Guessed in less than a minute',
-      :gold => 'Guessed in less than 10 seconds'
+    speed: {
+      silver: 'Guessed in less than a minute',
+      gold: 'Guessed in less than 10 seconds'
     },
-    :comments => {
-      :silver => '20 or more comments',
-      :gold => '30 or more comments'
+    comments: {
+      silver: '20 or more comments',
+      gold: '30 or more comments'
     },
-    :views => {
-      :bronze => '300 or more views',
-      :silver => '1000 or more views',
-      :gold => '3000 or more views'
+    views: {
+      bronze: '300 or more views',
+      silver: '1000 or more views',
+      gold: '3000 or more views'
     },
-    :faves => {
-      :bronze => '10 or more faves',
-      :silver => '30 or more faves',
-      :gold => '100 or more faves'
+    faves: {
+      bronze: '10 or more faves',
+      silver: '30 or more faves',
+      gold: '100 or more faves'
     }
   }
 
@@ -64,26 +64,21 @@ module PeopleHelper
       end
       break if high_scorer == person
     end
-
-    case position
-    when 1 then ''
-    when 2 then 'second-'
-    when 3 then 'third-'
-    when 4 then 'fourth-'
-    when 5 then 'fifth-'
-    end
-
+    {
+      1 => '',
+      2 => 'second-',
+      3 => 'third-',
+      4 => 'fourth-',
+      5 => 'fifth-'
+    }[position]
   end
 
   def image_for_star(star)
-    case star
-    when :bronze
-      '/images/star-bronze.gif'
-    when :silver
-      '/images/star-silver.gif'
-    when :gold
-      '/images/star-gold.gif'
-    end
+    {
+      bronze: '/images/star-bronze.gif',
+      silver: '/images/star-silver.gif',
+      gold: '/images/star-gold.gif'
+    }[star]
   end
 
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe GWW::Matchers::Routing do
-  #noinspection RubyResolve
   include GWW::Matchers::Routing
 
   def no_params_path

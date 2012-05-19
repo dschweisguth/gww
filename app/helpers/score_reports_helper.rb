@@ -17,9 +17,9 @@ module ScoreReportsHelper
 
   def image_url_for_star(star)
     star_images = {
-      :bronze => '/images/star-padded-bronze.gif',
-      :silver => '/images/star-padded-silver.gif',
-      :gold => '/images/star-padded-gold-animated.gif'
+      bronze: '/images/star-padded-bronze.gif',
+      silver: '/images/star-padded-silver.gif',
+      gold: '/images/star-padded-gold-animated.gif'
     }
     path_to_url star_images[star]
   end

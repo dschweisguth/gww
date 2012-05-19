@@ -10,7 +10,7 @@
     <th>game status</th>
     <th></th>
   </tr>  
-<% for photo in @photos %>
+<% @photos.each do |photo| %>
   <tr>
     <td><%= link_to_person photo.person %></td>
     <td><%= local_date photo.dateadded %></td>

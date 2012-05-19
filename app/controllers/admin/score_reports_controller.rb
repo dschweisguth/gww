@@ -22,6 +22,7 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def destroy
+    #noinspection RubyArgCount
     ScoreReport.destroy params[:id]
     PageCache.clear
     redirect_to admin_score_reports_path

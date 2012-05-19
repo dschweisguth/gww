@@ -7,7 +7,9 @@
     <inspection_tool class="RailsChecklist04" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RailsControllerCallsModelOnce" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RailsCustomFindAccessedTwice" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RailsI18nInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RailsTooManySharedVariables" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RubyCaseWithoutElseBlockInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyClassMethodNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_maxLength" value="99" />
     </inspection_tool>
@@ -24,12 +26,14 @@
     <inspection_tool class="RubyGlobalVariableNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_maxLength" value="99" />
     </inspection_tool>
+    <inspection_tool class="RubyHashKeysTypesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyInstanceMethodNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_maxLength" value="99" />
     </inspection_tool>
     <inspection_tool class="RubyInstanceVariableNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_maxLength" value="99" />
     </inspection_tool>
+    <inspection_tool class="RubyInstanceVariableToStringInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyLiteralArrayInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyLocalVariableNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_maxLength" value="99" />
@@ -38,11 +42,13 @@
       <option name="m_maxLength" value="99" />
     </inspection_tool>
     <inspection_tool class="RubyStringKeysInHashInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RubyTooManyInstanceVariablesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyTooManyMethodsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
       <option name="processCode" value="true" />
       <option name="processLiterals" value="true" />
       <option name="processComments" value="true" />
     </inspection_tool>
+    <inspection_tool class="YARDTagsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>

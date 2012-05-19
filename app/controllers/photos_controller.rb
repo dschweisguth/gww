@@ -19,7 +19,7 @@ class PhotosController < ApplicationController
   def map_photos
     photos = Photo.mapped(bounds, max_map_photos + 1)
     partial = photos.length == max_map_photos + 1
-    if (partial)
+    if partial
       photos.pop
     end
     first_photo = Photo.oldest
@@ -32,7 +32,6 @@ class PhotosController < ApplicationController
 
   caches_page :map_popup
   def map_popup
-    #noinspection RailsParamDefResolve
     @photo = Photo.includes(:person, { :guesses => :person }, :revelation).find params[:id]
     render :partial => 'photos/map/popup'
   end

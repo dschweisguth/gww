@@ -85,7 +85,6 @@ describe Comment do
 
       def photo_is_revealed_and_revelation_matches(comment)
         revelations = Revelation.find_all_by_photo_id comment.photo
-        #noinspection RubyResolve
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
@@ -136,6 +135,7 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
+        #noinspection RubyArgCount
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'username_from_request'
@@ -147,6 +147,7 @@ describe Comment do
         set_time
         stub_person_request_failure
         Comment.add_selected_answer comment.id, ''
+        #noinspection RubyArgCount
         guess = Guess.find_by_photo_id comment.photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'commenter_username'
@@ -237,7 +238,6 @@ describe Comment do
 
       def photo_is_guessed(comment, guesser)
         guesses = Guess.find_all_by_photo_id comment.photo
-        #noinspection RubyResolve
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == guesser

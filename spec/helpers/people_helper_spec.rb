@@ -165,9 +165,9 @@ describe PeopleHelper do
 
   describe '#image_for_star' do
     expected = {
-      :bronze => '/images/star-bronze.gif',
-      :silver => '/images/star-silver.gif',
-      :gold => '/images/star-gold.gif'
+      bronze: '/images/star-bronze.gif',
+      silver: '/images/star-silver.gif',
+      gold: '/images/star-gold.gif'
     }
     expected.each_pair do |star, uri|
       it "returns the image URI #{uri} given the star :#{star}" do

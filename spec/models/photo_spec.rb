@@ -1260,9 +1260,7 @@ describe Photo do
       Photo.infer_geocodes
 
       answer.photo.reload
-      #noinspection RubyArgCount
       answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      #noinspection RubyArgCount
       answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
 
     end
@@ -1275,9 +1273,7 @@ describe Photo do
       Photo.infer_geocodes
 
       answer.photo.reload
-      #noinspection RubyArgCount
       answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      #noinspection RubyArgCount
       answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
 
     end
@@ -1516,7 +1512,6 @@ describe Photo do
 
       def is_revealed(photo, comment_text)
         revelations = Revelation.find_all_by_photo_id photo
-        #noinspection RubyResolve
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
@@ -1563,6 +1558,7 @@ describe Photo do
         set_time
         stub_person_request
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
+        #noinspection RubyArgCount
         guess = Guess.find_by_photo_id photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'username_from_request'
@@ -1575,6 +1571,7 @@ describe Photo do
         set_time
         stub_person_request_failure
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
+        #noinspection RubyArgCount
         guess = Guess.find_by_photo_id photo, :include => :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'commenter_username'
@@ -1618,7 +1615,6 @@ describe Photo do
 
       def is_guessed(photo, guesser, comment_text)
         guesses = Guess.find_all_by_photo_id photo
-        #noinspection RubyResolve
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == guesser
