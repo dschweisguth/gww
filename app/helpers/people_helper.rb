@@ -11,7 +11,7 @@ module PeopleHelper
   end
 
   def infinity_or(x)
-    x.infinite? ? '&#8734;' : to_4_places(x)
+    x == Float::MAX ? '&#8734;' : to_4_places(x)
   end
 
   def thumbnail_with_alt(photo)

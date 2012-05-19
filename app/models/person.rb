@@ -1,7 +1,6 @@
 class Person < ActiveRecord::Base
   include UpdatableOnlyIfNecessary
 
-  INFINITY = 1.0 / 0
   MIN_GUESSES_FOR_FAVORITE = 10
   MIN_BIAS_FOR_FAVORITE = 2.5
 
@@ -212,10 +211,10 @@ class Person < ActiveRecord::Base
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:posts_per_day] = posts_per_days[person.id] || 0
       person[:posts_per_guess] = person[:post_count].to_f / person[:guess_count]
-      person[:guess_speed] = guess_speeds[person.id] || INFINITY
-      person[:be_guessed_speed] = be_guessed_speeds[person.id] || INFINITY
-      person.comments_to_guess ||= INFINITY
-      person.comments_to_be_guessed ||= INFINITY
+      person[:guess_speed] = guess_speeds[person.id] || Float::MAX
+      person[:be_guessed_speed] = be_guessed_speeds[person.id] || Float::MAX
+      person.comments_to_guess ||= Float::MAX
+      person.comments_to_be_guessed ||= Float::MAX
       person[:views_per_post] = views_per_post[person.id] || 0.0
       person[:faves_per_post] = faves_per_post[person.id] || 0.0
     end

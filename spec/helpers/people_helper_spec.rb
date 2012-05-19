@@ -35,7 +35,7 @@ describe PeopleHelper do
     end
 
     it 'returns HTML for infinity' do
-      helper.infinity_or(Person::INFINITY).should == '&#8734;'
+      helper.infinity_or(Float::MAX).should == '&#8734;'
     end
     
   end
