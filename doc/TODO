@@ -10,7 +10,6 @@ The username of a commenter on a photo which is guessed or revealed and then
 
 Debt
 
-Update ruby and see whether YAML defaults bug is still present
 Dump schema.rb when migrating, rolling back etc.
 Check and fix coverage
 Extract methods from update_all_from_flickr
