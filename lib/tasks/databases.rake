@@ -1,3 +1,18 @@
+# This application's database schema can only be correctly represented in SQL,
+# not in Ruby. This file adjusts existing Rake tasks to support this.
+#
+# Do not use test:prepare or db:test:prepare. They do not do the right thing
+# for this application, do not seem to fill a need and have not been adjusted
+# to meet this application's needs.
+#
+# Note that config/application.rb does not set ActiveRecord's schema format to
+# :sql. That's because
+# - none of the rake tasks actually used by GWW to manage databases use that
+#   setting, and
+# - RubyMine gets the model structure from the Ruby schema, so it is still
+#   useful to keep the Ruby schema up to date. Leaving the schema format set
+#   to :ruby results in the Ruby schema being generated when a migration runs
+#   or is rolled back.
 namespace :db do
 
   namespace :structure do
@@ -25,7 +40,7 @@ end
 
 # By default rspec recreates the test database from the development database.
 # That's dumb, because a development database doesn't necessarily exist on the
-# machine where we want to run tests (on the continuous integration machine,
-# for example), and if it did its schema might not be fit to run tests on (if
-# we were in the middle of developing a migration, for example). Prevent that.
+# machine where we want to run tests (in continuous integration, for example),
+# and if it did its schema might not be fit to run tests on (when developing a
+# migration, for example). Prevent that.
 Rake::Task[:spec].clear_prerequisites

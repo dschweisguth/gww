@@ -8,9 +8,8 @@ enum column type. Therefore,
 
 - The GWW schema and its migrations will probably not work with databases other
   than mysql without some work.
-- config.active_record.schema_format = :sql. When manipulating the schema with
-  rake, use the tasks which use SQL, not those which use Active Record's Ruby
-  schema format.
+- GWW needs slightly different database-related Rake tasks than those which
+  come with ActiveRecord. See doc/INSTALL and lib/tasks/databases.rake.
 
 Note that some of the indexes which support the GWW schema's foreign keys are
 essential for performance, although non-foreign key indexes would serve that
