@@ -92,35 +92,24 @@ Configure
 	    > cp config/flickr_credentials{_template,}.yml
 	    Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
 
-Create database user and databases
-----------------------------------
+Create database users and databases
+-----------------------------------
 
-Create users
+gww_dev will control the development and test environments and gww_production
+will control the production environment. Separating the two prevents gww_dev
+from damaging the production database.
+
+Create dev user
     mysql> grant usage on gww_dev.* to gww_dev@localhost identified by 'gww_dev';
-    mysql> grant usage on gww_production.* to gww_production@localhost identified by 'gww_production';
-    gww_dev will control the development and test environments and
-    gww_production will control the production environment. Separating the two
-    prevents gww_dev from damaging the production database.
 Create dev database
     mysql> grant all privileges on gww_dev.* to gww_dev@localhost;
     > bundle exec rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
-    > mkdir sfgis
-    > cd sfgis
-    > wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip
-    > mkdir stclines stintersections
-    > cd stclines
-    > unzip ../stclines.zip
-    > cd ../stintersections
-    > unzip ../stintersections.zip
-    > cd ..
-    > script/load_sfgis . gww_dev gww_dev gww_dev
 Create test database
     mysql> grant all privileges on gww_test.* to gww_dev@localhost;
-    > bundle exec rake RAILS_ENV=test db:create
-    > bundle exec rake db:test:clone_structure # Note that RAILS_ENV is default, not test
+    > bundle exec rake RAILS_ENV=test db:setup
 Create production database
-    mysql> grant all privileges on gww_production.* to gww_production@localhost;
+    mysql> grant all privileges on gww_production.* to gww_production@localhost identified by 'gww_production';
     Allow gww_dev to browse and mysqldump the production database:
     mysql> grant select, lock tables on gww_production.* to gww_dev@localhost;
     > bundle exec rake RAILS_ENV=production db:create
@@ -165,6 +154,25 @@ Linux
 
 Update GWW
 ----------
+
 Add something like the following to your crontab on your production server:
 30  17 *	*	*	/home/dave/public_html/gww/script/log_in_and_run -e production CronJob.update_from_flickr
 0 21,0,3	*	*	*	/home/dave/public_html/gww/script/log_in_and_run -e production CronJob.calculate_statistics_and_maps
+
+Update San Francisco GIS data
+-----------------------------
+
+SFGIS data from 2011 is in the current production database, so if you're restoring from a
+production backup you have it already. If you want to update to a newer version, do the
+following:
+
+> mkdir sfgis
+> cd sfgis
+> wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip
+> mkdir stclines stintersections
+> cd stclines
+> unzip ../stclines.zip
+> cd ../stintersections
+> unzip ../stintersections.zip
+> cd ..
+> script/load_sfgis . gww_dev gww_dev gww_dev
