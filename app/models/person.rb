@@ -73,7 +73,15 @@ class Person < ActiveRecord::Base
     people_by_score
   end
 
-  CLUBS = [ 222, 500, 3300 ]
+  CLUBS = {
+    21 => "http://www.flickr.com/photos/inkvision/2976263709/",
+    65 => "http://www.flickr.com/photos/deadslow/232833608/",
+    222 => "http://www.flickr.com/photos/potatopotato/90592664/",
+    365 => "http://www.flickr.com/photos/glasser/5065771787/",
+    500 => "http://www.flickr.com/photos/spine/2960364433/",
+    540 => "http://www.flickr.com/photos/tomhilton/2780581249/",
+    3300 => "http://www.flickr.com/photos/spine/3132055535/"
+  }
 
   # TODO make this work for boundaries above 5000
   MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
@@ -123,13 +131,13 @@ class Person < ActiveRecord::Base
         else
           change = ''
         end
-        club = CLUBS.find { |club| previous_score < club && club <= score }
+        club = CLUBS.keys.find { |club| previous_score < club && club <= score }
         milestone = club ? nil : MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
         entered_top_ten = previous_place > 10 && place <= 10
         if (club || milestone || entered_top_ten) && ! change.empty?
           change << '.'
         end
-        append(change, club) { "Welcome to the #{club} club!" }
+        append(change, club) { "Welcome to <a href=\"#{CLUBS[club]}\">the #{club} Club</a>!" }
         append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
         append(change, entered_top_ten) { 'Welcome to the top ten!' }
       end

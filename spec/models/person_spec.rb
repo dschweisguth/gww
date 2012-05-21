@@ -239,12 +239,12 @@ describe Person do
         'jumped from 3rd to 1st place, passing 3_username and tying 2_username')
     end
 
-    [ 222, 500, 3300 ].each do |club|
+    Person::CLUBS.each do |club, url|
       it "welcomes the guesser to the #{club} club" do
         adds_change(
           { club => [ @person ] },
           { club - 1 => [ @person ] },
-          "Welcome to the #{club} club!")
+          "Welcome to <a href=\"#{url}\">the #{club} Club</a>!")
       end
     end
 
@@ -266,7 +266,7 @@ describe Person do
       adds_change(
         { 222 => [ @person ] },
         { 199 => [ @person ] },
-        'Welcome to the 222 club!')
+        'Welcome to <a href="http://www.flickr.com/photos/potatopotato/90592664/">the 222 Club</a>!')
     end
 
     it "welcomes the guesser to the top ten" do
@@ -288,7 +288,7 @@ describe Person do
       adds_change(
         others_by_score.merge({ 100 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place. Congratulations on reaching 100 points! Welcome to the top ten!')
+        'jumped from 11th to 1st place. Welcome to <a href="http://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! Welcome to the top ten!')
     end
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)
