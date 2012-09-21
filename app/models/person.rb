@@ -218,7 +218,7 @@ class Person < ActiveRecord::Base
       person[:score_plus_posts] = person[:post_count] + person[:guess_count] 
       person[:guesses_per_day] = guesses_per_days[person.id] || 0
       person[:posts_per_day] = posts_per_days[person.id] || 0
-      person[:posts_per_guess] = person[:post_count].to_f / person[:guess_count]
+      person[:posts_per_guess] = person[:guess_count] == 0 ? Float::MAX : person[:post_count].to_f / person[:guess_count]
       person[:guess_speed] = guess_speeds[person.id] || Float::MAX
       person[:be_guessed_speed] = be_guessed_speeds[person.id] || Float::MAX
       person.comments_to_guess ||= Float::MAX
