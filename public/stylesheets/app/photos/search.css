@@ -1,0 +1,56 @@
+select {
+  vertical-align: top;
+}
+
+body > div > div {
+  display: inline-block;
+  height: 240px;
+  line-height: 240px; /* the height in which the child's vertical-align: middle applies */
+  margin: 0 8px 8px 0;
+}
+
+body > div > div > div {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal; /* reset line-height inherited from the parent */
+}
+
+body > div > div > div > div {
+  height: 40px;
+  position: relative;
+  bottom: 48px;
+  margin-bottom: -48px;
+  padding: 8px 0 0 5px;
+  z-index: 2;
+}
+
+.bg {
+  bottom: 51px;
+  margin-bottom: -51px;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 1;
+  visibility: hidden;
+}
+
+body > div > div > div > div > p {
+  margin: 0 0 2px 0;
+  color: white;
+  font-size: 11px;
+  text-shadow: 1px 1px 0 black;
+  opacity: 1.0;
+}
+
+body > div > div > div > div > p:first-child {
+  visibility: hidden;
+}
+
+body > div > div > div > div a {
+  font-weight: normal;
+  text-decoration: none;
+  color: white;
+}
+
+body > div > div > div > div a:hover {
+  background-color: blue;
+}

@@ -24,7 +24,8 @@ GWW::Application.routes.draw do
     get :map, :map_json, :unfound, :unfound_data, :on => :collection
   end
   # TODO Dave test
-  get 'photos/search/*terms/page/:page' => 'photos#search'
+  get 'photos/search/*terms' => 'photos#search', :as => :search_photos
+  get 'photos/search_data/*terms/page/:page' => 'photos#search_data'
 
   resources :guesses, :only => [] do
     get :longest_and_shortest, :on => :collection

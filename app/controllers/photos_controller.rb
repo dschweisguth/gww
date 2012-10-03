@@ -49,9 +49,25 @@ class PhotosController < ApplicationController
   end
 
   # TODO Dave test
+  # TODO Dave switch on Accept
   def search
-    @photos = Photo.search params[:terms], params[:page]
+    @terms = terms
+    @json = { 'terms' => @terms }.to_json
   end
+
+  def search_data
+    @photos = Photo.search terms, params[:page]
+    render :layout => false
+  end
+
+  def terms
+    terms = Hash[*params[:terms].split('/')]
+    if terms['game_status']
+      terms['game_status'] = terms['game_status'].split(',')
+    end
+    terms
+  end
+  private :terms
 
   caches_page :show
   def show

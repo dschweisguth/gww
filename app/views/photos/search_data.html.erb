@@ -1,0 +1,15 @@
+<% @photos.each_with_index do |photo, i| %>
+  <%# The outermost div is there so that the ID is at the top edge of the row so that we can scroll to the top edge %>
+  <%# of the row instead of to the top edge of the image, which isn't always at the top edge of the row. %>
+  <%# If we switch to images of uniform height this div can go away. %>
+  <div<% if i == 0 %> id="<%= params[:page] %>"<% end %>>
+    <div>
+      <a href="<%= url_for_flickr_photo_in_pool(photo) %>" target="_blank"><%= titled_image_tag url_for_flickr_image(photo, 'm'), "" %></a>
+      <div class="bg"></div>
+      <div>
+        <p>Posted <%= local_date photo.dateadded %></p>
+        <p>by <%= link_to_person photo.person %></p>
+      </div>
+    </div>
+  </div>
+<% end %>

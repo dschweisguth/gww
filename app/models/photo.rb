@@ -214,35 +214,36 @@ class Photo < ActiveRecord::Base
   end
 
   # TODO Dave test
-  def self.search(path_info, page)
-    terms = terms path_info
-    if terms.keys.sort != [ 'commenter', 'comment' ].sort
-      raise "Specify exactly one each of commenter and comment"
-    end
-    Photo.paginate \
-      :include => :comments,
-      :conditions => [ "comments.username like ? and comments.comment_text like ?", "%#{terms['commenter'][0]}%", "%#{terms['comment'][0]}%" ],
-      :page => page
-  end
-
-  def self.terms(path_info)
-    path_parts = path_info.split('/')
-    terms = {}
-    while ! path_parts.empty?
-      key = path_parts.shift
-      if path_parts.empty?
-        raise "Path info #{path_info} had an odd number of parts"
+  def self.search(terms, page)
+    # TODO Dave follow up
+    #if terms.keys != [ 'game_status' ] && terms.keys.sort != [ 'commenter', 'comment' ].sort
+    #  raise "Specify either game_status or exactly one each of commenter and comment"
+    #end
+    joins, conditions =
+      if terms.has_key? 'commenter'
+        [ "", [ "comments.username like ? and comments.comment_text like ?", "%#{terms['commenter']}%" << "%#{terms['comment']}%" ] ]
+      else
+        sql = ""
+        list = [ sql ]
+        if terms.has_key? 'game_status'
+          sql << "game_status in (?)"
+          list << terms['game_status']
+        end
+        if terms.has_key? 'posted_by'
+          unless sql.blank?
+            sql << " and "
+          end
+          sql << "p.username = ?"
+          list << terms['posted_by']
+        end
+        [ "join people p on photos.person_id = p.id", list ]
       end
-      term = terms[key]
-      if ! term
-        term = []
-        terms[key] = term
-      end
-      term << path_parts.shift
+    args = { :conditions => conditions, :order => "lastupdate desc", :per_page => 30, :page => page, :include => :person }
+    unless joins.blank?
+      args[:joins] = joins
     end
-    terms
+    Photo.paginate args
   end
-  private_class_method :terms
 
   # Used by WheresiesController
 
