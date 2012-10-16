@@ -104,7 +104,7 @@ Create dev user
 Create dev database
     mysql> grant all privileges on gww_dev.* to gww_dev@localhost;
     > bundle exec rake db:create
-    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_dev
+    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww_dev -p gww_dev
 Create test database
     mysql> grant all privileges on gww_test.* to gww_dev@localhost;
     > bundle exec rake RAILS_ENV=test db:setup
@@ -113,7 +113,7 @@ Create production database
     Allow gww_dev to browse and mysqldump the production database:
     mysql> grant select, lock tables on gww_production.* to gww_dev@localhost;
     > bundle exec rake RAILS_ENV=production db:create
-    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww -p gww_production
+    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww_production -p gww_production
 
 Test GWW
 --------
