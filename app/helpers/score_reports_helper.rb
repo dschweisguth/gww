@@ -16,17 +16,11 @@ module ScoreReportsHelper
   end
 
   def image_url_for_star(star)
-    star_images = {
-      bronze: '/images/star-padded-bronze.gif',
-      silver: '/images/star-padded-silver.gif',
-      gold: '/images/star-padded-gold-animated.gif'
-    }
-    path_to_url star_images[star]
+    {
+      bronze: 'http://farm9.static.flickr.com/8332/8143796058_095478b380_o.gif',
+      silver: 'http://farm9.static.flickr.com/8470/8143764201_c938bf6bea_o.gif',
+      gold:   'http://farm9.static.flickr.com/8050/8143796020_85a314ced3_o.gif'
+    }[star]
   end
-
-  def path_to_url(path)
-    request.protocol + request.host_with_port + path
-  end
-  private :path_to_url
 
 end
