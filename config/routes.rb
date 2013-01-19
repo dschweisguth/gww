@@ -1,5 +1,5 @@
 GWW::Application.routes.draw do
-  get 'autocomplete_person_username' => 'root#autocomplete_person_username', :as => :root_autocomplete_person_username
+  get 'autocomplete_usernames' => 'people#autocomplete_usernames', :as => :autocomplete_usernames
   get '/' => 'root#index', :as => :root
   get 'about-auto-mapping' => 'root#about_auto_mapping', :as => 'root_about_auto_mapping'
   %w(about bookmarklet).each do |action|
@@ -46,7 +46,6 @@ GWW::Application.routes.draw do
   get 'admin/bookmarklet' => 'admin/root#bookmarklet', :as => :admin_root_bookmarklet
 
   get 'admin/photos/edit_in_gww' => 'admin/photos#edit_in_gww', :as => :edit_in_gww
-  get 'admin/photos/autocomplete_person_username' => 'admin/photos#autocomplete_person_username', :as => :admin_photos_autocomplete_person_username
   %w(change_game_status add_selected_answer add_entered_answer remove_revelation remove_guess).each do |action|
     post "admin/photos/:id/#{action}" => "admin/photos##{action}", :as => action
   end

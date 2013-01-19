@@ -1,12 +1,13 @@
+<%# TODO Dave put in layout %>
 <%= head_css 'jquery-ui' %>
-<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'jquery.ba-hashchange.min.js', 'jquery.viewport.mini.js', 'app/shared/GWW', 'app/photos/search' %>
+<%= head_javascript 'jquery-ui.min', 'jquery.ba-hashchange.min.js', 'jquery.viewport.mini.js', 'app/shared/GWW', 'app/shared/autocomplete', 'app/photos/search' %>
 <% content_for :head do %>
   <%= stylesheet_link_tag 'app/photos/search' %>
   <%= render 'shared/config' %>
 <% end %>
 <p>
   <%= form_tag(search_photos_path, :method => :get, :class => 'inline') do %>
-    Posted by: <%= autocomplete_field_tag 'posted_by', @terms['posted_by'], root_autocomplete_person_username_path %>
+    Posted by: <%= text_field_tag 'username' %>
     Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %>
     <%= submit_tag 'Find' %>
   <% end %>

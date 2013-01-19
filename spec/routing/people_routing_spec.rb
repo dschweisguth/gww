@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe PeopleController do
 
+  describe 'autocomplete_usernames' do
+    it { should have_named_route :autocomplete_usernames, "/autocomplete_usernames" }
+    it { should route(:get, '/autocomplete_usernames').to :controller => 'people', :action => 'autocomplete_usernames' }
+  end
+
   describe 'find' do
     it { should have_named_route :find_person, '/people/find' }
     it { should route(:get, '/people/find').to :action => 'find' }

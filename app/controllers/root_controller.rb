@@ -1,5 +1,4 @@
 class RootController < ApplicationController
-  autocomplete :person, :username
 
   def index
     @latest = FlickrUpdate.latest

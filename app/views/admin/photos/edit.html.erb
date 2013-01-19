@@ -1,5 +1,5 @@
 <%= head_css 'jquery-ui' %>
-<%= head_javascript 'jquery-ui.min', 'autocomplete-rails', 'app/shared/GWW', 'app/admin/photos/edit' %>
+<%= head_javascript 'jquery-ui.min', 'app/shared/GWW', 'app/shared/autocomplete', 'app/admin/photos/edit' %>
 <% content_for :head do %>
   <%= javascript_tag '$(GWW.admin.photos.edit.setUp);' %>
   <% if @json %>
@@ -68,7 +68,7 @@
   <%= form_tag(add_entered_answer_path(@photo), :id => 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here
-        <%= autocomplete_field_tag 'username', '', admin_photos_autocomplete_person_username_path %>
+        <%= text_field_tag 'username' %>
         and choose the comment above or enter one below.<br/>
       <%= submit_tag 'Reveal or guess this photo with the following text:' %> <%= text_field_tag 'answer_text' %> (Leave the username above blank to reveal.)<br/>
       To delete a guess or revelation created with either of these options, change the photo's status to unfound or unconfirmed, or accept the poster's revelation.

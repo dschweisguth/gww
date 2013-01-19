@@ -1,8 +1,6 @@
 class Admin::PhotosController < ApplicationController
   include SinglePhotoMapSupport
 
-  autocomplete :person, :username
-
   caches_page :unfound
   def unfound
     @photos = Photo.unfound_or_unconfirmed

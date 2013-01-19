@@ -18,7 +18,7 @@ GWW.photos.search = function () {
       if (gameStatus.val() !== "") {
         path += "/game_status/" + gameStatus.val();
       }
-      var postedBy = $(this).find('[name="posted_by"]');
+      var postedBy = $(this).find('[name="username"]');
       if (postedBy.val() !== "") {
         path += "/posted_by/" + postedBy.val();
       }

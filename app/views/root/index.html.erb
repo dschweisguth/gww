@@ -1,5 +1,5 @@
 <%= head_css 'jquery-ui' %>
-<%= head_javascript 'jquery-ui.min', 'autocomplete-rails' %>
+<%= head_javascript 'jquery-ui.min', 'app/shared/GWW', 'app/shared/autocomplete' %>
 <% content_for :title do %>Home<% end %>
 <h1>Guess Where Watcher</h1>
 
@@ -23,7 +23,8 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'Score reports', score_reports_path %></li>
 <li>Find a person, by username, Flickr ID or GWW ID:
   <%= form_tag(find_person_path, :method => :get, :class => 'inline') do %>
-  <%= autocomplete_field_tag 'username', '', root_autocomplete_person_username_path %> <%= submit_tag 'Find' %>
+    <%= text_field_tag 'username' %>
+    <%= submit_tag 'Find' %>
   <% end %>
   <% if flash[:find_person_error] %><br/>
     <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.

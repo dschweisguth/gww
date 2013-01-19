@@ -28,6 +28,14 @@ img {
   padding-left: 10px;
 }
 
+/* TODO Dave extract */
+.ui-autocomplete {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 999;
+}
+
 /* Tables */
 
 table {

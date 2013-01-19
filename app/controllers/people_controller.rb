@@ -1,6 +1,10 @@
 class PeopleController < ApplicationController
   include MultiPhotoMapSupport
 
+  def autocomplete_usernames
+    render json: Person.select(:username).where("username like ?", "#{params[:term]}%").order("lower(username)"), only: :username
+  end
+
   def find
     username = params[:username]
     person = Person.find_by_multiple_fields username

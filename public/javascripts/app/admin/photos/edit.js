@@ -2,14 +2,16 @@ GWW.admin = {};
 GWW.admin.photos = {};
 GWW.admin.photos.edit = (function () {
 
-  var that = {
-    setUp: function () {
-      setUpCopyUsername();
-      preventSubmitPartialUsernameForm();
-    }
+  return {
+    setUp: setUp
   };
 
-  var setUpCopyUsername = function () {
+  function setUp() {
+    setUpCopyUsername();
+    preventSubmitPartialUsernameForm();
+  }
+
+  function setUpCopyUsername() {
     var forms = $('#comments form');
     for (var i = 0; i < forms.length; i++) {
       var form = forms[i];
@@ -17,15 +19,15 @@ GWW.admin.photos.edit = (function () {
         $(form['commit']).click(copyUsernameFor(form));
       }
     }
-  };
+  }
 
-  var copyUsernameFor = function (form) {
+  function copyUsernameFor(form) {
     return function () {
       form['username'].value = $('#username')[0].value;
     }
-  };
+  }
 
-  var preventSubmitPartialUsernameForm = function () {
+  function preventSubmitPartialUsernameForm() {
     $('#username_form').submit(function (event) {
       if (this['answer_text'].value === '') {
         event.stopImmediatePropagation(); // Not necessary for functionality. Permits testing.
@@ -34,7 +36,6 @@ GWW.admin.photos.edit = (function () {
         return true;
       }
     });
-  };
+  }
 
-  return that;
 })();
