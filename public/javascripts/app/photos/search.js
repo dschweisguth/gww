@@ -15,7 +15,7 @@ GWW.photos.search = function () {
       event.preventDefault();
       var path = '/photos/search';
       var gameStatus = $(this).find('[name="game_status[]"]'); // TODO Dave hyphens
-      if (gameStatus.val() !== "") {
+      if (gameStatus.val() !== "") { // TODO Dave fix null game status
         path += "/game_status/" + gameStatus.val();
       }
       var postedBy = $(this).find('[name="username"]');

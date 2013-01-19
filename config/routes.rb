@@ -1,5 +1,4 @@
 GWW::Application.routes.draw do
-  get 'autocomplete_usernames' => 'people#autocomplete_usernames', :as => :autocomplete_usernames
   get '/' => 'root#index', :as => :root
   get 'about-auto-mapping' => 'root#about_auto_mapping', :as => 'root_about_auto_mapping'
   %w(about bookmarklet).each do |action|
@@ -8,6 +7,8 @@ GWW::Application.routes.draw do
 
   resources :score_reports, :only => [ :index, :show ]
 
+  get 'autocomplete_usernames/:term' => 'people#autocomplete_usernames'
+  get 'autocomplete_usernames' => 'people#autocomplete_usernames', :as => :autocomplete_usernames
   get 'people/find' => 'people#find', :as => :find_person
   get 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people
   %w(guesses posts map map_json).each do |action|

@@ -10,10 +10,8 @@ GWW.shared.autocomplete = (function () {
     $("#username").autocomplete({
       source: function (request, response) {
         $.getJSON(
-          '/autocomplete_usernames',
-          {
-            term: request.term
-          },
+          '/autocomplete_usernames/' + escape(request.term),
+          {},
           function (data) {
             response($.map(data, function (item) {
               return {
