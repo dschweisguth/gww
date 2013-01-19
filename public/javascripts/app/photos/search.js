@@ -71,7 +71,7 @@ GWW.photos.search = function () {
       if (! willScrollLater) {
         willScrollLater = true;
         setTimeout(function () {
-          if ($(window).scrollTop() >= $(document).height() - $(window).height() - 100) {
+          if ($(window).scrollTop() >= $(document).height() - $(window).height() - 488) { // 488 = the height of two rows, so we never see a partial row
             if (! allPagesAdded) {
               addPage(afterAddingPages, null);
             }

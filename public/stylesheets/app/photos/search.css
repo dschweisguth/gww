@@ -54,3 +54,7 @@ body > div > div > div > div a {
 body > div > div > div > div a:hover {
   background-color: blue;
 }
+
+img {
+  height: 240px;
+}
