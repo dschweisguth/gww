@@ -8,7 +8,7 @@ GWW::Application.routes.draw do
   resources :score_reports, :only => [ :index, :show ]
 
   get 'autocomplete_usernames/:term' => 'people#autocomplete_usernames'
-  get 'autocomplete_usernames' => 'people#autocomplete_usernames', :as => :autocomplete_usernames
+  get 'autocomplete_usernames' => 'people#autocomplete_usernames', :as => :autocomplete_usernames # so it works without a term
   get 'people/find' => 'people#find', :as => :find_person
   get 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people
   %w(guesses posts map map_json).each do |action|
@@ -19,14 +19,15 @@ GWW::Application.routes.draw do
     get :nemeses, :top_guessers, :on => :collection
   end
 
+  get 'photos/search/*terms' => 'photos#search'
+  get 'photos/search' => 'photos#search', :as => :search_photos # so it works without a term
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', :as => :photos
   resources :photos, :only => [ :show ] do
     get :map_popup, :on => :member
     get :map, :map_json, :unfound, :unfound_data, :on => :collection
   end
-  # TODO Dave test
-  get 'photos/search/*terms' => 'photos#search', :as => :search_photos
   get 'photos/search_data/*terms/page/:page' => 'photos#search_data'
+  get 'photos/search_data/page/:page' => 'photos#search_data' # so it works without a term
 
   resources :guesses, :only => [] do
     get :longest_and_shortest, :on => :collection

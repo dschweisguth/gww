@@ -25,4 +25,15 @@ describe PhotosController do
     it { should route(:get, '/photos/666/map_popup').to :action => 'map_popup', :id => '666' }
   end
 
+  describe 'search' do
+    it { should have_named_route :search_photos, '/photos/search' }
+    it { should route(:get, '/photos/search').to action: 'search' }
+    it { should route(:get, '/photos/search/foo/bar').to(action: 'search', terms: 'foo/bar' ) }
+  end
+
+  describe 'search_data' do
+    it { should route(:get, '/photos/search_data/page/1').to action: 'search_data', page: '1' }
+    it { should route(:get, '/photos/search_data/foo/bar/page/1').to action: 'search_data', terms: 'foo/bar', page: '1' }
+  end
+
 end
