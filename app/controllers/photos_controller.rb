@@ -62,7 +62,7 @@ class PhotosController < ApplicationController
 
   def terms
     params[:terms] ||= [] # TODO Dave test
-    terms = Hash[*params[:terms].split('/')]
+    terms = Hash[*params[:terms].split('/').each_with_index { |term, i| if i.even? then term.gsub! '-', '_' end }]
     if terms['game_status']
       terms['game_status'] = terms['game_status'].split(',')
     end

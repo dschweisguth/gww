@@ -14,13 +14,13 @@ GWW.photos.search = function () {
     $('form').submit(function (event) {
       event.preventDefault();
       var path = '/photos/search';
-      var gameStatus = $(this).find('[name="game_status[]"]'); // TODO Dave hyphens
+      var gameStatus = $(this).find('[name="game_status[]"]');
       if (gameStatus.val() !== null && gameStatus.val() !== "") {
-        path += "/game_status/" + gameStatus.val();
+        path += "/game-status/" + gameStatus.val();
       }
       var postedBy = $(this).find('[name="username"]');
       if (postedBy.val() !== "") {
-        path += "/posted_by/" + postedBy.val();
+        path += "/posted-by/" + postedBy.val();
       }
       location = path;
     });
