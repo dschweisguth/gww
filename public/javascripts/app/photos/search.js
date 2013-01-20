@@ -26,6 +26,10 @@ GWW.photos.search = function () {
       if (sortedBy.val() !== null && sortedBy.val() !== "") {
         path += "/sorted-by/" + sortedBy.val();
       }
+      var direction = $(this).find('[name="direction"]');
+      if (direction.val() !== null && direction.val() !== "") {
+        path += "/direction/" + direction.val();
+      }
       location = path;
     });
     $('#clear').click(function (event) {
@@ -95,7 +99,7 @@ GWW.photos.search = function () {
 
   function addPage(afterPageAdded, afterAllPagesAdded) {
     $.ajax({
-      url: '/photos/search_data' + terms() + '/sorted-by/' + GWW.config.sortedBy + '/page/' + nextPageToAdd,
+      url: '/photos/search_data' + terms() + '/sorted-by/' + GWW.config.sortedBy + '/direction/' + GWW.config.direction + '/page/' + nextPageToAdd,
       success: function (data) {
         allPagesAdded = ! /\S/.test(data)
         if (allPagesAdded) {

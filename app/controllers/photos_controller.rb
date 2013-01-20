@@ -51,8 +51,8 @@ class PhotosController < ApplicationController
   # TODO Dave test
   # TODO Dave switch on Accept
   def search
-    @terms, @sorted_by = terms
-    @json = { 'terms' => @terms, 'sortedBy' => @sorted_by }.to_json
+    @terms, @sorted_by, @direction = terms
+    @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
   end
 
   def search_data
@@ -67,7 +67,8 @@ class PhotosController < ApplicationController
       terms['game_status'] = terms['game_status'].split(',')
     end
     sorted_by = terms.delete('sorted_by') || 'last-updated'
-    [ terms, sorted_by ]
+    direction = terms.delete('direction') || '-'
+    [ terms, sorted_by, direction ]
   end
   private :terms
 
