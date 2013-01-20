@@ -214,7 +214,7 @@ class Photo < ActiveRecord::Base
   end
 
   # TODO Dave test
-  def self.search(terms, page)
+  def self.search(terms, sorted_by, page)
     # TODO Dave follow up
     #if terms.keys != [ 'game_status' ] && terms.keys.sort != [ 'commenter', 'comment' ].sort
     #  raise "Specify either game_status or exactly one each of commenter and comment"
@@ -238,7 +238,13 @@ class Photo < ActiveRecord::Base
         end
         [ "join people p on photos.person_id = p.id", list ]
       end
-    args = { :conditions => conditions, :order => "lastupdate desc", :per_page => 30, :page => page, :include => :person }
+    args = {
+      :conditions => conditions,
+      :order => (sorted_by == 'date-added' ? 'dateadded asc' : 'lastupdate desc'),
+      :per_page => 30,
+      :page => page,
+      :include => :person
+    }
     unless joins.blank?
       args[:joins] = joins
     end

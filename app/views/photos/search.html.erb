@@ -11,6 +11,7 @@
   <%= form_tag(search_photos_path, :method => :get, :class => 'inline') do %>
     Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
     Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %>
+    Sorted by: <%= select_tag :sorted_by, options_for_select([ [ 'Last updated', 'last-updated' ], [ 'Date added', 'date-added' ] ], :selected => @sorted_by) %>
     <%= submit_tag 'Search' %>
     <%= submit_tag 'Clear form', id: 'clear' %>
   <% end %>

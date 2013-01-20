@@ -51,12 +51,12 @@ class PhotosController < ApplicationController
   # TODO Dave test
   # TODO Dave switch on Accept
   def search
-    @terms = terms
-    @json = { 'terms' => @terms }.to_json
+    @terms, @sorted_by = terms
+    @json = { 'terms' => @terms, 'sortedBy' => @sorted_by }.to_json
   end
 
   def search_data
-    @photos = Photo.search terms, params[:page]
+    @photos = Photo.search *terms, params[:page]
     render :layout => false
   end
 
@@ -66,7 +66,8 @@ class PhotosController < ApplicationController
     if terms['game_status']
       terms['game_status'] = terms['game_status'].split(',')
     end
-    terms
+    sorted_by = terms.delete('sorted_by') || 'last-updated'
+    [ terms, sorted_by ]
   end
   private :terms
 
