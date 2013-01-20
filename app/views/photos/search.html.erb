@@ -14,6 +14,7 @@
     <table>
       <tr>
         <td>Sorted by:</td>
+        <%# TODO Dave use a single term for dateadded throughout app %>
         <td><%= select_tag :sorted_by, options_for_select([ [ 'Last updated', 'last-updated' ], [ 'Date added', 'date-added' ] ], :selected => @sorted_by) %></td>
       </tr>
       <tr>

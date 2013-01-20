@@ -23,16 +23,16 @@ select {
 }
 
 #photos > div > div > div {
-  height: 40px;
+  height: 52px;
   position: relative;
-  bottom: 48px;
+  bottom: 60px;
   padding: 8px 5px 0 5px;
   z-index: 1;
 }
 
 #photos > div > div > div.bg {
-  bottom: 51px;
-  margin-bottom: -51px;
+  bottom: 63px;
+  margin-bottom: -63px;
   background-color: black;
   opacity: 0.5;
   visibility: hidden;
