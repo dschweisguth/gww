@@ -24,6 +24,11 @@ GWW.photos.search = function () {
       }
       location = path;
     });
+    $('#clear').click(function (event) {
+      $(this).closest('form').find('input[type="text"], select').val("");
+      event.preventDefault();
+      return false;
+    });
   }
 
   var nextPageToAdd = 1;
