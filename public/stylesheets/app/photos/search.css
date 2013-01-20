@@ -73,3 +73,8 @@ form {
 input, select {
   margin-right: 6px;
 }
+
+form > div {
+  display: inline-block;
+  vertical-align: top;
+}
