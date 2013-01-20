@@ -53,7 +53,10 @@ GWW.photos.search = function () {
 
   function addPagesUpTo(lastPage) {
     addPage(function () {
-      $(window).scrollTop($('#' + (nextPageToAdd - 1)).position().top);
+      // Don't scroll if we're on page 1 so we can still see the form
+      if (nextPageToAdd > 2) {
+        $(window).scrollTop($('#' + (nextPageToAdd - 1)).position().top);
+      }
       if (nextPageToAdd <= lastPage) {
         addPagesUpTo(lastPage);
       } else {
