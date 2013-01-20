@@ -74,7 +74,11 @@ input, select {
   margin-right: 6px;
 }
 
-form > div {
+form > table, form > div {
   display: inline-block;
   vertical-align: top;
+}
+
+table {
+  margin: 0;
 }
