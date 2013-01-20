@@ -26,7 +26,6 @@ select {
   height: 40px;
   position: relative;
   bottom: 48px;
-  margin-bottom: -48px;
   padding: 8px 5px 0 5px;
   z-index: 1;
 }
