@@ -1,18 +1,19 @@
-<%# TODO Dave put in layout %>
 <%= head_css 'jquery-ui' %>
 <%= head_javascript 'jquery-ui.min', 'jquery.ba-hashchange.min.js', 'jquery.viewport.mini.js', 'app/shared/GWW', 'app/shared/autocomplete', 'app/photos/search' %>
 <% content_for :head do %>
   <%= stylesheet_link_tag 'app/photos/search' %>
   <%= render 'shared/config' %>
 <% end %>
-<p>
+
+<%= sandwich do %>
+  <%= title_and_h1 "Photo search" %>
+
   <%= form_tag(search_photos_path, :method => :get, :class => 'inline') do %>
     Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
     Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %>
     <%= submit_tag 'Find' %>
   <% end %>
-  <% if flash[:find_person_error] %><br/><%# TODO Dave something like this %>
-    <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.
-      You could try again, or scan the <%= link_to 'Active members', people_path('score', '+') %> page.</span>
-  <% end %>
-</p>
+
+  <div id="photos"></div>
+
+<% end %>

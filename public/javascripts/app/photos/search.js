@@ -94,7 +94,7 @@ GWW.photos.search = function () {
             afterAllPagesAdded();
           }
         } else {
-          $('body > div').append(data);
+          $('#photos').append(data);
           nextPageToAdd++;
           if (afterPageAdded != null) {
             afterPageAdded();
@@ -125,7 +125,7 @@ GWW.photos.search = function () {
   }
 
   function setUpMetadataVisibility() {
-    $('body > div > div').hover(setMetadataVisibility('visible'), setMetadataVisibility('hidden'));
+    $('#photos > div').hover(setMetadataVisibility('visible'), setMetadataVisibility('hidden'));
   }
 
   function setMetadataVisibility(visibility) {
@@ -136,7 +136,7 @@ GWW.photos.search = function () {
 
   // TODO Dave but we'd rather update the hash only when the first div in the page is at the top of the viewport
   function updateHash() {
-    $('body > div > div:in-viewport[id]:first').each(function (unused, firstDivInPage) {
+    $('#photos > div:in-viewport[id]:first').each(function (unused, firstDivInPage) {
       // The hash and IDs are intentionally different so that the browser doesn't scroll when we update the hash
       location.hash = "#page=" + firstDivInPage.id;
     });
