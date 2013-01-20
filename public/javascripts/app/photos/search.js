@@ -143,7 +143,7 @@ GWW.photos.search = function () {
 
   function setMetadataVisibility(visibility) {
     return function () {
-      $(this).find('.bg, p:first-child').css('visibility', visibility);
+      $(this).find('.bg, p:not(.by)').css('visibility', visibility);
     };
   }
 

@@ -27,7 +27,7 @@ select {
   position: relative;
   bottom: 48px;
   margin-bottom: -48px;
-  padding: 8px 0 0 5px;
+  padding: 8px 5px 0 5px;
   z-index: 2;
 }
 
@@ -40,16 +40,17 @@ select {
   visibility: hidden;
 }
 
-#photos > div > div > div > p {
+#photos > div > div > div p {
   margin: 0 0 2px 0;
   color: white;
   font-size: 11px;
   text-shadow: 1px 1px 0 black;
   opacity: 1.0;
+  visibility: hidden;
 }
 
-#photos > div > div > div > p:first-child {
-  visibility: hidden;
+#photos > div > div > div p.by {
+  visibility: visible;
 }
 
 #photos > div > div > div a {
@@ -60,6 +61,16 @@ select {
 
 #photos > div > div > div a:hover {
   background-color: blue;
+}
+
+#photos > div > div > div div {
+  position: relative;
+}
+
+#photos > div > div > div p.game-status {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 img {
