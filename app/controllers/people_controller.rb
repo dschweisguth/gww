@@ -3,7 +3,7 @@ class PeopleController < ApplicationController
 
   caches_page :autocomplete_usernames
   def autocomplete_usernames
-    render json: Person.select(:username).where("username like ?", "#{params[:term]}%").order("lower(username)"), only: :username
+    render json: Person.select(:username).where("username like ?", "#{params[:term]}%").order("lower(username)")
   end
 
   def find

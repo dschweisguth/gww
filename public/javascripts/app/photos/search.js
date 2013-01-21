@@ -1,3 +1,5 @@
+"use strict"; // TODO Dave move these in to modules
+
 // TODO Dave add pages when scrolling backwards instead of loading all pages right away
 // TODO Dave scrolling fast or editing the hash sometimes results in weird bugs. I've seen
 // - a page loaded twice
@@ -6,21 +8,59 @@ GWW.photos = {};
 GWW.photos.search = function () {
 
   function setUp() {
-    setUpForm();
+    setUpAutocomplete();
+    setUpFormSubmit();
+    setUpClearForm();
     addPages();
   }
 
-  function setUpForm() {
+  function setUpAutocomplete() {
+    $("#username").autocomplete({
+      source: function (request, response) {
+        var url = '/photos/autocomplete_usernames';
+        if (request.term !== "") {
+          url += '/term/' + escape(request.term);
+        }
+        var gameStatus = $('form select[name="game_status[]"]'); // TODO Dave refactor
+        if (gameStatus.val() !== null && gameStatus.val() !== "") {
+          url += "/game-status/" + gameStatus.val();
+        }
+        $.getJSON(
+          url,
+          {},
+          function (data) {
+            response($.map(data, function (item) {
+              return {
+                label: item.label,
+                value: item.username
+              }
+            }));
+          }
+        );
+      },
+      minLength: 0,
+      open: function () {
+        $(this).autocomplete('widget').css('z-index', 100);
+        return false;
+      }
+    });
+  }
+
+  function gameStatuses() {
+
+  }
+
+  function setUpFormSubmit() {
     $('form').submit(function (event) {
       event.preventDefault();
       var path = '/photos/search';
-      var gameStatus = $(this).find('[name="game_status[]"]');
+      var gameStatus = $(this).find('select[name="game_status[]"]');
       if (gameStatus.val() !== null && gameStatus.val() !== "") {
         path += "/game-status/" + gameStatus.val();
       }
       var postedBy = $(this).find('[name="username"]');
       if (postedBy.val() !== "") {
-        path += "/posted-by/" + postedBy.val();
+        path += "/posted-by/" + encodeURIComponent(postedBy.val());
       }
       var sortedBy = $(this).find('[name="sorted_by"]');
       if (sortedBy.val() !== null && sortedBy.val() !== "") {
@@ -30,8 +70,11 @@ GWW.photos.search = function () {
       if (direction.val() !== null && direction.val() !== "") {
         path += "/direction/" + direction.val();
       }
-      location = path;
+      window.location = path;
     });
+  }
+
+  function setUpClearForm() {
     $('#clear').click(function (event) {
       $(this).closest('form').find('input[type="text"], select').val("");
       event.preventDefault();

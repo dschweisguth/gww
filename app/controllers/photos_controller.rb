@@ -51,6 +51,7 @@ class PhotosController < ApplicationController
   # TODO Dave test
   # TODO Dave switch on Accept
   def search
+    # TODO Dave fix nekomusume
     @terms, @sorted_by, @direction = terms
     @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
   end
@@ -61,7 +62,7 @@ class PhotosController < ApplicationController
   end
 
   def terms
-    params[:terms] ||= [] # TODO Dave test
+    params[:terms] ||= '' # TODO Dave test
     terms = Hash[*params[:terms].split('/').each_with_index { |term, i| if i.even? then term.gsub! '-', '_' end }]
     if terms['game_status']
       terms['game_status'] = terms['game_status'].split(',')
@@ -71,6 +72,22 @@ class PhotosController < ApplicationController
     [ terms, sorted_by, direction ]
   end
   private :terms
+
+  caches_page :autocomplete_usernames
+  def autocomplete_usernames
+    params[:terms] ||= '' # TODO Dave test
+    terms = Hash[*params[:terms].split('/')]
+    people = Person.select("people.username, count(f.id) n").joins("left join photos f on people.id = f.person_id")
+    if terms['term']
+      people = people.where('people.username like ?', "#{terms['term']}%")
+    end
+    if terms['game-status']
+      people = people.where('game_status in (?)', terms['game-status'].split(','))
+    end
+    people = people.group("people.username").order("lower(username)")
+    people.each { |person| person[:label] = "#{person.username} (#{person[:n]})" }
+    render json: people, only: [ :username, :label ]
+  end
 
   caches_page :show
   def show

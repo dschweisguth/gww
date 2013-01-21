@@ -21,13 +21,15 @@ GWW::Application.routes.draw do
 
   get 'photos/search/*terms' => 'photos#search'
   get 'photos/search' => 'photos#search', :as => :search_photos # so it works without a term
+  get 'photos/autocomplete_usernames/*terms' => 'photos#autocomplete_usernames'
+  get 'photos/autocomplete_usernames' => 'photos#autocomplete_usernames', :as => :autocomplete_photos_usernames # so it works without a term
+  get 'photos/search_data/*terms/page/:page' => 'photos#search_data'
+  get 'photos/search_data/page/:page' => 'photos#search_data' # so it works without a term
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', :as => :photos
   resources :photos, :only => [ :show ] do
     get :map_popup, :on => :member
     get :map, :map_json, :unfound, :unfound_data, :on => :collection
   end
-  get 'photos/search_data/*terms/page/:page' => 'photos#search_data'
-  get 'photos/search_data/page/:page' => 'photos#search_data' # so it works without a term
 
   resources :guesses, :only => [] do
     get :longest_and_shortest, :on => :collection
