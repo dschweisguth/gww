@@ -60,13 +60,12 @@ writing.
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
-> rbenv install 1.9.3-p194
-> rbenv global 1.9.3-p194
+> rbenv install 1.9.3-p374
+> rbenv global 1.9.3-p374
 > gem update --system
 > gem install bundler
 > gem list
 bundler (1.1.3)
-rubygems-update (1.8.24)
 # plus other gems that come with Ruby
 
 Get and configure GWW
