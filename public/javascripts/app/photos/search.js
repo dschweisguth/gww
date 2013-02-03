@@ -2,7 +2,7 @@
 
 // TODO Dave add pages when scrolling backwards instead of loading all pages right away
 // TODO Dave scrolling fast or editing the hash sometimes results in weird bugs. I've seen
-// - a page loaded twice
+// - a page loaded twice (in which case the following page is not loaded -- failure to bump page count?)
 // - the page refuse to scroll down, but jump back up a page
 GWW.photos = {};
 GWW.photos.search = function () {
