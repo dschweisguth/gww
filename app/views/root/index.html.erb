@@ -7,14 +7,9 @@
   <p class="error"><%= flash[:general_error] %></p>
 <% end %>
 
-<p>Welcome to Guess Where Watcher, the <a
-href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
-application! As well as allowing administrators to score guesses, GWW lets
-players see all of its data. Don't forget, though, that other tools
-are even more useful for GWSF players than GWW: David Gallagher's
-<a href="http://anythreewords.com/gwsf/">list of unfounds with thumbnails</a>
-and Jef Poskanzer's <a href="http://www.acme.com/flickr/searchr/">Flickr
-Comment Searchr</a>.</p>
+<p>Welcome to Guess Where Watcher, the <a href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
+application! Administrators use GWW to score guesses, and players can use it to browse unfound photos, see statistics
+and learn more about the competition.</p>
 
 <%= render 'shared/most_recent_update' %>
 
@@ -37,6 +32,9 @@ Comment Searchr</a>.</p>
 <li><%= link_to 'All photos', photos_path('date-added', '+', 1) %> with statistics, sortable so you can find the standouts</li>
 <li><%= link_to 'Mapped photos', map_photos_path %>, on a map</li>
 <li><%= link_to 'Unfound photos', unfound_photos_path %></li>
+<li><%= link_to 'Search for photos', search_photos_path %> by poster and/or game status.
+  For example, see <%= link_to 'all of the unfounds', search_photos_with_terms_path('game_status/unfound,unconfirmed') %> or just
+  <%= link_to "Octoferret's", search_photos_with_terms_path('game_status/unfound,unconfirmed/posted-by/Octoferret') %>.</li>
 <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_guesses_path %></li>
 <li><%= link_to 'Longest-lived revelations', longest_revelations_path %></li>
 <li>Statistics for the prestigious annual Wheresies awards: <%= render 'shared/wheresies' %></li>
@@ -47,11 +45,15 @@ Comment Searchr</a>.</p>
 <ul>
 <li><%= link_to 'Unfound photos', unfound_data_photos_path %></li>
 </ul>
+
+<h2>Other tools</h2>
+<ul class="spacious">
+  <li><%= link_to 'Get the "View in GWW" bookmarklet', root_bookmarklet_path %></li>
+  <li>David Gallagher's <a href="http://anythreewords.com/gwsf/">list of unfounds with thumbnails</a></li>
+  <li>Jef Poskanzer's <a href="http://www.acme.com/flickr/searchr/">Flickr Comment Searchr</a></li>
+</ul>
+
 <br/>
-
-<%= link_to 'Get the "View in GWW" bookmarklet', root_bookmarklet_path %>
-<br/><br/>
-
 <hr/>
 <a href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> -
 <%= link_to 'About GWW', root_about_path %>

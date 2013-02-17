@@ -19,7 +19,7 @@ GWW::Application.routes.draw do
     get :nemeses, :top_guessers, :on => :collection
   end
 
-  get 'photos/search/*terms' => 'photos#search'
+  get 'photos/search/*terms' => 'photos#search', :as => :search_photos_with_terms
   get 'photos/search' => 'photos#search', :as => :search_photos # so it works without a term
   get 'photos/autocomplete_usernames/*terms' => 'photos#autocomplete_usernames'
   get 'photos/autocomplete_usernames' => 'photos#autocomplete_usernames', :as => :autocomplete_photos_usernames # so it works without a term
