@@ -1,9 +1,6 @@
 "use strict"; // TODO Dave move these in to modules
 
 // TODO Dave add pages when scrolling backwards instead of loading all pages right away
-// TODO Dave scrolling fast or editing the hash sometimes results in weird bugs. I've seen
-// - a page loaded twice (in which case the following page is not loaded -- failure to bump page count?)
-// - the page refuse to scroll down, but jump back up a page
 GWW.photos = {};
 GWW.photos.search = function () {
 
@@ -44,10 +41,6 @@ GWW.photos.search = function () {
         return false;
       }
     });
-  }
-
-  function gameStatuses() {
-
   }
 
   function setUpFormSubmit() {
@@ -122,10 +115,11 @@ GWW.photos.search = function () {
     }
   }
 
+  var willScrollLater = false;
+
   function setUpFillWindowAfterScrolling() {
     // A single scrolling gesture may result in many scroll events.
     // So, when the user scrolls, react only every so often.
-    var willScrollLater = false;
     $(window).scroll(function () {
       if (! willScrollLater) {
         willScrollLater = true;
@@ -136,8 +130,8 @@ GWW.photos.search = function () {
             }
           } else {
             updateHash();
+            willScrollLater = false;
           }
-          willScrollLater = false;
         }, 250);
       }
     });
@@ -159,6 +153,9 @@ GWW.photos.search = function () {
             afterPageAdded();
           }
         }
+      },
+      complete: function () {
+        willScrollLater = false;
       }
     });
   }
