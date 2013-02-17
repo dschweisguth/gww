@@ -38,7 +38,7 @@ select {
   visibility: hidden;
 }
 
-#photos > div > div > div p {
+#photos > div > div > div p, #photos > div > div > div .game-status {
   margin: 0 0 2px 0;
   color: white;
   font-size: 11px;
@@ -65,7 +65,7 @@ select {
   position: relative;
 }
 
-#photos > div > div > div p.game-status {
+#photos > div > div > div .game-status {
   position: absolute;
   top: 0;
   right: 0;

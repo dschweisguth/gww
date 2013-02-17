@@ -11,7 +11,7 @@
         <p>Posted <%= dmy_local_date photo.dateadded %></p>
         <div>
           <p class="by">by <%= link_to_person photo.person %></p>
-          <p class="game-status"><%= photo.game_status %></p>
+          <%= link_to photo.game_status, photo_path(photo), class: 'game-status' %>
         </div>
       </div>
     </div>

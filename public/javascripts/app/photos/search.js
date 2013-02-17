@@ -189,7 +189,7 @@ GWW.photos.search = function () {
 
   function setMetadataVisibility(visibility) {
     return function () {
-      $(this).find('.bg, p:not(.by)').css('visibility', visibility);
+      $(this).find('.bg, p:not(.by), .game-status').css('visibility', visibility);
     };
   }
 
