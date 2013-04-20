@@ -10,8 +10,10 @@
   <%= title_and_h1 "Photo search" %>
 
   <%= form_tag(search_photos_path, :method => :get, :class => 'inline') do %>
-    <div>Posted by: <%= text_field_tag 'username', @terms['posted_by'] %></div>
-    <div>Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %></div>
+    <div>
+      Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
+      Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %>
+    </div>
     <div>
       <table>
         <tr>
