@@ -28,7 +28,7 @@ GWW::Application.routes.draw do
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', :as => :photos
   resources :photos, :only => [ :show ] do
     get :map_popup, :on => :member
-    get :map, :map_json, :unfound, :unfound_data, :on => :collection
+    get :map, :map_json, :unfound_data, :on => :collection
   end
 
   resources :guesses, :only => [] do

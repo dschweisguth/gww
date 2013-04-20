@@ -36,11 +36,6 @@ class PhotosController < ApplicationController
     render :partial => 'photos/map/popup'
   end
 
-  caches_page :unfound
-  def unfound
-    @photos = Photo.unfound_or_unconfirmed
-  end
-
   # Not cached since the cached copy would have an incorrect .html extension
   def unfound_data
     @lasttime = FlickrUpdate.latest.created_at

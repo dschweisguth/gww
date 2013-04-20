@@ -31,7 +31,6 @@ and learn more about the competition.</p>
 <li><%= link_to 'Top guessers', top_guessers_people_path %> by day, week, month and year</li>
 <li><%= link_to 'All photos', photos_path('date-added', '+', 1) %> with statistics, sortable so you can find the standouts</li>
 <li><%= link_to 'Mapped photos', map_photos_path %>, on a map</li>
-<li><%= link_to 'Unfound photos', unfound_photos_path %></li>
 <li><%= link_to 'Search for photos', search_photos_path %> by poster and/or game status.
   For example, see <%= link_to 'all of the unfounds', search_photos_with_terms_path('game_status/unfound,unconfirmed') %> or just
   <%= link_to "Octoferret's", search_photos_with_terms_path('game_status/unfound,unconfirmed/posted-by/Octoferret') %>.</li>

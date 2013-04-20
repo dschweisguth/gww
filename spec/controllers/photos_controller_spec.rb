@@ -184,20 +184,6 @@ describe PhotosController do
 
   end
 
-  describe '#unfound' do
-    it 'renders the page' do
-      photo = Photo.make
-      stub(Photo).unfound_or_unconfirmed { [ photo ] }
-      get :unfound
-
-      response.should be_success
-      response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo), :content => 'Flickr'
-      response.should have_selector 'a', :href => photo_path(photo), :content => 'GWW'
-      response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
-
-    end
-  end
-
   describe '#unfound_data' do
     it 'renders the page' do
       stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.utc(2011) }
