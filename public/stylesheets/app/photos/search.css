@@ -1,3 +1,21 @@
+form {
+  padding-bottom: 12px;
+}
+
+input, select {
+  margin-right: 6px;
+}
+
+form table, form div {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+table {
+  margin: 0;
+}
+
 .ui-autocomplete {
   max-height: 400px;
   overflow-y: auto;
@@ -73,21 +91,4 @@ select {
 
 img {
   height: 240px;
-}
-
-form {
-  padding-bottom: 12px;
-}
-
-input, select {
-  margin-right: 6px;
-}
-
-form > table, form > div {
-  display: inline-block;
-  vertical-align: top;
-}
-
-table {
-  margin: 0;
 }

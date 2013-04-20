@@ -10,22 +10,26 @@
   <%= title_and_h1 "Photo search" %>
 
   <%= form_tag(search_photos_path, :method => :get, :class => 'inline') do %>
-    Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
-    Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %>
-    <table>
-      <tr>
-        <td>Sorted by:</td>
-        <%# TODO Dave use a single term for dateadded throughout app %>
-        <td><%= select_tag :sorted_by, options_for_select([ [ 'Last updated', 'last-updated' ], [ 'Date added', 'date-added' ] ], :selected => @sorted_by) %></td>
-      </tr>
-      <tr>
-        <td>Direction:</td>
-        <td><%= select_tag :direction, options_for_select([ '-', '+' ], :selected => @direction) %></td>
-      </tr>
-    </table>
     <div>
-      <%= submit_tag 'Search' %><br/><br/>
-      <%= submit_tag 'Clear form', id: 'clear' %>
+      Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
+      Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], :selected => @terms['game_status']), :multiple => true %>
+    </div>
+    <div>
+      <table>
+        <tr>
+          <td>Sorted by:</td>
+          <%# TODO Dave use a single term for dateadded throughout app %>
+          <td><%= select_tag :sorted_by, options_for_select([ [ 'Last updated', 'last-updated' ], [ 'Date added', 'date-added' ] ], :selected => @sorted_by) %></td>
+        </tr>
+        <tr>
+          <td>Direction:</td>
+          <td><%= select_tag :direction, options_for_select([ '-', '+' ], :selected => @direction) %></td>
+        </tr>
+      </table>
+      <div>
+        <%= submit_tag 'Search' %><br/><br/>
+        <%= submit_tag 'Clear form', id: 'clear' %>
+      </div>
     </div>
   <% end %>
 
