@@ -2,18 +2,14 @@ form {
   padding-bottom: 12px;
 }
 
-input, select {
-  margin-right: 6px;
-}
-
-form table, form div {
+form div, form table {
   display: inline-block;
   vertical-align: top;
   white-space: nowrap;
 }
 
-table {
-  margin: 0;
+input {
+  margin-right: 3px;
 }
 
 .ui-autocomplete {
@@ -23,8 +19,17 @@ table {
   z-index: 999;
 }
 
+form img {
+  margin-right: 6px;
+}
+
 select {
   vertical-align: top;
+  margin-right: 6px;
+}
+
+table {
+  margin: 0;
 }
 
 #photos > div {
@@ -89,6 +94,6 @@ select {
   right: 0;
 }
 
-img {
+#photos img {
   height: 240px;
 }

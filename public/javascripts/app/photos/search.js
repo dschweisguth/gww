@@ -41,6 +41,10 @@ GWW.photos.search = function () {
         return false;
       }
     });
+    $("form img").click(function () {
+      $("#username").autocomplete("search", "").focus();
+      return false;
+    });
   }
 
   function setUpFormSubmit() {
