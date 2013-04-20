@@ -20,6 +20,8 @@ input {
 }
 
 form img {
+  vertical-align: top;
+  margin-top: 2px;
   margin-right: 6px;
 }
 
