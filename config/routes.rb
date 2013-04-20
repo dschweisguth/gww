@@ -11,7 +11,7 @@ GWW::Application.routes.draw do
   get 'autocomplete_usernames' => 'people#autocomplete_usernames', :as => :autocomplete_usernames # so it works without a term
   get 'people/find' => 'people#find', :as => :find_person
   get 'people/sorted-by/:sorted_by/order/:order' => 'people#index', :as => :people
-  %w(guesses posts map map_json).each do |action|
+  %w(guesses map map_json).each do |action|
     get "people/:id/#{action}" => "people##{action}", :as => "person_#{action}"
   end
   get 'people/:id/comments/page/:page' => 'people#comments', :as => :person_comments

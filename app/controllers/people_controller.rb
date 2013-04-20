@@ -116,12 +116,6 @@ class PeopleController < ApplicationController
       .order('commented_at desc').includes(:photo => :person)
   end
 
-  caches_page :posts
-  def posts
-    @person = Person.find params[:id]
-    @photos = Photo.where(:person_id => params[:id]).order('dateadded desc').includes(:person)
-  end
-  
   caches_page :comments
   def comments
     @person = Person.find params[:id]

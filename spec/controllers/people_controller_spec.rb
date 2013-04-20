@@ -311,24 +311,6 @@ describe PeopleController do
     end
   end
 
-  describe '#posts' do
-    it 'renders the page' do
-      person = Person.make :id => 1
-      stub(Person).find(person.id) { person }
-      photo = Photo.make :person => person
-      stub(Photo).where.stub!.order.stub!.includes { [ photo ] }
-      get :posts, :id => person.id
-
-      response.should be_success
-      response.should have_tag 'h1', :content => '1 photo posted by username'
-      response.should have_tag 'a', :href => person_path(person)
-      response.should have_tag 'img', :src => url_for_flickr_image(photo, 't')
-      response.should have_tag 'td', :content => 'false'
-      response.should have_tag 'td', :content => 'unfound'
-
-    end
-  end
-
   describe '#comments' do
     it 'renders the page' do
       person = Person.make :id => 1

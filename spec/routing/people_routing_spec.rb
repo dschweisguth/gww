@@ -31,7 +31,7 @@ describe PeopleController do
     it { should route(:get, '/people/666').to :action => 'show', :id => '666' }
   end
 
-  %w{ guesses posts map map_json }.each do |action|
+  %w{ guesses map map_json }.each do |action|
     describe action do
       it { should have_named_route "person_#{action}", 666, "/people/666/#{action}" }
       it { should route(:get, "/people/666/#{action}").to :action => action, :id => '666' }
