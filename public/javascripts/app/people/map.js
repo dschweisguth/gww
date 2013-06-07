@@ -30,7 +30,8 @@ GWW.people.map = (function () {
   };
 
   that.getMarkerParent = function (marker) {
-    return $('#guesses')[0].checked && marker.symbol === '!' || $('#posts')[0].checked && marker.symbol !== '!' ? that.map : null;
+    var guesses = $('#guesses');
+    return guesses.length === 0 || guesses.prop('checked') && marker.symbol === '!' || $('#posts').prop('checked') && marker.symbol !== '!' ? that.map : null;
   };
 
 
