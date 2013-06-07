@@ -1,5 +1,7 @@
 Bugs
 
+A National Acrobat's map has a Javascript error, I think because he has no
+  guesses.
 If a photo is private but in the group, so that getFavorites fails, is it
   updated every time?
 After http://code.google.com/p/phusion-passenger/issues/detail?id=563 is fixed, reinstate page caching
