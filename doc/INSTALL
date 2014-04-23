@@ -1,7 +1,8 @@
 This document describes how to install GWW on a Mac (OS 10.6, for development,
 using webrick) or Linux server (CentOS 6.5, for production, using Apache httpd
 and Phusion Passenger). It doesn't cover some things that Dave thinks are
-obvious; please fill gaps as you encounter them.
+obvious or that are hard to document in a way that will work for everyone;
+please fill gaps as you encounter them.
 
 Install and start mysql
 -----------------------
@@ -128,9 +129,13 @@ Install Phusion Passenger and configure httpd (for Linux production only)
 
 Install Phusion Passenger
     > bundle exec passenger-install-apache2-module # and follow instructions
-    In addition to editing httpd.conf as instructed by passenger, add the
-    following option to the appropriate place in your httpd configuration to
-    enable GWW's .htaccess: AllowOverride AuthConfig FileInfo
+    In addition to editing httpd.conf as instructed by passenger,
+    - add the following option to the appropriate place in your httpd
+      configuration to enable GWW's .htaccess:
+      AllowOverride AuthConfig FileInfo
+    - enable both HTTP and HTTPS access to GWW's public directory.
+      (The bookmarklets use HTTPs.) It is difficult to document that fully in a
+      way that will work for everyone, so ask.
 
 Put the server-up .htaccess in place
     > script/up
@@ -138,8 +143,8 @@ Put the server-up .htaccess in place
 Configure basic HTTP authentication
     Create a username and password per
         http://httpd.apache.org/docs/2.2/howto/auth.html. Be sure not to put
-	    the htpasswd file in a directory from which httpd serves files, such as
-	    GWW's public directory.
+	    the htpasswd file in a directory from which httpd serves files,
+	    such as GWW's public directory.
     > cp public/admin/.htaccess{_template,}
     Edit and fill in
     - the full path to the htpasswd file that you just created
