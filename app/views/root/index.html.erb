@@ -4,7 +4,7 @@
 <h1>Guess Where Watcher</h1>
 
 <% if !flash[:general_error].nil? %>
-  <p class="error"><%= flash[:general_error] %></p>
+  <p class="error"><%= raw flash[:general_error] %></p>
 <% end %>
 
 <p>Welcome to Guess Where Watcher, the <a href="http://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring

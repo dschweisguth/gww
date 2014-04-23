@@ -2,7 +2,7 @@
 <h1>Guess Where Watcher administration</h1>
 
 <% if !flash[:general_error].nil? %>
-  <p class="error"><%= flash[:general_error] %></p>
+  <p class="error"><%= raw flash[:general_error] %></p>
 <% end %>
 
 <%= render 'shared/most_recent_update' %>

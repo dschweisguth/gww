@@ -7,7 +7,7 @@
 
   var loadBookmarklet = function () {
     var script = document.createElement('script');
-    script.src = 'http://guesswheresf.org/javascripts/bookmarklets/viewInGWW.js';
+    script.src = '//guesswheresf.org/javascripts/bookmarklets/viewInGWW.js';
     script.type = 'text/javascript';
     document.body.appendChild(script);
   };

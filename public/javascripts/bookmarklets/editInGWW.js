@@ -1,5 +1,5 @@
 (function () {
-  if (/^http:\/\/www.flickr.com\/photos\/[^/]+\/\d+/.test(window.location)) {
+  if (/^https?:\/\/www.flickr.com\/photos\/[^/]+\/\d+/.test(window.location)) {
     // Do this asynchronously so Firefox doesn't treat it as a replace.
     // See http://stackoverflow.com/questions/3731888/javascript-redirect-location-href-breaks-the-back-button-unless-settimeout-is
     setTimeout(function() {
