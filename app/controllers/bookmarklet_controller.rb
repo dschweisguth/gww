@@ -2,7 +2,7 @@ class BookmarkletController < ApplicationController
 
   def show
     from = params[:from]
-    if from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
+    if from =~ /^https?:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
@@ -10,11 +10,11 @@ class BookmarkletController < ApplicationController
         return
       else
         message = "Sorry, Guess Where Watcher doesn't know anything about " +
-	  "that photo. Perhaps it hasn't been added to Guess Where SF, " +
+	        "that photo. Perhaps it hasn't been added to Guess Where SF, " +
           "or perhaps GWW hasn't updated since it was added. " +
           "If you like, you can <a href=\"#{from}\">go back where you came from</a>."
       end
-    elsif from =~ /^http:\/\/www.flickr.com\/(?:people|photos)\/([^\/]+)/
+    elsif from =~ /^https?:\/\/www.flickr.com\/(?:people|photos)\/([^\/]+)/
       person_identifier = Regexp.last_match[1]
       person = Person.find_by_pathalias(person_identifier) || Person.find_by_flickrid(person_identifier)
       if person

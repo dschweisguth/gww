@@ -172,6 +172,15 @@ describe Admin::PhotosController do
 
     end
 
+    it 'handles https when redirecting to a photo' do
+      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
+      stub(Photo).find_by_flickrid(photo.flickrid) { photo }
+      get :edit_in_gww, :from => "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+
+      redirects_to_edit_path photo, :update_from_flickr => true
+
+    end
+
     it 'punts an unknown photo Flickr ID' do
       stub(Photo).find_by_flickrid('0123456789') { nil }
       get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'

@@ -4,10 +4,20 @@ describe BookmarkletController do
   render_views
 
   describe '#show' do
+    # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given photo' do
       photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :show, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+
+      response.should redirect_to photo_path photo
+
+    end
+
+    it 'handles https when redirecting to a photo' do
+      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
+      stub(Photo).find_by_flickrid(photo.flickrid) { photo }
+      get :show, :from => "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
       response.should redirect_to photo_path photo
 
@@ -22,10 +32,20 @@ describe BookmarkletController do
 
     end
 
+    # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given person' do
       person = Person.make :pathalias => 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
       get :show, :from => "http://www.flickr.com/people/#{person.pathalias}/"
+
+      response.should redirect_to person_path person
+
+    end
+
+    it 'handles https when redirecting to a person' do
+      person = Person.make :pathalias => 'pathalias'
+      stub(Person).find_by_pathalias(person.pathalias) { person }
+      get :show, :from => "https://www.flickr.com/people/#{person.pathalias}/"
 
       response.should redirect_to person_path person
 

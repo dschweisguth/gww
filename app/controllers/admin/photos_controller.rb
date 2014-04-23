@@ -81,7 +81,7 @@ class Admin::PhotosController < ApplicationController
 
   def edit_in_gww
     from = params[:from]
-    if from =~ /^http:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
+    if from =~ /^https?:\/\/www.flickr.com\/photos\/[^\/]+\/(\d+)/
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
