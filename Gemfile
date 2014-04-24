@@ -8,17 +8,6 @@ gem 'jquery-rails', '1.0.19'
 gem 'will_paginate', '3.0.pre2' # Don't upgrade this without testing all uses. Later versions remove the ability to paginate a list of IDs.
 gem 'xml-simple', '1.1.1'
 
-# The following gem is in the default group
-# 1) because we use the production workspace when recreating TeamCity's copy of the test database
-#    (bundle exec rake RAILS_ENV=test db:drop db:create db:test:clone_structure) and referring to db:test drags in rspec
-# 2) because
-#    http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks/
-#    http://blog.davidchelimsky.net/2010/07/11/rspec-rails-2-generators-and-rake-tasks-part-ii/
-# TODO Dave this comment does not seem to describe this code
-group :development do
-  gem 'rspec-rails', '2.10.1'
-end
-
 group :test do
   gem 'jasmine', '1.1.0'
   gem 'rr', '1.0.4'
