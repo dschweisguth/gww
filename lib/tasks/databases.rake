@@ -1,9 +1,8 @@
 # This application's database schema can only be correctly represented in SQL,
 # not in Ruby. This file adjusts existing Rake tasks to support this.
 #
-# Do not use test:prepare or db:test:prepare. They do not do the right thing
-# for this application, do not seem to fill a need and have not been adjusted
-# to meet this application's needs.
+# Do not use db:migrate:reset. It does not do the right thing for this application,
+# does not seem to fill a need and has not been adjusted to meet this application's needs.
 #
 # Note that config/application.rb does not set ActiveRecord's schema format to
 # :sql. That's because
@@ -19,16 +18,10 @@ namespace :db do
     task :load => :environment do
       ActiveRecord::Base.establish_connection Rails.env
       ActiveRecord::Base.connection.execute 'SET foreign_key_checks = 0'
-      IO.readlines("#{Rails.root}/db/#{Rails.env}_structure.sql").join.split("\n\n").each do |table|
-        ActiveRecord::Base.connection.execute table
+      IO.readlines("#{Rails.root}/db/#{Rails.env}_structure.sql").join.split("\n\n").each do |statement|
+        ActiveRecord::Base.connection.execute statement
       end
     end
-  end
-
-  namespace :migrate do
-    # We override the original of this task for consistency. Like the original, it doesn't seed.
-    Rake::Task['db:migrate:reset'].clear
-    task :reset => [ 'db:drop', 'db:create', 'db:structure:load', 'db:migrate' ]
   end
 
   # This overrides the original, which does db:schema:load. The original doesn't migrate; this version does,
@@ -36,11 +29,11 @@ namespace :db do
   Rake::Task['db:setup'].clear
   task :setup => [ 'db:create', 'db:structure:load', 'db:migrate', 'db:seed' ]
 
-end
+  namespace :test do
+    # See also the comments on config.active_record.schema_format in test.rb.
+    desc "rspec tasks depend on this task, so we override it to set up the database in the way that we want."
+    Rake::Task['db:test:prepare'].clear
+    task prepare: [ 'db:reset' ]
+  end
 
-# By default rspec recreates the test database from the development database.
-# That's dumb, because a development database doesn't necessarily exist on the
-# machine where we want to run tests (in continuous integration, for example),
-# and if it did its schema might not be fit to run tests on (when developing a
-# migration, for example). Prevent that.
-Rake::Task[:spec].clear_prerequisites
+end
