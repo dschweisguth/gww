@@ -305,8 +305,8 @@ describe PeopleController do
       get :guesses, :id => person.id
 
       response.should be_success
-      response.should have_tag 'h1', :content => '1 guess by username'
-      response.should have_tag 'a', :content => 'guessed_photo_poster_username'
+      response.should have_selector 'h1', :content => '1 guess by username'
+      response.should have_selector 'a', :content => 'guessed_photo_poster_username'
 
     end
   end
