@@ -45,24 +45,24 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   get action, params
 
   response.should be_success
-  response.should have_selector 'b', :content => 'updated Wednesday, January  5, 12 AM'
-  response.should contain /3 new guesses by .../
-  response.should contain /guessed their first point/
-  response.should contain /#{person2[:change_in_standing]}/
-  response.should contain /3 photos revealed by .../
-  response.should contain /Top guessers in the last week:/
-  response.should contain /Top guessers in the last month:/
-  response.should contain /Top posters in the last week:/
-  response.should contain /Top posters in the last month:/
-  response.should contain /6 photos have been added to the pool since the previous report/
-  response.should have_selector 'a', :href => search_photos_with_terms_path('game_status/unfound,unconfirmed'), :content => '1234 unfound photos'
+  response.body.should have_selector 'b', :text => 'updated Wednesday, January  5, 12 AM'
+  response.body.should =~ /3 new guesses by .../
+  response.body.should =~ /guessed their first point/
+  response.body.should =~ /#{person2[:change_in_standing]}/
+  response.body.should =~ /3 photos revealed by .../
+  response.body.should =~ /Top guessers in the last week:/
+  response.body.should =~ /Top guessers in the last month:/
+  response.body.should =~ /Top posters in the last week:/
+  response.body.should =~ /Top posters in the last month:/
+  response.body.should =~ /6 photos have been added to the pool since the previous report/
+  response.body.should have_link '1234 unfound photos', :href => search_photos_with_terms_path('game_status/unfound,unconfirmed')
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
   participation = '2 people have made correct guesses. ' +
     '1 people have put at least one photo in the pool but not guessed any photos correctly. ' +
     'That means that at least 3 of our 3 members have participated in the game.'
-  response.should contain /#{participation}/
+  response.body.should =~ /#{participation}/
   guessing = "Since the beginning of the game, 1 people have guessed one photo correctly. " +
     "Here are the 1 people who've correctly guessed two or more photos."
-  response.should contain /#{guessing}/
+  response.body.should =~ /#{guessing}/
 
 end

@@ -12,10 +12,10 @@ describe GuessesController do
       get :longest_and_shortest
 
       response.should be_success
-      response.should have_selector 'a', :content => '1_guessed_photo_poster_username'
-      response.should have_selector 'a', :content => '2_guesser_username'
-      response.should have_selector 'a', :content => '1_guessed_photo_poster_username'
-      response.should have_selector 'a', :content => '2_guesser_username'
+      response.body.should have_link '1_guessed_photo_poster_username'
+      response.body.should have_link '2_guesser_username'
+      response.body.should have_link '1_guessed_photo_poster_username'
+      response.body.should have_link '2_guesser_username'
 
     end
   end

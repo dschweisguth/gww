@@ -34,10 +34,10 @@ describe Admin::PhotosController do
 
     def lists_photo
       response.should be_success
-      response.should have_selector 'a', :href => person_path(@photo.person), :content => @photo.person.username
-      response.should have_selector 'td', :content => 'false'
-      response.should have_selector 'td', :content => 'unfound'
-      response.should have_selector 'a', :href => edit_admin_photo_path(@photo, :update_from_flickr => true), :content => 'Edit'
+      response.body.should have_link @photo.person.username, :href => person_path(@photo.person)
+      response.body.should have_css 'td', :text => 'false'
+      response.body.should have_css 'td', :text => 'unfound'
+      response.body.should have_link 'Edit', :href => edit_admin_photo_path(@photo, :update_from_flickr => true)
     end
 
   end
@@ -63,16 +63,18 @@ describe Admin::PhotosController do
 
     def renders_edit_page
       response.should be_success
-      response.should contain 'This photo is unfound.'
-      response.should have_selector 'form', :action => change_game_status_path(111), :content => "Change this photo's status from unfound to" do |form|
-        form.should have_selector 'input', :value => 'unconfirmed'
-      end
-      response.should have_selector 'form', :action => add_selected_answer_path(111) do |form|
-        form.should have_selector 'input', :type => 'submit', :name => 'commit', :value => 'Add this guess'
-        form.should have_selector 'input', :type => 'hidden', :name => 'comment_id', :value => '222'
-      end
-      response.should contain 'This photo was added to the group at 12:00 AM, January 1, 2011.'
+      response.body.should include 'This photo is unfound.'
+
+      unconfirmed_form = top_node.find %Q(form[action="#{change_game_status_path(111)}"]), :text => "Change this photo's status from unfound to"
+      unconfirmed_form.should have_css 'input[name=commit][value=unconfirmed]'
+
+      comments_form = top_node.find %Q(form[action="#{add_selected_answer_path(111)}"])
+      comments_form.should have_css 'input[name=comment_id][type=hidden][value="222"]'
+      comments_form.should have_css 'input[name=commit][type=submit][value="Add this guess"]'
+
+      response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2011.'
       # See admin/photos_controller_spec for more on the sidebar
+
     end
 
   end

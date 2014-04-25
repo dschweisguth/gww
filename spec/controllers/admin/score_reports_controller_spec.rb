@@ -15,18 +15,16 @@ describe Admin::ScoreReportsController do
       get :index
 
       response.should be_success
-      # By experiment, this doesn't actually assert that the form is in the same tr as the later date!?!
-      response.should have_selector 'tr' do |tr|
-        tr.should have_selector 'a', :content => 'Jan  2, 2011, 12:00 AM'
-        tr.should have_selector 'td', :content => '4'
-        tr.should have_selector 'td', :content => '1'
-        tr.should have_selector 'form'
-      end
-      response.should have_selector 'tr' do |tr|
-        tr.should have_selector 'a', :content => 'Jan  1, 2011, 12:00 AM'
-        tr.should have_selector 'td', :content => '1'
-        tr.should have_selector 'td', :content => '0' # the page filled in the missing revelation count
-      end
+      trs = top_node.all 'tr'
+
+      trs[1].should have_selector 'a', :text => 'Jan  2, 2011, 12:00 AM'
+      trs[1].should have_selector 'td', :text => '4'
+      trs[1].should have_selector 'td', :text => '1'
+      trs[1].should have_selector 'form'
+
+      trs[2].should have_selector 'a', :text => 'Jan  1, 2011, 12:00 AM'
+      trs[2].should have_selector 'td', :text => '1'
+      trs[2].should have_selector 'td', :text => '0' # the page filled in the missing revelation count
 
     end
 

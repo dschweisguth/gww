@@ -20,9 +20,9 @@ describe PhotosController do
       get :index, :sorted_by => sorted_by_param, :order => order_param, :page => page_param
 
       response.should be_success
-      response.should have_selector 'h1', :content => '1 photos'
-      response.should have_selector 'a', :href => photos_path('username', '-', 1), :content => 'posted by'
-      response.should have_selector 'a', :href => person_path(photo.person), :content => 'poster_username'
+      response.body.should have_selector 'h1', :text => '1 photos'
+      response.body.should have_link 'posted by', :href => photos_path('username', '-', 1)
+      response.body.should have_link 'poster_username', :href => person_path(photo.person)
 
     end
   end
@@ -36,7 +36,7 @@ describe PhotosController do
       assigns[:json].should == json.to_json
 
       response.should be_success
-      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
+      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
   end
@@ -147,13 +147,12 @@ describe PhotosController do
       get :map_popup, :id => photo.id
 
       response.should be_success
-      response.should have_selector 'a', :href => photo_path(photo) do |content|
-        content.should have_selector 'img', :src => url_for_flickr_image(photo, 't')
-      end
-      response.should have_selector 'a', :href => person_path(photo.person), :content => photo.person.username
-      response.should contain ', January 1, 2011.'
-      response.should_not contain 'Guessed by'
-      response.should_not contain 'Revealed'
+      link = top_node.find %Q(a[href="#{photo_path(photo)}"])
+      link.should have_selector %Q(img[src="#{url_for_flickr_image(photo, 't')}"])
+      response.body.should have_link photo.person.username, :href => person_path(photo.person)
+      response.body.should include ', January  1, 2011.'
+      response.body.should_not include 'Guessed by'
+      response.body.should_not include 'Revealed'
 
     end
 
@@ -164,9 +163,9 @@ describe PhotosController do
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, :id => photo.id
 
-      response.should have_selector 'a', :href => person_path(guess.person), :content => guess.person.username
-      response.should contain ', February 1, 2011.'
-      response.should_not contain 'Revealed'
+      response.body.should have_link guess.person.username, :href => person_path(guess.person)
+      response.body.should include ', February  1, 2011.'
+      response.body.should_not include 'Revealed'
 
     end
 
@@ -177,8 +176,8 @@ describe PhotosController do
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, :id => photo.id
 
-      response.should_not contain 'Guessed by'
-      response.should contain 'Revealed February 1, 2011.'
+      response.body.should_not include 'Guessed by'
+      response.body.should include 'Revealed February  1, 2011.'
 
     end
 
@@ -191,9 +190,8 @@ describe PhotosController do
       get :unfound_data
 
       response.should be_success
-      response.should have_selector 'photos', :updated_at => '1293840000' do |content|
-        content.should have_selector 'photo', :posted_by => 'poster_username'
-      end
+      photos = top_node.find 'photos[updated_at="1293840000"]'
+      photos.should have_selector 'photo[posted_by=poster_username]'
 
     end
   end
@@ -208,24 +206,22 @@ describe PhotosController do
       get :show, :id => photo.id
 
       response.should be_success
-      response.should have_selector 'a', :href => url_for_flickr_photo_in_pool(photo) do |content|
-        content.should have_selector 'img', :src => url_for_flickr_image(photo, 'z')
-      end
-      response.should contain 'This photo is unfound.'
-      response.should have_selector 'table' do |content|
-        content.should have_selector 'td', :content => 'guesser_username'
-        content.should have_selector 'td', :content => 'guess text'
-      end
-      response.should have_selector 'strong', :content => 'commenter_username'
-      response.should contain 'comment text'
-      response.should contain 'This photo was added to the group at 12:00 AM, January 1, 2010.'
-      response.should contain "This photo hasn't been found or revealed yet"
-      response.should_not contain 'It was mapped by the photographer'
-      response.should_not contain 'It was auto-mapped'
-      response.should contain '11 comments'
-      response.should contain '22 views'
-      response.should contain '33 faves'
-      response.should_not contain 'GWW.config'
+      link = top_node.find %Q(a[href="#{url_for_flickr_photo_in_pool(photo)}"])
+      link.should have_selector %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
+      response.body.should include 'This photo is unfound.'
+      table = top_node.find 'table'
+      table.should have_selector 'td', :text => 'guesser_username'
+      table.should have_selector 'td', :text => 'guess text'
+      response.body.should have_selector 'strong', :text => 'commenter_username'
+      response.body.should include 'comment text'
+      response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
+      response.body.should include "This photo hasn't been found or revealed yet"
+      response.body.should_not include 'It was mapped by the photographer'
+      response.body.should_not include 'It was auto-mapped'
+      response.body.should include '11 comments'
+      response.body.should include '22 views'
+      response.body.should include '33 faves'
+      response.body.should_not include 'GWW.config'
 
     end
 
@@ -246,11 +242,11 @@ describe PhotosController do
       ActiveSupport::JSON.decode(assigns[:json]) == json
 
       response.should be_success
-      response.should contain 'It was mapped by the photographer'
-      response.should_not contain "This photo hasn't been found or revealed yet"
-      response.should_not contain 'It was auto-mapped'
-      response.should have_selector '#map'
-      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
+      response.body.should include 'It was mapped by the photographer'
+      response.body.should_not include "This photo hasn't been found or revealed yet"
+      response.body.should_not include 'It was auto-mapped'
+      response.body.should have_selector '#map'
+      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
 
@@ -271,11 +267,11 @@ describe PhotosController do
       ActiveSupport::JSON.decode(assigns[:json]).should == json
 
       response.should be_success
-      response.should contain 'It was auto-mapped'
-      response.should_not contain "This photo hasn't been found or revealed yet"
-      response.should_not contain 'It was mapped by the photographer'
-      response.should have_selector '#map'
-      response.should contain /GWW\.config = #{Regexp.escape assigns[:json]};/
+      response.body.should include 'It was auto-mapped'
+      response.body.should_not include "This photo hasn't been found or revealed yet"
+      response.body.should_not include 'It was mapped by the photographer'
+      response.body.should have_selector '#map'
+      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
 
@@ -295,8 +291,8 @@ describe PhotosController do
       assigns[:json].should == json
 
       response.should be_success
-      response.should have_selector '#map'
-      response.should contain /GWW\.config = #{Regexp.escape json};/
+      response.body.should have_selector '#map'
+      response.body.should =~ /GWW\.config = #{Regexp.escape json};/
 
     end
 

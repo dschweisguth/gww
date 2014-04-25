@@ -13,9 +13,9 @@ describe ScoreReportsController do
       get :index
 
       response.should be_success
-      response.should have_selector 'td', :content => 'Jan  1, 2011, 12:00 AM'
-      response.should have_selector 'td', :content => '1'
-      response.should have_selector 'td', :content => '2'
+      response.body.should have_selector 'td', :text => 'Jan  1, 2011, 12:00 AM'
+      response.body.should have_selector 'td', :text => '1'
+      response.body.should have_selector 'td', :text => '2'
 
     end
   end

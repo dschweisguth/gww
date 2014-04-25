@@ -12,10 +12,10 @@ describe Admin::RootController do
       get :index
 
       response.should be_success
-      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and is still running. An update takes about 20 minutes.'
-      response.should contain '(111)'
-      response.should contain '(222)'
-      response.should contain '(2)'
+      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 20 minutes.'
+      response.body.should include '(111)'
+      response.body.should include '(222)'
+      response.body.should include '(2)'
 
     end
 
@@ -26,7 +26,7 @@ describe Admin::RootController do
       stub(Guess).group(:photo_id).stub!.count { { 1 => 2, 2 => 2 }  }
       get :index
 
-      response.should contain 'The most recent update from Flickr began Saturday, January 1, 0:00 PST and completed at Monday, January 1, 0:06 PST.'
+      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and completed at Monday, January  1,  0:06 PST.'
 
     end
 
@@ -55,7 +55,7 @@ describe Admin::RootController do
       get :bookmarklet
 
       response.should be_success
-      response.should have_selector 'a', :href => root_bookmarklet_path
+      response.body.should have_selector %Q(a[href="#{root_bookmarklet_path}"])
 
     end
   end

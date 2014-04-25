@@ -9,7 +9,7 @@ describe RevelationsController do
       get :longest
 
       response.should be_success
-      response.should have_selector 'a', :content => 'revealed_photo_poster_username'
+      response.body.should have_link 'revealed_photo_poster_username'
 
     end
   end

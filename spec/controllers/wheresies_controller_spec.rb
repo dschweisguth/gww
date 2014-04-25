@@ -10,47 +10,36 @@ describe WheresiesController do
 
       response.should be_success
 
-      response.should have_selector 'a', :href => wheresies_path(2009), :content => '2009'
-      response.should_not have_selector 'a', :href => wheresies_path(2010)
+      response.body.should have_link '2009', :href => wheresies_path(2009)
+      response.body.should_not have_selector %Q(a[href="#{wheresies_path(2010)}"])
 
-      response.should have_selector 'h1' do |text|
-        text.should contain '2010 Wheresies (preliminary)'
-      end
+      h1 = top_node.find 'h1'
+      h1.text.should include '2010 Wheresies (preliminary)'
 
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h3', :content => "Most points in 2010"
-        content.should have_selector 'td', :content => '333'
-      end
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h3', :content => "Most posts in 2010"
-        content.should have_selector 'td', :content => '444'
-      end
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h3', :content => "Most points in 2010"
-        content.should have_selector 'td', :content => '111'
-      end
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h3', :content => "Most posts in 2010"
-        content.should have_selector 'td', :content => '222'
-      end
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h2', :content => "Most-viewed photos of 2010"
-        content.should have_selector 'td', :content => '555'
-      end
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h2', :content => "Most-faved photos of 2010"
-        content.should have_selector 'td', :content => '666'
-      end
-      response.should have_selector 'div' do |content|
-        content.should have_selector 'h2', :content => "Most-commented photos of 2010"
-        content.should have_selector 'td', :content => '777'
-      end
-      response.should have_selector 'td' do |td|
-        td.should contain /1.*year/
-      end
-      response.should have_selector 'td' do |td|
-        td.should contain /1.*second/
-      end
+      points_and_posts = top_node.all 'body > div > div > div'
+      points_and_posts.count.should == 4
+      points_and_posts[0].should have_selector 'h3', :text => "Most points in 2010"
+      points_and_posts[0].should have_selector 'td', :text => '333'
+      points_and_posts[1].should have_selector 'h3', :text => "Most posts in 2010"
+      points_and_posts[1].should have_selector 'td', :text => '444'
+      points_and_posts[2].should have_selector 'h3', :text => "Most points in 2010"
+      points_and_posts[2].should have_selector 'td', :text => '111'
+      points_and_posts[3].should have_selector 'h3', :text => "Most posts in 2010"
+      points_and_posts[3].should have_selector 'td', :text => '222'
+
+      divs = top_node.all 'body > div > div'
+      divs.count.should == 5
+      divs[2].should have_selector 'h2', :text => "Most-viewed photos of 2010"
+      divs[2].should have_selector 'td', :text => '555'
+      divs[3].should have_selector 'h2', :text => "Most-faved photos of 2010"
+      divs[3].should have_selector 'td', :text => '666'
+      divs[4].should have_selector 'h2', :text => "Most-commented photos of 2010"
+      divs[4].should have_selector 'td', :text => '777'
+
+      tables = top_node.all 'body > div > table'
+      tables.count.should == 2
+      tables[0].all('td').last.text.should == "1\u00A0year"
+      tables[1].all('td').last.text.should == "1\u00A0second"
 
     end
 
@@ -62,7 +51,7 @@ describe WheresiesController do
     it "doesn't says 'preliminary' if it's not for this year" do
       stub_queries 2009, 2010, 2009
       get :show, :year => '2009'
-      response.should_not have_selector 'h1', :content => '2009 Wheresies (preliminary)'
+      response.body.should_not have_selector 'h1', :text => '2009 Wheresies (preliminary)'
     end
 
   end
