@@ -8,10 +8,10 @@ module ModelFactory
     end
     caller_attrs = caller_attrs.clone
 
-    # When testing layers above the model layer, we always use :new. We want
-    # model objects to have @ids, but ActiveRecord prevents us from setting
-    # that attribute at creation time, so save it so we can set it later.
-    # When testing the model layer, we always use :create! and let ActiveRecord manage @id.
+    # In model specs and Cucumber features, we use create! and let ActiveRecord choose an id.
+    # When testing other layers, we use new, which creates an object with a nil id.
+    # We want to be able to assign an id to our model object, but ActiveRecord prevents us
+    # from doing so as an argument to new. Instead, save it so we can set it later.
     id = caller_attrs[:id]
     if id
       if method != :new
@@ -37,7 +37,7 @@ module ModelFactory
   end
 
   def construction_method
-    caller.find { |line| line =~ /\/spec\/models\// }.nil? ? :new : :create!
+    caller.find { |line| line =~ /\/spec\/models\/|\/features\/step_definitions\// } ? :create! : :new
   end
 
   def affix(label, value)

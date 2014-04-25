@@ -10,10 +10,13 @@ gem 'xml-simple', '1.1.1'
 
 group :test do
   gem 'capybara', '2.2.1'
+  gem 'cucumber-rails', '1.4.0', require: false
+  gem 'database_cleaner', '1.2.0'
   gem 'jasmine', '1.1.0'
+  gem 'launchy', '2.4.2'
   gem 'rr', '1.1.2', require: false
   gem 'shoulda-matchers', '1.1.0'
-  gem 'simplecov', '0.8.2'
+  gem 'simplecov', '0.7.1', require: false
   gem 'rspec-rails', '2.10.1'
 end
 

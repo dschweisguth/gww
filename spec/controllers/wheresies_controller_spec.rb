@@ -4,44 +4,7 @@ describe WheresiesController do
   render_views
 
   describe '#show' do
-    it 'renders the page' do
-      stub_queries 2009, 2010, 2010
-      get :show, :year => '2010'
-
-      response.should be_success
-
-      response.body.should have_link '2009', :href => wheresies_path(2009)
-      response.body.should_not have_selector %Q(a[href="#{wheresies_path(2010)}"])
-
-      h1 = top_node.find 'h1'
-      h1.text.should include '2010 Wheresies (preliminary)'
-
-      points_and_posts = top_node.all 'body > div > div > div'
-      points_and_posts.count.should == 4
-      points_and_posts[0].should have_selector 'h3', :text => "Most points in 2010"
-      points_and_posts[0].should have_selector 'td', :text => '333'
-      points_and_posts[1].should have_selector 'h3', :text => "Most posts in 2010"
-      points_and_posts[1].should have_selector 'td', :text => '444'
-      points_and_posts[2].should have_selector 'h3', :text => "Most points in 2010"
-      points_and_posts[2].should have_selector 'td', :text => '111'
-      points_and_posts[3].should have_selector 'h3', :text => "Most posts in 2010"
-      points_and_posts[3].should have_selector 'td', :text => '222'
-
-      divs = top_node.all 'body > div > div'
-      divs.count.should == 5
-      divs[2].should have_selector 'h2', :text => "Most-viewed photos of 2010"
-      divs[2].should have_selector 'td', :text => '555'
-      divs[3].should have_selector 'h2', :text => "Most-faved photos of 2010"
-      divs[3].should have_selector 'td', :text => '666'
-      divs[4].should have_selector 'h2', :text => "Most-commented photos of 2010"
-      divs[4].should have_selector 'td', :text => '777'
-
-      tables = top_node.all 'body > div > table'
-      tables.count.should == 2
-      tables[0].all('td').last.text.should == "1\u00A0year"
-      tables[1].all('td').last.text.should == "1\u00A0second"
-
-    end
+    # TODO Dave simplify
 
     it 'bails out if the year is invalid' do
       stub_queries 2010, 2010, 2011
