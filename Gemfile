@@ -11,7 +11,7 @@ gem 'xml-simple', '1.1.1'
 group :test do
   gem 'capybara', '2.2.1'
   gem 'jasmine', '1.1.0'
-  gem 'rr', '1.0.4'
+  gem 'rr', '1.1.2', require: false
   gem 'shoulda-matchers', '1.1.0'
   gem 'simplecov', '0.6.4'
   gem 'rspec-rails', '2.10.1'
