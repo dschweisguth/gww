@@ -13,7 +13,7 @@ group :test do
   gem 'jasmine', '1.1.0'
   gem 'rr', '1.1.2', require: false
   gem 'shoulda-matchers', '1.1.0'
-  gem 'simplecov', '0.6.4'
+  gem 'simplecov', '0.8.2'
   gem 'rspec-rails', '2.10.1'
 end
 
