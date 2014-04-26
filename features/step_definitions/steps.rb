@@ -59,6 +59,10 @@ When /^I go to (.*)$/ do |page_name|
   visit path_to(page_name)
 end
 
+Then /^the headline should say that the results are preliminary$/ do
+  page.should have_selector 'h1', :text => "#{Time.now.year} Wheresies (preliminary)"
+end
+
 Then /^the rookie should be first on the rookies' most-points list with (\d+) points$/ do |points|
   most_points_list = page.all('body > div > div > div')[0]
   most_points_list.should have_selector 'h3', :text => "Most points in #{Time.now.year}"

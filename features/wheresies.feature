@@ -17,6 +17,7 @@ Feature: Wheresies
     And a player "longest" guessed a photo after 3 years
     And a player "fastest" guessed a photo after 1 second
     When I go to this year's wheresies page
+    Then the headline should say that the results are preliminary
     Then the rookie should be first on the rookies' most-points list with 2 points
     And the rookie should be first on the rookies' most-posts list with 4 posts
     And the veteran should be first on the veterans' most-points list with 3 points
