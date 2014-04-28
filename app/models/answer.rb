@@ -1,8 +1,7 @@
 module Answer
 
   def time_elapsed_between(from, to)
-    formatted_age_by_period from, to,
-      %w(years months days hours minutes seconds)
+    formatted_age_by_period from, to, %w(years months days hours minutes seconds)
   end
 
   def ymd_elapsed_between(from, to)
@@ -41,11 +40,11 @@ module Answer
       years -= 1
     end
     time_elapsed = periods.each_with_object([]) do |name, list|
-        value = eval name
-	if value > 0
-	  list.push "#{value}&nbsp;#{value == 1 ? name.singularize : name}"
-	end
+      value = eval name
+      if value > 0
+        list.push "#{value}&nbsp;#{value == 1 ? name.singularize : name}"
       end
+    end
     time_elapsed.join ', '
   end
   private :formatted_age_by_period
