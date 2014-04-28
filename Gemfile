@@ -12,6 +12,7 @@ group :test do
   gem 'capybara', '2.2.1'
   gem 'cucumber-rails', '1.4.0', require: false
   gem 'database_cleaner', '1.2.0'
+  gem 'factory_girl_rails', '4.4.1'
   gem 'jasmine', '1.1.0'
   gem 'launchy', '2.4.2'
   gem 'rr', '1.1.2', require: false

@@ -1,58 +1,58 @@
 Given /^scores were reported this year$/ do
-  ScoreReport.make created_at: Time.now.end_of_year
+  create :score_report, created_at: Time.now.end_of_year
 end
 
 Given /^there is a veteran$/ do
-  @veteran = Person.make 'veteran'
-  Guess.make person: @veteran, commented_at: Time.now.year - 1
+  @veteran = create :person
+  create :guess, person: @veteran, commented_at: Time.now.year - 1
 end
 
 Given /^there is a rookie$/ do
-  @rookie = Person.make 'rookie'
+  @rookie = create :person
 end
 
 Given /^the veteran scored (\d+) points? this year$/ do |score|
-  score.to_i.times { |time| Guess.make "veteran#{time}", person: @veteran }
+  score.to_i.times { create :guess, person: @veteran }
 end
 
 Given /^the rookie scored (\d+) points? this year$/ do |score|
-  score.to_i.times { |time| Guess.make "rookie#{time}", person: @rookie }
+  score.to_i.times { create :guess, person: @rookie }
 end
 
 Given /^the veteran posted (\d+) photos? this year$/ do |photo_count|
-  photo_count.to_i.times { |time| Photo.make "veteran#{time}", person: @veteran }
+  photo_count.to_i.times { create :photo, person: @veteran }
 end
 
 Given /^the rookie posted (\d+) photos? this year$/ do |photo_count|
-  photo_count.to_i.times { |time| Photo.make "rookie#{time}", person: @rookie }
+  photo_count.to_i.times { create :photo, person: @rookie }
 end
 
 Given /^a player "([^"]*)" posted a photo with (\d+) views?$/ do |username, views|
-  player = Person.make username, username: username
-  Photo.make username, person: player, views: views.to_i
+  player = create :person, username: username
+  create :photo, person: player, views: views.to_i
 end
 
 Given /^a player "([^"]*)" posted a photo with (\d+) faves?$/ do |username, faves|
-  player = Person.make username, username: username
-  Photo.make username, person: player, faves: faves.to_i
+  player = create :person, username: username
+  create :photo, person: player, faves: faves.to_i
 end
 
 Given /^a player "([^"]*)" posted a photo with a comment$/ do |username|
-  player = Person.make username, username: username
-  photo = Photo.make username, person: player
-  Comment.make photo: photo
+  player = create :person, username: username
+  photo = create :photo, person: player
+  create :comment, photo: photo
 end
 
 Given /^a player "([^"]*)" guessed a photo after (\d+) years?$/ do |username, years|
-  player = Person.make username, username: username
-  photo = Photo.make username, dateadded: years.to_i.years.ago
-  Guess.make username, person: player, photo: photo
+  player = create :person, username: username
+  photo = create :photo, dateadded: years.to_i.years.ago
+  create :guess, person: player, photo: photo
 end
 
 Given /^a player "([^"]*)" guessed a photo after (\d+) seconds?$/ do |username, seconds|
-  player = Person.make username, username: username
-  photo = Photo.make username, dateadded: seconds.to_i.seconds.ago
-  Guess.make username, person: player, photo: photo
+  player = create :person, username: username
+  photo = create :photo, dateadded: seconds.to_i.seconds.ago
+  create :guess, person: player, photo: photo
 end
 
 When /^I go to (.*)$/ do |page_name|
