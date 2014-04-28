@@ -46,13 +46,13 @@ end
 Given /^a player "([^"]*)" guessed a photo after (\d+) years?$/ do |username, years|
   player = Person.make username, username: username
   photo = Photo.make username, dateadded: years.to_i.years.ago
-  guess = Guess.make username, person: player, photo: photo
+  Guess.make username, person: player, photo: photo
 end
 
 Given /^a player "([^"]*)" guessed a photo after (\d+) seconds?$/ do |username, seconds|
   player = Person.make username, username: username
   photo = Photo.make username, dateadded: seconds.to_i.seconds.ago
-  guess = Guess.make username, person: player, photo: photo
+  Guess.make username, person: player, photo: photo
 end
 
 When /^I go to (.*)$/ do |page_name|
@@ -121,12 +121,16 @@ end
 
 Then /^the player "([^"]*)" should be first on the longest-lasting list with a photo guessed after (\d+) years$/ do |username, years|
   longest_lasting_list = page.all('body > div > table')[0]
-  longest_lasting_list.all('tr')[1].all('td').last.text.should == "#{years} year#{if years.to_i != 1 then 's' end}"
+  tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
+  tds_in_first_row[2].text.should == username
+  tds_in_first_row.last.text.should == "#{years} year#{if years.to_i != 1 then 's' end}"
 end
 
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
   fastest_guessed_list = page.all('body > div > table')[1]
-  fastest_guessed_list.all('tr')[1].all('td').last.text.should == "#{seconds} second#{if seconds.to_i != 1 then 's' end}"
+  tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
+  tds_in_first_row[2].text.should == username
+  tds_in_first_row.last.text.should == "#{seconds} second#{if seconds.to_i != 1 then 's' end}"
 end
 
 Then /^show me the page$/ do
