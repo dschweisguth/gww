@@ -7,6 +7,8 @@ A photo which is guessed or revealed and then removed from the group remains
   in the database but is no longer updated
 The username of a commenter on a photo which is guessed or revealed and then
   made private or deleted is no longer updated
+This photo is not on the map, or is completely hidden by another:
+  http://guesswheresf.org/photos/15515
 
 Debt
 
