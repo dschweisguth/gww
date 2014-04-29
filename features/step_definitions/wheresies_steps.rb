@@ -1,7 +1,3 @@
-Given /^there is a Flickr update$/ do
-  create :flickr_update
-end
-
 Given /^scores were reported this year$/ do
   create :score_report, created_at: Time.now.end_of_year
 end
