@@ -51,11 +51,7 @@ Given /^a player "([^"]*)" guessed a photo after (\d+) seconds?$/ do |username, 
   create :guess, person: player, photo: photo
 end
 
-When /^I go to (.*)$/ do |page_name|
-  visit path_to(page_name)
-end
-
-And /^I click on this year$/ do
+When /^I click on this year$/ do
   click_link Time.now.year
 end
 
@@ -131,8 +127,4 @@ Then /^the player "([^"]*)" should be first on the fastest-guessed list with a p
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
   tds_in_first_row[2].text.should == username
   tds_in_first_row.last.text.should == "#{seconds} second#{if seconds.to_i != 1 then 's' end}"
-end
-
-Then /^show me the page$/ do
-  save_and_open_page
 end
