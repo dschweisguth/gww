@@ -5,6 +5,7 @@ Feature: Administer photos
 
   Background:
     Given there is a Flickr update
+    And requests to Flickr do nothing
 
   Scenario: Admin sets a photo to unconfirmed and then back to unfound
     Given there is a photo with a comment by another player

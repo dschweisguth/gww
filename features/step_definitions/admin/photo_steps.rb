@@ -1,3 +1,9 @@
+Given /^requests to Flickr do nothing$/ do
+  # TODO Dave shut down FlickrCredentials completely in features
+  any_instance_of Photo, update_from_flickr: nil
+  any_instance_of Person, attrs_from_flickr: nil
+end
+
 Given /^there is a photo$/ do
   @photo = create :photo
 end
