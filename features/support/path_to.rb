@@ -3,6 +3,8 @@ module PathTo
     case page_name
       when "the home page"
         root_path
+      when "the photos search page"
+        search_photos_path
       when "the admin home page"
         admin_root_path
       when "the photo's edit page"

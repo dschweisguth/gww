@@ -5,7 +5,8 @@ Feature: Administer photos
 
   Background:
     Given there is a Flickr update
-    And requests to Flickr do nothing
+    And updating a photo from Flickr does nothing
+    And getting a person's attributes from Flickr returns what we'd expect given what's in the database
 
   Scenario: Admin sets a photo to unconfirmed and then back to unfound
     Given there is a photo with a comment by another player

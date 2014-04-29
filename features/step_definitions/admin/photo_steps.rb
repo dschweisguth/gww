@@ -1,11 +1,13 @@
-Given /^requests to Flickr do nothing$/ do
+Given /^updating a photo from Flickr does nothing$/ do
   # TODO Dave shut down FlickrCredentials completely in features
   any_instance_of Photo, update_from_flickr: nil
-  any_instance_of Person, attrs_from_flickr: nil
 end
 
-Given /^there is a photo$/ do
-  @photo = create :photo
+Given /^getting a person's attributes from Flickr returns what we'd expect given what's in the database$/ do
+  stub(Person).attrs_from_flickr do |flickrid|
+    source = Person.find_by_flickrid(flickrid) || Comment.find_by_flickrid(flickrid)
+    { username: source.username, pathalias: source.respond_to?(:pathalias) ? source.pathalias : source.username }
+  end
 end
 
 Given /^there is a photo with a comment by another player$/ do

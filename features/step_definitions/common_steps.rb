@@ -1,5 +1,13 @@
+Given /^there is a photo$/ do
+  @photo = create :photo
+end
+
 Given /^there is a Flickr update$/ do
   create :flickr_update
+end
+
+Given /^there is a score report$/ do
+  create :score_report
 end
 
 When /^I go to (.*)$/ do |page_name|
