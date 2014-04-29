@@ -14,9 +14,7 @@ Feature: Photos
 
   @javascript
   Scenario: Player searches for unfound or unconfirmed photos
-    Given there is a Flickr update
-    And there is a score report
-    And there is an unfound photo
+    Given there is an unfound photo
     And there is an unconfirmed photo
     And there is a found photo
     And there is a revealed photo
