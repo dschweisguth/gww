@@ -1,3 +1,7 @@
+Given /^there is a Flickr update$/ do
+  create :flickr_update
+end
+
 Given /^scores were reported this year$/ do
   create :score_report, created_at: Time.now.end_of_year
 end
@@ -49,6 +53,10 @@ end
 
 When /^I go to (.*)$/ do |page_name|
   visit path_to(page_name)
+end
+
+And /^I click on this year$/ do
+  click_link Time.now.year
 end
 
 Then /^the headline should say that the results are preliminary$/ do

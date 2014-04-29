@@ -4,7 +4,8 @@ Feature: Wheresies
   So that I can nominate other players for or award them a coveted Wheresie
 
   Scenario: Player views wheresies page
-    Given scores were reported this year
+    Given there is a Flickr update
+    And scores were reported this year
     And there is a player "rookie" with no guesses from previous years
     And the player "rookie" scored 2 points this year
     And the player "rookie" posted 4 photos this year
@@ -16,7 +17,8 @@ Feature: Wheresies
     And a player "commentiest" posted a photo with a comment
     And a player "longest" guessed a photo after 3 years
     And a player "fastest" guessed a photo after 1 second
-    When I go to this year's wheresies page
+    When I go to the home page
+    And I click on this year
     Then the headline should say that the results are preliminary
     And the player "rookie" should be first on the rookies' most-points list with 2 points
     And the player "rookie" should be first on the rookies' most-posts list with 4 posts

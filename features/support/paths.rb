@@ -1,8 +1,8 @@
 module NavigationHelpers
   def path_to(page_name, params = {})
     case page_name
-      when "this year's wheresies page"
-        wheresies_path Time.now.year
+      when "the home page"
+        root_path
       # We'll want this soon
       #else
       #  begin
