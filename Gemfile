@@ -15,6 +15,7 @@ group :test do
   gem 'factory_girl_rails', '4.4.1'
   gem 'jasmine', '1.1.0'
   gem 'launchy', '2.4.2'
+  gem 'poltergeist', '1.5.0'
   gem 'rr', '1.1.2', require: false
   gem 'shoulda-matchers', '1.1.0'
   gem 'simplecov', '0.7.1', require: false

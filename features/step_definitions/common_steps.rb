@@ -14,6 +14,18 @@ When /^I press the "([^"]+)" button$/ do |label|
   click_button label
 end
 
+When /^I fill in "([^"]+)" with "([^"]+)"$/ do |field, text|
+  fill_in field, with: text
+end
+
+Then /^I should be on (.*)$/ do |page_name|
+  URI.parse(current_url).path.should == path_to(page_name)
+end
+
+Then /^I should see "([^"]+)"$/ do |text|
+  page.should have_content(text)
+end
+
 Then /^show me the page$/ do
   save_and_open_page
 end

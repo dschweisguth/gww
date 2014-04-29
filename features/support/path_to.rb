@@ -1,10 +1,12 @@
 module PathTo
-  def path_to(page_name, params = {})
+  def path_to(page_name)
     case page_name
       when "the home page"
         root_path
       when "the admin home page"
         admin_root_path
+      when "the photo's edit page"
+        edit_admin_photo_path @photo
       # We'll need this eventually
       # else
       #   begin
