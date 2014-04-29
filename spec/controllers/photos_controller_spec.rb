@@ -275,27 +275,6 @@ describe PhotosController do
 
     end
 
-    def includes_a_map(photo)
-      stub(Photo).includes.stub!.find(photo.id) { photo }
-      oldest = Photo.make :dateadded => 1.day.ago
-      stub(Photo).oldest { oldest }
-      get :show, :id => photo.id
-
-      json = {
-        'color' => 'FFFF00',
-        'id' => photo.id,
-        'latitude' => photo.latitude,
-        'longitude' => photo.longitude,
-        'symbol' => '?'
-      }.to_json
-      assigns[:json].should == json
-
-      response.should be_success
-      response.body.should have_selector '#map'
-      response.body.should =~ /GWW\.config = #{Regexp.escape json};/
-
-    end
-
   end
 
 end
