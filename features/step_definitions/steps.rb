@@ -2,29 +2,21 @@ Given /^scores were reported this year$/ do
   create :score_report, created_at: Time.now.end_of_year
 end
 
-Given /^there is a veteran$/ do
-  @veteran = create :person
-  create :guess, person: @veteran, commented_at: Time.now.year - 1
+Given /^there is a player "([^"]*)" with a guess from a previous year$/ do |username|
+  player = create :person, username: username
+  create :guess, person: player, commented_at: Time.now.year - 1
 end
 
-Given /^there is a rookie$/ do
-  @rookie = create :person
+Given /^there is a player "([^"]*)" with no guesses from previous years$/ do |username|
+  create :person, username: username
 end
 
-Given /^the veteran scored (\d+) points? this year$/ do |score|
-  score.to_i.times { create :guess, person: @veteran }
+Given /^the player "([^"]*)" scored (\d+) points? this year$/ do |username, score|
+  score.to_i.times { create :guess, person: Person.find_by_username(username) }
 end
 
-Given /^the rookie scored (\d+) points? this year$/ do |score|
-  score.to_i.times { create :guess, person: @rookie }
-end
-
-Given /^the veteran posted (\d+) photos? this year$/ do |photo_count|
-  photo_count.to_i.times { create :photo, person: @veteran }
-end
-
-Given /^the rookie posted (\d+) photos? this year$/ do |photo_count|
-  photo_count.to_i.times { create :photo, person: @rookie }
+Given /^the player "([^"]*)" posted (\d+) photos? this year$/ do |username, photo_count|
+  photo_count.to_i.times { create :photo, person: Person.find_by_username(username) }
 end
 
 Given /^a player "([^"]*)" posted a photo with (\d+) views?$/ do |username, views|
@@ -63,35 +55,35 @@ Then /^the headline should say that the results are preliminary$/ do
   page.should have_selector 'h1', :text => "#{Time.now.year} Wheresies (preliminary)"
 end
 
-Then /^the rookie should be first on the rookies' most-points list with (\d+) points$/ do |points|
+Then /^the player "([^"]*)" should be first on the rookies' most-points list with (\d+) points$/ do |username, points|
   most_points_list = page.all('body > div > div > div')[0]
   most_points_list.should have_selector 'h3', :text => "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
-  tds[1].text.should == @rookie.username
+  tds[1].text.should == username
   tds[2].text.should == points
 end
 
-Then /^the rookie should be first on the rookies' most-posts list with (\d+) posts$/ do |posts|
+Then /^the player "([^"]*)" should be first on the rookies' most-posts list with (\d+) posts$/ do |username, posts|
   most_posts_list = page.all('body > div > div > div')[1]
   most_posts_list.should have_selector 'h3', :text => "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
-  tds[1].text.should == @rookie.username
+  tds[1].text.should == username
   tds[2].text.should == posts
 end
 
-Then /^the veteran should be first on the veterans' most-points list with (\d+) points$/ do |points|
+Then /^the player "([^"]*)" should be first on the veterans' most-points list with (\d+) points$/ do |username, points|
   most_points_list = page.all('body > div > div > div')[2]
   most_points_list.should have_selector 'h3', :text => "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
-  tds[1].text.should == @veteran.username
+  tds[1].text.should == username
   tds[2].text.should == points
 end
 
-Then /^the veteran should be first on the veterans' most-posts list with (\d+) posts$/ do |posts|
+Then /^the player "([^"]*)" should be first on the veterans' most-posts list with (\d+) posts$/ do |username, posts|
   most_posts_list = page.all('body > div > div > div')[3]
   most_posts_list.should have_selector 'h3', :text => "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
-  tds[1].text.should == @veteran.username
+  tds[1].text.should == username
   tds[2].text.should == posts
 end
 
