@@ -122,5 +122,6 @@ Then /^the player "([^"]*)" should be first on the fastest-guessed list with a p
   fastest_guessed_list = page.all('body > div > table')[1]
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
   tds_in_first_row[2].text.should == username
-  tds_in_first_row.last.text.should == "#{seconds} second#{if seconds.to_i != 1 then 's' end}"
+  # Allow one more second than specified in case the test runs slowly
+  [ "#{seconds} second#{if seconds.to_i != 1 then 's' end}", "#{seconds.to_i + 1} seconds" ].should include(tds_in_first_row.last.text)
 end
