@@ -1,3 +1,7 @@
 Given /^page-showing has been neutered$/ do
-  any_instance_of Capybara::Session, save_and_open_page: nil
+  stub(self).save_and_open_page
+end
+
+Given /^screenshotting has been neutered$/ do
+  stub(self).save_screenshot
 end

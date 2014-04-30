@@ -43,7 +43,6 @@ class PhotosController < ApplicationController
     render :action => 'unfound_data.xml.builder', :layout => false
   end
 
-  # TODO Dave test
   # TODO Dave switch on Accept
   def search
     # TODO Dave fix nekomusume

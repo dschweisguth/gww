@@ -23,3 +23,16 @@ Feature: Photos
     And I select "unconfirmed" from "game_status"
     And I press the "Search" button
     Then I should see search results for 2 photos
+
+  @javascript
+  Scenario: Player searches for a given user's photos
+    Given there is a player "abcdefgh"
+    And player "abcdefgh" has a photo
+    And there is a player "ijklmnop"
+    And player "ijklmnop" has a photo
+    When I go to the photos search page
+    And I press the keys "a"
+    And I wait until a "abcdefgh (1)" menu item appears
+    And I click the "abcdefgh (1)" menu item
+    And I press the "Search" button
+    Then I should see search results for 1 photo

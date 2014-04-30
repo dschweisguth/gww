@@ -6,3 +6,7 @@ Feature: Cucumber support code
   Scenario: Developer views the HTML source of a page that is causing a feature to fail
     Given page-showing has been neutered
     Then show me the page
+
+  Scenario: Developer views a screenshot of a page that is causing a feature to fail
+    Given screenshotting has been neutered
+    Then show me the screen
