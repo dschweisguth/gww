@@ -745,6 +745,13 @@ describe Person do
     end
   end
 
+  describe '.faves_per_post' do
+    it 'returns a map of person ID to average # of faves per post' do
+      photo = Photo.make :faves => 1
+      Person.faves_per_post.should == { photo.person.id => 1 }
+    end
+  end
+
   describe '.nemeses' do
     it "lists guessers and their favorite posters" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)
