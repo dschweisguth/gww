@@ -1037,6 +1037,14 @@ describe Photo do
       photo_after.faves.should == 6
     end
 
+    it "sets faves to 0 if the request for faves fails" do
+      stub_get_photos
+      stub(Photo).faves_from_flickr { raise FlickrCredentials::FlickrRequestFailedError }
+      Photo.update_all_from_flickr
+      photo = Photo.first
+      photo.faves.should == 0
+    end
+
     it "stores 0 latitude, longitude and accuracy as nil" do
       stub(FlickrCredentials).groups_pools_get_photos { {
         'photos' => [ {
@@ -1391,7 +1399,7 @@ describe Photo do
       @photo = Photo.make
     end
 
-    it 'loads comments from Flickr' do
+    it "loads comments from Flickr" do
       stub_get_faves
       stub_request_to_return_one_comment
       @photo.update_from_flickr
@@ -1399,7 +1407,7 @@ describe Photo do
       photo_has_the_comment_from_the_request
     end
 
-    it 'deletes previous comments' do
+    it "deletes previous comments" do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
       stub_request_to_return_one_comment
@@ -1407,7 +1415,7 @@ describe Photo do
       photo_has_the_comment_from_the_request
     end
 
-    it 'but not if the photo currently has no comments' do
+    it "does not delete previous comments if the photo currently has no comments" do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
       stub(FlickrCredentials).request { {
@@ -1416,6 +1424,14 @@ describe Photo do
       } }
       @photo.update_from_flickr
       @photo.comments.length.should == 1
+      Comment.count.should == 1
+    end
+
+    it "leaves previous comments alone if the request for comments fails" do
+      Comment.make 'previous', :photo => @photo
+      stub_get_faves
+      stub(FlickrCredentials).photos_comments_get_list { raise FlickrCredentials::FlickrRequestFailedError }
+      @photo.update_from_flickr
       Comment.count.should == 1
     end
 

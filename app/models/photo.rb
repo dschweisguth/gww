@@ -327,6 +327,8 @@ class Photo < ActiveRecord::Base
             begin
               faves_from_flickr(photo_flickrid)
             rescue FlickrCredentials::FlickrRequestFailedError
+              # This happens when a photo is private but visible to the caller because it's posted to a group of which
+              # the caller is a member. Not clear yet whether this is a bug or intended behavior.
               0
             end
           photo_attrs.merge! :faves => faves
