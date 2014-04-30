@@ -213,41 +213,28 @@ class Photo < ActiveRecord::Base
     where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person)
   end
 
-  # TODO Dave test
   def self.search(terms, sorted_by, direction, page)
-    # TODO Dave follow up
-    #if terms.keys != [ 'game_status' ] && terms.keys.sort != [ 'commenter', 'comment' ].sort
-    #  raise "Specify either game_status or exactly one each of commenter and comment"
-    #end
-    joins, conditions =
-      if terms.has_key? 'commenter'
-        [ "", [ "comments.username like ? and comments.comment_text like ?", "%#{terms['commenter']}%" << "%#{terms['comment']}%" ] ]
-      else
-        sql = ""
-        list = [ sql ]
-        if terms.has_key? 'game_status'
-          sql << "game_status in (?)"
-          list << terms['game_status']
-        end
-        if terms.has_key? 'posted_by'
-          unless sql.blank?
-            sql << " and "
-          end
-          sql << "p.username = ?"
-          list << terms['posted_by']
-        end
-        [ "join people p on photos.person_id = p.id", list ]
+    sql = ""
+    conditions = [ sql ]
+    if terms.has_key? 'game_status'
+      sql << "game_status in (?)"
+      conditions << terms['game_status']
+    end
+    if terms.has_key? 'posted_by'
+      unless sql.blank?
+        sql << " and "
       end
+      sql << "p.username = ?"
+      conditions << terms['posted_by']
+    end
     args = {
+      :joins => "join people p on photos.person_id = p.id",
       :conditions => conditions,
       :order => "#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}",
       :per_page => 30,
       :page => page,
       :include => :person
     }
-    unless joins.blank?
-      args[:joins] = joins
-    end
     Photo.paginate args
   end
 
