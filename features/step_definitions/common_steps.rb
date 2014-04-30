@@ -26,6 +26,18 @@ When /^I fill in "([^"]+)" with "([^"]+)"$/ do |field, text|
   fill_in field, with: text
 end
 
+When /^I press the keys "([^"]+)" in the "([^"]+)" field$/ do |keys, field|
+  find(field).native.send_keys keys
+end
+
+When /^I wait until an? "([^"]+)" menu item appears$/ do |text|
+  wait_for { all('a', text: text).any? }
+end
+
+When /^I click the "([^"]+)" menu item$/ do |text|
+  find('a', text: text).click
+end
+
 Then /^I should be on (.*)$/ do |page_name|
   URI.parse(current_url).path.should == path_to(page_name)
 end

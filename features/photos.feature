@@ -31,7 +31,7 @@ Feature: Photos
     And there is a player "ijklmnop"
     And player "ijklmnop" has a photo
     When I go to the photos search page
-    And I press the keys "a"
+    And I press the keys "a" in the "#username" field
     And I wait until an "abcdefgh (1)" menu item appears
     And I click the "abcdefgh (1)" menu item
     And I press the "Search" button
@@ -45,7 +45,7 @@ Feature: Photos
     When I go to the photos search page
     And I select "unfound" from "game_status"
     And I select "unconfirmed" from "game_status"
-    And I press the keys "a"
+    And I press the keys "a" in the "#username" field
     And I wait until an "abcdefgh (1)" menu item appears
     And I click the "abcdefgh (1)" menu item
     And I press the "Search" button
