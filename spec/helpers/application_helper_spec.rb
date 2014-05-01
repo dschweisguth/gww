@@ -84,11 +84,6 @@ describe ApplicationHelper do
 
   end
 
-  describe '#sandwich' do
-    it "wraps the given content in views/shared/_sandwich " +
-      "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
-  end
-
   describe '#head_css' do
     it "adds the given stylesheets to the head" do
       helper.head_css 'my.css'

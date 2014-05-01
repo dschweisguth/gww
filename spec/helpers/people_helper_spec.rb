@@ -40,16 +40,6 @@ describe PeopleHelper do
     
   end
 
-  describe '#thumbnail_with_alt' do
-    it "renders a thumbnail with a link to the photo's page and alt text " +
-      "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
-  end
-
-  describe '#place' do
-    it "renders the trophy's place " +
-      "(which can't be tested due to the lack of rspec support, discussed here http://www.ruby-forum.com/topic/188667)"
-  end
-
   STARS = [ nil, :bronze, :silver, :gold ]
 
   describe '#star_and_alt' do
