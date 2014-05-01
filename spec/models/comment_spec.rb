@@ -224,7 +224,7 @@ describe Comment do
       end
 
       def stub_person_request
-        stub(FlickrService).people_get_info { {
+        stub(FlickrService.instance).people_get_info { {
           'person' => [{
             'username' => ['username_from_request'],
             'photosurl' => ['http://www.flickr.com/photos/pathalias_from_request/']
@@ -233,7 +233,7 @@ describe Comment do
       end
 
       def stub_person_request_failure
-        stub(FlickrService).people_get_info { raise FlickrService::FlickrRequestFailedError }
+        stub(FlickrService.instance).people_get_info { raise FlickrService::FlickrRequestFailedError }
       end
 
       def photo_is_guessed(comment, guesser)

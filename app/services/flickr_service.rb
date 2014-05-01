@@ -12,32 +12,38 @@ class FlickrService
   GROUP_ID = CREDENTIALS['group_id']
   SCORE_TOPIC_URL = CREDENTIALS['score_topic_url']
 
-  class << self; attr_accessor :retry_quantum end
-  @retry_quantum = 30
+  def self.instance
+    @instance ||= new
+  end
 
-  def self.groups_get_info(opts)
+  attr_accessor :retry_quantum
+
+  def initialize
+    @retry_quantum = 30
+  end
+
+  def groups_get_info(opts)
     request 'flickr.groups.getInfo', opts
   end
 
-  def self.groups_pools_get_photos(opts)
+  def groups_pools_get_photos(opts)
     request 'flickr.groups.pools.getPhotos', opts
   end
 
-  def self.people_get_info(opts)
+  def people_get_info(opts)
     request 'flickr.people.getInfo', opts
   end
 
-  def self.photos_get_favorites(opts)
+  def photos_get_favorites(opts)
     request 'flickr.photos.getFavorites', opts
   end
 
-  def self.photos_comments_get_list(opts)
+  def photos_comments_get_list(opts)
     request 'flickr.photos.comments.getList', opts
   end
 
-  private
-
-  def self.request(api_method, extra_params = {})
+  # Public for testing
+  def request(api_method, extra_params = {})
     url = api_url api_method, extra_params
     xml = submit url
     if xml !~ /<.*?>/m
@@ -51,7 +57,9 @@ class FlickrService
     parsed_xml
   end
 
-  def self.api_url(api_method, extra_params = {})
+  private
+
+  def api_url(api_method, extra_params = {})
     params = {
       'oauth_version' => '1.0',
       'oauth_signature_method' => 'HMAC-SHA1',
@@ -72,7 +80,7 @@ class FlickrService
       end
   end
 
-  def self.signature(params)
+  def signature(params)
     key = "#{SECRET}&#{OAUTH_TOKEN_SECRET}"
     base_string = "GET&#{oauth_encode "http://api.flickr.com/services/rest/"}&" +
       oauth_encode(params.keys.sort.map { |name| "#{name}=#{oauth_encode params[name]}" }.join('&'))
@@ -80,11 +88,11 @@ class FlickrService
     oauth_encode signature.chomp
   end
 
-  def self.oauth_encode(string)
+  def oauth_encode(string)
     URI.encode string, /[^\w\-.~]/
   end
 
-  def self.submit(url)
+  def submit(url)
     failure_count = 0
     begin
       response = Net::HTTP.get_response URI.parse url

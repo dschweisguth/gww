@@ -10,3 +10,6 @@ Feature: Cucumber support code
   Scenario: Developer views a screenshot of a page that is causing a feature to fail
     Given screenshotting has been neutered
     Then show me the screen
+
+  Scenario: Developer neglects to stub calls to FlickrService out of a feature
+    When I do something that calls FlickrService and forget to stub it out then it should explode

@@ -278,7 +278,7 @@ class Photo < ActiveRecord::Base
     new_person_count = 0
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       logger.info "Getting page #{page} ..."
-      photos_xml = FlickrService.groups_pools_get_photos 'group_id' => FlickrService::GROUP_ID,
+      photos_xml = FlickrService.instance.groups_pools_get_photos 'group_id' => FlickrService::GROUP_ID,
         'per_page' => '500', 'page' => page.to_s, 'extras' => 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
       photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
@@ -385,7 +385,7 @@ class Photo < ActiveRecord::Base
     parsed_faves = nil
     while parsed_faves.nil? || faves_page <= parsed_faves['pages'].to_i
       sleep 1.1
-      faves_xml = FlickrService.photos_get_favorites(
+      faves_xml = FlickrService.instance.photos_get_favorites(
           'photo_id' => photo_flickrid, 'per_page' => '50', 'page' => faves_page.to_s)
       parsed_faves = faves_xml['photo'][0]
       faves_count += parsed_faves['person'] ? parsed_faves['person'].length : 0
@@ -513,7 +513,7 @@ class Photo < ActiveRecord::Base
     end
 
     begin
-      comments_xml = FlickrService.photos_comments_get_list 'photo_id' => flickrid
+      comments_xml = FlickrService.instance.photos_comments_get_list 'photo_id' => flickrid
       parsed_comments = comments_xml['comments'][0]['comment']
       if ! parsed_comments.blank? # This element is nil if there are no comments and an array if there are
         transaction do
