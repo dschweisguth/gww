@@ -12,7 +12,6 @@ This photo is not on the map, or is completely hidden by another:
 
 Debt
 
-Check and fix coverage
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto
 Upgrade will_paginate, shoulda-matchers
