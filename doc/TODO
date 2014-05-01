@@ -1,18 +1,16 @@
 Bugs
 
+This photo is not on the map, or is completely hidden by another: http://guesswheresf.org/photos/15515
 After http://code.google.com/p/phusion-passenger/issues/detail?id=563 is fixed, reinstate page caching
-A photo which is guessed or revealed and then removed from the group remains
-  in the database but is no longer updated
-The username of a commenter on a photo which is guessed or revealed and then
-  made private or deleted is no longer updated
-This photo is not on the map, or is completely hidden by another:
-  http://guesswheresf.org/photos/15515
+A photo which is guessed or revealed and then removed from the group remains in the database but is no longer updated.
+  That means that the usernames of commenters on such a photo are no longer updated.
+  See doc/old_usernames for relevant code that has not been put into use yet.
 
 Debt
 
+Upgrade Rails, will_paginate, shoulda-matchers
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto
-Upgrade will_paginate, shoulda-matchers
 Extract facades from models
 Merge revelations into guesses?
 
@@ -24,22 +22,21 @@ Parse
 - "Market Street and Seventh Street?"
 Include tags in update
   Highlight foundinSF/unfoundinSF in unfound list
+  Make them searchable
 Include comments in update
   Order unfound list by most recent comment
+  Make them searchable
 Post scores to Flickr group automatically
-Add a search feature
 Add last-updated dates to photos which
-- reflect only things relevant to scoring
-- reflect only things relevant to players
-and use in unfound list
+  - reflect only things relevant to scoring
+  - reflect only things relevant to players
+  and use in unfound list
 Determine most-posted locations
 Determine neighborhoods from locations and geocodes
   Identify mayors/supervisors (most posts), tycoons/speculators/prospectors (most guesses) and bosses (both) of
   neighborhoods
-Determine whether a guess is a guess by the presence of known streets, place
-  names, etc.
-In the list of unfounds, highlight photos which if guessed would enter the
-  longest-to-find list
+Determine whether a guess is a guess by the presence of known streets, place names, etc.
+In the list of unfounds, highlight photos which if guessed would enter the longest-to-find list
 Track interestingness
 Combine a player's posts, guesses and comments into a single activity stream
 Do the same for all players?
