@@ -323,15 +323,13 @@ class Photo < ActiveRecord::Base
         }
         photo = existing_photos[photo_flickrid]
         if ! photo || photo.lastupdate != photo_attrs[:lastupdate]
-          faves =
-            begin
-              faves_from_flickr(photo_flickrid)
-            rescue FlickrService::FlickrRequestFailedError
-              # This happens when a photo is private but visible to the caller because it's posted to a group of which
-              # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-              0
-            end
-          photo_attrs.merge! faves: faves
+          begin
+            photo_attrs[:faves] = faves_from_flickr photo_flickrid
+          rescue FlickrService::FlickrRequestFailedError
+            # This happens when a photo is private but visible to the caller because it's posted to a group of which
+            # the caller is a member. Not clear yet whether this is a bug or intended behavior.
+            photo_attrs[:faves] ||= 0
+          end
         end
         if photo
           photo.update_attributes_if_necessary! photo_attrs

@@ -948,7 +948,7 @@ describe Photo do
       person_after.pathalias.should == 'incoming_pathalias'
     end
 
-    it 'uses an existing photo, and updates attributes that changed' do
+    it "uses an existing photo, and updates attributes that changed" do
       stub_get_photos
       stub_get_faves
       person = Person.make flickrid: 'incoming_person_flickrid'
@@ -1037,12 +1037,19 @@ describe Photo do
       photo_after.faves.should == 6
     end
 
-    it "sets faves to 0 if the request for faves fails" do
+    it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
       stub(Photo).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
       Photo.update_all_from_flickr
-      photo = Photo.first
-      photo.faves.should == 0
+      Photo.first.faves.should == 0
+    end
+
+    it "leaves an existing photo's faves alone if the request for faves fails" do
+      stub_get_photos
+      stub(Photo).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
+      photo_before = Photo.make faves: 6
+      Photo.update_all_from_flickr
+      Photo.first.faves.should == 6
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
