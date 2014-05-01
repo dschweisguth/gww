@@ -13,7 +13,7 @@ class PhotosController < ApplicationController
   end
 
   def map_json
-    render :json => map_photos
+    render json: map_photos
   end
 
   def map_photos
@@ -32,15 +32,15 @@ class PhotosController < ApplicationController
 
   caches_page :map_popup
   def map_popup
-    @photo = Photo.includes(:person, { :guesses => :person }, :revelation).find params[:id]
-    render :partial => 'photos/map/popup'
+    @photo = Photo.includes(:person, { guesses: :person }, :revelation).find params[:id]
+    render partial: 'photos/map/popup'
   end
 
   # Not cached since the cached copy would have an incorrect .html extension
   def unfound_data
     @lasttime = FlickrUpdate.latest.created_at
     @photos = Photo.unfound_or_unconfirmed
-    render :action => 'unfound_data.xml.builder', :layout => false
+    render action: 'unfound_data.xml.builder', layout: false
   end
 
   # TODO Dave switch on Accept
@@ -52,7 +52,7 @@ class PhotosController < ApplicationController
 
   def search_data
     @photos = Photo.search *terms, params[:page]
-    render :layout => false
+    render layout: false
   end
 
   def terms

@@ -17,7 +17,7 @@ and learn more about the competition.</p>
 <ul class="spacious">
 <li><%= link_to 'Score reports', score_reports_path %></li>
 <li>Find a person, by username, Flickr ID or GWW ID:
-  <%= form_tag(find_person_path, :method => :get, :class => 'inline') do %>
+  <%= form_tag(find_person_path, method: :get, class: 'inline') do %>
     <%= text_field_tag 'username' %>
     <%= submit_tag 'Find' %>
   <% end %>

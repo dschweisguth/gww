@@ -17,12 +17,12 @@ describe PhotosController do
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).all_sorted_and_paginated(sorted_by_param, order_param, page_param, 30) { paginated_photos }
-      get :index, :sorted_by => sorted_by_param, :order => order_param, :page => page_param
+      get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
 
       response.should be_success
-      response.body.should have_selector 'h1', :text => '1 photos'
-      response.body.should have_link 'posted by', :href => photos_path('username', '-', 1)
-      response.body.should have_link 'poster_username', :href => person_path(photo.person)
+      response.body.should have_selector 'h1', text: '1 photos'
+      response.body.should have_link 'posted by', href: photos_path('username', '-', 1)
+      response.body.should have_link 'poster_username', href: person_path(photo.person)
 
     end
   end
@@ -64,13 +64,13 @@ describe PhotosController do
     end
 
     it "copies an inferred geocode to the stated one" do
-      photo = Photo.make :id => 1, :inferred_latitude => 37, :inferred_longitude => -122
+      photo = Photo.make id: 1, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
       controller.map_photos.should == {
-        :partial => false,
-        :bounds => @initial_bounds,
-        :photos => [
+        partial: false,
+        bounds: @initial_bounds,
+        photos: [
           {
             'id' => photo.id,
             'latitude' => photo.latitude,
@@ -89,13 +89,13 @@ describe PhotosController do
     end
 
     def returns(bounds)
-      photo = Photo.make :id => 1, :latitude => 37, :longitude => -122
+      photo = Photo.make id: 1, latitude: 37, longitude: -122
       stub(Photo).mapped(bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
       controller.map_photos.should == {
-        :partial => false,
-        :bounds => bounds,
-        :photos => [
+        partial: false,
+        bounds: bounds,
+        photos: [
           {
             'id' => photo.id,
             'latitude' => photo.latitude,
@@ -109,14 +109,14 @@ describe PhotosController do
 
     it "returns no more than a maximum number of photos" do
       stub(controller).max_map_photos { 1 }
-      photo = Photo.make :id => 1, :latitude => 37, :longitude => -122
-      oldest_photo = Photo.make :dateadded => 1.day.ago
+      photo = Photo.make id: 1, latitude: 37, longitude: -122
+      oldest_photo = Photo.make dateadded: 1.day.ago
       stub(Photo).mapped(@initial_bounds, 2) { [ photo, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos.should == {
-        :partial => true,
-        :bounds => @initial_bounds,
-        :photos => [
+        partial: true,
+        bounds: @initial_bounds,
+        photos: [
           {
             'id' => photo.id,
             'latitude' => photo.latitude,
@@ -132,9 +132,9 @@ describe PhotosController do
       stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [] }
       stub(Photo).oldest { nil }
       controller.map_photos.should == {
-        :partial => false,
-        :bounds => @initial_bounds,
-        :photos => []
+        partial: false,
+        bounds: @initial_bounds,
+        photos: []
       }
     end
 
@@ -142,14 +142,14 @@ describe PhotosController do
 
   describe '#map_popup' do
     it "renders the partial" do
-      photo = Photo.make :dateadded => Time.local(2011)
+      photo = Photo.make dateadded: Time.local(2011)
       stub(Photo).includes.stub!.find(photo.id) { photo }
-      get :map_popup, :id => photo.id
+      get :map_popup, id: photo.id
 
       response.should be_success
       link = top_node.find %Q(a[href="#{photo_path(photo)}"])
       link.should have_selector %Q(img[src="#{url_for_flickr_image(photo, 't')}"])
-      response.body.should have_link photo.person.username, :href => person_path(photo.person)
+      response.body.should have_link photo.person.username, href: person_path(photo.person)
       response.body.should include ', January  1, 2011.'
       response.body.should_not include 'Guessed by'
       response.body.should_not include 'Revealed'
@@ -157,24 +157,24 @@ describe PhotosController do
     end
 
     it "displays guesses" do
-      photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
-      guess = Guess.make :photo => photo, :person => Person.make(:id => 15), :commented_at => Time.local(2011, 2)
+      photo = Photo.make person: Person.make(id: 14), dateadded: Time.local(2011)
+      guess = Guess.make photo: photo, person: Person.make(id: 15), commented_at: Time.local(2011, 2)
       photo.guesses << guess
       stub(Photo).includes.stub!.find(photo.id) { photo }
-      get :map_popup, :id => photo.id
+      get :map_popup, id: photo.id
 
-      response.body.should have_link guess.person.username, :href => person_path(guess.person)
+      response.body.should have_link guess.person.username, href: person_path(guess.person)
       response.body.should include ', February  1, 2011.'
       response.body.should_not include 'Revealed'
 
     end
 
     it "displays a revelation" do
-      photo = Photo.make :person => Person.make(:id => 14), :dateadded => Time.local(2011)
-      revelation = Revelation.make :photo => photo, :commented_at => Time.local(2011, 2)
+      photo = Photo.make person: Person.make(id: 14), dateadded: Time.local(2011)
+      revelation = Revelation.make photo: photo, commented_at: Time.local(2011, 2)
       photo.revelation = revelation
       stub(Photo).includes.stub!.find(photo.id) { photo }
-      get :map_popup, :id => photo.id
+      get :map_popup, id: photo.id
 
       response.body.should_not include 'Guessed by'
       response.body.should include 'Revealed February  1, 2011.'
@@ -185,7 +185,7 @@ describe PhotosController do
 
   describe '#unfound_data' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.utc(2011) }
+      stub(FlickrUpdate).latest { FlickrUpdate.make created_at: Time.utc(2011) }
       stub(Photo).unfound_or_unconfirmed { [ Photo.make ] }
       get :unfound_data
 
@@ -198,21 +198,21 @@ describe PhotosController do
 
   describe '#show' do
     it "renders the page" do
-      photo = Photo.make :id => 1, :dateadded => Time.local(2010), :other_user_comments => 11, :views => 22, :faves => 33
-      guess = Guess.make :photo => photo
+      photo = Photo.make id: 1, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
+      guess = Guess.make photo: photo
       photo.guesses << guess
       stub(Photo).find(photo.id) { photo }
-      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make(:photo => photo) ] }
-      get :show, :id => photo.id
+      stub(Comment).find_all_by_photo_id(photo) { [ Comment.make(photo: photo) ] }
+      get :show, id: photo.id
 
       response.should be_success
       link = top_node.find %Q(a[href="#{url_for_flickr_photo_in_pool(photo)}"])
       link.should have_selector %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
       response.body.should include 'This photo is unfound.'
       table = top_node.find 'table'
-      table.should have_selector 'td', :text => 'guesser_username'
-      table.should have_selector 'td', :text => 'guess text'
-      response.body.should have_selector 'strong', :text => 'commenter_username'
+      table.should have_selector 'td', text: 'guesser_username'
+      table.should have_selector 'td', text: 'guess text'
+      response.body.should have_selector 'strong', text: 'commenter_username'
       response.body.should include 'comment text'
       response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
       response.body.should include "This photo hasn't been found or revealed yet"
@@ -226,11 +226,11 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is mapped" do
-      photo = Photo.make(:id => 1, :latitude => 37, :longitude => -122, :accuracy => 12)
+      photo = Photo.make(id: 1, latitude: 37, longitude: -122, accuracy: 12)
       stub(Photo).find(photo.id) { photo }
-      oldest = Photo.make :dateadded => 1.day.ago
+      oldest = Photo.make dateadded: 1.day.ago
       stub(Photo).oldest { oldest }
-      get :show, :id => photo.id
+      get :show, id: photo.id
 
       json = {
         'id' => photo.id,
@@ -251,11 +251,11 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is auto-mapped" do
-      photo = Photo.make(:id => 1, :inferred_latitude => 37, :inferred_longitude => -122)
+      photo = Photo.make(id: 1, inferred_latitude: 37, inferred_longitude: -122)
       stub(Photo).find(photo.id) { photo }
-      oldest = Photo.make :dateadded => 1.day.ago
+      oldest = Photo.make dateadded: 1.day.ago
       stub(Photo).oldest { oldest }
-      get :show, :id => photo.id
+      get :show, id: photo.id
 
       json = {
         'id' => photo.id,

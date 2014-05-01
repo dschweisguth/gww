@@ -5,19 +5,19 @@
   <h2>Rookies (members who first posted or scored in <%= @year %>)</h2>
 
   <%= render 'wheresies/show/top_people',
-        :title => "Most points in #{@year}",
-        :division => 'Rookie',
-        :statistic => "Points in #{@year}",
-        :people => @rookies_with_most_points_in_year,
-        :key => :points
+        title: "Most points in #{@year}",
+        division: 'Rookie',
+        statistic: "Points in #{@year}",
+        people: @rookies_with_most_points_in_year,
+        key: :points
   %>
 
   <%= render 'wheresies/show/top_people',
-        :title => "Most posts in #{@year}",
-        :division => 'Rookie',
-        :statistic => "Posts in #{@year}",
-        :people => @rookies_with_most_posts_in_year,
-        :key => :posts
+        title: "Most posts in #{@year}",
+        division: 'Rookie',
+        statistic: "Posts in #{@year}",
+        people: @rookies_with_most_posts_in_year,
+        key: :posts
   %>
 
 </div>
@@ -26,19 +26,19 @@
   <h2>All GWSF members</h2>
 
   <%= render 'wheresies/show/top_people',
-        :title => "Most points in #{@year}",
-        :division => 'Member',
-        :statistic => "Points in #{@year}",
-        :people => @most_points_in_year,
-        :key => :points
+        title: "Most points in #{@year}",
+        division: 'Member',
+        statistic: "Points in #{@year}",
+        people: @most_points_in_year,
+        key: :points
   %>
 
   <%= render 'wheresies/show/top_people',
-        :title => "Most posts in #{@year}",
-        :division => 'Member',
-        :statistic => "Posts in #{@year}",
-        :people => @most_posts_in_year,
-        :key => :posts
+        title: "Most posts in #{@year}",
+        division: 'Member',
+        statistic: "Posts in #{@year}",
+        people: @most_posts_in_year,
+        key: :posts
   %>
 
 </div>
@@ -46,24 +46,24 @@
 <br class="clear"/>
 
 <%= render 'wheresies/show/top_photos',
-      :title => "Most-viewed photos of #{@year}",
-      :statistic => 'views',
-      :photos => @most_viewed_in_year,
-      :key => :views
+      title: "Most-viewed photos of #{@year}",
+      statistic: 'views',
+      photos: @most_viewed_in_year,
+      key: :views
 %>
 
 <%= render 'wheresies/show/top_photos',
-      :title => "Most-faved photos of #{@year}",
-      :statistic => 'faves',
-      :photos => @most_faved_in_year,
-      :key => :faves
+      title: "Most-faved photos of #{@year}",
+      statistic: 'faves',
+      photos: @most_faved_in_year,
+      key: :faves
 %>
 
 <%= render 'wheresies/show/top_photos',
-      :title => "Most-commented photos of #{@year}",
-      :statistic => 'comments',
-      :photos => @most_commented_in_year,
-      :key => :comments
+      title: "Most-commented photos of #{@year}",
+      statistic: 'comments',
+      photos: @most_commented_in_year,
+      key: :comments
 %>
 
 <br class="clear"/>
@@ -72,13 +72,13 @@
 
 <table class="dark">
   <%= render 'guesses/longest_and_shortest/header' %>
-  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @longest_in_year %>
+  <%= render partial: 'guesses/longest_and_shortest/guess', collection: @longest_in_year %>
 </table>
 
 <h2>Fastest-guessed photos of <%= @year %></h2>
 <table class="dark">
   <%= render 'guesses/longest_and_shortest/header' %>
-  <%= render :partial => 'guesses/longest_and_shortest/guess', :collection => @shortest_in_year %>
+  <%= render partial: 'guesses/longest_and_shortest/guess', collection: @shortest_in_year %>
 </table>
 
 <% end %>

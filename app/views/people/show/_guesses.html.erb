@@ -1,7 +1,7 @@
 <h2><%= @person.username %> has correctly guessed <%= pluralize @guesses.length, 'photo' %></h2>
 
 <% if ! @favorite_posters.empty? %>
-<p><%= @person.username %> is the <%= link_to 'nemesis', nemeses_people_path, :class => 'normal' %> of <%= -%>
+<p><%= @person.username %> is the <%= link_to 'nemesis', nemeses_people_path, class: 'normal' %> of <%= -%>
 <% @favorite_posters.each_with_index do |favorite_poster, i| %>
 <% if 0 < i && i < @favorite_posters.length - 1 %>, <% elsif 0 < i %> and <% end %><%= link_to_person favorite_poster %> (<%= '%.1f' % favorite_poster[:bias] %>)<%= -%>
 <% end %></p>

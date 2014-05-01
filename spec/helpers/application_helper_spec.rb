@@ -33,7 +33,7 @@ describe ApplicationHelper do
     end
 
     it 'escapes HTML special characters in the username' do
-      person = Person.make :username => 'tom&jerry'
+      person = Person.make username: 'tom&jerry'
       helper.link_to_person(person).should == "<a href=\"#{person_path person}\">tom&amp;jerry</a>"
     end
 
@@ -41,7 +41,7 @@ describe ApplicationHelper do
 
   describe '#link_to_photo' do
     it 'returns a local link to the photo' do
-      photo = Photo.make :id => 666
+      photo = Photo.make id: 666
       helper.link_to_photo(photo).should == '<a href="/photos/666">GWW</a>'
     end
   end
@@ -61,7 +61,7 @@ describe ApplicationHelper do
     end
 
     it 'handles additional attributes' do
-      helper.titled_image_tag('http://the.url', 'the title', :additional => 'foo').should ==
+      helper.titled_image_tag('http://the.url', 'the title', additional: 'foo').should ==
         '<img additional="foo" alt="the title" src="http://the.url" title="the title" />'
     end
 
@@ -69,7 +69,7 @@ describe ApplicationHelper do
 
   describe '#thumbnail' do
     before do
-      @photo = Photo.make :id => 666
+      @photo = Photo.make id: 666
     end
 
     it "returns a photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
@@ -110,7 +110,7 @@ describe ApplicationHelper do
   describe '#title_and_h1' do
     it "adds the title to the head and emits an h1 with the same text" do
       fragment = helper.title_and_h1 'foo'
-      fragment.should have_selector 'h1', :text => 'foo';
+      fragment.should have_selector 'h1', text: 'foo';
       helper.content_for(:title).should == 'foo'
     end
   end

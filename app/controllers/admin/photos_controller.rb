@@ -69,7 +69,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def update_from_flickr
-    redirect_to_edit_path params[:id], :update_from_flickr => true
+    redirect_to_edit_path params[:id], update_from_flickr: true
   end
 
   def destroy
@@ -85,7 +85,7 @@ class Admin::PhotosController < ApplicationController
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
-        redirect_to_edit_path photo, :update_from_flickr => true
+        redirect_to_edit_path photo, update_from_flickr: true
         return
       else
         message = "Sorry, Guess Where Watcher doesn't know anything about " +

@@ -7,7 +7,7 @@ describe PeopleController do
     it 'finds a person' do
       person = Person.make
       stub(Person).find_by_multiple_fields('username') { person }
-      get :find, :username => 'username'
+      get :find, username: 'username'
 
       response.should redirect_to person_path person
 
@@ -15,7 +15,7 @@ describe PeopleController do
 
     it 'punts back to the home page' do
       stub(Person).find_by_multiple_fields('xxx') { nil }
-      get :find, :username => 'xxx'
+      get :find, username: 'xxx'
       response.should redirect_to root_path
       flash[:find_person_error].should == 'xxx'
     end
@@ -27,7 +27,7 @@ describe PeopleController do
       sorted_by_param = 'score'
       order_param = '+'
 
-      person = Person.make :id => 666
+      person = Person.make id: 666
       person[:guess_count] = 1
       person[:post_count] = 1
       person[:score_plus_posts] = 1
@@ -42,28 +42,28 @@ describe PeopleController do
       person[:views_per_post] = 1.0
       person[:faves_per_post] = 1.0
       stub(Person).all_sorted(sorted_by_param, order_param) { [ person ] }
-      get :index, :sorted_by => sorted_by_param, :order => order_param
+      get :index, sorted_by: sorted_by_param, order: order_param
 
       response.should be_success
-      response.body.should have_link 'Score', :href => people_path('score', '-')
-      response.body.should have_link 'username', :href => person_path(person)
+      response.body.should have_link 'Score', href: people_path('score', '-')
+      response.body.should have_link 'username', href: person_path(person)
 
     end
   end
 
   describe '#nemeses' do
     it "renders the page" do
-      guesser = Person.make 'guesser', :id => 666
-      poster = Person.make 'poster', :id => 777
+      guesser = Person.make 'guesser', id: 666
+      poster = Person.make 'poster', id: 777
       guesser[:poster] = poster
       guesser[:bias] = 2.5
       stub(Person).nemeses { [ guesser ] }
       get :nemeses
 
       response.should be_success
-      response.body.should have_link 'guesser_username', :href => person_path(guesser)
-      response.body.should have_link 'poster_username', :href => person_path(poster)
-      response.body.should have_selector 'td', :text => '%.3f' % guesser[:bias]
+      response.body.should have_link 'guesser_username', href: person_path(guesser)
+      response.body.should have_link 'poster_username', href: person_path(poster)
+      response.body.should have_selector 'td', text: '%.3f' % guesser[:bias]
 
     end
   end
@@ -79,8 +79,8 @@ describe PeopleController do
             (0 .. 11).map { |i| Period.starting_at(report_day.beginning_of_month - (i + 1).months, 1.month) },
           [ Period.new(report_day.beginning_of_year, report_day + 1.day) ]
       ]
-      person = Person.make :id => 666
-      guess = Guess.make :person => person, :commented_at => report_day
+      person = Person.make id: 666
+      guess = Guess.make person: person, commented_at: report_day
       (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ person ] }
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
@@ -95,18 +95,18 @@ describe PeopleController do
 
     def response_has_table(title, guess)
       # Restricting the class avoids the enclosing container table
-      tables = top_node.all('table[class=dark]').select { |table| table.has_selector? 'th', :text => title }
+      tables = top_node.all('table[class=dark]').select { |table| table.has_selector? 'th', text: title }
       tables.count.should == 1
       table = tables.first
-      table.should have_selector 'td.opening-number', :text => '1'
-      table.should have_link 'username', :href => person_path(guess.person)
+      table.should have_selector 'td.opening-number', text: '1'
+      table.should have_link 'username', href: person_path(guess.person)
     end
 
   end
 
   describe '#show' do
     before do
-      @person = Person.make :id => 1
+      @person = Person.make id: 1
       @person[:score] = 1 # for the high_scorers methods
       @person[:posts] = 1 # for the top_posters methods
       stub(Person).find(@person.id) { @person }
@@ -121,7 +121,7 @@ describe PeopleController do
     it "renders the page" do
       stub_guesses
       stub_posts
-      get :show, :id => @person.id
+      get :show, id: @person.id
 
       response.should be_success
       response.body.should have_selector %Q(a[href="#{person_map_path(@person)}"]) # the link text is HTML-encoded
@@ -144,7 +144,7 @@ describe PeopleController do
 
       stub_posts
       
-      get :show, :id => @person.id
+      get :show, id: @person.id
 
       response.should be_success
       response.body.should have_selector %Q([href="#{person_map_path(@person)}"])
@@ -172,12 +172,12 @@ describe PeopleController do
       stub(Photo).most_commented(@person)
       stub(Photo).most_viewed(@person)
       stub(Photo).most_faved(@person)
-      stub(Photo).where(:person_id => @person).stub!.includes { [] }
+      stub(Photo).where(person_id: @person).stub!.includes { [] }
       stub(Photo).where(is_a(String), @person) { [] }
       stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
 
-      get :show, :id => @person.id
+      get :show, id: @person.id
 
       response.should be_success
       response.body.should have_selector %Q([href="#{person_map_path(@person)}"])
@@ -187,7 +187,7 @@ describe PeopleController do
       response.body.should include 'username has never posted a photo to the group'
       response.body.should_not include 'username posted the most photos in the last week'
       response.body.should_not include 'username posted the most photos in the last month'
-      response.body.should have_selector 'h2', :text => 'username has posted 0 photos'
+      response.body.should have_selector 'h2', text: 'username has posted 0 photos'
       response.body.should_not include 'Of the photos that username has posted'
       response.body.should_not include 'remains unfound'
       response.body.should_not include 'was revealed'
@@ -247,7 +247,7 @@ describe PeopleController do
       oldest_unfound[:place] = 1
       stub(Photo).oldest_unfound(@person) { oldest_unfound }
 
-      most_commented = Photo.make 'most_commented', :other_user_comments => 1
+      most_commented = Photo.make 'most_commented', other_user_comments: 1
       most_commented[:place] = 1
       stub(Photo).most_commented(@person) { most_commented }
 
@@ -279,7 +279,7 @@ describe PeopleController do
       response.body.should include 'username is in 1st place with a score of 2.'
       response.body.should include 'username scored the most points in the last week'
       response.body.should include 'username scored the most points in the last month'
-      response.body.should have_selector 'h2', :text => 'username has correctly guessed 2 photos'
+      response.body.should have_selector 'h2', text: 'username has correctly guessed 2 photos'
       response.body.should include 'Of the photos that username has guessed,'
       response.body.should have_link 'favorite_poster_username'
     end
@@ -288,7 +288,7 @@ describe PeopleController do
       response.body.should include 'username has posted 2 photos to the group, the most'
       response.body.should include 'username posted the most photos in the last week'
       response.body.should include 'username posted the most photos in the last month'
-      response.body.should have_selector 'h2', :text => 'username has posted 2 photos'
+      response.body.should have_selector 'h2', text: 'username has posted 2 photos'
       response.body.should include '1 remains unfound'
       response.body.should include '1 was revealed'
       response.body.should have_link 'favorite_poster_of_username'
@@ -298,13 +298,13 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
-      person = Person.make :id => 1
+      person = Person.make id: 1
       stub(Person).find(person.id) { person }
-      stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(:person => person) ] }
-      get :guesses, :id => person.id
+      stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(person: person) ] }
+      get :guesses, id: person.id
 
       response.should be_success
-      response.body.should have_selector 'h1', :text => '1 guess by username'
+      response.body.should have_selector 'h1', text: '1 guess by username'
       response.body.should have_link 'guessed_photo_poster_username'
 
     end
@@ -312,7 +312,7 @@ describe PeopleController do
 
   describe '#comments' do
     it 'renders the page' do
-      person = Person.make :id => 1
+      person = Person.make id: 1
       stub(Person).find(person.id) { person }
 
       photo = Photo.make
@@ -324,34 +324,34 @@ describe PeopleController do
       stub(paginated_photos).total_pages { 1 }
       stub(Photo).paginate { paginated_photos }
 
-      get :comments, :id => person.id, :page => "2"
+      get :comments, id: person.id, page: "2"
 
       response.should be_success
-      response.body.should have_selector 'h1', :text => '1 photo commented on by username'
-      response.body.should have_link 'Flickr', :href => url_for_flickr_photo_in_pool(photo)
-      response.body.should have_link 'GWW', :href => photo_path(photo)
-      response.body.should have_link 'poster_username', :href => person_path(photo.person)
+      response.body.should have_selector 'h1', text: '1 photo commented on by username'
+      response.body.should have_link 'Flickr', href: url_for_flickr_photo_in_pool(photo)
+      response.body.should have_link 'GWW', href: photo_path(photo)
+      response.body.should have_link 'poster_username', href: person_path(photo.person)
 
     end
   end
 
   describe '#map' do
     it "renders the page" do
-      person = Person.make :id => 1
+      person = Person.make id: 1
       stub(Person).find(person.id) { person }
       stub(Photo).mapped_count(person.id) { 1 }
       stub(Guess).mapped_count(person.id) { 1 }
       json = { 'property' => 'value' }
       stub(controller).map_photos(person.id) { json }
-      get :map, :id => person.id
+      get :map, id: person.id
 
       assigns[:json].should == json.to_json
 
       response.should be_success
       response.body.should have_selector 'input[id=posts]'
-      response.body.should have_selector 'label', :text => '1 mapped post (?, -)'
+      response.body.should have_selector 'label', text: '1 mapped post (?, -)'
       response.body.should have_selector 'input[id=guesses]'
-      response.body.should have_selector 'label', :text => '1 mapped guess (!)'
+      response.body.should have_selector 'label', text: '1 mapped guess (!)'
       response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
@@ -361,7 +361,7 @@ describe PeopleController do
     it "renders the page" do
       json = { 'property' => 'value' }
       stub(controller).map_photos(1) { json }
-      get :map_json, :id => 1
+      get :map_json, id: 1
 
       response.should be_success
       response.body.should == json.to_json
@@ -371,7 +371,7 @@ describe PeopleController do
 
   describe '#map_photos' do
     before do
-      @person = Person.make :id => 1
+      @person = Person.make id: 1
       stub(Person).find(@person.id) { @person }
       @initial_bounds = PeopleController::INITIAL_MAP_BOUNDS
       @default_max_photos = controller.max_map_photos
@@ -394,13 +394,13 @@ describe PeopleController do
     end
 
     it "copies an inferred geocode to the stated one" do
-      post = Photo.make :id => 14, :person_id => @person.id, :inferred_latitude => 37, :inferred_longitude => -122
+      post = Photo.make id: 14, person_id: @person.id, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
       controller.map_photos(@person.id).should == {
-        :partial => false,
-        :bounds => @initial_bounds,
-        :photos => [
+        partial: false,
+        bounds: @initial_bounds,
+        photos: [
           {
             'id' => post.id,
             'latitude' => post.inferred_latitude,
@@ -413,13 +413,13 @@ describe PeopleController do
     end
 
     it "returns a guess" do
-      photo = Photo.make :id => 15, :person_id => 2, :latitude => 37, :longitude => -122
+      photo = Photo.make id: 15, person_id: 2, latitude: 37, longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
       controller.map_photos(@person.id).should == {
-        :partial => false,
-        :bounds => @initial_bounds,
-        :photos => [
+        partial: false,
+        bounds: @initial_bounds,
+        photos: [
           {
             'id' => photo.id,
             'latitude' => photo.latitude,
@@ -438,13 +438,13 @@ describe PeopleController do
     end
 
     def returns_post(bounds, game_status, color, symbol)
-      post = Photo.make :id => 14, :person_id => @person.id, :latitude => 37, :longitude => -122, :game_status => game_status
+      post = Photo.make id: 14, person_id: @person.id, latitude: 37, longitude: -122, game_status: game_status
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { Photo.make :dateadded => 1.day.ago }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
       controller.map_photos(@person.id).should == {
-        :partial => false,
-        :bounds => bounds,
-        :photos => [
+        partial: false,
+        bounds: bounds,
+        photos: [
           {
             'id' => post.id,
             'latitude' => post.latitude,
@@ -458,14 +458,14 @@ describe PeopleController do
 
     it "returns no more than a maximum number of photos" do
       stub(controller).max_map_photos { 1 }
-      post = Photo.make :id => 14, :person_id => @person.id, :latitude => 37, :longitude => -122
-      oldest_photo = Photo.make :dateadded => 1.day.ago
+      post = Photo.make id: 14, person_id: @person.id, latitude: 37, longitude: -122
+      oldest_photo = Photo.make dateadded: 1.day.ago
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, 2) { [ post, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos(@person.id).should == {
-        :partial => true,
-        :bounds => @initial_bounds,
-        :photos => [
+        partial: true,
+        bounds: @initial_bounds,
+        photos: [
           {
             'id' => post.id,
             'latitude' => post.latitude,
@@ -481,9 +481,9 @@ describe PeopleController do
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [] }
       stub(Photo).oldest { nil }
       controller.map_photos(@person.id).should == {
-        :partial => false,
-        :bounds => @initial_bounds,
-        :photos => []
+        partial: false,
+        bounds: @initial_bounds,
+        photos: []
       }
     end
 

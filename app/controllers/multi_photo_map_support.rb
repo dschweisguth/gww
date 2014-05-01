@@ -22,9 +22,9 @@ module MultiPhotoMapSupport
 
   def as_json(partial, photos)
     {
-      :partial => partial,
-      :bounds => bounds,
-      :photos => photos.as_json(:only => [ :id, :latitude, :longitude, :color, :symbol ])
+      partial: partial,
+      bounds: bounds,
+      photos: photos.as_json(only: [ :id, :latitude, :longitude, :color, :symbol ])
     }
   end
   private :as_json

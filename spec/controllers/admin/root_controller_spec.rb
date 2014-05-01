@@ -5,7 +5,7 @@ describe Admin::RootController do
 
   describe '#index' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011) }
+      stub(FlickrUpdate).latest { FlickrUpdate.make created_at: Time.local(2011) }
       stub(Photo).unfound_or_unconfirmed_count { 111 }
       stub(Photo).where.stub!.count { 222 }
       stub(Guess).group(:photo_id).stub!.count { { 1 => 2, 2 => 2 }  }
@@ -20,7 +20,7 @@ describe Admin::RootController do
     end
 
     it 'reports a completed update' do
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011), :completed_at => Time.local(2001, 1, 1, 0, 6) }
+      stub(FlickrUpdate).latest { FlickrUpdate.make created_at: Time.local(2011), completed_at: Time.local(2001, 1, 1, 0, 6) }
       stub(Photo).unfound_or_unconfirmed_count { 111 }
       stub(Photo).where.stub!.count { 222 }
       stub(Guess).group(:photo_id).stub!.count { { 1 => 2, 2 => 2 }  }

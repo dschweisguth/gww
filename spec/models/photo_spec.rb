@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Photo do
   def valid_attrs
     now = Time.now
-    { :flickrid => 'flickrid',
-      :dateadded => now, :lastupdate => now, :seen_at => now,
-      :game_status => 'unfound',
-      :views => 0, :faves => 0, :member_comments => 0, :member_questions => 0 }
+    { flickrid: 'flickrid',
+      dateadded: now, lastupdate: now, seen_at: now,
+      game_status: 'unfound',
+      views: 0, faves: 0, member_comments: 0, member_questions: 0 }
   end
 
   describe '#person' do
@@ -60,12 +60,12 @@ describe Photo do
 
     %w(unfound unconfirmed found revealed).each do |value|
       it "accepts '#{value}'" do
-        Photo.new(valid_attrs.merge({ :game_status => value })).should be_valid
+        Photo.new(valid_attrs.merge({ game_status: value })).should be_valid
       end
     end
 
     it "rejects other values" do
-      Photo.new(valid_attrs.merge({ :game_status => 'other' })).should_not be_valid
+      Photo.new(valid_attrs.merge({ game_status: 'other' })).should_not be_valid
     end
 
   end
@@ -99,17 +99,17 @@ describe Photo do
 
   describe '.count_between' do
     it 'counts all photos between the given dates' do
-      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 1)
+      Photo.make dateadded: Time.utc(2011, 1, 1, 0, 0, 1)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 1
     end
 
     it 'ignores photos made on or before the from date' do
-      Photo.make :dateadded => Time.utc(2011)
+      Photo.make dateadded: Time.utc(2011)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
     end
 
     it 'ignores photos made after the to date' do
-      Photo.make :dateadded => Time.utc(2011, 1, 1, 0, 0, 2)
+      Photo.make dateadded: Time.utc(2011, 1, 1, 0, 0, 2)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
     end
 
@@ -117,36 +117,36 @@ describe Photo do
 
   describe '.unfound_or_unconfirmed_count_before' do
     it "counts photos added on or before and not scored on or before the given date" do
-      Photo.make :dateadded => Time.utc(2011)
+      Photo.make dateadded: Time.utc(2011)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
     end
 
     it "includes photos guessed after the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Guess.make :photo => photo, :added_at => Time.utc(2011, 2)
+      photo = Photo.make dateadded: Time.utc(2011)
+      Guess.make photo: photo, added_at: Time.utc(2011, 2)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
     end
 
     it "includes photos revealed after the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Revelation.make :photo => photo, :added_at => Time.utc(2011, 2)
+      photo = Photo.make dateadded: Time.utc(2011)
+      Revelation.make photo: photo, added_at: Time.utc(2011, 2)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
     end
 
     it "ignores photos added after the given date" do
-      Photo.make :dateadded => Time.utc(2011, 2)
+      Photo.make dateadded: Time.utc(2011, 2)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
     it "ignores photos guessed on or before the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Guess.make :photo => photo, :added_at => Time.utc(2011)
+      photo = Photo.make dateadded: Time.utc(2011)
+      Guess.make photo: photo, added_at: Time.utc(2011)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
     it "ignores photos revealed on or before the given date" do
-      photo = Photo.make :dateadded => Time.utc(2011)
-      Revelation.make :photo => photo, :added_at => Time.utc(2011)
+      photo = Photo.make dateadded: Time.utc(2011)
+      Revelation.make photo: photo, added_at: Time.utc(2011)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
@@ -155,14 +155,14 @@ describe Photo do
   describe '.add_posts' do
     it "adds each person's posts as an attribute" do
       person = Person.make
-      Photo.make 1, :person => person, :dateadded => Time.utc(2010)
+      Photo.make 1, person: person, dateadded: Time.utc(2010)
       Photo.add_posts [ person ], Time.utc(2011), :posts
       person[:posts].should == 1
     end
 
     it "ignores posts made after the report date" do
       person = Person.make
-      Photo.make 1, :person => person, :dateadded => Time.utc(2011)
+      Photo.make 1, person: person, dateadded: Time.utc(2011)
       Photo.add_posts [ person ], Time.utc(2010), :posts
       person[:posts].should == 0
     end
@@ -174,8 +174,8 @@ describe Photo do
   describe '.first_by' do
     it "returns the poster's first post" do
       poster = Person.make
-      Photo.make 'second', :person => poster, :dateadded => Time.utc(2001)
-      first = Photo.make 'first', :person => poster, :dateadded => Time.utc(2000)
+      Photo.make 'second', person: poster, dateadded: Time.utc(2001)
+      first = Photo.make 'first', person: poster, dateadded: Time.utc(2000)
       Photo.first_by(poster).should == first
     end
 
@@ -189,8 +189,8 @@ describe Photo do
   describe '.most_recent_by' do
     it "returns the poster's most recent post" do
       poster = Person.make
-      Photo.make 'penultimate', :person => poster, :dateadded => Time.utc(2000)
-      most_recent = Photo.make 'most_recent', :person => poster, :dateadded => Time.utc(2001)
+      Photo.make 'penultimate', person: poster, dateadded: Time.utc(2000)
+      most_recent = Photo.make 'most_recent', person: poster, dateadded: Time.utc(2001)
       Photo.most_recent_by(poster).should == most_recent
     end
 
@@ -204,8 +204,8 @@ describe Photo do
   describe '.oldest_unfound' do
     it "returns the poster's oldest unfound" do
       poster = Person.make
-      Photo.make 'second', :person => poster, :dateadded => Time.utc(2001)
-      first = Photo.make 'first', :person => poster, :dateadded => Time.utc(2000)
+      Photo.make 'second', person: poster, dateadded: Time.utc(2001)
+      first = Photo.make 'first', person: poster, dateadded: Time.utc(2000)
       oldest_unfound = Photo.oldest_unfound poster
       oldest_unfound.should == first
       oldest_unfound[:place].should == 1
@@ -217,34 +217,34 @@ describe Photo do
     end
 
     it "considers unconfirmed photos" do
-      photo = Photo.make :game_status => 'unconfirmed'
+      photo = Photo.make game_status: 'unconfirmed'
       Photo.oldest_unfound(photo.person).should == photo
     end
 
     it "ignores game statuses other than unfound and unconfirmed" do
-      photo = Photo.make :game_status => 'found'
+      photo = Photo.make game_status: 'found'
       Photo.oldest_unfound(photo.person).should be_nil
     end
 
     it "considers other posters' oldest unfounds when calculating place" do
-      Photo.make 'oldest', :dateadded => Time.utc(2000)
-      next_oldest = Photo.make 'next_oldest', :dateadded => Time.utc(2001)
+      Photo.make 'oldest', dateadded: Time.utc(2000)
+      next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound[:place].should == 2
     end
 
     it "considers unconfirmed photos when calculating place" do
-      Photo.make 'oldest', :dateadded => Time.utc(2000), :game_status => 'unconfirmed'
-      next_oldest = Photo.make 'next_oldest', :dateadded => Time.utc(2001)
+      Photo.make 'oldest', dateadded: Time.utc(2000), game_status: 'unconfirmed'
+      next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound[:place].should == 2
     end
 
     it "ignores other posters' equally old unfounds when calculating place" do
-      Photo.make 'oldest', :dateadded => Time.utc(2001)
-      next_oldest = Photo.make 'next_oldest', :dateadded => Time.utc(2001)
+      Photo.make 'oldest', dateadded: Time.utc(2001)
+      next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound[:place].should == 1
@@ -259,9 +259,9 @@ describe Photo do
   describe '.most_commented' do
     it "returns the poster's most-commented photo" do
       poster = Person.make
-      Photo.make 'second', :person => poster
-      first = Photo.make 'first', :person => poster, :other_user_comments => 1
-      Comment.make :photo => first
+      Photo.make 'second', person: poster
+      first = Photo.make 'first', person: poster, other_user_comments: 1
+      Comment.make photo: first
       most_commented = Photo.most_commented poster
       most_commented.should == first
       most_commented.other_user_comments.should == 1
@@ -270,11 +270,11 @@ describe Photo do
 
     it "counts comments" do
       poster = Person.make
-      second = Photo.make 'second', :person => poster, :other_user_comments => 1
-      Comment.make 21, :photo => second
-      first = Photo.make 'first', :person => poster, :other_user_comments => 2
-      Comment.make 11, :photo => first
-      Comment.make 12, :photo => first
+      second = Photo.make 'second', person: poster, other_user_comments: 1
+      Comment.make 21, photo: second
+      first = Photo.make 'first', person: poster, other_user_comments: 2
+      Comment.make 11, photo: first
+      Comment.make 12, photo: first
       most_commented = Photo.most_commented poster
       most_commented.should == first
       most_commented.other_user_comments.should == 2
@@ -282,25 +282,25 @@ describe Photo do
     end
 
     it "ignores other posters' photos" do
-      photo = Photo.make :other_user_comments => 1
-      Comment.make :photo => photo
+      photo = Photo.make other_user_comments: 1
+      Comment.make photo: photo
       Photo.most_commented(Person.make).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
-      other_posters_photo = Photo.make 'other_posters', :other_user_comments => 2
-      Comment.make 'o1', :photo => other_posters_photo
-      Comment.make 'o2', :photo => other_posters_photo
-      photo = Photo.make :other_user_comments => 1
-      Comment.make :photo => photo
+      other_posters_photo = Photo.make 'other_posters', other_user_comments: 2
+      Comment.make 'o1', photo: other_posters_photo
+      Comment.make 'o2', photo: other_posters_photo
+      photo = Photo.make other_user_comments: 1
+      Comment.make photo: photo
       Photo.most_commented(photo.person)[:place].should == 2
     end
 
     it "ignores other posters' equally commented photos when calculating place" do
-      other_posters_photo = Photo.make 'other_posters', :other_user_comments => 1
-      Comment.make 'other', :photo => other_posters_photo
-      photo = Photo.make :other_user_comments => 1
-      Comment.make :photo => photo
+      other_posters_photo = Photo.make 'other_posters', other_user_comments: 1
+      Comment.make 'other', photo: other_posters_photo
+      photo = Photo.make other_user_comments: 1
+      Comment.make photo: photo
       Photo.most_commented(photo.person)[:place].should == 1
     end
 
@@ -313,8 +313,8 @@ describe Photo do
   describe '.most_viewed' do
     it "returns the poster's most-viewed photo" do
       poster = Person.make
-      Photo.make 'second', :person => poster
-      first = Photo.make 'first', :person => poster, :views => 1
+      Photo.make 'second', person: poster
+      first = Photo.make 'first', person: poster, views: 1
       most_viewed = Photo.most_viewed poster
       most_viewed.should == first
       most_viewed[:place].should == 1
@@ -326,7 +326,7 @@ describe Photo do
     end
 
     it "considers other posters' photos when calculating place" do
-      Photo.make 'other_posters', :views => 1
+      Photo.make 'other_posters', views: 1
       photo = Photo.make
       Photo.most_viewed(photo.person)[:place].should == 2
     end
@@ -346,8 +346,8 @@ describe Photo do
   describe '.most_faved' do
     it "returns the poster's most-faved photo" do
       poster = Person.make
-      Photo.make 'second', :person => poster
-      first = Photo.make 'first', :person => poster, :faves => 1
+      Photo.make 'second', person: poster
+      first = Photo.make 'first', person: poster, faves: 1
       most_faved = Photo.most_faved poster
       most_faved.should == first
       most_faved[:place].should == 1
@@ -359,7 +359,7 @@ describe Photo do
     end
 
     it "considers other posters' photos when calculating place" do
-      Photo.make 'other_posters', :faves => 1
+      Photo.make 'other_posters', faves: 1
       photo = Photo.make
       Photo.most_faved(photo.person)[:place].should == 2
     end
@@ -388,17 +388,17 @@ describe Photo do
 
   describe '.mapped_count' do
     it "counts mapped photos" do
-      photo = Photo.make :accuracy => 12
+      photo = Photo.make accuracy: 12
       Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "counts auto-mapped photos" do
-      photo = Photo.make :inferred_latitude => 37
+      photo = Photo.make inferred_latitude: 37
       Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "ignores other people's photos" do
-      Photo.make :accuracy => 12
+      Photo.make accuracy: 12
       other_person = Person.make
       Photo.mapped_count(other_person.id).should == 0
     end
@@ -409,7 +409,7 @@ describe Photo do
     end
 
     it "ignores photos mapped with an accuracy < 12" do
-      photo = Photo.make :accuracy => 11
+      photo = Photo.make accuracy: 11
       Photo.mapped_count(photo.person.id).should == 0
     end
 
@@ -421,30 +421,30 @@ describe Photo do
     end
 
     it "returns photos posted by the person" do
-      returns_post :latitude => 37, :longitude => -122, :accuracy => 12
+      returns_post latitude: 37, longitude: -122, accuracy: 12
     end
 
     it "ignores other people's posts" do
-      Photo.make :latitude => 37, :longitude => -122, :accuracy => 12
+      Photo.make latitude: 37, longitude: -122, accuracy: 12
       other_person = Person.make
       Photo.posted_or_guessed_by_and_mapped(other_person.id, @bounds, 1).should == []
     end
 
     it "returns photos guessed by the person" do
-      photo = Photo.make :latitude => 37, :longitude => -122, :accuracy => 12
-      guess = Guess.make :photo => photo
+      photo = Photo.make latitude: 37, longitude: -122, accuracy: 12
+      guess = Guess.make photo: photo
       Photo.posted_or_guessed_by_and_mapped(guess.person.id, @bounds, 1).should == [ photo ]
     end
 
     it "ignores other people's guesses" do
-      photo = Photo.make :latitude => 37, :longitude => -122, :accuracy => 12
-      Guess.make :photo => photo
+      photo = Photo.make latitude: 37, longitude: -122, accuracy: 12
+      Guess.make photo: photo
       other_person = Person.make
       Photo.posted_or_guessed_by_and_mapped(other_person.id, @bounds, 1).should == []
     end
 
     it "returns auto-mapped photos" do
-      returns_post :inferred_latitude => 37, :inferred_longitude => -122
+      returns_post inferred_latitude: 37, inferred_longitude: -122
     end
 
     it "ignores unmapped photos" do
@@ -452,44 +452,44 @@ describe Photo do
     end
 
     it "ignores mapped photos with accuracy < 12" do
-      ignores_post :latitude => 37, :longitude => -122, :accuracy => 11
+      ignores_post latitude: 37, longitude: -122, accuracy: 11
     end
 
     it "ignores mapped photos south of the minimum latitude" do
-      ignores_post :latitude => 35, :longitude => -122, :accuracy => 12
+      ignores_post latitude: 35, longitude: -122, accuracy: 12
     end
 
     it "ignores mapped photos north of the maximum latitude" do
-      ignores_post :latitude => 39, :longitude => -122, :accuracy => 12
+      ignores_post latitude: 39, longitude: -122, accuracy: 12
     end
 
     it "ignores mapped photos west of the minimum longitude" do
-      ignores_post :latitude => 37, :longitude => -124, :accuracy => 12
+      ignores_post latitude: 37, longitude: -124, accuracy: 12
     end
 
     it "ignores mapped photos east of the maximum longitude" do
-      ignores_post :latitude => 37, :longitude => -120, :accuracy => 12
+      ignores_post latitude: 37, longitude: -120, accuracy: 12
     end
 
     it "ignores auto-mapped photos south of the minimum latitude" do
-      ignores_post :inferred_latitude => 35, :inferred_longitude => -122
+      ignores_post inferred_latitude: 35, inferred_longitude: -122
     end
 
     it "ignores auto-mapped photos north of the maximum latitude" do
-      ignores_post :inferred_latitude => 39, :inferred_longitude => -122
+      ignores_post inferred_latitude: 39, inferred_longitude: -122
     end
 
     it "ignores auto-mapped photos west of the minimum longitude" do
-      ignores_post :inferred_latitude => 37, :inferred_longitude => -124
+      ignores_post inferred_latitude: 37, inferred_longitude: -124
     end
 
     it "ignores auto-mapped photos east of the maximum longitude" do
-      ignores_post :inferred_latitude => 37, :inferred_longitude => -120
+      ignores_post inferred_latitude: 37, inferred_longitude: -120
     end
 
     it "returns only the youngest n photos" do
-      photo = Photo.make 1, :latitude => 37, :longitude => -122, :accuracy => 12
-      Photo.make 2, :latitude => 37, :longitude => -122, :dateadded => 1.day.ago, :accuracy => 12
+      photo = Photo.make 1, latitude: 37, longitude: -122, accuracy: 12
+      Photo.make 2, latitude: 37, longitude: -122, dateadded: 1.day.ago, accuracy: 12
       Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == [ photo ]
     end
 
@@ -510,126 +510,126 @@ describe Photo do
   describe '.all_sorted_and_paginated' do
     it 'returns photos sorted by username' do
       all_sorted_and_paginated_reverses_photos('username',
-        { :username => 'z' }, { :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :dateadded => Time.utc(2010) })
+        { username: 'z' }, { dateadded: Time.utc(2011) },
+        { username: 'a' }, { dateadded: Time.utc(2010) })
     end
 
     it 'ignores case' do
       all_sorted_and_paginated_reverses_photos('username',
-        { :username => 'Z' }, { :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :dateadded => Time.utc(2010) })
+        { username: 'Z' }, { dateadded: Time.utc(2011) },
+        { username: 'a' }, { dateadded: Time.utc(2010) })
     end
 
     it 'returns photos sorted by username, dateadded' do
       person = Person.make
-      photo1 = Photo.make 1, :person => person, :dateadded => Time.utc(2010)
-      photo2 = Photo.make 2, :person => person, :dateadded => Time.utc(2011)
+      photo1 = Photo.make 1, person: person, dateadded: Time.utc(2010)
+      photo2 = Photo.make 2, person: person, dateadded: Time.utc(2011)
       Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
     it 'returns photos sorted by dateadded' do
       all_sorted_and_paginated_reverses_photos('date-added',
-        { :username => 'a' }, { :dateadded => Time.utc(2010) },
-        { :username => 'z' }, { :dateadded => Time.utc(2011) })
+        { username: 'a' }, { dateadded: Time.utc(2010) },
+        { username: 'z' }, { dateadded: Time.utc(2011) })
     end
 
     it 'returns photos sorted by dateadded, username' do
       all_sorted_and_paginated_reverses_photos('date-added',
-        { :username => 'z' }, { :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :dateadded => Time.utc(2011) })
+        { username: 'z' }, { dateadded: Time.utc(2011) },
+        { username: 'a' }, { dateadded: Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate' do
       all_sorted_and_paginated_reverses_photos('last-updated',
-        { :username => 'a' }, { :lastupdate => Time.utc(2010) },
-        { :username => 'z' }, { :lastupdate => Time.utc(2011) })
+        { username: 'a' }, { lastupdate: Time.utc(2010) },
+        { username: 'z' }, { lastupdate: Time.utc(2011) })
     end
 
     it 'returns photos sorted by lastupdate, username' do
       all_sorted_and_paginated_reverses_photos('last-updated',
-        { :username => 'z' }, { :lastupdate => Time.utc(2011) },
-        { :username => 'a' }, { :lastupdate => Time.utc(2011) })
+        { username: 'z' }, { lastupdate: Time.utc(2011) },
+        { username: 'a' }, { lastupdate: Time.utc(2011) })
     end
 
     it 'returns photos sorted by views' do
       all_sorted_and_paginated_reverses_photos('views',
-        { :username => 'a' }, { :views => 0 },
-        { :username => 'z' }, { :views => 1 })
+        { username: 'a' }, { views: 0 },
+        { username: 'z' }, { views: 1 })
     end
 
     it 'returns photos sorted by views, username' do
       all_sorted_and_paginated_reverses_photos('views',
-        { :username => 'z' }, { :views => 0 },
-        { :username => 'a' }, { :views => 0 })
+        { username: 'z' }, { views: 0 },
+        { username: 'a' }, { views: 0 })
     end
 
     it 'returns photos sorted by faves' do
       all_sorted_and_paginated_reverses_photos('faves',
-        { :username => 'a' }, { :faves => 0 },
-        { :username => 'z' }, { :faves => 1 })
+        { username: 'a' }, { faves: 0 },
+        { username: 'z' }, { faves: 1 })
     end
 
     it 'returns photos sorted by faves, username' do
       all_sorted_and_paginated_reverses_photos('faves',
-        { :username => 'z' }, { :faves => 0 },
-        { :username => 'a' }, { :faves => 0 })
+        { username: 'z' }, { faves: 0 },
+        { username: 'a' }, { faves: 0 })
     end
 
     it 'returns photos sorted by comments' do
       all_sorted_and_paginated_reverses_photos('comments',
-        { :username => 'a' }, { :other_user_comments => 0 },
-        { :username => 'z' }, { :other_user_comments => 1 })
+        { username: 'a' }, { other_user_comments: 0 },
+        { username: 'z' }, { other_user_comments: 1 })
     end
 
     it 'returns photos sorted by comments, username' do
       all_sorted_and_paginated_reverses_photos('comments',
-        { :username => 'z' }, { :other_user_comments => 0 },
-        { :username => 'a' }, { :other_user_comments => 0 })
+        { username: 'z' }, { other_user_comments: 0 },
+        { username: 'a' }, { other_user_comments: 0 })
     end
 
     it 'returns photos sorted by member_comments' do
       all_sorted_and_paginated_reverses_photos('member-comments',
-        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
-        { :username => 'z' }, { :member_comments => 1, :dateadded => Time.utc(2010) })
+        { username: 'a' }, { member_comments: 0, dateadded: Time.utc(2011) },
+        { username: 'z' }, { member_comments: 1, dateadded: Time.utc(2010) })
     end
 
     it 'returns photos sorted by member_comments, dateadded' do
       all_sorted_and_paginated_reverses_photos('member-comments',
-        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2010) },
-        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
+        { username: 'a' }, { member_comments: 0, dateadded: Time.utc(2010) },
+        { username: 'z' }, { member_comments: 0, dateadded: Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_comments, dateadded, username' do
       all_sorted_and_paginated_reverses_photos('member-comments',
-        { :username => 'z' }, { :member_comments => 0, :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :member_comments => 0, :dateadded => Time.utc(2011) })
+        { username: 'z' }, { member_comments: 0, dateadded: Time.utc(2011) },
+        { username: 'a' }, { member_comments: 0, dateadded: Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_questions' do
       all_sorted_and_paginated_reverses_photos('member-questions',
-        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
-        { :username => 'z' }, { :member_questions => 1, :dateadded => Time.utc(2010) })
+        { username: 'a' }, { member_questions: 0, dateadded: Time.utc(2011) },
+        { username: 'z' }, { member_questions: 1, dateadded: Time.utc(2010) })
     end
 
     it 'returns photos sorted by member_questions, dateadded' do
       all_sorted_and_paginated_reverses_photos('member-questions',
-        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2010) },
-        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
+        { username: 'a' }, { member_questions: 0, dateadded: Time.utc(2010) },
+        { username: 'z' }, { member_questions: 0, dateadded: Time.utc(2011) })
     end
 
     it 'returns photos sorted by member_questions, dateadded, username' do
       all_sorted_and_paginated_reverses_photos('member-questions',
-        { :username => 'z' }, { :member_questions => 0, :dateadded => Time.utc(2011) },
-        { :username => 'a' }, { :member_questions => 0, :dateadded => Time.utc(2011) })
+        { username: 'z' }, { member_questions: 0, dateadded: Time.utc(2011) },
+        { username: 'a' }, { member_questions: 0, dateadded: Time.utc(2011) })
     end
 
     def all_sorted_and_paginated_reverses_photos(sorted_by,
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
       person1 = Person.make 1, person_1_options
-      photo1 = Photo.make 1, photo_1_options.merge({ :person => person1 })
+      photo1 = Photo.make 1, photo_1_options.merge({ person: person1 })
       person2 = Person.make 2, person_2_options
-      photo2 = Photo.make 2, photo_2_options.merge({ :person => person2 })
+      photo2 = Photo.make 2, photo_2_options.merge({ person: person2 })
       Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
 
     end
@@ -642,12 +642,12 @@ describe Photo do
     end
 
     it "returns photos" do
-      photo = Photo.make :latitude => 1, :longitude => 4, :accuracy => 12
+      photo = Photo.make latitude: 1, longitude: 4, accuracy: 12
       Photo.mapped(@bounds, 1).should == [ photo ]
     end
 
     it "returns auto-mapped photos" do
-      photo = Photo.make :inferred_latitude => 1, :inferred_longitude => 4, :accuracy => 12
+      photo = Photo.make inferred_latitude: 1, inferred_longitude: 4, accuracy: 12
       Photo.mapped(@bounds, 1).should == [ photo ]
     end
 
@@ -657,53 +657,53 @@ describe Photo do
     end
 
     it "ignores mapped photos with accuracy < 12" do
-      Photo.make :latitude => 1, :longitude => 4, :accuracy => 11
+      Photo.make latitude: 1, longitude: 4, accuracy: 11
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores mapped photos south of the minimum latitude" do
-      Photo.make :latitude => -1, :longitude => 4, :accuracy => 12
+      Photo.make latitude: -1, longitude: 4, accuracy: 12
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores mapped photos north of the maximum latitude" do
-      Photo.make :latitude => 3, :longitude => 4, :accuracy => 12
+      Photo.make latitude: 3, longitude: 4, accuracy: 12
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores mapped photos west of the minimum longitude" do
-      Photo.make :latitude => 1, :longitude => 2, :accuracy => 12
+      Photo.make latitude: 1, longitude: 2, accuracy: 12
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores mapped photos east of the maximum longitude" do
-      Photo.make :latitude => 1, :longitude => 6, :accuracy => 12
+      Photo.make latitude: 1, longitude: 6, accuracy: 12
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos south of the minimum latitude" do
-      Photo.make :inferred_latitude => -1, :inferred_longitude => 4
+      Photo.make inferred_latitude: -1, inferred_longitude: 4
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos north of the maximum latitude" do
-      Photo.make :inferred_latitude => 3, :inferred_longitude => 4
+      Photo.make inferred_latitude: 3, inferred_longitude: 4
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos west of the minimum longitude" do
-      Photo.make :inferred_latitude => 1, :inferred_longitude => 2
+      Photo.make inferred_latitude: 1, inferred_longitude: 2
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos east of the maximum longitude" do
-      Photo.make :inferred_latitude => 1, :inferred_longitude => 6
+      Photo.make inferred_latitude: 1, inferred_longitude: 6
       Photo.mapped(@bounds, 1).should == []
     end
 
     it "returns only the youngest n photos" do
-      photo = Photo.make 1, :latitude => 1, :longitude => 4, :accuracy => 12
-      Photo.make 2, :latitude => 1, :longitude => 4, :accuracy => 12, :dateadded => 1.day.ago
+      photo = Photo.make 1, latitude: 1, longitude: 4, accuracy: 12
+      Photo.make 2, latitude: 1, longitude: 4, accuracy: 12, dateadded: 1.day.ago
       Photo.mapped(@bounds, 1).should == [ photo ]
     end
 
@@ -712,7 +712,7 @@ describe Photo do
   describe '.oldest' do
     it "returns the oldest photo" do
       Photo.make 1
-      photo = Photo.make 2, :dateadded => 1.day.ago
+      photo = Photo.make 2, dateadded: 1.day.ago
       Photo.oldest.should == photo
     end
   end
@@ -720,14 +720,14 @@ describe Photo do
   describe '.unfound_or_unconfirmed' do
     %w(unfound unconfirmed).each do |game_status|
       it "returns #{game_status} photos" do
-        photo = Photo.make :game_status => game_status
+        photo = Photo.make game_status: game_status
         Photo.unfound_or_unconfirmed.should == [ photo ]
       end
     end
 
     %w(found revealed).each do |game_status|
       it "ignores #{game_status} photos" do
-        Photo.make :game_status => game_status
+        Photo.make game_status: game_status
         Photo.unfound_or_unconfirmed.should == []
       end
     end
@@ -738,23 +738,23 @@ describe Photo do
 
   describe '.most_viewed_in_year' do
     it 'lists photos' do
-      photo = Photo.make :dateadded => Time.local(2010).getutc
+      photo = Photo.make dateadded: Time.local(2010).getutc
       Photo.most_viewed_in(2010).should == [ photo ]
     end
 
     it 'sorts by views' do
-      photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc, :views => 0
-      photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc, :views => 1
+      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc, views: 0
+      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc, views: 1
       Photo.most_viewed_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
-      Photo.make :dateadded => Time.local(2009).getutc
+      Photo.make dateadded: Time.local(2009).getutc
       Photo.most_viewed_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
-      Photo.make :dateadded => Time.local(2011).getutc
+      Photo.make dateadded: Time.local(2011).getutc
       Photo.most_viewed_in(2010).should == []
     end
 
@@ -762,23 +762,23 @@ describe Photo do
 
   describe '.most_faved_in_year' do
     it 'lists photos' do
-      photo = Photo.make :dateadded => Time.local(2010).getutc
+      photo = Photo.make dateadded: Time.local(2010).getutc
       Photo.most_faved_in(2010).should == [ photo ]
     end
 
     it 'sorts by faves' do
-      photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc, :faves => 0
-      photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc, :faves => 1
+      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc, faves: 0
+      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc, faves: 1
       Photo.most_faved_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
-      Photo.make :dateadded => Time.local(2009).getutc
+      Photo.make dateadded: Time.local(2009).getutc
       Photo.most_faved_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
-      Photo.make :dateadded => Time.local(2011).getutc
+      Photo.make dateadded: Time.local(2011).getutc
       Photo.most_faved_in(2010).should == []
     end
 
@@ -786,35 +786,35 @@ describe Photo do
 
   describe '.most_commented_in_year' do
     it 'lists photos' do
-      photo = Photo.make :dateadded => Time.local(2010).getutc
-      Comment.make :photo => photo
+      photo = Photo.make dateadded: Time.local(2010).getutc
+      Comment.make photo: photo
       Photo.most_commented_in(2010).should == [ photo ]
     end
 
     it 'sorts by comment count' do
-      photo1 = Photo.make 1, :dateadded => Time.local(2010).getutc
-      Comment.make 11, :photo => photo1
-      photo2 = Photo.make 2, :dateadded => Time.local(2010).getutc
-      Comment.make 21, :photo => photo2
-      Comment.make 22, :photo => photo2
+      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc
+      Comment.make 11, photo: photo1
+      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc
+      Comment.make 21, photo: photo2
+      Comment.make 22, photo: photo2
       Photo.most_commented_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
-      photo = Photo.make :dateadded => Time.local(2009).getutc
-      Comment.make :photo => photo
+      photo = Photo.make dateadded: Time.local(2009).getutc
+      Comment.make photo: photo
       Photo.most_commented_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
-      photo = Photo.make :dateadded => Time.local(2011).getutc
-      Comment.make :photo => photo
+      photo = Photo.make dateadded: Time.local(2011).getutc
+      Comment.make photo: photo
       Photo.most_commented_in(2010).should == []
     end
 
     it "ignores comments by the poster" do
-      photo = Photo.make :dateadded => Time.local(2010).getutc
-      Comment.make :photo => photo, :flickrid => photo.person.flickrid
+      photo = Photo.make dateadded: Time.local(2010).getutc
+      Comment.make photo: photo, flickrid: photo.person.flickrid
       Photo.most_commented_in(2010).should == []
     end
 
@@ -825,14 +825,14 @@ describe Photo do
   describe '.unfound_or_unconfirmed_count' do
     %w(unfound unconfirmed).each do |game_status|
       it "counts #{game_status} photos" do
-        Photo.make :game_status => game_status
+        Photo.make game_status: game_status
         Photo.unfound_or_unconfirmed_count.should == 1
       end
     end
 
     %w(found revealed).each do |game_status|
       it "ignores #{game_status} photos" do
-        Photo.make :game_status => game_status
+        Photo.make game_status: game_status
         Photo.unfound_or_unconfirmed_count.should == 0
       end
     end
@@ -880,7 +880,7 @@ describe Photo do
       stub_get_faves
       Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
 
-      photos = Photo.all :include => :person
+      photos = Photo.all include: :person
       photos.size.should == 1
       photo = photos[0]
       person = photo.person
@@ -937,7 +937,7 @@ describe Photo do
     it 'uses an existing person, and updates their information if it changed' do
       stub_get_photos
       stub_get_faves
-      person_before = Person.make :flickrid => 'incoming_person_flickrid', :username => 'old_username', :pathalias => 'incoming_person_pathalias'
+      person_before = Person.make flickrid: 'incoming_person_flickrid', username: 'old_username', pathalias: 'incoming_person_pathalias'
       Photo.update_all_from_flickr.should == [ 1, 0, 1, 1 ]
       people = Person.all
       people.size.should == 1
@@ -951,20 +951,20 @@ describe Photo do
     it 'uses an existing photo, and updates attributes that changed' do
       stub_get_photos
       stub_get_faves
-      person = Person.make :flickrid => 'incoming_person_flickrid'
+      person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
-        :person => person,
-        :flickrid => 'incoming_photo_flickrid',
-        :farm => '1',
-        :server => 'old_server',
-        :secret => 'old_secret',
-        :latitude => 37.654321,
-        :latitude => -122.123456,
-        :accuracy => 15,
-        :dateadded => Time.utc(2010),
-        :lastupdate => Time.utc(2010, 1, 1, 1),
-        :views => 40,
-        :faves => 6
+        person: person,
+        flickrid: 'incoming_photo_flickrid',
+        farm: '1',
+        server: 'old_server',
+        secret: 'old_secret',
+        latitude: 37.654321,
+        latitude: -122.123456,
+        accuracy: 15,
+        dateadded: Time.utc(2010),
+        lastupdate: Time.utc(2010, 1, 1, 1),
+        views: 40,
+        faves: 6
       Photo.update_all_from_flickr.should == [ 0, 0, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
@@ -1005,20 +1005,20 @@ describe Photo do
           } ]
         } ]
       } }
-      person = Person.make :flickrid => 'incoming_person_flickrid'
+      person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
-        :person => person,
-        :flickrid => 'incoming_photo_flickrid',
-        :farm => '1',
-        :server => 'old_server',
-        :secret => 'old_secret',
-        :latitude => 37.654321,
-        :latitude => -122.123456,
-        :accuracy => 15,
-        :dateadded => Time.utc(2010),
-        :lastupdate => Time.utc(2010, 1, 1, 1),
-        :views => 40,
-        :faves => 6
+        person: person,
+        flickrid: 'incoming_photo_flickrid',
+        farm: '1',
+        server: 'old_server',
+        secret: 'old_secret',
+        latitude: 37.654321,
+        latitude: -122.123456,
+        accuracy: 15,
+        dateadded: Time.utc(2010),
+        lastupdate: Time.utc(2010, 1, 1, 1),
+        views: 40,
+        faves: 6
       Photo.update_all_from_flickr.should == [ 0, 0, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
@@ -1079,7 +1079,7 @@ describe Photo do
 
   describe '.update_seen_at' do
     it 'updates seen_at' do
-      photo = Photo.make :seen_at => Time.utc(2010)
+      photo = Photo.make seen_at: Time.utc(2010)
       Photo.update_seen_at [ photo.flickrid ], Time.utc(2011)
       photo.reload
       photo.seen_at.should == Time.utc(2011)
@@ -1097,14 +1097,14 @@ describe Photo do
 
       it "ignores comments by the poster" do
         photo = Photo.make
-        Comment.make :photo => photo, :flickrid => photo.person.flickrid, :username => photo.person.username
+        Comment.make photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
         Photo.update_statistics
         photo.reload
         photo.other_user_comments.should == 0
       end
 
       it "handles photos which go from nonzero to zero comments" do
-        photo = Photo.make :other_user_comments => 1
+        photo = Photo.make other_user_comments: 1
         Photo.update_statistics
         photo.reload
         photo.other_user_comments.should == 0
@@ -1115,9 +1115,9 @@ describe Photo do
     describe "when updating member comments" do
       it 'counts comments on guessed photos' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_comments.should == 1
@@ -1125,8 +1125,8 @@ describe Photo do
 
       it 'ignores comments by the poster' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username
+        Comment.make photo: guess.photo,
+          flickrid: guess.photo.person.flickrid, username: guess.photo.person.username
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_comments.should == 0
@@ -1134,7 +1134,7 @@ describe Photo do
 
       it 'ignores comments by non-members' do
         guess = Guess.make
-        Comment.make :photo => guess.photo
+        Comment.make photo: guess.photo
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_comments.should == 0
@@ -1142,12 +1142,12 @@ describe Photo do
 
       it 'counts comments other than the guess' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at - 5
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at - 5
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_comments.should == 2
@@ -1155,12 +1155,12 @@ describe Photo do
 
       it 'ignores comments after the guess' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at + 5
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at + 5
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_comments.should == 1
@@ -1170,8 +1170,8 @@ describe Photo do
       # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
       # didn't work that way
       it "handles photos which go from nonzero to zero comments" do
-        photo = Photo.make :member_comments => 1
-        Guess.make :photo => photo
+        photo = Photo.make member_comments: 1
+        Guess.make photo: photo
         Photo.update_statistics
         photo.reload
         photo.member_comments.should == 0
@@ -1182,9 +1182,9 @@ describe Photo do
     describe "when updating member questions" do
       it 'counts questions on guessed photos' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at, :comment_text => '?'
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 1
@@ -1192,9 +1192,9 @@ describe Photo do
 
       it 'ignores questions by the poster' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.photo.person.flickrid, :username => guess.photo.person.username,
-          :comment_text => '?'
+        Comment.make photo: guess.photo,
+          flickrid: guess.photo.person.flickrid, username: guess.photo.person.username,
+          comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 0
@@ -1202,7 +1202,7 @@ describe Photo do
 
       it 'ignores questions by non-members' do
         guess = Guess.make
-        Comment.make :photo => guess.photo, :comment_text => '?'
+        Comment.make photo: guess.photo, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 0
@@ -1210,12 +1210,12 @@ describe Photo do
 
       it 'counts questions other than the guess' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at - 5, :comment_text => '?'
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at, :comment_text => '?'
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at - 5, comment_text: '?'
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 2
@@ -1223,12 +1223,12 @@ describe Photo do
 
       it 'ignores questions after the guess' do
         guess = Guess.make
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at, :comment_text => '?'
-        Comment.make :photo => guess.photo,
-          :flickrid => guess.person.flickrid, :username => guess.person.username,
-          :commented_at => guess.commented_at + 5, :comment_text => '?'
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at, comment_text: '?'
+        Comment.make photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username,
+          commented_at: guess.commented_at + 5, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 1
@@ -1238,8 +1238,8 @@ describe Photo do
       # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
       # didn't work that way
       it "handles photos which go from nonzero to zero comments" do
-        photo = Photo.make :member_questions => 1
-        Guess.make :photo => photo
+        photo = Photo.make member_questions: 1
+        Guess.make photo: photo
         Photo.update_statistics
         photo.reload
         photo.member_questions.should == 0
@@ -1261,7 +1261,7 @@ describe Photo do
     end
 
     it "infers each guessed photo's lat+long from its guess" do
-      answer = Guess.make :comment_text => 'A parseable comment'
+      answer = Guess.make comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
@@ -1274,7 +1274,7 @@ describe Photo do
     end
 
     it "infers each revealed photo's lat+long from its revelation" do
-      answer = Revelation.make :comment_text => 'A parseable comment'
+      answer = Revelation.make comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
@@ -1287,8 +1287,8 @@ describe Photo do
     end
 
     it "removes an existing inferred geocode if the comment can't be parsed" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      answer = Guess.make :photo => photo, :comment_text => 'An unparseable comment'
+      photo = Photo.make inferred_latitude: 37, inferred_longitude: -122
+      answer = Guess.make photo: photo, comment_text: 'An unparseable comment'
       stub(@parser).parse(answer.comment_text) { [] }
       Photo.infer_geocodes
 
@@ -1299,8 +1299,8 @@ describe Photo do
     end
 
     it "removes an existing inferred geocode if the location can't be geocoded" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      answer = Guess.make :photo => photo, :comment_text => 'A parseable but not geocodable comment'
+      photo = Photo.make inferred_latitude: 37, inferred_longitude: -122
+      answer = Guess.make photo: photo, comment_text: 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { nil }
@@ -1313,8 +1313,8 @@ describe Photo do
     end
 
     it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
-      photo = Photo.make :inferred_latitude => 37, :inferred_longitude => -122
-      answer = Guess.make :photo => photo, :comment_text => 'A comment with multiple gecodable locations'
+      photo = Photo.make inferred_latitude: 37, inferred_longitude: -122
+      answer = Guess.make photo: photo, comment_text: 'A comment with multiple gecodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location1, location2 ] }
@@ -1334,26 +1334,26 @@ describe Photo do
 
   describe '.inaccessible' do
     it "lists photos not seen since the last update" do
-      FlickrUpdate.make :created_at => Time.utc(2011)
-      photo = Photo.make :seen_at => Time.utc(2010)
+      FlickrUpdate.make created_at: Time.utc(2011)
+      photo = Photo.make seen_at: Time.utc(2010)
       Photo.inaccessible.should == [ photo ]
     end
 
     it "includes unconfirmed photos" do
-      FlickrUpdate.make :created_at => Time.utc(2011)
-      photo = Photo.make :seen_at => Time.utc(2010), :game_status => 'unconfirmed'
+      FlickrUpdate.make created_at: Time.utc(2011)
+      photo = Photo.make seen_at: Time.utc(2010), game_status: 'unconfirmed'
       Photo.inaccessible.should == [ photo ]
     end
 
     it "ignores photos seen since the last update" do
-      FlickrUpdate.make :created_at => Time.utc(2011)
-      Photo.make :seen_at => Time.utc(2011)
+      FlickrUpdate.make created_at: Time.utc(2011)
+      Photo.make seen_at: Time.utc(2011)
       Photo.inaccessible.should == []
     end
 
     it "ignores statuses other than unfound and unconfirmed" do
-      FlickrUpdate.make :created_at => Time.utc(2011)
-      Photo.make :seen_at => Time.utc(2010), :game_status => 'found'
+      FlickrUpdate.make created_at: Time.utc(2011)
+      Photo.make seen_at: Time.utc(2010), game_status: 'found'
       Photo.inaccessible.should == []
     end
 
@@ -1362,8 +1362,8 @@ describe Photo do
   describe '.multipoint' do
     it 'returns photos for which more than one person got a point' do
       photo = Photo.make
-      Guess.make 1, :photo => photo
-      Guess.make 2, :photo => photo
+      Guess.make 1, photo: photo
+      Guess.make 2, photo: photo
       Photo.multipoint.should == [ photo ]
     end
 
@@ -1377,7 +1377,7 @@ describe Photo do
   describe '.find_with_associations' do
     it "returns a revealed photo with all of its associated objects" do
       photo_in = Photo.make
-      revelation = Revelation.make :photo => photo_in
+      revelation = Revelation.make photo: photo_in
       photo_out = Photo.find_with_associations photo_in.id
       photo_out.person.should == photo_in.person
       photo_out.revelation.should == revelation
@@ -1385,7 +1385,7 @@ describe Photo do
 
     it "returns a guessed photo with all of its associated objects" do
       photo_in = Photo.make
-      guess = Guess.make :photo => photo_in
+      guess = Guess.make photo: photo_in
       photo_out = Photo.find_with_associations photo_in.id
       photo_out.person.should == photo_in.person
       photo_out.guesses.should == [ guess ]
@@ -1408,7 +1408,7 @@ describe Photo do
     end
 
     it "deletes previous comments" do
-      Comment.make 'previous', :photo => @photo
+      Comment.make 'previous', photo: @photo
       stub_get_faves
       stub_request_to_return_one_comment
       @photo.update_from_flickr
@@ -1416,7 +1416,7 @@ describe Photo do
     end
 
     it "does not delete previous comments if the photo currently has no comments" do
-      Comment.make 'previous', :photo => @photo
+      Comment.make 'previous', photo: @photo
       stub_get_faves
       stub(FlickrService.instance).photos_comments_get_list { {
         'comments' => [ {
@@ -1428,7 +1428,7 @@ describe Photo do
     end
 
     it "leaves previous comments alone if the request for comments fails" do
-      Comment.make 'previous', :photo => @photo
+      Comment.make 'previous', photo: @photo
       stub_get_faves
       stub(FlickrService.instance).photos_comments_get_list { raise FlickrService::FlickrRequestFailedError }
       @photo.update_from_flickr
@@ -1479,7 +1479,7 @@ describe Photo do
 
     it 'deletes existing guesses' do
       photo = Photo.make
-      guess = Guess.make :photo => photo
+      guess = Guess.make photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
       owner_does_not_exist guess
@@ -1487,7 +1487,7 @@ describe Photo do
 
     it 'deletes existing revelations' do
       photo = Photo.make
-      Revelation.make :photo => photo
+      Revelation.make photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Revelation.count.should == 0
     end
@@ -1538,7 +1538,7 @@ describe Photo do
 
       it 'deletes an existing guess' do
         photo = Photo.make
-        guess = Guess.make :photo => photo
+        guess = Guess.make photo: photo
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
         Guess.count.should == 0
         owner_does_not_exist guess
@@ -1575,7 +1575,7 @@ describe Photo do
         stub_person_request
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
         #noinspection RubyArgCount
-        guess = Guess.find_by_photo_id photo, :include => :person
+        guess = Guess.find_by_photo_id photo, include: :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'username_from_request'
         guess.person.pathalias.should == 'pathalias_from_request'
@@ -1588,7 +1588,7 @@ describe Photo do
         stub_person_request_failure
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
         #noinspection RubyArgCount
-        guess = Guess.find_by_photo_id photo, :include => :person
+        guess = Guess.find_by_photo_id photo, include: :person
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'commenter_username'
         guess.person.pathalias.should == nil
@@ -1692,11 +1692,11 @@ describe Photo do
 
   describe '#years_old' do
     it "returns 0 for a photo posted moments ago" do
-      Photo.make(:dateadded => Time.now).years_old.should == 0
+      Photo.make(dateadded: Time.now).years_old.should == 0
     end
 
     it "returns 1 for a photo posted moments + 1 year ago" do
-      Photo.make(:dateadded => Time.now - 1.years).years_old.should == 1
+      Photo.make(dateadded: Time.now - 1.years).years_old.should == 1
     end
 
   end
@@ -1706,7 +1706,7 @@ describe Photo do
     expected = { 0 => nil, 1 => :bronze, 2 => :silver, 3 => :gold }
     expected.keys.sort.each do |years_old|
       it "returns a #{expected[years_old]} star for a #{years_old}-year-old photo" do
-        photo = Photo.new :dateadded => now - years_old.years
+        photo = Photo.new dateadded: now - years_old.years
         photo.star_for_age.should == expected[years_old]
       end
     end
@@ -1714,7 +1714,7 @@ describe Photo do
 
   describe '#time_elapsed' do
     it 'returns the age with a precision of seconds in English' do
-      photo = Photo.new :dateadded => Time.utc(2000)
+      photo = Photo.new dateadded: Time.utc(2000)
       stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
       photo.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second'
     end
@@ -1722,7 +1722,7 @@ describe Photo do
 
   describe '#ymd_elapsed' do
     it 'returns the age with a precision of days in English' do
-      photo = Photo.new :dateadded => Time.utc(2000)
+      photo = Photo.new dateadded: Time.utc(2000)
       stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
       photo.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day'
     end
@@ -1743,7 +1743,7 @@ describe Photo do
     expected = { 0 => nil, 300 => :bronze, 1000 => :silver, 3000 => :gold }
     expected.keys.sort.each do |views|
       it "returns a #{expected[views]} star for a photo with #{views} views" do
-        photo = Photo.new :views => views
+        photo = Photo.new views: views
         photo.star_for_views.should == expected[views]
       end
     end
@@ -1753,7 +1753,7 @@ describe Photo do
     expected = { 0 => nil, 10 => :bronze, 30 => :silver, 100 => :gold }
     expected.keys.sort.each do |faves|
       it "returns a #{expected[faves]} star for a photo with #{faves} faves" do
-        photo = Photo.new :faves => faves
+        photo = Photo.new faves: faves
         photo.star_for_faves.should == expected[faves]
       end
     end
@@ -1765,15 +1765,15 @@ describe Photo do
     end
 
     it "returns true if the photo is mapped at sufficient accuracy" do
-      Photo.make(:latitude => 37, :longitude => -122, :accuracy => 12).mapped?.should == true
+      Photo.make(latitude: 37, longitude: -122, accuracy: 12).mapped?.should == true
     end
 
     it "returns false if the photo is mapped at insufficient accuracy" do
-      Photo.make(:latitude => 37, :longitude => -122, :accuracy => 11).mapped?.should == false
+      Photo.make(latitude: 37, longitude: -122, accuracy: 11).mapped?.should == false
     end
 
     it "returns false even if the photo is auto-mapped" do
-      Photo.make(:inferred_latitude => 37, :inferred_longitude => -122).mapped?.should == false
+      Photo.make(inferred_latitude: 37, inferred_longitude: -122).mapped?.should == false
     end
 
   end
@@ -1784,15 +1784,15 @@ describe Photo do
     end
 
     it "returns true if the photo is mapped at sufficient accuracy" do
-      Photo.make(:latitude => 37, :longitude => -122, :accuracy => 12).mapped_or_automapped?.should == true
+      Photo.make(latitude: 37, longitude: -122, accuracy: 12).mapped_or_automapped?.should == true
     end
 
     it "returns false if the photo is mapped at insufficient accuracy" do
-      Photo.make(:latitude => 37, :longitude => -122, :accuracy => 11).mapped_or_automapped?.should == false
+      Photo.make(latitude: 37, longitude: -122, accuracy: 11).mapped_or_automapped?.should == false
     end
 
     it "returns true if the photo is auto-mapped" do
-      Photo.make(:inferred_latitude => 37, :inferred_longitude => -122).mapped_or_automapped?.should == true
+      Photo.make(inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?.should == true
     end
 
   end

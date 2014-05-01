@@ -1,6 +1,6 @@
 <% if trophy %>
 <td>
-  <%= if star then titled_image_tag image_for_star(star), alt, :size => '15x15' end %>
+  <%= if star then titled_image_tag image_for_star(star), alt, size: '15x15' end %>
   <span><%= link_to_if trophy.is_a?(Guess) && trophy[:place] <= 10, "#{trophy[:place].ordinal} place#{'!' if trophy[:place] <= 10}", longest_and_shortest_guesses_path %></span>
 </td>
 <% end %>

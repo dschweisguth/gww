@@ -21,7 +21,7 @@ module ScoreReportsControllerSupport
     people, people_by_score = people_by_score report_date
     Person.add_change_in_standings people_by_score, people, previous_report_date, @guessers
 
-    raw_html = render_to_string(:partial => 'score_reports/raw_thumbnails').chomp
+    raw_html = render_to_string(partial: 'score_reports/raw_thumbnails').chomp
     @gww_thumbnails_html = raw_html.gsub /$/, '<br/>'
     raw_html
 
@@ -48,10 +48,10 @@ module ScoreReportsControllerSupport
     @total_participants = people.length
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
     @total_correct_guessers = @total_participants - @total_posters_only
-    @member_count = FlickrUpdate.first(:order => 'id desc').member_count
+    @member_count = FlickrUpdate.first(order: 'id desc').member_count
     @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
 
-    raw_html = render_to_string(:partial => 'score_reports/raw_stats').chomp
+    raw_html = render_to_string(partial: 'score_reports/raw_stats').chomp
     @gww_stats_html = raw_html.gsub /$/, '<br/>'
     raw_html
 

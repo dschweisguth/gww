@@ -4,20 +4,20 @@
 <table class="container"><tr>
   <td>
     <%= render 'people/top_guessers/period',
-        :heading => 'by day for the past week', :periods => @days,
-        :format => '%A, %B %d' %>
+        heading: 'by day for the past week', periods: @days,
+        format: '%A, %B %d' %>
     <%= render 'people/top_guessers/period',
-        :heading => 'by week for the past month', :periods => @weeks,
-        :format => 'the week of %B %d' %>
+        heading: 'by week for the past month', periods: @weeks,
+        format: 'the week of %B %d' %>
   </td>
   <td>
     <%= render 'people/top_guessers/period',
-        :heading => 'by month for the past year', :periods => @months,
-        :format => '%B %Y' %>
+        heading: 'by month for the past year', periods: @months,
+        format: '%B %Y' %>
   </td>
   <td>
     <%= render 'people/top_guessers/period',
-        :heading => 'by year', :periods => @years, :format => '%Y' %>
+        heading: 'by year', periods: @years, format: '%Y' %>
   </td>
 </tr></table>
 

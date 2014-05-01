@@ -7,22 +7,22 @@ describe Stcline do
 
   describe '.street_names' do
     it "lists multiword street names" do
-      Stcline.create! :street => 'SAN JOSE', :SHAPE => point(1, 1)
+      Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1)
       Stcline.multiword_street_names.should == [ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS
     end
 
     it "consolidates duplicates" do
-      2.times { Stcline.create! :street => 'SAN JOSE', :SHAPE => point(1, 1) }
+      2.times { Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1) }
       Stcline.multiword_street_names.should == [ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS
     end
 
     it "ignores one-word street names" do
-      Stcline.create! :street => 'VALENCIA', :SHAPE => point(1, 1)
+      Stcline.create! street: 'VALENCIA', SHAPE: point(1, 1)
       Stcline.multiword_street_names.should == [] + Stcline::STREET_NAME_SYNONYMS
     end
 
     it "ignores unwanted names" do
-      Stcline.create! :street => 'UNNAMED 001', :SHAPE => point(1, 1)
+      Stcline.create! street: 'UNNAMED 001', SHAPE: point(1, 1)
       Stcline.multiword_street_names.should == [] + Stcline::STREET_NAME_SYNONYMS
     end
 
@@ -31,89 +31,89 @@ describe Stcline do
   describe '.geocode' do
 
     it "finds the lat + long of an address" do
-      Stcline.create! :street => 'VALENCIA',
-        :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'VALENCIA',
+        lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1498,
+        SHAPE: line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
       geocode.x.should be_within(0.001).of(2.02)
       geocode.y.should be_within(0.001).of(5.02)
     end
 
     it "handles a centerline with a single address" do
-      Stcline.create! :street => '18TH',
-        :lf_fadd => 3553, :lf_toadd => 3561, :rt_fadd => 3560, :rt_toadd => 3560,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: '18TH',
+        lf_fadd: 3553, lf_toadd: 3561, rt_fadd: 3560, rt_toadd: 3560,
+        SHAPE: line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('3560 18th', '3560', '18th', nil)
       geocode.x.should be_within(0.001).of(2)
       geocode.y.should be_within(0.001).of(5)
     end
 
     it "ignores a too-high address range on the left side of the street" do
-      Stcline.create! :street => 'VALENCIA',
-        :lf_fadd => 1451, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1498,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'VALENCIA',
+        lf_fadd: 1451, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1498,
+        SHAPE: line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1449 Valencia', '1449', 'Valencia', nil)).should == nil
     end
 
     it "ignores a too-low address range on the left side of the street" do
-      Stcline.create! :street => 'VALENCIA',
-        :lf_fadd => 1401, :lf_toadd => 1449, :rt_fadd => 1400, :rt_toadd => 1498,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'VALENCIA',
+        lf_fadd: 1401, lf_toadd: 1449, rt_fadd: 1400, rt_toadd: 1498,
+        SHAPE: line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1451 Valencia', '1451', 'Valencia', nil)).should == nil
     end
 
     it "ignores a too-high address range on the right side of the street" do
-      Stcline.create! :street => 'VALENCIA',
-        :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1450, :rt_toadd => 1498,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'VALENCIA',
+        lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1450, rt_toadd: 1498,
+        SHAPE: line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1448 Valencia', '1448', 'Valencia', nil)).should == nil
     end
 
     it "ignores a too-low address range on the right side of the street" do
-      Stcline.create! :street => 'VALENCIA',
-        :lf_fadd => 1401, :lf_toadd => 1499, :rt_fadd => 1400, :rt_toadd => 1450,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'VALENCIA',
+        lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1450,
+        SHAPE: line(point(1, 4), point(3, 6))
       Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil)).should == nil
     end
 
     it "handles missing odd address numbers when looking up an even address number" do
-      Stcline.create! :street => 'VALENCIA',
-        :lf_fadd => 0, :lf_toadd => 0, :rt_fadd => 1400, :rt_toadd => 1498,
-        :SHAPE => line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'VALENCIA',
+        lf_fadd: 0, lf_toadd: 0, rt_fadd: 1400, rt_toadd: 1498,
+        SHAPE: line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
       geocode.x.should be_within(0.001).of(2.02)
       geocode.y.should be_within(0.001).of(5.02)
     end
 
     it "declines to geocode an address which matches two centerlines" do
-      Stcline.create! :street => 'CALIFORNIA', :st_type => 'ST',
-        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
-        :SHAPE => line(point(1, 4), point(3, 6))
-      Stcline.create! :street => 'CALIFORNIA', :st_type => 'AVE',
-        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
-        :SHAPE => line(point(11, 14), point(13, 16))
+      Stcline.create! street: 'CALIFORNIA', st_type: 'ST',
+        lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
+        SHAPE: line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'CALIFORNIA', st_type: 'AVE',
+        lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
+        SHAPE: line(point(11, 14), point(13, 16))
       Stcline.geocode(Address.new('555 California', '555', 'California', nil)).should == nil
     end
 
     it "considers street type" do
-      Stcline.create! :street => 'CALIFORNIA', :st_type => 'ST',
-        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
-        :SHAPE => line(point(1, 4), point(3, 6))
-      Stcline.create! :street => 'CALIFORNIA', :st_type => 'AVE',
-        :lf_fadd => 501, :lf_toadd => 599, :rt_fadd => 500, :rt_toadd => 598,
-        :SHAPE => line(point(11, 14), point(13, 16))
+      Stcline.create! street: 'CALIFORNIA', st_type: 'ST',
+        lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
+        SHAPE: line(point(1, 4), point(3, 6))
+      Stcline.create! street: 'CALIFORNIA', st_type: 'AVE',
+        lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
+        SHAPE: line(point(11, 14), point(13, 16))
       geocode = Stcline.geocode Address.new('555 California Street', '555', 'California', 'Street')
       geocode.x.should be_within(0.001).of(2.102)
       geocode.y.should be_within(0.001).of(5.102)
     end
 
     it "uses the cross street to disambiguate the street, given an address at an intersection" do
-      Stcline.create! :street => '19TH', :st_type => 'ST',
-        :lf_fadd => 3601, :lf_toadd => 3661, :rt_fadd => 3600, :rt_toadd => 3656,
-        :SHAPE => line(point(1, 4), point(3, 6))
-      Stcline.create! :street => '19TH', :st_type => 'AVE',
-        :lf_fadd => 3600, :lf_toadd => 3698, :rt_fadd => 0, :rt_toadd => 0,
-        :SHAPE => line(point(11, 14), point(13, 16))
+      Stcline.create! street: '19TH', st_type: 'ST',
+        lf_fadd: 3601, lf_toadd: 3661, rt_fadd: 3600, rt_toadd: 3656,
+        SHAPE: line(point(1, 4), point(3, 6))
+      Stcline.create! street: '19TH', st_type: 'AVE',
+        lf_fadd: 3600, lf_toadd: 3698, rt_fadd: 0, rt_toadd: 0,
+        SHAPE: line(point(11, 14), point(13, 16))
       address = Address.new('3620 19th near Guerrero', '3620', '19th', nil, 'Guerrero', nil)
       stub(Stintersection).street_type(address.street, address.at) { 'ST' }
       geocode = Stcline.geocode address
@@ -122,12 +122,12 @@ describe Stcline do
     end
 
     it "uses the first adjacent street to disambiguate the street, given an address on a block" do
-      Stcline.create! :street => '19TH', :st_type => 'ST',
-        :lf_fadd => 3601, :lf_toadd => 3661, :rt_fadd => 3600, :rt_toadd => 3656,
-        :SHAPE => line(point(1, 4), point(3, 6))
-      Stcline.create! :street => '19TH', :st_type => 'AVE',
-        :lf_fadd => 3600, :lf_toadd => 3698, :rt_fadd => 0, :rt_toadd => 0,
-        :SHAPE => line(point(11, 14), point(13, 16))
+      Stcline.create! street: '19TH', st_type: 'ST',
+        lf_fadd: 3601, lf_toadd: 3661, rt_fadd: 3600, rt_toadd: 3656,
+        SHAPE: line(point(1, 4), point(3, 6))
+      Stcline.create! street: '19TH', st_type: 'AVE',
+        lf_fadd: 3600, lf_toadd: 3698, rt_fadd: 0, rt_toadd: 0,
+        SHAPE: line(point(11, 14), point(13, 16))
       address = Address.new(
         '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
       stub(Stintersection).street_type(address.street, address.between1) { 'ST' }
@@ -137,12 +137,12 @@ describe Stcline do
     end
 
     it "uses the second adjacent street to disambiguate the street if necessary, given an address on a block" do
-      Stcline.create! :street => '19TH', :st_type => 'ST',
-        :lf_fadd => 3601, :lf_toadd => 3661, :rt_fadd => 3600, :rt_toadd => 3656,
-        :SHAPE => line(point(1, 4), point(3, 6))
-      Stcline.create! :street => '19TH', :st_type => 'AVE',
-        :lf_fadd => 3600, :lf_toadd => 3698, :rt_fadd => 0, :rt_toadd => 0,
-        :SHAPE => line(point(11, 14), point(13, 16))
+      Stcline.create! street: '19TH', st_type: 'ST',
+        lf_fadd: 3601, lf_toadd: 3661, rt_fadd: 3600, rt_toadd: 3656,
+        SHAPE: line(point(1, 4), point(3, 6))
+      Stcline.create! street: '19TH', st_type: 'AVE',
+        lf_fadd: 3600, lf_toadd: 3698, rt_fadd: 0, rt_toadd: 0,
+        SHAPE: line(point(11, 14), point(13, 16))
       address = Address.new(
         '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
       stub(Stintersection).street_type(address.street, address.between1) { nil }

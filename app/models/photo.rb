@@ -4,22 +4,22 @@ class Photo < ActiveRecord::Base
   #noinspection RubyResolve
   self.include_root_in_json = false
 
-  belongs_to :person, :inverse_of => :photos
-  has_many :guesses, :inverse_of => :photo
-  has_many :comments, :inverse_of => :photo
-  has_one :revelation, :inverse_of => :photo
+  belongs_to :person, inverse_of: :photos
+  has_many :guesses, inverse_of: :photo
+  has_many :comments, inverse_of: :photo
+  has_one :revelation, inverse_of: :photo
   validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
     :game_status, :views, :faves, :other_user_comments, :member_comments, :member_questions
   attr_readonly :person, :flickrid
-  validates_numericality_of :latitude, :allow_nil => true
-  validates_numericality_of :longitude, :allow_nil => true
-  validates_numericality_of :accuracy, :allow_nil => true, :only_integer => true, :greater_than_or_equal_to => 0
-  validates_inclusion_of :game_status, :in => %w(unfound unconfirmed found revealed)
-  validates_numericality_of :views, :only_integer => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :faves, :only_integer => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :other_user_comments, :only_integer => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :member_comments, :only_integer => true, :greater_than_or_equal_to => 0
-  validates_numericality_of :member_questions, :only_integer => true, :greater_than_or_equal_to => 0
+  validates_numericality_of :latitude, allow_nil: true
+  validates_numericality_of :longitude, allow_nil: true
+  validates_numericality_of :accuracy, allow_nil: true, only_integer: true, greater_than_or_equal_to: 0
+  validates_inclusion_of :game_status, in: %w(unfound unconfirmed found revealed)
+  validates_numericality_of :views, only_integer: true, greater_than_or_equal_to: 0
+  validates_numericality_of :faves, only_integer: true, greater_than_or_equal_to: 0
+  validates_numericality_of :other_user_comments, only_integer: true, greater_than_or_equal_to: 0
+  validates_numericality_of :member_comments, only_integer: true, greater_than_or_equal_to: 0
+  validates_numericality_of :member_questions, only_integer: true, greater_than_or_equal_to: 0
 
   # Used by ScoreReportsController
 
@@ -50,11 +50,11 @@ class Photo < ActiveRecord::Base
   # Used by PeopleController
 
   def self.first_by(poster)
-    where(:person_id => poster).order(:dateadded).includes(:person).first
+    where(person_id: poster).order(:dateadded).includes(:person).first
   end
 
   def self.most_recent_by(poster)
-    where(:person_id => poster).order(:dateadded).includes(:person).last
+    where(person_id: poster).order(:dateadded).includes(:person).last
   end
 
   def self.oldest_unfound(poster)
@@ -79,7 +79,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_commented(poster)
-    most_commented = includes(:person).where(:person_id => poster).order('other_user_comments desc').first
+    most_commented = includes(:person).where(person_id: poster).order('other_user_comments desc').first
     if most_commented
       most_commented[:place] = count_by_sql([
         %q[
@@ -100,7 +100,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_viewed(poster)
-    most_viewed = includes(:person).where(:person_id => poster).order('views desc').first
+    most_viewed = includes(:person).where(person_id: poster).order('views desc').first
     if most_viewed
       most_viewed[:place] = count_by_sql([
         %q[
@@ -119,7 +119,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.most_faved(poster)
-    most_faved = includes(:person).where(:person_id => poster).order('faves desc').first
+    most_faved = includes(:person).where(person_id: poster).order('faves desc').first
     if most_faved
       most_faved[:place] = count_by_sql([
         %q[
@@ -138,11 +138,11 @@ class Photo < ActiveRecord::Base
   end
 
   def self.find_with_guesses(person)
-    where(:person_id => person).includes(:guesses => :person)
+    where(person_id: person).includes(guesses: :person)
   end
 
   def self.mapped_count(poster_id)
-    where(:person_id => poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
+    where(person_id: poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
   end
 
   def self.posted_or_guessed_by_and_mapped(person_id, bounds, limit)
@@ -160,26 +160,26 @@ class Photo < ActiveRecord::Base
           where p.person_id = poster.id
           order by #{order_by(sorted_by, order)}
       ],
-      :page => page, :per_page => per_page)
+      page: page, per_page: per_page)
   end
 
   SORTED_BY = {
-    'username' => { :secondary => [ 'date-added' ],
-      :column => 'lower(poster.username)', :default_order => '+' },
-    'date-added' => { :secondary => [ 'username' ],
-      :column => 'dateadded', :default_order => '-' },
-    'last-updated' => { :secondary => [ 'username' ],
-      :column => 'lastupdate', :default_order => '-' },
-    'views' => { :secondary => [ 'username' ],
-      :column => 'views', :default_order => '-' },
-    'faves' => { :secondary => [ 'username' ],
-      :column => 'faves', :default_order => '-' },
-    'comments' => { :secondary => [ 'username' ],
-      :column => 'other_user_comments', :default_order => '-' },
-    'member-comments' => { :secondary => [ 'date-added', 'username' ],
-      :column => 'member_comments', :default_order => '-' },
-    'member-questions' => { :secondary => [ 'date-added', 'username' ],
-      :column => 'member_questions', :default_order => '-' }
+    'username' => { secondary: [ 'date-added' ],
+      column: 'lower(poster.username)', default_order: '+' },
+    'date-added' => { secondary: [ 'username' ],
+      column: 'dateadded', default_order: '-' },
+    'last-updated' => { secondary: [ 'username' ],
+      column: 'lastupdate', default_order: '-' },
+    'views' => { secondary: [ 'username' ],
+      column: 'views', default_order: '-' },
+    'faves' => { secondary: [ 'username' ],
+      column: 'faves', default_order: '-' },
+    'comments' => { secondary: [ 'username' ],
+      column: 'other_user_comments', default_order: '-' },
+    'member-comments' => { secondary: [ 'date-added', 'username' ],
+      column: 'member_comments', default_order: '-' },
+    'member-questions' => { secondary: [ 'date-added', 'username' ],
+      column: 'member_questions', default_order: '-' }
   }
 
   def self.order_by(sorted_by, order)
@@ -228,12 +228,12 @@ class Photo < ActiveRecord::Base
       conditions << terms['posted_by']
     end
     args = {
-      :joins => "join people p on photos.person_id = p.id",
-      :conditions => conditions,
-      :order => "#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}",
-      :per_page => 30,
-      :page => page,
-      :include => :person
+      joins: "join people p on photos.person_id = p.id",
+      conditions: conditions,
+      order: "#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}",
+      per_page: 30,
+      page: page,
+      include: :person
     }
     Photo.paginate args
   end
@@ -297,7 +297,7 @@ class Photo < ActiveRecord::Base
 
       parsed_photos['photo'].each do |parsed_photo|
         person_flickrid = parsed_photo['owner']
-        person_attrs = { :username => parsed_photo['ownername'], :pathalias => parsed_photo['pathalias'] }
+        person_attrs = { username: parsed_photo['ownername'], pathalias: parsed_photo['pathalias'] }
         if person_attrs[:pathalias] == ''
           person_attrs[:pathalias] = person_flickrid
         end
@@ -305,21 +305,21 @@ class Photo < ActiveRecord::Base
         if person
           person.update_attributes_if_necessary! person_attrs
         else
-          person = Person.create!({ :flickrid => person_flickrid }.merge person_attrs)
+          person = Person.create!({ flickrid: person_flickrid }.merge person_attrs)
           existing_people[person_flickrid] = person
           new_person_count += 1
         end
 
         photo_flickrid = parsed_photo['id']
         photo_attrs = {
-          :farm => parsed_photo['farm'],
-          :server => parsed_photo['server'],
-          :secret => parsed_photo['secret'],
-          :latitude => to_float_or_nil(parsed_photo['latitude']),
-          :longitude => to_float_or_nil(parsed_photo['longitude']),
-          :accuracy => to_integer_or_nil(parsed_photo['accuracy']),
-          :lastupdate => Time.at(parsed_photo['lastupdate'].to_i).getutc,
-          :views => parsed_photo['views'].to_i
+          farm: parsed_photo['farm'],
+          server: parsed_photo['server'],
+          secret: parsed_photo['secret'],
+          latitude: to_float_or_nil(parsed_photo['latitude']),
+          longitude: to_float_or_nil(parsed_photo['longitude']),
+          accuracy: to_integer_or_nil(parsed_photo['accuracy']),
+          lastupdate: Time.at(parsed_photo['lastupdate'].to_i).getutc,
+          views: parsed_photo['views'].to_i
         }
         photo = existing_photos[photo_flickrid]
         if ! photo || photo.lastupdate != photo_attrs[:lastupdate]
@@ -331,7 +331,7 @@ class Photo < ActiveRecord::Base
               # the caller is a member. Not clear yet whether this is a bug or intended behavior.
               0
             end
-          photo_attrs.merge! :faves => faves
+          photo_attrs.merge! faves: faves
         end
         if photo
           photo.update_attributes_if_necessary! photo_attrs
@@ -339,11 +339,11 @@ class Photo < ActiveRecord::Base
           # Set dateadded only when a photo is created, so that if a photo is added to the group,
           # removed from the group and added to the group again it retains its original dateadded.
           Photo.create!({
-            :person_id => person.id,
-            :flickrid => photo_flickrid,
-            :dateadded => Time.at(parsed_photo['dateadded'].to_i).getutc,
-            :seen_at => now,
-            :game_status => 'unfound'
+            person_id: person.id,
+            flickrid: photo_flickrid,
+            dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
+            seen_at: now,
+            game_status: 'unfound'
           }.merge photo_attrs)
           new_photo_count += 1
         end
@@ -496,7 +496,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.find_with_associations(id)
-    includes(:person, :revelation, { :guesses => :person }).find id
+    includes(:person, :revelation, { guesses: :person }).find id
   end
 
   def update_from_flickr
@@ -517,13 +517,13 @@ class Photo < ActiveRecord::Base
       parsed_comments = comments_xml['comments'][0]['comment']
       if ! parsed_comments.blank? # This element is nil if there are no comments and an array if there are
         transaction do
-          Comment.where(:photo_id => id).delete_all
+          Comment.where(photo_id: id).delete_all
           parsed_comments.each do |comment_xml|
             self.comments.create!(
-              :flickrid => comment_xml['author'],
-              :username => comment_xml['authorname'],
-              :comment_text => comment_xml['content'],
-              :commented_at => Time.at(comment_xml['datecreate'].to_i).getutc)
+              flickrid: comment_xml['author'],
+              username: comment_xml['authorname'],
+              comment_text: comment_xml['content'],
+              commented_at: Time.at(comment_xml['datecreate'].to_i).getutc)
           end
         end
       end
@@ -536,7 +536,7 @@ class Photo < ActiveRecord::Base
   def self.change_game_status(id, status)
     transaction do
       Guess.destroy_all_by_photo_id id
-      Revelation.where(:photo_id => id).delete_all
+      Revelation.where(photo_id: id).delete_all
       find(id).update_attribute :game_status, status
     end
   end
@@ -599,11 +599,11 @@ class Photo < ActiveRecord::Base
   def reveal(comment_text, commented_at)
     update_attribute :game_status, 'revealed'
 
-    revelation_attrs = { :comment_text => comment_text, :commented_at => commented_at, :added_at => Time.now.getutc }
+    revelation_attrs = { comment_text: comment_text, commented_at: commented_at, added_at: Time.now.getutc }
     if self.revelation
       self.revelation.update_attributes! revelation_attrs
     else
-      Revelation.create!({ :photo => self }.merge revelation_attrs)
+      Revelation.create!({ photo: self }.merge revelation_attrs)
     end
 
     self.guesses.destroy_all
@@ -623,20 +623,20 @@ class Photo < ActiveRecord::Base
       begin
         Person.attrs_from_flickr guesser_flickrid
       rescue FlickrService::FlickrRequestFailedError
-        { :username => guesser_username }
+        { username: guesser_username }
       end
     if guesser
       guesser.update_attributes_if_necessary! guesser_attrs
       guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
     else
-      guesser = Person.create!({:flickrid => guesser_flickrid }.merge guesser_attrs)
+      guesser = Person.create!({flickrid: guesser_flickrid }.merge guesser_attrs)
       guess = nil
     end
-    guess_attrs = { :commented_at => commented_at, :comment_text => comment_text, :added_at => Time.now.getutc }
+    guess_attrs = { commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc }
     if guess
       guess.update_attributes! guess_attrs
     else
-      Guess.create!({ :photo => self, :person => guesser }.merge guess_attrs)
+      Guess.create!({ photo: self, person: guesser }.merge guess_attrs)
     end
 
     self.revelation.destroy if self.revelation
@@ -649,7 +649,7 @@ class Photo < ActiveRecord::Base
       photo = includes(:revelation, :person).find photo_id
       photo.revelation.destroy if photo.revelation
       Guess.destroy_all_by_photo_id photo.id
-      Comment.where(:photo_id => photo).delete_all
+      Comment.where(photo_id: photo).delete_all
       photo.destroy
     end
   end

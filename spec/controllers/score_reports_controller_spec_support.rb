@@ -4,17 +4,17 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   person2 = Person.make
   person2[:change_in_standing] = 'guessed their first point. Congratulations!'
 
-  guess11 = Guess.make 11, :person => person1
-  guess21 = Guess.make 21, :person => person2
-  guess22 = Guess.make 22, :person => person2
+  guess11 = Guess.make 11, person: person1
+  guess21 = Guess.make 21, person: person2
+  guess22 = Guess.make 22, person: person2
   stub(Guess).all_between(previous_report_date, report_date.getutc) { [guess11, guess21, guess22] }
 
-  revealed_photo11 = Photo.make 11, :person => person1
-  revealed_photo21 = Photo.make 21, :person => person2
-  revealed_photo22 = Photo.make 22, :person => person2
-  revelation11 = Revelation.make 11, :photo => revealed_photo11
-  revelation21 = Revelation.make 21, :photo => revealed_photo21
-  revelation22 = Revelation.make 22, :photo => revealed_photo22
+  revealed_photo11 = Photo.make 11, person: person1
+  revealed_photo21 = Photo.make 21, person: person2
+  revealed_photo22 = Photo.make 22, person: person2
+  revelation11 = Revelation.make 11, photo: revealed_photo11
+  revelation21 = Revelation.make 21, photo: revealed_photo21
+  revelation22 = Revelation.make 22, photo: revealed_photo22
   stub(Revelation).all_between(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
 
   stub(Person).high_scorers(report_date, 7) { [ person2, person1 ] }
@@ -40,12 +40,12 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   guessers = [ [ person2, [ guess21, guess22 ] ], [ person1, [ guess11 ] ] ]
   stub(Person).add_change_in_standings(people_by_score, people, previous_report_date, guessers) {}
 
-  stub(FlickrUpdate).first { FlickrUpdate.make :member_count => 3 }
+  stub(FlickrUpdate).first { FlickrUpdate.make member_count: 3 }
 
   get action, params
 
   response.should be_success
-  response.body.should have_selector 'b', :text => 'updated Wednesday, January  5, 12 AM'
+  response.body.should have_selector 'b', text: 'updated Wednesday, January  5, 12 AM'
   response.body.should =~ /3 new guesses by .../
   response.body.should =~ /guessed their first point/
   response.body.should =~ /#{person2[:change_in_standing]}/
@@ -55,7 +55,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   response.body.should =~ /Top posters in the last week:/
   response.body.should =~ /Top posters in the last month:/
   response.body.should =~ /6 photos have been added to the pool since the previous report/
-  response.body.should have_link '1234 unfound photos', :href => search_photos_with_terms_path('game_status/unfound,unconfirmed')
+  response.body.should have_link '1234 unfound photos', href: search_photos_with_terms_path('game_status/unfound,unconfirmed')
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
   participation = '2 people have made correct guesses. ' +
     '1 people have put at least one photo in the pool but not guessed any photos correctly. ' +

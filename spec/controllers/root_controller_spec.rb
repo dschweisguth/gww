@@ -5,19 +5,19 @@ describe RootController do
 
   describe '#index' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011).getutc }
-      stub(ScoreReport).order.stub!.first { ScoreReport.make :created_at => Time.local(2011).getutc }
+      stub(FlickrUpdate).latest { FlickrUpdate.make created_at: Time.local(2011).getutc }
+      stub(ScoreReport).order.stub!.first { ScoreReport.make created_at: Time.local(2011).getutc }
       get :index
 
       response.should be_success
       response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 20 minutes.'
-      response.body.should have_link '2011', :href => wheresies_path(2011)
+      response.body.should have_link '2011', href: wheresies_path(2011)
 
     end
 
     it 'reports a completed update' do
-      stub(FlickrUpdate).latest { FlickrUpdate.make :created_at => Time.local(2011), :completed_at => Time.local(2001, 1, 1, 0, 6) }
-      stub(ScoreReport).order.stub!.first { ScoreReport.make :created_at => Time.local(2011).getutc }
+      stub(FlickrUpdate).latest { FlickrUpdate.make created_at: Time.local(2011), completed_at: Time.local(2001, 1, 1, 0, 6) }
+      stub(ScoreReport).order.stub!.first { ScoreReport.make created_at: Time.local(2011).getutc }
       get :index
 
       response.should be_success
@@ -31,7 +31,7 @@ describe RootController do
     it 'renders the page' do
       get :about
       response.should be_success
-      response.body.should have_link 'Tomas Apodaca', :href => 'http://www.flickr.com/people/tma/'
+      response.body.should have_link 'Tomas Apodaca', href: 'http://www.flickr.com/people/tma/'
     end
   end
 
@@ -39,7 +39,7 @@ describe RootController do
     it 'renders the page' do
       get :bookmarklet
       response.should be_success
-      response.body.should have_selector 'h2', :text => 'To add "View in GWW" to your bookmarks,'
+      response.body.should have_selector 'h2', text: 'To add "View in GWW" to your bookmarks,'
     end
   end
 

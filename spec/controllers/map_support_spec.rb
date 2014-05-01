@@ -15,21 +15,21 @@ describe MapSupport do
     end
 
     it "prepares an unconfirmed like an unfound" do
-      photo = Photo.make :game_status => 'unconfirmed'
+      photo = Photo.make game_status: 'unconfirmed'
       prepare_for_display photo, 1.day.ago
       photo[:color].should == 'FFFF00'
       photo[:symbol].should == '?'
     end
 
     it "gives a found green and !" do
-      photo = Photo.make :game_status => 'found'
+      photo = Photo.make game_status: 'found'
       prepare_for_display photo, 1.day.ago
       photo[:color].should == scaled_green(0, 1, 1)
       photo[:symbol].should == '!'
     end
 
     it "gives a revealed red and -" do
-      photo = Photo.make :game_status => 'revealed'
+      photo = Photo.make game_status: 'revealed'
       prepare_for_display photo, 1.day.ago
       photo[:color].should == scaled_red(0, 1, 1)
       photo[:symbol].should == '-'

@@ -112,8 +112,8 @@ class PeopleController < ApplicationController
   caches_page :guesses
   def guesses
     @person = Person.find params[:id]
-    @guesses = Guess.where(:person_id => params[:id]) \
-      .order('commented_at desc').includes(:photo => :person)
+    @guesses = Guess.where(person_id: params[:id]) \
+      .order('commented_at desc').includes(photo: :person)
   end
 
   caches_page :comments
@@ -123,9 +123,9 @@ class PeopleController < ApplicationController
       'select distinct photo_id id from comments where flickrid = ?',
       @person.flickrid ]
     @photo_ids = photos.map { |p| p.id }
-    @photos = Photo.paginate @photo_ids, :page => params[:page],
-      :include => [ :person, { :guesses => :person } ],
-      :order => 'lastupdate desc', :per_page => 25
+    @photos = Photo.paginate @photo_ids, page: params[:page],
+      include: [ :person, { guesses: :person } ],
+      order: 'lastupdate desc', per_page: 25
   end
 
   caches_page :map
@@ -138,7 +138,7 @@ class PeopleController < ApplicationController
   end
 
   def map_json
-    render :json => map_photos(params[:id].to_i)
+    render json: map_photos(params[:id].to_i)
   end
 
   def map_photos(person_id)

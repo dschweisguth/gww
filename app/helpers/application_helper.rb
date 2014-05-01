@@ -40,8 +40,7 @@ module ApplicationHelper
   end
 
   def titled_image_tag(src, alt_and_title, options = {})
-    image_tag src,
-      { :alt => alt_and_title, :title => alt_and_title }.merge(options)
+    image_tag src, {alt: alt_and_title, title: alt_and_title }.merge(options)
   end
 
   def thumbnail(photo, alt = "")
@@ -49,7 +48,7 @@ module ApplicationHelper
   end
 
   def sandwich(breadcrumbs = 'shared/breadcrumbs', &content)
-    render :layout => 'shared/sandwich', :locals => { :breadcrumbs => breadcrumbs }, &content
+    render layout: 'shared/sandwich', locals: { breadcrumbs: breadcrumbs }, &content
   end
 
   def head_css(*stylesheets)
@@ -66,7 +65,7 @@ module ApplicationHelper
   end
 
   def title_and_h1(title)
-    render 'shared/title', :title => title
+    render 'shared/title', title: title
   end
 
 end

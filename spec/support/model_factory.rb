@@ -52,7 +52,7 @@ class FlickrUpdate
 
   #noinspection RubyUnusedLocalVariable
   def self.attrs(method, label, caller_attrs)
-    attrs = { :member_count => 0 }
+    attrs = { member_count: 0 }
     if method == :new && ! caller_attrs[:created_at]
       attrs[:created_at] = Time.now
     end
@@ -83,9 +83,9 @@ class Person
   #noinspection RubyUnusedLocalVariable
   def self.attrs(method, label, caller_attrs)
     {
-      :flickrid => affix(label, 'person_flickrid'),
-      :username => affix(label, 'username'),
-      :comments_per_post => 0
+      flickrid: affix(label, 'person_flickrid'),
+      username: affix(label, 'username'),
+      comments_per_post: 0
     }
   end
   private_class_method :attrs
@@ -99,16 +99,16 @@ class Photo
   def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :flickrid => affix(label, 'photo_flickrid'),
-      :farm => '0',
-      :server => 'server',
-      :secret => 'secret',
-      :dateadded => now,
-      :lastupdate => now,
-      :seen_at => now,
-      :game_status => 'unfound',
-      :views => 0,
-      :faves => 0
+      flickrid: affix(label, 'photo_flickrid'),
+      farm: '0',
+      server: 'server',
+      secret: 'secret',
+      dateadded: now,
+      lastupdate: now,
+      seen_at: now,
+      game_status: 'unfound',
+      views: 0,
+      faves: 0
     }
     if ! caller_attrs[:person]
       attrs[:person] = Person.make affix(label, 'poster')
@@ -125,10 +125,10 @@ class Comment
   #noinspection RubyUnusedLocalVariable
   def self.attrs(method, label, caller_attrs)
     attrs = {
-      :flickrid => affix(label, 'commenter_flickrid'),
-      :username => affix(label, 'commenter_username'),
-      :comment_text => affix(label, 'comment text'),
-      :commented_at => Time.now
+      flickrid: affix(label, 'commenter_flickrid'),
+      username: affix(label, 'commenter_username'),
+      comment_text: affix(label, 'comment text'),
+      commented_at: Time.now
     }
     if ! caller_attrs[:photo]
       attrs[:photo] = Photo.make affix(label, 'commented_photo')
@@ -146,12 +146,12 @@ class Guess
   def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :comment_text => affix(label, 'guess text'),
-      :commented_at => now,
-      :added_at => now
+      comment_text: affix(label, 'guess text'),
+      commented_at: now,
+      added_at: now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make affix(label, 'guessed_photo'), :game_status => 'found'
+      attrs[:photo] = Photo.make affix(label, 'guessed_photo'), game_status: 'found'
     end
     if ! caller_attrs[:person]
       attrs[:person] = Person.make affix(label, 'guesser')
@@ -169,12 +169,12 @@ class Revelation
   def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
-      :comment_text => affix(label, 'revelation text'),
-      :commented_at => now,
-      :added_at => now
+      comment_text: affix(label, 'revelation text'),
+      commented_at: now,
+      added_at: now
     }
     if ! caller_attrs[:photo]
-      attrs[:photo] = Photo.make affix(label, 'revealed_photo'), :game_status => 'revealed'
+      attrs[:photo] = Photo.make affix(label, 'revealed_photo'), game_status: 'revealed'
     end
     attrs
   end

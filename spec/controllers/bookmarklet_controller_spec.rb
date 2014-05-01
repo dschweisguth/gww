@@ -6,18 +6,18 @@ describe BookmarkletController do
   describe '#show' do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given photo' do
-      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
+      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :show, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :show, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
       response.should redirect_to photo_path photo
 
     end
 
     it 'handles https when redirecting to a photo' do
-      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
+      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :show, :from => "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :show, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
       response.should redirect_to photo_path photo
 
@@ -25,7 +25,7 @@ describe BookmarkletController do
 
     it 'punts an unknown photo Flickr ID' do
       stub(Photo).find_by_flickrid('0123456789') { nil }
-      get :show, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      get :show, from: 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that photo/
@@ -34,18 +34,18 @@ describe BookmarkletController do
 
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given person' do
-      person = Person.make :pathalias => 'pathalias'
+      person = Person.make pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
-      get :show, :from => "http://www.flickr.com/people/#{person.pathalias}/"
+      get :show, from: "http://www.flickr.com/people/#{person.pathalias}/"
 
       response.should redirect_to person_path person
 
     end
 
     it 'handles https when redirecting to a person' do
-      person = Person.make :pathalias => 'pathalias'
+      person = Person.make pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
-      get :show, :from => "https://www.flickr.com/people/#{person.pathalias}/"
+      get :show, from: "https://www.flickr.com/people/#{person.pathalias}/"
 
       response.should redirect_to person_path person
 
@@ -55,7 +55,7 @@ describe BookmarkletController do
       person = Person.make
       stub(Person).find_by_pathalias(person.flickrid) { nil }
       stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :show, :from => "http://www.flickr.com/people/#{person.flickrid}/"
+      get :show, from: "http://www.flickr.com/people/#{person.flickrid}/"
 
       response.should redirect_to person_path person
 
@@ -63,7 +63,7 @@ describe BookmarkletController do
 
     it 'punts an unknown person' do
       stub(Person).find_by_flickrid('person_flickrid') { nil }
-      get :show, :from => "http://www.flickr.com/people/person_flickrid/"
+      get :show, from: "http://www.flickr.com/people/person_flickrid/"
 
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that person/
@@ -73,14 +73,14 @@ describe BookmarkletController do
     it 'handles a /photo/ URL with a person Flickr ID but no photo Flickr ID' do
       person = Person.make
       stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :show, :from => "http://www.flickr.com/photos/#{person.flickrid}/"
+      get :show, from: "http://www.flickr.com/photos/#{person.flickrid}/"
 
       response.should redirect_to person_path person
 
     end
 
     it 'punts unknown URLs' do
-      get :show, :from => 'http://www.notflickr.com/'
+      get :show, from: 'http://www.notflickr.com/'
 
       response.should redirect_to root_path
       flash[:general_error].should =~ /Hmmm/

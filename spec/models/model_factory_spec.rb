@@ -27,9 +27,9 @@ describe ModelFactory do
     end
 
     it "handles attrs" do
-      stub(@factory).attrs(:new, '', { :attr => 'attr' }) { {} }
-      mock(@factory).send(:new, { :attr => 'attr' }) { @model_object }
-      @factory.make :attr => 'attr'
+      stub(@factory).attrs(:new, '', { attr: 'attr' }) { {} }
+      mock(@factory).send(:new, { attr: 'attr' }) { @model_object }
+      @factory.make attr: 'attr'
     end
 
     it "handles a label passed in as a string" do
@@ -39,15 +39,15 @@ describe ModelFactory do
     end
 
     it "handles a label passed in as a string plus attrs" do
-      stub(@factory).attrs(:new, 'xxx', { :attr => 'attr' }) { {} }
-      mock(@factory).send(:new, { :attr => 'attr' }) { @model_object }
-      @factory.make 'xxx', :attr => 'attr'
+      stub(@factory).attrs(:new, 'xxx', { attr: 'attr' }) { {} }
+      mock(@factory).send(:new, { attr: 'attr' }) { @model_object }
+      @factory.make 'xxx', attr: 'attr'
     end
 
     it "allows you to override the default id" do
       stub(@factory).attrs(:new, '', {}) { {} }
       mock(@factory).send(:new, {}) { @model_object }
-      model_object_out = @factory.make :id => 666
+      model_object_out = @factory.make id: 666
       model_object_out.id.should == 666
     end
 
@@ -63,7 +63,7 @@ describe ModelFactory do
     end
 
     it "blows up if you try to override the default id for an instance that will be saved in the database" do
-      lambda { @factory.make :id => 1 }.should raise_error ArgumentError
+      lambda { @factory.make id: 1 }.should raise_error ArgumentError
     end
     
   end
@@ -106,9 +106,9 @@ describe FlickrUpdate do
 
   def makes_flickr_update_with_custom_attributes
     makes_with_custom_attributes FlickrUpdate, {
-      :created_at => Time.utc(2011),
-      :member_count => 1,
-      :completed_at => Time.utc(2011, 2)
+      created_at: Time.utc(2011),
+      member_count: 1,
+      completed_at: Time.utc(2011, 2)
     }
   end
 
@@ -148,8 +148,8 @@ describe ScoreReport do
 
   def makes_score_report_with_custom_attributes
     makes_with_custom_attributes ScoreReport, {
-      :previous_report => ScoreReport.make(:created_at => Time.utc(2010)),
-      :created_at => Time.utc(2011)
+      previous_report: ScoreReport.make(created_at: Time.utc(2010)),
+      created_at: Time.utc(2011)
     }
   end
 
@@ -202,12 +202,12 @@ describe Person do
 
   def makes_person_with_custom_attributes
     makes_with_custom_attributes Person, {
-      :flickrid => 'other_person_flickrid',
-      :username => 'other_username',
-      :pathalias => 'other_pathalias',
-      :comments_to_guess => 1,
-      :comments_per_post => 1,
-      :comments_to_be_guessed => 1
+      flickrid: 'other_person_flickrid',
+      username: 'other_username',
+      pathalias: 'other_pathalias',
+      comments_to_guess: 1,
+      comments_per_post: 1,
+      comments_to_be_guessed: 1
     }
   end
 
@@ -279,25 +279,25 @@ describe Photo do
 
   def makes_photo_with_custom_attributes
     makes_with_custom_attributes Photo, {
-      :person => Person.make('other_poster'),
-      :flickrid => 'other_photo_flickrid',
-      :farm => '1',
-      :server => 'other_server',
-      :secret => 'other_secret',
-      :latitude => 37.123456,
-      :longitude => -122.654321,
-      :accuracy => 16,
-      :dateadded => Time.utc(2010),
-      :lastupdate => Time.utc(2011),
-      :seen_at => Time.utc(2012),
-      :game_status => 'found',
-      :views => 1,
-      :faves => 1,
-      :other_user_comments => 1,
-      :member_comments => 1,
-      :member_questions => 1,
-      :inferred_latitude => 37,
-      :inferred_longitude => -122
+      person: Person.make('other_poster'),
+      flickrid: 'other_photo_flickrid',
+      farm: '1',
+      server: 'other_server',
+      secret: 'other_secret',
+      latitude: 37.123456,
+      longitude: -122.654321,
+      accuracy: 16,
+      dateadded: Time.utc(2010),
+      lastupdate: Time.utc(2011),
+      seen_at: Time.utc(2012),
+      game_status: 'found',
+      views: 1,
+      faves: 1,
+      other_user_comments: 1,
+      member_comments: 1,
+      member_questions: 1,
+      inferred_latitude: 37,
+      inferred_longitude: -122
     }
   end
 
@@ -355,11 +355,11 @@ describe Comment do
 
   def makes_comment_with_custom_attributes
     makes_with_custom_attributes Comment, {
-      :photo => Photo.make('other_commented_photo'),
-      :flickrid => 'other_commenter_flickrid',
-      :username => 'other_commenter_username',
-      :comment_text => 'other comment text',
-      :commented_at => Time.utc(2011)
+      photo: Photo.make('other_commented_photo'),
+      flickrid: 'other_commenter_flickrid',
+      username: 'other_commenter_username',
+      comment_text: 'other comment text',
+      commented_at: Time.utc(2011)
     }
   end
 
@@ -420,11 +420,11 @@ describe Guess do
 
   def makes_guess_with_custom_attributes
     makes_with_custom_attributes Guess, {
-      :photo => Photo.make('other_guessed_photo'),
-      :person => Person.make('other_guesser'),
-      :comment_text => 'other guess text',
-      :commented_at => Time.utc(2011),
-      :added_at => Time.utc(2012)
+      photo: Photo.make('other_guessed_photo'),
+      person: Person.make('other_guesser'),
+      comment_text: 'other guess text',
+      commented_at: Time.utc(2011),
+      added_at: Time.utc(2012)
     }
   end
 
@@ -483,10 +483,10 @@ describe Revelation do
 
   def makes_revelation_with_custom_attributes
     makes_with_custom_attributes Revelation, {
-      :photo => Photo.make('other_revealed_photo'),
-      :comment_text => 'other revelation text',
-      :commented_at => Time.utc(2011),
-      :added_at => Time.utc(2012)
+      photo: Photo.make('other_revealed_photo'),
+      comment_text: 'other revelation text',
+      commented_at: Time.utc(2011),
+      added_at: Time.utc(2012)
     }
   end
 

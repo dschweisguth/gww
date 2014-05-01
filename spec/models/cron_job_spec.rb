@@ -10,8 +10,8 @@ describe CronJob do
           'members' => [ '1492' ]
         } ]
       } }
-      update = FlickrUpdate.make :member_count => 1492
-      mock(FlickrUpdate).create!(:member_count => '1492') { update }
+      update = FlickrUpdate.make member_count: 1492
+      mock(FlickrUpdate).create!(member_count: '1492') { update }
       mock(Photo).update_all_from_flickr { [ 1, 2, 3, 4 ] }
       mock(Person).update_all_from_flickr
       stub(Time).now { Time.utc(2011) }

@@ -1,13 +1,13 @@
 <%# See _raw_thumbnails.html.erb for a discussion of constraints on the output of this template. %>
 <%= render 'score_reports/high_scorers',
-    :high_scorers => @weekly_high_scorers, :period => 'week' -%>
+    high_scorers: @weekly_high_scorers, period: 'week' -%>
 <%= render 'score_reports/high_scorers',
-    :high_scorers => @monthly_high_scorers, :period => 'month' -%>
+    high_scorers: @monthly_high_scorers, period: 'month' -%>
 
 <%= render 'score_reports/top_posters',
-    :top_posters => @weekly_top_posters, :period => 'week' -%>
+    top_posters: @weekly_top_posters, period: 'week' -%>
 <%= render 'score_reports/top_posters',
-    :top_posters => @monthly_top_posters, :period => 'month' -%>
+    top_posters: @monthly_top_posters, period: 'month' -%>
 
 <%= pluralize @new_photos_count, 'photo' %> <%= singularize 'have', @new_photos_count %> been added to the pool since the previous report. There are still <%= link_to "#{@unfound_count} unfound photos", search_photos_with_terms_path('game_status/unfound,unconfirmed') %> in the pool.
 

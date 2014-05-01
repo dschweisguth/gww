@@ -1,12 +1,12 @@
 class Guess < ActiveRecord::Base
   include Answer
 
-  belongs_to :photo, :inverse_of => :guesses
-  belongs_to :person, :inverse_of => :guesses
+  belongs_to :photo, inverse_of: :guesses
+  belongs_to :person, inverse_of: :guesses
   validates_presence_of :comment_text, :commented_at, :added_at
 
   def self.destroy_all_by_photo_id(photo_id)
-    where(:photo_id => photo_id).destroy_all
+    where(photo_id: photo_id).destroy_all
   end
 
   # GWW saves all times as UTC, but the database time zone is Pacific time.
@@ -18,27 +18,25 @@ class Guess < ActiveRecord::Base
   # for consistency. Possibly setting the database timezone to UTC would be a
   # better solution.
 
-  GUESS_AGE =
-    'unix_timestamp(guesses.commented_at) - unix_timestamp(photos.dateadded)'
+  GUESS_AGE = 'unix_timestamp(guesses.commented_at) - unix_timestamp(photos.dateadded)'
   G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'
-  GUESS_AGE_IS_VALID =
-    'unix_timestamp(guesses.commented_at) > unix_timestamp(photos.dateadded)'
+  GUESS_AGE_IS_VALID = 'unix_timestamp(guesses.commented_at) > unix_timestamp(photos.dateadded)'
   G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
   def self.longest
-    where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10).includes(:person, { :photo => :person })
+    where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
   end
 
   def self.shortest
-    where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10).includes(:person, { :photo => :person })
+    where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
   end
 
   def self.first_by(guesser)
-    includes(:photo => :person).where(:person_id => guesser).order(:commented_at).first
+    includes(photo: :person).where(person_id: guesser).order(:commented_at).first
   end
 
   def self.most_recent_by(guesser)
-    includes(:photo => :person).where(:person_id => guesser).order(:commented_at).last
+    includes(photo: :person).where(person_id: guesser).order(:commented_at).last
   end
 
   def self.oldest(guesser)
@@ -66,7 +64,7 @@ class Guess < ActiveRecord::Base
   end
 
   def self.first_guess_with_place(person, conditions, order, place_conditions)
-    guess = includes(:person, { :photo => :person }) \
+    guess = includes(:person, { photo: :person }) \
       .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person).order("#{GUESS_AGE} #{order}").first
     if ! guess
       return nil
@@ -77,7 +75,7 @@ class Guess < ActiveRecord::Base
   private_class_method :first_guess_with_place
 
   def self.mapped_count(person_id)
-    where(:person_id => person_id) \
+    where(person_id: person_id) \
       .joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null') \
       .count
   end
@@ -85,22 +83,22 @@ class Guess < ActiveRecord::Base
   def self.longest_in year
    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
       Time.local(year).getutc, Time.local(year + 1).getutc) \
-      .order("#{GUESS_AGE} desc").limit(10).includes(:person, { :photo => :person })
+      .order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
   end
 
   def self.shortest_in year
     where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
       Time.local(year).getutc, Time.local(year + 1).getutc) \
-      .order(GUESS_AGE).limit(10).includes(:person, { :photo => :person })
+      .order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
   end
 
   def self.all_between(from, to)
     where("? < added_at and added_at <= ?", from.getutc, to.getutc) \
-      .order(:commented_at).includes(:person, { :photo => :person })
+      .order(:commented_at).includes(:person, { photo: :person })
   end
 
   def self.find_with_associations(person)
-    where(:person_id => person).includes(:photo => :person)
+    where(person_id: person).includes(photo: :person)
   end
 
   def years_old

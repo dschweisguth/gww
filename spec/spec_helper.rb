@@ -33,12 +33,12 @@ RSpec.configure do |config|
   config.include Shoulda::Matchers::ActionController
   # shoulda-matchers should include itself, but the following include is
   # necessary for rake spec:rcov (but not rake spec!?!) to pass.
-  config.include Shoulda::Matchers::ActiveRecord, :type => :model
+  config.include Shoulda::Matchers::ActiveRecord, type: :model
 
-  config.include GWW::Matchers::Model, :type => :model
-  config.include GWW::Matchers::Routing, :type => :routing
-  config.include Photos, :type => :helper
-  config.include Photos, :type => :controller
+  config.include GWW::Matchers::Model, type: :model
+  config.include GWW::Matchers::Routing, type: :routing
+  config.include Photos, type: :helper
+  config.include Photos, type: :controller
 
   config.before :each do
     stub(FlickrService).instance.returns MockFlickrService.new

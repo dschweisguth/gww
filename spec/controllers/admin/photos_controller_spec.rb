@@ -5,7 +5,7 @@ describe Admin::PhotosController do
 
   describe 'collections' do
     before do
-      @photo = Photo.make :id => 1
+      @photo = Photo.make id: 1
     end
 
     describe '#unfound' do
@@ -34,10 +34,10 @@ describe Admin::PhotosController do
 
     def lists_photo
       response.should be_success
-      response.body.should have_link @photo.person.username, :href => person_path(@photo.person)
-      response.body.should have_css 'td', :text => 'false'
-      response.body.should have_css 'td', :text => 'unfound'
-      response.body.should have_link 'Edit', :href => edit_admin_photo_path(@photo, :update_from_flickr => true)
+      response.body.should have_link @photo.person.username, href: person_path(@photo.person)
+      response.body.should have_css 'td', text: 'false'
+      response.body.should have_css 'td', text: 'unfound'
+      response.body.should have_link 'Edit', href: edit_admin_photo_path(@photo, update_from_flickr: true)
     end
 
   end
@@ -50,14 +50,14 @@ describe Admin::PhotosController do
     end
 
     it 'renders the page without loading comments' do
-      get :edit, :id => photo.id
+      get :edit, id: photo.id
       response.should be_success
     end
 
     it 'loads comments and renders the page' do
       stub(photo).update_from_flickr
       mock_clear_page_cache
-      get :edit, :id => photo.id, :update_from_flickr => true
+      get :edit, id: photo.id, update_from_flickr: true
       response.should be_success
     end
 
@@ -66,7 +66,7 @@ describe Admin::PhotosController do
   describe '#add_selected_answer' do
     it "notifies the user if there was an error" do
       mock(Comment).add_selected_answer('2', 'username') { raise Photo::AddAnswerError, 'Sorry' }
-      post :add_selected_answer, :id => '1', :comment_id => '2', :username => 'username'
+      post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end
@@ -75,7 +75,7 @@ describe Admin::PhotosController do
   describe '#add_entered_answer' do
     it "notifies the user if there was an error" do
       mock(Photo).add_entered_answer(1, 'username', 'answer text') { raise Photo::AddAnswerError, 'Sorry' }
-      post :add_entered_answer, :id => '1', :username => 'username', :answer_text => 'answer text'
+      post :add_entered_answer, id: '1', username: 'username', answer_text: 'answer text'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end
@@ -85,7 +85,7 @@ describe Admin::PhotosController do
     it "removes a revelation" do
       mock(Comment).remove_revelation '2'
       mock_clear_page_cache
-      post :remove_revelation, :id => '1', :comment_id => '2'
+      post :remove_revelation, id: '1', comment_id: '2'
       redirects_to_edit_path 1
     end
   end
@@ -93,7 +93,7 @@ describe Admin::PhotosController do
   describe '#remove_guess' do
     it "notifies the user if there was an error" do
       mock(Comment).remove_guess('2') { raise Comment::RemoveGuessError, 'Sorry' }
-      post :remove_guess, :id => '1', :comment_id => '2'
+      post :remove_guess, id: '1', comment_id: '2'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
     end
@@ -101,33 +101,33 @@ describe Admin::PhotosController do
 
   describe '#update_from_flickr' do
     it 'just redirects to the edit page with update_from_flickr=true' do
-      get :update_from_flickr, :id => '1'
-      redirects_to_edit_path 1, :update_from_flickr => true
+      get :update_from_flickr, id: '1'
+      redirects_to_edit_path 1, update_from_flickr: true
     end
   end
 
   describe '#edit_in_gww' do
     it 'redirects to the given photo' do
-      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
+      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :edit_in_gww, :from => "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :edit_in_gww, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
-      redirects_to_edit_path photo, :update_from_flickr => true
+      redirects_to_edit_path photo, update_from_flickr: true
 
     end
 
     it 'handles https when redirecting to a photo' do
-      photo = Photo.make :flickrid => '0123456789' # must be all digits like the real thing
+      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :edit_in_gww, :from => "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :edit_in_gww, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
-      redirects_to_edit_path photo, :update_from_flickr => true
+      redirects_to_edit_path photo, update_from_flickr: true
 
     end
 
     it 'punts an unknown photo Flickr ID' do
       stub(Photo).find_by_flickrid('0123456789') { nil }
-      get :edit_in_gww, :from => 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      get :edit_in_gww, from: 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
       response.should redirect_to admin_root_path
       flash[:general_error].should =~ /Sorry/
@@ -135,7 +135,7 @@ describe Admin::PhotosController do
     end
 
     it 'punts unknown URLs' do
-      get :edit_in_gww, :from => 'http://www.notflickr.com/'
+      get :edit_in_gww, from: 'http://www.notflickr.com/'
 
       response.should redirect_to admin_root_path
       flash[:general_error].should =~ /Hmmm/

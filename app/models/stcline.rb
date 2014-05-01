@@ -30,13 +30,13 @@ class Stcline < ActiveRecord::Base
 
   def self.geocode(address)
     number = address.number.to_i
-    clines = where(:street => address.street.name) \
+    clines = where(street: address.street.name) \
       .where(
         "(lf_fadd % 2 = #{number % 2} and lf_fadd <= ? and ? <= lf_toadd) or " +
           "(rt_fadd % 2 = #{number % 2} and rt_fadd <= ? and ? <= rt_toadd)",
         number, number, number, number)
     if address.street.type
-      clines = clines.where :st_type => address.street.type.name
+      clines = clines.where st_type: address.street.type.name
     else
       cross_street = address.at || address.between1
       if cross_street
@@ -45,7 +45,7 @@ class Stcline < ActiveRecord::Base
           street_type = Stintersection.street_type address.street, address.between2
         end
         if street_type
-          clines = clines.where :st_type => street_type
+          clines = clines.where st_type: street_type
         end
       end
     end

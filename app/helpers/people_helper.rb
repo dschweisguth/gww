@@ -15,12 +15,12 @@ module PeopleHelper
   end
 
   def thumbnail_with_alt(photo)
-    thumbnail photo, render('shared/alt', :photo => photo)
+    thumbnail photo, render('shared/alt', photo: photo)
   end
 
   def place(trophy, reason)
     star, alt = star_and_alt(trophy, reason)
-    render 'people/show/place', :trophy => trophy, :star => star, :alt => alt
+    render 'people/show/place', trophy: trophy, star: star, alt: alt
   end
 
   ALT = {

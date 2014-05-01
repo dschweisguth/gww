@@ -112,7 +112,7 @@ describe Stintersection do
   end
 
   def make_intersection(cnn, street_name, street_type, point)
-    Stintersection.create! :cnn => cnn, :st_name => street_name, :st_type => street_type, :SHAPE => point
+    Stintersection.create! cnn: cnn, st_name: street_name, st_type: street_type, SHAPE: point
   end
 
   after do

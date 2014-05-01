@@ -34,7 +34,7 @@ describe Photos do
     end
 
     it 'handles missing farm' do
-      photo = Photo.make :farm => ''
+      photo = Photo.make farm: ''
       url_for_flickr_image(photo).should ==
         "http://static.flickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
     end

@@ -10,8 +10,8 @@ class Person < ActiveRecord::Base
   validates_presence_of :flickrid, :username
   attr_readonly :flickrid
 
-  has_many :photos, :inverse_of => :person
-  has_many :guesses, :inverse_of => :person
+  has_many :photos, inverse_of: :person
+  has_many :guesses, inverse_of: :person
 
   # Used by ScoreReportsController
 
@@ -509,7 +509,7 @@ class Person < ActiveRecord::Base
   # Used in Admin::RootController
 
   def self.update_all_from_flickr
-    Person.all(:conditions => 'id != 0').each do |person|
+    Person.all(conditions: 'id != 0').each do |person|
       begin
         person.update_attributes_if_necessary! attrs_from_flickr(person.flickrid)
       rescue FlickrService::FlickrRequestFailedError
@@ -518,7 +518,7 @@ class Person < ActiveRecord::Base
   end
 
   def self.update_statistics
-    update_all :comments_to_guess => nil, :comments_per_post => 0, :comments_to_be_guessed => nil
+    update_all comments_to_guess: nil, comments_per_post: 0, comments_to_be_guessed: nil
     update_statistic :comments_to_guess, %q{
       select id, avg(comment_count) statistic
       from (
@@ -569,7 +569,7 @@ class Person < ActiveRecord::Base
   # Used in Admin::PhotosController
 
   def destroy_if_has_no_dependents
-    if ! Photo.where(:person_id => id).exists? && ! Guess.where(:person_id => id).exists?
+    if ! Photo.where(person_id: id).exists? && ! Guess.where(person_id: id).exists?
       destroy
     end
   end
@@ -581,7 +581,7 @@ class Person < ActiveRecord::Base
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
     pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
-    { :username => username, :pathalias => pathalias }
+    { username: username, pathalias: pathalias }
   end
 
 end

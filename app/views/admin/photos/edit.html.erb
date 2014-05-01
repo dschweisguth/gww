@@ -20,7 +20,7 @@
 <% end %>
 
 <div id="photo">
-  <%= render 'photos/image_and_status', :size => 'm' %>
+  <%= render 'photos/image_and_status', size: 'm' %>
 
   <%= form_tag change_game_status_path(@photo) do %>
     <p>Change this photo's status from <%= @photo.game_status %> to
@@ -37,15 +37,15 @@
         <% if is_accepted_answer then %>
           <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
             <div>
-              <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
+              <%= hidden_field_tag 'comment_id', comment.id, id: nil %>
               <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
             </div>
           <% end %>
         <% else %>
           <%= form_tag add_selected_answer_path(@photo) do %>
             <div>
-              <%= hidden_field_tag 'comment_id', comment.id, :id => nil %>
-              <%= hidden_field_tag 'username', nil, :id => nil %>
+              <%= hidden_field_tag 'comment_id', comment.id, id: nil %>
+              <%= hidden_field_tag 'username', nil, id: nil %>
               <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess') %>
             </div>
           <% end %>
@@ -65,7 +65,7 @@
 <%= render 'photos/sidebar' %>
 
 <% if ! @photo.comments.empty? %>
-  <%= form_tag(add_entered_answer_path(@photo), :id => 'username_form') do %>
+  <%= form_tag(add_entered_answer_path(@photo), id: 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here
         <%= text_field_tag 'username' %>
@@ -80,7 +80,7 @@
 
 <%= button_to 'Update this photo from Flickr', update_photo_from_flickr_path(@photo) %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<%= button_to 'Delete this photo', admin_photo_path(@photo), :method => :delete, :confirm => 'Are you sure?' %>
+<%= button_to 'Delete this photo', admin_photo_path(@photo), method: :delete, confirm: 'Are you sure?' %>
 
 <% end %>
 <%= render 'shared/config' %>

@@ -28,7 +28,7 @@ describe ScoreReportsHelper do
     end
 
     it "escapes HTML special characters in the person's username" do
-      person = Person.make :username => 'try&catch>me'
+      person = Person.make username: 'try&catch>me'
       helper.link_to_person_url(person).should == "<a href=\"#{person_url person}\">try&amp;catch&gt;me</a>"
     end
 
@@ -36,9 +36,9 @@ describe ScoreReportsHelper do
 
   describe '#image_url_for_star' do
     expected = {
-      :bronze => 'http://farm9.static.flickr.com/8332/8143796058_095478b380_o.gif',
-      :silver => 'http://farm9.static.flickr.com/8470/8143764201_c938bf6bea_o.gif',
-      :gold =>   'http://farm9.static.flickr.com/8050/8143796020_85a314ced3_o.gif'
+      bronze: 'http://farm9.static.flickr.com/8332/8143796058_095478b380_o.gif',
+      silver: 'http://farm9.static.flickr.com/8470/8143764201_c938bf6bea_o.gif',
+      gold:   'http://farm9.static.flickr.com/8050/8143796020_85a314ced3_o.gif'
     }
     expected.keys.each do |star|
       it "returns #{expected[star]} given a #{star} star" do
