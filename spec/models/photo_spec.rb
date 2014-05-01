@@ -1418,7 +1418,7 @@ describe Photo do
     it "does not delete previous comments if the photo currently has no comments" do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
-      stub(FlickrService.instance).request { {
+      stub(FlickrService.instance).photos_comments_get_list { {
         'comments' => [ {
         } ]
       } }

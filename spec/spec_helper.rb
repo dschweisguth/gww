@@ -40,4 +40,8 @@ RSpec.configure do |config|
   config.include Photos, :type => :helper
   config.include Photos, :type => :controller
 
+  config.before :each do
+    stub(FlickrService).instance.returns MockFlickrService.new
+  end
+
 end
