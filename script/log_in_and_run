@@ -2,4 +2,4 @@
 # The above line makes this a login shell so that e.g. rbenv
 # (which is normally initialized in .bashrc) is initialized.
 cd `dirname $0`/..
-exec script/rails runner $*
+exec script/rails runner -e production $*

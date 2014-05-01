@@ -164,8 +164,8 @@ Update GWW
 ----------
 
 Add something like the following to your crontab on your production server:
-30  17 *	*	*	/home/dave/public_html/gww/script/log_in_and_run -e production CronJob.update_from_flickr
-0 21,0,3	*	*	*	/home/dave/public_html/gww/script/log_in_and_run -e production CronJob.calculate_statistics_and_maps
+30 17     * * *	/home/dave/public_html/gww/script/suppress_output_on_success /home/dave/public_html/gww/script/log_in_and_run CronJob.update_from_flickr
+ 0 21,0,3 * * *	/home/dave/public_html/gww/script/suppress_output_on_success /home/dave/public_html/gww/script/log_in_and_run CronJob.calculate_statistics_and_maps
 
 Update San Francisco GIS data
 -----------------------------
