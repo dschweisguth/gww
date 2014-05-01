@@ -513,6 +513,7 @@ class Person < ActiveRecord::Base
       begin
         person.update_attributes_if_necessary! attrs_from_flickr(person.flickrid)
       rescue FlickrService::FlickrRequestFailedError
+        # Ignore the error. We'll update again soon enough.
       end
     end
   end
