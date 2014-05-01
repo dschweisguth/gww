@@ -1067,7 +1067,7 @@ describe Person do
   describe '.update_all_from_flickr' do
     it "updates an existing user's username and pathalias" do
       person = Person.make :username => 'old_username', :pathalias => 'new_pathalias'
-      stub(FlickrCredentials).people_get_info { {
+      stub(FlickrService).people_get_info { {
         'person' => [ {
           'username' => [ 'new_username' ],
           'photosurl' => [ 'http://www.flickr.com/photos/new_pathalias/' ]

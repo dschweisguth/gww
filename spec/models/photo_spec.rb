@@ -841,7 +841,7 @@ describe Photo do
 
   describe '.update_all_from_flickr' do
     def stub_get_photos
-      stub(FlickrCredentials).groups_pools_get_photos { {
+      stub(FlickrService).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -864,7 +864,7 @@ describe Photo do
     end
 
     def stub_get_faves
-      stub(FlickrCredentials).photos_get_favorites(
+      stub(FlickrService).photos_get_favorites(
         'photo_id' => 'incoming_photo_flickrid', 'per_page' => '50', 'page' => '1') { {
         'stat' => 'ok',
         'photo' => [ {
@@ -904,7 +904,7 @@ describe Photo do
     end
 
     it "replaces an empty-string pathalias with the person's flickrid" do
-      stub(FlickrCredentials).groups_pools_get_photos { {
+      stub(FlickrService).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -985,7 +985,7 @@ describe Photo do
     end
 
     it "doesn't update faves if Flickr says the photo hasn't been updated" do
-      stub(FlickrCredentials).groups_pools_get_photos { {
+      stub(FlickrService).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -1039,14 +1039,14 @@ describe Photo do
 
     it "sets faves to 0 if the request for faves fails" do
       stub_get_photos
-      stub(Photo).faves_from_flickr { raise FlickrCredentials::FlickrRequestFailedError }
+      stub(Photo).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
       Photo.update_all_from_flickr
       photo = Photo.first
       photo.faves.should == 0
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
-      stub(FlickrCredentials).groups_pools_get_photos { {
+      stub(FlickrService).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
@@ -1418,7 +1418,7 @@ describe Photo do
     it "does not delete previous comments if the photo currently has no comments" do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
-      stub(FlickrCredentials).request { {
+      stub(FlickrService).request { {
         'comments' => [ {
         } ]
       } }
@@ -1430,13 +1430,13 @@ describe Photo do
     it "leaves previous comments alone if the request for comments fails" do
       Comment.make 'previous', :photo => @photo
       stub_get_faves
-      stub(FlickrCredentials).photos_comments_get_list { raise FlickrCredentials::FlickrRequestFailedError }
+      stub(FlickrService).photos_comments_get_list { raise FlickrService::FlickrRequestFailedError }
       @photo.update_from_flickr
       Comment.count.should == 1
     end
 
     def stub_get_faves
-      stub(FlickrCredentials).photos_get_favorites(
+      stub(FlickrService).photos_get_favorites(
         'photo_id' => @photo.flickrid, 'per_page' => '50', 'page' => '1') { {
         'stat' => 'ok',
         'photo' => [ {
@@ -1448,7 +1448,7 @@ describe Photo do
     end
 
     def stub_request_to_return_one_comment
-      stub(FlickrCredentials).photos_comments_get_list { {
+      stub(FlickrService).photos_comments_get_list { {
         'comments' => [ {
           'comment' => [ {
             'author' => 'commenter_flickrid',
@@ -1617,7 +1617,7 @@ describe Photo do
       end
 
       def stub_person_request
-        stub(FlickrCredentials).people_get_info { {
+        stub(FlickrService).people_get_info { {
           'person' => [ {
             'username' => [ 'username_from_request' ],
             'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
@@ -1626,7 +1626,7 @@ describe Photo do
       end
 
       def stub_person_request_failure
-        stub(FlickrCredentials).people_get_info { raise FlickrCredentials::FlickrRequestFailedError }
+        stub(FlickrService).people_get_info { raise FlickrService::FlickrRequestFailedError }
       end
 
       def is_guessed(photo, guesser, comment_text)

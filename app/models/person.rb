@@ -512,7 +512,7 @@ class Person < ActiveRecord::Base
     Person.all(:conditions => 'id != 0').each do |person|
       begin
         person.update_attributes_if_necessary! attrs_from_flickr(person.flickrid)
-      rescue FlickrCredentials::FlickrRequestFailedError
+      rescue FlickrService::FlickrRequestFailedError
       end
     end
   end
@@ -577,7 +577,7 @@ class Person < ActiveRecord::Base
   # Miscellaneous
 
   def self.attrs_from_flickr(person_flickrid)
-    response = FlickrCredentials.people_get_info 'user_id' => person_flickrid
+    response = FlickrService.people_get_info 'user_id' => person_flickrid
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
     pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]

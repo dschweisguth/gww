@@ -1,5 +1,5 @@
 Given /^updating a photo from Flickr does nothing$/ do
-  # TODO Dave shut down FlickrCredentials completely in features
+  # TODO Dave shut down FlickrService completely in features
   any_instance_of Photo, update_from_flickr: nil
 end
 

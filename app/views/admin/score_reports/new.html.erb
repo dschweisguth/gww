@@ -1,7 +1,7 @@
 <%= sandwich 'admin/score_reports/breadcrumbs' do %>
 <%= title_and_h1 'New score report' %>
 
-<p><a href="#preview">Preview</a> - <a href="<%= FlickrCredentials::SCORE_TOPIC_URL %>">GWSF Scores discussion topic</a></p>
+<p><a href="#preview">Preview</a> - <a href="<%= FlickrService::SCORE_TOPIC_URL %>">GWSF Scores discussion topic</a></p>
 
 <%= form_tag admin_score_reports_path do %>
   <%= submit_tag 'Remember that the score report below was published' %>

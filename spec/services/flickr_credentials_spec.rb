@@ -1,38 +1,38 @@
 require 'spec_helper'
 
-describe FlickrCredentials do
+describe FlickrService do
 
   before do
-    FlickrCredentials.retry_quantum = 0.001
+    FlickrService.retry_quantum = 0.001
   end
 
   describe '.groups_get_info' do
     it "gets group info" do
-      FlickrCredentials.groups_get_info('group_id' => FlickrCredentials::GROUP_ID)['group'][0]['id'].should == FlickrCredentials::GROUP_ID
+      FlickrService.groups_get_info('group_id' => FlickrService::GROUP_ID)['group'][0]['id'].should == FlickrService::GROUP_ID
     end
   end
 
   describe '.groups_pools_get_photos' do
     it "gets group photos" do
-      FlickrCredentials.groups_pools_get_photos('group_id' => FlickrCredentials::GROUP_ID)['photos'].should_not be_empty
+      FlickrService.groups_pools_get_photos('group_id' => FlickrService::GROUP_ID)['photos'].should_not be_empty
     end
   end
 
   describe '.people_get_info' do
     it "gets people info" do
-      FlickrCredentials.people_get_info('user_id' => '26686665@N06')['person'][0]['id'].should == '26686665@N06'
+      FlickrService.people_get_info('user_id' => '26686665@N06')['person'][0]['id'].should == '26686665@N06'
     end
   end
 
   describe '.photos_comments_get_list' do
     it "gets a photo's comments" do
-      FlickrCredentials.photos_comments_get_list('photo_id' => '4637739576')['comments'][0]['comment'].should_not be_empty
+      FlickrService.photos_comments_get_list('photo_id' => '4637739576')['comments'][0]['comment'].should_not be_empty
     end
   end
 
   describe '.photos_get_favorites' do
     it "gets a photo's favorites" do
-      FlickrCredentials.photos_get_favorites('photo_id' => '4637739576')['photo'][0]['person'].should_not be_empty
+      FlickrService.photos_get_favorites('photo_id' => '4637739576')['photo'][0]['person'].should_not be_empty
     end
   end
 
@@ -73,12 +73,12 @@ describe FlickrCredentials do
       # At least some of the Flickr API methods that GWW uses don't require OAuth, or work (perhaps returning less
       # information) when a request is not signed or is signed incorrectly. flickr.test.login requires correct OAuth to
       # work at all, so use it in these tests to verify that our OAuth implementation is correct.
-      result = FlickrCredentials.request 'flickr.test.login'
+      result = FlickrService.request 'flickr.test.login'
       result['user'][0]['username'][0].should == 'dschweisguth'
     end
 
     def request_fails
-      lambda { FlickrCredentials.request 'flickr.test.login' }.should raise_error FlickrCredentials::FlickrRequestFailedError
+      lambda { FlickrService.request 'flickr.test.login' }.should raise_error FlickrService::FlickrRequestFailedError
     end
 
     def mock_get_times_out(times)
