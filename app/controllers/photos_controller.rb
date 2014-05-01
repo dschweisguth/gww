@@ -56,7 +56,7 @@ class PhotosController < ApplicationController
   end
 
   def terms
-    params[:terms] ||= '' # TODO Dave test
+    params[:terms] ||= ''
     terms = Hash[*params[:terms].split('/').each_with_index { |term, i| if i.even? then term.gsub! '-', '_' end }]
     if terms['game_status']
       terms['game_status'] = terms['game_status'].split(',')
@@ -69,7 +69,7 @@ class PhotosController < ApplicationController
 
   caches_page :autocomplete_usernames
   def autocomplete_usernames
-    params[:terms] ||= '' # TODO Dave test
+    params[:terms] ||= ''
     terms = Hash[*params[:terms].split('/')]
     people = Person.select("people.username, count(f.id) n").joins("left join photos f on people.id = f.person_id")
     if terms['term']
