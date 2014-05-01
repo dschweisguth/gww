@@ -6,8 +6,9 @@ SimpleCov.start 'rails' do
   groups.delete 'Mailers'
   groups.delete 'Plugins'
 
+  add_group 'Services', 'services/'
   add_group 'Factories', 'factories/'
-  add_group 'Features', 'features/'
   add_group 'Specs', 'spec/'
+  add_group 'Features', 'features/'
 
 end
