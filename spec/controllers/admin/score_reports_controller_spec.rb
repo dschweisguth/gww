@@ -17,14 +17,14 @@ describe Admin::ScoreReportsController do
       response.should be_success
       trs = top_node.all 'tr'
 
-      trs[1].should have_selector 'a', text: 'Jan  2, 2011, 12:00 AM'
-      trs[1].should have_selector 'td', text: '4'
-      trs[1].should have_selector 'td', text: '1'
-      trs[1].should have_selector 'form'
+      trs[1].should have_css 'a', text: 'Jan  2, 2011, 12:00 AM'
+      trs[1].should have_css 'td', text: '4'
+      trs[1].should have_css 'td', text: '1'
+      trs[1].should have_css 'form'
 
-      trs[2].should have_selector 'a', text: 'Jan  1, 2011, 12:00 AM'
-      trs[2].should have_selector 'td', text: '1'
-      trs[2].should have_selector 'td', text: '0' # the page filled in the missing revelation count
+      trs[2].should have_css 'a', text: 'Jan  1, 2011, 12:00 AM'
+      trs[2].should have_css 'td', text: '1'
+      trs[2].should have_css 'td', text: '0' # the page filled in the missing revelation count
 
     end
 
@@ -33,7 +33,7 @@ describe Admin::ScoreReportsController do
       get :index
 
       response.should be_success
-      response.should_not have_selector 'form'
+      response.should_not have_css 'form'
 
     end
 
@@ -42,7 +42,7 @@ describe Admin::ScoreReportsController do
       get :index
 
       response.should be_success
-      response.should_not have_selector 'form'
+      response.should_not have_css 'form'
 
     end
 

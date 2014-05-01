@@ -20,7 +20,7 @@ describe PhotosController do
       get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
 
       response.should be_success
-      response.body.should have_selector 'h1', text: '1 photos'
+      response.body.should have_css 'h1', text: '1 photos'
       response.body.should have_link 'posted by', href: photos_path('username', '-', 1)
       response.body.should have_link 'poster_username', href: person_path(photo.person)
 
@@ -148,7 +148,7 @@ describe PhotosController do
 
       response.should be_success
       link = top_node.find %Q(a[href="#{photo_path(photo)}"])
-      link.should have_selector %Q(img[src="#{url_for_flickr_image(photo, 't')}"])
+      link.should have_css %Q(img[src="#{url_for_flickr_image(photo, 't')}"])
       response.body.should have_link photo.person.username, href: person_path(photo.person)
       response.body.should include ', January  1, 2011.'
       response.body.should_not include 'Guessed by'
@@ -191,7 +191,7 @@ describe PhotosController do
 
       response.should be_success
       photos = top_node.find 'photos[updated_at="1293840000"]'
-      photos.should have_selector 'photo[posted_by=poster_username]'
+      photos.should have_css 'photo[posted_by=poster_username]'
 
     end
   end
@@ -207,12 +207,12 @@ describe PhotosController do
 
       response.should be_success
       link = top_node.find %Q(a[href="#{url_for_flickr_photo_in_pool(photo)}"])
-      link.should have_selector %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
+      link.should have_css %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
       response.body.should include 'This photo is unfound.'
       table = top_node.find 'table'
-      table.should have_selector 'td', text: 'guesser_username'
-      table.should have_selector 'td', text: 'guess text'
-      response.body.should have_selector 'strong', text: 'commenter_username'
+      table.should have_css 'td', text: 'guesser_username'
+      table.should have_css 'td', text: 'guess text'
+      response.body.should have_css 'strong', text: 'commenter_username'
       response.body.should include 'comment text'
       response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
       response.body.should include "This photo hasn't been found or revealed yet"
@@ -245,7 +245,7 @@ describe PhotosController do
       response.body.should include 'It was mapped by the photographer'
       response.body.should_not include "This photo hasn't been found or revealed yet"
       response.body.should_not include 'It was auto-mapped'
-      response.body.should have_selector '#map'
+      response.body.should have_css '#map'
       response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
@@ -270,7 +270,7 @@ describe PhotosController do
       response.body.should include 'It was auto-mapped'
       response.body.should_not include "This photo hasn't been found or revealed yet"
       response.body.should_not include 'It was mapped by the photographer'
-      response.body.should have_selector '#map'
+      response.body.should have_css '#map'
       response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end

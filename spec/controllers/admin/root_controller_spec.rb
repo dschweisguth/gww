@@ -55,7 +55,7 @@ describe Admin::RootController do
       get :bookmarklet
 
       response.should be_success
-      response.body.should have_selector %Q(a[href="#{root_bookmarklet_path}"])
+      response.body.should have_css %Q(a[href="#{root_bookmarklet_path}"])
 
     end
   end

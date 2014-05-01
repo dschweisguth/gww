@@ -63,7 +63,7 @@ describe PeopleController do
       response.should be_success
       response.body.should have_link 'guesser_username', href: person_path(guesser)
       response.body.should have_link 'poster_username', href: person_path(poster)
-      response.body.should have_selector 'td', text: '%.3f' % guesser[:bias]
+      response.body.should have_css 'td', text: '%.3f' % guesser[:bias]
 
     end
   end
@@ -98,7 +98,7 @@ describe PeopleController do
       tables = top_node.all('table[class=dark]').select { |table| table.has_selector? 'th', text: title }
       tables.count.should == 1
       table = tables.first
-      table.should have_selector 'td.opening-number', text: '1'
+      table.should have_css 'td.opening-number', text: '1'
       table.should have_link 'username', href: person_path(guess.person)
     end
 
@@ -124,7 +124,7 @@ describe PeopleController do
       get :show, id: @person.id
 
       response.should be_success
-      response.body.should have_selector %Q(a[href="#{person_map_path(@person)}"]) # the link text is HTML-encoded
+      response.body.should have_css %Q(a[href="#{person_map_path(@person)}"]) # the link text is HTML-encoded
       renders_bits_for_user_who_has_guessed
       renders_bits_for_user_who_has_posted
 
@@ -147,7 +147,7 @@ describe PeopleController do
       get :show, id: @person.id
 
       response.should be_success
-      response.body.should have_selector %Q([href="#{person_map_path(@person)}"])
+      response.body.should have_css %Q([href="#{person_map_path(@person)}"])
 
       response.body.should include 'username has never made a correct guess'
       response.body.should_not include 'username scored the most points in the last week'
@@ -180,14 +180,14 @@ describe PeopleController do
       get :show, id: @person.id
 
       response.should be_success
-      response.body.should have_selector %Q([href="#{person_map_path(@person)}"])
+      response.body.should have_css %Q([href="#{person_map_path(@person)}"])
 
       renders_bits_for_user_who_has_guessed
 
       response.body.should include 'username has never posted a photo to the group'
       response.body.should_not include 'username posted the most photos in the last week'
       response.body.should_not include 'username posted the most photos in the last month'
-      response.body.should have_selector 'h2', text: 'username has posted 0 photos'
+      response.body.should have_css 'h2', text: 'username has posted 0 photos'
       response.body.should_not include 'Of the photos that username has posted'
       response.body.should_not include 'remains unfound'
       response.body.should_not include 'was revealed'
@@ -279,7 +279,7 @@ describe PeopleController do
       response.body.should include 'username is in 1st place with a score of 2.'
       response.body.should include 'username scored the most points in the last week'
       response.body.should include 'username scored the most points in the last month'
-      response.body.should have_selector 'h2', text: 'username has correctly guessed 2 photos'
+      response.body.should have_css 'h2', text: 'username has correctly guessed 2 photos'
       response.body.should include 'Of the photos that username has guessed,'
       response.body.should have_link 'favorite_poster_username'
     end
@@ -288,7 +288,7 @@ describe PeopleController do
       response.body.should include 'username has posted 2 photos to the group, the most'
       response.body.should include 'username posted the most photos in the last week'
       response.body.should include 'username posted the most photos in the last month'
-      response.body.should have_selector 'h2', text: 'username has posted 2 photos'
+      response.body.should have_css 'h2', text: 'username has posted 2 photos'
       response.body.should include '1 remains unfound'
       response.body.should include '1 was revealed'
       response.body.should have_link 'favorite_poster_of_username'
@@ -304,7 +304,7 @@ describe PeopleController do
       get :guesses, id: person.id
 
       response.should be_success
-      response.body.should have_selector 'h1', text: '1 guess by username'
+      response.body.should have_css 'h1', text: '1 guess by username'
       response.body.should have_link 'guessed_photo_poster_username'
 
     end
@@ -327,7 +327,7 @@ describe PeopleController do
       get :comments, id: person.id, page: "2"
 
       response.should be_success
-      response.body.should have_selector 'h1', text: '1 photo commented on by username'
+      response.body.should have_css 'h1', text: '1 photo commented on by username'
       response.body.should have_link 'Flickr', href: url_for_flickr_photo_in_pool(photo)
       response.body.should have_link 'GWW', href: photo_path(photo)
       response.body.should have_link 'poster_username', href: person_path(photo.person)
@@ -348,10 +348,10 @@ describe PeopleController do
       assigns[:json].should == json.to_json
 
       response.should be_success
-      response.body.should have_selector 'input[id=posts]'
-      response.body.should have_selector 'label', text: '1 mapped post (?, -)'
-      response.body.should have_selector 'input[id=guesses]'
-      response.body.should have_selector 'label', text: '1 mapped guess (!)'
+      response.body.should have_css 'input[id=posts]'
+      response.body.should have_css 'label', text: '1 mapped post (?, -)'
+      response.body.should have_css 'input[id=guesses]'
+      response.body.should have_css 'label', text: '1 mapped guess (!)'
       response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end

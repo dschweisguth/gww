@@ -16,7 +16,7 @@ describe WheresiesController do
       stub(Time).now { Time.local(2010) }
       get :show, year: '2009'
       response.should be_success
-      response.body.should_not have_selector 'h1', text: '2009 Wheresies (preliminary)'
+      response.body.should_not have_css 'h1', text: '2009 Wheresies (preliminary)'
     end
 
   end

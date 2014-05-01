@@ -45,7 +45,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   get action, params
 
   response.should be_success
-  response.body.should have_selector 'b', text: 'updated Wednesday, January  5, 12 AM'
+  response.body.should have_css 'b', text: 'updated Wednesday, January  5, 12 AM'
   response.body.should =~ /3 new guesses by .../
   response.body.should =~ /guessed their first point/
   response.body.should =~ /#{person2[:change_in_standing]}/

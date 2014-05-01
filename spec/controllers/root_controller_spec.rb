@@ -39,7 +39,7 @@ describe RootController do
     it 'renders the page' do
       get :bookmarklet
       response.should be_success
-      response.body.should have_selector 'h2', text: 'To add "View in GWW" to your bookmarks,'
+      response.body.should have_css 'h2', text: 'To add "View in GWW" to your bookmarks,'
     end
   end
 
