@@ -60,11 +60,7 @@ describe PhotosController do
     end
 
     it "returns an unfound photo" do
-      returns @initial_bounds
-    end
-
-    it "copies an inferred geocode to the stated one" do
-      photo = Photo.make id: 1, inferred_latitude: 37, inferred_longitude: -122
+      photo = Photo.make id: 1, latitude: 37, longitude: -122
       stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
       stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
       controller.map_photos.should == {
@@ -82,19 +78,36 @@ describe PhotosController do
       }
     end
 
-    it "echos non-default bounds" do
-      controller.params[:sw] = '1,2'
-      controller.params[:ne] = '3,4'
-      returns Bounds.new(1, 3, 2, 4)
+    it "handles no photos" do
+      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [] }
+      stub(Photo).oldest { nil }
+      controller.map_photos.should == {
+        partial: false,
+        bounds: @initial_bounds,
+        photos: []
+      }
     end
 
-    def returns(bounds)
-      photo = Photo.make id: 1, latitude: 37, longitude: -122
-      stub(Photo).mapped(bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
+    it "echos non-default bounds" do
+      bounds = Bounds.new 1, 3, 2, 4
+      stub(Photo).mapped(bounds, @default_max_photos + 1) { [] }
+      stub(Photo).oldest { nil }
+      controller.params[:sw] = '1,2'
+      controller.params[:ne] = '3,4'
       controller.map_photos.should == {
         partial: false,
         bounds: bounds,
+        photos: []
+      }
+    end
+
+    it "copies an inferred geocode to the stated one" do
+      photo = Photo.make id: 1, inferred_latitude: 37, inferred_longitude: -122
+      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
+      controller.map_photos.should == {
+        partial: false,
+        bounds: @initial_bounds,
         photos: [
           {
             'id' => photo.id,
@@ -125,16 +138,6 @@ describe PhotosController do
             'symbol' => '?'
           }
         ]
-      }
-    end
-
-    it "handles no photos" do
-      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [] }
-      stub(Photo).oldest { nil }
-      controller.map_photos.should == {
-        partial: false,
-        bounds: @initial_bounds,
-        photos: []
       }
     end
 
