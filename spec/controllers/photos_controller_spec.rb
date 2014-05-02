@@ -141,6 +141,32 @@ describe PhotosController do
       }
     end
 
+    it "moves a younger photo so that it doesn't completely overlap an older photo with an identical location" do
+      photo1 = Photo.make id: 1, latitude: 37, longitude: -122, dateadded: 1.day.ago
+      photo2 = Photo.make id: 2, latitude: 37, longitude: -122
+      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo2, photo1 ] }
+      stub(Photo).oldest { photo1 }
+      photos = controller.map_photos[:photos]
+      photos[0]['latitude'].should be_within(0.000001).of 36.999991
+      photos[0]['longitude'].should be_within(0.000001).of -122.000037
+      photos[1]['latitude'].should == 37
+      photos[1]['longitude'].should == -122
+    end
+
+  end
+
+  describe '#perturb_identical_locations' do
+    it "moves younger photos so that they don't completely overlap older photos with identical locations" do
+      photos = Array.new(3) { Photo.make latitude: 37, longitude: -122 }
+      controller.perturb_identical_locations photos
+      # Increasingly younger photos are moved farther along the involute of a circle
+      photos[0].latitude.should be_within(0.000001).of 36.999951
+      photos[0].longitude.should be_within(0.000001).of -122.000003
+      photos[1].latitude.should be_within(0.000001).of 36.999991
+      photos[1].longitude.should be_within(0.000001).of -122.000037
+      photos[2].latitude.should == 37
+      photos[2].longitude.should == -122
+    end
   end
 
   describe '#map_popup' do
