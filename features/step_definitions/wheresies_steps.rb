@@ -118,6 +118,7 @@ Then /^the player "([^"]*)" should be first on the longest-lasting list with a p
   tds_in_first_row.last.text.should == "#{years} year#{if years.to_i != 1 then 's' end}"
 end
 
+# TODO Dave this test failed once; veteran was first instead of fastest. Deflake it somehow.
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
   fastest_guessed_list = page.all('body > div > table')[1]
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
