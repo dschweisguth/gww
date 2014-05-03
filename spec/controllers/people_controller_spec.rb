@@ -431,6 +431,18 @@ describe PeopleController do
       }
     end
 
+    it "moves a younger post so that it doesn't completely overlap an older post with an identical location" do
+      post1 = Photo.make id: 1, latitude: 37, longitude: -122, dateadded: 1.day.ago
+      post2 = Photo.make id: 2, latitude: 37, longitude: -122
+      stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ post2, post1 ] }
+      stub(Photo).oldest { post1 }
+      photos = controller.map_photos(@person.id)[:photos]
+      photos[0]['latitude'].should be_within(0.000001).of 36.999991
+      photos[0]['longitude'].should be_within(0.000001).of -122.000037
+      photos[1]['latitude'].should == 37
+      photos[1]['longitude'].should == -122
+    end
+
     it "returns a guess" do
       photo = Photo.make id: 15, person_id: 2, latitude: 37, longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ photo ] }

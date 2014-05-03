@@ -142,16 +142,17 @@ class PeopleController < ApplicationController
   end
 
   def map_photos(person_id)
-    photos = Photo.posted_or_guessed_by_and_mapped(person_id, bounds, max_map_photos + 1)
+    photos = Photo.posted_or_guessed_by_and_mapped person_id, bounds, max_map_photos + 1
     partial = photos.length == max_map_photos + 1
     if partial
       photos.pop
     end
     first_photo = Photo.oldest
     if first_photo
-      use_inferred_geocode_if_necessary(photos)
+      use_inferred_geocode_if_necessary photos
       photos.each { |photo| prepare_for_display_for_person photo, person_id, first_photo.dateadded }
     end
+    perturb_identical_locations photos
     as_json partial, photos
   end
 

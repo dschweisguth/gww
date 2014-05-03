@@ -1,6 +1,5 @@
 Bugs
 
-This photo is not on the map, or is completely hidden by another: http://guesswheresf.org/photos/15515
 After http://code.google.com/p/phusion-passenger/issues/detail?id=563 is fixed, reinstate page caching
 A photo which is guessed or revealed and then removed from the group remains in the database but is no longer updated.
   That means that the usernames of commenters on such a photo are no longer updated.
