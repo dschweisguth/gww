@@ -16,4 +16,5 @@ bundle install --deployment --without test
 bundle exec rake RAILS_ENV=production db:migrate
 touch tmp/restart.txt
 rm -rf public/cache
+mkdir public/cache
 script/up
