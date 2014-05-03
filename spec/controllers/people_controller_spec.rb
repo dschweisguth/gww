@@ -298,14 +298,16 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
-      person = Person.make id: 1
-      stub(Person).find(person.id) { person }
-      stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(person: person) ] }
-      get :guesses, id: person.id
+      guesser = Person.make id: 1
+      stub(Person).find(guesser.id) { guesser }
+      poster = Person.make id: 2, username: 'poster'
+      photo = Photo.make person: poster
+      stub(Guess).where.stub!.order.stub!.includes { [ Guess.make(person: guesser, photo: photo) ] }
+      get :guesses, id: guesser.id
 
       response.should be_success
       response.body.should have_css 'h1', text: '1 guess by username'
-      response.body.should have_link 'guessed_photo_poster_username'
+      response.body.should have_link 'poster'
 
     end
   end

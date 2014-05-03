@@ -1,7 +1,7 @@
 def renders_report_for(report_date, previous_report_date, action, params = {})
-  person0 = Person.make
-  person1 = Person.make
-  person2 = Person.make
+  person0 = Person.make id: 0
+  person1 = Person.make id: 1
+  person2 = Person.make id: 2
   person2[:change_in_standing] = 'guessed their first point. Congratulations!'
 
   guess11 = Guess.make 11, person: person1

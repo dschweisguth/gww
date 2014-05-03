@@ -33,7 +33,7 @@ class PhotosController < ApplicationController
 
   caches_page :map_popup
   def map_popup
-    @photo = Photo.includes(:person, { guesses: :person }, :revelation).find params[:id]
+    @photo = Photo.includes(:person, { guesses: :person }, :revelation).find params[:id].to_i
     render partial: 'photos/map/popup'
   end
 
@@ -86,7 +86,7 @@ class PhotosController < ApplicationController
 
   caches_page :show
   def show
-    @photo = Photo.find params[:id]
+    @photo = Photo.find params[:id].to_i
     @comments = Comment.find_all_by_photo_id @photo
     set_config_to @photo
   end

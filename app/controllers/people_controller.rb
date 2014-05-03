@@ -34,7 +34,7 @@ class PeopleController < ApplicationController
 
   caches_page :show
   def show
-    @person = Person.find params[:id]
+    @person = Person.find params[:id].to_i
 
     @mapped_post_and_guess_count = Photo.mapped_count(@person.id) + Guess.mapped_count(@person.id)
 
@@ -111,14 +111,14 @@ class PeopleController < ApplicationController
 
   caches_page :guesses
   def guesses
-    @person = Person.find params[:id]
+    @person = Person.find params[:id].to_i
     @guesses = Guess.where(person_id: params[:id]) \
       .order('commented_at desc').includes(photo: :person)
   end
 
   caches_page :comments
   def comments
-    @person = Person.find params[:id]
+    @person = Person.find params[:id].to_i
     photos = Comment.find_by_sql [
       'select distinct photo_id id from comments where flickrid = ?',
       @person.flickrid ]

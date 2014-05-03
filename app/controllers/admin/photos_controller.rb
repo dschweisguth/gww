@@ -17,7 +17,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def edit
-    @photo = Photo.find_with_associations params[:id]
+    @photo = Photo.find_with_associations params[:id].to_i
     if params[:update_from_flickr]
       @photo.update_from_flickr
       PageCache.clear

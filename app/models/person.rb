@@ -1,9 +1,6 @@
 class Person < ActiveRecord::Base
   include UpdatableOnlyIfNecessary
 
-  #noinspection RubyResolve
-  self.include_root_in_json = false
-
   MIN_GUESSES_FOR_FAVORITE = 10
   MIN_BIAS_FOR_FAVORITE = 2.5
 
