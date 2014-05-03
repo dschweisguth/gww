@@ -2,7 +2,10 @@
 
 defaults: &defaults
   adapter: mysql2spatial
-  host:    localhost
+  host: localhost
+  encoding: utf8
+  pool: 5
+  reconnect: false
 
 development:
   <<: *defaults
