@@ -393,6 +393,25 @@ describe PeopleController do
       returns_post @initial_bounds, 'revealed', 'E00000', '-'
     end
 
+    def returns_post(bounds, game_status, color, symbol)
+      post = Photo.make id: 14, person_id: @person.id, latitude: 37, longitude: -122, game_status: game_status
+      stub(Photo).posted_or_guessed_by_and_mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }
+      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
+      controller.map_photos(@person.id).should == {
+        partial: false,
+        bounds: bounds,
+        photos: [
+          {
+            'id' => post.id,
+            'latitude' => post.latitude,
+            'longitude' => post.longitude,
+            'color' => color,
+            'symbol' => symbol
+          }
+        ]
+      }
+    end
+
     it "copies an inferred geocode to the stated one" do
       post = Photo.make id: 14, person_id: @person.id, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, @initial_bounds, @default_max_photos + 1) { [ post ] }
@@ -434,26 +453,10 @@ describe PeopleController do
     it "echos non-default bounds" do
       controller.params[:sw] = '1,2'
       controller.params[:ne] = '3,4'
-      returns_post Bounds.new(1, 3, 2, 4), 'unfound', 'FFFF00', '?'
-    end
-
-    def returns_post(bounds, game_status, color, symbol)
-      post = Photo.make id: 14, person_id: @person.id, latitude: 37, longitude: -122, game_status: game_status
-      stub(Photo).posted_or_guessed_by_and_mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { Photo.make dateadded: 1.day.ago }
-      controller.map_photos(@person.id).should == {
-        partial: false,
-        bounds: bounds,
-        photos: [
-          {
-            'id' => post.id,
-            'latitude' => post.latitude,
-            'longitude' => post.longitude,
-            'color' => color,
-            'symbol' => symbol
-          }
-        ]
-      }
+      bounds = Bounds.new 1, 3, 2, 4
+      stub(Photo).posted_or_guessed_by_and_mapped(@person.id, bounds, @default_max_photos + 1) { [] }
+      stub(Photo).oldest { nil }
+      controller.map_photos(@person.id)[:bounds].should == bounds
     end
 
     it "returns no more than a maximum number of photos" do
