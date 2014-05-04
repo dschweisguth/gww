@@ -12,7 +12,10 @@ Given /^there is a player "([^"]*)" with no guesses from previous years$/ do |us
 end
 
 Given /^the player "([^"]*)" scored (\d+) points? this year$/ do |username, score|
-  score.to_i.times { create :guess, person: Person.find_by_username(username) }
+  score.to_i.times do
+    photo = create :photo, dateadded: 1.day.ago # prevent these guesses from showing up on the fastest-guessed list
+    create :guess, person: Person.find_by_username(username), photo: photo
+  end
 end
 
 Given /^the player "([^"]*)" posted (\d+) photos? this year$/ do |username, photo_count|
@@ -115,10 +118,10 @@ Then /^the player "([^"]*)" should be first on the longest-lasting list with a p
   longest_lasting_list = page.all('body > div > table')[0]
   tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
   tds_in_first_row[2].text.should == username
-  tds_in_first_row.last.text.should == "#{years} year#{if years.to_i != 1 then 's' end}"
+  # Allow both "3 years" and "3 years, 1 second" to pass in case the test runs slowly
+  tds_in_first_row.last.text.start_with?("#{years} year#{if years.to_i != 1 then 's' end}").should be_true
 end
 
-# TODO Dave this test failed once; veteran was first instead of fastest. Deflake it somehow.
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
   fastest_guessed_list = page.all('body > div > table')[1]
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
