@@ -22,6 +22,10 @@ class FlickrService
     @retry_quantum = 30
   end
 
+  def wait_between_requests
+    sleep Rails.env.test? ? 0 : 1.1
+  end
+
   def groups_get_info(opts)
     request 'flickr.groups.getInfo', opts
   end

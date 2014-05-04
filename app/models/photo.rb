@@ -379,7 +379,7 @@ class Photo < ActiveRecord::Base
     faves_page = 1
     parsed_faves = nil
     while parsed_faves.nil? || faves_page <= parsed_faves['pages'].to_i
-      sleep 1.1
+      FlickrService.instance.wait_between_requests
       faves_xml = FlickrService.instance.photos_get_favorites(
           'photo_id' => photo_flickrid, 'per_page' => '50', 'page' => faves_page.to_s)
       parsed_faves = faves_xml['photo'][0]
