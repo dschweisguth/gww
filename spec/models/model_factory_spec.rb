@@ -510,24 +510,9 @@ def set_spec_type_to_non_model(*model_classes)
 end
 
 def makes_with_custom_attributes(model_class, attrs_in)
-  instance = model_class.make attrs_in
-  actual_attrs = update_nil_id_attributes instance
+  actual_attrs = model_class.make(attrs_in).attributes
   expected_attrs = replace_object_attributes_with_id_attributes stringify_keys attrs_in
   actual_attrs.except('id').should == expected_attrs.except('id')
-end
-
-# A nil ID attr means that this object hasn't been saved, so the ID of the
-# object attr corresponding to the ID hasn't been copied to the ID attr.
-# This method does that.
-def update_nil_id_attributes object
-  updated_attrs = {}
-  object.attributes.each_pair do |key, val|
-    if key =~ /^(.*)_id$/ && val.nil?
-      val = object.send($1).id
-    end
-    updated_attrs[key] = val
-  end
-  updated_attrs
 end
 
 def replace_object_attributes_with_id_attributes attrs

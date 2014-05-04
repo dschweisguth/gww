@@ -223,7 +223,12 @@ describe PeopleController do
       shortest_lasting_guess[:place] = 1
       stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
-      stub(Guess).find_with_associations(@person) { [ Guess.make('all1'), Guess.make('all2') ] }
+      # Give the posters different IDs so that they're considered different people, we have a list of guesses from
+      # more than one poster and code that handles that is tested
+      stub(Guess).find_with_associations(@person) { [
+        Guess.make('all1', photo: Photo.make('all1', person: Person.make('all1', id: 1))),
+        Guess.make('all2', photo: Photo.make('all2', person: Person.make('all2', id: 2)))
+      ] }
 
       favorite_poster = Person.make 'favorite_poster'
       favorite_poster[:bias] = 2.5
@@ -259,9 +264,9 @@ describe PeopleController do
       most_faved[:place] = 1
       stub(Photo).most_faved(@person) { most_faved }
 
-      found1 = Guess.make 'found1'
+      found1 = Guess.make 'found1', person: Person.make('guesser1', id: 1)
       found1.photo.guesses << found1
-      found2 = Guess.make 'found2'
+      found2 = Guess.make 'found2', person: Person.make('guesser2', id: 2)
       found2.photo.guesses << found2
       stub(Photo).find_with_guesses(@person) { [ found1.photo, found2.photo ] }
 
