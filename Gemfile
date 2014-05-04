@@ -5,7 +5,7 @@ gem 'activerecord-mysql2spatial-adapter', '0.4.3'
 gem 'rails', '3.1.12'
 gem 'jquery-rails', '1.0.19'
 gem 'will_paginate', '3.0.pre2' # Don't upgrade this without testing all uses. Later versions remove the ability to paginate a list of IDs.
-gem 'xml-simple', '1.1.1'
+gem 'xml-simple', '1.1.3'
 
 group :test do
   gem 'capybara', '2.2.1'
