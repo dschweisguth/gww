@@ -1,5 +1,5 @@
 <%= sandwich 'person_breadcrumbs' do %>
-<%= title_and_h1 "#{pluralize @photo_ids.length, 'photo'} commented on by #{@person.username}" %>
+<%= title_and_h1 "#{pluralize @photos.total_entries, 'photo'} commented on by #{@person.username}" %>
 
 <table class="dark">
   <tr>

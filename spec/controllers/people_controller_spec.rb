@@ -323,15 +323,14 @@ describe PeopleController do
       stub(Person).find(person.id) { person }
 
       photo = Photo.make
-      stub(Comment).find_by_sql { [ photo ] }
-
       paginated_photos = [ photo ]
-      # Mock methods from will_paginate's version of Array
+      # Stub methods from will_paginate's version of Array
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
-      stub(Photo).paginate { paginated_photos }
+      stub(paginated_photos).total_entries { 1 }
+      stub(person).paginated_commented_photos('1') { paginated_photos }
 
-      get :comments, id: person.id, page: "2"
+      get :comments, id: person.id, page: '1'
 
       response.should be_success
       response.body.should have_css 'h1', text: '1 photo commented on by username'

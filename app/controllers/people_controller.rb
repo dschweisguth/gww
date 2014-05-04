@@ -119,13 +119,7 @@ class PeopleController < ApplicationController
   caches_page :comments
   def comments
     @person = Person.find params[:id].to_i
-    photos = Comment.find_by_sql [
-      'select distinct photo_id id from comments where flickrid = ?',
-      @person.flickrid ]
-    @photo_ids = photos.map { |p| p.id }
-    @photos = Photo.paginate @photo_ids, page: params[:page],
-      include: [ :person, { guesses: :person } ],
-      order: 'lastupdate desc', per_page: 25
+    @photos = @person.paginated_commented_photos params[:page]
   end
 
   caches_page :map

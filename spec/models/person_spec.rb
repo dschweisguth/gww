@@ -912,6 +912,44 @@ describe Person do
 
   end
 
+  describe '#paginated_commented_photos' do
+    it "returns the photos commented on by a given user" do
+      person = Person.make
+      comment = Comment.make flickrid: person.flickrid, username: person.username
+      person.paginated_commented_photos(1).should == [comment.photo]
+    end
+
+    it "ignores photos commented on by another user" do
+      person = Person.make
+      comment = Comment.make
+      person.paginated_commented_photos(1).should == []
+    end
+
+    it "paginates" do
+      person = Person.make
+      3.times { |n| Comment.make n, flickrid: person.flickrid, username: person.username }
+      person.paginated_commented_photos(1, 2).count.should == 2
+    end
+
+    it "returns each photo only once, even if the person commented on it more than once" do
+      person = Person.make
+      photo = Photo.make
+      comment = Comment.make 1, photo: photo, flickrid: person.flickrid, username: person.username
+      comment = Comment.make 2, photo: photo, flickrid: person.flickrid, username: person.username
+      person.paginated_commented_photos(1).should == [photo]
+    end
+
+    it "sorts the most recently updated photos first" do
+      person = Person.make
+      photo1 = Photo.make(1, lastupdate: 2.days.ago)
+      comment = Comment.make 1, photo: photo1, flickrid: person.flickrid, username: person.username
+      photo2 = Photo.make(2, lastupdate: 1.days.ago)
+      comment = Comment.make 2, photo: photo2, flickrid: person.flickrid, username: person.username
+      person.paginated_commented_photos(1).should == [photo2, photo1]
+    end
+
+  end
+
   describe '.most_points_in' do
     it 'returns a list of scorers with their scores' do
       guess = Guess.make commented_at: Time.local(2010).getutc
