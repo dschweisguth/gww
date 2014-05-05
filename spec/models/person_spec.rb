@@ -928,7 +928,7 @@ describe Person do
     it "paginates" do
       person = Person.make
       3.times { |n| Comment.make n, flickrid: person.flickrid, username: person.username }
-      person.paginated_commented_photos(1, 2).count.should == 2
+      person.paginated_commented_photos(1, 2).length.should == 2
     end
 
     it "returns each photo only once, even if the person commented on it more than once" do
