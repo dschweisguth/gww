@@ -921,7 +921,7 @@ describe Person do
 
     it "ignores photos commented on by another user" do
       person = Person.make
-      comment = Comment.make
+      Comment.make
       person.paginated_commented_photos(1).should == []
     end
 
@@ -934,17 +934,17 @@ describe Person do
     it "returns each photo only once, even if the person commented on it more than once" do
       person = Person.make
       photo = Photo.make
-      comment = Comment.make 1, photo: photo, flickrid: person.flickrid, username: person.username
-      comment = Comment.make 2, photo: photo, flickrid: person.flickrid, username: person.username
+      Comment.make 1, photo: photo, flickrid: person.flickrid, username: person.username
+      Comment.make 2, photo: photo, flickrid: person.flickrid, username: person.username
       person.paginated_commented_photos(1).should == [photo]
     end
 
     it "sorts the most recently updated photos first" do
       person = Person.make
       photo1 = Photo.make(1, lastupdate: 2.days.ago)
-      comment = Comment.make 1, photo: photo1, flickrid: person.flickrid, username: person.username
+      Comment.make 1, photo: photo1, flickrid: person.flickrid, username: person.username
       photo2 = Photo.make(2, lastupdate: 1.days.ago)
-      comment = Comment.make 2, photo: photo2, flickrid: person.flickrid, username: person.username
+      Comment.make 2, photo: photo2, flickrid: person.flickrid, username: person.username
       person.paginated_commented_photos(1).should == [photo2, photo1]
     end
 
