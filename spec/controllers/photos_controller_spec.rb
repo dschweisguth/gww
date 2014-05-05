@@ -9,13 +9,12 @@ describe PhotosController do
       order_param = '+'
       page_param = '1'
 
-      stub(Photo).count { 1 }
-
       # Mock methods from will_paginate's version of Array
       photo = Photo.make
       paginated_photos = [ photo ]
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
+      stub(paginated_photos).total_entries { 1 }
       stub(Photo).all_sorted_and_paginated(sorted_by_param, order_param, page_param, 30) { paginated_photos }
       get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
 
