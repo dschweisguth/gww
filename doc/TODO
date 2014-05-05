@@ -7,7 +7,8 @@ A photo which is guessed or revealed and then removed from the group remains in 
 
 Debt
 
-Upgrade Rails, will_paginate, shoulda-matchers, jquery-rails
+Upgrade Rails, shoulda-matchers, jquery-rails, jasmine
+Include Jasmine in default rake task
 Upgrade to HTML 5
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto
