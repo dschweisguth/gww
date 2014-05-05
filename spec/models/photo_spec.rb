@@ -508,116 +508,116 @@ describe Photo do
   # Used by PhotosController
 
   describe '.all_sorted_and_paginated' do
-    it 'returns photos sorted by username' do
+    it "returns photos sorted by username" do
       all_sorted_and_paginated_reverses_photos('username',
         { username: 'z' }, { dateadded: Time.utc(2011) },
         { username: 'a' }, { dateadded: Time.utc(2010) })
     end
 
-    it 'ignores case' do
+    it "ignores case" do
       all_sorted_and_paginated_reverses_photos('username',
         { username: 'Z' }, { dateadded: Time.utc(2011) },
         { username: 'a' }, { dateadded: Time.utc(2010) })
     end
 
-    it 'returns photos sorted by username, dateadded' do
+    it "returns photos sorted by username, dateadded" do
       person = Person.make
       photo1 = Photo.make 1, person: person, dateadded: Time.utc(2010)
       photo2 = Photo.make 2, person: person, dateadded: Time.utc(2011)
       Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
-    it 'returns photos sorted by dateadded' do
+    it "returns photos sorted by dateadded" do
       all_sorted_and_paginated_reverses_photos('date-added',
         { username: 'a' }, { dateadded: Time.utc(2010) },
         { username: 'z' }, { dateadded: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by dateadded, username' do
+    it "returns photos sorted by dateadded, username" do
       all_sorted_and_paginated_reverses_photos('date-added',
         { username: 'z' }, { dateadded: Time.utc(2011) },
         { username: 'a' }, { dateadded: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by lastupdate' do
+    it "returns photos sorted by lastupdate" do
       all_sorted_and_paginated_reverses_photos('last-updated',
         { username: 'a' }, { lastupdate: Time.utc(2010) },
         { username: 'z' }, { lastupdate: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by lastupdate, username' do
+    it "returns photos sorted by lastupdate, username" do
       all_sorted_and_paginated_reverses_photos('last-updated',
         { username: 'z' }, { lastupdate: Time.utc(2011) },
         { username: 'a' }, { lastupdate: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by views' do
+    it "returns photos sorted by views" do
       all_sorted_and_paginated_reverses_photos('views',
         { username: 'a' }, { views: 0 },
         { username: 'z' }, { views: 1 })
     end
 
-    it 'returns photos sorted by views, username' do
+    it "returns photos sorted by views, username" do
       all_sorted_and_paginated_reverses_photos('views',
         { username: 'z' }, { views: 0 },
         { username: 'a' }, { views: 0 })
     end
 
-    it 'returns photos sorted by faves' do
+    it "returns photos sorted by faves" do
       all_sorted_and_paginated_reverses_photos('faves',
         { username: 'a' }, { faves: 0 },
         { username: 'z' }, { faves: 1 })
     end
 
-    it 'returns photos sorted by faves, username' do
+    it "returns photos sorted by faves, username" do
       all_sorted_and_paginated_reverses_photos('faves',
         { username: 'z' }, { faves: 0 },
         { username: 'a' }, { faves: 0 })
     end
 
-    it 'returns photos sorted by comments' do
+    it "returns photos sorted by comments" do
       all_sorted_and_paginated_reverses_photos('comments',
         { username: 'a' }, { other_user_comments: 0 },
         { username: 'z' }, { other_user_comments: 1 })
     end
 
-    it 'returns photos sorted by comments, username' do
+    it "returns photos sorted by comments, username" do
       all_sorted_and_paginated_reverses_photos('comments',
         { username: 'z' }, { other_user_comments: 0 },
         { username: 'a' }, { other_user_comments: 0 })
     end
 
-    it 'returns photos sorted by member_comments' do
+    it "returns photos sorted by member_comments" do
       all_sorted_and_paginated_reverses_photos('member-comments',
         { username: 'a' }, { member_comments: 0, dateadded: Time.utc(2011) },
         { username: 'z' }, { member_comments: 1, dateadded: Time.utc(2010) })
     end
 
-    it 'returns photos sorted by member_comments, dateadded' do
+    it "returns photos sorted by member_comments, dateadded" do
       all_sorted_and_paginated_reverses_photos('member-comments',
         { username: 'a' }, { member_comments: 0, dateadded: Time.utc(2010) },
         { username: 'z' }, { member_comments: 0, dateadded: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by member_comments, dateadded, username' do
+    it "returns photos sorted by member_comments, dateadded, username" do
       all_sorted_and_paginated_reverses_photos('member-comments',
         { username: 'z' }, { member_comments: 0, dateadded: Time.utc(2011) },
         { username: 'a' }, { member_comments: 0, dateadded: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by member_questions' do
+    it "returns photos sorted by member_questions" do
       all_sorted_and_paginated_reverses_photos('member-questions',
         { username: 'a' }, { member_questions: 0, dateadded: Time.utc(2011) },
         { username: 'z' }, { member_questions: 1, dateadded: Time.utc(2010) })
     end
 
-    it 'returns photos sorted by member_questions, dateadded' do
+    it "returns photos sorted by member_questions, dateadded" do
       all_sorted_and_paginated_reverses_photos('member-questions',
         { username: 'a' }, { member_questions: 0, dateadded: Time.utc(2010) },
         { username: 'z' }, { member_questions: 0, dateadded: Time.utc(2011) })
     end
 
-    it 'returns photos sorted by member_questions, dateadded, username' do
+    it "returns photos sorted by member_questions, dateadded, username" do
       all_sorted_and_paginated_reverses_photos('member-questions',
         { username: 'z' }, { member_questions: 0, dateadded: Time.utc(2011) },
         { username: 'a' }, { member_questions: 0, dateadded: Time.utc(2011) })
@@ -632,6 +632,11 @@ describe Photo do
       photo2 = Photo.make 2, photo_2_options.merge({ person: person2 })
       Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
 
+    end
+
+    it "paginates" do
+      3.times { |n| Photo.make n }
+      Photo.all_sorted_and_paginated('username', '+', 1, 2).length.should == 2
     end
 
   end
