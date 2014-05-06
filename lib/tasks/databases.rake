@@ -14,15 +14,15 @@
 #   or is rolled back.
 namespace :db do
 
-  namespace :structure do
-    task load: :environment do
-      ActiveRecord::Base.establish_connection Rails.env
-      ActiveRecord::Base.connection.execute 'SET foreign_key_checks = 0'
-      IO.readlines("#{Rails.root}/db/#{Rails.env}_structure.sql").join.split("\n\n").each do |statement|
-        ActiveRecord::Base.connection.execute statement
-      end
-    end
-  end
+  # namespace :structure do
+  #   task load: :environment do
+  #     ActiveRecord::Base.establish_connection Rails.env
+  #     ActiveRecord::Base.connection.execute 'SET foreign_key_checks = 0'
+  #     IO.readlines("#{Rails.root}/db/#{Rails.env}_structure.sql").join.split("\n\n").each do |statement|
+  #       ActiveRecord::Base.connection.execute statement
+  #     end
+  #   end
+  # end
 
   # This overrides the original, which does db:schema:load. The original doesn't migrate; this version does,
   # since, unlike schema.rb, *_structure.sql does not necessarily include all migrations.

@@ -4,7 +4,7 @@ gem 'activerecord-mysql2spatial-adapter', '0.4.3'
 gem 'bundler', '1.6.2'
 gem 'jquery-rails', '1.0.19'
 gem 'mysql2', '0.3.15'
-gem 'rails', '3.1.12'
+gem 'rails', '3.2.18'
 gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
 
