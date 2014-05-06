@@ -185,6 +185,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-mysql2spatial-adapter (= 0.4.3)
+  bundler (= 1.6.2)
   capybara (= 2.2.1)
   cucumber-rails (= 1.4.0)
   database_cleaner (= 1.2.0)

@@ -69,8 +69,8 @@ Install ruby-build per https://github.com/sstephenson/ruby-build
 > gem update --system
 > gem install bundler
 > gem list
-bundler (1.5.0)
-rubygems-update (2.2.0)
+bundler (1.6.2)
+rubygems-update (2.2.2)
 # plus other gems that come with Ruby
 
 Get and configure GWW
