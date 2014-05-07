@@ -156,15 +156,15 @@ describe Photo do
     it "adds each person's posts as an attribute" do
       person = Person.make
       Photo.make 1, person: person, dateadded: Time.utc(2010)
-      Photo.add_posts [ person ], Time.utc(2011), :posts
-      person.posts.should == 1
+      Photo.add_posts [ person ], Time.utc(2011), :post_count
+      person.post_count.should == 1
     end
 
     it "ignores posts made after the report date" do
       person = Person.make
       Photo.make 1, person: person, dateadded: Time.utc(2011)
-      Photo.add_posts [ person ], Time.utc(2010), :posts
-      person.posts.should == 0
+      Photo.add_posts [ person ], Time.utc(2010), :post_count
+      person.post_count.should == 0
     end
 
   end

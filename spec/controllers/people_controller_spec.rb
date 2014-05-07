@@ -108,7 +108,7 @@ describe PeopleController do
     before do
       @person = Person.make id: 1
       @person.score = 1 # for the high_scorers methods
-      @person.posts = 1 # for the top_posters methods
+      @person.post_count = 1 # for the top_posters methods
       stub(Person).find(@person.id) { @person }
       stub(Person).standing { [ 1, false ] }
       stub(Person).posts_standing { [ 1, false ] }

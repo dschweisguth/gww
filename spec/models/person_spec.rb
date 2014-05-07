@@ -129,10 +129,10 @@ describe Person do
       top_posters_returns @report_date, 1, person, 2
     end
 
-    def top_posters_returns(now, for_the_past_n_days, person, posts)
+    def top_posters_returns(now, for_the_past_n_days, person, post_count)
       top_posters = Person.top_posters now, for_the_past_n_days
       top_posters.should == [ person ]
-      top_posters[0].posts.should == posts
+      top_posters[0].post_count.should == post_count
     end
 
     it "ignores post counts of 1" do
@@ -171,7 +171,7 @@ describe Person do
   describe '.add_change_in_standings' do
     before do
       @person = Person.make 1
-      @person.posts = 1
+      @person.post_count = 1
       @person.previous_post_count = 1
       @people = [ @person ]
     end
@@ -987,7 +987,7 @@ describe Person do
       post = Photo.make dateadded: Time.local(2010).getutc
       top_posters = Person.most_posts_in 2010
       top_posters.should == [ post.person ]
-      top_posters[0].posts.should == 1
+      top_posters[0].post_count.should == 1
     end
 
     it 'ignores posts before the given year' do
@@ -1063,7 +1063,7 @@ describe Person do
       post = Photo.make dateadded: Time.local(2010).getutc
       top_posters = Person.rookies_with_most_posts_in 2010
       top_posters.should == [ post.person ]
-      top_posters[0].posts.should == 1
+      top_posters[0].post_count.should == 1
     end
 
     it 'ignores people who posted before the given year' do

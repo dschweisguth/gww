@@ -60,7 +60,7 @@ module ScoreReportsControllerSupport
 
   def people_by_score(report_date)
     people = Person.all_before report_date
-    Photo.add_posts people, report_date, :posts
+    Photo.add_posts people, report_date, :post_count
     people_by_score = Person.by_score people, report_date
     return people, people_by_score
   end

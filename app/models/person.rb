@@ -11,7 +11,7 @@ class Person < ActiveRecord::Base
   has_many :guesses, inverse_of: :person
 
   # Not persisted, used in views
-  attr_accessor :change_in_standing, :posts, :downcased_username, :guess_count, :post_count, :score_plus_posts,
+  attr_accessor :change_in_standing, :downcased_username, :guess_count, :post_count, :score_plus_posts,
     :guesses_per_day, :posts_per_day, :posts_per_guess, :guess_speed, :be_guessed_speed,
     :views_per_post, :faves_per_post, :poster, :bias, :score, :previous_post_count, :place, :previous_score, :previous_place,
     :label
@@ -51,17 +51,17 @@ class Person < ActiveRecord::Base
   def self.top_posters(now, for_the_past_n_days)
     utc_now = now.getutc
     people = find_by_sql [ %q{
-      select p.*, count(*) posts from people p, photos f
+      select p.*, count(*) post_count from people p, photos f
       where p.id = f.person_id and ? < f.dateadded and f.dateadded <= ?
-      group by p.id having posts > 1 order by posts desc
+      group by p.id having post_count > 1 order by post_count desc
     }, utc_now - for_the_past_n_days.days, utc_now]
     top_posters = []
     current_post_count = nil
     people.each do |person|
-      person.posts = person[:posts]
-      break if top_posters.length >= 3 && person.posts < current_post_count
+      person.post_count = person[:post_count]
+      break if top_posters.length >= 3 && person.post_count < current_post_count
       top_posters << person
-      current_post_count = person.posts
+      current_post_count = person.post_count
     end
     top_posters
   end
@@ -487,11 +487,11 @@ class Person < ActiveRecord::Base
 
   def self.most_posts_in(year)
     posters = find_by_sql [ %q{
-      select p.*, count(*) posts from people p, photos f
+      select p.*, count(*) post_count from people p, photos f
       where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ?
-      group by p.id order by posts desc limit 10
+      group by p.id order by post_count desc limit 10
     }, Time.local(year).getutc, Time.local(year + 1).getutc ]
-    posters.each { |poster| poster.posts = poster[:posts] }
+    posters.each { |poster| poster.post_count = poster[:post_count] }
     posters
   end
 
@@ -518,7 +518,7 @@ class Person < ActiveRecord::Base
   def self.rookies_with_most_posts_in(year)
     rookies = find_by_sql [
       %q{
-        select p.*, count(*) posts
+        select p.*, count(*) post_count
         from people p,
           (select person_id, min(a.acted) joined
             from
@@ -527,11 +527,11 @@ class Person < ActiveRecord::Base
             group by person_id having ? <= joined and joined < ?) r,
           photos f
         where p.id = r.person_id and p.id = f.person_id and f.dateadded < ?
-        group by p.id order by posts desc limit 10
+        group by p.id order by post_count desc limit 10
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
-    rookies.each { |rookies| rookies.posts = rookies[:posts] }
+    rookies.each { |rookies| rookies.post_count = rookies[:post_count] }
     rookies
   end
 

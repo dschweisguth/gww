@@ -30,10 +30,10 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   people = [ person0, person1, person2 ]
   stub(Person).all_before(report_date) { people }
 
-  stub(Photo).add_posts(people, report_date, :posts)
-  person0.posts = 0
-  person1.posts = 1
-  person2.posts = 2
+  stub(Photo).add_posts(people, report_date, :post_count)
+  person0.post_count = 0
+  person1.post_count = 1
+  person2.post_count = 2
 
   people_by_score = { 0 => [ person0 ], 1 => [ person1 ], 2 => [ person2 ] }
   stub(Person).by_score(people, report_date) { people_by_score }
