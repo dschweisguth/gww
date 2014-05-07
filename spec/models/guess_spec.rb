@@ -120,7 +120,7 @@ describe Guess do
         person: guesser, photo: photo2, commented_at: Time.utc(2004)
       oldest = Guess.oldest guesser
       oldest.should == guess2
-      oldest[:place].should == 1
+      oldest.place.should == 1
     end
 
     it "ignores other players' guesses" do
@@ -136,7 +136,7 @@ describe Guess do
       Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
       oldest = Guess.oldest guesser
       oldest.should == guess1
-      oldest[:place].should == 2
+      oldest.place.should == 2
     end
 
     it "ignores a guess that precedes its post" do
@@ -157,7 +157,7 @@ describe Guess do
       guess2 = Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
       longest_lasting = Guess.longest_lasting poster
       longest_lasting.should == guess2
-      longest_lasting[:place].should == 1
+      longest_lasting.place.should == 1
     end
 
     it "ignores guesses of other players' posts" do
@@ -173,7 +173,7 @@ describe Guess do
       Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
       longest_lasting = Guess.longest_lasting poster
       longest_lasting.should == guess1
-      longest_lasting[:place].should == 2
+      longest_lasting.place.should == 2
     end
 
     it 'ignores a guess that precedes its post' do
@@ -194,7 +194,7 @@ describe Guess do
       guess2 = Guess.make 2, person: guesser, photo: photo2, commented_at: Time.utc(2001)
       fastest = Guess.fastest guesser
       fastest.should == guess2
-      fastest[:place].should == 1
+      fastest.place.should == 1
     end
 
     it "ignores other players' guesses" do
@@ -210,7 +210,7 @@ describe Guess do
       Guess.make 2, photo: photo2, commented_at: Time.utc(2001)
       fastest = Guess.fastest guesser
       fastest.should == guess1
-      fastest[:place].should == 2
+      fastest.place.should == 2
     end
 
     it "ignores a guess that precedes its post" do
@@ -231,7 +231,7 @@ describe Guess do
       guess2 = Guess.make 2, photo: photo2, commented_at: Time.utc(2001)
       shortest_lasting = Guess.shortest_lasting poster
       shortest_lasting.should == guess2
-      shortest_lasting[:place].should == 1
+      shortest_lasting.place.should == 1
     end
 
     it "ignores guesses of other players' posts" do
@@ -247,7 +247,7 @@ describe Guess do
       Guess.make 2, photo: photo2, commented_at: Time.utc(2001)
       shortest_lasting = Guess.shortest_lasting poster
       shortest_lasting.should == guess1
-      shortest_lasting[:place].should == 2
+      shortest_lasting.place.should == 2
     end
 
     it 'ignores a guess that precedes its post' do

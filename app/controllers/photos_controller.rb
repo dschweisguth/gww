@@ -79,8 +79,8 @@ class PhotosController < ApplicationController
       people = people.where('game_status in (?)', terms['game-status'].split(','))
     end
     people = people.group("people.username").order("lower(username)")
-    people.each { |person| person[:label] = "#{person.username} (#{person[:n]})" }
-    render json: people, only: [ :username, :label ]
+    people.each { |person| person.label = "#{person.username} (#{person[:n]})" }
+    render json: people, only: [ :username ], methods: [ :label ]
   end
 
   caches_page :show

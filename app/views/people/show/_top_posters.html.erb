@@ -1,6 +1,6 @@
 <% if top_posters %>
 <%= @person.username %> posted the <%= position top_posters, @person, :posts %>most photos in the last <%= period %>:
 <% top_posters.each_with_index do |top_poster, i| %>
-<% if i > 0 %>, <% end %><%= link_to_unless top_poster == @person, h(top_poster.username), person_url(top_poster) %> (<%= top_poster[:posts] %>)<%= -%>
+<% if i > 0 %>, <% end %><%= link_to_unless top_poster == @person, h(top_poster.username), person_url(top_poster) %> (<%= top_poster.posts %>)<%= -%>
 <% end %>. Thanks, <%= @person.username %>!<br/>
 <% end %>

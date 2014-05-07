@@ -10,6 +10,12 @@ class Person < ActiveRecord::Base
   has_many :photos, inverse_of: :person
   has_many :guesses, inverse_of: :person
 
+  # Not persisted, used in views
+  attr_accessor :change_in_standing, :posts, :downcased_username, :guess_count, :post_count, :score_plus_posts,
+    :guesses_per_day, :posts_per_day, :posts_per_guess, :guess_speed, :be_guessed_speed,
+    :views_per_post, :faves_per_post, :poster, :bias, :score, :previous_post_count, :place, :previous_score, :previous_place,
+    :label
+
   # Used by ScoreReportsController
 
   def self.all_before(date)
@@ -34,9 +40,10 @@ class Person < ActiveRecord::Base
     high_scorers = []
     current_score = nil
     people.each do |person|
-      break if high_scorers.length >= 3 && person[:score] < current_score
+      person.score = person[:score]
+      break if high_scorers.length >= 3 && person.score < current_score
       high_scorers << person
-      current_score = person[:score]
+      current_score = person.score
     end
     high_scorers
   end
@@ -51,9 +58,10 @@ class Person < ActiveRecord::Base
     top_posters = []
     current_post_count = nil
     people.each do |person|
-      break if top_posters.length >= 3 && person[:posts] < current_post_count
+      person.posts = person[:posts]
+      break if top_posters.length >= 3 && person.posts < current_post_count
       top_posters << person
-      current_post_count = person[:posts]
+      current_post_count = person.posts
     end
     top_posters
   end
@@ -90,29 +98,29 @@ class Person < ActiveRecord::Base
     add_score_and_place people_by_score, :score, :place
     people_by_previous_score = Person.by_score people, previous_report_date
     add_score_and_place people_by_previous_score, :previous_score, :previous_place
-    Photo.add_posts people, previous_report_date, :previous_posts
+    Photo.add_posts people, previous_report_date, :previous_post_count
     scored_people = Hash[people.map { |person| [person, person] }]
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
       scored_guesser = scored_people[guesser]
-      score = scored_guesser[:score]
-      previous_score = scored_guesser[:previous_score]
+      score = scored_guesser.score
+      previous_score = scored_guesser.previous_score
       if previous_score == 0 && score > 0
         change = 'scored his or her first point'
         if score > 1
           change << " (and #{score - 1} more)"
         end
-        change << (scored_guesser[:previous_posts] == 0 \
+        change << (scored_guesser.previous_post_count == 0 \
           ? '. Congratulations, and welcome to GWSF!' \
           : '. Congratulations!')
       else
-        place = scored_guesser[:place]
-        previous_place = scored_guesser[:previous_place]
+        place = scored_guesser.place
+        previous_place = scored_guesser.previous_place
         if place < previous_place
           change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
           passed =
-            people.find_all { |person| person[:previous_place] < scored_guesser[:previous_place] } &
-              people.find_all { |person| person[:place] > scored_guesser[:place] }
+            people.find_all { |person| person.previous_place < scored_guesser.previous_place } &
+              people.find_all { |person| person.place > scored_guesser.place }
           ties = people_by_score[score] - [ scored_guesser ]
           show_passed = passed.length == 1 || passed.length > 0 && previous_place - place == 2
           if show_passed || ties.length > 0
@@ -141,7 +149,7 @@ class Person < ActiveRecord::Base
         append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
         append(change, entered_top_ten) { 'Welcome to the top ten!' }
       end
-      guesser[:change_in_standing] = change
+      guesser.change_in_standing = change
     end
   end
 
@@ -150,8 +158,8 @@ class Person < ActiveRecord::Base
     people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
       people_with_score = people_by_score[score]
       people_with_score.each do |person|
-        person[score_attr_name] = score
-        person[place_attr_name] = place
+        person.send "#{score_attr_name}=", score
+        person.send "#{place_attr_name}=", place
       end
       place += people_with_score.length
     end
@@ -212,25 +220,25 @@ class Person < ActiveRecord::Base
 
     people = all
     people.each do |person|
-      person[:downcased_username] = person.username.downcase
-      person[:post_count] = post_counts[person.id] || 0
-      person[:guess_count] = guess_counts[person.id] || 0
-      person[:score_plus_posts] = person[:post_count] + person[:guess_count] 
-      person[:guesses_per_day] = guesses_per_days[person.id] || 0
-      person[:posts_per_day] = posts_per_days[person.id] || 0
-      person[:posts_per_guess] = person[:guess_count] == 0 ? Float::MAX : person[:post_count].to_f / person[:guess_count]
-      person[:guess_speed] = guess_speeds[person.id] || Float::MAX
-      person[:be_guessed_speed] = be_guessed_speeds[person.id] || Float::MAX
+      person.downcased_username = person.username.downcase
+      person.post_count = post_counts[person.id] || 0
+      person.guess_count = guess_counts[person.id] || 0
+      person.score_plus_posts = person.post_count + person.guess_count
+      person.guesses_per_day = guesses_per_days[person.id] || 0
+      person.posts_per_day = posts_per_days[person.id] || 0
+      person.posts_per_guess = person.guess_count == 0 ? Float::MAX : person.post_count.to_f / person.guess_count
+      person.guess_speed = guess_speeds[person.id] || Float::MAX
+      person.be_guessed_speed = be_guessed_speeds[person.id] || Float::MAX
       person.comments_to_guess ||= Float::MAX
       person.comments_to_be_guessed ||= Float::MAX
-      person[:views_per_post] = views_per_post[person.id] || 0.0
-      person[:faves_per_post] = faves_per_post[person.id] || 0.0
+      person.views_per_post = views_per_post[person.id] || 0.0
+      person.faves_per_post = faves_per_post[person.id] || 0.0
     end
 
     people.sort! do |x, y|
       total_comparison = 0
       CRITERIA[sorted_by].each do |attr|
-        comparison = y[attr] <=> x[attr]
+        comparison = y.send(attr) <=> x.send(attr)
         if comparison != 0
           total_comparison = comparison
           if attr == :downcased_username
@@ -309,7 +317,10 @@ class Person < ActiveRecord::Base
     poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
     posters = find_all_by_id poster_ids
     posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
-    nemeses.each { |nemesis| nemesis[:poster] = posters_by_id[nemesis[:poster_id]] }
+    nemeses.each do |nemesis|
+      nemesis.poster = posters_by_id[nemesis[:poster_id]]
+      nemesis.bias = nemesis[:bias]
+    end
     nemeses
   end
 
@@ -352,7 +363,8 @@ class Person < ActiveRecord::Base
         "where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ? group by p.id",
       begin_date.getutc, end_date.getutc ]
     guessers.each do |guesser|
-      score = guesser[:score]
+      guesser.score = guesser[:score]
+      score = guesser.score
       guessers_with_score = scores[score]
       if guessers_with_score
         guessers_with_score.push guesser
@@ -409,7 +421,7 @@ class Person < ActiveRecord::Base
   end
 
   def favorite_posters
-    Person.find_by_sql [
+    favorite_posters = Person.find_by_sql [
       %Q[
         select posters.*,
           count(*) / posters_posts.post_count /
@@ -427,10 +439,12 @@ class Person < ActiveRecord::Base
       ],
       id, id
     ]
+    favorite_posters.each { |fp| fp.bias = fp[:bias] }
+    favorite_posters
   end
 
   def favorite_posters_of
-    Person.find_by_sql [
+    favorite_posters_of = Person.find_by_sql [
       %Q[
         select guessers.*,
           count(*) / (select count(*) from photos where person_id = ?) /
@@ -447,6 +461,8 @@ class Person < ActiveRecord::Base
       ],
       id, id
     ]
+    favorite_posters_of.each { |fp| fp.bias = fp[:bias] }
+    favorite_posters_of
   end
 
   def paginated_commented_photos(page, per_page = 25)
@@ -460,23 +476,27 @@ class Person < ActiveRecord::Base
   # Used in WheresiesController
 
   def self.most_points_in(year)
-    find_by_sql [ %q{
+    guessers = find_by_sql [ %q{
       select p.*, count(*) points from people p, guesses g
         where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ?
-	group by p.id order by points desc limit 10
+	      group by p.id order by points desc limit 10
     }, Time.local(year).getutc, Time.local(year + 1).getutc ]
+    guessers.each { |guesser| guesser.points = guesser[:points] }
+    guessers
   end
 
   def self.most_posts_in(year)
-    find_by_sql [ %q{
+    posters = find_by_sql [ %q{
       select p.*, count(*) posts from people p, photos f
       where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ?
       group by p.id order by posts desc limit 10
     }, Time.local(year).getutc, Time.local(year + 1).getutc ]
+    posters.each { |poster| poster.posts = poster[:posts] }
+    posters
   end
 
   def self.rookies_with_most_points_in(year)
-    find_by_sql [
+    guessers = find_by_sql [
       %q{
         select p.*, count(*) points
         from people p,
@@ -491,10 +511,12 @@ class Person < ActiveRecord::Base
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
+    guessers.each { |guesser| guesser.points = guesser[:points] }
+    guessers
   end
 
   def self.rookies_with_most_posts_in(year)
-    find_by_sql [
+    rookies = find_by_sql [
       %q{
         select p.*, count(*) posts
         from people p,
@@ -509,6 +531,8 @@ class Person < ActiveRecord::Base
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
+    rookies.each { |rookies| rookies.posts = rookies[:posts] }
+    rookies
   end
 
   # Used in Admin::RootController

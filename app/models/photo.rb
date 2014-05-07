@@ -18,6 +18,9 @@ class Photo < ActiveRecord::Base
   validates_numericality_of :member_comments, only_integer: true, greater_than_or_equal_to: 0
   validates_numericality_of :member_questions, only_integer: true, greater_than_or_equal_to: 0
 
+  # Not persisted, used in views
+  attr_accessor :color, :symbol, :place
+
   # Used by ScoreReportsController
 
   def self.count_between(from, to)
@@ -40,7 +43,7 @@ class Photo < ActiveRecord::Base
   def self.add_posts(people, to_date, attr_name)
     posts_per_person = where('dateadded <= ?', to_date.getutc).group(:person_id).count
     people.each do |person|
-      person[attr_name] = posts_per_person[person.id] || 0
+      person.send "#{attr_name}=", (posts_per_person[person.id] || 0)
     end
   end
 
@@ -58,7 +61,7 @@ class Photo < ActiveRecord::Base
     oldest_unfound =
       includes(:person).where("person_id = ? and game_status in ('unfound', 'unconfirmed')", poster).order(:dateadded).first
     if oldest_unfound
-      oldest_unfound[:place] = count_by_sql([
+      oldest_unfound.place = count_by_sql([
         %q{
           select count(*)
           from
@@ -78,7 +81,7 @@ class Photo < ActiveRecord::Base
   def self.most_commented(poster)
     most_commented = includes(:person).where(person_id: poster).order('other_user_comments desc').first
     if most_commented
-      most_commented[:place] = count_by_sql([
+      most_commented.place = count_by_sql([
         %q[
           select count(*)
           from (
@@ -99,7 +102,7 @@ class Photo < ActiveRecord::Base
   def self.most_viewed(poster)
     most_viewed = includes(:person).where(person_id: poster).order('views desc').first
     if most_viewed
-      most_viewed[:place] = count_by_sql([
+      most_viewed.place = count_by_sql([
         %q[
           select count(*)
           from (
@@ -118,7 +121,7 @@ class Photo < ActiveRecord::Base
   def self.most_faved(poster)
     most_faved = includes(:person).where(person_id: poster).order('faves desc').first
     if most_faved
-      most_faved[:place] = count_by_sql([
+      most_faved.place = count_by_sql([
         %q[
           select count(*)
           from (

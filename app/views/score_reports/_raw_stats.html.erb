@@ -17,5 +17,5 @@ Since the beginning of the game, <%= @total_single_guessers %> people have guess
 
 <% @people_by_score.keys.sort { |a, b| b <=> a }.each do |score| %>
 <% next if score <= 1 %>
-<b><%= score %></b> - <% @people_by_score[score].each_with_index do |person, i| %><%= link_to_person_url person %> (<%= person[:posts] %>)<% if i < @people_by_score[score].length - 1 %>, <% end %><% end %>
+<b><%= score %></b> - <% @people_by_score[score].each_with_index do |person, i| %><%= link_to_person_url person %> (<%= person.posts %>)<% if i < @people_by_score[score].length - 1 %>, <% end %><% end %>
 <% end %>

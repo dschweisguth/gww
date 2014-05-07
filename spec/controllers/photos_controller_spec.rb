@@ -70,8 +70,8 @@ describe PhotosController do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
+            color: 'FFFF00',
+            symbol: '?'
           }
         ]
       }
@@ -112,8 +112,8 @@ describe PhotosController do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
+            color: 'FFFF00',
+            symbol: '?'
           }
         ]
       }
@@ -133,8 +133,8 @@ describe PhotosController do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
+            color: 'FFFF00',
+            symbol: '?'
           }
         ]
       }
@@ -253,7 +253,7 @@ describe PhotosController do
         'color' => 'FFFF00',
         'symbol' => '?'
       }
-      ActiveSupport::JSON.decode(assigns[:json]) == json
+      ActiveSupport::JSON.decode(assigns[:json]).should == json
 
       response.should be_success
       response.body.should include 'It was mapped by the photographer'

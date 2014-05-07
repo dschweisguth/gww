@@ -42,7 +42,7 @@ module MultiPhotoMapSupport
     {
       partial: partial,
       bounds: bounds,
-      photos: photos.as_json(only: [ :id, :latitude, :longitude, :color, :symbol ])
+      photos: photos.as_json(only: [ :id, :latitude, :longitude ], methods: [ :color, :symbol ])
     }
   end
   private :as_json

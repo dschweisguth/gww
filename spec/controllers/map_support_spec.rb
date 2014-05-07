@@ -10,29 +10,29 @@ describe MapSupport do
     it "gives an unfound yellow and ?" do
       photo = Photo.make
       prepare_for_display photo, 1.day.ago
-      photo[:color].should == 'FFFF00'
-      photo[:symbol].should == '?'
+      photo.color.should == 'FFFF00'
+      photo.symbol.should == '?'
     end
 
     it "prepares an unconfirmed like an unfound" do
       photo = Photo.make game_status: 'unconfirmed'
       prepare_for_display photo, 1.day.ago
-      photo[:color].should == 'FFFF00'
-      photo[:symbol].should == '?'
+      photo.color.should == 'FFFF00'
+      photo.symbol.should == '?'
     end
 
     it "gives a found green and !" do
       photo = Photo.make game_status: 'found'
       prepare_for_display photo, 1.day.ago
-      photo[:color].should == scaled_green(0, 1, 1)
-      photo[:symbol].should == '!'
+      photo.color.should == scaled_green(0, 1, 1)
+      photo.symbol.should == '!'
     end
 
     it "gives a revealed red and -" do
       photo = Photo.make game_status: 'revealed'
       prepare_for_display photo, 1.day.ago
-      photo[:color].should == scaled_red(0, 1, 1)
-      photo[:symbol].should == '-'
+      photo.color.should == scaled_red(0, 1, 1)
+      photo.symbol.should == '-'
     end
 
   end

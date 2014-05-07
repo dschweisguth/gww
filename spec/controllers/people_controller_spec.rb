@@ -28,19 +28,19 @@ describe PeopleController do
       order_param = '+'
 
       person = Person.make id: 666
-      person[:guess_count] = 1
-      person[:post_count] = 1
-      person[:score_plus_posts] = 1
-      person[:guesses_per_day] = 1.0
-      person[:posts_per_day] = 1.0
-      person[:posts_per_guess] = 1.0
-      person[:guess_speed] = 1.0
-      person[:be_guessed_speed] = 1.0
-      person[:comments_to_guess] = 1.0
-      person[:comments_per_post] = 1.0
-      person[:comments_to_be_guessed] = 1.0
-      person[:views_per_post] = 1.0
-      person[:faves_per_post] = 1.0
+      person.guess_count = 1
+      person.post_count = 1
+      person.score_plus_posts = 1
+      person.guesses_per_day = 1.0
+      person.posts_per_day = 1.0
+      person.posts_per_guess = 1.0
+      person.guess_speed = 1.0
+      person.be_guessed_speed = 1.0
+      person.comments_to_guess = 1.0
+      person.comments_per_post = 1.0
+      person.comments_to_be_guessed = 1.0
+      person.views_per_post = 1.0
+      person.faves_per_post = 1.0
       stub(Person).all_sorted(sorted_by_param, order_param) { [ person ] }
       get :index, sorted_by: sorted_by_param, order: order_param
 
@@ -55,15 +55,15 @@ describe PeopleController do
     it "renders the page" do
       guesser = Person.make 'guesser', id: 666
       poster = Person.make 'poster', id: 777
-      guesser[:poster] = poster
-      guesser[:bias] = 2.5
+      guesser.poster = poster
+      guesser.bias = 2.5
       stub(Person).nemeses { [ guesser ] }
       get :nemeses
 
       response.should be_success
       response.body.should have_link 'guesser_username', href: person_path(guesser)
       response.body.should have_link 'poster_username', href: person_path(poster)
-      response.body.should have_css 'td', text: '%.3f' % guesser[:bias]
+      response.body.should have_css 'td', text: '%.3f' % guesser.bias
 
     end
   end
@@ -107,8 +107,8 @@ describe PeopleController do
   describe '#show' do
     before do
       @person = Person.make id: 1
-      @person[:score] = 1 # for the high_scorers methods
-      @person[:posts] = 1 # for the top_posters methods
+      @person.score = 1 # for the high_scorers methods
+      @person.posts = 1 # for the top_posters methods
       stub(Person).find(@person.id) { @person }
       stub(Person).standing { [ 1, false ] }
       stub(Person).posts_standing { [ 1, false ] }
@@ -208,19 +208,19 @@ describe PeopleController do
       stub(Guess).most_recent_by(@person) { most_recent_guess }
 
       oldest_guess = Guess.make 'oldest_guess'
-      oldest_guess[:place] = 1
+      oldest_guess.place = 1
       stub(Guess).oldest(@person) { oldest_guess }
 
       fastest_guess = Guess.make 'fastest_guess'
-      fastest_guess[:place] = 1
+      fastest_guess.place = 1
       stub(Guess).fastest(@person) { fastest_guess }
 
       longest_lasting_guess = Guess.make 'longest_lasting_guess'
-      longest_lasting_guess[:place] = 1
+      longest_lasting_guess.place = 1
       stub(Guess).longest_lasting(@person) { longest_lasting_guess }
 
       shortest_lasting_guess = Guess.make 'shortest_lasting_guess'
-      shortest_lasting_guess[:place] = 1
+      shortest_lasting_guess.place = 1
       stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
 
       # Give the posters different IDs so that they're considered different people, we have a list of guesses from
@@ -231,7 +231,7 @@ describe PeopleController do
       ] }
 
       favorite_poster = Person.make 'favorite_poster'
-      favorite_poster[:bias] = 2.5
+      favorite_poster.bias = 2.5
       stub(@person).favorite_posters { [ favorite_poster ] }
 
     end
@@ -249,19 +249,19 @@ describe PeopleController do
       stub(Photo).most_recent_by(@person) { most_recent_post }
 
       oldest_unfound = Photo.make 'oldest_unfound'
-      oldest_unfound[:place] = 1
+      oldest_unfound.place = 1
       stub(Photo).oldest_unfound(@person) { oldest_unfound }
 
       most_commented = Photo.make 'most_commented', other_user_comments: 1
-      most_commented[:place] = 1
+      most_commented.place = 1
       stub(Photo).most_commented(@person) { most_commented }
 
       most_viewed = Photo.make 'most_viewed'
-      most_viewed[:place] = 1
+      most_viewed.place = 1
       stub(Photo).most_viewed(@person) { most_viewed }
 
       most_faved = Photo.make 'most_faved'
-      most_faved[:place] = 1
+      most_faved.place = 1
       stub(Photo).most_faved(@person) { most_faved }
 
       found1 = Guess.make 'found1', person: Person.make('guesser1', id: 1)
@@ -275,7 +275,7 @@ describe PeopleController do
       stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [ Photo.make('revealed') ] }
 
       favorite_poster_of = Person.make 'favorite_poster_of'
-      favorite_poster_of[:bias] = 3.6
+      favorite_poster_of.bias = 3.6
       stub(@person).favorite_posters_of { [ favorite_poster_of ] }
 
     end
@@ -411,8 +411,8 @@ describe PeopleController do
             'id' => post.id,
             'latitude' => post.latitude,
             'longitude' => post.longitude,
-            'color' => color,
-            'symbol' => symbol
+            color: color,
+            symbol: symbol
           }
         ]
       }
@@ -430,8 +430,8 @@ describe PeopleController do
             'id' => post.id,
             'latitude' => post.inferred_latitude,
             'longitude' => post.inferred_longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
+            color: 'FFFF00',
+            symbol: '?'
           }
         ]
       }
@@ -461,8 +461,8 @@ describe PeopleController do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => '008000',
-            'symbol' => '!'
+            color: '008000',
+            symbol: '!'
           }
         ]
       }
@@ -491,8 +491,8 @@ describe PeopleController do
             'id' => post.id,
             'latitude' => post.latitude,
             'longitude' => post.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
+            color: 'FFFF00',
+            symbol: '?'
           }
         ]
       }

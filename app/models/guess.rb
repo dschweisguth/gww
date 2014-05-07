@@ -5,6 +5,9 @@ class Guess < ActiveRecord::Base
   belongs_to :person, inverse_of: :guesses
   validates_presence_of :comment_text, :commented_at, :added_at
 
+  # Not persisted, used in views
+  attr_accessor :place
+
   def self.destroy_all_by_photo_id(photo_id)
     where(photo_id: photo_id).destroy_all
   end
@@ -69,7 +72,7 @@ class Guess < ActiveRecord::Base
     if ! guess
       return nil
     end
-    guess[:place] = joins(:photo).where("#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id).count + 1
+    guess.place = joins(:photo).where("#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id).count + 1
     guess
   end
   private_class_method :first_guess_with_place

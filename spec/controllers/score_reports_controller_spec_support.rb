@@ -2,7 +2,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   person0 = Person.make id: 0
   person1 = Person.make id: 1
   person2 = Person.make id: 2
-  person2[:change_in_standing] = 'guessed their first point. Congratulations!'
+  person2.change_in_standing = 'guessed their first point. Congratulations!'
 
   guess11 = Guess.make 11, person: person1
   guess21 = Guess.make 21, person: person2
@@ -31,9 +31,9 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   stub(Person).all_before(report_date) { people }
 
   stub(Photo).add_posts(people, report_date, :posts)
-  person0[:posts] = 0
-  person1[:posts] = 1
-  person2[:posts] = 2
+  person0.posts = 0
+  person1.posts = 1
+  person2.posts = 2
 
   people_by_score = { 0 => [ person0 ], 1 => [ person1 ], 2 => [ person2 ] }
   stub(Person).by_score(people, report_date) { people_by_score }
@@ -48,7 +48,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   response.body.should have_css 'b', text: 'updated Wednesday, January  5, 12 AM'
   response.body.should =~ /3 new guesses by .../
   response.body.should =~ /guessed their first point/
-  response.body.should =~ /#{person2[:change_in_standing]}/
+  response.body.should =~ /#{person2.change_in_standing}/
   response.body.should =~ /3 photos revealed by .../
   response.body.should =~ /Top guessers in the last week:/
   response.body.should =~ /Top guessers in the last month:/

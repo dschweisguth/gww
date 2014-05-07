@@ -154,18 +154,18 @@ class PeopleController < ApplicationController
     now = Time.now
     if photo.person_id == person_id
       if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
-        photo[:color] = 'FFFF00'
-        photo[:symbol] = '?'
+        photo.color = 'FFFF00'
+        photo.symbol = '?'
       elsif photo.game_status == 'found'
-        photo[:color] = scaled_blue first_dateadded, now, photo.dateadded
-        photo[:symbol] = '?'
+        photo.color = scaled_blue first_dateadded, now, photo.dateadded
+        photo.symbol = '?'
       else # revealed
-        photo[:color] = scaled_red first_dateadded, now, photo.dateadded
-        photo[:symbol] = '-'
+        photo.color = scaled_red first_dateadded, now, photo.dateadded
+        photo.symbol = '-'
       end
     else
-      photo[:color] = scaled_green first_dateadded, now, photo.dateadded
-      photo[:symbol] = '!'
+      photo.color = scaled_green first_dateadded, now, photo.dateadded
+      photo.symbol = '!'
     end
   end
   private :prepare_for_display_for_person

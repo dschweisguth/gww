@@ -138,14 +138,14 @@ describe PeopleHelper do
 
       high_scorers = higher_scores.map do |score|
         higher_scorer = Person.new
-        higher_scorer[:score] = score
+        higher_scorer.score = score
         higher_scorer
       end
       # Clone the person before setting their score to simulate the caller's
       # situation, where the people in the first argument have :score but the
       # second argument does not.
       person_with_score = person.clone
-      person_with_score[:score] = 0
+      person_with_score.score = 0
       high_scorers.push person_with_score
 
       helper.position(high_scorers, person, :score).should == expected

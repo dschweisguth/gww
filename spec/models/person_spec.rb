@@ -86,7 +86,7 @@ describe Person do
     def high_scorers_returns(now, for_the_past_n_days, person, score)
       high_scorers = Person.high_scorers now, for_the_past_n_days
       high_scorers.should == [ person ]
-      high_scorers[0][:score].should == score
+      high_scorers[0].score.should == score
     end
 
     it "ignores scores of 1" do
@@ -132,7 +132,7 @@ describe Person do
     def top_posters_returns(now, for_the_past_n_days, person, posts)
       top_posters = Person.top_posters now, for_the_past_n_days
       top_posters.should == [ person ]
-      top_posters[0][:posts].should == posts
+      top_posters[0].posts.should == posts
     end
 
     it "ignores post counts of 1" do
@@ -171,13 +171,13 @@ describe Person do
   describe '.add_change_in_standings' do
     before do
       @person = Person.make 1
-      @person[:posts] = 1
-      @person[:previous_posts] = 1
+      @person.posts = 1
+      @person.previous_post_count = 1
       @people = [ @person ]
     end
 
     it "congratulates a new guesser" do
-      @person[:previous_posts] = 0
+      @person.previous_post_count = 0
       adds_change(
         { 1 => [ @person ] },
         { 0 => [ @person ] },
@@ -294,10 +294,10 @@ describe Person do
     def adds_change(people_by_score, people_by_previous_score, expected_change)
       previous_report_date = Time.utc(2010)
       stub(Person).by_score(@people, previous_report_date) { people_by_previous_score }
-      stub(Photo).add_posts @people, previous_report_date, :previous_posts
+      stub(Photo).add_posts @people, previous_report_date, :previous_post_count
       guessers = [ [ @person, [] ] ]
       Person.add_change_in_standings people_by_score, @people, previous_report_date, guessers
-      @person[:change_in_standing].should == expected_change
+      @person.change_in_standing.should == expected_change
     end
 
   end
@@ -307,8 +307,8 @@ describe Person do
       person = Person.make
       people_by_score = { 0 => [ person ] }
       Person.add_score_and_place people_by_score, :score, :place
-      person[:score].should == 0
-      person[:place].should == 1
+      person.score.should == 0
+      person.place.should == 1
     end
 
     it "gives a lower (numerically greater) place to people with lower scores" do
@@ -316,8 +316,8 @@ describe Person do
       second = Person.make 2
       people_by_score = { 1 => [ first ], 0 => [ second ] }
       Person.add_score_and_place people_by_score, :score, :place
-      first[:place].should == 1
-      second[:place].should == 2
+      first.place.should == 1
+      second.place.should == 2
     end
 
     it "handles ties" do
@@ -325,8 +325,8 @@ describe Person do
       tied2 = Person.make 2
       people_by_score = { 0 => [ tied1, tied2 ] }
       Person.add_score_and_place people_by_score, :score, :place
-      tied1[:place].should == 1
-      tied2[:place].should == 1
+      tied1.place.should == 1
+      tied2.place.should == 1
     end
 
     it "counts the number of people above one, not the number of scores above one" do
@@ -335,7 +335,7 @@ describe Person do
       third = Person.make 3
       people_by_score = { 1 => [ tied1, tied2 ], 0 => [ third ] }
       Person.add_score_and_place people_by_score, :score, :place
-      third[:place].should == 3
+      third.place.should == 3
     end
 
   end
@@ -758,8 +758,8 @@ describe Person do
       nemeses = Person.nemeses
       nemeses.should == [ guesser ]
       nemesis = nemeses[0]
-      nemesis[:poster].should == favorite_poster
-      nemesis[:bias].should == 2.5
+      nemesis.poster.should == favorite_poster
+      nemesis.bias.should == 2.5
     end
 
     it "ignores less than #{Person::MIN_GUESSES_FOR_FAVORITE} guesses" do
@@ -873,7 +873,7 @@ describe Person do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)
       favorite_posters = guesser.favorite_posters
       favorite_posters.should == [ favorite_poster ]
-      favorite_posters[0][:bias].should == Person::MIN_BIAS_FOR_FAVORITE
+      favorite_posters[0].bias.should == Person::MIN_BIAS_FOR_FAVORITE
     end
 
     it "ignores a poster which this person has guessed less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as this person has guessed all posts" do
@@ -895,7 +895,7 @@ describe Person do
       devoted_guesser, poster = make_potential_favorite_poster(10, 15)
       favorite_posters_of = poster.favorite_posters_of
       favorite_posters_of.should == [ devoted_guesser ]
-      favorite_posters_of[0][:bias].should == Person::MIN_BIAS_FOR_FAVORITE
+      favorite_posters_of[0].bias.should == Person::MIN_BIAS_FOR_FAVORITE
     end
 
     it "ignores a guesser who has guessed this person less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as that guesser has guessed all posts" do
@@ -955,7 +955,7 @@ describe Person do
       guess = Guess.make commented_at: Time.local(2010).getutc
       top_scorers = Person.most_points_in 2010
       top_scorers.should == [ guess.person ]
-      top_scorers[0][:points].should == 1
+      top_scorers[0].points.should == 1
     end
 
     it 'ignores guesses made before the given year' do
@@ -987,7 +987,7 @@ describe Person do
       post = Photo.make dateadded: Time.local(2010).getutc
       top_posters = Person.most_posts_in 2010
       top_posters.should == [ post.person ]
-      top_posters[0][:posts].should == 1
+      top_posters[0].posts.should == 1
     end
 
     it 'ignores posts before the given year' do
@@ -1019,7 +1019,7 @@ describe Person do
       guess = Guess.make commented_at: Time.local(2010).getutc
       top_scorers = Person.rookies_with_most_points_in 2010
       top_scorers.should == [ guess.person ]
-      top_scorers[0][:points].should == 1
+      top_scorers[0].points.should == 1
     end
 
     it 'ignores people who guessed before the given year' do
@@ -1063,7 +1063,7 @@ describe Person do
       post = Photo.make dateadded: Time.local(2010).getutc
       top_posters = Person.rookies_with_most_posts_in 2010
       top_posters.should == [ post.person ]
-      top_posters[0][:posts].should == 1
+      top_posters[0].posts.should == 1
     end
 
     it 'ignores people who posted before the given year' do

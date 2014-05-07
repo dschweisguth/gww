@@ -13,14 +13,14 @@ module MapSupport
   def prepare_for_display(photo, first_dateadded)
     now = Time.now
     if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
-      photo[:color] = 'FFFF00'
-      photo[:symbol] = '?'
+      photo.color = 'FFFF00'
+      photo.symbol = '?'
     elsif photo.game_status == 'found'
-      photo[:color] = scaled_green first_dateadded, now, photo.dateadded
-      photo[:symbol] = '!'
+      photo.color = scaled_green first_dateadded, now, photo.dateadded
+      photo.symbol = '!'
     else # revealed
-      photo[:color] = scaled_red first_dateadded, now, photo.dateadded
-      photo[:symbol] = '-'
+      photo.color = scaled_red first_dateadded, now, photo.dateadded
+      photo.symbol = '-'
     end
   end
   private :prepare_for_display

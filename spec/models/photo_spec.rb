@@ -157,14 +157,14 @@ describe Photo do
       person = Person.make
       Photo.make 1, person: person, dateadded: Time.utc(2010)
       Photo.add_posts [ person ], Time.utc(2011), :posts
-      person[:posts].should == 1
+      person.posts.should == 1
     end
 
     it "ignores posts made after the report date" do
       person = Person.make
       Photo.make 1, person: person, dateadded: Time.utc(2011)
       Photo.add_posts [ person ], Time.utc(2010), :posts
-      person[:posts].should == 0
+      person.posts.should == 0
     end
 
   end
@@ -208,7 +208,7 @@ describe Photo do
       first = Photo.make 'first', person: poster, dateadded: Time.utc(2000)
       oldest_unfound = Photo.oldest_unfound poster
       oldest_unfound.should == first
-      oldest_unfound[:place].should == 1
+      oldest_unfound.place.should == 1
     end
 
     it "ignores other posters' photos" do
@@ -231,7 +231,7 @@ describe Photo do
       next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
-      oldest_unfound[:place].should == 2
+      oldest_unfound.place.should == 2
     end
 
     it "considers unconfirmed photos when calculating place" do
@@ -239,7 +239,7 @@ describe Photo do
       next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
-      oldest_unfound[:place].should == 2
+      oldest_unfound.place.should == 2
     end
 
     it "ignores other posters' equally old unfounds when calculating place" do
@@ -247,7 +247,7 @@ describe Photo do
       next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
-      oldest_unfound[:place].should == 1
+      oldest_unfound.place.should == 1
     end
 
     it "handles a person with no photos" do
@@ -265,7 +265,7 @@ describe Photo do
       most_commented = Photo.most_commented poster
       most_commented.should == first
       most_commented.other_user_comments.should == 1
-      most_commented[:place].should == 1
+      most_commented.place.should == 1
     end
 
     it "counts comments" do
@@ -278,7 +278,7 @@ describe Photo do
       most_commented = Photo.most_commented poster
       most_commented.should == first
       most_commented.other_user_comments.should == 2
-      most_commented[:place].should == 1
+      most_commented.place.should == 1
     end
 
     it "ignores other posters' photos" do
@@ -293,7 +293,7 @@ describe Photo do
       Comment.make 'o2', photo: other_posters_photo
       photo = Photo.make other_user_comments: 1
       Comment.make photo: photo
-      Photo.most_commented(photo.person)[:place].should == 2
+      Photo.most_commented(photo.person).place.should == 2
     end
 
     it "ignores other posters' equally commented photos when calculating place" do
@@ -301,7 +301,7 @@ describe Photo do
       Comment.make 'other', photo: other_posters_photo
       photo = Photo.make other_user_comments: 1
       Comment.make photo: photo
-      Photo.most_commented(photo.person)[:place].should == 1
+      Photo.most_commented(photo.person).place.should == 1
     end
 
     it "handles a person with no photos" do
@@ -317,7 +317,7 @@ describe Photo do
       first = Photo.make 'first', person: poster, views: 1
       most_viewed = Photo.most_viewed poster
       most_viewed.should == first
-      most_viewed[:place].should == 1
+      most_viewed.place.should == 1
     end
 
     it "ignores other posters' photos" do
@@ -328,13 +328,13 @@ describe Photo do
     it "considers other posters' photos when calculating place" do
       Photo.make 'other_posters', views: 1
       photo = Photo.make
-      Photo.most_viewed(photo.person)[:place].should == 2
+      Photo.most_viewed(photo.person).place.should == 2
     end
 
     it "ignores other posters' equally viewed photos when calculating place" do
       Photo.make 'other_posters'
       photo = Photo.make
-      Photo.most_viewed(photo.person)[:place].should == 1
+      Photo.most_viewed(photo.person).place.should == 1
     end
 
     it "handles a person with no photos" do
@@ -350,7 +350,7 @@ describe Photo do
       first = Photo.make 'first', person: poster, faves: 1
       most_faved = Photo.most_faved poster
       most_faved.should == first
-      most_faved[:place].should == 1
+      most_faved.place.should == 1
     end
 
     it "ignores other posters' photos" do
@@ -361,13 +361,13 @@ describe Photo do
     it "considers other posters' photos when calculating place" do
       Photo.make 'other_posters', faves: 1
       photo = Photo.make
-      Photo.most_faved(photo.person)[:place].should == 2
+      Photo.most_faved(photo.person).place.should == 2
     end
 
     it "ignores other posters' equally faved photos when calculating place" do
       Photo.make 'other_posters'
       photo = Photo.make
-      Photo.most_faved(photo.person)[:place].should == 1
+      Photo.most_faved(photo.person).place.should == 1
     end
 
     it "handles a person with no photos" do

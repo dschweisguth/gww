@@ -23,19 +23,19 @@
 <tr>
   <td class="row-number"><%= person_index + 1 %>.</td>
   <td><%= link_to_person person %></td>
-  <td class="number"><%= person[:guess_count] %></td>
-  <td class="number"><%= person[:post_count] %></td>
-  <td class="number"><%= person[:score_plus_posts] %></td>
-  <td class="number"><%= to_4_places person[:guesses_per_day] %></td>
-  <td class="number"><%= to_4_places person[:posts_per_day] %></td>
-  <td class="number"><%= raw infinity_or person[:posts_per_guess] %></td>
-  <td class="number"><%= raw(person[:guess_speed] == Float::MAX ? '&#8734;' : to_4_places(person[:guess_speed] / 86400)) %></td>
-  <td class="number"><%= raw(person[:be_guessed_speed] == Float::MAX ? '&#8734;' : to_4_places(person[:be_guessed_speed] / 86400)) %></td>
-  <td class="number"><%= raw infinity_or person[:comments_to_guess] %></td>
-  <td class="number"><%= to_4_places person[:comments_per_post] %></td>
-  <td class="number"><%= raw infinity_or person[:comments_to_be_guessed] %></td>
-  <td class="number"><%= to_4_places person[:views_per_post] %></td>
-  <td class="number"><%= to_4_places person[:faves_per_post] %></td>
+  <td class="number"><%= person.guess_count %></td>
+  <td class="number"><%= person.post_count %></td>
+  <td class="number"><%= person.score_plus_posts %></td>
+  <td class="number"><%= to_4_places person.guesses_per_day %></td>
+  <td class="number"><%= to_4_places person.posts_per_day %></td>
+  <td class="number"><%= raw infinity_or person.posts_per_guess %></td>
+  <td class="number"><%= raw(person.guess_speed == Float::MAX ? '&#8734;' : to_4_places(person.guess_speed / 86400)) %></td>
+  <td class="number"><%= raw(person.be_guessed_speed == Float::MAX ? '&#8734;' : to_4_places(person.be_guessed_speed / 86400)) %></td>
+  <td class="number"><%= raw infinity_or person.comments_to_guess %></td>
+  <td class="number"><%= to_4_places person.comments_per_post %></td>
+  <td class="number"><%= raw infinity_or person.comments_to_be_guessed %></td>
+  <td class="number"><%= to_4_places person.views_per_post %></td>
+  <td class="number"><%= to_4_places person.faves_per_post %></td>
 </tr>
 <% end %>
 </table>

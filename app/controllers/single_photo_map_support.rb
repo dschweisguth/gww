@@ -6,7 +6,7 @@ module SinglePhotoMapSupport
       first_photo = Photo.oldest
       use_inferred_geocode_if_necessary [ photo ]
       prepare_for_display photo, first_photo.dateadded
-      @json = photo.to_json only: [ :id, :latitude, :longitude, :color, :symbol ]
+      @json = photo.to_json only: [ :id, :latitude, :longitude ], methods: [ :color, :symbol ]
     end
   end
   private :set_config_to

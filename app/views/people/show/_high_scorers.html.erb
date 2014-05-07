@@ -1,6 +1,6 @@
 <% if high_scorers %>
 <%= @person.username %> scored the <%= position high_scorers, @person, :score %>most points in the last <%= period %>:
 <% high_scorers.each_with_index do |high_scorer, i| %>
-<% if i > 0 %>, <% end %><%= link_to_unless high_scorer == @person, h(high_scorer.username), person_url(high_scorer) %> (<%= high_scorer[:score] %>)<%= -%>
+<% if i > 0 %>, <% end %><%= link_to_unless high_scorer == @person, h(high_scorer.username), person_url(high_scorer) %> (<%= high_scorer.score %>)<%= -%>
 <% end %>. Go <%= @person.username %>!<br/>
 <% end %>

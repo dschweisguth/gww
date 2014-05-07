@@ -10,7 +10,7 @@
   <tr>
     <td class="row-number"><%= person_index + 1 %>.</td>
     <td><%= link_to_person person %></td>
-    <td class="number"><%= person[key] %></td>
+    <td class="number"><%= person.send key %></td>
   </tr>
   <% end %>
   </table>
