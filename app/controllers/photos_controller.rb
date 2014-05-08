@@ -40,7 +40,7 @@ class PhotosController < ApplicationController
   def unfound_data
     @lasttime = FlickrUpdate.latest.created_at
     @photos = Photo.unfound_or_unconfirmed
-    render action: 'unfound_data.xml.builder', layout: false
+    render formats: [:xml]
   end
 
   # TODO Dave switch on Accept
