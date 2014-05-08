@@ -610,7 +610,7 @@ class Person < ActiveRecord::Base
     response = FlickrService.instance.people_get_info 'user_id' => person_flickrid
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
-    pathalias = parsed_person['photosurl'][0].match(/http:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
+    pathalias = parsed_person['photosurl'][0].match(/https:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
     { username: username, pathalias: pathalias }
   end
 
