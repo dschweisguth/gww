@@ -1632,7 +1632,7 @@ describe Photo do
         stub(FlickrService.instance).people_get_info { {
           'person' => [ {
             'username' => [ 'username_from_request' ],
-            'photosurl' => [ 'http://www.flickr.com/photos/pathalias_from_request/' ]
+            'photosurl' => [ 'https://www.flickr.com/photos/pathalias_from_request/' ]
           } ]
         } }
       end

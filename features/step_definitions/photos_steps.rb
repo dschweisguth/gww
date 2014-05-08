@@ -24,5 +24,5 @@ Then /^I should see a search result for the photo$/ do
 end
 
 Then /^I should see search results for (\d+) photos?$/ do |photo_count|
-  page.all('a[href^="http://www.flickr.com/photos/"]').count.should == photo_count.to_i
+  page.all('a[href^="https://www.flickr.com/photos/"]').count.should == photo_count.to_i
 end

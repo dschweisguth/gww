@@ -78,7 +78,7 @@ Get and configure GWW
 
 Get the source: Either
     > git clone git@github.com:dschweisguth/gww.git, or
-    Browse http://github.com/dschweisguth/gww, click "Download Source", pick a
+    Browse https://github.com/dschweisguth/gww, click "Download Source", pick a
         format, download it and unpack it
 Install gems
     Mac

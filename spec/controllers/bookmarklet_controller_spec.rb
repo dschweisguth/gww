@@ -55,7 +55,7 @@ describe BookmarkletController do
       person = Person.make
       stub(Person).find_by_pathalias(person.flickrid) { nil }
       stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :show, from: "http://www.flickr.com/people/#{person.flickrid}/"
+      get :show, from: "https://www.flickr.com/people/#{person.flickrid}/"
 
       response.should redirect_to person_path person
 
@@ -63,7 +63,7 @@ describe BookmarkletController do
 
     it 'punts an unknown person' do
       stub(Person).find_by_flickrid('person_flickrid') { nil }
-      get :show, from: "http://www.flickr.com/people/person_flickrid/"
+      get :show, from: "https://www.flickr.com/people/person_flickrid/"
 
       response.should redirect_to root_path
       flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that person/
@@ -73,7 +73,7 @@ describe BookmarkletController do
     it 'handles a /photo/ URL with a person Flickr ID but no photo Flickr ID' do
       person = Person.make
       stub(Person).find_by_flickrid(person.flickrid) { person }
-      get :show, from: "http://www.flickr.com/photos/#{person.flickrid}/"
+      get :show, from: "https://www.flickr.com/photos/#{person.flickrid}/"
 
       response.should redirect_to person_path person
 

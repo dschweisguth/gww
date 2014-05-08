@@ -266,7 +266,7 @@ describe Person do
       adds_change(
         { 222 => [ @person ] },
         { 199 => [ @person ] },
-        'Welcome to <a href="http://www.flickr.com/photos/potatopotato/90592664/">the 222 Club</a>!')
+        'Welcome to <a href="https://www.flickr.com/photos/potatopotato/90592664/">the 222 Club</a>!')
     end
 
     it "welcomes the guesser to the top ten" do
@@ -288,7 +288,7 @@ describe Person do
       adds_change(
         others_by_score.merge({ 100 => [ @person ] }),
         others_by_score.merge({ 1 => [ @person ] }),
-        'jumped from 11th to 1st place. Welcome to <a href="http://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! Welcome to the top ten!')
+        'jumped from 11th to 1st place. Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! Welcome to the top ten!')
     end
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)
@@ -1108,7 +1108,7 @@ describe Person do
       stub(FlickrService.instance).people_get_info { {
         'person' => [ {
           'username' => [ 'new_username' ],
-          'photosurl' => [ 'http://www.flickr.com/photos/new_pathalias/' ]
+          'photosurl' => [ 'https://www.flickr.com/photos/new_pathalias/' ]
         } ]
       } }
       Person.update_all_from_flickr

@@ -31,7 +31,7 @@ describe RootController do
     it 'renders the page' do
       get :about
       response.should be_success
-      response.body.should have_link 'Tomas Apodaca', href: 'http://www.flickr.com/people/tma/'
+      response.body.should have_link 'Tomas Apodaca', href: 'https://www.flickr.com/people/tma/'
     end
   end
 

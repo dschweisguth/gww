@@ -127,7 +127,7 @@ describe Admin::PhotosController do
 
     it 'punts an unknown photo Flickr ID' do
       stub(Photo).find_by_flickrid('0123456789') { nil }
-      get :edit_in_gww, from: 'http://www.flickr.com/photos/person_flickrid/0123456789/'
+      get :edit_in_gww, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
       response.should redirect_to admin_root_path
       flash[:general_error].should =~ /Sorry/
