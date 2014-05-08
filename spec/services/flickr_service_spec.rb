@@ -83,7 +83,7 @@ describe FlickrService do
     end
 
     def mock_get_times_out(times)
-      mock(Net::HTTP).get_response.with_any_args.times(times) { raise Timeout::Error }
+      mock(service).get.with_any_args.times(times) { raise Timeout::Error }
     end
 
     def mock_get_succeeds
@@ -93,7 +93,7 @@ describe FlickrService do
     def mock_get_returns(body)
       response = Object.new
       mock(response).body { body }
-      mock(Net::HTTP).get_response.with_any_args { response }
+      mock(service).get.with_any_args { response }
     end
 
   end

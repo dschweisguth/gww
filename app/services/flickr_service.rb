@@ -3,6 +3,7 @@ require 'timeout'
 require 'xmlsimple'
 
 class FlickrService
+  API_URL = "https://api.flickr.com/services/rest/"
   FILE = YAML.load_file "#{Rails.root.to_s}/config/flickr_credentials.yml"
   CREDENTIALS = FILE['flickr_credentials']
   SECRET = CREDENTIALS['secret']
@@ -61,8 +62,6 @@ class FlickrService
     parsed_xml
   end
 
-  private
-
   def api_url(api_method, extra_params = {})
     params = {
       'oauth_version' => '1.0',
@@ -75,7 +74,7 @@ class FlickrService
     }
     params.merge! extra_params
     params['oauth_signature'] = signature params
-    'http://api.flickr.com/services/rest/?' +
+    "#{API_URL}?" +
       params.each_with_object('') do |param, query_string|
         if ! query_string.empty?
           query_string << '&'
@@ -83,24 +82,26 @@ class FlickrService
         query_string << param[0] + '=' + param[1]
       end
   end
+  private :api_url
 
   def signature(params)
     key = "#{SECRET}&#{OAUTH_TOKEN_SECRET}"
-    base_string = "GET&#{oauth_encode "http://api.flickr.com/services/rest/"}&" +
+    base_string = "GET&#{oauth_encode API_URL}&" +
       oauth_encode(params.keys.sort.map { |name| "#{name}=#{oauth_encode params[name]}" }.join('&'))
     signature = Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), key, base_string)
     oauth_encode signature.chomp
   end
+  private :signature
 
   def oauth_encode(string)
     URI.encode string, /[^\w\-.~]/
   end
+  private :oauth_encode
 
   def submit(url)
     failure_count = 0
     begin
-      response = Net::HTTP.get_response URI.parse url
-      response.body
+      get(url).body
     rescue StandardError, Timeout::Error => e
       failure_count += 1
       sleep_time = retry_quantum * (2 ** failure_count)
@@ -116,6 +117,15 @@ class FlickrService
         raise FlickrRequestFailedError, "Request and retries failed; gave up."
       end
     end
+  end
+  private :submit
+
+  # public so that it can be mocked in tests
+  def get(url)
+    uri = URI.parse url
+    http = Net::HTTP.new uri.host, uri.port
+    http.use_ssl = true
+    http.request Net::HTTP::Get.new(uri.request_uri)
   end
 
   class FlickrRequestFailedError < StandardError

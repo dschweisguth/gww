@@ -1,6 +1,6 @@
 Bugs
 
-Switch API calls and links to Flickr to https
+Switch links to Flickr to https
 Stylesheet doesn't work when printing. Use 'application' instead of 'screen'.
 A photo which is guessed or revealed and then removed from the group remains in the database but is no longer updated.
   That means that the usernames of commenters on such a photo are no longer updated.
