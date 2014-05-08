@@ -9,6 +9,8 @@ Debt
 
 Upgrade Rails, jquery-rails, jasmine
 Include Jasmine in default rake task
+Deploy automatically after successful CI build
+Measure Javascript coverage
 Upgrade to HTML 5
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto
