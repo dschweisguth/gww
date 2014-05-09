@@ -14,7 +14,6 @@ src_files:
   - public/javascripts/jquery.js
   - public/javascripts/jquery-ui.js
   - public/javascripts/jquery_ujs.js
-  - spec/javascripts/support/jasmine-jquery-1.2.0.js
   - public/javascripts/app/shared/GWW.js
   - public/javascripts/app/admin/photos/edit.js
   - public/javascripts/app/shared/aboutAutoMapping.js
