@@ -1,5 +1,5 @@
-<%= head_css 'jquery-ui.min' %>
-<%= head_javascript 'jquery-ui.min', 'isInViewport.min', 'app/shared/GWW', 'app/shared/autocomplete', 'app/photos/search' %>
+<%= head_css '/stylesheets/jquery-ui.min' %>
+<%= head_javascript 'jquery-ui', 'isInViewport', 'app/shared/GWW', 'app/shared/autocomplete', 'app/photos/search' %>
 <% content_for :head do %>
   <meta name="viewport" content="width=device-width">
   <%= stylesheet_link_tag 'app/photos/search' %>
@@ -12,7 +12,7 @@
   <%= form_tag(search_photos_path, method: :get, class: 'inline') do %>
     <div>
       Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
-      <img src="/images/arrow_sans_down-16.png" width="16" height="16"/>
+      <%= image_tag 'arrow_sans_down-16.png', size: '16x16' %>
       Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], selected: @terms['game_status']), multiple: true %>
     </div>
     <div>

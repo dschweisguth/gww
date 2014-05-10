@@ -95,8 +95,7 @@ describe ApplicationHelper do
     it "adds the default Javascript includes and the CSRF protection data to the head" do
       helper.head_javascript
       content_for_head = helper.content_for(:head)
-      content_for_head.should include 'jquery.min.js'
-      content_for_head.should include 'jquery_ujs.js'
+      content_for_head.should include 'application.js'
       # Can't test that CSRF stuff is present since test controller doesn't have protect_from_forgery
     end
 

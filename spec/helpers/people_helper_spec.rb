@@ -155,13 +155,13 @@ describe PeopleHelper do
 
   describe '#image_for_star' do
     expected = {
-      bronze: '/images/star-bronze.gif',
-      silver: '/images/star-silver.gif',
-      gold: '/images/star-gold.gif'
+      bronze: 'star-bronze.gif',
+      silver: 'star-silver.gif',
+      gold: 'star-gold.gif'
     }
-    expected.each_pair do |star, uri|
-      it "returns the image URI #{uri} given the star :#{star}" do
-        helper.image_for_star(star).should == uri
+    expected.each_pair do |star, file_name|
+      it "returns the image file name #{file_name} given the star :#{star}" do
+        helper.image_for_star(star).should == file_name
       end
     end
   end

@@ -8,6 +8,10 @@ gem 'rails', '3.2.18'
 gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
 
+group :assets do
+  gem 'uglifier', '2.5.0'
+end
+
 group :test do
   gem 'capybara', '2.2.1'
   gem 'cucumber-rails', '1.4.0', require: false

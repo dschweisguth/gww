@@ -40,7 +40,7 @@ module ApplicationHelper
   end
 
   def titled_image_tag(src, alt_and_title, options = {})
-    image_tag src, {alt: alt_and_title, title: alt_and_title }.merge(options)
+    image_tag src, { alt: alt_and_title, title: alt_and_title }.merge(options)
   end
 
   def thumbnail(photo, alt = "")
@@ -53,13 +53,13 @@ module ApplicationHelper
 
   def head_css(*stylesheets)
     content_for :head do
-      stylesheet_link_tag(stylesheets) + "\n"
+      stylesheet_link_tag(*stylesheets) + "\n"
     end
   end
 
   def head_javascript(*custom)
     content_for :head do
-      javascript_include_tag(:defaults, *custom) + "\n" +
+      javascript_include_tag('application', *custom) + "\n" +
       csrf_meta_tags
     end
   end

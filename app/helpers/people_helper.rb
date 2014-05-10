@@ -75,9 +75,9 @@ module PeopleHelper
 
   def image_for_star(star)
     {
-      bronze: '/images/star-bronze.gif',
-      silver: '/images/star-silver.gif',
-      gold: '/images/star-gold.gif'
+      bronze: 'star-bronze.gif',
+      silver: 'star-silver.gif',
+      gold: 'star-gold.gif'
     }[star]
   end
 
