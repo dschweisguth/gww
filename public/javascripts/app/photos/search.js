@@ -203,7 +203,7 @@ GWW.photos.search = function () {
   }
 
   function setUpHashChange() {
-    $(window).hashchange(function () {
+    window.onhashchange = function () {
       // TODO Dave scroll the page if necessary
       // TODO Dave do nothing if we know it was us that changed the hash?
       var matches = location.hash.match(/^#page=(\d*[1-9]+\d*)$/);
@@ -212,7 +212,7 @@ GWW.photos.search = function () {
           addPagesUpTo(matches[1]);
         }
       }
-    });
+    };
   }
 
   return {
