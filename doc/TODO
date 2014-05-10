@@ -7,7 +7,7 @@ A photo which is guessed or revealed and then removed from the group remains in 
 
 Debt
 
-Upgrade Rails, jquery-rails, jasmine
+Upgrade Rails, jasmine
 Include Jasmine in default rake task
 Deploy automatically after successful CI build
 Measure Javascript coverage
