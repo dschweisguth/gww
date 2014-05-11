@@ -122,7 +122,12 @@ Create production database
 Test GWW
 --------
 
-> bundle exec rake RAILS_ENV=test
+Run the rspec and cucumber tests
+> bundle exec rake RAILS_ENV=test # runs rspec and cucumber tests
+
+Run the Jasmine tests
+> env RAILS_ENV=test bundle exec rails s
+Browse http://localhost:3000/specs
 
 Install Phusion Passenger and configure httpd (for Linux production only)
 -------------------------------------------------------------------------

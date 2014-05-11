@@ -1,3 +1,5 @@
+//= require app/admin/photos/edit
+
 describe('edit', function () {
   describe('setUp', function() {
     beforeEach(function () {
