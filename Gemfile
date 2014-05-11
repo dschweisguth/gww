@@ -9,6 +9,7 @@ gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
 
 group :assets do
+  gem 'therubyracer', '0.12.1'
   gem 'uglifier', '2.5.0'
 end
 
