@@ -10,7 +10,7 @@ GWW::Application.configure do
   config.action_controller.page_cache_directory = Rails.root.join('public/cache').to_s
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
+  config.serve_static_assets = true
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
