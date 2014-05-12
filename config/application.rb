@@ -1,4 +1,5 @@
 require File.expand_path('../boot', __FILE__)
+require 'find'
 
 # Pick the frameworks you want:
 require "active_record/railtie"
@@ -65,6 +66,15 @@ module GWW
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Put the following in application.rb so we can test it in development
+    # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
+    config.assets.precompile += %w(
+      jquery.ui.autocomplete.css
+      jquery.ui.autocomplete.js
+    )
+    config.assets.precompile += Find.find('app/assets/stylesheets').select { |file| file.end_with? '.css' }.map { |file| file.sub /^app\/assets\/stylesheets\//, '' }
+    config.assets.precompile += Find.find('app/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub /^app\/assets\/javascripts\//, '' }
 
     config.colorize_logging = false
   end
