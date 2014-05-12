@@ -1,5 +1,5 @@
 GWW::Application.routes.draw do
-  mount JasmineRails::Engine => '/specs'
+  mount JasmineRails::Engine => '/specs' if defined? JasmineRails::Engine
   # Map fixtures directory for Jasmine suite.
   # See config/initializers/jasmine_fixtures.rb and https://github.com/travisjeffery/jasmine-jquery-rails/issues/4
   mount JasmineFixtureServer => '/spec/javascripts/fixtures' if defined? Jasmine::Jquery::Rails::Engine
