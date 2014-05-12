@@ -19,8 +19,7 @@ group :test do
   gem 'cucumber-rails', '1.4.0', require: false
   gem 'database_cleaner', '1.2.0'
   gem 'factory_girl_rails', '4.4.1'
-  gem 'jasmine-jquery-rails', '2.0.3'
-  gem 'jasmine-rails', '0.7.2'
+  gem 'jasmine', '2.0.1'
   gem 'launchy', '2.4.2'
   gem 'poltergeist', '1.5.0'
   gem 'rr', '1.1.2', require: false

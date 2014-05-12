@@ -1,5 +1,3 @@
-//= require app/shared/aboutAutoMapping
-
 describe('aboutAutoMapping', function () {
   describe('setUp', function () {
     it("sets up the link to open a window", function () {
