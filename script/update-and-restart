@@ -14,6 +14,7 @@ git checkout `git tag | ruby -e 'puts STDIN.readlines.sort_by { |s| s[6, s.lengt
 # running this script.
 bundle install --deployment --without test
 bundle exec rake RAILS_ENV=production db:migrate
+bundle exec rake RAILS_ENV=production assets:precompile
 touch tmp/restart.txt
 rm -rf public/cache
 mkdir public/cache
