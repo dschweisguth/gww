@@ -53,7 +53,7 @@ module ApplicationHelper
 
   def head_css(*stylesheets)
     content_for :head do
-      stylesheet_link_tag(*stylesheets) + "\n"
+      stylesheet_link_tag(*stylesheets, media: 'all') + "\n"
     end
   end
 

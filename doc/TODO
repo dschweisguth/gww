@@ -1,6 +1,5 @@
 Bugs
 
-Stylesheet doesn't work when printing. Use 'application' instead of 'screen'.
 A photo which is guessed or revealed and then removed from the group remains in the database but is no longer updated.
   That means that the usernames of commenters on such a photo are no longer updated.
   See doc/old_usernames for relevant code that has not been put into use yet.

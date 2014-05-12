@@ -2,7 +2,7 @@
 <%= head_javascript 'jquery.ui.autocomplete', 'isInViewport', 'app/shared/GWW', 'app/shared/autocomplete', 'app/photos/search' %>
 <% content_for :head do %>
   <meta name="viewport" content="width=device-width">
-  <%= stylesheet_link_tag 'app/photos/search' %>
+  <%= stylesheet_link_tag 'app/photos/search', media: 'all' %>
   <%= render 'shared/config' %>
 <% end %>
 
