@@ -182,7 +182,7 @@ class Photo < ActiveRecord::Base
       column: 'member_questions', default_order: '-' }
   }
 
-  def self.order_by(sorted_by, order)
+  private_class_method def self.order_by(sorted_by, order)
     term_names = [ sorted_by, *SORTED_BY[sorted_by][:secondary] ]
     terms = term_names.map do |term_name|
       term = SORTED_BY[term_name][:column]
@@ -193,7 +193,6 @@ class Photo < ActiveRecord::Base
     end
     terms.join ', '
   end
-  private_class_method :order_by
 
   def self.mapped(bounds, limit)
     Photo \
@@ -365,17 +364,15 @@ class Photo < ActiveRecord::Base
       "flickrid in (#{joined_flickrids})"
   end
 
-  def self.to_float_or_nil(string)
+  private_class_method def self.to_float_or_nil(string)
     number = string.to_f
     number == 0.0 ? nil : number
   end
-  private_class_method :to_float_or_nil
 
-  def self.to_integer_or_nil(string)
+  private_class_method def self.to_integer_or_nil(string)
     number = string.to_i
     number == 0 ? nil : number
   end
-  private_class_method :to_integer_or_nil
 
   def self.faves_from_flickr(photo_flickrid)
     faves_count = 0

@@ -22,7 +22,7 @@ class Stintersection < ActiveRecord::Base
     end
   end
 
-  def self.geocode_intersection(street1, street2)
+  private_class_method def self.geocode_intersection(street1, street2)
     intersections = intersections street1, street2
     if intersections.length == 1
       point = intersections[0].SHAPE
@@ -33,12 +33,10 @@ class Stintersection < ActiveRecord::Base
       nil
     end
   end
-  private_class_method :geocode_intersection
 
-  def self.point(x, y)
+  private_class_method def self.point(x, y)
     RGeo::Cartesian.preferred_factory.point(x, y)
   end
-  private_class_method :point
 
   def self.street_type(street, cross_street)
     intersections = intersections street, cross_street
@@ -53,7 +51,7 @@ class Stintersection < ActiveRecord::Base
     end
   end
 
-  def self.intersections(street1, street2)
+  private_class_method def self.intersections(street1, street2)
     sql = %q[
       select i1.* from stintersections i1, stintersections i2
       where i1.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ? ]
@@ -68,6 +66,5 @@ class Stintersection < ActiveRecord::Base
     end
     find_by_sql args
   end
-  private_class_method :intersections
 
 end

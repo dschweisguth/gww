@@ -166,7 +166,7 @@ class Person < ActiveRecord::Base
   end
   # public only for testing
 
-  def self.append(change, value)
+  private_class_method def self.append(change, value)
     if value
       if ! change.empty?
         change << ' '
@@ -174,7 +174,6 @@ class Person < ActiveRecord::Base
       change << yield
     end
   end
-  private_class_method :append
 
   # Used by PeopleController
 
@@ -293,10 +292,9 @@ class Person < ActiveRecord::Base
     statistic_by_person 'select person_id id, avg(faves) statistic from photos group by person_id'
   end
 
-  def self.statistic_by_person(sql)
+  private_class_method def self.statistic_by_person(sql)
     find_by_sql(sql).each_with_object({}) { | person, statistic| statistic[person.id] = person[:statistic].to_f }
   end
-  private_class_method :statistic_by_person
 
   def self.nemeses
     nemeses = find_by_sql %Q[
@@ -336,7 +334,7 @@ class Person < ActiveRecord::Base
     return days, weeks, months, years
   end
 
-  def self.get_periods(report_time)
+  private_class_method def self.get_periods(report_time)
     report_day = report_time.beginning_of_day
 
     days = (0 .. 6).map { |i| Period.starting_at(report_day - i.days, 1.day) }
@@ -353,9 +351,8 @@ class Person < ActiveRecord::Base
 
     return days, weeks, months, years
   end
-  private_class_method :get_periods
 
-  def self.get_scores(begin_date, end_date)
+  private_class_method def self.get_scores(begin_date, end_date)
     scores = {}
 
     guessers = Person.find_by_sql [
@@ -380,7 +377,6 @@ class Person < ActiveRecord::Base
 
     scores
   end
-  private_class_method :get_scores
 
   def self.standing(person)
     place = 1
@@ -589,12 +585,11 @@ class Person < ActiveRecord::Base
     }
   end
 
-  def self.update_statistic(attribute, sql)
+  private_class_method def self.update_statistic(attribute, sql)
     find_by_sql(sql).each do |person|
       person.update_attribute attribute, person[:statistic]
     end
   end
-  private_class_method :update_statistic
 
   # Used in Admin::PhotosController
 

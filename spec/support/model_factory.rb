@@ -51,14 +51,13 @@ class FlickrUpdate
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     attrs = { member_count: 0 }
     if method == :new && ! caller_attrs[:created_at]
       attrs[:created_at] = Time.now
     end
     attrs
   end
-  private_class_method :attrs
 
 end
 
@@ -66,14 +65,13 @@ class ScoreReport
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     attrs = {}
     if method == :new && ! caller_attrs[:created_at]
       attrs[:created_at] = Time.now
     end
     attrs
   end
-  private_class_method :attrs
 
 end
 
@@ -81,14 +79,13 @@ class Person
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     {
       flickrid: affix(label, 'person_flickrid'),
       username: affix(label, 'username'),
       comments_per_post: 0
     }
   end
-  private_class_method :attrs
 
 end
 
@@ -96,7 +93,7 @@ class Photo
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
       flickrid: affix(label, 'photo_flickrid'),
@@ -115,7 +112,6 @@ class Photo
     end
     attrs
   end
-  private_class_method :attrs
 
 end
 
@@ -123,7 +119,7 @@ class Comment
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     attrs = {
       flickrid: affix(label, 'commenter_flickrid'),
       username: affix(label, 'commenter_username'),
@@ -135,7 +131,6 @@ class Comment
     end
     attrs
   end
-  private_class_method :attrs
 
 end
 
@@ -143,7 +138,7 @@ class Guess
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
       comment_text: affix(label, 'guess text'),
@@ -158,7 +153,6 @@ class Guess
     end
     attrs
   end
-  private_class_method :attrs
 
 end
 
@@ -166,7 +160,7 @@ class Revelation
   extend ModelFactory
 
   #noinspection RubyUnusedLocalVariable
-  def self.attrs(method, label, caller_attrs)
+  private_class_method def self.attrs(method, label, caller_attrs)
     now = Time.now
     attrs = {
       comment_text: affix(label, 'revelation text'),
@@ -178,6 +172,5 @@ class Revelation
     end
     attrs
   end
-  private_class_method :attrs
 
 end

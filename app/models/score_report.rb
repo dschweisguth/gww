@@ -10,7 +10,7 @@ class ScoreReport < ActiveRecord::Base
     answer_counts :revelations
   end
 
-  def self.answer_counts(answer_table_name)
+  private_class_method def self.answer_counts(answer_table_name)
     reports = find_by_sql [
       %Q[
         select current.*, count(*) count
@@ -24,7 +24,6 @@ class ScoreReport < ActiveRecord::Base
     ]
     reports.map { |report| [ report.id, report[:count] ] }.to_h
   end
-  private_class_method :answer_counts
 
   def self.previous(date)
     where('created_at < ?', date.getutc).order('created_at desc').first

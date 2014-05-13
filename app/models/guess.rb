@@ -66,7 +66,7 @@ class Guess < ActiveRecord::Base
 	      "where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
   end
 
-  def self.first_guess_with_place(person, conditions, order, place_conditions)
+  private_class_method def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = includes(:person, { photo: :person }) \
       .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person).order("#{GUESS_AGE} #{order}").first
     if ! guess
@@ -75,7 +75,6 @@ class Guess < ActiveRecord::Base
     guess.place = joins(:photo).where("#{place_conditions} and #{GUESS_AGE_IS_VALID}", person.id).count + 1
     guess
   end
-  private_class_method :first_guess_with_place
 
   def self.mapped_count(person_id)
     where(person_id: person_id) \
