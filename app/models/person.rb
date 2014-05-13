@@ -99,7 +99,7 @@ class Person < ActiveRecord::Base
     people_by_previous_score = Person.by_score people, previous_report_date
     add_score_and_place people_by_previous_score, :previous_score, :previous_place
     Photo.add_posts people, previous_report_date, :previous_post_count
-    scored_people = Hash[people.map { |person| [person, person] }]
+    scored_people = people.map { |person| [person, person] }.to_h
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
       scored_guesser = scored_people[guesser]

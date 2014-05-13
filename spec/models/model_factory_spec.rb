@@ -528,5 +528,5 @@ def replace_object_attributes_with_id_attributes attrs
 end
 
 def stringify_keys attrs
-  Hash[attrs.to_a.map { |pair| [ pair[0].to_s, pair[1] ] }]
+  attrs.to_a.map { |pair| [ pair[0].to_s, pair[1] ] }.to_h
 end

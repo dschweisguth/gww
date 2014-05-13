@@ -22,7 +22,7 @@ class ScoreReport < ActiveRecord::Base
       ],
       Time.local(2005).getutc
     ]
-    Hash[reports.map { |report| [ report.id, report[:count] ] }]
+    reports.map { |report| [ report.id, report[:count] ] }.to_h
   end
   private_class_method :answer_counts
 

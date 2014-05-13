@@ -57,7 +57,7 @@ class PhotosController < ApplicationController
 
   def terms
     params[:terms] ||= ''
-    terms = Hash[*params[:terms].split('/').each_with_index { |term, i| if i.even? then term.gsub! '-', '_' end }]
+    terms = params[:terms].split('/').each_slice(2).map { |key, value| [key.gsub('-', '_'), value] }.to_h
     if terms['game_status']
       terms['game_status'] = terms['game_status'].split(',')
     end
@@ -70,7 +70,7 @@ class PhotosController < ApplicationController
   caches_page :autocomplete_usernames
   def autocomplete_usernames
     params[:terms] ||= ''
-    terms = Hash[*params[:terms].split('/')]
+    terms = params[:terms].split('/').each_slice(2).to_h
     people = Person.select("people.username, count(f.id) n").joins("left join photos f on people.id = f.person_id")
     if terms['term']
       people = people.where('people.username like ?', "#{terms['term']}%")
