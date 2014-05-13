@@ -88,7 +88,7 @@ class FlickrService
     key = "#{SECRET}&#{OAUTH_TOKEN_SECRET}"
     base_string = "GET&#{oauth_encode API_URL}&" +
       oauth_encode(params.keys.sort.map { |name| "#{name}=#{oauth_encode params[name]}" }.join('&'))
-    signature = Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest::Digest.new('sha1'), key, base_string)
+    signature = Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), key, base_string)
     oauth_encode signature.chomp
   end
   private :signature
