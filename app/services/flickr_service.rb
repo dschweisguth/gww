@@ -62,7 +62,7 @@ class FlickrService
     parsed_xml
   end
 
-  def api_url(api_method, extra_params = {})
+  private def api_url(api_method, extra_params = {})
     params = {
       'oauth_version' => '1.0',
       'oauth_signature_method' => 'HMAC-SHA1',
@@ -82,23 +82,20 @@ class FlickrService
         query_string << param[0] + '=' + param[1]
       end
   end
-  private :api_url
 
-  def signature(params)
+  private def signature(params)
     key = "#{SECRET}&#{OAUTH_TOKEN_SECRET}"
     base_string = "GET&#{oauth_encode API_URL}&" +
       oauth_encode(params.keys.sort.map { |name| "#{name}=#{oauth_encode params[name]}" }.join('&'))
     signature = Base64.encode64 OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), key, base_string)
     oauth_encode signature.chomp
   end
-  private :signature
 
-  def oauth_encode(string)
+  private def oauth_encode(string)
     URI.encode string, /[^\w\-.~]/
   end
-  private :oauth_encode
 
-  def submit(url)
+  private def submit(url)
     failure_count = 0
     begin
       get(url).body
@@ -118,7 +115,6 @@ class FlickrService
       end
     end
   end
-  private :submit
 
   # public so that it can be mocked in tests
   def get(url)

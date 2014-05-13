@@ -55,7 +55,7 @@ class PhotosController < ApplicationController
     render layout: false
   end
 
-  def terms
+  private def terms
     params[:terms] ||= ''
     terms = params[:terms].split('/').each_slice(2).map { |key, value| [key.gsub('-', '_'), value] }.to_h
     if terms['game_status']
@@ -65,7 +65,6 @@ class PhotosController < ApplicationController
     direction = terms.delete('direction') || '-'
     [ terms, sorted_by, direction ]
   end
-  private :terms
 
   caches_page :autocomplete_usernames
   def autocomplete_usernames

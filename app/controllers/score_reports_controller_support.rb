@@ -1,6 +1,6 @@
 module ScoreReportsControllerSupport
 
-  def prepare_gww_thumbnails_html(report_date)
+  private def prepare_gww_thumbnails_html(report_date)
     @report_date = report_date.getlocal
 
     previous_report = ScoreReport.previous @report_date
@@ -26,9 +26,8 @@ module ScoreReportsControllerSupport
     raw_html
 
   end
-  private :prepare_gww_thumbnails_html
 
-  def prepare_gww_stats_html(report_date)
+  private def prepare_gww_stats_html(report_date)
     report_date = report_date.getlocal
 
     previous_report = ScoreReport.previous report_date
@@ -56,14 +55,12 @@ module ScoreReportsControllerSupport
     raw_html
 
   end
-  private :prepare_gww_stats_html
 
-  def people_by_score(report_date)
+  private def people_by_score(report_date)
     people = Person.all_before report_date
     Photo.add_posts people, report_date, :post_count
     people_by_score = Person.by_score people, report_date
     return people, people_by_score
   end
-  private :people_by_score
 
 end

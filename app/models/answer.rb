@@ -10,7 +10,7 @@ module Answer
   end
 
   #noinspection RubyUnusedLocalVariable
-  def formatted_age_by_period(from, to, periods)
+  private def formatted_age_by_period(from, to, periods)
     utc_from = from.getutc
     utc_to = to.getutc
     years = utc_to.year - utc_from.year
@@ -47,6 +47,5 @@ module Answer
     end
     time_elapsed.join ', '
   end
-  private :formatted_age_by_period
 
 end

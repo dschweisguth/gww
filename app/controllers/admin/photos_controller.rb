@@ -102,9 +102,8 @@ class Admin::PhotosController < ApplicationController
     redirect_to admin_root_path
   end
 
-  def redirect_to_edit_path(id, options = {})
+  private def redirect_to_edit_path(id, options = {})
     redirect_to edit_admin_photo_path id, options
   end
-  private :redirect_to_edit_path
 
 end

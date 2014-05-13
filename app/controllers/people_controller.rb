@@ -89,7 +89,7 @@ class PeopleController < ApplicationController
     
   end
 
-  def group_by_guessers(posts)
+  private def group_by_guessers(posts)
     guessers = {}
     posts.each do |post|
       post.guesses.each do |guess|
@@ -107,7 +107,6 @@ class PeopleController < ApplicationController
       c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
     end
   end
-  private :group_by_guessers
 
   caches_page :guesses
   def guesses
@@ -150,7 +149,7 @@ class PeopleController < ApplicationController
     as_json partial, photos
   end
 
-  def prepare_for_display_for_person(photo, person_id, first_dateadded)
+  private def prepare_for_display_for_person(photo, person_id, first_dateadded)
     now = Time.now
     if photo.person_id == person_id
       if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
@@ -168,6 +167,5 @@ class PeopleController < ApplicationController
       photo.symbol = '!'
     end
   end
-  private :prepare_for_display_for_person
 
 end

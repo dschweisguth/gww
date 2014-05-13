@@ -594,7 +594,7 @@ class Photo < ActiveRecord::Base
   class AddAnswerError < StandardError
   end
 
-  def reveal(comment_text, commented_at)
+  private def reveal(comment_text, commented_at)
     update_attribute :game_status, 'revealed'
 
     revelation_attrs = { comment_text: comment_text, commented_at: commented_at, added_at: Time.now.getutc }
@@ -607,11 +607,10 @@ class Photo < ActiveRecord::Base
     self.guesses.destroy_all
 
   end
-  private :reveal
 
   # guesser is present only for performance. It may be nil.
   # If non-nil, it has the given guesser_flickrid and guesser_username.
-  def guess(comment_text, commented_at, guesser_flickrid, guesser_username, guesser)
+  private def guess(comment_text, commented_at, guesser_flickrid, guesser_username, guesser)
     update_attribute :game_status, 'found'
 
     if !guesser then
@@ -640,7 +639,6 @@ class Photo < ActiveRecord::Base
     self.revelation.destroy if self.revelation
     
   end
-  private :guess
 
   def self.destroy_photo_and_dependent_objects(photo_id)
     transaction do
