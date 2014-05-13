@@ -183,20 +183,20 @@ class Person < ActiveRecord::Base
   end
 
   CRITERIA = {
-    'username' => [ :downcased_username ],
-    'score' => [ :guess_count, :post_count, :downcased_username ],
-    'posts' => [ :post_count, :guess_count, :downcased_username ],
-    'score-plus-posts' => [ :score_plus_posts, :guess_count, :downcased_username ],
-    'guesses-per-day' => [ :guesses_per_day, :guess_count, :downcased_username ],
-    'posts-per-day' => [ :posts_per_day, :post_count, :downcased_username ],
-    'posts-per-guess' => [ :posts_per_guess, :post_count, :downcased_username ],
-    'time-to-guess' => [ :guess_speed, :guess_count, :downcased_username ],
-    'time-to-be-guessed' => [ :be_guessed_speed, :post_count, :downcased_username ],
-    'comments-to-guess' => [ :comments_to_guess, :guess_count, :downcased_username ],
-    'comments-per-post' => [ :comments_per_post, :post_count, :downcased_username ],
-    'comments-to-be-guessed' => [ :comments_to_be_guessed, :post_count, :downcased_username ],
-    'views-per-post' => [ :views_per_post, :post_count, :downcased_username ],
-    'faves-per-post' => [ :faves_per_post, :post_count, :downcased_username ]
+    'username' => %i(downcased_username),
+    'score' => %i(guess_count post_count downcased_username),
+    'posts' => %i(post_count guess_count downcased_username),
+    'score-plus-posts' => %i(score_plus_posts guess_count downcased_username),
+    'guesses-per-day' => %i(guesses_per_day guess_count downcased_username),
+    'posts-per-day' => %i(posts_per_day post_count downcased_username),
+    'posts-per-guess' => %i(posts_per_guess post_count downcased_username),
+    'time-to-guess' => %i(guess_speed guess_count downcased_username),
+    'time-to-be-guessed' => %i(be_guessed_speed post_count downcased_username),
+    'comments-to-guess' => %i(comments_to_guess guess_count downcased_username),
+    'comments-per-post' => %i(comments_per_post post_count downcased_username),
+    'comments-to-be-guessed' => %i(comments_to_be_guessed post_count downcased_username),
+    'views-per-post' => %i(views_per_post post_count downcased_username),
+    'faves-per-post' => %i(faves_per_post post_count downcased_username)
   }
 
   def self.all_sorted(sorted_by, order)

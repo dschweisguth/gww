@@ -80,7 +80,7 @@ class PhotosController < ApplicationController
     end
     people = people.group("people.username").order("lower(username)")
     people.each { |person| person.label = "#{person.username} (#{person[:n]})" }
-    render json: people, only: [ :username ], methods: [ :label ]
+    render json: people, only: %i(username), methods: %i(label)
   end
 
   caches_page :show

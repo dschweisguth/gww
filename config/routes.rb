@@ -5,7 +5,7 @@ GWW::Application.routes.draw do
     get action => "root##{action}", as: "root_#{action}"
   end
 
-  resources :score_reports, only: [ :index, :show ]
+  resources :score_reports, only: %i(index show)
 
   get 'autocomplete_usernames/:term' => 'people#autocomplete_usernames'
   get 'autocomplete_usernames' => 'people#autocomplete_usernames', as: :autocomplete_usernames # so it works without a term
@@ -15,7 +15,7 @@ GWW::Application.routes.draw do
     get "people/:id/#{action}" => "people##{action}", as: "person_#{action}"
   end
   get 'people/:id/comments/page/:page' => 'people#comments', as: :person_comments
-  resources :people, only: [ :show ] do
+  resources :people, only: %i(show) do
     get :nemeses, :top_guessers, on: :collection
   end
 
@@ -26,7 +26,7 @@ GWW::Application.routes.draw do
   get 'photos/search_data/*terms/page/:page' => 'photos#search_data'
   get 'photos/search_data/page/:page' => 'photos#search_data' # so it works without a term
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', as: :photos
-  resources :photos, only: [ :show ] do
+  resources :photos, only: %(show) do
     get :map_popup, on: :member
     get :map, :map_json, :unfound_data, on: :collection
   end
@@ -56,11 +56,11 @@ GWW::Application.routes.draw do
   post "admin/photos/:id/update_from_flickr" => "admin/photos#update_from_flickr", as: 'update_photo_from_flickr'
 
   namespace :admin do
-    resources :photos, only: [ :edit, :destroy ] do
+    resources :photos, only: %i(edit destroy) do
       get :unfound, :inaccessible, :multipoint, on: :collection
     end
 
-    resources :score_reports, only: [ :index, :new, :create, :destroy ]
+    resources :score_reports, only: %i(index new create destroy)
 
   end
 
