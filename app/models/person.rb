@@ -313,7 +313,7 @@ class Person < ActiveRecord::Base
       group by guessers.id, poster_id having count(*) >= 10 order by bias desc;
     ]
     poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
-    posters = find_all_by_id poster_ids
+    posters = where id: poster_ids
     posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
     nemeses.each do |nemesis|
       nemesis.poster = posters_by_id[nemesis[:poster_id]]
@@ -534,7 +534,7 @@ class Person < ActiveRecord::Base
   # Used in Admin::RootController
 
   def self.update_all_from_flickr
-    Person.all(conditions: 'id != 0').each do |person|
+    Person.where('id != 0').each do |person|
       begin
         person.update_attributes_if_necessary! attrs_from_flickr(person.flickrid)
       rescue FlickrService::FlickrRequestFailedError

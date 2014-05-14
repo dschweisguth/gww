@@ -80,7 +80,7 @@
 
 <%= button_to 'Update this photo from Flickr', update_photo_from_flickr_path(@photo) %>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<%= button_to 'Delete this photo', admin_photo_path(@photo), method: :delete, confirm: 'Are you sure?' %>
+<%= button_to 'Delete this photo', admin_photo_path(@photo), method: :delete, data: { confirm: 'Are you sure?' } %>
 
 <% end %>
 <%= render 'shared/config' %>

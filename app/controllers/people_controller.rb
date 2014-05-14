@@ -84,7 +84,7 @@ class PeopleController < ApplicationController
     @posts = Photo.find_with_guesses @person
     @favorite_posters_of = @person.favorite_posters_of
     @unfound_photos = Photo.where("person_id = ? AND game_status in ('unfound', 'unconfirmed')", @person).to_a
-    @revealed_photos = Photo.find_all_by_person_id_and_game_status @person, 'revealed'
+    @revealed_photos = Photo.where person_id: @person, game_status: 'revealed'
     @guessers = group_by_guessers @posts
     
   end

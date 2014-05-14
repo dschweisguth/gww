@@ -174,7 +174,7 @@ describe PeopleController do
       stub(Photo).most_faved(@person)
       stub(Photo).where(person_id: @person).stub!.includes { [] }
       stub(Photo).where(is_a(String), @person) { [] }
-      stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [] }
+      stub(Photo).where(person_id: @person, game_status: 'revealed') { [] }
       stub(@person).favorite_posters_of { [] }
 
       get :show, id: @person.id
@@ -272,7 +272,7 @@ describe PeopleController do
 
       stub(Photo).where(is_a(String), @person) { [ Photo.make('unfound') ] }
 
-      stub(Photo).find_all_by_person_id_and_game_status(@person, 'revealed') { [ Photo.make('revealed') ] }
+      stub(Photo).where(person_id: @person, game_status: 'revealed') { [ Photo.make('revealed') ] }
 
       favorite_poster_of = Person.make 'favorite_poster_of'
       favorite_poster_of.bias = 3.6

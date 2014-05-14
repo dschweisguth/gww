@@ -885,7 +885,7 @@ describe Photo do
       stub_get_faves
       Photo.update_all_from_flickr.should == [ 1, 1, 1, 1 ]
 
-      photos = Photo.all include: :person
+      photos = Photo.includes :person
       photos.size.should == 1
       photo = photos[0]
       person = photo.person
@@ -1539,9 +1539,7 @@ describe Photo do
       end
 
       def is_revealed(photo, comment_text)
-        revelations = Revelation.find_all_by_photo_id photo
-        revelations.length.should == 1
-        revelation = revelations[0]
+        revelation = photo.revelation.reload
         revelation.photo.game_status.should == 'revealed'
         revelation.comment_text.should == comment_text
         revelation.commented_at.should == @now
@@ -1587,7 +1585,7 @@ describe Photo do
         stub_person_request
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
         #noinspection RubyArgCount
-        guess = Guess.find_by_photo_id photo, include: :person
+        guess = Guess.includes(:person).find_by_photo_id photo
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'username_from_request'
         guess.person.pathalias.should == 'pathalias_from_request'
@@ -1600,7 +1598,7 @@ describe Photo do
         stub_person_request_failure
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
         #noinspection RubyArgCount
-        guess = Guess.find_by_photo_id photo, include: :person
+        guess = Guess.includes(:person).find_by_photo_id photo
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'commenter_username'
         guess.person.pathalias.should == nil
@@ -1642,7 +1640,7 @@ describe Photo do
       end
 
       def is_guessed(photo, guesser, comment_text)
-        guesses = Guess.find_all_by_photo_id photo
+        guesses = photo.reload.guesses
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == guesser

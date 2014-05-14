@@ -213,28 +213,17 @@ class Photo < ActiveRecord::Base
   end
 
   def self.search(terms, sorted_by, direction, page)
-    sql = ""
-    conditions = [ sql ]
+    query = all
     if terms.has_key? 'game_status'
-      sql << "game_status in (?)"
-      conditions << terms['game_status']
+      query = query.where game_status: terms['game_status']
     end
     if terms.has_key? 'posted_by'
-      unless sql.blank?
-        sql << " and "
-      end
-      sql << "p.username = ?"
-      conditions << terms['posted_by']
+      query = query.joins(:person).where people: { username: terms['posted_by'] }
     end
-    args = {
-      joins: "join people p on photos.person_id = p.id",
-      conditions: conditions,
-      order: "#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}",
-      per_page: 30,
-      page: page,
-      include: :person
-    }
-    Photo.paginate args
+    query
+      .order("#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
+      .includes(:person)
+      .paginate page: page, per_page: 30
   end
 
   # Used by WheresiesController
@@ -286,11 +275,11 @@ class Photo < ActiveRecord::Base
 
       people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
       existing_people_flickrids = people_flickrids - existing_people.keys
-      Person.find_all_by_flickrid(existing_people_flickrids.to_a).each do |person|
+      Person.where(flickrid: existing_people_flickrids.to_a).each do |person|
         existing_people[person.flickrid] = person
       end
 
-      existing_photos = find_all_by_flickrid(photo_flickrids).index_by &:flickrid
+      existing_photos = where(flickrid: photo_flickrids).index_by &:flickrid
 
       now = Time.now.getutc
 
@@ -359,9 +348,10 @@ class Photo < ActiveRecord::Base
 
   # Public only for testing
   def self.update_seen_at(flickrids, time)
-    joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
-    update_all "seen_at = '#{time.getutc.strftime '%Y-%m-%d %H:%M:%S'}'",
-      "flickrid in (#{joined_flickrids})"
+    # joined_flickrids = flickrids.map { |flickrid| "'#{flickrid}'" }.join ','
+    # update_all "seen_at = '#{time.getutc.strftime '%Y-%m-%d %H:%M:%S'}'",
+    #   "flickrid in (#{joined_flickrids})"
+    where(flickrid: flickrids).update_all "seen_at = '#{time.getutc.strftime '%Y-%m-%d %H:%M:%S'}'"
   end
 
   private_class_method def self.to_float_or_nil(string)

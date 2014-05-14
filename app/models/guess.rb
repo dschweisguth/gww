@@ -27,11 +27,11 @@ class Guess < ActiveRecord::Base
   G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
   def self.longest
-    where(GUESS_AGE_IS_VALID).order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
+    where(GUESS_AGE_IS_VALID).references(:photos).order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
   end
 
   def self.shortest
-    where(GUESS_AGE_IS_VALID).order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
+    where(GUESS_AGE_IS_VALID).references(:photos).order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
   end
 
   def self.first_by(guesser)
@@ -68,7 +68,7 @@ class Guess < ActiveRecord::Base
 
   private_class_method def self.first_guess_with_place(person, conditions, order, place_conditions)
     guess = includes(:person, { photo: :person }) \
-      .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person).order("#{GUESS_AGE} #{order}").first
+      .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person).references(:photos).order("#{GUESS_AGE} #{order}").first
     if ! guess
       return nil
     end
@@ -85,13 +85,13 @@ class Guess < ActiveRecord::Base
   def self.longest_in year
    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
       Time.local(year).getutc, Time.local(year + 1).getutc) \
-      .order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
+      .order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person }).references :photos
   end
 
   def self.shortest_in year
     where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
       Time.local(year).getutc, Time.local(year + 1).getutc) \
-      .order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
+      .order(GUESS_AGE).limit(10).includes(:person, { photo: :person }).references :photos
   end
 
   def self.all_between(from, to)

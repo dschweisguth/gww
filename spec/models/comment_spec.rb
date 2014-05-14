@@ -83,7 +83,7 @@ describe Comment do
       end
 
       def photo_is_revealed_and_revelation_matches(comment)
-        revelations = Revelation.find_all_by_photo_id comment.photo
+        revelations = Revelation.where photo: comment.photo
         revelations.length.should == 1
         revelation = revelations[0]
         revelation.photo.game_status.should == 'revealed'
@@ -135,7 +135,7 @@ describe Comment do
         stub_person_request
         Comment.add_selected_answer comment.id, ''
         #noinspection RubyArgCount
-        guess = Guess.find_by_photo_id comment.photo, include: :person
+        guess = Guess.includes(:person).find_by_photo_id comment.photo
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'username_from_request'
         guess.person.pathalias.should == 'pathalias_from_request'
@@ -147,7 +147,7 @@ describe Comment do
         stub_person_request_failure
         Comment.add_selected_answer comment.id, ''
         #noinspection RubyArgCount
-        guess = Guess.find_by_photo_id comment.photo, include: :person
+        guess = Guess.includes(:person).find_by_photo_id comment.photo
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'commenter_username'
         guess.person.pathalias.should == nil
@@ -171,7 +171,7 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
-        guesses = Guess.find_all_by_photo_id answer_comment.photo
+        guesses = Guess.where photo: answer_comment.photo
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.flickrid.should == scorer_comment.flickrid
@@ -236,7 +236,7 @@ describe Comment do
       end
 
       def photo_is_guessed(comment, guesser)
-        guesses = Guess.find_all_by_photo_id comment.photo
+        guesses = Guess.where photo: comment.photo
         guesses.length.should == 1
         guess = guesses[0]
         guess.person.should == guesser

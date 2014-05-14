@@ -5,7 +5,7 @@ class Revelation < ActiveRecord::Base
   validates_presence_of :comment_text, :commented_at, :added_at
 
   def self.longest
-    order('unix_timestamp(revelations.commented_at) - unix_timestamp(photos.dateadded) desc').limit(10) \
+    order('unix_timestamp(revelations.commented_at) - unix_timestamp(photos.dateadded) desc').limit(10).references(:photos) \
       .includes(photo: :person)
   end
 
