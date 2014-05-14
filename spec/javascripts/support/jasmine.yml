@@ -12,9 +12,9 @@
 #
 src_files:
   - assets/application.js
-  - assets/app/shared/GWW.js
-  - assets/app/admin/photos/edit.js
-  - assets/app/shared/aboutAutoMapping.js
+  - assets/shared/GWW.js
+  - assets/admin/photos/edit.js
+  - assets/shared/aboutAutoMapping.js
 
 # stylesheets
 #
