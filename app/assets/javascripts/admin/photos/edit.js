@@ -1,6 +1,7 @@
 GWW.admin = {};
 GWW.admin.photos = {};
 GWW.admin.photos.edit = (function () {
+  "use strict";
 
   return {
     setUp: setUp

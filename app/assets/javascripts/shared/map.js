@@ -1,4 +1,6 @@
 GWW.shared.createMap = function () {
+  "use strict";
+
   var loadMarkersFromPage = true;
   var jsonIncludedAllMarkers = false;
   var jsonBounds = null;

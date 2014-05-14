@@ -1,4 +1,6 @@
 GWW.shared.aboutAutoMapping = (function () {
+  "use strict";
+
   return {
     setUp: function () {
       $('#about-auto-mapping').click(function(event) {
@@ -8,4 +10,5 @@ GWW.shared.aboutAutoMapping = (function () {
       });
     }
   };
+
 })();

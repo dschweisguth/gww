@@ -1,5 +1,6 @@
 // http://juhukinners.wordpress.com/2009/01/08/how-to-write-a-bookmarklet/
 (function () {
+  "use strict";
 
   $(function() {
     $('#bookmarklet').attr('href', 'javascript:(' + loadBookmarklet.toString() + ')();');

@@ -1,6 +1,5 @@
-"use strict";
-
 GWW.shared.autocomplete = (function () {
+  "use strict";
 
   return {
     setUp: setUp

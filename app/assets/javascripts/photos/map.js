@@ -1,5 +1,7 @@
 GWW.photos = {};
 GWW.photos.map = (function () {
+  "use strict";
+
   var that = GWW.shared.createMap();
 
   var superSetUp = GWW.superior(that, 'setUp');
@@ -8,4 +10,5 @@ GWW.photos.map = (function () {
   };
 
   return that;
+
 })();

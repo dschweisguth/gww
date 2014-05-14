@@ -1,5 +1,7 @@
 GWW.people = {};
 GWW.people.map = (function () {
+  "use strict";
+
   var that = GWW.shared.createMap();
 
   var superSetUp = GWW.superior(that, 'setUp');

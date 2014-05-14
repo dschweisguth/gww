@@ -1,4 +1,6 @@
 GWW.shared.singlePhotoMap = (function () {
+  "use strict";
+
   return {
     setUp: function () {
       var script = document.createElement('script');
@@ -26,4 +28,5 @@ GWW.shared.singlePhotoMap = (function () {
     }
 
   };
+
 })();
