@@ -37,7 +37,7 @@ module GWW
       jquery.ui.autocomplete.css
       jquery.ui.autocomplete.js
     )
-    config.assets.precompile += Find.find('vendor/assets/stylesheets').select { |file| file.end_with? '.css' }.map { |file| file.sub /^vendor\/assets\/stylesheets\//, '' }
+    config.assets.precompile += Find.find('vendor/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub /^vendor\/assets\/javascripts\//, '' }
     config.assets.precompile += Find.find('app/assets/stylesheets').select { |file| file.end_with? '.css' }.map { |file| file.sub /^app\/assets\/stylesheets\//, '' }
     config.assets.precompile += Find.find('app/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub /^app\/assets\/javascripts\//, '' }
 
