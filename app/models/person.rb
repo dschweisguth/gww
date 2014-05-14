@@ -234,7 +234,7 @@ class Person < ActiveRecord::Base
       person.faves_per_post = faves_per_post[person.id] || 0.0
     end
 
-    people.sort! do |x, y|
+    people.to_a.sort! do |x, y|
       total_comparison = 0
       CRITERIA[sorted_by].each do |attr|
         comparison = y.send(attr) <=> x.send(attr)

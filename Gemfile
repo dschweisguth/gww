@@ -6,15 +6,15 @@ gem 'bundler', '1.6.2'
 gem 'jquery-rails', '3.1.0'
 gem 'jquery-ui-rails', '4.2.1'
 gem 'mysql2', '0.3.15'
-gem 'rails', '4.0.5'
-gem 'therubyracer', '0.12.1'
+gem 'rails', '4.1.1'
+gem 'therubyracer', '0.12.1', platforms: :ruby
 gem 'uglifier', '2.5.0'
 gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
 
 group :test do
   gem 'capybara', '2.2.1'
-  gem 'cucumber-rails', '1.4.0', require: false
+  gem 'cucumber-rails', '1.4.1', require: false
   gem 'database_cleaner', '1.2.0'
   gem 'factory_girl_rails', '4.4.1'
   gem 'jasmine', '2.0.1'

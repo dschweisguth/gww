@@ -138,7 +138,7 @@ class PeopleController < ApplicationController
     photos = Photo.posted_or_guessed_by_and_mapped person_id, bounds, max_map_photos + 1
     partial = photos.length == max_map_photos + 1
     if partial
-      photos.pop
+      photos.to_a.pop
     end
     first_photo = Photo.oldest
     if first_photo

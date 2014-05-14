@@ -10,8 +10,6 @@ cd `dirname $0`/..
 script/down
 git fetch --tags
 git checkout `git tag | ruby -e 'puts STDIN.readlines.sort_by { |s| s[6, s.length - 6].to_i }.last'`
-# I thought Rails would do this on startup, but it doesn't seem to happen when
-# running this script.
 bundle install --deployment --without test
 bundle exec rake RAILS_ENV=production db:migrate
 bundle exec rake RAILS_ENV=production assets:precompile

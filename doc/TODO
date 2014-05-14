@@ -7,7 +7,8 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
-Upgrade Rails
+Compress CSS?
+Spring?
 Measure Javascript coverage
 Extract methods from update_all_from_flickr
 Display count of Flickr API calls made in ditto

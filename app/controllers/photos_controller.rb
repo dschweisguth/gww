@@ -19,7 +19,7 @@ class PhotosController < ApplicationController
     photos = Photo.mapped(bounds, max_map_photos + 1)
     partial = photos.length == max_map_photos + 1
     if partial
-      photos.pop
+      photos.to_a.pop
     end
     first_photo = Photo.oldest
     if first_photo
