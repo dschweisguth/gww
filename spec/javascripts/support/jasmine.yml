@@ -12,7 +12,6 @@
 #
 src_files:
   - assets/application.js
-  - assets/shared/GWW.js
   - assets/admin/photos/edit.js
   - assets/shared/aboutAutoMapping.js
 

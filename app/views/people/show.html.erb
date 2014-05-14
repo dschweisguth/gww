@@ -1,4 +1,4 @@
-<%= head_javascript 'shared/GWW', 'shared/aboutAutoMapping' %>
+<%= head_javascript 'shared/aboutAutoMapping' %>
 <% content_for :head do javascript_tag '$(GWW.shared.aboutAutoMapping.setUp);' end %>
 <%= sandwich 'people/breadcrumbs' do %>
 <%= title_and_h1 @person.username %>
