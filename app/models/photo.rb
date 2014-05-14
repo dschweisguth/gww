@@ -586,7 +586,7 @@ class Photo < ActiveRecord::Base
 
     revelation_attrs = { comment_text: comment_text, commented_at: commented_at, added_at: Time.now.getutc }
     if self.revelation
-      self.revelation.update_attributes! revelation_attrs
+      self.revelation.update! revelation_attrs
     else
       Revelation.create!({ photo: self }.merge revelation_attrs)
     end
@@ -618,7 +618,7 @@ class Photo < ActiveRecord::Base
     end
     guess_attrs = { commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc }
     if guess
-      guess.update_attributes! guess_attrs
+      guess.update! guess_attrs
     else
       Guess.create!({ photo: self, person: guesser }.merge guess_attrs)
     end
