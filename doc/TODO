@@ -8,7 +8,6 @@ A photo which is guessed or revealed and then removed from the group remains in
 Debt
 
 Upgrade Rails
-Move third-party assets to vendor
 Measure Javascript coverage
 Upgrade to HTML 5
 Extract methods from update_all_from_flickr
