@@ -1,18 +1,16 @@
 source 'http://rubygems.org/'
 
+gem 'actionpack-page_caching', '1.0.2'
 gem 'activerecord-mysql2spatial-adapter', '0.4.3'
 gem 'bundler', '1.6.2'
 gem 'jquery-rails', '3.1.0'
 gem 'jquery-ui-rails', '4.2.1'
 gem 'mysql2', '0.3.15'
-gem 'rails', '3.2.18'
+gem 'rails', '4.0.5'
+gem 'therubyracer', '0.12.1'
+gem 'uglifier', '2.5.0'
 gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
-
-group :assets do
-  gem 'therubyracer', '0.12.1'
-  gem 'uglifier', '2.5.0'
-end
 
 group :test do
   gem 'capybara', '2.2.1'

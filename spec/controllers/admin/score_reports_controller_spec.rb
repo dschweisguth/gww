@@ -29,7 +29,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of the last report" do
-      stub(ScoreReport).all { [ ScoreReport.make(created_at: Time.now) ] }
+      stub(ScoreReport).order { [ ScoreReport.make(created_at: Time.now) ] }
       get :index
 
       response.should be_success
@@ -38,7 +38,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of a report more than a day old" do
-      stub(ScoreReport).all { [ ScoreReport.make(created_at: Time.now - 1.day - 1.second) ] }
+      stub(ScoreReport).order { [ ScoreReport.make(created_at: Time.now - 1.day - 1.second) ] }
       get :index
 
       response.should be_success

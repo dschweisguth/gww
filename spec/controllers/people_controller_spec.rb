@@ -411,8 +411,8 @@ describe PeopleController do
             'id' => post.id,
             'latitude' => post.latitude,
             'longitude' => post.longitude,
-            color: color,
-            symbol: symbol
+            'color' => color,
+            'symbol' => symbol
           }
         ]
       }
@@ -430,8 +430,8 @@ describe PeopleController do
             'id' => post.id,
             'latitude' => post.inferred_latitude,
             'longitude' => post.inferred_longitude,
-            color: 'FFFF00',
-            symbol: '?'
+            'color' => 'FFFF00',
+            'symbol' => '?'
           }
         ]
       }
@@ -461,8 +461,8 @@ describe PeopleController do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            color: '008000',
-            symbol: '!'
+            'color' => '008000',
+            'symbol' => '!'
           }
         ]
       }
@@ -491,8 +491,8 @@ describe PeopleController do
             'id' => post.id,
             'latitude' => post.latitude,
             'longitude' => post.longitude,
-            color: 'FFFF00',
-            symbol: '?'
+            'color' => 'FFFF00',
+            'symbol' => '?'
           }
         ]
       }

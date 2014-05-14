@@ -12,28 +12,29 @@
 #   useful to keep the Ruby schema up to date. Leaving the schema format set
 #   to :ruby results in the Ruby schema being generated when a migration runs
 #   or is rolled back.
+
+# TODO this might all be obsolete after upgrading to Rails 4. Review the next time we have a migration.
+
 namespace :db do
 
   # namespace :structure do
   #   task load: :environment do
   #     ActiveRecord::Base.establish_connection Rails.env
   #     ActiveRecord::Base.connection.execute 'SET foreign_key_checks = 0'
-  #     IO.readlines("#{Rails.root}/db/#{Rails.env}_structure.sql").join.split("\n\n").each do |statement|
+  #     IO.readlines("#{Rails.root}/db/structure.sql").join.split("\n\n").each do |statement|
   #       ActiveRecord::Base.connection.execute statement
   #     end
   #   end
   # end
 
-  # This overrides the original, which does db:schema:load. The original doesn't migrate; this version does,
-  # since, unlike schema.rb, *_structure.sql does not necessarily include all migrations.
-  Rake::Task['db:setup'].clear
-  task setup: [ 'db:create', 'db:structure:load', 'db:migrate', 'db:seed' ]
-
-  namespace :test do
-    # See also the comments on config.active_record.schema_format in test.rb.
-    desc "rspec tasks depend on this task, so we override it to set up the database in the way that we want."
-    Rake::Task['db:test:prepare'].clear
-    task prepare: [ 'db:reset' ]
-  end
+  # # This changes the original to migrate, since structure.sql does not necessarily include all migrations.
+  # Rake::Task['db:setup'].clear
+  # task setup: %w(db:structure:load_if_sql db:migrate db:seed)
 
 end
+
+# namespace :test do
+#   desc "rspec tasks depend on this task, so we override it to set up the database in the way that we want."
+#   Rake::Task['test:prepare'].clear
+#   task prepare: [ 'db:test:prepare', 'db:test:load', 'db:migrate', 'db:seed' ]
+# end

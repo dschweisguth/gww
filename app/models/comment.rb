@@ -21,7 +21,7 @@ class Comment < ActiveRecord::Base
       comment = find comment_id
       guesses = Guess.joins(:person).where(
         "guesses.photo_id = ? and people.flickrid = ? and guesses.comment_text = ?",
-          comment.photo_id, comment.flickrid, comment.comment_text)
+          comment.photo_id, comment.flickrid, comment.comment_text).readonly false
       if guesses.length != 1
         raise RemoveGuessError,
           "There are #{guesses.length} guesses by the person with the Flickr ID #{comment.flickrid} with the same guess text!?!"

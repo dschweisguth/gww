@@ -4,7 +4,7 @@ end
 
 Given /^there is a player "([^"]*)" with a guess from a previous year$/ do |username|
   player = create :person, username: username
-  create :guess, person: player, commented_at: Time.now.year - 1
+  create :guess, person: player, commented_at: Time.now - 1.year
 end
 
 Given /^there is a player "([^"]*)" with no guesses from previous years$/ do |username|
