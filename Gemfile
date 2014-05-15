@@ -7,6 +7,7 @@ gem 'jquery-rails', '3.1.0'
 gem 'jquery-ui-rails', '4.2.1'
 gem 'mysql2', '0.3.15'
 gem 'rails', '4.1.1'
+gem 'sass-rails', '4.0.3'
 gem 'therubyracer', '0.12.1', platforms: :ruby
 gem 'uglifier', '2.5.0'
 gem 'will_paginate', '3.0.5'
