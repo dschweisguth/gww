@@ -34,7 +34,7 @@ describe Admin::RootController do
 
   describe '#update_from_flickr' do
     it 'calls the equivalent CronJob method and redirects' do
-      mock(CronJob).update_from_flickr { "The message" }
+      mock(CronJob).update_from_flickr { "The message" } # TODO Dave it shouldn't be called CronJob, then
       get :update_from_flickr
       response.should redirect_to admin_root_path
       flash[:notice].should == "The message"

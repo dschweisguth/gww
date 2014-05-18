@@ -1101,22 +1101,6 @@ describe Person do
 
   end
 
-  describe '.update_all_from_flickr' do
-    it "updates an existing user's username and pathalias" do
-      person = Person.make username: 'old_username', pathalias: 'new_pathalias'
-      stub(FlickrService.instance).people_get_info { {
-        'person' => [ {
-          'username' => [ 'new_username' ],
-          'photosurl' => [ 'https://www.flickr.com/photos/new_pathalias/' ]
-        } ]
-      } }
-      Person.update_all_from_flickr
-      person.reload
-      person.username.should == 'new_username'
-      person.pathalias.should == 'new_pathalias'
-    end
-  end
-
   describe '.update_statistics' do
     it 'initializes statistics to nil or 0' do
       person = Person.make comments_to_guess: 1, comments_per_post: 1, comments_to_be_guessed: 1

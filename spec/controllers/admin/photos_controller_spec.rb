@@ -55,7 +55,7 @@ describe Admin::PhotosController do
     end
 
     it 'loads comments and renders the page' do
-      stub(photo).update_from_flickr
+      stub(FlickrUpdater).update_photo(photo)
       mock_clear_page_cache
       get :edit, id: photo.id, update_from_flickr: true
       response.should be_success

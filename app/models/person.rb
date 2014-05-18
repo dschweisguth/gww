@@ -533,16 +533,6 @@ class Person < ActiveRecord::Base
 
   # Used in Admin::RootController
 
-  def self.update_all_from_flickr
-    Person.where('id != 0').each do |person|
-      begin
-        person.update_attributes_if_necessary! attrs_from_flickr(person.flickrid)
-      rescue FlickrService::FlickrRequestFailedError
-        # Ignore the error. We'll update again soon enough.
-      end
-    end
-  end
-
   def self.update_statistics
     update_all comments_to_guess: nil, comments_per_post: 0, comments_to_be_guessed: nil
     update_statistic :comments_to_guess, %q{
