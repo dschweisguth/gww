@@ -366,7 +366,7 @@ class Photo < ActiveRecord::Base
     transaction do
       Guess.destroy_all_by_photo_id id
       Revelation.where(photo_id: id).delete_all
-      find(id).update_attribute :game_status, status
+      find(id).update! game_status: status
     end
   end
 
@@ -423,7 +423,7 @@ class Photo < ActiveRecord::Base
   end
 
   private def reveal(comment_text, commented_at)
-    update_attribute :game_status, 'revealed'
+    update! game_status: 'revealed'
 
     revelation_attrs = { comment_text: comment_text, commented_at: commented_at, added_at: Time.now.getutc }
     if self.revelation
@@ -437,7 +437,7 @@ class Photo < ActiveRecord::Base
   end
 
   private def guess(comment_text, commented_at, guesser_flickrid)
-    update_attribute :game_status, 'found'
+    update! game_status: 'found'
 
     guesser = FlickrUpdater.create_or_update_person guesser_flickrid
     guess = Guess.find_by_photo_id_and_person_id self, guesser
@@ -448,7 +448,7 @@ class Photo < ActiveRecord::Base
       Guess.create!({ photo: self, person: guesser }.merge guess_attrs)
     end
 
-    self.revelation.destroy if self.revelation
+    self.revelation.try :destroy
     
   end
 

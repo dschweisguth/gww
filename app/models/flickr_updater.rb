@@ -110,7 +110,7 @@ class FlickrUpdater
     begin
       faves = faves_from_flickr photo.flickrid
       if faves != photo.faves
-        photo.update_attribute :faves, faves
+        photo.update! faves: faves
       end
     rescue FlickrService::FlickrRequestFailedError
       # This happens when a photo is private but visible to the caller because it's posted to a group of which

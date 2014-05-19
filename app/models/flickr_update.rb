@@ -12,7 +12,7 @@ class FlickrUpdate < ActiveRecord::Base
     member_count = group_info['group'][0]['members'][0]
     update = FlickrUpdate.create! member_count: member_count
     return_value = yield
-    update.update_attribute :completed_at, Time.now.getutc
+    update.update! completed_at: Time.now.getutc
     return_value
   end
 

@@ -561,72 +561,72 @@ describe Person do
 
     it 'sorts by comments-to-guess' do
       create_people_named 'a', 'z'
-      @person1.update_attribute :comments_to_guess, 1
-      @person2.update_attribute :comments_to_guess, 2
+      @person1.update! comments_to_guess: 1
+      @person2.update! comments_to_guess: 2
       stub_score 2, 1
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-guess, score' do
       create_people_named 'a', 'z'
-      @person1.update_attribute :comments_to_guess, 1
-      @person2.update_attribute :comments_to_guess, 1
+      @person1.update! comments_to_guess: 1
+      @person2.update! comments_to_guess: 1
       stub_score 1, 2
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-to-guess, score, username' do
       create_people_named 'z', 'a'
-      @person1.update_attribute :comments_to_guess, 1
-      @person2.update_attribute :comments_to_guess, 1
+      @person1.update! comments_to_guess: 1
+      @person2.update! comments_to_guess: 1
       stub_score 1, 1
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it 'sorts by comments-per-post' do
       create_people_named 'a', 'z'
-      @person1.update_attribute :comments_per_post, 1
-      @person2.update_attribute :comments_per_post, 2
+      @person1.update! comments_per_post: 1
+      @person2.update! comments_per_post: 2
       stub_post_count 2, 1
       puts_person2_before_person1 'comments-per-post'
     end
 
     it 'sorts by comments-per-post, post count' do
       create_people_named 'a', 'z'
-      @person1.update_attribute :comments_per_post, 1
-      @person2.update_attribute :comments_per_post, 1
+      @person1.update! comments_per_post: 1
+      @person2.update! comments_per_post: 1
       stub_post_count 1, 2
       puts_person2_before_person1 'comments-per-post'
     end
 
     it 'sorts by comments-per-post, post count, username' do
       create_people_named 'z', 'a'
-      @person1.update_attribute :comments_per_post, 1
-      @person2.update_attribute :comments_per_post, 1
+      @person1.update! comments_per_post: 1
+      @person2.update! comments_per_post: 1
       stub_post_count 1, 1
       puts_person2_before_person1 'comments-per-post'
     end
 
     it 'sorts by comments-to-be-guessed' do
       create_people_named 'a', 'z'
-      @person1.update_attribute :comments_to_be_guessed, 1
-      @person2.update_attribute :comments_to_be_guessed, 2
+      @person1.update! comments_to_be_guessed: 1
+      @person2.update! comments_to_be_guessed: 2
       stub_post_count 2, 1
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts by comments-to-be-guessed, post count' do
       create_people_named 'a', 'z'
-      @person1.update_attribute :comments_to_be_guessed, 1
-      @person2.update_attribute :comments_to_be_guessed, 1
+      @person1.update! comments_to_be_guessed: 1
+      @person2.update! comments_to_be_guessed: 1
       stub_post_count 1, 2
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it 'sorts by comments-to-be-guessed, post count, username' do
       create_people_named 'z', 'a'
-      @person1.update_attribute :comments_to_be_guessed, 1
-      @person2.update_attribute :comments_to_be_guessed, 1
+      @person1.update! comments_to_be_guessed: 1
+      @person2.update! comments_to_be_guessed: 1
       stub_post_count 1, 1
       puts_person2_before_person1 'comments-to-be-guessed'
     end

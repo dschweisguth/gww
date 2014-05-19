@@ -12,7 +12,7 @@ class Comment < ActiveRecord::Base
     transaction do
       photo = find(comment_id).photo
       photo.revelation.destroy
-      photo.update_attribute :game_status, 'unfound'
+      photo.update! game_status: 'unfound'
     end
   end
 
@@ -29,7 +29,7 @@ class Comment < ActiveRecord::Base
       guesses[0].destroy
       photo = comment.photo
       if photo.guesses.empty?
-        photo.update_attribute :game_status, 'unfound'
+        photo.update! game_status: 'unfound'
       end
     end
   end

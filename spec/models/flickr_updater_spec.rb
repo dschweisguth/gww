@@ -14,7 +14,7 @@ describe FlickrUpdater do
       mock(FlickrUpdater).update_all_photos { [ 1, 2, 3, 4 ] }
       mock(FlickrUpdater).update_all_people
       stub(Time).now { Time.utc(2011) }
-      mock(update).update_attribute :completed_at, Time.utc(2011)
+      mock(update).update! completed_at: Time.utc(2011)
       FlickrUpdater.update_everything.should == "Created 1 new photos and 2 new users. Got 3 pages out of 4."
     end
   end
