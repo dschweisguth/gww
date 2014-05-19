@@ -5,7 +5,7 @@ class Comment < ActiveRecord::Base
 
   def self.add_selected_answer(comment_id, username)
     comment = find comment_id
-    comment.photo.answer comment.username, comment.flickrid, username, comment.comment_text, comment.commented_at
+    comment.photo.answer comment.flickrid, username, comment.comment_text, comment.commented_at
   end
 
   def self.remove_revelation(comment_id)

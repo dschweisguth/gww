@@ -14,7 +14,7 @@ class FlickrUpdater
   def self.update_all_people
     Person.where('id != 0').each do |person|
       begin
-        person.update! Person.attrs_from_flickr(person.flickrid)
+        person.update! attrs_from_flickr(person.flickrid)
       rescue FlickrService::FlickrRequestFailedError
         # Ignore the error. We'll update again soon enough.
       end
@@ -151,6 +151,25 @@ class FlickrUpdater
       faves_page += 1
     end
     faves_count
+  end
+
+  def self.create_or_update_person(flickrid)
+    person ||= Person.find_by_flickrid flickrid
+    attrs = attrs_from_flickr flickrid
+    if person
+      person.update! attrs
+    else
+      person = Person.create!({ flickrid: flickrid }.merge attrs)
+    end
+    person
+  end
+
+  def self.attrs_from_flickr(person_flickrid)
+    response = FlickrService.instance.people_get_info 'user_id' => person_flickrid
+    parsed_person = response['person'][0]
+    username = parsed_person['username'][0]
+    pathalias = parsed_person['photosurl'][0].match(/https:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
+    { username: username, pathalias: pathalias }
   end
 
 end

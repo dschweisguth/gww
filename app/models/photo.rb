@@ -379,17 +379,14 @@ class Photo < ActiveRecord::Base
     if username.empty?
       username = photo.person.username
     end
-    photo.answer nil, nil, username, answer_text, Time.now.getutc
+    photo.answer nil, username, answer_text, Time.now.getutc
 
   end
 
-  def answer(selected_username, selected_flickrid, entered_username, answer_text, answered_at)
-    guesser = nil
+  def answer(selected_flickrid, entered_username, answer_text, answered_at)
     if entered_username.empty?
-      guesser_username = selected_username
       guesser_flickrid = selected_flickrid
     else
-      guesser_username = entered_username
       guesser_flickrid = nil
       if entered_username == self.person.username
         guesser_flickrid = self.person.flickrid
@@ -416,7 +413,7 @@ class Photo < ActiveRecord::Base
       if guesser_flickrid == self.person.flickrid
         reveal answer_text, answered_at
       else
-        guess answer_text, answered_at, guesser_flickrid, guesser_username, guesser
+        guess answer_text, answered_at, guesser_flickrid
       end
     end
 
@@ -439,25 +436,11 @@ class Photo < ActiveRecord::Base
 
   end
 
-  # guesser is present only for performance. It may be nil.
-  # If non-nil, it has the given guesser_flickrid and guesser_username.
-  private def guess(comment_text, commented_at, guesser_flickrid, guesser_username, guesser)
+  private def guess(comment_text, commented_at, guesser_flickrid)
     update_attribute :game_status, 'found'
 
-    guesser ||= Person.find_by_flickrid guesser_flickrid
-    guesser_attrs =
-      begin
-        Person.attrs_from_flickr guesser_flickrid
-      rescue FlickrService::FlickrRequestFailedError
-        { username: guesser_username }
-      end
-    if guesser
-      guesser.update! guesser_attrs
-      guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
-    else
-      guesser = Person.create!({ flickrid: guesser_flickrid }.merge guesser_attrs)
-      guess = nil
-    end
+    guesser = FlickrUpdater.create_or_update_person guesser_flickrid
+    guess = Guess.find_by_photo_id_and_person_id self, guesser
     guess_attrs = { commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc }
     if guess
       guess.update! guess_attrs

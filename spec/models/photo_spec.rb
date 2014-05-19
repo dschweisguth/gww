@@ -1238,17 +1238,6 @@ describe Photo do
         is_updated_per_flickr guesser
       end
 
-      it "leaves the guesser alone if they can't be updated from Flickr" do
-        photo = Photo.make
-        guesser = Person.make
-        set_time
-        stub_person_request_failure
-        Photo.add_entered_answer photo.id, guesser.username, 'comment text'
-        guesser.reload
-        guesser.username.should == 'username'
-        guesser.pathalias.should == nil
-      end
-
       it 'creates the guesser if necessary' do
         photo = Photo.make
         comment = Comment.make
@@ -1260,19 +1249,6 @@ describe Photo do
         guess.person.flickrid.should == comment.flickrid
         guess.person.username.should == 'username_from_request'
         guess.person.pathalias.should == 'pathalias_from_request'
-      end
-
-      it "creates the guesser from available information if they can't be updated from Flickr" do
-        photo = Photo.make
-        comment = Comment.make
-        set_time
-        stub_person_request_failure
-        Photo.add_entered_answer photo.id, comment.username, 'comment text'
-        #noinspection RubyArgCount
-        guess = Guess.includes(:person).find_by_photo_id photo
-        guess.person.flickrid.should == comment.flickrid
-        guess.person.username.should == 'commenter_username'
-        guess.person.pathalias.should == nil
       end
 
       it 'updates an existing guess and updates the guesser if necessary' do
@@ -1304,10 +1280,6 @@ describe Photo do
             'photosurl' => [ 'https://www.flickr.com/photos/pathalias_from_request/' ]
           } ]
         } }
-      end
-
-      def stub_person_request_failure
-        stub(FlickrService.instance).people_get_info { raise FlickrService::FlickrRequestFailedError }
       end
 
       def is_guessed(photo, guesser, comment_text)
