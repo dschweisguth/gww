@@ -64,13 +64,14 @@ class FlickrUpdater
           seen_at: now
         }
         photo = Photo.find_by_flickrid photo_flickrid
-        if ! photo || photo.lastupdate != photo_attrs[:lastupdate]
+        photo_needs_update = ! photo || photo.lastupdate != photo_attrs[:lastupdate]
+        if photo_needs_update
           begin
             photo_attrs[:faves] = faves_from_flickr photo_flickrid
           rescue FlickrService::FlickrRequestFailedError
             # This happens when a photo is private but visible to the caller because it's posted to a group of which
             # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-            photo_attrs[:faves] ||= 0
+            photo_attrs[:faves] ||= 0 # TODO Dave this is a bug. Use 0 only if the photo is new.
           end
         end
         if photo
@@ -78,7 +79,7 @@ class FlickrUpdater
         else
           # Set dateadded only when a photo is created, so that if a photo is added to the group,
           # removed from the group and added to the group again it retains its original dateadded.
-          Photo.create!({
+          photo = Photo.create!({
             person_id: person.id,
             flickrid: photo_flickrid,
             dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
@@ -86,6 +87,11 @@ class FlickrUpdater
           }.merge photo_attrs)
           new_photo_count += 1
         end
+
+        # TODO Dave reinstate check after running in production
+        # if photo_needs_update
+          update_comments photo
+        # end
 
       end
 
@@ -117,24 +123,7 @@ class FlickrUpdater
       # the caller is a member. Not clear yet whether this is a bug or intended behavior.
     end
 
-    begin
-      comments_xml = FlickrService.instance.photos_comments_get_list 'photo_id' => photo.flickrid
-      parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
-      if ! parsed_comments.blank?
-        Comment.transaction do
-          photo.comments.clear
-          parsed_comments.each do |comment_xml|
-            photo.comments.create!(
-              flickrid: comment_xml['author'],
-              username: comment_xml['authorname'],
-              comment_text: comment_xml['content'],
-              commented_at: Time.at(comment_xml['datecreate'].to_i).getutc)
-          end
-        end
-      end
-    rescue FlickrService::FlickrRequestFailedError
-      # This happens when a photo has been removed from the group.
-    end
+    update_comments photo
 
   end
 
@@ -151,6 +140,29 @@ class FlickrUpdater
       faves_page += 1
     end
     faves_count
+  end
+
+  # TODO Dave test independently
+  def self.update_comments(photo)
+    FlickrService.instance.wait_between_requests
+    begin
+      comments_xml = FlickrService.instance.photos_comments_get_list 'photo_id' => photo.flickrid
+      parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
+      if !parsed_comments.blank?
+        Comment.transaction do
+          photo.comments.clear
+          parsed_comments.each do |comment_xml|
+            photo.comments.create!(
+              flickrid: comment_xml['author'],
+              username: comment_xml['authorname'],
+              comment_text: comment_xml['content'],
+              commented_at: Time.at(comment_xml['datecreate'].to_i).getutc)
+          end
+        end
+      end
+    rescue FlickrService::FlickrRequestFailedError
+      # This happens when a photo has been removed from the group.
+    end
   end
 
   def self.create_or_update_person(flickrid)
