@@ -76,6 +76,7 @@ describe FlickrUpdater do
     it "gets the state of the group's photos from Flickr and stores it" do
       stub_get_photos
       stub_get_faves
+      stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
 
       photos = Photo.includes :person
@@ -98,6 +99,7 @@ describe FlickrUpdater do
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
       photo.faves.should == 7
+      photo.seen_at.should == Time.utc(2014)
 
     end
 
@@ -132,7 +134,7 @@ describe FlickrUpdater do
       person.pathalias.should == 'incoming_person_flickrid'
     end
 
-    it 'uses an existing person, and updates their information if it changed' do
+    it "uses an existing person" do
       stub_get_photos
       stub_get_faves
       person_before = Person.make flickrid: 'incoming_person_flickrid', username: 'old_username', pathalias: 'incoming_person_pathalias'
@@ -142,13 +144,15 @@ describe FlickrUpdater do
       person_after = people[0]
       person_after.id.should == person_before.id
       person_after.flickrid.should == person_before.flickrid
-      person_after.username.should == 'incoming_username'
-      person_after.pathalias.should == 'incoming_pathalias'
+      # The following two assertions document that a username or pathalias that changes during the update is not updated
+      person_after.username.should == person_before.username
+      person_after.pathalias.should == person_before.pathalias
     end
 
     it "uses an existing photo, and updates attributes that changed" do
       stub_get_photos
       stub_get_faves
+      stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
         person: person,
@@ -180,6 +184,7 @@ describe FlickrUpdater do
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
       photo_after.faves.should == 7
+      photo_after.seen_at.should == Time.utc(2014)
     end
 
     it "doesn't update faves if Flickr says the photo hasn't been updated" do
@@ -203,6 +208,7 @@ describe FlickrUpdater do
           } ]
         } ]
       } }
+      stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
         person: person,
@@ -233,6 +239,7 @@ describe FlickrUpdater do
       photo_after.lastupdate.should == Time.utc(2010, 1, 1, 1)
       photo_after.views.should == 50
       photo_after.faves.should == 6
+      photo_after.seen_at.should == Time.utc(2014)
     end
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
@@ -358,15 +365,5 @@ describe FlickrUpdater do
     end
 
   end
-
-  describe '.update_seen_at' do
-    it 'updates seen_at' do
-      photo = Photo.make seen_at: Time.utc(2010)
-      FlickrUpdater.update_seen_at [ photo.flickrid ], Time.utc(2011)
-      photo.reload
-      photo.seen_at.should == Time.utc(2011)
-    end
-  end
-
 
 end

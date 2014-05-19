@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Answer, UpdatableOnlyIfNecessary
+  include Answer
 
   belongs_to :person, inverse_of: :photos
   has_many :guesses, inverse_of: :photo
@@ -454,10 +454,10 @@ class Photo < ActiveRecord::Base
         { username: guesser_username }
       end
     if guesser
-      guesser.update_attributes_if_necessary! guesser_attrs
+      guesser.update! guesser_attrs
       guess = Guess.find_by_photo_id_and_person_id self.id, guesser.id
     else
-      guesser = Person.create!({flickrid: guesser_flickrid }.merge guesser_attrs)
+      guesser = Person.create!({ flickrid: guesser_flickrid }.merge guesser_attrs)
       guess = nil
     end
     guess_attrs = { commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc }

@@ -14,7 +14,7 @@ class FlickrUpdater
   def self.update_all_people
     Person.where('id != 0').each do |person|
       begin
-        person.update_attributes_if_necessary! Person.attrs_from_flickr(person.flickrid)
+        person.update! Person.attrs_from_flickr(person.flickrid)
       rescue FlickrService::FlickrRequestFailedError
         # Ignore the error. We'll update again soon enough.
       end
@@ -26,7 +26,6 @@ class FlickrUpdater
   def self.update_all_photos
     page = 1
     parsed_photos = nil
-    existing_people = {}
     new_photo_count = 0
     new_person_count = 0
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
@@ -34,17 +33,8 @@ class FlickrUpdater
       photos_xml = FlickrService.instance.groups_pools_get_photos 'group_id' => FlickrService::GROUP_ID,
         'per_page' => '500', 'page' => page.to_s, 'extras' => 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
-      photo_flickrids = parsed_photos['photo'].map { |p| p['id'] }
 
       Rails.logger.info "Updating database from page #{page} ..."
-
-      people_flickrids = Set.new parsed_photos['photo'].map { |p| p['owner'] }
-      existing_people_flickrids = people_flickrids - existing_people.keys
-      Person.where(flickrid: existing_people_flickrids.to_a).each do |person|
-        existing_people[person.flickrid] = person
-      end
-
-      existing_photos = Photo.where(flickrid: photo_flickrids).index_by &:flickrid
 
       now = Time.now.getutc
 
@@ -54,12 +44,10 @@ class FlickrUpdater
         if person_attrs[:pathalias] == ''
           person_attrs[:pathalias] = person_flickrid
         end
-        person = existing_people[person_flickrid]
-        if person
-          person.update_attributes_if_necessary! person_attrs
-        else
+        person = Person.find_by_flickrid person_flickrid
+        # Don't bother to update an existing Person. We already did that in update_all_people.
+        if ! person
           person = Person.create!({ flickrid: person_flickrid }.merge person_attrs)
-          existing_people[person_flickrid] = person
           new_person_count += 1
         end
 
@@ -72,9 +60,10 @@ class FlickrUpdater
           longitude: to_float_or_nil(parsed_photo['longitude']),
           accuracy: to_integer_or_nil(parsed_photo['accuracy']),
           lastupdate: Time.at(parsed_photo['lastupdate'].to_i).getutc,
-          views: parsed_photo['views'].to_i
+          views: parsed_photo['views'].to_i,
+          seen_at: now
         }
-        photo = existing_photos[photo_flickrid]
+        photo = Photo.find_by_flickrid photo_flickrid
         if ! photo || photo.lastupdate != photo_attrs[:lastupdate]
           begin
             photo_attrs[:faves] = faves_from_flickr photo_flickrid
@@ -85,7 +74,7 @@ class FlickrUpdater
           end
         end
         if photo
-          photo.update_attributes_if_necessary! photo_attrs
+          photo.update! photo_attrs
         else
           # Set dateadded only when a photo is created, so that if a photo is added to the group,
           # removed from the group and added to the group again it retains its original dateadded.
@@ -93,7 +82,6 @@ class FlickrUpdater
             person_id: person.id,
             flickrid: photo_flickrid,
             dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
-            seen_at: now,
             game_status: 'unfound'
           }.merge photo_attrs)
           new_photo_count += 1
@@ -101,19 +89,9 @@ class FlickrUpdater
 
       end
 
-      # Update seen_at after processing the entire page so that if there's an error seen_at won't have been updated for
-      # photos that didn't get processed. Having photos updated except for seen_at is not so bad, so we live with that
-      # chance instead of putting it all in a very long transaction.
-      update_seen_at photo_flickrids, now
-
       page += 1
     end
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
-  end
-
-  # Public only for testing
-  def self.update_seen_at(flickrids, time)
-    Photo.where(flickrid: flickrids).update_all "seen_at = '#{time.getutc.strftime '%Y-%m-%d %H:%M:%S'}'"
   end
 
   private_class_method def self.to_float_or_nil(string)
