@@ -525,7 +525,7 @@ class Person < ActiveRecord::Base
       },
       Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
     ]
-    rookies.each { |rookies| rookies.post_count = rookies[:post_count] }
+    rookies.each { |rookie| rookie.post_count = rookie[:post_count] }
     rookies
   end
 

@@ -396,7 +396,7 @@ class Photo < ActiveRecord::Base
       end
       if !guesser_flickrid
         guesser = Person.find_by_username entered_username
-        guesser_flickrid = guesser ? guesser.flickrid : nil
+        guesser_flickrid = guesser.try :flickrid
       end
       if !guesser_flickrid
         guesser_comment = Comment.find_by_username entered_username
@@ -444,9 +444,7 @@ class Photo < ActiveRecord::Base
   private def guess(comment_text, commented_at, guesser_flickrid, guesser_username, guesser)
     update_attribute :game_status, 'found'
 
-    if !guesser then
-      guesser = Person.find_by_flickrid guesser_flickrid
-    end
+    guesser ||= Person.find_by_flickrid guesser_flickrid
     guesser_attrs =
       begin
         Person.attrs_from_flickr guesser_flickrid
