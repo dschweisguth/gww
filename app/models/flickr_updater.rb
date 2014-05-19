@@ -154,7 +154,7 @@ class FlickrUpdater
   end
 
   def self.create_or_update_person(flickrid)
-    person ||= Person.find_by_flickrid flickrid
+    person = Person.find_by_flickrid flickrid
     attrs = attrs_from_flickr flickrid
     if person
       person.update! attrs
