@@ -21,7 +21,7 @@ describe FlickrUpdater do
 
   describe '.update_all_people' do
     it "updates an existing user's username and pathalias" do
-      person = Person.make username: 'old_username', pathalias: 'new_pathalias'
+      person = Person.make username: 'old_username', pathalias: 'old_pathalias'
       stub(FlickrService.instance).people_get_info { {
         'person' => [ {
           'username' => [ 'new_username' ],
