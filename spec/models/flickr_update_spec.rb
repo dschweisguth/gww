@@ -16,24 +16,4 @@ describe FlickrUpdate do
     end
   end
 
-  describe '.create_before_and_update_after' do
-    it "creates an update, does something and updates the update with the time it was completed" do
-      stub(FlickrService.instance).groups_get_info('group_id' => FlickrService::GROUP_ID) { {
-        'group'=> [ {
-          'members' => [ '1492' ]
-        } ]
-      } }
-      the_block_ran = false
-      FlickrUpdate.create_before_and_update_after { the_block_ran = true }
-
-      the_block_ran.should be_true
-      updates = FlickrUpdate.all
-      updates.size.should == 1
-      update = updates[0]
-      update.member_count.should == 1492
-      update.completed_at.should_not be_nil
-
-    end
-  end
-
 end

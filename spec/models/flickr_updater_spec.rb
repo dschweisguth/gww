@@ -4,18 +4,20 @@ describe FlickrUpdater do
   describe '#update_everything' do
     it "does some work" do
       mock_clear_page_cache 2
-      stub(FlickrService.instance).groups_get_info('group_id' => FlickrService::GROUP_ID) { {
+      stub(FlickrService.instance).groups_get_info(group_id: FlickrService::GROUP_ID) { {
         'group'=> [ {
           'members' => [ '1492' ]
         } ]
       } }
-      update = FlickrUpdate.make member_count: 1492
-      mock(FlickrUpdate).create!(member_count: '1492') { update }
       mock(FlickrUpdater).update_all_photos { [ 1, 2, 3, 4 ] }
       mock(FlickrUpdater).update_all_people
       stub(Time).now { Time.utc(2011) }
-      mock(update).update! completed_at: Time.utc(2011)
       FlickrUpdater.update_everything.should == "Created 1 new photos and 2 new users. Got 3 pages out of 4."
+      updates = FlickrUpdate.all
+      updates.length.should == 1
+      update = updates.first
+      update.member_count.should == 1492
+      update.completed_at.should == Time.utc(2011)
     end
   end
 

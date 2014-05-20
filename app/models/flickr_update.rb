@@ -7,13 +7,4 @@ class FlickrUpdate < ActiveRecord::Base
     order("id desc").first
   end
 
-  def self.create_before_and_update_after
-    group_info = FlickrService.instance.groups_get_info 'group_id' => FlickrService::GROUP_ID
-    member_count = group_info['group'][0]['members'][0]
-    update = FlickrUpdate.create! member_count: member_count
-    return_value = yield
-    update.update! completed_at: Time.now.getutc
-    return_value
-  end
-
 end

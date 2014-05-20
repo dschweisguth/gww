@@ -2,13 +2,14 @@ class FlickrUpdater
   def self.update_everything
     # Expire before updating so everyone sees the in-progress message
     PageCache.clear
-    new_photo_count, new_person_count, pages_gotten, pages_available = FlickrUpdate.create_before_and_update_after do
-      update_all_people
-      update_all_photos
-    end
+    group_info = FlickrService.instance.groups_get_info group_id: FlickrService::GROUP_ID
+    member_count = group_info['group'][0]['members'][0]
+    update = FlickrUpdate.create! member_count: member_count
+    update_all_people
+    new_photo_count, new_person_count, pages_gotten, pages_available = update_all_photos
+    update.update! completed_at: Time.now.getutc
     PageCache.clear
-    return "Created #{new_photo_count} new photos and #{new_person_count} new users. " +
-      "Got #{pages_gotten} pages out of #{pages_available}."
+    "Created #{new_photo_count} new photos and #{new_person_count} new users. Got #{pages_gotten} pages out of #{pages_available}."
   end
 
   ### People
