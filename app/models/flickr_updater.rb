@@ -30,8 +30,8 @@ class FlickrUpdater
     new_person_count = 0
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       Rails.logger.info "Getting page #{page} ..."
-      photos_xml = FlickrService.instance.groups_pools_get_photos 'group_id' => FlickrService::GROUP_ID,
-        'per_page' => '500', 'page' => page.to_s, 'extras' => 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
+      photos_xml = FlickrService.instance.groups_pools_get_photos group_id: FlickrService::GROUP_ID,
+        per_page: 500, page: page, extras: 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
 
       Rails.logger.info "Updating database from page #{page} ..."
@@ -131,14 +131,14 @@ class FlickrUpdater
 
   def self.faves_from_flickr(photo_flickrid)
     FlickrService.instance.wait_between_requests
-    faves_xml = FlickrService.instance.photos_get_favorites 'photo_id' => photo_flickrid, 'per_page' => '1'
+    faves_xml = FlickrService.instance.photos_get_favorites photo_id: photo_flickrid, per_page: 1
     faves_xml['photo'][0]['total'].to_i
   end
 
   def self.update_comments(photo)
     FlickrService.instance.wait_between_requests
     begin
-      comments_xml = FlickrService.instance.photos_comments_get_list 'photo_id' => photo.flickrid
+      comments_xml = FlickrService.instance.photos_comments_get_list photo_id: photo.flickrid
       parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
       if !parsed_comments.blank?
         Comment.transaction do
@@ -169,7 +169,7 @@ class FlickrUpdater
   end
 
   def self.attrs_from_flickr(person_flickrid)
-    response = FlickrService.instance.people_get_info 'user_id' => person_flickrid
+    response = FlickrService.instance.people_get_info user_id: person_flickrid
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
     pathalias = parsed_person['photosurl'][0].match(/https:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]

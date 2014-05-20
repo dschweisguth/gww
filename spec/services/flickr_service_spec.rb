@@ -9,7 +9,7 @@ describe FlickrService do
 
   describe '.groups_get_info' do
     it "gets group info" do
-      service.groups_get_info('group_id' => FlickrService::GROUP_ID)['group'][0]['id'].should == FlickrService::GROUP_ID
+      service.groups_get_info(group_id: FlickrService::GROUP_ID)['group'][0]['id'].should == FlickrService::GROUP_ID
     end
   end
 
@@ -68,6 +68,14 @@ describe FlickrService do
     it "gives up after four failures" do
       mock_get_times_out 4
       request_fails
+    end
+
+    it "accepts non-string option names" do
+      service.request('flickr.groups.pools.getPhotos', 'group_id' => FlickrService::GROUP_ID, per_page: '1')['photos'].should_not be_empty
+    end
+
+    it "accepts non-string option values" do
+      service.request('flickr.groups.pools.getPhotos', group_id: FlickrService::GROUP_ID, per_page: 1)['photos'].should_not be_empty
     end
 
     def request_succeeds

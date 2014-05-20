@@ -309,7 +309,7 @@ describe FlickrUpdater do
   describe '.faves_from_flickr' do
     it "returns the number of faves that the photo has" do
       # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_get_favorites('photo_id' => 'photo_flickrid', 'per_page' => '1') { {
+      stub(FlickrService.instance).photos_get_favorites(photo_id: 'photo_flickrid', per_page: 1) { {
         'stat' => 'ok',
         'photo' => [ { 'total' => '7'} ]
       } }
@@ -353,7 +353,7 @@ describe FlickrUpdater do
 
     def stub_request_to_return_one_comment
       # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_comments_get_list('photo_id' => 'photo_flickrid') { {
+      stub(FlickrService.instance).photos_comments_get_list(photo_id: 'photo_flickrid') { {
         'comments' => [ {
           'comment' => [ {
             'author' => 'commenter_flickrid',
