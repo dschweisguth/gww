@@ -65,23 +65,15 @@ describe FlickrUpdater do
       stub(FlickrUpdater).faves_from_flickr('incoming_photo_flickrid') { 7 }
     end
 
-    def stub_get_comments
-      stub(FlickrService.instance).photos_comments_get_list('photo_id' => 'incoming_photo_flickrid') { {
-        'comments' => [ {
-          'comment' => [ {
-            'author' => 'commenter_flickrid',
-            'authorname' => 'commenter_username',
-            'content' => 'comment text',
-            'datecreate' => '1356998400'
-          } ]
-        } ]
-      } }
+    def mock_get_comments
+      # noinspection RubyArgCount
+      mock(FlickrUpdater).update_comments is_a(Photo)
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
       stub_get_photos
       stub_get_faves
-      stub_get_comments
+      mock_get_comments
       stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
 
@@ -107,16 +99,9 @@ describe FlickrUpdater do
       photo.faves.should == 7
       photo.seen_at.should == Time.utc(2014)
 
-      comments = photo.comments
-      comments.length.should == 1
-      comment = comments.first
-      comment.flickrid.should == 'commenter_flickrid'
-      comment.username.should == 'commenter_username'
-      comment.comment_text.should == 'comment text'
-      comment.commented_at.should == Time.utc(2013)
-
     end
 
+    # The response from this API call needs to be fixed up in this way. That from people.get.info does not.
     it "replaces an empty-string pathalias with the person's flickrid" do
       stub(FlickrService.instance).groups_pools_get_photos { {
         'photos' => [ {
@@ -139,7 +124,7 @@ describe FlickrUpdater do
         } ]
       } }
       stub_get_faves
-      stub_get_comments
+      mock_get_comments
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
       people = Person.all
       people.size.should == 1
@@ -152,7 +137,7 @@ describe FlickrUpdater do
     it "uses an existing person" do
       stub_get_photos
       stub_get_faves
-      stub_get_comments
+      mock_get_comments
       person_before = Person.make flickrid: 'incoming_person_flickrid', username: 'old_username', pathalias: 'incoming_person_pathalias'
       FlickrUpdater.update_all_photos.should == [ 1, 0, 1, 1 ]
       people = Person.all
@@ -168,7 +153,7 @@ describe FlickrUpdater do
     it "uses an existing photo, and updates attributes that changed" do
       stub_get_photos
       stub_get_faves
-      stub_get_comments
+      mock_get_comments
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
@@ -184,12 +169,6 @@ describe FlickrUpdater do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      Comment.make \
-        photo: photo_before,
-        flickrid: 'old_commenter_flickrid',
-        username: 'old_commenter_username',
-        comment_text: 'old comment text',
-        commented_at: Time.utc(2012)
       FlickrUpdater.update_all_photos.should == [ 0, 0, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
@@ -208,13 +187,6 @@ describe FlickrUpdater do
       photo_after.views.should == 50
       photo_after.faves.should == 7
       photo_after.seen_at.should == Time.utc(2014)
-      comments = photo_after.comments
-      comments.length.should == 1
-      comment = comments.first
-      comment.flickrid.should == 'commenter_flickrid'
-      comment.username.should == 'commenter_username'
-      comment.comment_text.should == 'comment text'
-      comment.commented_at.should == Time.utc(2013)
     end
 
     it "doesn't update faves or comments if Flickr says the photo hasn't been updated" do
@@ -239,7 +211,7 @@ describe FlickrUpdater do
         } ]
       } }
       dont_allow(FlickrService.instance).faves_from_flickr
-      dont_allow(FlickrService.instance).photos_comments_get_list
+      dont_allow(FlickrUpdater).update_comments
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
@@ -255,12 +227,6 @@ describe FlickrUpdater do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      Comment.make \
-        photo: photo_before,
-        flickrid: 'old_commenter_flickrid',
-        username: 'old_commenter_username',
-        comment_text: 'old comment text',
-        commented_at: Time.utc(2012)
       FlickrUpdater.update_all_photos.should == [ 0, 0, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
@@ -278,18 +244,11 @@ describe FlickrUpdater do
       photo_after.views.should == 50
       photo_after.faves.should == 6
       photo_after.seen_at.should == Time.utc(2014)
-      comments = photo_after.comments
-      comments.length.should == 1
-      comment = comments.first
-      comment.flickrid.should == 'old_commenter_flickrid'
-      comment.username.should == 'old_commenter_username'
-      comment.comment_text.should == 'old comment text'
-      comment.commented_at.should == Time.utc(2012)
     end
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
-      stub_get_comments
+      mock_get_comments
       stub(FlickrUpdater).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
       FlickrUpdater.update_all_photos
       Photo.first.faves.should == 0
@@ -297,7 +256,7 @@ describe FlickrUpdater do
 
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
-      stub_get_comments
+      mock_get_comments
       stub(FlickrUpdater).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
       photo_before = Photo.make faves: 6
       FlickrUpdater.update_all_photos
@@ -325,7 +284,7 @@ describe FlickrUpdater do
         } ]
       } }
       stub_get_faves
-      stub_get_comments
+      mock_get_comments
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1
@@ -338,71 +297,13 @@ describe FlickrUpdater do
   end
 
   describe '.update_photo' do
-    before do
-      @photo = Photo.make
-    end
-
     it "loads comments from Flickr" do
-      stub_get_faves
-      stub_request_to_return_one_comment
-      FlickrUpdater.update_photo @photo
-      @photo.faves.should == 7
-      photo_has_the_comment_from_the_request
+      photo = Photo.make
+      stub(FlickrUpdater).faves_from_flickr(photo.flickrid) { 7 }
+      mock(FlickrUpdater).update_comments photo
+      FlickrUpdater.update_photo photo
+      photo.faves.should == 7
     end
-
-    it "deletes previous comments" do
-      Comment.make 'previous', photo: @photo
-      stub_get_faves
-      stub_request_to_return_one_comment
-      FlickrUpdater.update_photo @photo
-      photo_has_the_comment_from_the_request
-    end
-
-    it "does not delete previous comments if the photo currently has no comments" do
-      Comment.make 'previous', photo: @photo
-      stub_get_faves
-      stub(FlickrService.instance).photos_comments_get_list { {
-        'comments' => [ {
-        } ]
-      } }
-      FlickrUpdater.update_photo @photo
-      @photo.comments.length.should == 1
-      Comment.count.should == 1
-    end
-
-    it "leaves previous comments alone if the request for comments fails" do
-      Comment.make 'previous', photo: @photo
-      stub_get_faves
-      stub(FlickrService.instance).photos_comments_get_list { raise FlickrService::FlickrRequestFailedError }
-      FlickrUpdater.update_photo @photo
-      Comment.count.should == 1
-    end
-
-    def stub_get_faves
-      stub(FlickrUpdater).faves_from_flickr(@photo.flickrid) { 7 }
-    end
-
-    def stub_request_to_return_one_comment
-      # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_comments_get_list('photo_id' => 'photo_flickrid') { {
-        'comments' => [ {
-          'comment' => [ {
-            'author' => 'commenter_flickrid',
-            'authorname' => 'commenter_username',
-            'content' => 'comment text'
-          } ]
-        } ]
-      } }
-    end
-
-    def photo_has_the_comment_from_the_request
-      @photo.comments.length.should == 1
-      comment = @photo.comments[0]
-      comment.flickrid.should == 'commenter_flickrid'
-      comment.username.should == 'commenter_username'
-      comment.comment_text.should == 'comment text'
-    end
-
   end
 
   describe '.faves_from_flickr' do
@@ -414,6 +315,65 @@ describe FlickrUpdater do
       } }
       FlickrUpdater.faves_from_flickr('photo_flickrid').should == 7
     end
+  end
+
+  describe '.update_comments' do
+    let(:photo) { Photo.make }
+
+    it "loads comments from Flickr" do
+      stub_request_to_return_one_comment
+      FlickrUpdater.update_comments photo
+      photo_has_the_comment_from_the_request
+    end
+
+    it "deletes previous comments" do
+      Comment.make 'previous', photo: photo
+      stub_request_to_return_one_comment
+      FlickrUpdater.update_comments photo
+      photo_has_the_comment_from_the_request
+    end
+
+    it "does not delete previous comments if the photo currently has no comments" do
+      Comment.make 'previous', photo: photo
+      stub(FlickrService.instance).photos_comments_get_list { {
+        'comments' => [ {
+        } ]
+      } }
+      FlickrUpdater.update_comments photo
+      photo.comments.length.should == 1
+      Comment.count.should == 1
+    end
+
+    it "leaves previous comments alone if the request for comments fails" do
+      Comment.make 'previous', photo: photo
+      stub(FlickrService.instance).photos_comments_get_list { raise FlickrService::FlickrRequestFailedError }
+      FlickrUpdater.update_comments photo
+      Comment.count.should == 1
+    end
+
+    def stub_request_to_return_one_comment
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_comments_get_list('photo_id' => 'photo_flickrid') { {
+        'comments' => [ {
+          'comment' => [ {
+            'author' => 'commenter_flickrid',
+            'authorname' => 'commenter_username',
+            'content' => 'comment text',
+            'datecreate' => '1356998400'
+          } ]
+        } ]
+      } }
+    end
+
+    def photo_has_the_comment_from_the_request
+      photo.comments.length.should == 1
+      comment = photo.comments[0]
+      comment.flickrid.should == 'commenter_flickrid'
+      comment.username.should == 'commenter_username'
+      comment.comment_text.should == 'comment text'
+      comment.commented_at.should == Time.utc(2013)
+    end
+
   end
 
 end

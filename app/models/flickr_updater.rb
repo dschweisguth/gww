@@ -119,9 +119,7 @@ class FlickrUpdater
 
     begin
       faves = faves_from_flickr photo.flickrid
-      if faves != photo.faves
-        photo.update! faves: faves
-      end
+      photo.update! faves: faves
     rescue FlickrService::FlickrRequestFailedError
       # This happens when a photo is private but visible to the caller because it's posted to a group of which
       # the caller is a member. Not clear yet whether this is a bug or intended behavior.
@@ -137,7 +135,6 @@ class FlickrUpdater
     faves_xml['photo'][0]['total'].to_i
   end
 
-  # TODO Dave test independently
   def self.update_comments(photo)
     FlickrService.instance.wait_between_requests
     begin
