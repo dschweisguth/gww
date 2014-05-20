@@ -247,8 +247,7 @@ describe FlickrUpdater do
         } ]
       } }
       dont_allow(FlickrService.instance).photos_get_favorites
-      # dont_allow(FlickrService.instance).photos_comments_get_list
-      stub_get_comments # TODO Dave remove
+      dont_allow(FlickrService.instance).photos_comments_get_list
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
@@ -287,14 +286,13 @@ describe FlickrUpdater do
       photo_after.views.should == 50
       photo_after.faves.should == 6
       photo_after.seen_at.should == Time.utc(2014)
-      # TODO Dave reinstate
-      # comments = photo_after.comments
-      # comments.length.should == 1
-      # comment = comments.first
-      # comment.flickrid.should == 'old_commenter_flickrid'
-      # comment.username.should == 'old_commenter_username'
-      # comment.comment_text.should == 'old comment text'
-      # comment.commented_at.should == Time.utc(2012)
+      comments = photo_after.comments
+      comments.length.should == 1
+      comment = comments.first
+      comment.flickrid.should == 'old_commenter_flickrid'
+      comment.username.should == 'old_commenter_username'
+      comment.comment_text.should == 'old comment text'
+      comment.commented_at.should == Time.utc(2012)
     end
 
     it "sets a new photo's faves to 0 if the request for faves fails" do

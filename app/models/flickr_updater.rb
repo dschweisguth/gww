@@ -93,10 +93,9 @@ class FlickrUpdater
         end
 
         # Update comments
-        # TODO Dave reinstate check after running in production
-        # if photo_needs_update
+        if photo_needs_update
           update_comments photo
-        # end
+        end
 
       end
 
