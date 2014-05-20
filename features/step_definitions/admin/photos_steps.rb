@@ -5,7 +5,7 @@ end
 
 Given /^getting a person's attributes from Flickr returns what we'd expect given what's in the database$/ do
   # noinspection RubyArgCount
-  stub(FlickrUpdater).attrs_from_flickr do |flickrid|
+  stub(FlickrUpdater).person_attributes do |flickrid|
     source = Person.find_by_flickrid(flickrid) || Comment.find_by_flickrid(flickrid)
     { username: source.username, pathalias: source.respond_to?(:pathalias) ? source.pathalias : source.username }
   end

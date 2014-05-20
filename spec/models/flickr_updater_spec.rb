@@ -19,6 +19,8 @@ describe FlickrUpdater do
     end
   end
 
+  ### People
+
   describe '.update_all_people' do
     it "updates an existing user's username and pathalias" do
       person = Person.make username: 'old_username', pathalias: 'old_pathalias'
@@ -34,6 +36,8 @@ describe FlickrUpdater do
       person.pathalias.should == 'new_pathalias'
     end
   end
+
+  ### Photos
 
   describe '.update_all_photos' do
     def stub_get_photos
@@ -62,7 +66,7 @@ describe FlickrUpdater do
 
     def stub_get_faves
       # noinspection RubyArgCount
-      stub(FlickrUpdater).faves_from_flickr('incoming_photo_flickrid') { 7 }
+      stub(FlickrUpdater).fave_count('incoming_photo_flickrid') { 7 }
     end
 
     def mock_get_comments
@@ -210,7 +214,7 @@ describe FlickrUpdater do
           } ]
         } ]
       } }
-      dont_allow(FlickrService.instance).faves_from_flickr
+      dont_allow(FlickrService.instance).fave_count
       dont_allow(FlickrUpdater).update_comments
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
@@ -249,7 +253,7 @@ describe FlickrUpdater do
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
       mock_get_comments
-      stub(FlickrUpdater).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
+      stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
       FlickrUpdater.update_all_photos
       Photo.first.faves.should == 0
     end
@@ -257,7 +261,7 @@ describe FlickrUpdater do
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
       mock_get_comments
-      stub(FlickrUpdater).faves_from_flickr { raise FlickrService::FlickrRequestFailedError }
+      stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
       photo_before = Photo.make faves: 6
       FlickrUpdater.update_all_photos
       Photo.first.faves.should == 6
@@ -299,21 +303,21 @@ describe FlickrUpdater do
   describe '.update_photo' do
     it "loads comments from Flickr" do
       photo = Photo.make
-      stub(FlickrUpdater).faves_from_flickr(photo.flickrid) { 7 }
+      stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       mock(FlickrUpdater).update_comments photo
       FlickrUpdater.update_photo photo
       photo.faves.should == 7
     end
   end
 
-  describe '.faves_from_flickr' do
+  describe '.fave_count' do
     it "returns the number of faves that the photo has" do
       # noinspection RubyArgCount
       stub(FlickrService.instance).photos_get_favorites(photo_id: 'photo_flickrid', per_page: 1) { {
         'stat' => 'ok',
         'photo' => [ { 'total' => '7'} ]
       } }
-      FlickrUpdater.faves_from_flickr('photo_flickrid').should == 7
+      FlickrUpdater.fave_count('photo_flickrid').should == 7
     end
   end
 

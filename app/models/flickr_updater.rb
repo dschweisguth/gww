@@ -11,15 +11,38 @@ class FlickrUpdater
       "Got #{pages_gotten} pages out of #{pages_available}."
   end
 
+  ### People
+
   def self.update_all_people
     Person.where('id != 0').each do |person|
       begin
-        person.update! attrs_from_flickr(person.flickrid)
+        person.update! person_attributes(person.flickrid)
       rescue FlickrService::FlickrRequestFailedError
         # Ignore the error. We'll update again soon enough.
       end
     end
   end
+
+  def self.create_or_update_person(flickrid)
+    person = Person.find_by_flickrid flickrid
+    attrs = person_attributes flickrid
+    if person
+      person.update! attrs
+    else
+      person = Person.create!({ flickrid: flickrid }.merge attrs)
+    end
+    person
+  end
+
+  def self.person_attributes(flickrid)
+    response = FlickrService.instance.people_get_info user_id: flickrid
+    parsed_person = response['person'][0]
+    username = parsed_person['username'][0]
+    pathalias = parsed_person['photosurl'][0].match(/https:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
+    { username: username, pathalias: pathalias }
+  end
+
+  ### Photos
 
   # TODO Dave count and report Flickr API calls
   # TODO Dave move delays into request method -- check how much time has passed since previous request
@@ -69,7 +92,7 @@ class FlickrUpdater
         photo_needs_update = ! photo || photo.lastupdate != photo_attrs[:lastupdate]
         if photo_needs_update
           begin
-            photo_attrs[:faves] = faves_from_flickr photo_flickrid
+            photo_attrs[:faves] = fave_count photo_flickrid
           rescue FlickrService::FlickrRequestFailedError
             # This happens when a photo is private but visible to the caller because it's posted to a group of which
             # the caller is a member. Not clear yet whether this is a bug or intended behavior.
@@ -118,7 +141,7 @@ class FlickrUpdater
     # TODO Dave update the photo and poster, too
 
     begin
-      faves = faves_from_flickr photo.flickrid
+      faves = fave_count photo.flickrid
       photo.update! faves: faves
     rescue FlickrService::FlickrRequestFailedError
       # This happens when a photo is private but visible to the caller because it's posted to a group of which
@@ -129,7 +152,7 @@ class FlickrUpdater
 
   end
 
-  def self.faves_from_flickr(photo_flickrid)
+  def self.fave_count(photo_flickrid)
     FlickrService.instance.wait_between_requests
     faves_xml = FlickrService.instance.photos_get_favorites photo_id: photo_flickrid, per_page: 1
     faves_xml['photo'][0]['total'].to_i
@@ -155,25 +178,6 @@ class FlickrUpdater
     rescue FlickrService::FlickrRequestFailedError
       # This happens when a photo has been removed from the group.
     end
-  end
-
-  def self.create_or_update_person(flickrid)
-    person = Person.find_by_flickrid flickrid
-    attrs = attrs_from_flickr flickrid
-    if person
-      person.update! attrs
-    else
-      person = Person.create!({ flickrid: flickrid }.merge attrs)
-    end
-    person
-  end
-
-  def self.attrs_from_flickr(person_flickrid)
-    response = FlickrService.instance.people_get_info user_id: person_flickrid
-    parsed_person = response['person'][0]
-    username = parsed_person['username'][0]
-    pathalias = parsed_person['photosurl'][0].match(/https:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
-    { username: username, pathalias: pathalias }
   end
 
 end
