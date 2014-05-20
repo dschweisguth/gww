@@ -71,7 +71,9 @@ class FlickrUpdater
           rescue FlickrService::FlickrRequestFailedError
             # This happens when a photo is private but visible to the caller because it's posted to a group of which
             # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-            photo_attrs[:faves] ||= 0 # TODO Dave this is a bug. Use 0 only if the photo is new.
+            if ! photo
+              photo_attrs[:faves] = 0
+            end
           end
         end
         if photo
