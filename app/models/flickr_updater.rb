@@ -39,6 +39,7 @@ class FlickrUpdater
       now = Time.now.getutc
 
       parsed_photos['photo'].each do |parsed_photo|
+        # Find or create person
         person_flickrid = parsed_photo['owner']
         person_attrs = { username: parsed_photo['ownername'], pathalias: parsed_photo['pathalias'] }
         if person_attrs[:pathalias] == ''
@@ -51,6 +52,7 @@ class FlickrUpdater
           new_person_count += 1
         end
 
+        # Update or create photo
         photo_flickrid = parsed_photo['id']
         photo_attrs = {
           farm: parsed_photo['farm'],
@@ -90,6 +92,7 @@ class FlickrUpdater
           new_photo_count += 1
         end
 
+        # Update comments
         # TODO Dave reinstate check after running in production
         # if photo_needs_update
           update_comments photo
