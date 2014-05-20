@@ -132,18 +132,9 @@ class FlickrUpdater
   end
 
   def self.faves_from_flickr(photo_flickrid)
-    faves_count = 0
-    faves_page = 1
-    parsed_faves = nil
-    while parsed_faves.nil? || faves_page <= parsed_faves['pages'].to_i
-      FlickrService.instance.wait_between_requests
-      faves_xml = FlickrService.instance.photos_get_favorites(
-          'photo_id' => photo_flickrid, 'per_page' => '50', 'page' => faves_page.to_s)
-      parsed_faves = faves_xml['photo'][0]
-      faves_count += parsed_faves['person'] ? parsed_faves['person'].length : 0
-      faves_page += 1
-    end
-    faves_count
+    FlickrService.instance.wait_between_requests
+    faves_xml = FlickrService.instance.photos_get_favorites 'photo_id' => photo_flickrid, 'per_page' => '1'
+    faves_xml['photo'][0]['total'].to_i
   end
 
   # TODO Dave test independently

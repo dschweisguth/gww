@@ -62,15 +62,7 @@ describe FlickrUpdater do
 
     def stub_get_faves
       # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_get_favorites(
-        'photo_id' => 'incoming_photo_flickrid', 'per_page' => '50', 'page' => '1') { {
-        'stat' => 'ok',
-        'photo' => [ {
-          'person' => [
-            {}, {}, {}, {}, {}, {}, {}
-          ]
-        } ]
-      } }
+      stub(FlickrUpdater).faves_from_flickr('incoming_photo_flickrid') { 7 }
     end
 
     def stub_get_comments
@@ -246,7 +238,7 @@ describe FlickrUpdater do
           } ]
         } ]
       } }
-      dont_allow(FlickrService.instance).photos_get_favorites
+      dont_allow(FlickrService.instance).faves_from_flickr
       dont_allow(FlickrService.instance).photos_comments_get_list
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
@@ -387,16 +379,7 @@ describe FlickrUpdater do
     end
 
     def stub_get_faves
-      # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_get_favorites(
-        'photo_id' => @photo.flickrid, 'per_page' => '50', 'page' => '1') { {
-        'stat' => 'ok',
-        'photo' => [ {
-          'person' => [
-            {}, {}, {}, {}, {}, {}, {}
-          ]
-        } ]
-      } }
+      stub(FlickrUpdater).faves_from_flickr(@photo.flickrid) { 7 }
     end
 
     def stub_request_to_return_one_comment
@@ -420,6 +403,17 @@ describe FlickrUpdater do
       comment.comment_text.should == 'comment text'
     end
 
+  end
+
+  describe '.faves_from_flickr' do
+    it "returns the number of faves that the photo has" do
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_get_favorites('photo_id' => 'photo_flickrid', 'per_page' => '1') { {
+        'stat' => 'ok',
+        'photo' => [ { 'total' => '7'} ]
+      } }
+      FlickrUpdater.faves_from_flickr('photo_flickrid').should == 7
+    end
   end
 
 end
