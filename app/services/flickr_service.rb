@@ -47,6 +47,10 @@ class FlickrService
     request 'flickr.photos.comments.getList', opts
   end
 
+  def tags_get_list_photo(opts)
+    request 'flickr.tags.getListPhoto', opts
+  end
+
   # Public for testing
   def request(api_method, extra_params = {})
     url = api_url api_method, extra_params

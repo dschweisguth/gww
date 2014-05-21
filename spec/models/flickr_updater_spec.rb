@@ -382,4 +382,27 @@ describe FlickrUpdater do
 
   end
 
+  describe '.update_tags' do
+    it "loads tags from Flickr" do
+      photo = Photo.make
+      stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'tags' => [ {
+            'tag' => [
+              { 'raw' => 'tag1' },
+              { 'raw' => 'tag2' }
+            ]
+          } ]
+        } ]
+      } }
+      FlickrUpdater.update_tags photo
+      photo.tags.map(&:raw).should =~ %w(tag1 tag2)
+    end
+
+    it "deletes previous comments"
+
+    it "leaves previous comments alone if the request for comments fails"
+
+  end
+
 end

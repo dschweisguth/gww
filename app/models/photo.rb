@@ -2,8 +2,9 @@ class Photo < ActiveRecord::Base
   include Answer
 
   belongs_to :person, inverse_of: :photos
-  has_many :guesses, inverse_of: :photo
   has_many :comments, inverse_of: :photo, dependent: :destroy
+  has_many :tags, inverse_of: :photo, dependent: :destroy
+  has_many :guesses, inverse_of: :photo
   has_one :revelation, inverse_of: :photo
   validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
     :game_status, :views, :faves, :other_user_comments, :member_comments, :member_questions

@@ -181,4 +181,20 @@ class FlickrUpdater
     end
   end
 
+  def self.update_tags(photo)
+    FlickrService.instance.wait_between_requests
+    begin
+      tags_xml = FlickrService.instance.tags_get_list_photo photo_id: photo.flickrid
+      parsed_tags = tags_xml['photo'][0]['tags'][0]['tag']
+      Tag.transaction do
+        photo.tags.clear
+        parsed_tags.each do |parsed_tag|
+          photo.tags.create! raw: parsed_tag['raw']
+        end
+      end
+    rescue FlickrService::FlickrRequestFailedError
+      # Judging from how comments work, this probably happens when a photo has been removed from the group.
+    end
+  end
+
 end
