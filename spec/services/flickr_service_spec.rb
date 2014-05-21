@@ -25,15 +25,21 @@ describe FlickrService do
     end
   end
 
+  describe '.photos_get_favorites' do
+    it "gets a photo's favorites" do
+      service.photos_get_favorites('photo_id' => '4637739576')['photo'][0]['person'].should_not be_empty
+    end
+  end
+
   describe '.photos_comments_get_list' do
     it "gets a photo's comments" do
       service.photos_comments_get_list('photo_id' => '4637739576')['comments'][0]['comment'].should_not be_empty
     end
   end
 
-  describe '.photos_get_favorites' do
-    it "gets a photo's favorites" do
-      service.photos_get_favorites('photo_id' => '4637739576')['photo'][0]['person'].should_not be_empty
+  describe '.tags_get_list_photo' do
+    it "gets a photo's tags" do
+      service.tags_get_list_photo('photo_id' => '4637739576')['photo'][0]['tags'][0]['tag'].should_not be_empty
     end
   end
 
