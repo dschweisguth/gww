@@ -383,25 +383,50 @@ describe FlickrUpdater do
   end
 
   describe '.update_tags' do
+    let(:photo) { create :photo }
+
     it "loads tags from Flickr" do
-      photo = Photo.make
+      stub_get_tags 'Tag 1', 'Tag 2'
+      FlickrUpdater.update_tags photo
+      photo.tags.map(&:raw).should =~ ['Tag 1', 'Tag 2']
+    end
+
+    it "deletes previous tags" do
+      create :tag, photo: photo, raw: 'old tag'
+      stub_get_tags 'new tag'
+      FlickrUpdater.update_tags photo
+      photo.tags.map(&:raw).should == ['new tag']
+    end
+
+    it "deletes previous tags alone if the photo currently has no tags" do
+      create :tag, photo: photo, raw: 'old tag'
       stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { {
         'photo' => [ {
           'tags' => [ {
-            'tag' => [
-              { 'raw' => 'tag1' },
-              { 'raw' => 'tag2' }
-            ]
           } ]
         } ]
       } }
       FlickrUpdater.update_tags photo
-      photo.tags.map(&:raw).should =~ %w(tag1 tag2)
+      photo.tags.should be_empty
     end
 
-    it "deletes previous comments"
+    it "leaves previous tags alone if the request for comments fails" do
+      create :tag, photo: photo, raw: 'old tag'
+      stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { raise FlickrService::FlickrRequestFailedError }
+      FlickrUpdater.update_tags photo
+      photo.tags.map(&:raw).should == ['old tag']
+    end
 
-    it "leaves previous comments alone if the request for comments fails"
+    def stub_get_tags(*raw)
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'tags' => [ {
+            'tag' => raw.map { |raw| { 'raw' => raw } }
+          } ]
+        } ]
+      } }
+    end
 
   end
 

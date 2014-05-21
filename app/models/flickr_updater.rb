@@ -185,7 +185,7 @@ class FlickrUpdater
     FlickrService.instance.wait_between_requests
     begin
       tags_xml = FlickrService.instance.tags_get_list_photo photo_id: photo.flickrid
-      parsed_tags = tags_xml['photo'][0]['tags'][0]['tag']
+      parsed_tags = tags_xml['photo'][0]['tags'][0]['tag'] || []
       Tag.transaction do
         photo.tags.clear
         parsed_tags.each do |parsed_tag|
