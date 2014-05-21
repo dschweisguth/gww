@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Comment do
-  describe '#photo' do
-    it { should belong_to :photo }
-  end
-
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }
     it { should have_readonly_attribute :flickrid }

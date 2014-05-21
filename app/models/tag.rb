@@ -5,4 +5,6 @@ class Tag < ActiveRecord::Base
   validates_uniqueness_of :raw, scope: :photo_id
   validates_inclusion_of :machine_tag, in: [false, true]
 
+  attr_readonly :raw, :machine_tag
+
 end

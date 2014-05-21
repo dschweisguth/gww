@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-# TODO Dave review shoulda-matchers
 describe Tag do
+
   describe '#raw' do
     it { should validate_presence_of :raw }
+    it { should have_readonly_attribute :raw }
 
     it "is unique for a given photo" do
       existing = create :tag, raw: 'text'
@@ -18,6 +19,9 @@ describe Tag do
   end
 
   describe '#machine_tag' do
+    # Can't use validate_presence_of because that validation happens before the database default value is applied
+    it { should have_readonly_attribute :machine_tag }
+
     it "defaults to false" do
       Tag.new(raw: 'text').machine_tag.should == false
     end

@@ -1,30 +1,6 @@
 require 'spec_helper'
 
 describe Photo do
-  def valid_attrs
-    now = Time.now
-    { flickrid: 'flickrid',
-      dateadded: now, lastupdate: now, seen_at: now,
-      game_status: 'unfound',
-      views: 0, faves: 0, member_comments: 0, member_questions: 0 }
-  end
-
-  describe '#person' do
-    it { should belong_to :person }
-  end
-
-  describe '#comments' do
-    it { should have_many :comments }
-  end
-
-  describe '#guesses' do
-    it { should have_many :guesses }
-  end
-
-  describe '#revelation' do
-    it { should have_one :revelation }
-  end
-
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }
     it { should have_readonly_attribute :flickrid }
@@ -57,17 +33,7 @@ describe Photo do
 
   describe '#game_status' do
     it { should validate_presence_of :game_status }
-
-    %w(unfound unconfirmed found revealed).each do |value|
-      it "accepts '#{value}'" do
-        Photo.new(valid_attrs.merge({ game_status: value })).should be_valid
-      end
-    end
-
-    it "rejects other values" do
-      Photo.new(valid_attrs.merge({ game_status: 'other' })).should_not be_valid
-    end
-
+    it { should ensure_inclusion_of(:game_status).in_array %w(unfound unconfirmed found revealed) }
   end
 
   describe '#views' do

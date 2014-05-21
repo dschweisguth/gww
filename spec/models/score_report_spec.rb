@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe ScoreReport do
-  describe '#previous_report' do
-    it { should belong_to :previous_report }
-    it { should have_one :next_report }
-  end
 
   describe '.guess_counts' do
     it "counts the guesses in the first score report" do
@@ -51,4 +47,5 @@ describe ScoreReport do
     end
 
   end
+
 end

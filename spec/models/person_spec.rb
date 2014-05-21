@@ -2,14 +2,6 @@ require 'spec_helper'
 
 describe Person do
 
-  describe '#photos' do
-    it { should have_many :photos }
-  end
-
-  describe '#guesses' do
-    it { should have_many :guesses }
-  end
-
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }
     it { should have_readonly_attribute :flickrid }
