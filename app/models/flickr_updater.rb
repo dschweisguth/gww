@@ -116,10 +116,11 @@ class FlickrUpdater
           new_photo_count += 1
         end
 
-        # Update comments
+        # Update comments and tags
         if photo_needs_update
           update_comments photo
         end
+        update_tags photo
 
       end
 
