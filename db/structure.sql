@@ -32,7 +32,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=423580 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `flickr_updates` (
   `member_count` int(11) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1698 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +90,7 @@ CREATE TABLE `guesses` (
   KEY `guesses_commented_at_index` (`commented_at`),
   CONSTRAINT `guesses_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
   CONSTRAINT `guesses_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30362 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +111,7 @@ CREATE TABLE `people` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`),
   UNIQUE KEY `people_username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=1261 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +148,7 @@ CREATE TABLE `photos` (
   KEY `photos_person_id_fk` (`person_id`),
   KEY `photos_dateadded_index` (`dateadded`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33916 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,7 +168,7 @@ CREATE TABLE `revelations` (
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   KEY `revelations_added_at_index` (`added_at`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=577 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +198,7 @@ CREATE TABLE `score_reports` (
   PRIMARY KEY (`id`),
   KEY `previous_report_id_fk` (`previous_report_id`),
   CONSTRAINT `previous_report_id_fk` FOREIGN KEY (`previous_report_id`) REFERENCES `score_reports` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=632 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,7 +250,7 @@ CREATE TABLE `stclines` (
   SPATIAL KEY `SHAPE` (`SHAPE`),
   KEY `stclines_street_index` (`street`),
   KEY `stclines_st_type_index` (`st_type`)
-) ENGINE=MyISAM AUTO_INCREMENT=16353 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -272,7 +272,7 @@ CREATE TABLE `stintersections` (
   KEY `stintersections_cnn_index` (`cnn`),
   KEY `stintersections_st_name_index` (`st_name`),
   KEY `stintersections_st_type_index` (`st_type`)
-) ENGINE=MyISAM AUTO_INCREMENT=18666 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,10 +286,11 @@ CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
   `raw` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `machine_tag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_tags_on_photo_id_and_raw` (`photo_id`,`raw`),
   CONSTRAINT `tags_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -301,7 +302,7 @@ CREATE TABLE `tags` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-21 10:22:34
+-- Dump completed on 2014-05-21 12:19:48
 INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('13');
@@ -361,6 +362,8 @@ INSERT INTO schema_migrations (version) VALUES ('20111015174120');
 INSERT INTO schema_migrations (version) VALUES ('20111016155721');
 
 INSERT INTO schema_migrations (version) VALUES ('20140521042205');
+
+INSERT INTO schema_migrations (version) VALUES ('20140521191000');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

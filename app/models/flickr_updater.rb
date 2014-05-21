@@ -190,7 +190,7 @@ class FlickrUpdater
       Tag.transaction do
         photo.tags.clear
         parsed_tags.each do |parsed_tag|
-          photo.tags.create! raw: parsed_tag['raw']
+          photo.tags.create! raw: parsed_tag['raw'], machine_tag: (parsed_tag['machine_tag'] == '1')
         end
       end
     rescue FlickrService::FlickrRequestFailedError
