@@ -61,6 +61,35 @@ describe Photo do
     it { should validate_non_negative_integer :member_questions }
   end
 
+  describe '#destroy' do
+
+    it "destroys the photo and its person" do
+      photo = Photo.make
+      photo.destroy
+      Photo.any?.should be_false
+      Person.any?.should be_false
+    end
+
+    it "but not if the person has another photo" do
+      photo = Photo.make
+      person = photo.person
+      Photo.make 2, person: person
+      photo.destroy
+      Photo.exists?(photo.id).should be_false
+      Person.exists?(person.id).should be_true
+    end
+
+    it "but not if the person has a guess" do
+      photo = Photo.make
+      person = photo.person
+      Guess.make person: person
+      photo.destroy
+      Photo.exists?(photo.id).should be_false
+      Person.exists?(person.id).should be_true
+    end
+
+  end
+
   # Used by ScoreReportController
 
   describe '.count_between' do
@@ -1131,7 +1160,6 @@ describe Photo do
       guess = Guess.make photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
-      owner_does_not_exist guess
     end
 
     it 'deletes existing revelations' do
@@ -1185,19 +1213,9 @@ describe Photo do
 
       it 'deletes an existing guess' do
         photo = Photo.make
-        guess = Guess.make photo: photo
+        Guess.make photo: photo
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
-        Guess.count.should == 0
-        owner_does_not_exist guess
-      end
-
-      it "doesn't blow up if, when deleting an existing guess, it isn't able to delete the guesser" do
-        photo = Photo.make
-        guess = Guess.make photo: photo
-        Photo.make 2, person: guess.person
-        Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
-        Guess.count.should == 0
-        Person.exists?(guess.person.id).should be_true
+        Guess.any?.should be_false
       end
 
     end
@@ -1257,7 +1275,7 @@ describe Photo do
         guesser = Person.make
         stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
-        Revelation.count.should == 0
+        Revelation.any?.should be_false
       end
 
       it "blows up if an unknown username is specified" do
@@ -1307,15 +1325,6 @@ describe Photo do
       owner_does_not_exist guess
     end
 
-  end
-
-  describe '#destroy' do
-    it 'destroys the photo and its person' do
-      photo = Photo.make
-      photo.destroy
-      Photo.count.should == 0
-      owner_does_not_exist photo
-    end
   end
 
   # Miscellaneous instance methods
@@ -1425,6 +1434,10 @@ describe Photo do
       Photo.make(inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?.should == true
     end
 
+  end
+
+  def owner_does_not_exist(owner)
+    Person.exists?(owner.person.id).should == false
   end
 
 end

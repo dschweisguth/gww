@@ -14,6 +14,13 @@ class Person < ActiveRecord::Base
     :views_per_post, :faves_per_post, :poster, :bias, :score, :previous_post_count, :place, :previous_score, :previous_place,
     :label
 
+  # Used in other classes' callbacks
+  def destroy_if_has_no_dependents
+    if ! Photo.where(person_id: id).exists? && ! Guess.where(person_id: id).exists?
+      destroy
+    end
+  end
+
   # Used by ScoreReportsController
 
   def self.all_before(date)
@@ -576,16 +583,6 @@ class Person < ActiveRecord::Base
   private_class_method def self.update_statistic(attribute, sql)
     find_by_sql(sql).each do |person|
       person.update_attribute attribute, person[:statistic]
-    end
-  end
-
-  # Used in Admin::PhotosController
-
-  def destroy_if_has_no_dependents
-    if ! Photo.where(person_id: id).exists? && ! Guess.where(person_id: id).exists?
-      destroy
-    else
-      true
     end
   end
 

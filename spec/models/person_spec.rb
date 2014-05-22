@@ -1194,21 +1194,21 @@ describe Person do
   describe '#destroy_if_has_no_dependents' do
     it 'destroys the person' do
       person = Person.make
-      person.destroy_if_has_no_dependents.should be_true
+      person.destroy_if_has_no_dependents
       Person.count.should == 0
     end
 
     it 'but not if they have a photo' do
       person = Person.make
       Photo.make person: person
-      person.destroy_if_has_no_dependents.should be_true
+      person.destroy_if_has_no_dependents
       Person.all.should == [ person ]
     end
 
     it 'but not if they have a guess' do
       person = Person.make
       Guess.make person: person
-      person.destroy_if_has_no_dependents.should be_true
+      person.destroy_if_has_no_dependents
       Person.find(person.id).should == person
     end
 

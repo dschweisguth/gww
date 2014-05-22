@@ -9,6 +9,10 @@ class Guess < ActiveRecord::Base
   # Not persisted, used in views
   attr_accessor :place
 
+  after_destroy do
+    person.destroy_if_has_no_dependents
+  end
+
   def self.destroy_all_by_photo_id(photo_id)
     where(photo_id: photo_id).destroy_all
   end
@@ -142,10 +146,6 @@ class Guess < ActiveRecord::Base
     else
       nil
     end
-  end
-
-  def destroy
-    super && person.destroy_if_has_no_dependents
   end
 
 end

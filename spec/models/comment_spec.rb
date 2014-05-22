@@ -92,21 +92,9 @@ describe Comment do
         photo = Photo.make
         comment = Comment.make photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
-        guess = Guess.make photo: photo
+        Guess.make photo: photo
         Comment.add_selected_answer comment.id, ''
-        Guess.count.should == 0
-        owner_does_not_exist guess
-      end
-
-      it "doesn't blow up if, when deleting an existing guess, it isn't able to delete the guesser" do
-        photo = Photo.make
-        comment = Comment.make photo: photo, flickrid: photo.person.flickrid,
-          username: photo.person.username, commented_at: Time.utc(2011)
-        guess = Guess.make photo: photo
-        Photo.make 2, person: guess.person
-        Comment.add_selected_answer comment.id, ''
-        Guess.count.should == 0
-        Person.exists?(guess.person.id).should be_true
+        Guess.any?.should be_false
       end
 
     end
@@ -201,7 +189,7 @@ describe Comment do
         Revelation.make photo: comment.photo
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        Revelation.count.should == 0
+        Revelation.any?.should be_false
       end
 
       it "blows up if an unknown username is specified" do
@@ -286,7 +274,6 @@ describe Comment do
       photo.reload
       photo.game_status.should == 'unfound'
       Guess.count.should == 0
-      owner_does_not_exist guess
     end
 
     it "leaves the photo found if there's another guess" do

@@ -38,12 +38,44 @@ describe Guess do
     it { should validate_presence_of :added_at }
   end
 
+  describe '#destroy' do
+
+    it "destroys the guess and its person" do
+      guess = Guess.make
+      person = guess.person
+      guess.destroy
+      Guess.any?.should be_false
+      Person.exists?(person.id).should be_false
+      Photo.exists?(guess.photo.id).should be_true
+    end
+
+    it "but not if the person has another guess" do
+      guess = Guess.make
+      person = guess.person
+      Guess.make 2, person: person
+      guess.destroy
+      Guess.exists?(guess.id).should be_false
+      Person.exists?(person.id).should be_true
+      Photo.exists?(guess.photo.id).should be_true
+    end
+
+    it "but not if the person has a photo" do
+      guess = Guess.make
+      person = guess.person
+      Photo.make person: person
+      guess.destroy
+      Guess.any?.should be_false
+      Person.exists?(person.id).should be_true
+      Photo.exists?(guess.photo.id).should be_true
+    end
+
+  end
+
   describe '.destroy_all_by_photo_id' do
     it 'destroys all guesses of the photo with the given id' do
       guess = Guess.make
       Guess.destroy_all_by_photo_id guess.photo.id
-      Guess.count.should == 0
-      owner_doesnt_exist guess
+      Guess.any?.should be_false
     end
 
     it "ignores other photos' guesses" do
@@ -416,24 +448,6 @@ describe Guess do
         guess.star_for_speed.should == expected[seconds_guessed]
       end
     end
-  end
-
-  describe '#destroy' do
-    it 'destroys the guess and its person' do
-      guess = Guess.make
-      guess.destroy
-      Guess.count.should == 0
-      owner_doesnt_exist guess
-    end
-  end
-
-  # Used by specs which delete a guess to assert that the owner had no
-  # other photos or other guesses, so they should have been deleted too.
-  # It would be nice to mock the method that deletes the owner, which handles
-  # cases where the owner has a photo or other guess and shouldn't be deleted,
-  # but doing so would be ugly.
-  def owner_doesnt_exist(guess)
-    Person.exists?(guess.person.id).should == false
   end
 
 end

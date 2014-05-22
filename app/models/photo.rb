@@ -22,6 +22,10 @@ class Photo < ActiveRecord::Base
   # Not persisted, used in views
   attr_accessor :color, :symbol, :place
 
+  after_destroy do
+    person.destroy_if_has_no_dependents
+  end
+
   # Used by ScoreReportsController
 
   def self.count_between(from, to)
@@ -365,6 +369,7 @@ class Photo < ActiveRecord::Base
 
   def self.change_game_status(id, status)
     transaction do
+      # TODO Dave replace the following two lines with uses of association methods?
       Guess.destroy_all_by_photo_id id
       Revelation.where(photo_id: id).delete_all
       find(id).update! game_status: status
@@ -448,14 +453,11 @@ class Photo < ActiveRecord::Base
     transaction do
       photo = includes(:revelation, :person).find photo_id
       photo.revelation.destroy if photo.revelation
+      # TODO Dave use association methods?
       Guess.destroy_all_by_photo_id photo.id
       Comment.where(photo_id: photo).delete_all # TODO Dave remove tags, too
       photo.destroy
     end
-  end
-
-  def destroy
-    super && person.destroy_if_has_no_dependents
   end
 
   # Miscellaneous instance methods
