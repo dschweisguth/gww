@@ -166,7 +166,7 @@ describe Comment do
         is_updated_per_flickr scorer
       end
 
-      it 'updates an existing guess' do
+      it "leaves alone an existing guess by the same guesser" do
         old_guess = Guess.make
         comment = Comment.make photo: old_guess.photo,
           flickrid: old_guess.person.flickrid, username: old_guess.person.username,
@@ -174,8 +174,13 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        photo_is_guessed comment, old_guess.person
-        is_updated_per_flickr old_guess.person
+
+        guesses = old_guess.photo.reload.guesses
+        guesses.length.should == 2
+        guesses.all? { |guess| guess.photo == old_guess.photo }.should be_true
+        guesses.all? { |guess| guess.person == old_guess.person }.should be_true
+        guesses.map(&:comment_text).should =~ [old_guess.comment_text, comment.comment_text]
+
       end
 
       it 'deletes an existing revelation' do
@@ -194,6 +199,7 @@ describe Comment do
       end
 
       def stub_person_request
+        # noinspection RubyArgCount
         stub(FlickrService.instance).people_get_info { {
           'person' => [{
             'username' => ['username_from_request'],
@@ -225,6 +231,7 @@ describe Comment do
     # that it doesn't affect test objects' date attributes and assertions on
     # those attributes don't pass by accident
     def set_time
+      # noinspection RubyArgCount
       stub(Time).now { @now }
     end
 

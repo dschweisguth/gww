@@ -1200,8 +1200,20 @@ describe Photo do
         set_time
         stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
-        is_guessed photo, guesser, 'comment text'
-        is_updated_per_flickr guesser
+
+        photo.reload
+        photo.guesses.length.should == 1
+        guess = photo.guesses.first
+        guess.person.should == guesser
+        guess.comment_text.should == 'comment text'
+        guess.commented_at.should == @now
+        guess.added_at.should == @now
+        guess.photo.game_status.should == 'found'
+
+        guesser.reload
+        guesser.username.should == 'username_from_request'
+        guesser.pathalias.should == 'pathalias_from_request'
+
       end
 
       it 'creates the guesser if necessary' do
@@ -1217,13 +1229,18 @@ describe Photo do
         guess.person.pathalias.should == 'pathalias_from_request'
       end
 
-      it 'updates an existing guess and updates the guesser if necessary' do
+      it "leaves alone an existing guess by the same guesser" do
         old_guess = Guess.make
         set_time
         stub_person_request
         Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new comment text'
-        is_guessed old_guess.photo, old_guess.person, 'new comment text'
-        is_updated_per_flickr old_guess.person
+
+        guesses = old_guess.photo.reload.guesses
+        guesses.length.should == 2
+        guesses.all? { |guess| guess.photo == old_guess.photo }.should be_true
+        guesses.all? { |guess| guess.person == old_guess.person }.should be_true
+        guesses.map(&:comment_text).should =~ [old_guess.comment_text, 'new comment text']
+
       end
 
       it 'deletes an existing revelation' do
@@ -1240,6 +1257,7 @@ describe Photo do
       end
 
       def stub_person_request
+        # noinspection RubyArgCount
         stub(FlickrService.instance).people_get_info { {
           'person' => [ {
             'username' => [ 'username_from_request' ],
@@ -1248,28 +1266,12 @@ describe Photo do
         } }
       end
 
-      def is_guessed(photo, guesser, comment_text)
-        guesses = photo.reload.guesses
-        guesses.length.should == 1
-        guess = guesses[0]
-        guess.person.should == guesser
-        guess.comment_text.should == comment_text
-        guess.commented_at.should == @now
-        guess.added_at.should == @now
-        guess.photo.game_status.should == 'found'
-      end
-
-      def is_updated_per_flickr(guesser)
-        guesser.reload
-        guesser.username.should == 'username_from_request'
-        guesser.pathalias.should == 'pathalias_from_request'
-      end
-
     end
 
     # Specs of add_entered_answer call this immediately before calling add_selected_answer so
     # that it doesn't affect test objects' date attributes and assertions on those attributes don't pass by accident
     def set_time
+      # noinspection RubyArgCount
       stub(Time).now { @now }
     end
 

@@ -439,18 +439,9 @@ class Photo < ActiveRecord::Base
 
   private def guess(comment_text, commented_at, guesser_flickrid)
     update! game_status: 'found'
-
     guesser = FlickrUpdater.create_or_update_person guesser_flickrid
-    guess = Guess.find_by_photo_id_and_person_id self, guesser
-    guess_attrs = { commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc }
-    if guess
-      guess.update! guess_attrs
-    else
-      Guess.create!({ photo: self, person: guesser }.merge guess_attrs)
-    end
-
+    Guess.create! photo: self, person: guesser, commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc
     self.revelation.try :destroy
-    
   end
 
   def self.destroy_photo_and_dependent_objects(photo_id)
