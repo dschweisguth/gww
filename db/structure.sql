@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.1.68, for apple-darwin10.8.0 (i386)
 --
--- Host: localhost    Database: gww_dev
+-- Host: localhost    Database: gww_test
 -- ------------------------------------------------------
 -- Server version	5.1.68
 
@@ -286,12 +286,12 @@ DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
-  `raw` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `raw` varchar(255) COLLATE utf8_bin NOT NULL,
   `machine_tag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_tags_on_photo_id_and_raw` (`photo_id`,`raw`),
   CONSTRAINT `tags_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2211 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2211 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -303,7 +303,7 @@ CREATE TABLE `tags` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-21 17:14:32
+-- Dump completed on 2014-05-21 22:03:13
 INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('13');
@@ -367,6 +367,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140521042205');
 INSERT INTO schema_migrations (version) VALUES ('20140521191000');
 
 INSERT INTO schema_migrations (version) VALUES ('20140521234839');
+
+INSERT INTO schema_migrations (version) VALUES ('20140522045551');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
