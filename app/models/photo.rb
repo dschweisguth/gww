@@ -369,9 +369,8 @@ class Photo < ActiveRecord::Base
 
   def self.change_game_status(id, status)
     transaction do
-      # TODO Dave replace the following two lines with uses of association methods?
       Guess.destroy_all_by_photo_id id
-      Revelation.where(photo_id: id).delete_all
+      Revelation.where(photo_id: id).destroy_all
       find(id).update! game_status: status
     end
   end
@@ -455,7 +454,7 @@ class Photo < ActiveRecord::Base
       photo.revelation.destroy if photo.revelation
       # TODO Dave use association methods?
       Guess.destroy_all_by_photo_id photo.id
-      Comment.where(photo_id: photo).delete_all # TODO Dave remove tags, too
+      Comment.where(photo_id: photo).destroy_all # TODO Dave remove tags, too
       photo.destroy
     end
   end
