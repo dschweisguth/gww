@@ -22,11 +22,7 @@ class Comment < ActiveRecord::Base
       guesses = Guess.joins(:person).where(
         "guesses.photo_id = ? and people.flickrid = ? and guesses.comment_text = ?",
           comment.photo_id, comment.flickrid, comment.comment_text).readonly false
-      if guesses.length != 1
-        raise RemoveGuessError,
-          "There are #{guesses.length} guesses by the person with the Flickr ID #{comment.flickrid} with the same guess text!?!"
-      end
-      guesses[0].destroy
+      guesses.first.destroy # There can be only one Guess for a given photo, person and comment text
       photo = comment.photo
       if photo.guesses.empty?
         photo.update! game_status: 'unfound'

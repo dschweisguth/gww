@@ -297,17 +297,6 @@ describe Comment do
       Guess.all.should == [ guess2 ]
     end
 
-    it "blows up if two guesses have the same photo, guesser and guess text" do
-      photo = Photo.make game_status: 'found'
-      guesser = Person.make 'guesser'
-      guess = Guess.make 1, photo: photo, person: guesser, comment_text: 'identical'
-      Guess.make 2, photo: photo, person: guesser, comment_text: 'identical'
-      comment = Comment.make photo: photo,
-        flickrid: guesser.flickrid, username: guesser.username,
-        comment_text: guess.comment_text
-      lambda { Comment.remove_guess comment.id }.should raise_error Comment::RemoveGuessError
-    end
-
   end
 
   describe '#is_by_poster' do
