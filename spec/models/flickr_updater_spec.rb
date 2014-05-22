@@ -37,6 +37,16 @@ describe FlickrUpdater do
       person.username.should == 'new_username'
       person.pathalias.should == 'new_pathalias'
     end
+
+    it "handles an error" do
+      person = Person.make username: 'old_username', pathalias: 'old_pathalias'
+      stub(FlickrService.instance).people_get_info { raise FlickrService::FlickrRequestFailedError, "Couldn't get info from Flickr" }
+      FlickrUpdater.update_all_people
+      person.reload
+      person.username.should == 'old_username'
+      person.pathalias.should == 'old_pathalias'
+    end
+
   end
 
   ### Photos
@@ -318,13 +328,22 @@ describe FlickrUpdater do
   end
 
   describe '.update_photo' do
-    it "loads comments from Flickr" do
+    it "loads faves and comments from Flickr" do
       photo = Photo.make
       stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       mock(FlickrUpdater).update_comments photo
       FlickrUpdater.update_photo photo
       photo.faves.should == 7
     end
+
+    it "moves on if there is an error getting faves" do
+      photo = Photo.make
+      stub(FlickrUpdater).fave_count(photo.flickrid) { raise FlickrService::FlickrRequestFailedError, "Couldn't get faves from Flickr" }
+      mock(FlickrUpdater).update_comments photo
+      FlickrUpdater.update_photo photo
+      photo.faves.should == 0
+    end
+
   end
 
   describe '.fave_count' do

@@ -18,7 +18,8 @@ class FlickrUpdater
     Person.where('id != 0').each do |person|
       begin
         person.update! person_attributes(person.flickrid)
-      rescue FlickrService::FlickrRequestFailedError
+      rescue FlickrService::FlickrRequestFailedError => e
+        Rails.logger.warn "Couldn't get info for person #{person.id}, flickrid #{person.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
         # Ignore the error. We'll update again soon enough.
       end
     end
@@ -94,7 +95,8 @@ class FlickrUpdater
         if photo_needs_update
           begin
             photo_attrs[:faves] = fave_count photo_flickrid
-          rescue FlickrService::FlickrRequestFailedError
+          rescue FlickrService::FlickrRequestFailedError => e
+            Rails.logger.warn "Couldn't get faves for photo flickrid #{photo_flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
             # This happens when a photo is private but visible to the caller because it's posted to a group of which
             # the caller is a member. Not clear yet whether this is a bug or intended behavior.
             if ! photo
@@ -145,9 +147,10 @@ class FlickrUpdater
     begin
       faves = fave_count photo.flickrid
       photo.update! faves: faves
-    rescue FlickrService::FlickrRequestFailedError
+    rescue FlickrService::FlickrRequestFailedError => e
       # This happens when a photo is private but visible to the caller because it's posted to a group of which
       # the caller is a member. Not clear yet whether this is a bug or intended behavior.
+      Rails.logger.warn "Couldn't get faves for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
     end
 
     update_comments photo
@@ -177,8 +180,9 @@ class FlickrUpdater
           end
         end
       end
-    rescue FlickrService::FlickrRequestFailedError
+    rescue FlickrService::FlickrRequestFailedError => e
       # This happens when a photo has been removed from the group.
+      Rails.logger.warn "Couldn't get comments for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
     end
   end
 
@@ -193,8 +197,9 @@ class FlickrUpdater
           photo.tags.create! raw: parsed_tag['raw'], machine_tag: (parsed_tag['machine_tag'] == '1')
         end
       end
-    rescue FlickrService::FlickrRequestFailedError
+    rescue FlickrService::FlickrRequestFailedError => e
       # Judging from how comments work, this probably happens when a photo has been removed from the group.
+      Rails.logger.warn "Couldn't get tags for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
     rescue REXML::ParseException => e
       Rails.logger.warn "Couldn't get tags for photo #{photo.id}, flickrid #{photo.flickrid}: REXML::ParseException #{e.message}"
     end
