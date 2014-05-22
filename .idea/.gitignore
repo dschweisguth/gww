@@ -1,4 +1,4 @@
-.generators
-.rakeTasks
-jsLibraryMappings.xml
-workspace.xml
+/.generators
+/.rakeTasks
+/runConfigurations
+/workspace.xml

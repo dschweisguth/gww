@@ -1,4 +1,5 @@
-.htaccess
-backups
-cache
-restart.txt
+/.htaccess
+/assets
+/backups
+/cache
+/restart.txt

@@ -1,2 +1,2 @@
-# See lib/tasks/databases.rb
+# This project keeps its schema in SQL, not in Ruby, but RubyMine wants the Ruby version.
 schema.rb
