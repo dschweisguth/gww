@@ -413,6 +413,17 @@ describe FlickrUpdater do
       photo.tags.map(&:raw).should == ['new tag']
     end
 
+    def stub_get_tags(*tags)
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'tags' => [ {
+            'tag' => tags.map { |tag| { 'raw' => tag.raw, 'machine_tag' => (tag.machine_tag ? 1 : 0).to_s } }
+          } ]
+        } ]
+      } }
+    end
+
     it "deletes previous tags if the photo currently has no tags" do
       create :tag, photo: photo, raw: 'old tag'
       stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { {
@@ -425,22 +436,18 @@ describe FlickrUpdater do
       photo.tags.should be_empty
     end
 
-    it "leaves previous tags alone if the request for tags fails" do
+    it "leaves previous tags alone if the request for tags fails due to FlickrService::FlickrRequestFailedError" do
       create :tag, photo: photo, raw: 'old tag'
       stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { raise FlickrService::FlickrRequestFailedError }
       FlickrUpdater.update_tags photo
       photo.tags.map(&:raw).should == ['old tag']
     end
 
-    def stub_get_tags(*tags)
-      # noinspection RubyArgCount
-      stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { {
-        'photo' => [ {
-          'tags' => [ {
-            'tag' => tags.map { |tag| { 'raw' => tag.raw, 'machine_tag' => (tag.machine_tag ? 1 : 0).to_s } }
-          } ]
-        } ]
-      } }
+    it "leaves previous tags alone if the request for tags fails due to REXML::ParseException" do
+      create :tag, photo: photo, raw: 'old tag'
+      stub(FlickrService.instance).tags_get_list_photo(photo_id: photo.flickrid) { raise REXML::ParseException, "Flickr sent bad XML" }
+      FlickrUpdater.update_tags photo
+      photo.tags.map(&:raw).should == ['old tag']
     end
 
   end

@@ -195,6 +195,8 @@ class FlickrUpdater
       end
     rescue FlickrService::FlickrRequestFailedError
       # Judging from how comments work, this probably happens when a photo has been removed from the group.
+    rescue REXML::ParseException => e
+      Rails.logger.warn "Couldn't get tags for photo #{photo.id}, flickrid #{photo.flickrid}: REXML::ParseException #{e.message}"
     end
   end
 
