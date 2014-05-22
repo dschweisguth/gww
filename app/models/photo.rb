@@ -455,8 +455,7 @@ class Photo < ActiveRecord::Base
   end
 
   def destroy
-    super
-    person.destroy_if_has_no_dependents
+    super && person.destroy_if_has_no_dependents
   end
 
   # Miscellaneous instance methods

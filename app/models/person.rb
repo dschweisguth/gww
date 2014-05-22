@@ -584,6 +584,8 @@ class Person < ActiveRecord::Base
   def destroy_if_has_no_dependents
     if ! Photo.where(person_id: id).exists? && ! Guess.where(person_id: id).exists?
       destroy
+    else
+      true
     end
   end
 

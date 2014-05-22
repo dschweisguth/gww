@@ -98,6 +98,17 @@ describe Comment do
         owner_does_not_exist guess
       end
 
+      it "doesn't blow up if, when deleting an existing guess, it isn't able to delete the guesser" do
+        photo = Photo.make
+        comment = Comment.make photo: photo, flickrid: photo.person.flickrid,
+          username: photo.person.username, commented_at: Time.utc(2011)
+        guess = Guess.make photo: photo
+        Photo.make 2, person: guess.person
+        Comment.add_selected_answer comment.id, ''
+        Guess.count.should == 0
+        Person.exists?(guess.person.id).should be_true
+      end
+
     end
 
     describe 'when adding a guess' do
