@@ -81,14 +81,9 @@ describe FlickrUpdater do
       stub(FlickrUpdater).fave_count('incoming_photo_flickrid') { 7 }
     end
 
-    # TODO Dave after tags have been collected once in production, merge the following two methods into one
-
-    def mock_get_comments
+    def mock_get_comments_and_tags
       # noinspection RubyArgCount
       mock(FlickrUpdater).update_comments is_a(Photo)
-    end
-
-    def mock_get_tags
       # noinspection RubyArgCount
       mock(FlickrUpdater).update_tags is_a(Photo)
     end
@@ -96,8 +91,7 @@ describe FlickrUpdater do
     it "gets the state of the group's photos from Flickr and stores it" do
       stub_get_photos
       stub_get_faves
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
 
@@ -148,8 +142,7 @@ describe FlickrUpdater do
         } ]
       } }
       stub_get_faves
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
       people = Person.all
       people.size.should == 1
@@ -162,8 +155,7 @@ describe FlickrUpdater do
     it "uses an existing person" do
       stub_get_photos
       stub_get_faves
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       person_before = Person.make flickrid: 'incoming_person_flickrid', username: 'old_username', pathalias: 'incoming_person_pathalias'
       FlickrUpdater.update_all_photos.should == [ 1, 0, 1, 1 ]
       people = Person.all
@@ -179,8 +171,7 @@ describe FlickrUpdater do
     it "uses an existing photo, and updates attributes that changed" do
       stub_get_photos
       stub_get_faves
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
@@ -239,7 +230,7 @@ describe FlickrUpdater do
       } }
       dont_allow(FlickrService.instance).fave_count
       dont_allow(FlickrUpdater).update_comments
-      mock_get_tags # TODO Dave dont_allow update_tags after tags have been updated in production
+      dont_allow(FlickrUpdater).update_tags
       stub(Time).now { Time.utc 2014 }
       person = Person.make flickrid: 'incoming_person_flickrid'
       photo_before = Photo.make \
@@ -276,8 +267,7 @@ describe FlickrUpdater do
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
       FlickrUpdater.update_all_photos
       Photo.first.faves.should == 0
@@ -285,12 +275,11 @@ describe FlickrUpdater do
 
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
       photo_before = Photo.make faves: 6
       FlickrUpdater.update_all_photos
-      Photo.first.faves.should == 6
+      photo_before.reload.faves.should == 6
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
@@ -314,8 +303,7 @@ describe FlickrUpdater do
         } ]
       } }
       stub_get_faves
-      mock_get_comments
-      mock_get_tags
+      mock_get_comments_and_tags
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
       photos = Photo.all
       photos.size.should == 1

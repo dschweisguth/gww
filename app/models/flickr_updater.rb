@@ -121,8 +121,8 @@ class FlickrUpdater
         # Update comments and tags
         if photo_needs_update
           update_comments photo
+          update_tags photo
         end
-        update_tags photo
 
       end
 
