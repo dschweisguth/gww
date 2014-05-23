@@ -131,6 +131,62 @@ class FlickrUpdater
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
   end
 
+  def self.update_photo(photo)
+    photo.person.update! person_attributes(photo.person.flickrid)
+
+    photo_info = FlickrService.instance.photos_get_info(photo_id: photo.flickrid)['photo'].first
+    lastupdate = Time.at(photo_info['dates'][0]['lastupdate'].to_i).getutc
+    if lastupdate == photo.lastupdate
+      photo.update! seen_at: Time.now
+    else
+      latitude, longitude, accuracy = location photo
+      photo.update! \
+        farm: photo_info['farm'],
+        server: photo_info['server'],
+        secret: photo_info['secret'],
+        views: photo_info['views'].to_i,
+        lastupdate: Time.at(photo_info['dates'][0]['lastupdate'].to_i).getutc,
+        latitude: latitude,
+        longitude: longitude,
+        accuracy: accuracy,
+        seen_at: Time.now
+
+      begin
+        faves = fave_count photo.flickrid
+        photo.update! faves: faves
+      rescue FlickrService::FlickrRequestFailedError => e
+        # This happens when a photo is private but visible to the caller because it's posted to a group of which
+        # the caller is a member. Not clear yet whether this is a bug or intended behavior.
+        Rails.logger.warn "Couldn't get faves for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
+      end
+
+      if photo_info['comments'].first.to_i > 0
+        update_comments photo
+      end
+
+      if photo_info['tags'].first.any?
+        update_tags photo
+      end
+
+    end
+  end
+
+  private_class_method def self.location(photo)
+    begin
+      location = FlickrService.instance.photos_geo_get_location(photo_id: photo.flickrid)['photo'].first['location'].first
+      latitude = to_float_or_nil location['latitude']
+      longitude = to_float_or_nil location['longitude']
+      accuracy = to_integer_or_nil location['accuracy']
+      [latitude, longitude, accuracy]
+    rescue FlickrService::FlickrReturnedAnError => e
+      if e.code == 2
+        [nil, nil, nil]
+      else
+        raise
+      end
+    end
+  end
+
   private_class_method def self.to_float_or_nil(string)
     number = string.to_f
     number == 0.0 ? nil : number
@@ -139,22 +195,6 @@ class FlickrUpdater
   private_class_method def self.to_integer_or_nil(string)
     number = string.to_i
     number == 0 ? nil : number
-  end
-
-  def self.update_photo(photo)
-    # TODO Dave update the photo and poster, too
-
-    begin
-      faves = fave_count photo.flickrid
-      photo.update! faves: faves
-    rescue FlickrService::FlickrRequestFailedError => e
-      # This happens when a photo is private but visible to the caller because it's posted to a group of which
-      # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-      Rails.logger.warn "Couldn't get faves for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
-    end
-
-    update_comments photo
-
   end
 
   def self.fave_count(photo_flickrid)

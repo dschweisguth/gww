@@ -43,8 +43,16 @@ class FlickrService
     request 'flickr.photos.getFavorites', opts
   end
 
+  def photos_get_info(opts)
+    request 'flickr.photos.getInfo', opts
+  end
+
   def photos_comments_get_list(opts)
     request 'flickr.photos.comments.getList', opts
+  end
+
+  def photos_geo_get_location(opts)
+    request 'flickr.photos.geo.getLocation', opts
   end
 
   def tags_get_list_photo(opts)
@@ -62,7 +70,8 @@ class FlickrService
     parsed_xml = XmlSimple.xml_in xml
     if parsed_xml['stat'] != 'ok'
       # One way we get here is if we request information we don't have access to, e.g. a deleted user
-      raise FlickrRequestFailedError, "stat=\"#{parsed_xml['stat']}\""
+      err = parsed_xml['err'].first
+      raise FlickrReturnedAnError.new(stat: parsed_xml['stat'], code: err['code'].to_i, msg: err['msg'])
     end
     parsed_xml
   end
@@ -130,6 +139,18 @@ class FlickrService
   end
 
   class FlickrRequestFailedError < StandardError
+  end
+
+  class FlickrReturnedAnError < FlickrRequestFailedError
+    attr_accessor :stat, :code, :msg
+
+    def initialize(stat:, code:, msg:)
+      super "stat = '#{stat}', code = #{code}, msg = \"#{msg}\""
+      self.stat = stat
+      self.code = code
+      self.msg = msg
+    end
+
   end
 
 end

@@ -316,20 +316,214 @@ describe FlickrUpdater do
   end
 
   describe '.update_photo' do
-    it "loads faves and comments from Flickr" do
-      photo = Photo.make
+    let(:photo) { create :photo }
+
+    it "loads the photo and its location, person, faves, comments and tags from Flickr" do
+      stub_get_photo
+      stub_get_photo_location
+      stub_get_person
       stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       mock(FlickrUpdater).update_comments photo
+      mock(FlickrUpdater).update_tags photo
+      stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_photo photo
+
+      photo.farm.should == '1'
+      photo.server.should == 'incoming_server'
+      photo.secret.should == 'incoming_secret'
+      photo.views.should == 50
+      photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
+      photo.seen_at.should == Time.utc(2014)
+
+      photo.latitude.should == 37.123456
+      photo.longitude.should == -122.654321
+      photo.accuracy.should == 16
+
       photo.faves.should == 7
+
+      photo.person.username.should == 'new_username'
+      photo.person.pathalias.should == 'new_pathalias'
+
+    end
+
+    it "handles a photo with no location information" do
+      stub_get_photo
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_geo_get_location(photo_id: photo.flickrid) { raise FlickrService::FlickrReturnedAnError.new(stat: 'fail', code: 2, msg: "whatever" ) }
+      stub_get_person
+      stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
+      stub(FlickrUpdater).update_comments photo
+      stub(FlickrUpdater).update_tags photo
+      FlickrUpdater.update_photo photo
+      photo.latitude.should be_nil
+      photo.longitude.should be_nil
+      photo.accuracy.should be_nil
+    end
+
+    it "does not attempt to handle other errors returned when requesting location" do
+      stub_get_photo
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_geo_get_location(photo_id: photo.flickrid) { raise FlickrService::FlickrReturnedAnError.new(stat: 'fail', code: 1, msg: "whatever" ) }
+      lambda { FlickrUpdater.update_photo photo }.should raise_error
+    end
+
+    it "does not attempt to handle other errors when requesting location" do
+      stub_get_photo
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_geo_get_location(photo_id: photo.flickrid) { raise FlickrService::FlickrRequestFailedError }
+      lambda { FlickrUpdater.update_photo photo }.should raise_error
     end
 
     it "moves on if there is an error getting faves" do
-      photo = Photo.make
+      stub_get_photo
+      stub_get_photo_location
+      stub_get_person
       stub(FlickrUpdater).fave_count(photo.flickrid) { raise FlickrService::FlickrRequestFailedError, "Couldn't get faves from Flickr" }
-      mock(FlickrUpdater).update_comments photo
+      stub(FlickrUpdater).update_comments photo
+      stub(FlickrUpdater).update_tags photo
       FlickrUpdater.update_photo photo
       photo.faves.should == 0
+    end
+
+    it "only updates the photo's seen_at and the person if the photo hasn't been updated, for performance" do
+      photo.update! lastupdate: Time.utc(2013)
+      old_photo_attrs = photo.attributes
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'farm' => '1',
+          'server' => 'incoming_server',
+          'secret' => 'incoming_secret',
+          'views' => '50',
+          'dates' => [ {
+            'lastupdate' => Time.utc(2013).to_i.to_s
+          } ],
+          'comments' => ['1'],
+          'tags' => [ {
+            'tag' => [ {
+              'raw' => 'Tag 1'
+            } ]
+          } ]
+        } ]
+      } }
+      dont_allow(FlickrService.instance).photos_geo_get_location
+      stub_get_person
+      dont_allow(FlickrUpdater).fave_count(photo.flickrid) { 7 }
+      dont_allow(FlickrUpdater).update_comments photo
+      dont_allow(FlickrUpdater).update_tags photo
+      stub(Time).now { Time.utc 2014 }
+      FlickrUpdater.update_photo photo
+
+      photo.farm.should == old_photo_attrs['farm']
+      photo.server.should == old_photo_attrs['server']
+      photo.secret.should == old_photo_attrs['secret']
+      photo.views.should == old_photo_attrs['views']
+      photo.lastupdate.should == old_photo_attrs['lastupdate']
+      photo.seen_at.should == Time.utc(2014)
+
+      photo.latitude.should be_nil
+      photo.longitude.should be_nil
+      photo.accuracy.should be_nil
+
+      photo.faves.should == old_photo_attrs['faves']
+
+      photo.person.username.should == 'new_username'
+      photo.person.pathalias.should == 'new_pathalias'
+
+
+    end
+
+    it "doesn't request comments if the photo has none, for performance" do
+      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'farm' => '1',
+          'server' => 'incoming_server',
+          'secret' => 'incoming_secret',
+          'views' => '50',
+          'dates' => [ {
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
+          } ],
+          'comments' => ['0'],
+          'tags' => [ {
+            'tag' => [ {
+              'raw' => 'Tag 1'
+            } ]
+          } ]
+        } ]
+      } }
+      stub_get_photo_location
+      stub_get_person
+      stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
+      dont_allow(FlickrUpdater).update_comments
+      stub(FlickrUpdater).update_tags photo
+      FlickrUpdater.update_photo photo
+    end
+
+    it "doesn't request tags if the photo has none, for performance" do
+      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'farm' => '1',
+          'server' => 'incoming_server',
+          'secret' => 'incoming_secret',
+          'views' => '50',
+          'dates' => [ {
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
+          } ],
+          'comments' => ['0'],
+          'tags' => [ {
+          } ]
+        } ]
+      } }
+      stub_get_photo_location
+      stub_get_person
+      stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
+      stub(FlickrUpdater).update_comments
+      dont_allow(FlickrUpdater).update_tags photo
+      FlickrUpdater.update_photo photo
+    end
+
+    def stub_get_photo
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'farm' => '1',
+          'server' => 'incoming_server',
+          'secret' => 'incoming_secret',
+          'views' => '50',
+          'dates' => [ {
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
+          } ],
+          'comments' => ['1'],
+          'tags' => [ {
+            'tag' => [ {
+              'raw' => 'Tag 1'
+            } ]
+          } ]
+        } ]
+      } }
+    end
+
+    def stub_get_photo_location
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_geo_get_location(photo_id: photo.flickrid) { {
+        'photo' => [ {
+          'location' => [ {
+            'latitude' => '37.123456',
+            'longitude' => '-122.654321',
+            'accuracy' => '16'
+          } ]
+        } ]
+      } }
+    end
+
+    def stub_get_person
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).people_get_info(user_id: photo.person.flickrid) { {
+        'person' => [ {
+          'username' => [ 'new_username' ],
+          'photosurl' => [ 'https://www.flickr.com/photos/new_pathalias/' ]
+        } ]
+      } }
     end
 
   end
