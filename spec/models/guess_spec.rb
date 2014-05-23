@@ -41,7 +41,7 @@ describe Guess do
   describe '#destroy' do
 
     it "destroys the guess and its person" do
-      guess = Guess.make
+      guess = create :guess
       person = guess.person
       guess.destroy
       Guess.any?.should be_false
@@ -49,20 +49,20 @@ describe Guess do
       Photo.exists?(guess.photo.id).should be_true
     end
 
-    it "but not if the person has another guess" do
-      guess = Guess.make
+    it "leaves the person alone if they have another guess" do
+      guess = create :guess
       person = guess.person
-      Guess.make 2, person: person
+      create :guess, person: person
       guess.destroy
       Guess.exists?(guess.id).should be_false
       Person.exists?(person.id).should be_true
       Photo.exists?(guess.photo.id).should be_true
     end
 
-    it "but not if the person has a photo" do
-      guess = Guess.make
+    it "leaves the person alone if they have a photo" do
+      guess = create :guess
       person = guess.person
-      Photo.make person: person
+      create :photo, person: person
       guess.destroy
       Guess.any?.should be_false
       Person.exists?(person.id).should be_true

@@ -4,8 +4,8 @@ class Photo < ActiveRecord::Base
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy
   has_many :tags, inverse_of: :photo, dependent: :destroy
-  has_many :guesses, inverse_of: :photo
-  has_one :revelation, inverse_of: :photo
+  has_many :guesses, inverse_of: :photo, dependent: :destroy
+  has_one :revelation, inverse_of: :photo, dependent: :destroy
   validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
     :game_status, :views, :faves, :other_user_comments, :member_comments, :member_questions
   attr_readonly :person, :flickrid
@@ -431,17 +431,6 @@ class Photo < ActiveRecord::Base
     guesser = FlickrUpdater.create_or_update_person guesser_flickrid
     Guess.create! photo: self, person: guesser, commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc
     self.revelation.try :destroy
-  end
-
-  def self.destroy_photo_and_dependent_objects(photo_id)
-    transaction do
-      photo = includes(:revelation, :person).find photo_id
-      photo.revelation.destroy if photo.revelation
-      # TODO Dave use association methods?
-      Guess.destroy_all_by_photo_id photo.id
-      Comment.where(photo_id: photo).destroy_all # TODO Dave remove tags, too
-      photo.destroy
-    end
   end
 
   # Miscellaneous instance methods

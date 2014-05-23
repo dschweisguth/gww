@@ -73,7 +73,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def destroy
-    Photo.destroy_photo_and_dependent_objects params[:id]
+    Photo.find(params[:id]).destroy
     PageCache.clear
     #noinspection RubyResolve
     redirect_to admin_root_path

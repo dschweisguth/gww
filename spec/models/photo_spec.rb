@@ -64,28 +64,52 @@ describe Photo do
   describe '#destroy' do
 
     it "destroys the photo and its person" do
-      photo = Photo.make
+      photo = create :photo
       photo.destroy
       Photo.any?.should be_false
       Person.any?.should be_false
     end
 
-    it "but not if the person has another photo" do
-      photo = Photo.make
+    it "leaves the person alone if they have another photo" do
+      photo = create :photo
       person = photo.person
-      Photo.make 2, person: person
+      create :photo, person: person
       photo.destroy
       Photo.exists?(photo.id).should be_false
       Person.exists?(person.id).should be_true
     end
 
-    it "but not if the person has a guess" do
-      photo = Photo.make
+    it "leaves the person alone if they have a guess" do
+      photo = create :photo
       person = photo.person
-      Guess.make person: person
+      create :guess, person: person
       photo.destroy
       Photo.exists?(photo.id).should be_false
       Person.exists?(person.id).should be_true
+    end
+
+    it "destroys the photo's tags" do
+      tag = create :tag
+      tag.photo.destroy
+      Tag.any?.should be_false
+    end
+
+    it "destroys the photo's comments" do
+      comment = create :comment
+      comment.photo.destroy
+      Comment.any?.should be_false
+    end
+
+    it "destroys the photo's revelation" do
+      revelation = create :revelation
+      revelation.photo.destroy
+      Revelation.any?.should be_false
+    end
+
+    it "destroys the photo's guesses" do
+      guess = create :guess
+      guess.photo.destroy
+      Guess.any?.should be_false
     end
 
   end
@@ -1304,29 +1328,6 @@ describe Photo do
 
   end
 
-  describe '.destroy_photo_and_dependent_objects' do
-    it 'destroys the photo and its person' do
-      photo = Photo.make
-      Photo.destroy_photo_and_dependent_objects photo.id
-      Photo.count.should == 0
-      owner_does_not_exist photo
-    end
-
-    it "destroys the photo's revelation" do
-      revelation = Revelation.make
-      Photo.destroy_photo_and_dependent_objects revelation.photo.id
-      Revelation.count.should == 0
-    end
-
-    it "destroys the photo's guesses" do
-      guess = Guess.make
-      Photo.destroy_photo_and_dependent_objects guess.photo.id
-      Guess.count.should == 0
-      owner_does_not_exist guess
-    end
-
-  end
-
   # Miscellaneous instance methods
 
   describe '#years_old' do
@@ -1434,10 +1435,6 @@ describe Photo do
       Photo.make(inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?.should == true
     end
 
-  end
-
-  def owner_does_not_exist(owner)
-    Person.exists?(owner.person.id).should == false
   end
 
 end
