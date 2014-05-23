@@ -7,6 +7,7 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
+Migrate from static.flickr to staticflickr
 Make PhantomJS report errors in Javascript
 Spring?
 Measure Javascript coverage
