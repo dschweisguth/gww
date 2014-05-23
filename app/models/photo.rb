@@ -389,31 +389,17 @@ class Photo < ActiveRecord::Base
   end
 
   def answer(selected_flickrid, entered_username, answer_text, answered_at)
-    if entered_username.empty?
-      guesser_flickrid = selected_flickrid
-    else
-      guesser_flickrid = nil
-      if entered_username == self.person.username
-        guesser_flickrid = self.person.flickrid
-      end
-      if !guesser_flickrid
-        guesser = Person.find_by_username entered_username
-        guesser_flickrid = guesser.try :flickrid
-      end
-      if !guesser_flickrid
-        guesser_comment = Comment.find_by_username entered_username
-        if guesser_comment
-          guesser_flickrid = guesser_comment.flickrid
-        end
-      end
-      if !guesser_flickrid
-        raise AddAnswerError,
+    guesser_flickrid =
+      if entered_username.empty?
+        selected_flickrid
+      else
+        Person.find_by_username(entered_username).try(:flickrid) ||
+        Comment.find_by_username(entered_username).try(:flickrid) ||
+        raise(AddAnswerError,
           "Sorry; GWW hasn't seen any posts or comments by #{entered_username} yet, " +
             "so doesn't know enough about them to award them a point. " +
-            "Did you spell their username correctly?"
+            "Did you spell their username correctly?")
       end
-    end
-
     transaction do
       if guesser_flickrid == self.person.flickrid
         reveal answer_text, answered_at
@@ -421,7 +407,6 @@ class Photo < ActiveRecord::Base
         guess answer_text, answered_at, guesser_flickrid
       end
     end
-
   end
 
   class AddAnswerError < StandardError
