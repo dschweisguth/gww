@@ -109,8 +109,6 @@ class FlickrUpdater
         if photo
           photo.update! photo_attrs
         else
-          # Set dateadded only when a photo is created, so that if a photo is added to the group,
-          # removed from the group and added to the group again it retains its original dateadded.
           photo = Photo.create!({
             person_id: person.id,
             flickrid: photo_flickrid,

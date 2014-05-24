@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FlickrUpdater do
+describe FlickrUpdater, type: :model do
   describe '#update_everything' do
     it "does some work" do
       mock_clear_page_cache 2
@@ -13,9 +13,7 @@ describe FlickrUpdater do
       mock(FlickrUpdater).update_all_people
       stub(Time).now { Time.utc(2011) }
       FlickrUpdater.update_everything.should == "Created 1 new photos and 2 new users. Got 3 pages out of 4."
-      updates = FlickrUpdate.all
-      updates.length.should == 1
-      update = updates.first
+      update = FlickrUpdate.only_one_exists
       update.member_count.should == 1492
       update.completed_at.should == Time.utc(2011)
     end
@@ -25,7 +23,7 @@ describe FlickrUpdater do
 
   describe '.update_all_people' do
     it "updates an existing user's username and pathalias" do
-      person = Person.make username: 'old_username', pathalias: 'old_pathalias'
+      person = create :person, username: 'old_username', pathalias: 'old_pathalias'
       stub(FlickrService.instance).people_get_info { {
         'person' => [ {
           'username' => [ 'new_username' ],
@@ -39,7 +37,7 @@ describe FlickrUpdater do
     end
 
     it "handles an error" do
-      person = Person.make username: 'old_username', pathalias: 'old_pathalias'
+      person = create :person, username: 'old_username', pathalias: 'old_pathalias'
       stub(FlickrService.instance).people_get_info { raise FlickrService::FlickrRequestFailedError, "Couldn't get info from Flickr" }
       FlickrUpdater.update_all_people
       person.reload
@@ -52,35 +50,61 @@ describe FlickrUpdater do
   ### Photos
 
   describe '.update_all_photos' do
-    def stub_get_photos
+    let!(:now) { Time.utc 2014 }
+
+    before do
+      stub(Time).now { now }
+    end
+
+    def stub_get_photos(opts = {})
+      stubbed_photo =
+        {
+          id: 'incoming_photo_flickrid',
+          owner: 'incoming_person_flickrid',
+          ownername: 'incoming_username',
+          pathalias: 'incoming_pathalias',
+          farm: '1',
+          server: 'incoming_server',
+          secret: 'incoming_secret',
+          dateadded: Time.utc(2011),
+          latitude: 37.123456,
+          longitude: -122.654321,
+          accuracy: 16,
+          lastupdate: Time.utc(2011, 1, 1, 1),
+          views: 50,
+          title: 'The title',
+          description: 'The description'
+        }.merge opts
       # noinspection RubyArgCount
       stub(FlickrService.instance).groups_pools_get_photos { {
         'photos' => [ {
           'pages' => '1',
           'photo' =>  [ {
-            'id' => 'incoming_photo_flickrid',
-            'owner' => 'incoming_person_flickrid',
-            'ownername' => 'incoming_username',
-            'pathalias' => 'incoming_pathalias',
-            'farm' => '1',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '37.123456',
-            'longitude' => '-122.654321',
-            'accuracy' => '16',
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50',
-            'title' => 'The title',
-            'description' => ['The description']
+            'id' => stubbed_photo[:id],
+            'owner' => stubbed_photo[:owner],
+            'ownername' => stubbed_photo[:ownername],
+            'pathalias' => stubbed_photo[:pathalias],
+            'farm' => stubbed_photo[:farm],
+            'server' => stubbed_photo[:server],
+            'secret' => stubbed_photo[:secret],
+            'dateadded' => stubbed_photo[:dateadded].to_i.to_s,
+            'latitude' => stubbed_photo[:latitude].to_s,
+            'longitude' => stubbed_photo[:longitude].to_s,
+            'accuracy' => stubbed_photo[:accuracy].to_s,
+            'lastupdate' => stubbed_photo[:lastupdate].to_i.to_s,
+            'views' => stubbed_photo[:views].to_s,
+            'title' => stubbed_photo[:title],
+            'description' => [stubbed_photo[:description]]
           } ]
         } ]
       } }
+      stubbed_photo
     end
 
     def stub_get_faves
       # noinspection RubyArgCount
       stub(FlickrUpdater).fave_count('incoming_photo_flickrid') { 7 }
+      7
     end
 
     def mock_get_comments_and_tags
@@ -91,136 +115,82 @@ describe FlickrUpdater do
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
-      stub_get_photos
-      stub_get_faves
+      stubbed_photo = stub_get_photos
+      stubbed_faves = stub_get_faves
       mock_get_comments_and_tags
-      stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
 
-      photos = Photo.includes :person
-      photos.size.should == 1
-      photo = photos[0]
-      person = photo.person
+      photo = Photo.only_one_exists
 
-      person.flickrid.should == 'incoming_person_flickrid'
-      person.username.should == 'incoming_username'
-      person.pathalias.should == 'incoming_pathalias'
+      photo.person.should have_attributes(
+        flickrid: stubbed_photo[:owner],
+        username: stubbed_photo[:ownername],
+        pathalias: stubbed_photo[:pathalias]
+      )
 
-      photo.flickrid.should == 'incoming_photo_flickrid'
-      photo.farm.should == '1'
-      photo.server.should == 'incoming_server'
-      photo.secret.should == 'incoming_secret'
-      photo.latitude.should == 37.123456
-      photo.longitude.should == -122.654321
-      photo.accuracy.should == 16
-      photo.dateadded.should == Time.utc(2011)
-      photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
-      photo.views.should == 50
-      photo.title.should == 'The title'
-      photo.description.should == 'The description'
-      photo.faves.should == 7
-      photo.seen_at.should == Time.utc(2014)
+      photo.should have_attributes(
+        flickrid: stubbed_photo[:id],
+        farm: stubbed_photo[:farm],
+        server: stubbed_photo[:server],
+        secret: stubbed_photo[:secret],
+        latitude: stubbed_photo[:latitude],
+        longitude: stubbed_photo[:longitude],
+        accuracy: stubbed_photo[:accuracy],
+        dateadded: stubbed_photo[:dateadded],
+        lastupdate: stubbed_photo[:lastupdate],
+        views: stubbed_photo[:views],
+        title: stubbed_photo[:title],
+        description: stubbed_photo[:description],
+        faves: stubbed_faves,
+        seen_at: now
+      )
 
     end
 
     # The response from this API call needs to be fixed up in this way. That from people.get.info does not.
     it "replaces an empty-string pathalias with the person's flickrid" do
-      stub(FlickrService.instance).groups_pools_get_photos { {
-        'photos' => [ {
-          'pages' => '1',
-          'photo' =>  [ {
-            'id' => 'incoming_photo_flickrid',
-            'owner' => 'incoming_person_flickrid',
-            'ownername' => 'incoming_username',
-            'pathalias' => '',
-            'farm' => '1',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '37.123456',
-            'longitude' => '-122.654321',
-            'accuracy' => '16',
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50',
-            'title' => 'The title',
-            'description' => ['The description']
-          } ]
-        } ]
-      } }
+      stubbed_photo = stub_get_photos pathalias: ''
       stub_get_faves
       mock_get_comments_and_tags
-      FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
+      FlickrUpdater.update_all_photos
 
-      people = Person.all
-      people.size.should == 1
-      person = people[0]
-      person.flickrid.should == 'incoming_person_flickrid'
-      person.username.should == 'incoming_username'
-      person.pathalias.should == 'incoming_person_flickrid'
+      Person.only_one_exists.should have_attributes(
+        flickrid: stubbed_photo[:owner],
+        username: stubbed_photo[:ownername],
+        pathalias: stubbed_photo[:owner]
+      )
 
     end
 
     it "uses an existing person" do
-      stub_get_photos
+      stubbed_photo = stub_get_photos
       stub_get_faves
       mock_get_comments_and_tags
-      person_before = Person.make flickrid: 'incoming_person_flickrid', username: 'old_username', pathalias: 'incoming_person_pathalias'
+      person_before = create :person, flickrid: stubbed_photo[:owner]
       FlickrUpdater.update_all_photos.should == [ 1, 0, 1, 1 ]
-      people = Person.all
-      people.size.should == 1
-      person_after = people[0]
-      person_after.id.should == person_before.id
-      person_after.flickrid.should == person_before.flickrid
-      # The following two assertions document that a username or pathalias that changes during the update is not updated
-      person_after.username.should == person_before.username
-      person_after.pathalias.should == person_before.pathalias
+
+      # Note that a username or pathalias that changes during the update is not updated
+      Person.only_one_exists.should have_the_same_attributes_as(person_before)
+
     end
 
-    it "gets the state of the group's photos from Flickr and stores it" do
-      stub(FlickrService.instance).groups_pools_get_photos { {
-        'photos' => [ {
-          'pages' => '1',
-          'photo' =>  [ {
-            'id' => 'incoming_photo_flickrid',
-            'owner' => 'incoming_person_flickrid',
-            'ownername' => 'incoming_username',
-            'pathalias' => 'incoming_pathalias',
-            'farm' => '1',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '37.123456',
-            'longitude' => '-122.654321',
-            'accuracy' => '16',
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50',
-            'title' => 'The title',
-            'description' => [{}]
-          } ]
-        } ]
-      } }
+    it "handles an empty description" do
+      stub_get_photos description: {}
       stub_get_faves
       mock_get_comments_and_tags
-      stub(Time).now { Time.utc 2014 }
-      FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
-
-      photos = Photo.includes :person
-      photos.size.should == 1
-      photo = photos[0]
-      photo.description.should be_nil
-
+      FlickrUpdater.update_all_photos
+      Photo.only_one_exists.description.should be_nil
     end
 
     it "uses an existing photo, and updates attributes that changed" do
-      stub_get_photos
-      stub_get_faves
+      stubbed_photo = stub_get_photos
+      stubbed_faves = stub_get_faves
       mock_get_comments_and_tags
-      stub(Time).now { Time.utc 2014 }
-      person = Person.make flickrid: 'incoming_person_flickrid'
-      photo_before = Photo.make \
+      person = create :person, flickrid: 'incoming_person_flickrid'
+      photo_before = create :photo,
         person: person,
         flickrid: 'incoming_photo_flickrid',
-        farm: '1',
+        farm: '2',
         server: 'old_server',
         secret: 'old_secret',
         latitude: 37.654321,
@@ -231,59 +201,39 @@ describe FlickrUpdater do
         views: 40,
         faves: 6
       FlickrUpdater.update_all_photos.should == [ 0, 0, 1, 1 ]
-      photos = Photo.all
-      photos.size.should == 1
-      photo_after = photos[0]
-      photo_after.id.should == photo_before.id
-      photo_after.flickrid.should == photo_before.flickrid
-      photo_after.farm.should == '1'
-      photo_after.server.should == 'incoming_server'
-      photo_after.secret.should == 'incoming_secret'
-      photo_after.latitude.should == 37.123456
-      photo_after.longitude.should == -122.654321
-      photo_after.accuracy.should == 16
-      # Note that dateadded is not updated
-      photo_after.dateadded.should == Time.utc(2010)
-      photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
-      photo_after.views.should == 50
-      photo_after.title.should == 'The title'
-      photo_after.description.should == 'The description'
-      photo_after.faves.should == 7
-      photo_after.seen_at.should == Time.utc(2014)
+
+      Photo.only_one_exists.should have_attributes(
+        id: photo_before.id,
+        flickrid: photo_before.flickrid,
+        farm: stubbed_photo[:farm],
+        server: stubbed_photo[:server],
+        secret: stubbed_photo[:secret],
+        latitude: stubbed_photo[:latitude],
+        longitude: stubbed_photo[:longitude],
+        accuracy: stubbed_photo[:accuracy],
+        # Set dateadded only when a photo is created, so that if a photo is added to the group,
+        # removed from the group and added to the group again it retains its original dateadded.
+        dateadded: photo_before.dateadded,
+        lastupdate: stubbed_photo[:lastupdate],
+        views: stubbed_photo[:views],
+        title: stubbed_photo[:title],
+        description: stubbed_photo[:description],
+        faves: stubbed_faves,
+        seen_at: now
+      )
+
     end
 
     it "doesn't update faves, comments or tags if Flickr says the photo hasn't been updated" do
-      stub(FlickrService.instance).groups_pools_get_photos { {
-        'photos' => [ {
-          'pages' => '1',
-          'photo' =>  [ {
-            'id' => 'incoming_photo_flickrid',
-            'owner' => 'incoming_person_flickrid',
-            'ownername' => 'incoming_username',
-            'pathalias' => 'incoming_pathalias',
-            'farm' => '1',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '37.123456',
-            'longitude' => '-122.654321',
-            'accuracy' => '16',
-            'lastupdate' => Time.utc(2010, 1, 1, 1).to_i.to_s,
-            'views' => '50',
-            'title' => 'The title',
-            'description' => ['The description']
-          } ]
-        } ]
-      } }
+      stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
       dont_allow(FlickrService.instance).fave_count
       dont_allow(FlickrUpdater).update_comments
       dont_allow(FlickrUpdater).update_tags
-      stub(Time).now { Time.utc 2014 }
-      person = Person.make flickrid: 'incoming_person_flickrid'
-      photo_before = Photo.make \
+      person = create :person, flickrid: 'incoming_person_flickrid'
+      photo_before = create :photo,
         person: person,
-        flickrid: 'incoming_photo_flickrid',
-        farm: '1',
+        flickrid: stubbed_photo[:id],
+        farm: '2',
         server: 'old_server',
         secret: 'old_secret',
         latitude: 37.654321,
@@ -293,25 +243,26 @@ describe FlickrUpdater do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      FlickrUpdater.update_all_photos.should == [ 0, 0, 1, 1 ]
-      photos = Photo.all
-      photos.size.should == 1
-      photo_after = photos[0]
-      photo_after.id.should == photo_before.id
-      photo_after.flickrid.should == photo_before.flickrid
-      photo_after.farm.should == '1'
-      photo_after.server.should == 'incoming_server'
-      photo_after.secret.should == 'incoming_secret'
-      photo_after.latitude.should == 37.123456
-      photo_after.longitude.should == -122.654321
-      photo_after.accuracy.should == 16
-      photo_after.dateadded.should == Time.utc(2010)
-      photo_after.lastupdate.should == Time.utc(2010, 1, 1, 1)
-      photo_after.views.should == 50
-      photo_after.title.should == 'The title'
-      photo_after.description.should == 'The description'
-      photo_after.faves.should == 6
-      photo_after.seen_at.should == Time.utc(2014)
+      FlickrUpdater.update_all_photos
+
+      Photo.only_one_exists.should have_attributes(
+        id: photo_before.id,
+        flickrid: photo_before.flickrid,
+        farm: stubbed_photo[:farm],
+        server: stubbed_photo[:server],
+        secret: stubbed_photo[:secret],
+        latitude: stubbed_photo[:latitude],
+        longitude: stubbed_photo[:longitude],
+        accuracy: stubbed_photo[:accuracy],
+        dateadded: photo_before.dateadded,
+        lastupdate: photo_before.lastupdate,
+        views: stubbed_photo[:views],
+        title: stubbed_photo[:title],
+        description: stubbed_photo[:description],
+        faves: photo_before.faves,
+        seen_at: now
+      )
+
     end
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
@@ -326,76 +277,60 @@ describe FlickrUpdater do
       stub_get_photos
       mock_get_comments_and_tags
       stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
-      photo_before = Photo.make faves: 6
+      photo = create :photo, faves: 6
       FlickrUpdater.update_all_photos
-      photo_before.reload.faves.should == 6
+      photo.reload.faves.should == 6
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
-      stub(FlickrService.instance).groups_pools_get_photos { {
-        'photos' => [ {
-          'pages' => '1',
-          'photo' =>  [ {
-            'id' => 'incoming_photo_flickrid',
-            'owner' => 'incoming_person_flickrid',
-            'ownername' => 'incoming_username',
-            'farm' => '0',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'dateadded' => Time.utc(2011).to_i.to_s,
-            'latitude' => '0',
-            'longitude' => '0',
-            'accuracy' => '0',
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50',
-            'title' => 'The title',
-            'description' => ['The description']
-          } ]
-        } ]
-      } }
+      stub_get_photos latitude: 0, longitude: 0, accuracy: 0
       stub_get_faves
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
-      photos = Photo.all
-      photos.size.should == 1
-      photo = photos[0]
-      photo.latitude.should be_nil
-      photo.longitude.should be_nil
-      photo.accuracy.should be_nil
+      Photo.only_one_exists.should have_attributes(
+        latitude: nil,
+        longitude: nil,
+        accuracy: nil,
+      )
     end
 
   end
 
   describe '.update_photo' do
     let(:photo) { create :photo }
+    let!(:now) { Time.utc 2014 }
 
-    it "loads the photo and its location, person, faves, comments and tags from Flickr" do
+    before do
+      stub(Time).now { now }
+    end
+
+    it "loads the photo and its person, location, faves, comments and tags from Flickr" do
       stub_get_person
       stub_get_photo
       stub_get_photo_location
       stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       mock(FlickrUpdater).update_comments photo
       mock(FlickrUpdater).update_tags photo
-      stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_photo photo
 
-      photo.farm.should == '1'
-      photo.server.should == 'incoming_server'
-      photo.secret.should == 'incoming_secret'
-      photo.views.should == 50
-      photo.title.should == 'The title'
-      photo.description.should == 'The description'
-      photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
-      photo.seen_at.should == Time.utc(2014)
-
-      photo.latitude.should == 37.123456
-      photo.longitude.should == -122.654321
-      photo.accuracy.should == 16
-
-      photo.faves.should == 7
-
-      photo.person.username.should == 'new_username'
-      photo.person.pathalias.should == 'new_pathalias'
+      photo.person.should have_attributes(
+        username: 'new_username',
+        pathalias: 'new_pathalias'
+      )
+      photo.should have_attributes(
+        farm: '1',
+        server: 'incoming_server',
+        secret: 'incoming_secret',
+        views: 50,
+        title: 'The title',
+        description: 'The description',
+        lastupdate: Time.utc(2011, 1, 1, 1),
+        seen_at: now,
+        latitude: 37.123456,
+        longitude: -122.654321,
+        accuracy: 16,
+        faves: 7,
+      )
 
     end
 
@@ -403,14 +338,18 @@ describe FlickrUpdater do
       stub_get_person
       stub_get_photo
       # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_geo_get_location(photo_id: photo.flickrid) { raise FlickrService::FlickrReturnedAnError.new(stat: 'fail', code: 2, msg: "whatever" ) }
+      stub(FlickrService.instance).photos_geo_get_location(photo_id: photo.flickrid) { raise FlickrService::FlickrReturnedAnError, stat: 'fail', code: 2, msg: "whatever" }
       stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       stub(FlickrUpdater).update_comments photo
       stub(FlickrUpdater).update_tags photo
       FlickrUpdater.update_photo photo
-      photo.latitude.should be_nil
-      photo.longitude.should be_nil
-      photo.accuracy.should be_nil
+
+      photo.should have_attributes(
+        latitude: nil,
+        longitude: nil,
+        accuracy: nil
+      )
+
     end
 
     it "does not attempt to handle other errors returned when requesting location" do
@@ -446,75 +385,37 @@ describe FlickrUpdater do
       photo.update! lastupdate: Time.utc(2013)
       old_photo_attrs = photo.attributes
       stub_get_person
-      # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
-        'photo' => [ {
-          'farm' => '1',
-          'server' => 'incoming_server',
-          'secret' => 'incoming_secret',
-          'views' => '50',
-          'title' => ['The title'],
-          'description' => ['The description'],
-          'dates' => [ {
-            'lastupdate' => Time.utc(2013).to_i.to_s
-          } ],
-          'comments' => ['1'],
-          'tags' => [ {
-            'tag' => [ {
-              'raw' => 'Tag 1'
-            } ]
-          } ]
-        } ]
-      } }
+      stub_get_photo lastupdate: Time.utc(2013)
       dont_allow(FlickrService.instance).photos_geo_get_location
       dont_allow(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       dont_allow(FlickrUpdater).update_comments photo
       dont_allow(FlickrUpdater).update_tags photo
-      stub(Time).now { Time.utc 2014 }
       FlickrUpdater.update_photo photo
 
-      photo.farm.should == old_photo_attrs['farm']
-      photo.server.should == old_photo_attrs['server']
-      photo.secret.should == old_photo_attrs['secret']
-      photo.views.should == old_photo_attrs['views']
-      photo.title.should == old_photo_attrs['title']
-      photo.description.should == old_photo_attrs['description']
-      photo.lastupdate.should == old_photo_attrs['lastupdate']
-      photo.seen_at.should == Time.utc(2014)
-
-      photo.latitude.should be_nil
-      photo.longitude.should be_nil
-      photo.accuracy.should be_nil
-
-      photo.faves.should == old_photo_attrs['faves']
-
-      photo.person.username.should == 'new_username'
-      photo.person.pathalias.should == 'new_pathalias'
-
+      photo.person.should have_attributes(
+        username: 'new_username',
+        pathalias: 'new_pathalias'
+      )
+      photo.should have_attributes(
+        farm: old_photo_attrs['farm'],
+        server: old_photo_attrs['server'],
+        secret: old_photo_attrs['secret'],
+        views: old_photo_attrs['views'],
+        title: old_photo_attrs['title'],
+        description: old_photo_attrs['description'],
+        lastupdate: old_photo_attrs['lastupdate'],
+        seen_at: now,
+        latitude: nil,
+        longitude: nil,
+        accuracy: nil,
+        faves: old_photo_attrs['faves']
+      )
 
     end
 
     it "doesn't request comments if the photo has none, for performance" do
       stub_get_person
-      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
-        'photo' => [ {
-          'farm' => '1',
-          'server' => 'incoming_server',
-          'secret' => 'incoming_secret',
-          'views' => '50',
-          'title' => ['The title'],
-          'description' => ['The description'],
-          'dates' => [ {
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
-          } ],
-          'comments' => ['0'],
-          'tags' => [ {
-            'tag' => [ {
-              'raw' => 'Tag 1'
-            } ]
-          } ]
-        } ]
-      } }
+      stub_get_photo comments: 0
       stub_get_photo_location
       stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       dont_allow(FlickrUpdater).update_comments
@@ -524,22 +425,7 @@ describe FlickrUpdater do
 
     it "doesn't request tags if the photo has none, for performance" do
       stub_get_person
-      stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
-        'photo' => [ {
-          'farm' => '1',
-          'server' => 'incoming_server',
-          'secret' => 'incoming_secret',
-          'views' => '50',
-          'title' => ['The title'],
-          'description' => ['The description'],
-          'dates' => [ {
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
-          } ],
-          'comments' => ['0'],
-          'tags' => [ {
-          } ]
-        } ]
-      } }
+      stub_get_photo tags: []
       stub_get_photo_location
       stub(FlickrUpdater).fave_count(photo.flickrid) { 7 }
       stub(FlickrUpdater).update_comments
@@ -557,7 +443,7 @@ describe FlickrUpdater do
       } }
     end
 
-    def stub_get_photo
+    def stub_get_photo(lastupdate: Time.utc(2011, 1, 1, 1), comments: 1, tags: ['Tag 1'])
       # noinspection RubyArgCount
       stub(FlickrService.instance).photos_get_info(photo_id: photo.flickrid) { {
         'photo' => [ {
@@ -568,14 +454,17 @@ describe FlickrUpdater do
           'title' => ['The title'],
           'description' => ['The description'],
           'dates' => [ {
-            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
+            'lastupdate' => lastupdate.to_i.to_s
           } ],
-          'comments' => ['1'],
-          'tags' => [ {
-            'tag' => [ {
-              'raw' => 'Tag 1'
-            } ]
-          } ]
+          'comments' => ["#{comments}"],
+          'tags' => [
+            # The response is structured differently if there are no tags than if there are tags
+            if tags.any?
+              { 'tag' => tags.map { |tag| { 'raw' => tag } } }
+            else
+              {}
+            end
+          ]
         } ]
       } }
     end
@@ -656,11 +545,12 @@ describe FlickrUpdater do
 
     def photo_has_the_comment_from_the_request
       photo.comments.length.should == 1
-      comment = photo.comments[0]
-      comment.flickrid.should == 'commenter_flickrid'
-      comment.username.should == 'commenter_username'
-      comment.comment_text.should == 'comment text'
-      comment.commented_at.should == Time.utc(2013)
+      photo.comments.first.should have_attributes(
+        flickrid: 'commenter_flickrid',
+        username: 'commenter_username',
+        comment_text: 'comment text',
+        commented_at: Time.utc(2013)
+      )
     end
 
   end
