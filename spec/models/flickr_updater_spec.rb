@@ -70,7 +70,9 @@ describe FlickrUpdater do
             'longitude' => '-122.654321',
             'accuracy' => '16',
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50'
+            'views' => '50',
+            'title' => 'The title',
+            'description' => ['The description']
           } ]
         } ]
       } }
@@ -114,6 +116,8 @@ describe FlickrUpdater do
       photo.dateadded.should == Time.utc(2011)
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.views.should == 50
+      photo.title.should == 'The title'
+      photo.description.should == 'The description'
       photo.faves.should == 7
       photo.seen_at.should == Time.utc(2014)
 
@@ -137,19 +141,23 @@ describe FlickrUpdater do
             'longitude' => '-122.654321',
             'accuracy' => '16',
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50'
+            'views' => '50',
+            'title' => 'The title',
+            'description' => ['The description']
           } ]
         } ]
       } }
       stub_get_faves
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
+
       people = Person.all
       people.size.should == 1
       person = people[0]
       person.flickrid.should == 'incoming_person_flickrid'
       person.username.should == 'incoming_username'
       person.pathalias.should == 'incoming_person_flickrid'
+
     end
 
     it "uses an existing person" do
@@ -166,6 +174,41 @@ describe FlickrUpdater do
       # The following two assertions document that a username or pathalias that changes during the update is not updated
       person_after.username.should == person_before.username
       person_after.pathalias.should == person_before.pathalias
+    end
+
+    it "gets the state of the group's photos from Flickr and stores it" do
+      stub(FlickrService.instance).groups_pools_get_photos { {
+        'photos' => [ {
+          'pages' => '1',
+          'photo' =>  [ {
+            'id' => 'incoming_photo_flickrid',
+            'owner' => 'incoming_person_flickrid',
+            'ownername' => 'incoming_username',
+            'pathalias' => 'incoming_pathalias',
+            'farm' => '1',
+            'server' => 'incoming_server',
+            'secret' => 'incoming_secret',
+            'dateadded' => Time.utc(2011).to_i.to_s,
+            'latitude' => '37.123456',
+            'longitude' => '-122.654321',
+            'accuracy' => '16',
+            'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
+            'views' => '50',
+            'title' => 'The title',
+            'description' => [{}]
+          } ]
+        } ]
+      } }
+      stub_get_faves
+      mock_get_comments_and_tags
+      stub(Time).now { Time.utc 2014 }
+      FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
+
+      photos = Photo.includes :person
+      photos.size.should == 1
+      photo = photos[0]
+      photo.description.should be_nil
+
     end
 
     it "uses an existing photo, and updates attributes that changed" do
@@ -203,6 +246,8 @@ describe FlickrUpdater do
       photo_after.dateadded.should == Time.utc(2010)
       photo_after.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo_after.views.should == 50
+      photo_after.title.should == 'The title'
+      photo_after.description.should == 'The description'
       photo_after.faves.should == 7
       photo_after.seen_at.should == Time.utc(2014)
     end
@@ -224,7 +269,9 @@ describe FlickrUpdater do
             'longitude' => '-122.654321',
             'accuracy' => '16',
             'lastupdate' => Time.utc(2010, 1, 1, 1).to_i.to_s,
-            'views' => '50'
+            'views' => '50',
+            'title' => 'The title',
+            'description' => ['The description']
           } ]
         } ]
       } }
@@ -261,6 +308,8 @@ describe FlickrUpdater do
       photo_after.dateadded.should == Time.utc(2010)
       photo_after.lastupdate.should == Time.utc(2010, 1, 1, 1)
       photo_after.views.should == 50
+      photo_after.title.should == 'The title'
+      photo_after.description.should == 'The description'
       photo_after.faves.should == 6
       photo_after.seen_at.should == Time.utc(2014)
     end
@@ -298,7 +347,9 @@ describe FlickrUpdater do
             'longitude' => '0',
             'accuracy' => '0',
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s,
-            'views' => '50'
+            'views' => '50',
+            'title' => 'The title',
+            'description' => ['The description']
           } ]
         } ]
       } }
@@ -332,6 +383,8 @@ describe FlickrUpdater do
       photo.server.should == 'incoming_server'
       photo.secret.should == 'incoming_secret'
       photo.views.should == 50
+      photo.title.should == 'The title'
+      photo.description.should == 'The description'
       photo.lastupdate.should == Time.utc(2011, 1, 1, 1)
       photo.seen_at.should == Time.utc(2014)
 
@@ -395,6 +448,8 @@ describe FlickrUpdater do
           'server' => 'incoming_server',
           'secret' => 'incoming_secret',
           'views' => '50',
+          'title' => ['The title'],
+          'description' => ['The description'],
           'dates' => [ {
             'lastupdate' => Time.utc(2013).to_i.to_s
           } ],
@@ -418,6 +473,8 @@ describe FlickrUpdater do
       photo.server.should == old_photo_attrs['server']
       photo.secret.should == old_photo_attrs['secret']
       photo.views.should == old_photo_attrs['views']
+      photo.title.should == old_photo_attrs['title']
+      photo.description.should == old_photo_attrs['description']
       photo.lastupdate.should == old_photo_attrs['lastupdate']
       photo.seen_at.should == Time.utc(2014)
 
@@ -440,6 +497,8 @@ describe FlickrUpdater do
           'server' => 'incoming_server',
           'secret' => 'incoming_secret',
           'views' => '50',
+          'title' => ['The title'],
+          'description' => ['The description'],
           'dates' => [ {
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
           } ],
@@ -466,6 +525,8 @@ describe FlickrUpdater do
           'server' => 'incoming_server',
           'secret' => 'incoming_secret',
           'views' => '50',
+          'title' => ['The title'],
+          'description' => ['The description'],
           'dates' => [ {
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
           } ],
@@ -490,6 +551,8 @@ describe FlickrUpdater do
           'server' => 'incoming_server',
           'secret' => 'incoming_secret',
           'views' => '50',
+          'title' => ['The title'],
+          'description' => ['The description'],
           'dates' => [ {
             'lastupdate' => Time.utc(2011, 1, 1, 1).to_i.to_s
           } ],

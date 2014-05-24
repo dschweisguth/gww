@@ -105,6 +105,8 @@ class Photo
       seen_at: now,
       game_status: 'unfound',
       views: 0,
+      title: 'Title',
+      description: 'Description',
       faves: 0
     }
     if ! caller_attrs[:person]

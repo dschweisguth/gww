@@ -269,6 +269,8 @@ describe Photo do
     photo.seen_at.should_not == nil
     photo.game_status.should == 'unfound'
     photo.views.should == 0
+    photo.title.should == 'Title'
+    photo.description.should == 'Description'
     photo.faves.should == 0
     photo.other_user_comments.should == 0
     photo.member_comments.should == 0
@@ -292,6 +294,8 @@ describe Photo do
       seen_at: Time.utc(2012),
       game_status: 'found',
       views: 1,
+      title: 'Other title',
+      description: 'Other description',
       faves: 1,
       other_user_comments: 1,
       member_comments: 1,

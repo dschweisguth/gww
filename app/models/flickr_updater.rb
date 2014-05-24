@@ -56,7 +56,7 @@ class FlickrUpdater
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       Rails.logger.info "Getting page #{page} ..."
       photos_xml = FlickrService.instance.groups_pools_get_photos group_id: FlickrService::GROUP_ID,
-        per_page: 500, page: page, extras: 'geo,last_update,path_alias,views' # Note path_alias here but pathalias in the result
+        per_page: 500, page: page, extras: 'geo,last_update,path_alias,views,description' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
 
       Rails.logger.info "Updating database from page #{page} ..."
@@ -88,6 +88,8 @@ class FlickrUpdater
           accuracy: to_integer_or_nil(parsed_photo['accuracy']),
           lastupdate: Time.at(parsed_photo['lastupdate'].to_i).getutc,
           views: parsed_photo['views'].to_i,
+          title: parsed_photo['title'],
+          description: to_string_or_nil(parsed_photo['description']),
           seen_at: now
         }
         photo = Photo.find_by_flickrid photo_flickrid
@@ -145,6 +147,8 @@ class FlickrUpdater
         server: photo_info['server'],
         secret: photo_info['secret'],
         views: photo_info['views'].to_i,
+        title: to_string_or_nil(photo_info['title']),
+        description: to_string_or_nil(photo_info['description']),
         lastupdate: Time.at(photo_info['dates'][0]['lastupdate'].to_i).getutc,
         latitude: latitude,
         longitude: longitude,
@@ -195,6 +199,11 @@ class FlickrUpdater
   private_class_method def self.to_integer_or_nil(string)
     number = string.to_i
     number == 0 ? nil : number
+  end
+
+  private_class_method def self.to_string_or_nil(content)
+    description = content.first
+    description == {} ? nil : description
   end
 
   def self.fave_count(photo_flickrid)

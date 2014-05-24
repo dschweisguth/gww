@@ -10,6 +10,8 @@ FactoryGirl.define do
     seen_at { Time.now }
     game_status 'unfound'
     views 0
+    sequence(:title) { |n| "Title #{n}" }
+    sequence(:description) { |n| "Description #{n}" }
     faves 0
   end
 end

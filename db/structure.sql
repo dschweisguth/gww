@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.1.68, for apple-darwin10.8.0 (i386)
 --
--- Host: localhost    Database: gww_test
+-- Host: localhost    Database: gww_dev
 -- ------------------------------------------------------
 -- Server version	5.1.68
 
@@ -32,7 +32,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=847766 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=847808 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,6 +143,8 @@ CREATE TABLE `photos` (
   `member_questions` int(11) NOT NULL DEFAULT '0',
   `inferred_latitude` decimal(9,6) DEFAULT NULL,
   `inferred_longitude` decimal(9,6) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `photos_flickrid_unique` (`flickrid`),
   KEY `photos_game_status_index` (`game_status`),
@@ -169,7 +171,7 @@ CREATE TABLE `revelations` (
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   KEY `revelations_added_at_index` (`added_at`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=721 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=735 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,7 +293,7 @@ CREATE TABLE `tags` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_tags_on_photo_id_and_raw` (`photo_id`,`raw`),
   CONSTRAINT `tags_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2211 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2232 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -303,7 +305,7 @@ CREATE TABLE `tags` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-21 22:03:13
+-- Dump completed on 2014-05-23 16:08:44
 INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('13');
@@ -369,6 +371,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140521191000');
 INSERT INTO schema_migrations (version) VALUES ('20140521234839');
 
 INSERT INTO schema_migrations (version) VALUES ('20140522045551');
+
+INSERT INTO schema_migrations (version) VALUES ('20140523230659');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
