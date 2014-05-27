@@ -8,15 +8,17 @@
     <th>last update</th>
     <th>mapped</th>
     <th>game status</th>
+    <th>game status tags</th>
     <th></th>
   </tr>  
 <% @photos.each do |photo| %>
-  <tr>
+  <tr<%if photo.ready_to_score? %> class="ready-to-score"<% end %>>
     <td><%= link_to_person photo.person %></td>
     <td><%= local_date photo.dateadded %></td>
     <td><%= local_date photo.lastupdate %></td>
     <td><%= ! photo.accuracy.nil? %></td>
     <td><%= photo.game_status %></td>
+    <td><%= photo.game_status_tags.map(&:raw).join ', ' %></td>
     <td><%= link_to 'Edit', edit_admin_photo_path(photo, update_from_flickr: true) %></td>
   </tr>
 <% end %>

@@ -371,6 +371,16 @@ class Photo < ActiveRecord::Base
     order('lastupdate desc').includes(:person).find photo_ids
   end
 
+  GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf)
+
+  def ready_to_score?
+    %w(unfound unconfirmed).include?(game_status) && tags.any? { |tag| %w(foundinsf revealedinsf).include? tag.raw.downcase }
+  end
+
+  def game_status_tags
+    tags.select { |tag| GAME_STATUS_TAGS.include?(tag.raw.downcase) }.sort_by { |tag| GAME_STATUS_TAGS.index tag.raw.downcase }
+  end
+
   def self.find_with_associations(id)
     includes(:person, :revelation, { guesses: :person }).find id
   end

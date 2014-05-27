@@ -14,6 +14,17 @@ describe Admin::PhotosController do
         get :unfound
         lists_photo
       end
+
+      it "highlights a photo tagged foundinSF" do
+        stub(Photo).unfound_or_unconfirmed { [ @photo ] }
+        tag = build :tag, photo: @photo, raw: 'foundinSF'
+        stub(@photo).tags { [tag] }
+        get :unfound
+        tr = top_node.all('tr')[1]
+        tr.all('td')[5].text.should == 'foundinSF'
+        tr['class'].should == 'ready-to-score'
+      end
+
     end
 
     describe '#inaccessible' do

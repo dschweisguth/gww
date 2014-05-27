@@ -1183,6 +1183,60 @@ describe Photo do
 
   end
 
+  describe '#ready_to_score?' do
+    %w(unfound unconfirmed).each do |game_status|
+      %w(foundinSF revealedinSF).each do |raw|
+        it "returns true if the photo is #{game_status} and has a #{raw} tag" do
+          photo = create :photo, game_status: game_status
+          create :tag, photo: photo, raw: raw
+          photo.ready_to_score?.should be_true
+        end
+      end
+    end
+
+    it "ignores tag case" do
+      photo = create :photo, game_status: 'unfound'
+      create :tag, photo: photo, raw: 'FOUNDINSF'
+      photo.ready_to_score?.should be_true
+    end
+
+    it "returns false if the photo is neither unfound nor unconfirmed" do
+      photo = create :photo, game_status: 'found'
+      create :tag, photo: photo, raw: 'foundinSF'
+      photo.ready_to_score?.should be_false
+    end
+
+    it "returns false if the photo does not have a foundinSF or revealedinSF tag" do
+      photo = create :photo, game_status: 'unfound'
+      create :tag, photo: photo, raw: 'unfoundinSF'
+      photo.ready_to_score?.should be_false
+    end
+
+  end
+
+  describe '#game_status_tags' do
+    it "returns the photo's game status tags" do
+      photo = create :photo
+      %w(unfoundinSF foundinSF revealedinSF).each do |raw|
+        create :tag, photo: photo, raw: raw
+      end
+      photo.game_status_tags.map(&:raw).should == %w(unfoundinSF foundinSF revealedinSF)
+    end
+
+    it "is case-insensitive" do
+      photo = create :photo
+      %w(UNFOUNDINSF FOUNDINSF REVEALEDINSF).each do |raw|
+        create :tag, photo: photo, raw: raw
+      end
+      photo.game_status_tags.map(&:raw).should == %w(UNFOUNDINSF FOUNDINSF REVEALEDINSF)
+    end
+
+    it "ignores non-game-status tags" do
+      create(:tag).photo.game_status_tags.should be_empty
+    end
+
+  end
+
   describe '.find_with_associations' do
     it "returns a revealed photo with all of its associated objects" do
       photo_in = Photo.make

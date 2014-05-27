@@ -296,6 +296,12 @@ h2 {
   display: inline;
 }
 
+/* /admin/photos/unfound */
+
+tr.ready-to-score {
+  background-color: yellow;
+}
+
 /* /admin/photos/#/edit */
 
 .edit {
