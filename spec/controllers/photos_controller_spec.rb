@@ -293,23 +293,33 @@ describe PhotosController do
 
     end
 
-  end
+    it "displays tags" do
+      photo = build :photo, id: 1
+      stub(photo).human_tags { [
+        build(:tag, raw: 'Tag 2'),
+        build(:tag, raw: 'Tag 1'),
+      ] }
+      stub(photo).machine_tags { [
+        build(:tag, raw: 'Machine tag 2'),
+        build(:tag, raw: 'Machine tag 1')
+      ] }
+      stub(Photo).find(photo.id) { photo }
+      get :show, id: photo.id
 
-  it "displays tags" do
-    photo = build :photo, id: 1
-    stub(photo).human_tags { [
-      build(:tag, raw: 'Tag 2'),
-      build(:tag, raw: 'Tag 1'),
-    ] }
-    stub(photo).machine_tags { [
-      build(:tag, raw: 'Machine tag 2'),
-      build(:tag, raw: 'Machine tag 1')
-    ] }
-    stub(Photo).find(photo.id) { photo }
-    get :show, id: photo.id
+      response.body.should =~ /Tags.*Tag 2.*Tag 1/m
+      response.body.should =~ /Machine tags.*Machine tag 2.*Machine tag 1/m
 
-    response.body.should =~ /Tags.*Tag 2.*Tag 1/m
-    response.body.should =~ /Machine tags.*Machine tag 2.*Machine tag 1/m
+    end
+
+    it "styles a foundinSF or unfoundinSF tag differently if it doesn't match the photo" do
+      photo = build :photo, id: 1
+      stub(Photo).find(photo.id) { photo }
+      stub(photo).human_tags { [build(:tag, raw: 'foundinSF')] }
+      get :show, id: photo.id
+
+      response.body.should have_css 'li.incorrect'
+
+    end
 
   end
 

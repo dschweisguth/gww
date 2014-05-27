@@ -7,4 +7,9 @@ class Tag < ActiveRecord::Base
 
   attr_readonly :raw, :machine_tag
 
+  def correct?
+    !(raw.downcase == 'foundinsf' && photo.game_status != 'found' ||
+      raw.downcase == 'unfoundinsf' && ! %w(unfound unconfirmed).include?(photo.game_status))
+  end
+
 end

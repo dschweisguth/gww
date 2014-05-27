@@ -41,4 +41,53 @@ describe Tag do
 
   end
 
+  describe '#correct?' do
+    context "when checking foundinSF" do
+      it "returns true if the photo is found" do
+        photo = build :photo, game_status: 'found'
+        tag = build :tag, photo: photo, raw: 'foundinSF'
+        tag.correct?.should be_true
+      end
+
+      it "returns false if the photo is not found" do
+        photo = build :photo, game_status: 'unfound'
+        tag = build :tag, photo: photo, raw: 'foundinSF'
+        tag.correct?.should be_false
+      end
+
+      it "is case-insensitive" do
+        photo = build :photo, game_status: 'unfound'
+        tag = build :tag, photo: photo, raw: 'FOUNDINSF'
+        tag.correct?.should be_false
+      end
+
+    end
+
+    context "when checking unfoundinSF" do
+      %w(unfound unconfirmed).each do |game_status|
+        it "returns true if the photo is #{game_status}" do
+          photo = build :photo, game_status: game_status
+          tag = build :tag, photo: photo, raw: 'unfoundinSF'
+          tag.correct?.should be_true
+        end
+      end
+
+      %w(found revealed).each do |game_status|
+        it "returns false if the photo is #{game_status}" do
+          photo = build :photo, game_status: game_status
+          tag = build :tag, photo: photo, raw: 'unfoundinSF'
+          tag.correct?.should be_false
+        end
+      end
+
+      it "is case-insensitive" do
+        photo = build :photo, game_status: 'found'
+        tag = build :tag, photo: photo, raw: 'UNFOUNDINSF'
+        tag.correct?.should be_false
+      end
+
+    end
+
+  end
+
 end
