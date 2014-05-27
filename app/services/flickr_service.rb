@@ -23,10 +23,6 @@ class FlickrService
     @retry_quantum = 30
   end
 
-  def wait_between_requests
-    sleep Rails.env.test? ? 0 : 1.1
-  end
-
   def groups_get_info(opts)
     request 'flickr.groups.getInfo', opts
   end
@@ -61,6 +57,7 @@ class FlickrService
 
   # Public for testing
   def request(api_method, extra_params = {})
+    sleep seconds_to_wait
     url = api_url api_method, extra_params
     xml = submit url
     if xml !~ /<.*?>/m
@@ -74,6 +71,18 @@ class FlickrService
       raise FlickrReturnedAnError.new(stat: parsed_xml['stat'], code: err['code'].to_i, msg: err['msg'])
     end
     parsed_xml
+  end
+
+  def seconds_to_wait
+    now = Time.now
+    time =
+      if Rails.env.test? || @last_called_at.nil?
+        0
+      else
+        [@last_called_at + 1 - now, 0].max
+      end
+    @last_called_at = now
+    time
   end
 
   private def api_url(api_method, extra_params = {})

@@ -46,8 +46,6 @@ class FlickrUpdater
 
   ### Photos
 
-  # TODO Dave count and report Flickr API calls
-  # TODO Dave move delays into request method -- check how much time has passed since previous request
   def self.update_all_photos
     page = 1
     parsed_photos = nil
@@ -205,13 +203,11 @@ class FlickrUpdater
   end
 
   def self.fave_count(photo_flickrid)
-    FlickrService.instance.wait_between_requests
     faves_xml = FlickrService.instance.photos_get_favorites photo_id: photo_flickrid, per_page: 1
     faves_xml['photo'][0]['total'].to_i
   end
 
   def self.update_comments(photo)
-    FlickrService.instance.wait_between_requests
     begin
       comments_xml = FlickrService.instance.photos_comments_get_list photo_id: photo.flickrid
       parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
@@ -234,7 +230,6 @@ class FlickrUpdater
   end
 
   def self.update_tags(photo)
-    FlickrService.instance.wait_between_requests
     begin
       tags_xml = FlickrService.instance.tags_get_list_photo photo_id: photo.flickrid
       parsed_tags = tags_xml['photo'][0]['tags'][0]['tag'] || []

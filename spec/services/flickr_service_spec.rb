@@ -124,4 +124,43 @@ describe FlickrService do
 
   end
 
+  describe '.seconds_to_wait' do
+
+    it "returns 0 in tests" do
+      service.seconds_to_wait.should == 0
+    end
+
+    context "when not in tests" do
+      before do
+        stub(Rails.env).test? { false }
+      end
+
+      it "returns 0 the first time it's called" do
+        service.seconds_to_wait.should == 0
+      end
+
+      it "returns 1 if it's been 0 seconds since it was last called" do
+        stub(Time).now { Time.utc(2014) }
+        service.seconds_to_wait
+        service.seconds_to_wait.should == 1
+      end
+
+      it "returns 0.25 if it's been 0.75 seconds since it was last called" do
+        stub(Time).now { Time.utc(2014) }
+        service.seconds_to_wait
+        stub(Time).now { Time.utc(2014) + 0.75.seconds }
+        service.seconds_to_wait.should == 0.25
+      end
+
+      it "returns 0 if it's been more than 1 second since it was last called" do
+        stub(Time).now { Time.utc(2014) }
+        service.seconds_to_wait
+        stub(Time).now { Time.utc(2014) + 2.seconds }
+        service.seconds_to_wait.should == 0
+      end
+
+    end
+
+  end
+
 end
