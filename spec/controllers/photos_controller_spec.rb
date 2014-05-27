@@ -222,6 +222,8 @@ describe PhotosController do
       response.should be_success
       link = top_node.find %Q(a[href="#{url_for_flickr_photo_in_pool(photo)}"])
       link.should have_css %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
+      response.body.should include photo.title
+      response.body.should include photo.description
       response.body.should include 'This photo is unfound.'
       table = top_node.find 'table'
       table.should have_css 'td', text: 'guesser_username'
