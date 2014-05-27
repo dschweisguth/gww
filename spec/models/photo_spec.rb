@@ -758,6 +758,38 @@ describe Photo do
 
   end
 
+  describe '.human_tags' do
+    it "returns non-machine tags sorted by id" do
+      photo = create :photo
+      photo.tags.create! raw: 'Tag 2'
+      photo.tags.create! raw: 'Tag 1'
+      photo.human_tags.map(&:raw).should == ['Tag 2', 'Tag 1']
+    end
+
+    it "ignores machine tags" do
+      photo = create :photo
+      photo.tags.create! raw: 'Machine tag 1', machine_tag: true
+      photo.human_tags.should be_empty
+    end
+
+  end
+
+  describe '.machine_tags' do
+    it "returns machine tags sorted by id" do
+      photo = create :photo
+      photo.tags.create! raw: 'Tag 2', machine_tag: true
+      photo.tags.create! raw: 'Tag 1', machine_tag: true
+      photo.machine_tags.map(&:raw).should == ['Tag 2', 'Tag 1']
+    end
+
+    it "ignores machine tags" do
+      photo = create :photo
+      photo.tags.create! raw: 'Machine tag 1', machine_tag: false
+      photo.machine_tags.should be_empty
+    end
+
+  end
+
   # Used by WheresiesController
 
   describe '.most_viewed_in_year' do

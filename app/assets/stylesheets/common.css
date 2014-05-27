@@ -259,6 +259,25 @@ a.normal {
   text-align: center;
 }
 
+h2 {
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.tags {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tags li {
+  display: inline-block;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin: 0 5px 5px 0;
+  color: #666666;
+}
+
 /* /wheresies/# */
 
 .float {

@@ -238,6 +238,8 @@ describe PhotosController do
       response.body.should include '22 views'
       response.body.should include '33 faves'
       response.body.should_not include 'GWW.config'
+      response.body.should_not include 'Tags'
+      response.body.should_not include 'Machine tags'
 
     end
 
@@ -290,6 +292,24 @@ describe PhotosController do
       response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
 
     end
+
+  end
+
+  it "displays tags" do
+    photo = build :photo, id: 1
+    stub(photo).human_tags { [
+      build(:tag, raw: 'Tag 2'),
+      build(:tag, raw: 'Tag 1'),
+    ] }
+    stub(photo).machine_tags { [
+      build(:tag, raw: 'Machine tag 2'),
+      build(:tag, raw: 'Machine tag 1')
+    ] }
+    stub(Photo).find(photo.id) { photo }
+    get :show, id: photo.id
+
+    response.body.should =~ /Tags.*Tag 2.*Tag 1/m
+    response.body.should =~ /Machine tags.*Machine tag 2.*Machine tag 1/m
 
   end
 

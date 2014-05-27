@@ -28,5 +28,21 @@
     </div>
   </div>
   <hr/>
+  <% if @photo.human_tags.any? %>
+    <h2>Tags</h2>
+    <ul class="tags">
+      <% @photo.human_tags.each do |tag| %>
+        <li><%= tag.raw %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if @photo.machine_tags.any? %>
+    <h2>Machine tags</h2>
+    <ul class="tags">
+      <% @photo.machine_tags.each do |tag| %>
+        <li><%= tag.raw %></li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>
 <br class="clear"/>

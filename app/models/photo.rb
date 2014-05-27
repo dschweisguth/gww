@@ -231,6 +231,14 @@ class Photo < ActiveRecord::Base
       .paginate page: page, per_page: 30
   end
 
+  def human_tags
+    tags.where(machine_tag: false).order :id
+  end
+
+  def machine_tags
+    tags.where(machine_tag: true).order :id
+  end
+
   # Used by WheresiesController
 
   def self.most_viewed_in(year)
