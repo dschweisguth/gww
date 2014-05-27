@@ -7,7 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
-Migrate from static.flickr to staticflickr
 Make PhantomJS report errors in Javascript
 Spring?
 Measure Javascript coverage
@@ -18,13 +17,15 @@ Merge revelations into guesses?
 
 Features
 
+Migrate from static.flickr to staticflickr
+Use flic.kr URLs in score report
 Scrape and display given names, since Flickr prefers them to usernames now
 Parse
 - "1535 7th, on the west side between Kirkham and Lawton"
 - Mount and Mt(.)
 - "Market Street and Seventh Street?"
 Include tags in update
-  Highlight foundinSF/unfoundinSF in unfound list
+  Highlight foundinSF/unfoundinSF in on photo page and in unfound list
   Make them searchable
 Include comments in update
   Order unfound list by most recent comment
