@@ -1,3 +1,4 @@
+# noinspection RubyArgCount
 def renders_report_for(report_date, previous_report_date, action, params = {})
   person0 = Person.make id: 0
   person1 = Person.make id: 1
@@ -40,7 +41,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   guessers = [ [ person2, [ guess21, guess22 ] ], [ person1, [ guess11 ] ] ]
   stub(Person).add_change_in_standings(people_by_score, people, previous_report_date, guessers) {}
 
-  stub(FlickrUpdate).first { FlickrUpdate.make member_count: 3 }
+  stub(FlickrUpdate).order.stub!.first { FlickrUpdate.make member_count: 3 }
 
   get action, params
 
