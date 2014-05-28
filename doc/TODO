@@ -16,7 +16,6 @@ Merge revelations into guesses?
 
 Features
 
-Migrate from static.flickr to staticflickr
 Use flic.kr URLs in score report
 Scrape and display given names, since Flickr prefers them to usernames now
 Parse

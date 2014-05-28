@@ -30,19 +30,19 @@ describe Photos do
     it 'returns the URL to the given photo' do
       photo = Photo.make
       url_for_flickr_image(photo).should ==
-        "https://farm#{photo.farm}.static.flickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
+        "https://farm#{photo.farm}.staticflickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
     end
 
     it 'handles missing farm' do
       photo = Photo.make farm: ''
       url_for_flickr_image(photo).should ==
-        "https://static.flickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
+        "https://staticflickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
     end
 
     it 'provides the requested size' do
       photo = Photo.make
       url_for_flickr_image(photo, 't').should ==
-        "https://farm0.static.flickr.com/server/#{photo.flickrid}_#{photo.secret}_t.jpg";
+        "https://farm0.staticflickr.com/server/#{photo.flickrid}_#{photo.secret}_t.jpg";
     end
 
   end

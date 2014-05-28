@@ -36,9 +36,9 @@ describe ScoreReportsHelper do
 
   describe '#image_url_for_star' do
     expected = {
-      bronze: 'https://farm9.static.flickr.com/8332/8143796058_095478b380_o.gif',
-      silver: 'https://farm9.static.flickr.com/8470/8143764201_c938bf6bea_o.gif',
-      gold:   'https://farm9.static.flickr.com/8050/8143796020_85a314ced3_o.gif'
+      bronze: 'https://farm9.staticflickr.com/8332/8143796058_095478b380_o.gif',
+      silver: 'https://farm9.staticflickr.com/8470/8143764201_c938bf6bea_o.gif',
+      gold:   'https://farm9.staticflickr.com/8050/8143796020_85a314ced3_o.gif'
     }
     expected.keys.each do |star|
       it "returns #{expected[star]} given a #{star} star" do
