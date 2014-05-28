@@ -88,6 +88,27 @@ describe Tag do
 
     end
 
+    context "when checking revealedinSF" do
+      it "returns true if the photo is revealed" do
+        photo = build :photo, game_status: 'revealed'
+        tag = build :tag, photo: photo, raw: 'revealedinSF'
+        tag.correct?.should be_true
+      end
+
+      it "returns false if the photo is not revealed" do
+        photo = build :photo, game_status: 'unfound'
+        tag = build :tag, photo: photo, raw: 'revealedinSF'
+        tag.correct?.should be_false
+      end
+
+      it "is case-insensitive" do
+        photo = build :photo, game_status: 'unfound'
+        tag = build :tag, photo: photo, raw: 'REVEALEDINSF'
+        tag.correct?.should be_false
+      end
+
+    end
+
   end
 
 end
