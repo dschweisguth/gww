@@ -214,7 +214,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.unfound_or_unconfirmed
-    where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person)
+    where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person, :tags)
   end
 
   def self.search(terms, sorted_by, direction, page)
@@ -361,14 +361,15 @@ class Photo < ActiveRecord::Base
   # Used by Admin::PhotosController
 
   def self.inaccessible
-    where("seen_at < ? and game_status in ('unfound', 'unconfirmed')", FlickrUpdate.latest.created_at) \
-      .order('lastupdate desc').includes(:person)
+    where("seen_at < ?", FlickrUpdate.latest.created_at)
+      .where("game_status in ('unfound', 'unconfirmed')")
+      .order('lastupdate desc')
+      .includes(:person, :tags)
   end
 
   def self.multipoint
-    photo_ids = Guess.group(:photo_id).count \
-      .to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
-    order('lastupdate desc').includes(:person).find photo_ids
+    photo_ids = Guess.group(:photo_id).count.to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
+    order('lastupdate desc').includes(:person, :tags).find photo_ids
   end
 
   GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf)
