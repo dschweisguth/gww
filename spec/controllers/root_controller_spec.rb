@@ -10,7 +10,7 @@ describe RootController do
       get :index
 
       response.should be_success
-      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 20 minutes.'
+      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 40 minutes.'
       response.body.should have_link '2011', href: wheresies_path(2011)
 
     end
