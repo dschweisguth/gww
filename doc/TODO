@@ -22,11 +22,8 @@ Parse
 - "1535 7th, on the west side between Kirkham and Lawton"
 - Mount and Mt(.)
 - "Market Street and Seventh Street?"
-Include tags in update
-  Highlight foundinSF/unfoundinSF in on photo page and in unfound list
-  Make them searchable
-Include comments in update
-  Order unfound list by most recent comment
+Include tags and comment in update
+  Order unfound list by most recent comment or tag
   Make them searchable
 Post scores to Flickr group automatically
 Add last-updated dates to photos which
@@ -43,7 +40,7 @@ Track interestingness
 Combine a player's posts, guesses and comments into a single activity stream
 Do the same for all players?
 Write an admin page that reports on bogus data
-  Photos that have guesses but have game_status != unfound
+  Photos that have guesses or revelations but have game_status unfound
   Photos that are guessed by the owner of the photo
   Photos that have both guesses and revelations
   Guesses made before photo was added

@@ -146,6 +146,14 @@ class Photo < ActiveRecord::Base
     where(person_id: person).includes(guesses: :person)
   end
 
+  def has_obsolete_tags?
+    if %w(found revealed).include?(game_status)
+      raws = tags.map { |tag| tag.raw.downcase }
+      raws.include?('unfoundinsf') &&
+        ! (raws.include?('foundinsf') || game_status == 'revealed' && raws.include?('revealedinsf'))
+    end
+  end
+
   def self.mapped_count(poster_id)
     where(person_id: poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
   end

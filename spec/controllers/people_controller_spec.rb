@@ -131,17 +131,7 @@ describe PeopleController do
     end
 
     it "handles a person who has never guessed" do
-      stub(Guess).mapped_count { 0 }
-      stub(Person).high_scorers(@now, 7) { [] }
-      stub(Person).high_scorers(@now, 30) { [] }
-      stub(Guess).first_by(@person)
-      stub(Guess).most_recent_by(@person)
-      stub(Guess).oldest(@person)
-      stub(Guess).fastest(@person)
-      stub(Guess).longest_lasting(@person)
-      stub(Guess).shortest_lasting(@person)
-      stub(@person).favorite_posters { [] }
-
+      stub_no_guesses
       stub_posts
       
       get :show, id: @person.id
@@ -195,6 +185,48 @@ describe PeopleController do
 
     end
 
+    it "highlights guessed posts with obsolete tags" do
+      stub_no_guesses
+      stub_posts
+      found1 = Guess.make 'found1', person: Person.make('guesser1', id: 1)
+      found1.photo.guesses << found1
+      stub(found1.photo).has_obsolete_tags? { true }
+      stub(Photo).find_with_guesses(@person) { [ found1.photo ] }
+      stub(Photo).where(person_id: @person, game_status: 'revealed') { [] }
+      get :show, id: @person.id
+
+      top_node.should have_css('.photo-links a.needs-attention')
+
+    end
+
+    it "highlights revealed posts with obsolete tags" do
+      stub_no_guesses
+      stub_posts
+      stub(Photo).find_with_guesses(@person) { [] }
+      photo = Photo.make 'revealed'
+      stub(photo).has_obsolete_tags? { true }
+      stub(Photo).where(person_id: @person, game_status: 'revealed') { [photo] }
+      get :show, id: @person.id
+
+      top_node.should have_css('.photo-links a.needs-attention')
+
+    end
+
+    # noinspection RubyArgCount
+    def stub_no_guesses
+      stub(Guess).mapped_count { 0 }
+      stub(Person).high_scorers(@now, 7) { [] }
+      stub(Person).high_scorers(@now, 30) { [] }
+      stub(Guess).first_by(@person)
+      stub(Guess).most_recent_by(@person)
+      stub(Guess).oldest(@person)
+      stub(Guess).fastest(@person)
+      stub(Guess).longest_lasting(@person)
+      stub(Guess).shortest_lasting(@person)
+      stub(@person).favorite_posters { [] }
+    end
+
+    # noinspection RubyArgCount
     def stub_guesses
       stub(Guess).mapped_count { 1 }
 
@@ -236,6 +268,7 @@ describe PeopleController do
 
     end
 
+    # noinspection RubyArgCount
     def stub_posts
       stub(Photo).mapped_count { 1 }
 

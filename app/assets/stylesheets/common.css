@@ -159,7 +159,7 @@ a.normal {
   padding: 0 2px;
 }
 
-.unconfirmed {
+.unconfirmed, .needs-attention {
   background-color: #ffcc33;
 }
 

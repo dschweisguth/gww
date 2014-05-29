@@ -81,4 +81,16 @@ module PeopleHelper
     }[star]
   end
 
+  def highlighted_link_to(text, photo)
+    classes =
+      if photo.has_obsolete_tags?
+        ['needs-attention']
+      elsif !photo.mapped_or_automapped?
+        ['unmapped']
+      else
+        []
+      end
+    link_to text, photo_path(photo), classes.any? ? { class: classes } : {}
+  end
+
 end
