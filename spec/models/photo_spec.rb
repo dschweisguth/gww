@@ -817,6 +817,183 @@ describe Photo do
 
   end
 
+  describe '.search' do
+    it "returns all photos" do
+      create :photo
+      Photo.search({}, 'last-updated', '-', 1).length.should == 1
+    end
+
+    context "when specifying game_status" do
+      it "returns a photo with the given status" do
+        create :photo, game_status: 'found'
+        Photo.search({ 'game_status' => %w(found) }, 'last-updated', '-', 1).length.should == 1
+      end
+
+      it "searches for photos with any of multiple statuses" do
+        create :photo, game_status: 'found'
+        create :photo, game_status: 'revealed'
+        Photo.search({ 'game_status' => %w(found revealed) }, 'last-updated', '-', 1).length.should == 2
+      end
+
+      it "ignores a photo with a different status" do
+        create :photo, game_status: 'found'
+        Photo.search({ 'game_status' => %w(unfound) }, 'last-updated', '-', 1).length.should == 0
+      end
+
+    end
+
+    context "when specifying posted_by" do
+      it "returns a photo posted by the person with the given username" do
+        photo = create :photo
+        Photo.search({ 'posted_by' => photo.person.username }, 'last-updated', '-', 1).length.should == 1
+      end
+
+      it "ignores a photo posted by a person with a different username" do
+        create :photo
+        Photo.search({ 'posted_by' => 'xyz' }, 'last-updated', '-', 1).length.should == 0
+      end
+
+    end
+
+    context "when specifying text" do
+      %i(title description).each do |attr|
+        it "returns a photo whose #{attr} contains the given text" do
+          create :photo, attr => 'one two three'
+          photos_which_mention('two').length.should == 1
+        end
+
+        it "returns a photo whose #{attr} contains the given text in any case" do
+          create :photo, attr => 'ONE TWO THREE'
+          photos_which_mention('two').length.should == 1
+        end
+
+        it "ignores a photo whose title contains the given text, but not as a separate word" do
+          create :photo, title: 'onetwothree'
+          photos_which_mention('two').length.should == 0
+        end
+
+      end
+
+      it "ignores a photo that has all the terms but in different attributes" do
+        create :photo, title: 'one two three', description: 'four five six'
+        photos_which_mention('two', 'five').length.should == 0
+      end
+
+      it "returns a photo with a tag that contains the given text" do
+        create :tag, raw: 'one two three'
+        photos_which_mention('two').length.should == 1
+      end
+
+      it "returns a photo with a tag that contains the given text in any case" do
+        create :tag, raw: 'ONE TWO THREE'
+        photos_which_mention('two').length.should == 1
+      end
+
+      it "returns a photo that has all the terms but in different tags" do
+        photo = create :photo
+        create :tag, photo: photo, raw: 'one two three'
+        create :tag, photo: photo, raw: 'four five six'
+        photos_which_mention('two', 'four').length.should == 1
+      end
+
+      it "ignores a photo with a tag that contains the given text, but not as a separate word" do
+        create :tag, raw: 'onetwothree'
+        photos_which_mention('two').length.should == 0
+      end
+
+      it "doesn't return all photos when a tag matches, just the one with the tag" do
+        tag1 = create :tag, raw: 'one two three'
+        create :tag
+        photos_which_mention('two').should == [tag1.photo]
+      end
+
+      it "returns a photo with a comment that contains the given text" do
+        create :comment, comment_text: 'one two three'
+        photos_which_mention('two').length.should == 1
+      end
+
+      it "returns a photo with a comment that contains the given text in any case" do
+        create :comment, comment_text: 'ONE TWO THREE'
+        photos_which_mention('two').length.should == 1
+      end
+
+      it "ignores a photo that has all the terms but in different comments" do
+        photo = create :photo
+        create :comment, photo: photo, comment_text: 'one two three'
+        create :comment, photo: photo, comment_text: 'four five six'
+        photos_which_mention('two', 'four').length.should == 0
+      end
+
+      it "ignores a photo with a comment that contains the given text, but not as a separate word" do
+        create :comment, comment_text: 'onetwothree'
+        photos_which_mention('two').length.should == 0
+      end
+
+      it "doesn't return all photos when a comment matches, just the one with the comment" do
+        comment1 = create :comment, comment_text: 'one two three'
+        create :comment
+        photos_which_mention('two').should == [comment1.photo]
+      end
+
+      it "searches for multiple terms" do
+        create :photo, title: 'one two three four five'
+        photos_which_mention('two', 'four').length.should == 1
+      end
+
+      it "ignores a photo that has only one of multiple terms" do
+        create :photo, title: 'one two three'
+        photos_which_mention('two', 'four').length.should == 0
+      end
+
+      it "searches for multiple groups in different attributes" do
+        create :photo, title: 'one two three', description: 'four five six'
+        Photo.search({ 'text' => [['two'], ['five']] }, 'last-updated', '-', 1).length.should == 1
+      end
+
+      it "ignores a photo none of whose title, description, tags or comments contains the given text" do
+        create :photo
+        photos_which_mention('Fort Point').length.should == 0
+      end
+
+      def photos_which_mention(*text)
+        Photo.search({ 'text' => [text] }, 'last-updated', '-', 1)
+      end
+
+    end
+
+    it "searches by more than one criterion" do
+      photo1 = create :photo, game_status: 'found'
+      create :photo, person: photo1.person
+      create :photo, game_status: 'found'
+      Photo.search({ 'game_status' => 'found', 'posted_by' => photo1.person.username }, 'last-updated', '-', 1).length.should == 1
+    end
+
+    it "sorts by last-updated, -" do
+      photo1 = create :photo, lastupdate: Time.utc(2012)
+      photo2 = create :photo, lastupdate: Time.utc(2013)
+      Photo.search({}, 'last-updated', '-', 1).should == [photo2, photo1]
+    end
+
+    it "sorts by last-updated, +" do
+      photo1 = create :photo, lastupdate: Time.utc(2013)
+      photo2 = create :photo, lastupdate: Time.utc(2012)
+      Photo.search({}, 'last-updated', '+', 1).should == [photo2, photo1]
+    end
+
+    it "sorts by date-added, -" do
+      photo1 = create :photo, dateadded: Time.utc(2012)
+      photo2 = create :photo, dateadded: Time.utc(2013)
+      Photo.search({}, 'date-added', '-', 1).should == [photo2, photo1]
+    end
+
+    it "sorts by date-added, +" do
+      photo1 = create :photo, dateadded: Time.utc(2013)
+      photo2 = create :photo, dateadded: Time.utc(2012)
+      Photo.search({}, 'date-added', '+', 1).should == [photo2, photo1]
+    end
+
+  end
+
   describe '.human_tags' do
     it "returns non-machine tags sorted by id" do
       photo = create :photo

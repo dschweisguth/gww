@@ -50,3 +50,45 @@ Feature: Photos
     And I click the "abcdefgh (1)" menu item
     And I press the "Search" button
     Then I should see search results for 1 photo
+
+  @javascript
+  Scenario: Player searches for a string which matches only the title
+    Given there is a photo
+    And the photo's "title" is "Fort Point Title"
+    And the photo has a tag
+    And the photo has a comment
+    When I go to the photos search page
+    And I fill in "text" with "Fort Point"
+    And I press the "Search" button
+    Then I should see search results for 1 photo
+    And I should see the photo's "title"
+    And I should see the photo's "description"
+    And I should see the tag
+    But I should not see the comment
+
+  @javascript
+  Scenario: Player searches for a string which matches every field
+    Given there is a photo
+    And the photo's "title" is "Fort Point Title"
+    And the photo's "description" is "Fort Point Title"
+    And the photo has a tag "Fort Point Tag"
+    And the photo has a comment "Fort Point Comment"
+    When I go to the photos search page
+    And I fill in "text" with "Fort Point"
+    And I press the "Search" button
+    Then I should see search results for 1 photo
+    And I should see the photo's "title"
+    And I should see the photo's "description"
+    And I should see the tag
+    And I should see the comment
+
+  @javascript
+  Scenario: Player searches for a comma-separated string which matches different comments
+    Given there is a photo
+    And the photo has a comment "It's a super-spectacular day"
+    And the photo has a comment "I thought gentrification meant men dressing themselves carefully"
+    When I go to the photos search page
+    And I fill in "text" with "spectacular, gentrification"
+    And I press the "Search" button
+    Then I should see "It's a super-spectacular day"
+    And I should see "I thought gentrification meant men dressing themselves carefully"

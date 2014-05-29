@@ -2,9 +2,9 @@
   <%# The outermost div is there so that the ID is at the top edge of the row so that we can scroll to the top edge %>
   <%# of the row instead of to the top edge of the image, which isn't always at the top edge of the row. %>
   <%# If we switch to images of uniform height this div can go away. %>
-  <div<% if i == 0 %> id="<%= params[:page] %>"<% end %>>
+  <div<% if i == 0 %> id="<%= params[:page] %>"<% end %> class="image<% if @text_terms.any? %> full<% end %>">
     <div>
-      <a href="<%= url_for_flickr_photo_in_pool(photo) %>" target="_blank"><%= titled_image_tag url_for_flickr_image(photo, 'm'), "" %></a>
+      <a href="<%= url_for_flickr_photo_in_pool(photo) %>"><%= titled_image_tag url_for_flickr_image(photo, 'm'), "" %></a>
       <div class="bg"></div>
       <div>
         <p>Last updated <%= dmy_local_date photo.lastupdate %></p>
@@ -16,4 +16,26 @@
       </div>
     </div>
   </div>
+  <% if @text_terms.any? %>
+    <% if photo.title %>
+      <h2><%= photo.title %></h2>
+    <% end %>
+    <% if photo.description %>
+      <p><%= raw photo.description.gsub("\n", "<br/>") %></p>
+    <% end %>
+    <% if photo.tags.any? %>
+      <h3>Tags:</h3>
+      <% photo.human_tags.map(&:raw).each do |tag|%>
+        <%= tag %>&nbsp;&nbsp;
+      <% end %>
+    <% end %>
+    <% matching_comments = photo.comments.select { |comment| @text_terms.any? { |terms| terms.all? { |text| comment.comment_text.downcase.include? text.downcase } } } %><%# TODO Dave match only on word boundaries %>
+    <% if matching_comments.any? %>
+      <br/><br/>
+      <% matching_comments.each do |comment| %>
+        <b><%= comment.username %></b> <%= raw comment.comment_text %><br/>
+      <% end %>
+    <% end %>
+    <br clear="all"/>
+  <% end %>
 <% end %>

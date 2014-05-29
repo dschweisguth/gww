@@ -1,15 +1,20 @@
-form {
-  padding-bottom: 12px;
-}
-
 form div, form table {
   display: inline-block;
   vertical-align: top;
   white-space: nowrap;
 }
 
+.text-fields .label {
+  display: inline-block;
+  width: 65px;
+}
+
 input {
   margin-right: 3px;
+}
+
+input:first-of-type {
+  margin-bottom: 10px;
 }
 
 .ui-autocomplete {
@@ -25,29 +30,48 @@ form img {
   margin-right: 6px;
 }
 
-select {
-  vertical-align: top;
-  margin-right: 6px;
+#search-help-icon {
+  font-size: 16px;
+  font-weight: normal;
+  margin-left: 3px;
+}
+
+.game-status span {
+  display: inline-block;
+  margin-top: 3px;
 }
 
 table {
   margin: 0;
 }
 
-#photos > div {
+select {
+  vertical-align: top;
+  margin-right: 6px;
+}
+
+#search-help {
+  display: none;
+}
+
+#search-help, #photos {
+  margin-top: 12px;
+}
+
+.image {
   display: inline-block;
   height: 240px;
   line-height: 240px; /* the height in which the child's vertical-align: middle applies */
   margin: 0 8px 8px 0;
 }
 
-#photos > div > div {
+.image > div {
   display: inline-block;
   vertical-align: middle;
   line-height: normal; /* reset line-height inherited from the parent */
 }
 
-#photos > div > div > div {
+.image > div > div {
   height: 52px;
   position: relative;
   bottom: 60px;
@@ -55,7 +79,7 @@ table {
   z-index: 1;
 }
 
-#photos > div > div > div.bg {
+.image > div > div.bg {
   bottom: 63px;
   margin-bottom: -63px;
   background-color: black;
@@ -63,7 +87,7 @@ table {
   visibility: hidden;
 }
 
-#photos > div > div > div p, #photos > div > div > div .game-status {
+.image > div > div p, .image > div > div .game-status {
   margin: 0 0 2px 0;
   color: white;
   font-size: 11px;
@@ -72,30 +96,44 @@ table {
   visibility: hidden;
 }
 
-#photos > div > div > div p.by {
+.image > div > div p.by {
   visibility: visible;
 }
 
-#photos > div > div > div a {
+.image > div > div a {
   font-weight: normal;
   text-decoration: none;
   color: white;
 }
 
-#photos > div > div > div a:hover {
+.image > div > div a:hover {
   background-color: blue;
 }
 
-#photos > div > div > div div {
+.image > div > div div {
   position: relative;
 }
 
-#photos > div > div > div .game-status {
+.image > div > div .game-status {
   position: absolute;
   top: 0;
   right: 0;
 }
 
-#photos img {
+.image img {
   height: 240px;
+}
+
+.image.full {
+  float: left;
+  clear: left;
+}
+
+h2 {
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 14px;
+  display: inline;
 }

@@ -43,27 +43,37 @@ class PhotosController < ApplicationController
     render formats: [:xml]
   end
 
-  # TODO Dave switch on Accept
   def search
     # TODO Dave fix nekomusume
-    @terms, @sorted_by, @direction = terms
+    @terms, @sorted_by, @direction = parsed_params
     @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
   end
 
   def search_data
-    @photos = Photo.search *terms, params[:page]
+    terms, sorted_by, direction = parsed_params
+    parsed_terms = parsed_terms terms
+    @photos = Photo.search(parsed_terms, sorted_by, direction, params[:page]).to_a
+    @text_terms = parsed_terms['text'] || []
     render layout: false
   end
 
-  private def terms
+  private def parsed_params
     params[:terms] ||= ''
     terms = params[:terms].split('/').each_slice(2).map { |key, value| [key.gsub('-', '_'), value] }.to_h
     if terms['game_status']
-      terms['game_status'] = terms['game_status'].split(',')
+      terms['game_status'] = terms['game_status'].split ','
     end
     sorted_by = terms.delete('sorted_by') || 'last-updated'
     direction = terms.delete('direction') || '-'
     [ terms, sorted_by, direction ]
+  end
+
+  private def parsed_terms(terms)
+    parsed_terms = terms.dup
+    if parsed_terms['text']
+      parsed_terms['text'] = parsed_terms['text'].split(/\s*,\s*/).map &:split
+    end
+    parsed_terms
   end
 
   caches_page :autocomplete_usernames

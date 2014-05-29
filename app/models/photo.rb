@@ -3,7 +3,7 @@ class Photo < ActiveRecord::Base
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy
-  has_many :tags, inverse_of: :photo, dependent: :destroy
+  has_many :tags, -> { order :id }, inverse_of: :photo, dependent: :destroy
   has_many :guesses, inverse_of: :photo, dependent: :destroy
   has_one :revelation, inverse_of: :photo, dependent: :destroy
   validates_presence_of :flickrid, :dateadded, :lastupdate, :seen_at,
@@ -233,6 +233,19 @@ class Photo < ActiveRecord::Base
     if terms.has_key? 'posted_by'
       query = query.joins(:person).where people: { username: terms['posted_by'] }
     end
+    if terms['text']
+      terms['text'].each do |words|
+        clauses = [
+          "title regexp ?",
+          "description regexp ?",
+          "exists (select 1 from tags t where photos.id = t.photo_id and lower(t.raw) regexp ?)"
+        ]
+        sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
+          "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and " }))"
+        query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word}[[:>:]]" })
+          .includes :tags, :comments # because we display them when it's a text search
+      end
+    end
     query
       .order("#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
       .includes(:person)
@@ -240,11 +253,11 @@ class Photo < ActiveRecord::Base
   end
 
   def human_tags
-    tags.where(machine_tag: false).order :id
+    tags.select { |tag| !tag.machine_tag }
   end
 
   def machine_tags
-    tags.where(machine_tag: true).order :id
+    tags.select &:machine_tag
   end
 
   # Used by WheresiesController
@@ -380,11 +393,11 @@ class Photo < ActiveRecord::Base
     order('lastupdate desc').includes(:person, :tags).find photo_ids
   end
 
-  GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf)
-
   def ready_to_score?
     %w(unfound unconfirmed).include?(game_status) && tags.any? { |tag| %w(foundinsf revealedinsf).include? tag.raw.downcase }
   end
+
+  GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf)
 
   def game_status_tags
     tags.select { |tag| GAME_STATUS_TAGS.include?(tag.raw.downcase) }.sort_by { |tag| GAME_STATUS_TAGS.index tag.raw.downcase }

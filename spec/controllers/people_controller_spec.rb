@@ -185,30 +185,83 @@ describe PeopleController do
 
     end
 
-    it "highlights guessed posts with obsolete tags" do
-      stub_no_guesses
-      stub_posts
-      found1 = Guess.make 'found1', person: Person.make('guesser1', id: 1)
-      found1.photo.guesses << found1
-      stub(found1.photo).has_obsolete_tags? { true }
-      stub(Photo).find_with_guesses(@person) { [ found1.photo ] }
-      stub(Photo).where(person_id: @person, game_status: 'revealed') { [] }
-      get :show, id: @person.id
+    context "when highlighting a post" do
+      let(:photo) { Photo.make 'the_post' }
 
-      top_node.should have_css('.photo-links a.needs-attention')
+      before do
+        stub_no_guesses
+        stub_posts
+        stub(Photo).find_with_guesses(@person) { [] }
+        stub(Photo).where(person_id: @person, game_status: 'revealed') { [] }
+      end
 
-    end
+      it "does not highlight a guessed post which is mapped and has no obsolete tags" do
+        stub_guessed_post
+        stub(photo).mapped_or_automapped? { true }
+        get :show, id: @person.id
 
-    it "highlights revealed posts with obsolete tags" do
-      stub_no_guesses
-      stub_posts
-      stub(Photo).find_with_guesses(@person) { [] }
-      photo = Photo.make 'revealed'
-      stub(photo).has_obsolete_tags? { true }
-      stub(Photo).where(person_id: @person, game_status: 'revealed') { [photo] }
-      get :show, id: @person.id
+        top_node.should_not have_css('.photo-links a.unmapped')
+        top_node.should_not have_css('.photo-links a.needs-attention')
 
-      top_node.should have_css('.photo-links a.needs-attention')
+      end
+
+      it "does not highlight a revealed post which is mapped and has no obsolete tags" do
+        stub_revealed_post
+        stub(photo).mapped_or_automapped? { true }
+        get :show, id: @person.id
+
+        top_node.should_not have_css('.photo-links a.unmapped')
+        top_node.should_not have_css('.photo-links a.needs-attention')
+
+      end
+
+      it "highlights a guessed post which is not mapped" do
+        stub_guessed_post
+        stub(photo).mapped_or_automapped? { false }
+        get :show, id: @person.id
+
+        top_node.should have_css('.photo-links a.unmapped')
+
+      end
+
+      it "highlights a revealed post which is not mapped" do
+        stub_revealed_post
+        stub(photo).mapped_or_automapped? { false }
+        get :show, id: @person.id
+
+        top_node.should have_css('.photo-links a.unmapped')
+
+      end
+
+      it "highlights a guessed post with an obsolete tag" do
+        stub_guessed_post
+        stub(photo).has_obsolete_tags? { true }
+        get :show, id: @person.id
+
+        top_node.should have_css('.photo-links a.needs-attention')
+
+      end
+
+      it "highlights a revealed post with an obsolete tag" do
+        stub_revealed_post
+        stub(photo).has_obsolete_tags? { true }
+        get :show, id: @person.id
+
+        top_node.should have_css('.photo-links a.needs-attention')
+
+      end
+
+      def stub_guessed_post
+        found1 = Guess.make 'found1', photo: photo, person: Person.make('guesser1', id: 1)
+        photo.guesses << found1
+        # noinspection RubyArgCount
+        stub(Photo).find_with_guesses(@person) { [ photo ] }
+      end
+
+      def stub_revealed_post
+        # noinspection RubyArgCount
+        stub(Photo).where(person_id: @person, game_status: 'revealed') { [photo] }
+      end
 
     end
 
@@ -432,6 +485,7 @@ describe PeopleController do
       returns_post @initial_bounds, 'revealed', 'E00000', '-'
     end
 
+    # noinspection RubyArgCount
     def returns_post(bounds, game_status, color, symbol)
       post = Photo.make id: 14, person_id: @person.id, latitude: 37, longitude: -122, game_status: game_status
       stub(Photo).posted_or_guessed_by_and_mapped(@person.id, bounds, @default_max_photos + 1) { [ post ] }

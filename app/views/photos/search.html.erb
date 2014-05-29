@@ -9,11 +9,15 @@
 <%= sandwich do %>
   <%= title_and_h1 "Photo search" %>
 
-  <%= form_tag(search_photos_path, method: :get, class: 'inline') do %>
-    <div>
-      Posted by: <%= text_field_tag 'username', @terms['posted_by'] %>
-      <%= image_tag 'arrow_sans_down-16.png', size: '16x16' %>
-      Game status: <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], selected: @terms['game_status']), multiple: true %>
+  <%= form_tag(search_photos_path, method: :get) do %>
+    <div class="text-fields">
+      <span class="label">Posted by:</span> <%= text_field_tag 'username', @terms['posted_by'] %>
+      <%= image_tag 'arrow_sans_down-16.png', size: '16x16' %><br/>
+      <span class="label">Mentions:</span> <%= text_field_tag 'text', @terms['text'] %>
+      <a id="search-help-icon">?</a>
+    </div>
+    <div class="game-status">
+      <span>Game status:</span> <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], selected: @terms['game_status']), multiple: true %>
     </div>
     <div>
       <table>
@@ -33,6 +37,12 @@
       </div>
     </div>
   <% end %>
+
+  <p id="search-help">Searching for two or more words separated by spaces (e.g. "Fort Point") will return photos which have the two words near each other:
+    both in the title, both in the description, each in any tag, or both in a single comment.
+    Searching for two or more words separated by commas (e.g. "hint, Potrero") will return photos which have each
+    of the two words separately anywhere in their text.
+    You can even search both ways at the same time. For example, "San Jose, mural" is a good way to find murals on San Jose Avenue.</p>
 
   <div id="photos"></div>
 
