@@ -47,18 +47,57 @@ Then /^I should see search results for (\d+) photos?$/ do |photo_count|
   page.all('a[href^="https://www.flickr.com/photos/"]').count.should == photo_count.to_i
 end
 
-Then /^I should see the photo's "([^"]+)"$/ do |attribute|
-  page.should have_content(@photo.send attribute)
+Then /^I should see the photo's title$/ do
+  page.all('h2').any? { |h2| h2.has_content?(@photo.title) }.should be_true
+end
+
+Then /^I should see the photo's description$/ do
+  page.all('p').any? { |p| p.has_content?(@photo.description) }.should be_true
+end
+
+Then /^I should see the photo's title with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
+  page.should have_content(@photo.title)
+  [term1, term2].each do |term|
+    page.all('h2').any? { |h2| h2.has_css?('span[class=matched]', text: term) }.should be_true
+  end
+end
+
+Then /^I should see the photo's description with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
+  step "I should see the photo's description"
+  [term1, term2].each do |term|
+    page.all('p').any? { |p| p.has_css?('span[class=matched]', text: term) }.should be_true
+  end
 end
 
 Then /^I should see the tag$/ do
-  page.should have_content(@tag.raw)
+  page.should have_content("Tags: #{@tag.raw}")
 end
 
-Then /^I should see the comment$/ do
+Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
+  step "I should see the tag"
+  [term1, term2].each do |term|
+    page.should have_css('span[class=matched]', text: term)
+  end
+end
+
+Then /^I should see the comment with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   page.should have_content(@comment.comment_text)
+  [term1, term2].each do |term|
+    page.should have_css('span[class=matched]', text: term)
+  end
 end
 
 Then /^I should not see the comment$/ do
   page.should_not have_content(@comment.comment_text)
+end
+
+
+Then(/^I should see "([^"]+)" with "([^"]+)" highlighted$/) do |text, term|
+  page.should have_content(text)
+  page.should have_css('span[class=matched]', text: term)
+end
+
+
+Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
+  page.should have_css('span[class=matched]', text: term)
 end

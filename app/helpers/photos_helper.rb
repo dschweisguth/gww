@@ -42,4 +42,27 @@ module PhotosHelper
     ago
   end
 
+  def highlighted(string, text_terms, other_strings_that_count=[])
+    # Copy the string to be highlighted, remove HTML and use that when scanning for matches
+    strings_that_count = [string.gsub(/<[^>]+>/, '')] + other_strings_that_count
+    substrings = string.split /(<[^<]+>)/
+    text_terms.each do |group|
+      if group.all? { |term| strings_that_count.any? { |string_that_counts| string_that_counts =~ contains_as_word(term) } }
+        group.each do |term|
+          regexp = contains_as_word term
+          substrings.each_with_index do |substring, i|
+            if i.even?
+              substring.gsub! regexp, '<span class="matched">\\1</span>'
+            end
+          end
+        end
+      end
+    end
+    substrings.join
+  end
+
+  private def contains_as_word(term)
+    /(?<!<span class="matched">)\b(#{term})\b/i
+  end
+
 end

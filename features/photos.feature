@@ -61,10 +61,36 @@ Feature: Photos
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
     Then I should see search results for 1 photo
-    And I should see the photo's "title"
-    And I should see the photo's "description"
+    And I should see the photo's title with "Fort" and "Point" highlighted
+    And I should see the photo's description
     And I should see the tag
     But I should not see the comment
+
+  # This scenario is necessary because there's no way to tell a highlight in a tag from one in a different field
+  @javascript
+  Scenario: Player searches for a string which matches only a tag
+    Given there is a photo
+    And the photo has a tag "Fort Point Tag"
+    When I go to the photos search page
+    And I fill in "text" with "Fort Point"
+    And I press the "Search" button
+    Then I should see search results for 1 photo
+    And I should see the photo's title
+    And I should see the photo's description
+    And I should see the tag with "Fort" and "Point" highlighted
+
+  # This scenario is necessary because there's no way to tell a highlight in a comment from one in a different field
+  @javascript
+  Scenario: Player searches for a string which matches only a comment
+    Given there is a photo
+    And the photo has a comment "Fort Point Comment"
+    When I go to the photos search page
+    And I fill in "text" with "Fort Point"
+    And I press the "Search" button
+    Then I should see search results for 1 photo
+    And I should see the photo's title
+    And I should see the photo's description
+    And I should see the comment with "Fort" and "Point" highlighted
 
   @javascript
   Scenario: Player searches for a string which matches every field
@@ -77,10 +103,21 @@ Feature: Photos
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
     Then I should see search results for 1 photo
-    And I should see the photo's "title"
-    And I should see the photo's "description"
-    And I should see the tag
-    And I should see the comment
+    And I should see the photo's title with "Fort" and "Point" highlighted
+    And I should see the photo's description with "Fort" and "Point" highlighted
+    And I should see the tag with "Fort" and "Point" highlighted
+    And I should see the comment with "Fort" and "Point" highlighted
+
+  @javascript
+  Scenario: Player searches for a two-word string which matches two different tags
+    Given there is a photo
+    And the photo has a tag "Fort Tag"
+    And the photo has a tag "Point Tag"
+    When I go to the photos search page
+    And I fill in "text" with "Fort Point"
+    And I press the "Search" button
+    Then I should see a tag with "Fort" highlighted
+    And I should see a tag with "Point" highlighted
 
   @javascript
   Scenario: Player searches for a comma-separated string which matches different comments
@@ -90,5 +127,5 @@ Feature: Photos
     When I go to the photos search page
     And I fill in "text" with "spectacular, gentrification"
     And I press the "Search" button
-    Then I should see "It's a super-spectacular day"
-    And I should see "I thought gentrification meant men dressing themselves carefully"
+    Then I should see "It's a super-spectacular day" with "spectacular" highlighted
+    And I should see "I thought gentrification meant men dressing themselves carefully" with "gentrification" highlighted

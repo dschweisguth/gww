@@ -137,3 +137,7 @@ h3 {
   font-size: 14px;
   display: inline;
 }
+
+.matched {
+  background: yellow;
+}

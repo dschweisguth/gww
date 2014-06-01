@@ -18,22 +18,23 @@
   </div>
   <% if @text_terms.any? %>
     <% if photo.title %>
-      <h2><%= photo.title %></h2>
+      <h2><%= raw highlighted(h(photo.title), @text_terms) %></h2>
     <% end %>
     <% if photo.description %>
-      <p><%= raw photo.description.gsub("\n", "<br/>") %></p>
+      <p><%= raw highlighted(photo.description.gsub("\n", "<br/>"), @text_terms) %></p>
     <% end %>
     <% if photo.human_tags.any? %>
       <h3>Tags:</h3>
-      <% photo.human_tags.map(&:raw).each do |tag|%>
-        <%= tag %>&nbsp;&nbsp;
+      <% raws = photo.human_tags.map &:raw %>
+      <% raws.each do |tag|%>
+        <%= raw highlighted(h(tag), @text_terms, raws) %>&nbsp;&nbsp;
       <% end %>
     <% end %>
     <% matching_comments = photo.comments_that_match @text_terms %>
     <% if matching_comments.any? %>
       <br/><br/>
       <% matching_comments.each do |comment| %>
-        <b><%= comment.username %></b> <%= raw comment.comment_text %><br/>
+        <b><%= comment.username %></b> <%= raw highlighted(comment.comment_text, @text_terms) %><br/>
       <% end %>
     <% end %>
     <br clear="all"/>
