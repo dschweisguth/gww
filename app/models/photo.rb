@@ -252,6 +252,10 @@ class Photo < ActiveRecord::Base
       .paginate page: page, per_page: 30
   end
 
+  def comments_that_match(text_term_groups)
+    comments.select { |comment| text_term_groups.any? { |terms| terms.all? { |text| comment.comment_text =~ /\b#{text}\b/i } } }
+  end
+
   def human_tags
     tags.select { |tag| !tag.machine_tag }
   end

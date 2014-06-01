@@ -29,7 +29,7 @@
         <%= tag %>&nbsp;&nbsp;
       <% end %>
     <% end %>
-    <% matching_comments = photo.comments.select { |comment| @text_terms.any? { |terms| terms.all? { |text| comment.comment_text.downcase.include? text.downcase } } } %><%# TODO Dave match only on word boundaries %>
+    <% matching_comments = photo.comments_that_match @text_terms %>
     <% if matching_comments.any? %>
       <br/><br/>
       <% matching_comments.each do |comment| %>

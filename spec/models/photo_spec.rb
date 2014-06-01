@@ -994,6 +994,44 @@ describe Photo do
 
   end
 
+  describe '.comments_that_match' do
+    it "returns a comment that matches a word" do
+      comment = create :comment, comment_text: "one"
+      comment.photo.comments_that_match([['one']]).length.should == 1
+    end
+
+    it "is case-insensitive" do
+      comment = create :comment, comment_text: "ONE"
+      comment.photo.comments_that_match([['one']]).length.should == 1
+    end
+
+    it "ignores a comment that doesn't match a word" do
+      comment = create :comment, comment_text: "one"
+      comment.photo.comments_that_match([['two']]).length.should == 0
+    end
+
+    it "ignores a comment that matches a word, but not on word boundaries" do
+      comment = create :comment, comment_text: "phones"
+      comment.photo.comments_that_match([['one']]).length.should == 0
+    end
+
+    it "returns a comment that matches all of multiple words" do
+      comment = create :comment, comment_text: "one two"
+      comment.photo.comments_that_match([['one', 'two']]).length.should == 1
+    end
+
+    it "ignores a comment that does not match all of multiple words" do
+      comment = create :comment, comment_text: "one two"
+      comment.photo.comments_that_match([['one', 'three']]).length.should == 0
+    end
+
+    it "returns a comment that matches any of multiple groups" do
+      comment = create :comment, comment_text: "one"
+      comment.photo.comments_that_match([['one'], ['two']]).length.should == 1
+    end
+
+  end
+
   describe '.human_tags' do
     it "returns non-machine tags sorted by id" do
       photo = create :photo
