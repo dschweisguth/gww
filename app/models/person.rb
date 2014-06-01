@@ -376,8 +376,7 @@ class Person < ActiveRecord::Base
     end
 
     scores.values.each do |guessers_with_score|
-      guessers_with_score.replace \
-        guessers_with_score.sort_by { |guesser| guesser.username.downcase }
+      guessers_with_score.replace(guessers_with_score.sort_by { |guesser| guesser.username.downcase })
     end
 
     scores
@@ -387,8 +386,7 @@ class Person < ActiveRecord::Base
     place = 1
     tied = false
     scores_by_person = Guess.group(:person_id).count
-    people_by_score = scores_by_person.keys.group_by \
-      { |person_id| scores_by_person[person_id] }
+    people_by_score = scores_by_person.keys.group_by { |person_id| scores_by_person[person_id] }
     scores = people_by_score.keys.sort { |a, b| b <=> a }
     scores.each do |score|
       people_with_score = people_by_score[score]
@@ -406,8 +404,7 @@ class Person < ActiveRecord::Base
     place = 1
     tied = false
     posts_by_person = Photo.group(:person_id).count
-    people_by_post_count = posts_by_person.keys.group_by \
-      { |person_id| posts_by_person[person_id] }
+    people_by_post_count = posts_by_person.keys.group_by { |person_id| posts_by_person[person_id] }
     post_counts = people_by_post_count.keys.sort { |a, b| b <=> a }
     post_counts.each do |post_count|
       people_with_post_count = people_by_post_count[post_count]

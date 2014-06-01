@@ -40,8 +40,8 @@ module MapSupport
   private def scaled(start_of_range, end_of_range, position, color_ranges)
     start_of_range = start_of_range.to_f
     end_of_range = end_of_range.to_f
-    fractional_position = start_of_range == end_of_range \
-      ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
+    fractional_position =
+      start_of_range == end_of_range ? 1 : (position.to_f - start_of_range) / (end_of_range - start_of_range)
     intensities = color_ranges.map do |color_range|
       intensity = (color_range[0] + (color_range[1] - color_range[0]) * fractional_position).to_i
       intensity -= intensity % 4

@@ -72,7 +72,7 @@ class Guess < ActiveRecord::Base
   end
 
   private_class_method def self.first_guess_with_place(person, conditions, order, place_conditions)
-    guess = includes(:person, { photo: :person }) \
+    guess = includes(:person, { photo: :person })
       .where("#{conditions} and #{GUESS_AGE_IS_VALID}", person).references(:photos).order("#{GUESS_AGE} #{order}").first
     if ! guess
       return nil
@@ -82,25 +82,25 @@ class Guess < ActiveRecord::Base
   end
 
   def self.mapped_count(person_id)
-    where(person_id: person_id) \
-      .joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null') \
+    where(person_id: person_id)
+      .joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null')
       .count
   end
 
   def self.longest_in year
    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-      Time.local(year).getutc, Time.local(year + 1).getutc) \
+      Time.local(year).getutc, Time.local(year + 1).getutc)
       .order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person }).references :photos
   end
 
   def self.shortest_in year
     where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-      Time.local(year).getutc, Time.local(year + 1).getutc) \
+      Time.local(year).getutc, Time.local(year + 1).getutc)
       .order(GUESS_AGE).limit(10).includes(:person, { photo: :person }).references :photos
   end
 
   def self.all_between(from, to)
-    where("? < added_at and added_at <= ?", from.getutc, to.getutc) \
+    where("? < added_at and added_at <= ?", from.getutc, to.getutc)
       .order(:commented_at).includes(:person, { photo: :person })
   end
 

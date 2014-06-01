@@ -75,8 +75,8 @@ class PeopleController < ApplicationController
 
     @guesses = Guess.find_with_associations @person
     @favorite_posters = @person.favorite_posters
-    @posters = @guesses.group_by { |guess| guess.photo.person }.sort \
-      do |x,y|
+    @posters = @guesses.group_by { |guess| guess.photo.person }
+      .sort do |x,y|
         c = y[1].length <=> x[1].length
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
@@ -111,8 +111,7 @@ class PeopleController < ApplicationController
   caches_page :guesses
   def guesses
     @person = Person.find params[:id].to_i
-    @guesses = Guess.where(person_id: params[:id]) \
-      .order('commented_at desc').includes(photo: :person)
+    @guesses = Guess.where(person_id: params[:id]).order('commented_at desc').includes(photo: :person)
   end
 
   caches_page :comments

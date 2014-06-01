@@ -159,7 +159,7 @@ class Photo < ActiveRecord::Base
   end
 
   def self.posted_or_guessed_by_and_mapped(person_id, bounds, limit)
-    mapped(bounds, limit).joins('left join guesses on guesses.photo_id = photos.id') \
+    mapped(bounds, limit).joins('left join guesses on guesses.photo_id = photos.id')
       .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id)
   end
 
@@ -208,12 +208,12 @@ class Photo < ActiveRecord::Base
   end
 
   def self.mapped(bounds, limit)
-    Photo \
+    Photo
       .where(
         '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
           '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
           bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
-          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long) \
+          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long)
       .order('dateadded desc').limit(limit)
   end
 
@@ -267,12 +267,12 @@ class Photo < ActiveRecord::Base
   # Used by WheresiesController
 
   def self.most_viewed_in(year)
-    where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc) \
+    where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc)
       .order('views desc').limit(10).includes(:person)
   end
 
   def self.most_faved_in(year)
-    where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc) \
+    where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc)
       .order('faves desc').limit(10).includes(:person)
   end
 
