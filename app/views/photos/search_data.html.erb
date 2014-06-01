@@ -23,7 +23,7 @@
     <% if photo.description %>
       <p><%= raw photo.description.gsub("\n", "<br/>") %></p>
     <% end %>
-    <% if photo.tags.any? %>
+    <% if photo.human_tags.any? %>
       <h3>Tags:</h3>
       <% photo.human_tags.map(&:raw).each do |tag|%>
         <%= tag %>&nbsp;&nbsp;
