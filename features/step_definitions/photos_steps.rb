@@ -70,13 +70,13 @@ Then /^I should see the photo's description with "([^"]+)" and "([^"]+)" highlig
 end
 
 Then /^I should see the tag$/ do
-  page.should have_content("Tags: #{@tag.raw}")
+  page.should have_css('li', text: @tag.raw)
 end
 
 Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   step "I should see the tag"
   [term1, term2].each do |term|
-    page.should have_css('span[class=matched]', text: term)
+    page.all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_true
   end
 end
 
@@ -99,5 +99,5 @@ end
 
 
 Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
-  page.should have_css('span[class=matched]', text: term)
+  page.all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_true
 end

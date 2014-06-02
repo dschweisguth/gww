@@ -24,15 +24,16 @@
       <p><%= raw highlighted(photo.description.gsub("\n", "<br/>"), @text_terms) %></p>
     <% end %>
     <% if photo.human_tags.any? %>
-      <h3>Tags:</h3>
-      <% raws = photo.human_tags.map &:raw %>
-      <% raws.each do |tag|%>
-        <%= raw highlighted(h(tag), @text_terms, raws) %>&nbsp;&nbsp;
-      <% end %>
+      <ul class="tags">
+        <% raws = photo.human_tags.map &:raw %>
+        <% raws.each do |tag|%>
+          <li><%= raw highlighted(h(tag), @text_terms, raws) %></li>
+        <% end %>
+      </ul>
     <% end %>
     <% matching_comments = photo.comments_that_match @text_terms %>
     <% if matching_comments.any? %>
-      <br/><br/>
+      <br/>
       <% matching_comments.each do |comment| %>
         <b><%= comment.username %></b> <%= raw highlighted(comment.comment_text, @text_terms) %><br/>
       <% end %>

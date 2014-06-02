@@ -66,19 +66,6 @@ Feature: Photos
     And I should see the tag
     But I should not see the comment
 
-  # This scenario is necessary because there's no way to tell a highlight in a tag from one in a different field
-  @javascript
-  Scenario: Player searches for a string which matches only a tag
-    Given there is a photo
-    And the photo has a tag "Fort Point Tag"
-    When I go to the photos search page
-    And I fill in "text" with "Fort Point"
-    And I press the "Search" button
-    Then I should see search results for 1 photo
-    And I should see the photo's title
-    And I should see the photo's description
-    And I should see the tag with "Fort" and "Point" highlighted
-
   # This scenario is necessary because there's no way to tell a highlight in a comment from one in a different field
   @javascript
   Scenario: Player searches for a string which matches only a comment
