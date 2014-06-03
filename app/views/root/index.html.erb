@@ -1,4 +1,4 @@
-<%= head_css 'jquery.ui.autocomplete' %>
+<%= head_css 'root/index', 'jquery.ui.autocomplete' %>
 <%= head_javascript 'jquery.ui.autocomplete', 'shared/autocomplete' %>
 <% content_for :title do %>Home<% end %>
 <h1>Guess Where Watcher</h1>
@@ -8,48 +8,61 @@
 <% end %>
 
 <p>Welcome to Guess Where Watcher, the <a href="https://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
-application! Administrators use GWW to score guesses, and players can use it to search for photos, see statistics and
-learn more about the competition.</p>
+application! Administrators use GWW to score guesses, and players can use it to search for photos and players,
+see statistics and learn more about the competition.</p>
 
 <%= render 'shared/most_recent_update' %>
 
-<h2>Reports</h2>
-<ul class="spacious">
-<li><%= link_to 'Score reports', score_reports_path %></li>
-<li>Find a person, by username, Flickr ID or GWW ID:
-  <%= form_tag(find_person_path, method: :get, class: 'inline') do %>
-    <%= text_field_tag 'username' %>
-    <%= submit_tag 'Find' %>
-  <% end %>
-  <% if flash[:find_person_error] %><br/>
-    <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.
-      You could try again, or scan the <%= link_to 'Active members', people_path('score', '+') %> page.</span>
-  <% end %>
-</li>
-<li><%= link_to 'Active members', people_path('score', '+') %>, with scores and statistics. How do you measure up?</li>
-<li><%= link_to 'Nemeses', nemeses_people_path %>: who guesses whom the most?</li>
-<li><%= link_to 'Top guessers', top_guessers_people_path %> by day, week, month and year</li>
-<li><%= link_to 'All photos', photos_path('date-added', '+', 1) %> with statistics, sortable so you can find the standouts</li>
-<li><%= link_to 'Mapped photos', map_photos_path %>, on a map</li>
-<li><%= link_to 'Search for photos', search_photos_path %> by poster and/or game status.
-  For example, see <%= link_to 'all of the unfounds', search_photos_with_terms_path('game_status/unfound,unconfirmed') %> or just
-  <%= link_to "Octoferret's", search_photos_with_terms_path('game_status/unfound,unconfirmed/posted-by/Octoferret') %>.</li>
-<li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_guesses_path %></li>
-<li><%= link_to 'Longest-lived revelations', longest_revelations_path %></li>
-<li>Statistics for the prestigious annual Wheresies awards: <%= render 'shared/wheresies' %></li>
-</ul>
-
-<h2>API</h2>
-<p>The following page is XML, intended to be used by other programs and analytically minded humans.</p>
+<h2>See the scores</h2>
 <ul>
-<li><%= link_to 'Unfound photos', unfound_data_photos_path %></li>
+  <li><%= link_to 'Score reports', score_reports_path %></li>
 </ul>
 
-<h2>Other tools</h2>
+<h2>Search for photos and players</h2>
 <ul class="spacious">
-  <li><%= link_to 'Get the "View in GWW" bookmarklet', root_bookmarklet_path %></li>
-  <li>David Gallagher's <a href="https://anythreewords.com/gwsf/">list of unfounds with thumbnails</a></li>
-  <li>Jef Poskanzer's <a href="https://www.acme.com/flickr/searchr/">Flickr Comment Searchr</a></li>
+  <li>
+    <%= link_to 'Search for photos', search_photos_path %> by poster, game status and/or text.
+    For example, see <%= link_to 'all of the unfounds', search_photos_with_terms_path('game_status/unfound,unconfirmed') %>, or just
+    <%= link_to "Octoferret's", search_photos_with_terms_path('game_status/unfound,unconfirmed/posted-by/Octoferret') %>,
+    or just <%= link_to 'unfound murals', search_photos_with_terms_path('game_status/unfound,unconfirmed/text/mural') %>.<br/>
+    You can also search for photos with Jef Poskanzer's <a href="https://www.acme.com/flickr/searchr/">Flickr Comment Searchr</a>,
+    and you can see the unfound photos on David Gallagher's <a href="https://anythreewords.com/gwsf/">list of unfounds with thumbnails</a>.
+  </li>
+  <li>Find a player, by username, Flickr ID or GWW ID:
+    <%= form_tag(find_person_path, method: :get, class: 'inline') do %>
+      <%= text_field_tag 'username' %>
+      <%= submit_tag 'Find' %>
+    <% end %>
+    <% if flash[:find_person_error] %><br/>
+      <span class="error">Sorry; "<%= flash[:find_person_error] %>" doesn't seem to be anyone's username, Flickr ID or GWW ID.
+        You could try again, or scan the <%= link_to 'Active members', people_path('score', '+') %> page.</span>
+    <% end %>
+  </li>
+  <li>See what a Flickr photo or user looks like in GWW with <%= link_to 'the "View in GWW" bookmarklet', root_bookmarklet_path %>.</li>
+</ul>
+
+<h2>Statistics</h2>
+<div class="indented">
+  <h3>about players:</h3>
+  <ul>
+    <li><%= link_to 'Active players', people_path('score', '+') %>, with scores and statistics. How do you measure up?</li>
+    <li><%= link_to 'Nemeses', nemeses_people_path %>: who guesses whom the most?</li>
+    <li><%= link_to 'Top guessers', top_guessers_people_path %> by day, week, month and year</li>
+  </ul>
+  <h3>about photos:</h3>
+  <ul>
+    <li><%= link_to 'All photos', photos_path('date-added', '+', 1) %> with statistics, sortable so you can find the standouts</li>
+    <li><%= link_to 'Mapped photos', map_photos_path %>, on a map</li>
+    <li><%= link_to 'Longest and shortest-lived unfounds', longest_and_shortest_guesses_path %></li>
+    <li><%= link_to 'Longest-lived revelations', longest_revelations_path %></li>
+  </ul>
+  <h3>Statistics for the prestigious annual Wheresies awards: <%= render 'shared/wheresies' %></h3>
+</div>
+
+<h2>Write your own program</h2>
+<ul class="spacious">
+  <li>The list of unfound photos is available in <%= link_to 'XML', unfound_data_photos_path %>.</li>
+  <li>See <%= link_to 'the About page', root_about_path %> for a link to backups of GWW's MySQL database.</li>
 </ul>
 
 <br/>
