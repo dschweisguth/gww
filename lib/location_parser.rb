@@ -1,4 +1,3 @@
-# TODO Dave single-block streets
 class LocationParser
 
   def initialize(multiword_street_names)

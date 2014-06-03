@@ -16,15 +16,16 @@ Merge revelations into guesses?
 
 Features
 
+Rewrite front page
 Use flic.kr URLs in score report
 Scrape and display given names, since Flickr prefers them to usernames now
 Parse
+- single-block streets
 - "1535 7th, on the west side between Kirkham and Lawton"
 - Mount and Mt(.)
 - "Market Street and Seventh Street?"
 Include tags and comment in update
   Order unfound list by most recent comment or tag
-  Make them searchable
 Post scores to Flickr group automatically
 Add last-updated dates to photos which
   - reflect only things relevant to scoring
