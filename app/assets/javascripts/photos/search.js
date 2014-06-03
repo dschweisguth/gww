@@ -151,7 +151,9 @@ GWW.photos.search = function () {
     });
   }
 
+
   function addPage(afterPageAdded, afterAllPagesAdded) {
+    startLoadingAnimation();
     $.ajax({
       url: '/photos/search_data' + terms() + '/sorted-by/' + GWW.config.sortedBy + '/direction/' + GWW.config.direction + '/page/' + nextPageToAdd,
       success: function (data) {
@@ -170,8 +172,54 @@ GWW.photos.search = function () {
       },
       complete: function () {
         willScrollLater = false;
+        stopLoadingAnimation();
       }
     });
+  }
+
+  // Loading animation based on http://superdit.com/2011/02/25/flickr-style-loading-animation-using-jquery/
+
+  var distanceToMove;
+  var loadingAnimationThread;
+
+  function startLoadingAnimation() {
+    var container = $('#loading-animation');
+    container.toggle();
+    var leftDot = container.find('> div:nth-child(1)');
+    leftDot.css('left', ($(window).width() / 2) - leftDot.width());
+    distanceToMove = leftDot.width() + 4;
+    container.find('> div:nth-child(2)').css('left', leftDot.position().left + distanceToMove);
+    loadingAnimationThread = setInterval(playLoadingAnimation, 800);
+  }
+
+  function playLoadingAnimation() {
+    var container = $('#loading-animation');
+    var leftDot = container.find('> div:nth-child(1)');
+    var rightDot = container.find('> div:nth-child(2)');
+    moveDotLeft(leftDot);
+    moveDotRight(leftDot);
+    moveDotRight(rightDot);
+    moveDotLeft(rightDot);
+  }
+
+  function moveDotLeft(element) {
+    $(element).animate({ left: '+=' + distanceToMove }, 800,
+      function () {
+        $(element).css('z-index', '-100');
+      }
+    );
+  }
+
+  function moveDotRight(element) {
+    $(element).animate({ left: '-=' + distanceToMove }, 800,
+      function () {
+        $(element).css('z-index', '100');
+      }
+    );
+  }
+
+  function stopLoadingAnimation() {
+    clearInterval(loadingAnimationThread);
   }
 
   function terms() {

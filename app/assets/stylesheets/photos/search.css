@@ -141,3 +141,30 @@ h3 {
 .matched {
   background: yellow;
 }
+
+#loading-animation, #loading-animation > div {
+  width: 20px;
+  height: 20px;
+}
+
+#loading-animation {
+  display: none;
+}
+
+#loading-animation > div {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  margin-right: 2px;
+  position: absolute;
+}
+
+#loading-animation > div:nth-child(1) {
+  background: #0063dc;
+  z-index: 1;
+}
+
+#loading-animation > div:nth-child(2) {
+  background: #ff0084;
+  z-index: 0;
+}
