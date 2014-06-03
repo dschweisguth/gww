@@ -34,6 +34,7 @@ form img {
   font-size: 16px;
   font-weight: normal;
   margin-left: 3px;
+  cursor: default;
 }
 
 .game-status span {
@@ -166,5 +167,3 @@ h3 {
   background: #ff0084;
   z-index: 0;
 }
-
-/* TODO Dave fix pointer over search help icon */
