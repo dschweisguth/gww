@@ -7,6 +7,7 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
+Remove ModelFactory
 Spring?
 Measure Javascript coverage
 Extract methods from update_all_from_flickr
@@ -17,6 +18,7 @@ Merge revelations into guesses?
 Features
 
 Rewrite front page
+Support form field parameters in search page so that search from browser works
 Use flic.kr URLs in score report
 Scrape and display given names, since Flickr prefers them to usernames now
 Parse
