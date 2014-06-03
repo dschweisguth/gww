@@ -152,8 +152,6 @@ h3 {
 }
 
 #loading-animation > div {
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
   border-radius: 10px;
   margin-right: 2px;
   position: absolute;
