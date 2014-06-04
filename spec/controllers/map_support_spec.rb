@@ -8,28 +8,28 @@ describe MapSupport do
 
   describe '#prepare_for_display' do
     it "gives an unfound yellow and ?" do
-      photo = Photo.make
+      photo = build :photo
       prepare_for_display photo, 1.day.ago
       photo.color.should == 'FFFF00'
       photo.symbol.should == '?'
     end
 
     it "prepares an unconfirmed like an unfound" do
-      photo = Photo.make game_status: 'unconfirmed'
+      photo = build :photo, game_status: 'unconfirmed'
       prepare_for_display photo, 1.day.ago
       photo.color.should == 'FFFF00'
       photo.symbol.should == '?'
     end
 
     it "gives a found green and !" do
-      photo = Photo.make game_status: 'found'
+      photo = build :photo, game_status: 'found'
       prepare_for_display photo, 1.day.ago
       photo.color.should == scaled_green(0, 1, 1)
       photo.symbol.should == '!'
     end
 
     it "gives a revealed red and -" do
-      photo = Photo.make game_status: 'revealed'
+      photo = build :photo, game_status: 'revealed'
       prepare_for_display photo, 1.day.ago
       photo.color.should == scaled_red(0, 1, 1)
       photo.symbol.should == '-'

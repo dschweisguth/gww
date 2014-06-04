@@ -1,21 +1,21 @@
 # noinspection RubyArgCount
 def renders_report_for(report_date, previous_report_date, action, params = {})
-  person0 = Person.make id: 0
-  person1 = Person.make id: 1
-  person2 = Person.make id: 2
+  person0 = build :person, id: 0
+  person1 = build :person, id: 1
+  person2 = build :person, id: 2
   person2.change_in_standing = 'guessed their first point. Congratulations!'
 
-  guess11 = Guess.make 11, person: person1
-  guess21 = Guess.make 21, person: person2
-  guess22 = Guess.make 22, person: person2
+  guess11 = build :guess, person: person1
+  guess21 = build :guess, person: person2
+  guess22 = build :guess, person: person2
   stub(Guess).all_between(previous_report_date, report_date.getutc) { [guess11, guess21, guess22] }
 
-  revealed_photo11 = Photo.make 11, person: person1
-  revealed_photo21 = Photo.make 21, person: person2
-  revealed_photo22 = Photo.make 22, person: person2
-  revelation11 = Revelation.make 11, photo: revealed_photo11
-  revelation21 = Revelation.make 21, photo: revealed_photo21
-  revelation22 = Revelation.make 22, photo: revealed_photo22
+  revealed_photo11 = build :photo, person: person1
+  revealed_photo21 = build :photo, person: person2
+  revealed_photo22 = build :photo, person: person2
+  revelation11 = build :revelation, photo: revealed_photo11
+  revelation21 = build :revelation, photo: revealed_photo21
+  revelation22 = build :revelation, photo: revealed_photo22
   stub(Revelation).all_between(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
 
   stub(Person).high_scorers(report_date, 7) { [ person2, person1 ] }
@@ -41,7 +41,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   guessers = [ [ person2, [ guess21, guess22 ] ], [ person1, [ guess11 ] ] ]
   stub(Person).add_change_in_standings(people_by_score, people, previous_report_date, guessers) {}
 
-  stub(FlickrUpdate).order.stub!.first { FlickrUpdate.make member_count: 3 }
+  stub(FlickrUpdate).order.stub!.first { build :flickr_update, member_count: 3 }
 
   get action, params
 

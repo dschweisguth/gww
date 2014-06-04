@@ -5,11 +5,12 @@ describe RevelationsController do
 
   describe '#longest' do
     it 'renders the page' do
-      stub(Revelation).longest { [ Revelation.make ] }
+      revelation = build :revelation
+      stub(Revelation).longest { [revelation] }
       get :longest
 
       response.should be_success
-      response.body.should have_link 'revealed_photo_poster_username'
+      response.body.should have_link revelation.photo.person.username
 
     end
   end

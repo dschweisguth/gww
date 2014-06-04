@@ -5,17 +5,17 @@ describe GuessesController do
 
   describe '#longest_and_shortest' do
     it 'renders the page' do
-      longest = [ Guess.make(1) ]
-      stub(Guess).longest { longest }
-      shortest = [ Guess.make(2) ]
-      stub(Guess).shortest { shortest }
+      longest = build :guess
+      stub(Guess).longest { [longest] }
+      shortest = build :guess
+      stub(Guess).shortest { [shortest] }
       get :longest_and_shortest
 
       response.should be_success
-      response.body.should have_link '1_guessed_photo_poster_username'
-      response.body.should have_link '2_guesser_username'
-      response.body.should have_link '1_guessed_photo_poster_username'
-      response.body.should have_link '2_guesser_username'
+      response.body.should have_link longest.photo.person.username
+      response.body.should have_link shortest.person.username
+      response.body.should have_link longest.photo.person.username
+      response.body.should have_link shortest.person.username
 
     end
   end

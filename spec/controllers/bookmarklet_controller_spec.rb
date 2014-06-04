@@ -6,7 +6,7 @@ describe BookmarkletController do
   describe '#show' do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given photo' do
-      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
+      photo = build :photo, id: 1, flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :show, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -15,7 +15,7 @@ describe BookmarkletController do
     end
 
     it 'handles https when redirecting to a photo' do
-      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
+      photo = build :photo, id: 1, flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :show, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -34,7 +34,7 @@ describe BookmarkletController do
 
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given person' do
-      person = Person.make pathalias: 'pathalias'
+      person = create :person, pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
       get :show, from: "http://www.flickr.com/people/#{person.pathalias}/"
 
@@ -43,7 +43,7 @@ describe BookmarkletController do
     end
 
     it 'handles https when redirecting to a person' do
-      person = Person.make pathalias: 'pathalias'
+      person = create :person, pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
       get :show, from: "https://www.flickr.com/people/#{person.pathalias}/"
 
@@ -52,7 +52,7 @@ describe BookmarkletController do
     end
 
     it "handles a URL with a flickrid" do
-      person = Person.make
+      person = create :person
       stub(Person).find_by_pathalias(person.flickrid) { nil }
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/people/#{person.flickrid}/"
@@ -71,7 +71,7 @@ describe BookmarkletController do
     end
 
     it 'handles a /photo/ URL with a person Flickr ID but no photo Flickr ID' do
-      person = Person.make
+      person = create :person
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/photos/#{person.flickrid}/"
 
