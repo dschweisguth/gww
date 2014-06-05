@@ -4,14 +4,14 @@ describe Photos do
 
   describe '#url_for_flickr_photo' do
     it "returns the URL to the given photo's Flickr page" do
-      photo = Photo.make
-      photo.person.pathalias = "poster_pathalias"
+      photo = build :photo
       url_for_flickr_photo(photo).should ==
         "https://www.flickr.com/photos/#{photo.person.pathalias}/#{photo.flickrid}/";
     end
 
     it "falls back on the poster's flickrid if they have no pathalias" do
-      photo = Photo.make
+      photo = build :photo
+      photo.person.pathalias = nil
       url_for_flickr_photo(photo).should ==
         "https://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/";
     end
@@ -20,29 +20,29 @@ describe Photos do
 
   describe '#url_for_flickr_photo_in_pool' do
     it "returns the URL to the given photo's Flickr page, in the GWSF pool" do
-      photo = Photo.make
+      photo = build :photo
       url_for_flickr_photo_in_pool(photo).should ==
-        "https://www.flickr.com/photos/#{photo.person.flickrid}/#{photo.flickrid}/in/pool-guesswheresf/";
+        "https://www.flickr.com/photos/#{photo.person.pathalias}/#{photo.flickrid}/in/pool-guesswheresf/";
     end
   end
 
   describe '#url_for_flickr_image' do
     it 'returns the URL to the given photo' do
-      photo = Photo.make
+      photo = build :photo
       url_for_flickr_image(photo).should ==
-        "https://farm#{photo.farm}.staticflickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
+        "https://farm#{photo.farm}.staticflickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}.jpg";
     end
 
     it 'handles missing farm' do
-      photo = Photo.make farm: ''
+      photo = build :photo, farm: ''
       url_for_flickr_image(photo).should ==
-        "https://staticflickr.com/server/#{photo.flickrid}_#{photo.secret}.jpg";
+        "https://staticflickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}.jpg";
     end
 
     it 'provides the requested size' do
-      photo = Photo.make
+      photo = build :photo
       url_for_flickr_image(photo, 't').should ==
-        "https://farm0.staticflickr.com/server/#{photo.flickrid}_#{photo.secret}_t.jpg";
+        "https://farm#{photo.farm}.staticflickr.com/#{photo.server}/#{photo.flickrid}_#{photo.secret}_t.jpg";
     end
 
   end
