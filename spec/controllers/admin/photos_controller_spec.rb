@@ -5,7 +5,7 @@ describe Admin::PhotosController do
 
   describe 'collections' do
     before do
-      @photo = Photo.make id: 1
+      @photo = build :photo, id: 1
     end
 
     describe '#unfound' do
@@ -54,7 +54,7 @@ describe Admin::PhotosController do
   end
 
   describe '#edit' do
-    let(:photo) { Photo.make }
+    let(:photo) { build :photo, id: 1 }
 
     before do
       stub(Photo).find_with_associations(photo.id) { photo }
@@ -119,7 +119,7 @@ describe Admin::PhotosController do
 
   describe '#edit_in_gww' do
     it 'redirects to the given photo' do
-      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
+      photo = build :photo, id: 1
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -128,7 +128,7 @@ describe Admin::PhotosController do
     end
 
     it 'handles https when redirecting to a photo' do
-      photo = Photo.make flickrid: '0123456789' # must be all digits like the real thing
+      photo = build :photo, id: 1
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 

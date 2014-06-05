@@ -6,8 +6,8 @@ describe Admin::ScoreReportsController do
 
   describe '#index' do
     it "renders the page" do
-      report2 = ScoreReport.make id: 2, created_at: Time.local(2011, 1, 2)
-      report1 = ScoreReport.make id: 1, created_at: Time.local(2011)
+      report2 = build :score_report, id: 2, created_at: Time.local(2011, 1, 2)
+      report1 = build :score_report, id: 1, created_at: Time.local(2011)
       stub(ScoreReport).order { [ report2, report1 ] }
       stub(ScoreReport).guess_counts { { report2.id => 4, report1.id => 3 } }
       stub(ScoreReport).revelation_counts { { report2.id => 1 } }
@@ -29,7 +29,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of the last report" do
-      stub(ScoreReport).order { [ ScoreReport.make(created_at: Time.now) ] }
+      stub(ScoreReport).order { [ build(:score_report, id: 1, created_at: Time.now) ] }
       get :index
 
       response.should be_success
@@ -38,7 +38,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of a report more than a day old" do
-      stub(ScoreReport).order { [ ScoreReport.make(created_at: Time.now - 1.day - 1.second) ] }
+      stub(ScoreReport).order { [ build(:score_report, id: 1, created_at: Time.now - 1.day - 1.second) ] }
       get :index
 
       response.should be_success
@@ -56,7 +56,7 @@ describe Admin::ScoreReportsController do
 
     it "renders the page" do
       previous_report_date = Time.local(2011).getutc
-      previous_report = ScoreReport.make created_at: previous_report_date
+      previous_report = build :score_report, created_at: previous_report_date
       stub(ScoreReport).previous(@report_date.getutc) { previous_report }
       renders_report_for @report_date, previous_report_date, :new
     end
@@ -70,7 +70,7 @@ describe Admin::ScoreReportsController do
 
   describe '#create' do
     it "creates and redirects" do
-      previous = ScoreReport.make
+      previous = build :score_report
       stub(ScoreReport).order.stub!.first { previous }
       mock(ScoreReport).create! previous_report: previous
       mock_clear_page_cache
