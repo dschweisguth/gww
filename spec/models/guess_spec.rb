@@ -24,7 +24,7 @@ describe Guess do
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
-      Guess.make comment_text: non_ascii_text
+      create :guess, comment_text: non_ascii_text
       Guess.all[0].comment_text.should == non_ascii_text
     end
 
@@ -73,14 +73,14 @@ describe Guess do
 
   describe '.destroy_all_by_photo_id' do
     it 'destroys all guesses of the photo with the given id' do
-      guess = Guess.make
+      guess = create :guess
       Guess.destroy_all_by_photo_id guess.photo.id
       Guess.any?.should be_false
     end
 
     it "ignores other photos' guesses" do
-      one_guess = Guess.make 'one'
-      other_guess = Guess.make 'other'
+      one_guess = create :guess
+      other_guess = create :guess
       Guess.destroy_all_by_photo_id one_guess.photo.id
       Guess.all.should == [ other_guess ]
     end
@@ -89,16 +89,16 @@ describe Guess do
 
   describe '.longest' do
     it 'lists guesses sorted by time between post and guess, descending' do
-      photo1 = Photo.make 1, dateadded: Time.utc(2000)
-      guess1 = Guess.make 1, photo: photo1, commented_at: Time.utc(2001)
-      photo2 = Photo.make 2, dateadded: Time.utc(2002)
-      guess2 = Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
       Guess.longest.should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
-      photo = Photo.make dateadded: Time.utc(2011)
-      Guess.make photo: photo, commented_at: Time.utc(2010)
+      photo = create :photo, dateadded: Time.utc(2011)
+      create :guess, photo: photo, commented_at: Time.utc(2010)
       Guess.longest.should == []
     end
 
@@ -106,16 +106,16 @@ describe Guess do
 
   describe '.shortest' do
     it 'lists guesses sorted by time between post and guess, ascending' do
-      photo1 = Photo.make 1, dateadded: Time.utc(2000)
-      guess1 = Guess.make 1, photo: photo1, commented_at: Time.utc(2002)
-      photo2 = Photo.make 2, dateadded: Time.utc(2003)
-      guess2 = Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      guess1 = create :guess, photo: photo1, commented_at: Time.utc(2002)
+      photo2 = create :photo, dateadded: Time.utc(2003)
+      guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
       Guess.shortest.should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
-      photo = Photo.make dateadded: Time.utc(2011)
-      Guess.make photo: photo, commented_at: Time.utc(2010)
+      photo = create :photo, dateadded: Time.utc(2011)
+      create :guess, photo: photo, commented_at: Time.utc(2010)
       Guess.shortest.should == []
     end
 
@@ -123,67 +123,66 @@ describe Guess do
 
   describe '.first_by' do
     it "returns the guesser's first guess" do
-      guesser = Person.make
-      Guess.make 'second', person: guesser, commented_at: Time.utc(2001)
-      first = Guess.make 'first', person: guesser, commented_at: Time.utc(2000)
+      guesser = create :person
+      create :guess, person: guesser, commented_at: Time.utc(2001)
+      first = create :guess, person: guesser, commented_at: Time.utc(2000)
       Guess.first_by(guesser).should == first
     end
 
     it "ignores other players' guesses" do
-      Guess.make
-      Guess.first_by(Person.make).should be_nil
+      create :guess
+      Guess.first_by(create :person).should be_nil
     end
 
   end
 
   describe '.most_recent_by' do
     it "returns the guesser's most recent guess" do
-      guesser = Person.make
-      Guess.make 'penultimate', person: guesser, commented_at: Time.utc(2000)
-      most_recent = Guess.make 'most_recent', person: guesser, commented_at: Time.utc(2001)
+      guesser = create :person
+      create :guess, person: guesser, commented_at: Time.utc(2000)
+      most_recent = create :guess, person: guesser, commented_at: Time.utc(2001)
       Guess.most_recent_by(guesser).should == most_recent
     end
 
     it "ignores other players' guesses" do
-      Guess.make
-      Guess.most_recent_by(Person.make).should be_nil
+      create :guess
+      Guess.most_recent_by(create :person).should be_nil
     end
 
   end
 
   describe '.oldest' do
     it "returns the guesser's guess made the longest after the post" do
-      guesser = Person.make
-      photo1 = Photo.make 1, dateadded: Time.utc(2000)
-      Guess.make 1, person: guesser, photo: photo1, commented_at: Time.utc(2001)
-      photo2 = Photo.make 2, dateadded: Time.utc(2002)
-      guess2 = Guess.make 2,
-        person: guesser, photo: photo2, commented_at: Time.utc(2004)
+      guesser = create :person
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      guess2 = create :guess, person: guesser, photo: photo2, commented_at: Time.utc(2004)
       oldest = Guess.oldest guesser
       oldest.should == guess2
       oldest.place.should == 1
     end
 
     it "ignores other players' guesses" do
-      Guess.make
-      Guess.oldest(Person.make).should be_nil
+      create :guess
+      Guess.oldest(create :person).should be_nil
     end
 
     it "considers other players' guesses when calculating place" do
-      guesser = Person.make
-      photo1 = Photo.make 1, dateadded: Time.utc(2000)
-      guess1 = Guess.make 1, person: guesser, photo: photo1, commented_at: Time.utc(2001)
-      photo2 = Photo.make 2, dateadded: Time.utc(2002)
-      Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
+      guesser = create :person
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      guess1 = create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      create :guess, photo: photo2, commented_at: Time.utc(2004)
       oldest = Guess.oldest guesser
       oldest.should == guess1
       oldest.place.should == 2
     end
 
     it "ignores a guess that precedes its post" do
-      guesser = Person.make
-      photo1 = Photo.make 1, dateadded: Time.utc(2001)
-      Guess.make 1, person: guesser, photo: photo1, commented_at: Time.utc(2000)
+      guesser = create :person
+      photo1 = create :photo, dateadded: Time.utc(2001)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
       Guess.oldest(guesser).should == nil
     end
 
@@ -191,36 +190,36 @@ describe Guess do
 
   describe '.longest_lasting' do
     it "returns the poster's photo which went unfound the longest" do
-      poster = Person.make
-      photo1 = Photo.make 1, person: poster, dateadded: Time.utc(2000)
-      Guess.make 1, photo: photo1, commented_at: Time.utc(2001)
-      photo2 = Photo.make 2, person: poster, dateadded: Time.utc(2002)
-      guess2 = Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
+      poster = create :person
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2000)
+      create :guess, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, person: poster, dateadded: Time.utc(2002)
+      guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
       longest_lasting = Guess.longest_lasting poster
       longest_lasting.should == guess2
       longest_lasting.place.should == 1
     end
 
     it "ignores guesses of other players' posts" do
-      Guess.make 2
-      Guess.longest_lasting(Photo.make(1).person).should be_nil
+      create :guess
+      Guess.longest_lasting(create(:photo).person).should be_nil
     end
 
     it "considers other posters when calculating place" do
-      poster = Person.make
-      photo1 = Photo.make 1, person: poster, dateadded: Time.utc(2000)
-      guess1 = Guess.make 1, photo: photo1, commented_at: Time.utc(2001)
-      photo2 = Photo.make 2, dateadded: Time.utc(2002)
-      Guess.make 2, photo: photo2, commented_at: Time.utc(2004)
+      poster = create :person
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2000)
+      guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      create :guess, photo: photo2, commented_at: Time.utc(2004)
       longest_lasting = Guess.longest_lasting poster
       longest_lasting.should == guess1
       longest_lasting.place.should == 2
     end
 
     it 'ignores a guess that precedes its post' do
-      poster = Person.make
-      photo1 = Photo.make person: poster, dateadded: Time.utc(2001)
-      Guess.make photo: photo1, commented_at: Time.utc(2000)
+      poster = create :person
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
+      create :guess, photo: photo1, commented_at: Time.utc(2000)
       Guess.longest_lasting(poster).should == nil
     end
 
@@ -228,36 +227,36 @@ describe Guess do
 
   describe '.fastest' do
     it "returns the guesser's guess made the fastest after the post" do
-      guesser = Person.make
-      photo1 = Photo.make 1, dateadded: Time.utc(2002)
-      Guess.make 1, person: guesser, photo: photo1, commented_at: Time.utc(2004)
-      photo2 = Photo.make 2, dateadded: Time.utc(2000)
-      guess2 = Guess.make 2, person: guesser, photo: photo2, commented_at: Time.utc(2001)
+      guesser = create :person
+      photo1 = create :photo, dateadded: Time.utc(2002)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, dateadded: Time.utc(2000)
+      guess2 = create :guess, person: guesser, photo: photo2, commented_at: Time.utc(2001)
       fastest = Guess.fastest guesser
       fastest.should == guess2
       fastest.place.should == 1
     end
 
     it "ignores other players' guesses" do
-      Guess.make
-      Guess.fastest(Person.make).should be_nil
+      create :guess
+      Guess.fastest(create :person).should be_nil
     end
 
     it "considers other players' guesses when calculating place" do
-      guesser = Person.make
-      photo1 = Photo.make 1, dateadded: Time.utc(2002)
-      guess1 = Guess.make 1, person: guesser, photo: photo1, commented_at: Time.utc(2004)
-      photo2 = Photo.make 2, dateadded: Time.utc(2000)
-      Guess.make 2, photo: photo2, commented_at: Time.utc(2001)
+      guesser = create :person
+      photo1 = create :photo, dateadded: Time.utc(2002)
+      guess1 = create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, dateadded: Time.utc(2000)
+      create :guess, photo: photo2, commented_at: Time.utc(2001)
       fastest = Guess.fastest guesser
       fastest.should == guess1
       fastest.place.should == 2
     end
 
     it "ignores a guess that precedes its post" do
-      guesser = Person.make
-      photo1 = Photo.make 1, dateadded: Time.utc(2001)
-      Guess.make 1, person: guesser, photo: photo1, commented_at: Time.utc(2000)
+      guesser = create :person
+      photo1 = create :photo, dateadded: Time.utc(2001)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
       Guess.fastest(guesser).should == nil
     end
 
@@ -265,36 +264,36 @@ describe Guess do
 
   describe '.shortest_lasting' do
     it "returns the guess of the poster's photo which was made the soonest after the post" do
-      poster = Person.make
-      photo1 = Photo.make 1, person: poster, dateadded: Time.utc(2002)
-      Guess.make 1, photo: photo1, commented_at: Time.utc(2004)
-      photo2 = Photo.make 2, person: poster, dateadded: Time.utc(2000)
-      guess2 = Guess.make 2, photo: photo2, commented_at: Time.utc(2001)
+      poster = create :person
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2002)
+      create :guess, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, person: poster, dateadded: Time.utc(2000)
+      guess2 = create :guess, photo: photo2, commented_at: Time.utc(2001)
       shortest_lasting = Guess.shortest_lasting poster
       shortest_lasting.should == guess2
       shortest_lasting.place.should == 1
     end
 
     it "ignores guesses of other players' posts" do
-      Guess.make 2
-      Guess.shortest_lasting(Photo.make(1).person).should be_nil
+      create :guess
+      Guess.shortest_lasting(create(:photo).person).should be_nil
     end
 
     it "considers other posters when calculating place" do
-      poster = Person.make
-      photo1 = Photo.make 1, person: poster, dateadded: Time.utc(2002)
-      guess1 = Guess.make 1, photo: photo1, commented_at: Time.utc(2004)
-      photo2 = Photo.make 2, dateadded: Time.utc(2000)
-      Guess.make 2, photo: photo2, commented_at: Time.utc(2001)
+      poster = create :person
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2002)
+      guess1 = create :guess, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, dateadded: Time.utc(2000)
+      create :guess, photo: photo2, commented_at: Time.utc(2001)
       shortest_lasting = Guess.shortest_lasting poster
       shortest_lasting.should == guess1
       shortest_lasting.place.should == 2
     end
 
     it 'ignores a guess that precedes its post' do
-      poster = Person.make
-      photo1 = Photo.make person: poster, dateadded: Time.utc(2001)
-      Guess.make photo: photo1, commented_at: Time.utc(2000)
+      poster = create :person
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
+      create :guess, photo: photo1, commented_at: Time.utc(2000)
       Guess.shortest_lasting(poster).should == nil
     end
 
@@ -302,33 +301,33 @@ describe Guess do
 
   describe '.mapped_count' do
     it "counts the person's guesses of mapped photos" do
-      photo = Photo.make accuracy: 12
-      guess = Guess.make photo: photo
+      photo = create :photo, accuracy: 12
+      guess = create :guess, photo: photo
       Guess.mapped_count(guess.person.id).should == 1
     end
 
     it "counts the person's guesses of auto-mapped photos" do
-      photo = Photo.make inferred_latitude: 37
-      guess = Guess.make photo: photo
+      photo = create :photo, inferred_latitude: 37
+      guess = create :guess, photo: photo
       Guess.mapped_count(guess.person.id).should == 1
     end
 
     it "ignores others' guesses" do
-      photo = Photo.make accuracy: 12
-      Guess.make photo: photo
-      other_person = Person.make
+      photo = create :photo, accuracy: 12
+      create :guess, photo: photo
+      other_person = create :person
       Guess.mapped_count(other_person.id).should == 0
     end
 
     it "ignores guesses of unmapped photos" do
-      photo = Photo.make
-      guess = Guess.make photo: photo
+      photo = create :photo
+      guess = create :guess, photo: photo
       Guess.mapped_count(guess.person.id).should == 0
     end
 
     it "ignores guesses of photos mapped with insufficient accuracy" do
-      photo = Photo.make accuracy: 11
-      guess = Guess.make photo: photo
+      photo = create :photo, accuracy: 11
+      guess = create :guess, photo: photo
       Guess.mapped_count(guess.person.id).should == 0
     end
 
@@ -336,16 +335,16 @@ describe Guess do
 
   describe '.longest_in' do
     it 'lists guesses made in the given year sorted by time between post and guess, descending' do
-      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc
-      guess1 = Guess.make 1, photo: photo1, commented_at: Time.local(2010, 2).getutc
-      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc
-      guess2 = Guess.make 2, photo: photo2, commented_at: Time.local(2010, 3).getutc
+      photo1 = create :photo, dateadded: Time.local(2010).getutc
+      guess1 = create :guess, photo: photo1, commented_at: Time.local(2010, 2).getutc
+      photo2 = create :photo, dateadded: Time.local(2010).getutc
+      guess2 = create :guess, photo: photo2, commented_at: Time.local(2010, 3).getutc
       Guess.longest_in(2010).should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
-      photo = Photo.make dateadded: Time.local(2010, 2).getutc
-      Guess.make photo: photo, commented_at: Time.local(2010).getutc
+      photo = create :photo, dateadded: Time.local(2010, 2).getutc
+      create :guess, photo: photo, commented_at: Time.local(2010).getutc
       Guess.longest_in(2010).should == []
     end
 
@@ -353,16 +352,16 @@ describe Guess do
 
   describe '.shortest_in' do
     it 'lists guesses made in the given year sorted by time between post and guess, ascending' do
-      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc
-      guess1 = Guess.make 1, photo: photo1, commented_at: Time.local(2010, 3).getutc
-      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc
-      guess2 = Guess.make 2, photo: photo2, commented_at: Time.local(2010, 2).getutc
+      photo1 = create :photo, dateadded: Time.local(2010).getutc
+      guess1 = create :guess, photo: photo1, commented_at: Time.local(2010, 3).getutc
+      photo2 = create :photo, dateadded: Time.local(2010).getutc
+      guess2 = create :guess, photo: photo2, commented_at: Time.local(2010, 2).getutc
       Guess.shortest_in(2010).should == [ guess2, guess1 ]
     end
 
     it 'ignores a guess made before it was posted' do
-      photo = Photo.make dateadded: Time.local(2010, 2).getutc
-      Guess.make photo: photo, commented_at: Time.local(2010).getutc
+      photo = create :photo, dateadded: Time.local(2010, 2).getutc
+      create :guess, photo: photo, commented_at: Time.local(2010).getutc
       Guess.shortest_in(2010).should == []
     end
 
@@ -370,17 +369,17 @@ describe Guess do
 
   describe '.all_between' do
     it 'returns all guesses between the given dates' do
-      guess = Guess.make added_at: Time.utc(2011, 1, 1, 0, 0, 1)
+      guess = create :guess, added_at: Time.utc(2011, 1, 1, 0, 0, 1)
       Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == [ guess ]
     end
 
     it 'ignores guesses made on or before the from date' do
-      Guess.make added_at: Time.utc(2011)
+      create :guess, added_at: Time.utc(2011)
       Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
     end
 
     it 'ignores guesses made after the to date' do
-      Guess.make added_at: Time.utc(2011, 1, 1, 0, 0, 2)
+      create :guess, added_at: Time.utc(2011, 1, 1, 0, 0, 2)
       Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
     end
 
@@ -388,7 +387,7 @@ describe Guess do
 
   describe '.find_with_associations' do
     it "returns a person's guesses with their photos and the photos' people" do
-      guess = Guess.make
+      guess = create :guess
       guesses = Guess.find_with_associations guess.person
       guesses.should == [ guess ]
       guesses[0].photo.should == guess.photo

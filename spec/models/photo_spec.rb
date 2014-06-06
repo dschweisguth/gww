@@ -62,16 +62,15 @@ describe Photo do
   end
 
   describe '#destroy' do
+    let(:photo) { create :photo }
 
     it "destroys the photo and its person" do
-      photo = create :photo
       photo.destroy
       Photo.any?.should be_false
       Person.any?.should be_false
     end
 
     it "leaves the person alone if they have another photo" do
-      photo = create :photo
       person = photo.person
       create :photo, person: person
       photo.destroy
@@ -80,7 +79,6 @@ describe Photo do
     end
 
     it "leaves the person alone if they have a guess" do
-      photo = create :photo
       person = photo.person
       create :guess, person: person
       photo.destroy
@@ -89,26 +87,26 @@ describe Photo do
     end
 
     it "destroys the photo's tags" do
-      tag = create :tag
-      tag.photo.destroy
+      create :tag, photo: photo
+      photo.destroy
       Tag.any?.should be_false
     end
 
     it "destroys the photo's comments" do
-      comment = create :comment
-      comment.photo.destroy
+      create :comment, photo: photo
+      photo.destroy
       Comment.any?.should be_false
     end
 
     it "destroys the photo's revelation" do
-      revelation = create :revelation
-      revelation.photo.destroy
+      create :revelation, photo: photo
+      photo.destroy
       Revelation.any?.should be_false
     end
 
     it "destroys the photo's guesses" do
-      guess = create :guess
-      guess.photo.destroy
+      create :guess, photo: photo
+      photo.destroy
       Guess.any?.should be_false
     end
 
@@ -118,17 +116,17 @@ describe Photo do
 
   describe '.count_between' do
     it 'counts all photos between the given dates' do
-      Photo.make dateadded: Time.utc(2011, 1, 1, 0, 0, 1)
+      create :photo, dateadded: Time.utc(2011, 1, 1, 0, 0, 1)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 1
     end
 
     it 'ignores photos made on or before the from date' do
-      Photo.make dateadded: Time.utc(2011)
+      create :photo, dateadded: Time.utc(2011)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
     end
 
     it 'ignores photos made after the to date' do
-      Photo.make dateadded: Time.utc(2011, 1, 1, 0, 0, 2)
+      create :photo, dateadded: Time.utc(2011, 1, 1, 0, 0, 2)
       Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
     end
 
@@ -136,52 +134,52 @@ describe Photo do
 
   describe '.unfound_or_unconfirmed_count_before' do
     it "counts photos added on or before and not scored on or before the given date" do
-      Photo.make dateadded: Time.utc(2011)
+      create :photo, dateadded: Time.utc(2011)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
     end
 
     it "includes photos guessed after the given date" do
-      photo = Photo.make dateadded: Time.utc(2011)
-      Guess.make photo: photo, added_at: Time.utc(2011, 2)
+      photo = create :photo, dateadded: Time.utc(2011)
+      create :guess, photo: photo, added_at: Time.utc(2011, 2)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
     end
 
     it "includes photos revealed after the given date" do
-      photo = Photo.make dateadded: Time.utc(2011)
-      Revelation.make photo: photo, added_at: Time.utc(2011, 2)
+      photo = create :photo, dateadded: Time.utc(2011)
+      create :revelation, photo: photo, added_at: Time.utc(2011, 2)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
     end
 
     it "ignores photos added after the given date" do
-      Photo.make dateadded: Time.utc(2011, 2)
+      create :photo, dateadded: Time.utc(2011, 2)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
     it "ignores photos guessed on or before the given date" do
-      photo = Photo.make dateadded: Time.utc(2011)
-      Guess.make photo: photo, added_at: Time.utc(2011)
+      photo = create :photo, dateadded: Time.utc(2011)
+      create :guess, photo: photo, added_at: Time.utc(2011)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
     it "ignores photos revealed on or before the given date" do
-      photo = Photo.make dateadded: Time.utc(2011)
-      Revelation.make photo: photo, added_at: Time.utc(2011)
+      photo = create :photo, dateadded: Time.utc(2011)
+      create :revelation, photo: photo, added_at: Time.utc(2011)
       Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
     end
 
   end
 
   describe '.add_posts' do
+    let(:person) { create :person }
+
     it "adds each person's posts as an attribute" do
-      person = Person.make
-      Photo.make 1, person: person, dateadded: Time.utc(2010)
+      create :photo, person: person, dateadded: Time.utc(2010)
       Photo.add_posts [ person ], Time.utc(2011), :post_count
       person.post_count.should == 1
     end
 
     it "ignores posts made after the report date" do
-      person = Person.make
-      Photo.make 1, person: person, dateadded: Time.utc(2011)
+      create :photo, person: person, dateadded: Time.utc(2011)
       Photo.add_posts [ person ], Time.utc(2010), :post_count
       person.post_count.should == 0
     end
@@ -192,95 +190,95 @@ describe Photo do
 
   describe '.first_by' do
     it "returns the poster's first post" do
-      poster = Person.make
-      Photo.make 'second', person: poster, dateadded: Time.utc(2001)
-      first = Photo.make 'first', person: poster, dateadded: Time.utc(2000)
+      poster = create :person
+      create :photo, person: poster, dateadded: Time.utc(2001)
+      first = create :photo, person: poster, dateadded: Time.utc(2000)
       Photo.first_by(poster).should == first
     end
 
     it "ignores other posters' photos" do
-      Photo.make
-      Photo.first_by(Person.make).should be_nil
+      create :photo
+      Photo.first_by(create :person).should be_nil
     end
 
   end
 
   describe '.most_recent_by' do
     it "returns the poster's most recent post" do
-      poster = Person.make
-      Photo.make 'penultimate', person: poster, dateadded: Time.utc(2000)
-      most_recent = Photo.make 'most_recent', person: poster, dateadded: Time.utc(2001)
+      poster = create :person
+      create :photo, person: poster, dateadded: Time.utc(2000)
+      most_recent = create :photo, person: poster, dateadded: Time.utc(2001)
       Photo.most_recent_by(poster).should == most_recent
     end
 
     it "ignores other posters' photos" do
-      Photo.make
-      Photo.most_recent_by(Person.make).should be_nil
+      create :photo
+      Photo.most_recent_by(create :person).should be_nil
     end
 
   end
 
   describe '.oldest_unfound' do
     it "returns the poster's oldest unfound" do
-      poster = Person.make
-      Photo.make 'second', person: poster, dateadded: Time.utc(2001)
-      first = Photo.make 'first', person: poster, dateadded: Time.utc(2000)
+      poster = create :person
+      create :photo, person: poster, dateadded: Time.utc(2001)
+      first = create :photo, person: poster, dateadded: Time.utc(2000)
       oldest_unfound = Photo.oldest_unfound poster
       oldest_unfound.should == first
       oldest_unfound.place.should == 1
     end
 
     it "ignores other posters' photos" do
-      Photo.make
-      Photo.oldest_unfound(Person.make).should be_nil
+      create :photo
+      Photo.oldest_unfound(create :person).should be_nil
     end
 
     it "considers unconfirmed photos" do
-      photo = Photo.make game_status: 'unconfirmed'
+      photo = create :photo, game_status: 'unconfirmed'
       Photo.oldest_unfound(photo.person).should == photo
     end
 
     it "ignores game statuses other than unfound and unconfirmed" do
-      photo = Photo.make game_status: 'found'
+      photo = create :photo, game_status: 'found'
       Photo.oldest_unfound(photo.person).should be_nil
     end
 
     it "considers other posters' oldest unfounds when calculating place" do
-      Photo.make 'oldest', dateadded: Time.utc(2000)
-      next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
+      create :photo, dateadded: Time.utc(2000)
+      next_oldest = create :photo, dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound.place.should == 2
     end
 
     it "considers unconfirmed photos when calculating place" do
-      Photo.make 'oldest', dateadded: Time.utc(2000), game_status: 'unconfirmed'
-      next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
+      create :photo, dateadded: Time.utc(2000), game_status: 'unconfirmed'
+      next_oldest = create :photo, dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound.place.should == 2
     end
 
     it "ignores other posters' equally old unfounds when calculating place" do
-      Photo.make 'oldest', dateadded: Time.utc(2001)
-      next_oldest = Photo.make 'next_oldest', dateadded: Time.utc(2001)
+      create :photo, dateadded: Time.utc(2001)
+      next_oldest = create :photo, dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
       oldest_unfound.place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.oldest_unfound(Person.make).should be_nil
+      Photo.oldest_unfound(create :person).should be_nil
     end
 
   end
 
   describe '.most_commented' do
     it "returns the poster's most-commented photo" do
-      poster = Person.make
-      Photo.make 'second', person: poster
-      first = Photo.make 'first', person: poster, other_user_comments: 1
-      Comment.make photo: first
+      poster = create :person
+      create :photo, person: poster
+      first = create :photo, person: poster, other_user_comments: 1
+      create :comment, photo: first
       most_commented = Photo.most_commented poster
       most_commented.should == first
       most_commented.other_user_comments.should == 1
@@ -288,12 +286,12 @@ describe Photo do
     end
 
     it "counts comments" do
-      poster = Person.make
-      second = Photo.make 'second', person: poster, other_user_comments: 1
-      Comment.make 21, photo: second
-      first = Photo.make 'first', person: poster, other_user_comments: 2
-      Comment.make 11, photo: first
-      Comment.make 12, photo: first
+      poster = create :person
+      second = create :photo, person: poster, other_user_comments: 1
+      create :comment, photo: second
+      first = create :photo, person: poster, other_user_comments: 2
+      create :comment, photo: first
+      create :comment, photo: first
       most_commented = Photo.most_commented poster
       most_commented.should == first
       most_commented.other_user_comments.should == 2
@@ -301,103 +299,103 @@ describe Photo do
     end
 
     it "ignores other posters' photos" do
-      photo = Photo.make other_user_comments: 1
-      Comment.make photo: photo
-      Photo.most_commented(Person.make).should be_nil
+      photo = create :photo, other_user_comments: 1
+      create :comment, photo: photo
+      Photo.most_commented(create :person).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
-      other_posters_photo = Photo.make 'other_posters', other_user_comments: 2
-      Comment.make 'o1', photo: other_posters_photo
-      Comment.make 'o2', photo: other_posters_photo
-      photo = Photo.make other_user_comments: 1
-      Comment.make photo: photo
+      other_posters_photo = create :photo, other_user_comments: 2
+      create :comment, photo: other_posters_photo
+      create :comment, photo: other_posters_photo
+      photo = create :photo, other_user_comments: 1
+      create :comment, photo: photo
       Photo.most_commented(photo.person).place.should == 2
     end
 
     it "ignores other posters' equally commented photos when calculating place" do
-      other_posters_photo = Photo.make 'other_posters', other_user_comments: 1
-      Comment.make 'other', photo: other_posters_photo
-      photo = Photo.make other_user_comments: 1
-      Comment.make photo: photo
+      other_posters_photo = create :photo, other_user_comments: 1
+      create :comment, photo: other_posters_photo
+      photo = create :photo, other_user_comments: 1
+      create :comment, photo: photo
       Photo.most_commented(photo.person).place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.most_commented(Person.make).should be_nil
+      Photo.most_commented(create :person).should be_nil
     end
 
   end
 
   describe '.most_viewed' do
     it "returns the poster's most-viewed photo" do
-      poster = Person.make
-      Photo.make 'second', person: poster
-      first = Photo.make 'first', person: poster, views: 1
+      poster = create :person
+      create :photo, person: poster
+      first = create :photo, person: poster, views: 1
       most_viewed = Photo.most_viewed poster
       most_viewed.should == first
       most_viewed.place.should == 1
     end
 
     it "ignores other posters' photos" do
-      Photo.make
-      Photo.most_viewed(Person.make).should be_nil
+      create :photo
+      Photo.most_viewed(create :person).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
-      Photo.make 'other_posters', views: 1
-      photo = Photo.make
+      create :photo, views: 1
+      photo = create :photo
       Photo.most_viewed(photo.person).place.should == 2
     end
 
     it "ignores other posters' equally viewed photos when calculating place" do
-      Photo.make 'other_posters'
-      photo = Photo.make
+      create :photo
+      photo = create :photo
       Photo.most_viewed(photo.person).place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.most_viewed(Person.make).should be_nil
+      Photo.most_viewed(create :person).should be_nil
     end
 
   end
 
   describe '.most_faved' do
     it "returns the poster's most-faved photo" do
-      poster = Person.make
-      Photo.make 'second', person: poster
-      first = Photo.make 'first', person: poster, faves: 1
+      poster = create :person
+      create :photo, person: poster
+      first = create :photo, person: poster, faves: 1
       most_faved = Photo.most_faved poster
       most_faved.should == first
       most_faved.place.should == 1
     end
 
     it "ignores other posters' photos" do
-      Photo.make
-      Photo.most_faved(Person.make).should be_nil
+      create :photo
+      Photo.most_faved(create :person).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
-      Photo.make 'other_posters', faves: 1
-      photo = Photo.make
+      create :photo, faves: 1
+      photo = create :photo
       Photo.most_faved(photo.person).place.should == 2
     end
 
     it "ignores other posters' equally faved photos when calculating place" do
-      Photo.make 'other_posters'
-      photo = Photo.make
+      create :photo
+      photo = create :photo
       Photo.most_faved(photo.person).place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.most_faved(Person.make).should be_nil
+      Photo.most_faved(create :person).should be_nil
     end
 
   end
 
   describe '.find_with_guesses' do
     it "returns a person's photos, with their guesses and the guesses' people" do
-      guess = Guess.make
+      guess = create :guess
       photos = Photo.find_with_guesses guess.photo.person
       photos.should == [ guess.photo ]
       photos[0].guesses.should == [ guess ]
@@ -466,59 +464,57 @@ describe Photo do
 
   describe '.mapped_count' do
     it "counts mapped photos" do
-      photo = Photo.make accuracy: 12
+      photo = create :photo, accuracy: 12
       Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "counts auto-mapped photos" do
-      photo = Photo.make inferred_latitude: 37
+      photo = create :photo, inferred_latitude: 37
       Photo.mapped_count(photo.person.id).should == 1
     end
 
     it "ignores other people's photos" do
-      Photo.make accuracy: 12
-      other_person = Person.make
+      create :photo, accuracy: 12
+      other_person = create :person
       Photo.mapped_count(other_person.id).should == 0
     end
 
     it "ignores unmapped photos" do
-      photo = Photo.make
+      photo = create :photo
       Photo.mapped_count(photo.person.id).should == 0
     end
 
     it "ignores photos mapped with an accuracy < 12" do
-      photo = Photo.make accuracy: 11
+      photo = create :photo, accuracy: 11
       Photo.mapped_count(photo.person.id).should == 0
     end
 
   end
 
   describe '.posted_or_guessed_by_and_mapped' do
-    before do
-      @bounds = Bounds.new(36, 38, -123, -121)
-    end
+    let(:bounds) { Bounds.new 36, 38, -123, -121 }
 
     it "returns photos posted by the person" do
       returns_post latitude: 37, longitude: -122, accuracy: 12
     end
 
     it "ignores other people's posts" do
-      Photo.make latitude: 37, longitude: -122, accuracy: 12
-      other_person = Person.make
-      Photo.posted_or_guessed_by_and_mapped(other_person.id, @bounds, 1).should == []
+      create :photo, latitude: 37, longitude: -122, accuracy: 12
+      other_person = create :person
+      Photo.posted_or_guessed_by_and_mapped(other_person.id, bounds, 1).should == []
     end
 
     it "returns photos guessed by the person" do
-      photo = Photo.make latitude: 37, longitude: -122, accuracy: 12
-      guess = Guess.make photo: photo
-      Photo.posted_or_guessed_by_and_mapped(guess.person.id, @bounds, 1).should == [ photo ]
+      photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
+      guess = create :guess, photo: photo
+      Photo.posted_or_guessed_by_and_mapped(guess.person.id, bounds, 1).should == [ photo ]
     end
 
     it "ignores other people's guesses" do
-      photo = Photo.make latitude: 37, longitude: -122, accuracy: 12
-      Guess.make photo: photo
-      other_person = Person.make
-      Photo.posted_or_guessed_by_and_mapped(other_person.id, @bounds, 1).should == []
+      photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
+      create :guess, photo: photo
+      other_person = create :person
+      Photo.posted_or_guessed_by_and_mapped(other_person.id, bounds, 1).should == []
     end
 
     it "returns auto-mapped photos" do
@@ -566,19 +562,19 @@ describe Photo do
     end
 
     it "returns only the youngest n photos" do
-      photo = Photo.make 1, latitude: 37, longitude: -122, accuracy: 12
-      Photo.make 2, latitude: 37, longitude: -122, dateadded: 1.day.ago, accuracy: 12
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == [ photo ]
+      photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
+      create :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago, accuracy: 12
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1).should == [ photo ]
     end
 
     def returns_post(attributes)
-      photo = Photo.make attributes
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == [ photo ]
+      photo = create :photo, attributes
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1).should == [ photo ]
     end
 
     def ignores_post(attributes)
-      photo = Photo.make attributes
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, @bounds, 1).should == []
+      photo = create :photo, attributes
+      Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1).should == []
     end
 
   end
@@ -599,9 +595,9 @@ describe Photo do
     end
 
     it "returns photos sorted by username, dateadded" do
-      person = Person.make
-      photo1 = Photo.make 1, person: person, dateadded: Time.utc(2010)
-      photo2 = Photo.make 2, person: person, dateadded: Time.utc(2011)
+      person = create :person
+      photo1 = create :photo, person: person, dateadded: Time.utc(2010)
+      photo2 = create :photo, person: person, dateadded: Time.utc(2011)
       Photo.all_sorted_and_paginated('username', '+', 1, 2).should == [ photo2, photo1 ]
     end
 
@@ -704,98 +700,96 @@ describe Photo do
     def all_sorted_and_paginated_reverses_photos(sorted_by,
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
-      person1 = Person.make 1, person_1_options
-      photo1 = Photo.make 1, photo_1_options.merge({ person: person1 })
-      person2 = Person.make 2, person_2_options
-      photo2 = Photo.make 2, photo_2_options.merge({ person: person2 })
+      person1 = create :person, person_1_options
+      photo1 = create :photo, photo_1_options.merge({ person: person1 })
+      person2 = create :person, person_2_options
+      photo2 = create :photo, photo_2_options.merge({ person: person2 })
       Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2).should == [ photo2, photo1 ]
 
     end
 
     it "paginates" do
-      3.times { |n| Photo.make n }
+      3.times { create :photo }
       Photo.all_sorted_and_paginated('username', '+', 1, 2).length.should == 2
     end
 
   end
 
   describe '.mapped' do
-    before do
-      @bounds = Bounds.new(0, 2, 3, 5)
-    end
+    let(:bounds) { Bounds.new 0, 2, 3, 5 }
 
     it "returns photos" do
-      photo = Photo.make latitude: 1, longitude: 4, accuracy: 12
-      Photo.mapped(@bounds, 1).should == [ photo ]
+      photo = create :photo, latitude: 1, longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == [ photo ]
     end
 
     it "returns auto-mapped photos" do
-      photo = Photo.make inferred_latitude: 1, inferred_longitude: 4, accuracy: 12
-      Photo.mapped(@bounds, 1).should == [ photo ]
+      photo = create :photo, inferred_latitude: 1, inferred_longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == [ photo ]
     end
 
     it "ignores unmapped photos" do
-      Photo.make
-      Photo.mapped(@bounds, 1).should == []
+      create :photo
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores mapped photos with accuracy < 12" do
-      Photo.make latitude: 1, longitude: 4, accuracy: 11
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, latitude: 1, longitude: 4, accuracy: 11
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores mapped photos south of the minimum latitude" do
-      Photo.make latitude: -1, longitude: 4, accuracy: 12
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, latitude: -1, longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores mapped photos north of the maximum latitude" do
-      Photo.make latitude: 3, longitude: 4, accuracy: 12
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, latitude: 3, longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores mapped photos west of the minimum longitude" do
-      Photo.make latitude: 1, longitude: 2, accuracy: 12
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, latitude: 1, longitude: 2, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores mapped photos east of the maximum longitude" do
-      Photo.make latitude: 1, longitude: 6, accuracy: 12
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, latitude: 1, longitude: 6, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos south of the minimum latitude" do
-      Photo.make inferred_latitude: -1, inferred_longitude: 4
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, inferred_latitude: -1, inferred_longitude: 4
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos north of the maximum latitude" do
-      Photo.make inferred_latitude: 3, inferred_longitude: 4
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, inferred_latitude: 3, inferred_longitude: 4
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos west of the minimum longitude" do
-      Photo.make inferred_latitude: 1, inferred_longitude: 2
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, inferred_latitude: 1, inferred_longitude: 2
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "ignores auto-mapped photos east of the maximum longitude" do
-      Photo.make inferred_latitude: 1, inferred_longitude: 6
-      Photo.mapped(@bounds, 1).should == []
+      create :photo, inferred_latitude: 1, inferred_longitude: 6
+      Photo.mapped(bounds, 1).should == []
     end
 
     it "returns only the youngest n photos" do
-      photo = Photo.make 1, latitude: 1, longitude: 4, accuracy: 12
-      Photo.make 2, latitude: 1, longitude: 4, accuracy: 12, dateadded: 1.day.ago
-      Photo.mapped(@bounds, 1).should == [ photo ]
+      photo = create :photo, latitude: 1, longitude: 4, accuracy: 12
+      create :photo, latitude: 1, longitude: 4, accuracy: 12, dateadded: 1.day.ago
+      Photo.mapped(bounds, 1).should == [ photo ]
     end
 
   end
 
   describe '.oldest' do
     it "returns the oldest photo" do
-      Photo.make 1
-      photo = Photo.make 2, dateadded: 1.day.ago
+      create :photo
+      photo = create :photo, dateadded: 1.day.ago
       Photo.oldest.should == photo
     end
   end
@@ -803,14 +797,14 @@ describe Photo do
   describe '.unfound_or_unconfirmed' do
     %w(unfound unconfirmed).each do |game_status|
       it "returns #{game_status} photos" do
-        photo = Photo.make game_status: game_status
+        photo = create :photo, game_status: game_status
         Photo.unfound_or_unconfirmed.should == [ photo ]
       end
     end
 
     %w(found revealed).each do |game_status|
       it "ignores #{game_status} photos" do
-        Photo.make game_status: game_status
+        create :photo, game_status: game_status
         Photo.unfound_or_unconfirmed.should == []
       end
     end
@@ -1050,15 +1044,15 @@ describe Photo do
   end
 
   describe '.human_tags' do
+    let(:photo) { create :photo }
+
     it "returns non-machine tags sorted by id" do
-      photo = create :photo
       photo.tags.create! raw: 'Tag 2'
       photo.tags.create! raw: 'Tag 1'
       photo.human_tags.map(&:raw).should == ['Tag 2', 'Tag 1']
     end
 
     it "ignores machine tags" do
-      photo = create :photo
       photo.tags.create! raw: 'Machine tag 1', machine_tag: true
       photo.human_tags.should be_empty
     end
@@ -1066,15 +1060,15 @@ describe Photo do
   end
 
   describe '.machine_tags' do
+    let(:photo) { create :photo }
+
     it "returns machine tags sorted by id" do
-      photo = create :photo
       photo.tags.create! raw: 'Tag 2', machine_tag: true
       photo.tags.create! raw: 'Tag 1', machine_tag: true
       photo.machine_tags.map(&:raw).should == ['Tag 2', 'Tag 1']
     end
 
     it "ignores machine tags" do
-      photo = create :photo
       photo.tags.create! raw: 'Machine tag 1', machine_tag: false
       photo.machine_tags.should be_empty
     end
@@ -1085,23 +1079,23 @@ describe Photo do
 
   describe '.most_viewed_in_year' do
     it 'lists photos' do
-      photo = Photo.make dateadded: Time.local(2010).getutc
+      photo = create :photo, dateadded: Time.local(2010).getutc
       Photo.most_viewed_in(2010).should == [ photo ]
     end
 
     it 'sorts by views' do
-      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc, views: 0
-      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc, views: 1
+      photo1 = create :photo, dateadded: Time.local(2010).getutc, views: 0
+      photo2 = create :photo, dateadded: Time.local(2010).getutc, views: 1
       Photo.most_viewed_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
-      Photo.make dateadded: Time.local(2009).getutc
+      create :photo, dateadded: Time.local(2009).getutc
       Photo.most_viewed_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
-      Photo.make dateadded: Time.local(2011).getutc
+      create :photo, dateadded: Time.local(2011).getutc
       Photo.most_viewed_in(2010).should == []
     end
 
@@ -1109,23 +1103,23 @@ describe Photo do
 
   describe '.most_faved_in_year' do
     it 'lists photos' do
-      photo = Photo.make dateadded: Time.local(2010).getutc
+      photo = create :photo, dateadded: Time.local(2010).getutc
       Photo.most_faved_in(2010).should == [ photo ]
     end
 
     it 'sorts by faves' do
-      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc, faves: 0
-      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc, faves: 1
+      photo1 = create :photo, dateadded: Time.local(2010).getutc, faves: 0
+      photo2 = create :photo, dateadded: Time.local(2010).getutc, faves: 1
       Photo.most_faved_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
-      Photo.make dateadded: Time.local(2009).getutc
+      create :photo, dateadded: Time.local(2009).getutc
       Photo.most_faved_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
-      Photo.make dateadded: Time.local(2011).getutc
+      create :photo, dateadded: Time.local(2011).getutc
       Photo.most_faved_in(2010).should == []
     end
 
@@ -1133,35 +1127,35 @@ describe Photo do
 
   describe '.most_commented_in_year' do
     it 'lists photos' do
-      photo = Photo.make dateadded: Time.local(2010).getutc
-      Comment.make photo: photo
+      photo = create :photo, dateadded: Time.local(2010).getutc
+      create :comment, photo: photo
       Photo.most_commented_in(2010).should == [ photo ]
     end
 
     it 'sorts by comment count' do
-      photo1 = Photo.make 1, dateadded: Time.local(2010).getutc
-      Comment.make 11, photo: photo1
-      photo2 = Photo.make 2, dateadded: Time.local(2010).getutc
-      Comment.make 21, photo: photo2
-      Comment.make 22, photo: photo2
+      photo1 = create :photo, dateadded: Time.local(2010).getutc
+      create :comment, photo: photo1
+      photo2 = create :photo, dateadded: Time.local(2010).getutc
+      create :comment, photo: photo2
+      create :comment, photo: photo2
       Photo.most_commented_in(2010).should == [ photo2, photo1 ]
     end
 
     it 'ignores photos from before the year' do
-      photo = Photo.make dateadded: Time.local(2009).getutc
-      Comment.make photo: photo
+      photo = create :photo, dateadded: Time.local(2009).getutc
+      create :comment, photo: photo
       Photo.most_commented_in(2010).should == []
     end
 
     it 'ignores photos from after the year' do
-      photo = Photo.make dateadded: Time.local(2011).getutc
-      Comment.make photo: photo
+      photo = create :photo, dateadded: Time.local(2011).getutc
+      create :comment, photo: photo
       Photo.most_commented_in(2010).should == []
     end
 
     it "ignores comments by the poster" do
-      photo = Photo.make dateadded: Time.local(2010).getutc
-      Comment.make photo: photo, flickrid: photo.person.flickrid
+      photo = create :photo, dateadded: Time.local(2010).getutc
+      create :comment, photo: photo, flickrid: photo.person.flickrid
       Photo.most_commented_in(2010).should == []
     end
 
@@ -1172,14 +1166,14 @@ describe Photo do
   describe '.unfound_or_unconfirmed_count' do
     %w(unfound unconfirmed).each do |game_status|
       it "counts #{game_status} photos" do
-        Photo.make game_status: game_status
+        create :photo, game_status: game_status
         Photo.unfound_or_unconfirmed_count.should == 1
       end
     end
 
     %w(found revealed).each do |game_status|
       it "ignores #{game_status} photos" do
-        Photo.make game_status: game_status
+        create :photo, game_status: game_status
         Photo.unfound_or_unconfirmed_count.should == 0
       end
     end
@@ -1189,22 +1183,22 @@ describe Photo do
   describe '.update_statistics' do
     describe "when updating other user comments" do
       it "counts comments" do
-        comment = Comment.make
+        comment = create :comment
         Photo.update_statistics
         comment.photo.reload
         comment.photo.other_user_comments.should == 1
       end
 
       it "ignores comments by the poster" do
-        photo = Photo.make
-        Comment.make photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
+        photo = create :photo
+        create :comment, photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
         Photo.update_statistics
         photo.reload
         photo.other_user_comments.should == 0
       end
 
       it "handles photos which go from nonzero to zero comments" do
-        photo = Photo.make other_user_comments: 1
+        photo = create :photo, other_user_comments: 1
         Photo.update_statistics
         photo.reload
         photo.other_user_comments.should == 0
@@ -1214,8 +1208,8 @@ describe Photo do
 
     describe "when updating member comments" do
       it 'counts comments on guessed photos' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
         Photo.update_statistics
@@ -1224,8 +1218,8 @@ describe Photo do
       end
 
       it 'ignores comments by the poster' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username
         Photo.update_statistics
         guess.photo.reload
@@ -1233,19 +1227,19 @@ describe Photo do
       end
 
       it 'ignores comments by non-members' do
-        guess = Guess.make
-        Comment.make photo: guess.photo
+        guess = create :guess
+        create :comment, photo: guess.photo
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_comments.should == 0
       end
 
       it 'counts comments other than the guess' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at - 5
-        Comment.make photo: guess.photo,
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
         Photo.update_statistics
@@ -1254,11 +1248,11 @@ describe Photo do
       end
 
       it 'ignores comments after the guess' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
-        Comment.make photo: guess.photo,
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at + 5
         Photo.update_statistics
@@ -1270,8 +1264,8 @@ describe Photo do
       # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
       # didn't work that way
       it "handles photos which go from nonzero to zero comments" do
-        photo = Photo.make member_comments: 1
-        Guess.make photo: photo
+        photo = create :photo, member_comments: 1
+        create :guess, photo: photo
         Photo.update_statistics
         photo.reload
         photo.member_comments.should == 0
@@ -1281,8 +1275,8 @@ describe Photo do
 
     describe "when updating member questions" do
       it 'counts questions on guessed photos' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'
         Photo.update_statistics
@@ -1291,8 +1285,8 @@ describe Photo do
       end
 
       it 'ignores questions by the poster' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username,
           comment_text: '?'
         Photo.update_statistics
@@ -1301,19 +1295,19 @@ describe Photo do
       end
 
       it 'ignores questions by non-members' do
-        guess = Guess.make
-        Comment.make photo: guess.photo, comment_text: '?'
+        guess = create :guess
+        create :comment, photo: guess.photo, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
         guess.photo.member_questions.should == 0
       end
 
       it 'counts questions other than the guess' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at - 5, comment_text: '?'
-        Comment.make photo: guess.photo,
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'
         Photo.update_statistics
@@ -1322,11 +1316,11 @@ describe Photo do
       end
 
       it 'ignores questions after the guess' do
-        guess = Guess.make
-        Comment.make photo: guess.photo,
+        guess = create :guess
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'
-        Comment.make photo: guess.photo,
+        create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at + 5, comment_text: '?'
         Photo.update_statistics
@@ -1338,8 +1332,8 @@ describe Photo do
       # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
       # didn't work that way
       it "handles photos which go from nonzero to zero comments" do
-        photo = Photo.make member_questions: 1
-        Guess.make photo: photo
+        photo = create :photo, member_questions: 1
+        create :guess, photo: photo
         Photo.update_statistics
         photo.reload
         photo.member_questions.should == 0
@@ -1361,7 +1355,7 @@ describe Photo do
     end
 
     it "infers each guessed photo's lat+long from its guess" do
-      answer = Guess.make comment_text: 'A parseable comment'
+      answer = create :guess, comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
@@ -1374,7 +1368,7 @@ describe Photo do
     end
 
     it "infers each revealed photo's lat+long from its revelation" do
-      answer = Revelation.make comment_text: 'A parseable comment'
+      answer = create :revelation, comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
@@ -1387,8 +1381,8 @@ describe Photo do
     end
 
     it "removes an existing inferred geocode if the comment can't be parsed" do
-      photo = Photo.make inferred_latitude: 37, inferred_longitude: -122
-      answer = Guess.make photo: photo, comment_text: 'An unparseable comment'
+      photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
+      answer = create :guess, photo: photo, comment_text: 'An unparseable comment'
       stub(@parser).parse(answer.comment_text) { [] }
       Photo.infer_geocodes
 
@@ -1399,8 +1393,8 @@ describe Photo do
     end
 
     it "removes an existing inferred geocode if the location can't be geocoded" do
-      photo = Photo.make inferred_latitude: 37, inferred_longitude: -122
-      answer = Guess.make photo: photo, comment_text: 'A parseable but not geocodable comment'
+      photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
+      answer = create :guess, photo: photo, comment_text: 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { nil }
@@ -1413,8 +1407,8 @@ describe Photo do
     end
 
     it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
-      photo = Photo.make inferred_latitude: 37, inferred_longitude: -122
-      answer = Guess.make photo: photo, comment_text: 'A comment with multiple gecodable locations'
+      photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
+      answer = create :guess, photo: photo, comment_text: 'A comment with multiple gecodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       stub(@parser).parse(answer.comment_text) { [ location1, location2 ] }
@@ -1433,27 +1427,27 @@ describe Photo do
   # Used by Admin::PhotosController
 
   describe '.inaccessible' do
+    before do
+      create :flickr_update, created_at: Time.utc(2011)
+    end
+
     it "lists photos not seen since the last update" do
-      FlickrUpdate.make created_at: Time.utc(2011)
-      photo = Photo.make seen_at: Time.utc(2010)
+      photo = create :photo, seen_at: Time.utc(2010)
       Photo.inaccessible.should == [ photo ]
     end
 
     it "includes unconfirmed photos" do
-      FlickrUpdate.make created_at: Time.utc(2011)
-      photo = Photo.make seen_at: Time.utc(2010), game_status: 'unconfirmed'
+      photo = create :photo, seen_at: Time.utc(2010), game_status: 'unconfirmed'
       Photo.inaccessible.should == [ photo ]
     end
 
     it "ignores photos seen since the last update" do
-      FlickrUpdate.make created_at: Time.utc(2011)
-      Photo.make seen_at: Time.utc(2011)
+      create :photo, seen_at: Time.utc(2011)
       Photo.inaccessible.should == []
     end
 
     it "ignores statuses other than unfound and unconfirmed" do
-      FlickrUpdate.make created_at: Time.utc(2011)
-      Photo.make seen_at: Time.utc(2010), game_status: 'found'
+      create :photo, seen_at: Time.utc(2010), game_status: 'found'
       Photo.inaccessible.should == []
     end
 
@@ -1461,14 +1455,14 @@ describe Photo do
 
   describe '.multipoint' do
     it 'returns photos for which more than one person got a point' do
-      photo = Photo.make
-      Guess.make 1, photo: photo
-      Guess.make 2, photo: photo
+      photo = create :photo
+      create :guess, photo: photo
+      create :guess, photo: photo
       Photo.multipoint.should == [ photo ]
     end
 
     it 'ignores photos for which only one person got a point' do
-      Guess.make
+      create :guess
       Photo.multipoint.should == []
     end
 
@@ -1506,8 +1500,9 @@ describe Photo do
   end
 
   describe '#game_status_tags' do
+    let(:photo) { create :photo }
+
     it "returns the photo's game status tags" do
-      photo = create :photo
       %w(unfoundinSF foundinSF revealedinSF).each do |raw|
         create :tag, photo: photo, raw: raw
       end
@@ -1515,7 +1510,6 @@ describe Photo do
     end
 
     it "is case-insensitive" do
-      photo = create :photo
       %w(UNFOUNDINSF FOUNDINSF REVEALEDINSF).each do |raw|
         create :tag, photo: photo, raw: raw
       end
@@ -1523,23 +1517,24 @@ describe Photo do
     end
 
     it "ignores non-game-status tags" do
-      create(:tag).photo.game_status_tags.should be_empty
+      create :tag, photo: photo
+      photo.game_status_tags.should be_empty
     end
 
   end
 
   describe '.find_with_associations' do
+    let(:photo_in) { create :photo }
+
     it "returns a revealed photo with all of its associated objects" do
-      photo_in = Photo.make
-      revelation = Revelation.make photo: photo_in
+      revelation = create :revelation, photo: photo_in
       photo_out = Photo.find_with_associations photo_in.id
       photo_out.person.should == photo_in.person
       photo_out.revelation.should == revelation
     end
 
     it "returns a guessed photo with all of its associated objects" do
-      photo_in = Photo.make
-      guess = Guess.make photo: photo_in
+      guess = create :guess, photo: photo_in
       photo_out = Photo.find_with_associations photo_in.id
       photo_out.person.should == photo_in.person
       photo_out.guesses.should == [ guess ]
@@ -1549,23 +1544,22 @@ describe Photo do
   end
 
   describe '.change_game_status' do
+    let(:photo) { create :photo }
+
     it "changes the photo's status" do
-      photo = Photo.make
       Photo.change_game_status photo.id, 'unconfirmed'
       photo.reload
       photo.game_status.should == 'unconfirmed'
     end
 
     it 'deletes existing guesses' do
-      photo = Photo.make
-      guess = Guess.make photo: photo
+      create :guess, photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Guess.count.should == 0
     end
 
     it 'deletes existing revelations' do
-      photo = Photo.make
-      Revelation.make photo: photo
+      create :revelation, photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       Revelation.count.should == 0
     end
@@ -1573,32 +1567,28 @@ describe Photo do
   end
 
   describe '.add_entered_answer' do
-    before do
-      @now = Time.utc(2010)
-    end
+    let(:now) { Time.utc 2010 }
+    let(:photo) { create :photo }
 
-    describe 'when adding a revelation' do
+    context 'when adding a revelation' do
       it 'needs a non-empty comment text' do
-        photo = Photo.make
         lambda { Photo.add_entered_answer photo.id, photo.person.username, '' }.should raise_error ArgumentError
       end
 
       it 'adds a revelation' do
-        photo = Photo.make
         set_time
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
         is_revealed photo, 'comment text'
       end
 
       it "defaults to the photo's owner" do
-        photo = Photo.make
         set_time
         Photo.add_entered_answer photo.id, '', 'comment text'
         is_revealed photo, 'comment text'
       end
 
       it 'updates an existing revelation' do
-        photo = Revelation.make.photo
+        create :revelation, photo: photo
         set_time
         Photo.add_entered_answer photo.id, photo.person.username, 'new comment text'
         is_revealed photo, 'new comment text'
@@ -1608,23 +1598,21 @@ describe Photo do
         revelation = photo.revelation.reload
         revelation.photo.game_status.should == 'revealed'
         revelation.comment_text.should == comment_text
-        revelation.commented_at.should == @now
-        revelation.added_at.should == @now
+        revelation.commented_at.should == now
+        revelation.added_at.should == now
       end
 
       it 'deletes an existing guess' do
-        photo = Photo.make
-        Guess.make photo: photo
+        create :guess, photo: photo
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
         Guess.any?.should be_false
       end
 
     end
 
-    describe 'when adding a guess' do
+    context 'when adding a guess' do
       it 'adds a guess and updates the guesser if necessary' do
-        photo = Photo.make
-        guesser = Person.make
+        guesser = create :person
         set_time
         stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
@@ -1634,8 +1622,8 @@ describe Photo do
         guess = photo.guesses.first
         guess.person.should == guesser
         guess.comment_text.should == 'comment text'
-        guess.commented_at.should == @now
-        guess.added_at.should == @now
+        guess.commented_at.should == now
+        guess.added_at.should == now
         guess.photo.game_status.should == 'found'
 
         guesser.reload
@@ -1645,8 +1633,7 @@ describe Photo do
       end
 
       it 'creates the guesser if necessary' do
-        photo = Photo.make
-        comment = Comment.make
+        comment = create :comment
         set_time
         stub_person_request
         Photo.add_entered_answer photo.id, comment.username, 'comment text'
@@ -1658,29 +1645,28 @@ describe Photo do
       end
 
       it "leaves alone an existing guess by the same guesser" do
-        old_guess = Guess.make
+        old_guess = create :guess, photo: photo
         set_time
         stub_person_request
-        Photo.add_entered_answer old_guess.photo.id, old_guess.person.username, 'new comment text'
+        Photo.add_entered_answer photo.id, old_guess.person.username, 'new comment text'
 
-        guesses = old_guess.photo.reload.guesses
+        guesses = photo.reload.guesses
         guesses.length.should == 2
-        guesses.all? { |guess| guess.photo == old_guess.photo }.should be_true
+        guesses.all? { |guess| guess.photo == photo }.should be_true
         guesses.all? { |guess| guess.person == old_guess.person }.should be_true
         guesses.map(&:comment_text).should =~ [old_guess.comment_text, 'new comment text']
 
       end
 
       it 'deletes an existing revelation' do
-        photo = Revelation.make.photo
-        guesser = Person.make
+        create :revelation, photo: photo
+        guesser = create :person
         stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
         Revelation.any?.should be_false
       end
 
       it "blows up if an unknown username is specified" do
-        photo = Photo.make
         lambda { Photo.add_entered_answer photo.id, 'unknown_username', 'comment text' }.should raise_error Photo::AddAnswerError
       end
 
@@ -1700,7 +1686,7 @@ describe Photo do
     # that it doesn't affect test objects' date attributes and assertions on those attributes don't pass by accident
     def set_time
       # noinspection RubyArgCount
-      stub(Time).now { @now }
+      stub(Time).now { now }
     end
 
   end
@@ -1709,11 +1695,11 @@ describe Photo do
 
   describe '#years_old' do
     it "returns 0 for a photo posted moments ago" do
-      Photo.make(dateadded: Time.now).years_old.should == 0
+      create(:photo, dateadded: Time.now).years_old.should == 0
     end
 
     it "returns 1 for a photo posted moments + 1 year ago" do
-      Photo.make(dateadded: Time.now - 1.years).years_old.should == 1
+      create(:photo, dateadded: Time.now - 1.years).years_old.should == 1
     end
 
   end
@@ -1749,8 +1735,7 @@ describe Photo do
     expected = { 0 => nil, 20 => :silver, 30 => :gold }
     expected.keys.sort.each do |other_user_comments|
       it "returns a #{expected[other_user_comments]} star for a photo with #{other_user_comments} comments" do
-        photo = Photo.new
-        photo.other_user_comments = other_user_comments
+        photo = Photo.new other_user_comments: other_user_comments
         photo.star_for_comments.should == expected[other_user_comments]
       end
     end
@@ -1778,38 +1763,38 @@ describe Photo do
 
   describe '#mapped' do
     it "returns false if the photo is not mapped" do
-      Photo.make.mapped?.should == false
+      build(:photo).mapped?.should == false
     end
 
     it "returns true if the photo is mapped at sufficient accuracy" do
-      Photo.make(latitude: 37, longitude: -122, accuracy: 12).mapped?.should == true
+      build(:photo, latitude: 37, longitude: -122, accuracy: 12).mapped?.should == true
     end
 
     it "returns false if the photo is mapped at insufficient accuracy" do
-      Photo.make(latitude: 37, longitude: -122, accuracy: 11).mapped?.should == false
+      build(:photo, latitude: 37, longitude: -122, accuracy: 11).mapped?.should == false
     end
 
     it "returns false even if the photo is auto-mapped" do
-      Photo.make(inferred_latitude: 37, inferred_longitude: -122).mapped?.should == false
+      build(:photo, inferred_latitude: 37, inferred_longitude: -122).mapped?.should == false
     end
 
   end
 
   describe '#mapped_or_automapped' do
     it "returns false if the photo is not mapped" do
-      Photo.make.mapped_or_automapped?.should == false
+      build(:photo).mapped_or_automapped?.should == false
     end
 
     it "returns true if the photo is mapped at sufficient accuracy" do
-      Photo.make(latitude: 37, longitude: -122, accuracy: 12).mapped_or_automapped?.should == true
+      build(:photo, latitude: 37, longitude: -122, accuracy: 12).mapped_or_automapped?.should == true
     end
 
     it "returns false if the photo is mapped at insufficient accuracy" do
-      Photo.make(latitude: 37, longitude: -122, accuracy: 11).mapped_or_automapped?.should == false
+      build(:photo, latitude: 37, longitude: -122, accuracy: 11).mapped_or_automapped?.should == false
     end
 
     it "returns true if the photo is auto-mapped" do
-      Photo.make(inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?.should == true
+      build(:photo, inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?.should == true
     end
 
   end

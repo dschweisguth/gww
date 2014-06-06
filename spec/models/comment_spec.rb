@@ -12,7 +12,7 @@ describe Comment do
 
     it 'should handle non-ASCII characters' do
       non_ascii_username = '猫娘/ nekomusume'
-      Comment.make username: non_ascii_username
+      create :comment, username: non_ascii_username
       Comment.all[0].username.should == non_ascii_username
     end
 
@@ -24,7 +24,7 @@ describe Comment do
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
-      Comment.make comment_text: non_ascii_text
+      create :comment, comment_text: non_ascii_text
       Comment.all[0].comment_text.should == non_ascii_text
     end
 
@@ -42,8 +42,8 @@ describe Comment do
 
     describe 'when adding a revelation' do
       it 'adds a revelation' do
-        photo = Photo.make
-        comment = Comment.make photo: photo, flickrid: photo.person.flickrid,
+        photo = create :photo
+        comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         set_time
         Comment.add_selected_answer comment.id, ''
@@ -51,8 +51,8 @@ describe Comment do
       end
 
       it 'handles a redundant username' do
-        photo = Photo.make
-        comment = Comment.make photo: photo, flickrid: photo.person.flickrid,
+        photo = create :photo
+        comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         set_time
         Comment.add_selected_answer comment.id, photo.person.username
@@ -60,16 +60,16 @@ describe Comment do
       end
 
       it "gets text from another user's comment" do
-        photo = Photo.make
-        comment = Comment.make photo: photo, commented_at: Time.utc(2011)
+        photo = create :photo
+        comment = create :comment, photo: photo, commented_at: Time.utc(2011)
         set_time
         Comment.add_selected_answer comment.id, photo.person.username
         photo_is_revealed_and_revelation_matches comment
       end
 
       it 'updates an existing revelation' do
-        old_revelation = Revelation.make
-        comment = Comment.make photo: old_revelation.photo,
+        old_revelation = create :revelation
+        comment = create :comment, photo: old_revelation.photo,
           flickrid: old_revelation.photo.person.flickrid,
           username: old_revelation.photo.person.username,
           commented_at: Time.utc(2011)
@@ -89,10 +89,10 @@ describe Comment do
       end
 
       it 'deletes an existing guess' do
-        photo = Photo.make
-        comment = Comment.make photo: photo, flickrid: photo.person.flickrid,
+        photo = create :photo
+        comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
-        Guess.make photo: photo
+        create :guess, photo: photo
         Comment.add_selected_answer comment.id, ''
         Guess.any?.should be_false
       end
@@ -101,9 +101,8 @@ describe Comment do
 
     describe 'when adding a guess' do
       it "adds a guess and updates the guesser if necessary" do
-        guesser = Person.make
-        comment = Comment.make flickrid: guesser.flickrid,
-          username: guesser.username, commented_at: Time.utc(2011)
+        guesser = create :person
+        comment = create :comment, flickrid: guesser.flickrid, username: guesser.username, commented_at: Time.utc(2011)
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
@@ -112,7 +111,7 @@ describe Comment do
       end
 
       it 'creates the guesser if necessary' do
-        comment = Comment.make
+        comment = create :comment
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
@@ -124,9 +123,8 @@ describe Comment do
       end
 
       it 'handles a redundant username' do
-        guesser = Person.make
-        comment = Comment.make flickrid: guesser.flickrid,
-          username: guesser.username, commented_at: Time.utc(2011)
+        guesser = create :person
+        comment = create :comment, flickrid: guesser.flickrid, username: guesser.username, commented_at: Time.utc(2011)
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, guesser.username
@@ -135,9 +133,8 @@ describe Comment do
       end
 
       it 'gives the point to another, new user' do
-        scorer_comment = Comment.make 'scorer',
-          flickrid: 'scorer_flickrid', username: 'scorer_person_username'
-        answer_comment = Comment.make 'answer', commented_at: Time.utc(2011)
+        scorer_comment = create :comment, flickrid: 'scorer_flickrid', username: 'scorer_person_username'
+        answer_comment = create :comment, commented_at: Time.utc(2011)
         set_time
         stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
@@ -154,10 +151,9 @@ describe Comment do
       end
 
       it 'gives the point to another, known user' do
-        scorer = Person.make 'scorer'
-        scorer_comment = Comment.make 'scorer',
-          flickrid: scorer.flickrid, username: scorer.username
-        answer_comment = Comment.make 'answer', commented_at: Time.utc(2011)
+        scorer = create :person
+        scorer_comment = create :comment, flickrid: scorer.flickrid, username: scorer.username
+        answer_comment = create :comment, commented_at: Time.utc(2011)
         set_time
         stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
@@ -166,8 +162,8 @@ describe Comment do
       end
 
       it "leaves alone an existing guess by the same guesser" do
-        old_guess = Guess.make
-        comment = Comment.make photo: old_guess.photo,
+        old_guess = create :guess
+        comment = create :comment, photo: old_guess.photo,
           flickrid: old_guess.person.flickrid, username: old_guess.person.username,
           commented_at: Time.utc(2011)
         set_time
@@ -183,17 +179,17 @@ describe Comment do
       end
 
       it 'deletes an existing revelation' do
-        guesser = Person.make
-        comment = Comment.make flickrid: guesser.flickrid,
+        guesser = create :person
+        comment = create :comment, flickrid: guesser.flickrid,
           username: guesser.username, commented_at: Time.utc(2011)
-        Revelation.make photo: comment.photo
+        create :revelation, photo: comment.photo
         stub_person_request
         Comment.add_selected_answer comment.id, ''
         Revelation.any?.should be_false
       end
 
       it "blows up if an unknown username is specified" do
-        comment = Comment.make
+        comment = create :comment
         lambda { Comment.add_selected_answer comment.id, 'unknown_username' }.should raise_error Photo::AddAnswerError
       end
 
@@ -238,9 +234,9 @@ describe Comment do
 
   describe '.remove_revelation' do
     it 'removes a revelation' do
-      revelation = Revelation.make
+      revelation = create :revelation
       photo = revelation.photo
-      comment = Comment.make photo: photo,
+      comment = create :comment, photo: photo,
         flickrid: photo.person.flickrid, username: photo.person.username,
         comment_text: revelation.comment_text
       Comment.remove_revelation comment.id
@@ -250,11 +246,11 @@ describe Comment do
     end
 
     it "doesn't delete the revealer's revelation of another photo with the same comment" do
-      revelation1 = Revelation.make comment_text: 'identical'
+      revelation1 = create :revelation, comment_text: 'identical'
       photo1 = revelation1.photo
-      photo2 = Photo.make person: photo1.person
-      revelation2 = Revelation.make photo: photo2, comment_text: 'identical'
-      comment = Comment.make photo: photo1,
+      photo2 = create :photo, person: photo1.person
+      revelation2 = create :revelation, photo: photo2, comment_text: 'identical'
+      comment = create :comment, photo: photo1,
         flickrid: photo1.person.flickrid, username: photo1.person.username,
         comment_text: revelation1.comment_text
       Comment.remove_revelation comment.id
@@ -265,9 +261,9 @@ describe Comment do
 
   describe '.remove_guess' do
     it 'removes a guess' do
-      guess = Guess.make
+      guess = create :guess
       photo = guess.photo
-      comment = Comment.make photo: photo,
+      comment = create :comment, photo: photo,
         flickrid: guess.person.flickrid, username: guess.person.username,
         comment_text: guess.comment_text
       Comment.remove_guess comment.id
@@ -277,13 +273,13 @@ describe Comment do
     end
 
     it "leaves the photo found if there's another guess" do
-      photo = Photo.make game_status: 'found'
-      guess1 = Guess.make 1, photo: photo
-      comment1 = Comment.make 1, photo: photo,
+      photo = create :photo, game_status: 'found'
+      guess1 = create :guess, photo: photo
+      comment1 = create :comment, photo: photo,
         flickrid: guess1.person.flickrid, username: guess1.person.username,
         comment_text: guess1.comment_text
-      guess2 = Guess.make 2, photo: photo
-      Comment.make 2, photo: photo,
+      guess2 = create :guess, photo: photo
+      create :comment, photo: photo,
         flickrid: guess2.person.flickrid, username: guess2.person.username,
         comment_text: guess2.comment_text
       Comment.remove_guess comment1.id
@@ -293,9 +289,9 @@ describe Comment do
     end
 
     it "doesn't delete the guesser's guess of another photo with the same comment" do
-      guess1 = Guess.make 1, comment_text: 'identical'
-      guess2 = Guess.make 2, person: guess1.person, comment_text: guess1.comment_text
-      comment = Comment.make photo: guess1.photo,
+      guess1 = create :guess, comment_text: 'identical'
+      guess2 = create :guess, person: guess1.person, comment_text: guess1.comment_text
+      comment = create :comment, photo: guess1.photo,
         flickrid: guess1.person.flickrid, username: guess1.person.username,
         comment_text: guess1.comment_text
       Comment.remove_guess comment.id
@@ -306,70 +302,70 @@ describe Comment do
 
   describe '#is_by_poster' do
     it "returns true if the comment was made by the photo's poster" do
-      photo = Photo.make
-      comment = Comment.make photo: photo, flickrid: photo.person.flickrid
+      photo = create :photo
+      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
       comment.is_by_poster.should be_true
     end
 
     it "returns false if the comment was not made by the photo's poster" do
-      Comment.make.is_by_poster.should be_false
+      create(:comment).is_by_poster.should be_false
     end
 
   end
 
   describe '#is_accepted_answer' do
     it "returns false if this comment has no revelations or guesses" do
-      Comment.make.is_accepted_answer.should be_false
+      create(:comment).is_accepted_answer.should be_false
     end
 
     it "returns true if a revelation was created from this comment" do
-      photo = Photo.make
-      comment = Comment.make photo: photo, flickrid: photo.person.flickrid
-      Revelation.make photo: photo, comment_text: comment.comment_text
+      photo = create :photo
+      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
+      create :revelation, photo: photo, comment_text: comment.comment_text
       comment.is_accepted_answer.should be_true
     end
 
     it "returns false if the revelation is of another photo" do
-      photo = Photo.make
-      comment = Comment.make photo: photo, flickrid: photo.person.flickrid
-      other_photo = Photo.make 'other', person: photo.person
-      Revelation.make photo: other_photo, comment_text: comment.comment_text
+      photo = create :photo
+      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
+      other_photo = create :photo, person: photo.person
+      create :revelation, photo: other_photo, comment_text: comment.comment_text
       comment.is_accepted_answer.should be_false
     end
 
     it "returns false if the text doesn't match" do
-      photo = Photo.make
-      comment = Comment.make photo: photo, flickrid: photo.person.flickrid
-      Revelation.make photo: photo, comment_text: "something else"
+      photo = create :photo
+      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
+      create :revelation, photo: photo, comment_text: "something else"
       comment.is_accepted_answer.should be_false
     end
 
     it "returns true if a guess was created from this comment" do
-      person = Person.make
-      comment = Comment.make flickrid: person.flickrid
-      Guess.make photo: comment.photo, person: person, comment_text: comment.comment_text
+      person = create :person
+      comment = create :comment, flickrid: person.flickrid
+      create :guess, photo: comment.photo, person: person, comment_text: comment.comment_text
       comment.is_accepted_answer.should be_true
     end
 
     it "returns false if the guess is of another photo" do
-      person = Person.make
-      comment = Comment.make flickrid: person.flickrid
-      other_photo = Photo.make 'other', person: person
-      Guess.make photo: other_photo, person: person, comment_text: comment.comment_text
+      person = create :person
+      comment = create :comment, flickrid: person.flickrid
+      other_photo = create :photo, person: person
+      create :guess, photo: other_photo, person: person, comment_text: comment.comment_text
       comment.is_accepted_answer.should be_false
     end
 
     it "returns false if the text doesn't match" do
-      person = Person.make
-      comment = Comment.make flickrid: person.flickrid
-      Guess.make photo: comment.photo, person: person, comment_text: "something else"
+      person = create :person
+      comment = create :comment, flickrid: person.flickrid
+      create :guess, photo: comment.photo, person: person, comment_text: "something else"
       comment.is_accepted_answer.should be_false
     end
 
     it "returns false if the guess is by another person" do
-      person = Person.make
-      comment = Comment.make flickrid: person.flickrid
-      Guess.make photo: comment.photo, comment_text: comment.comment_text
+      person = create :person
+      comment = create :comment, flickrid: person.flickrid
+      create :guess, photo: comment.photo, comment_text: comment.comment_text
       comment.is_accepted_answer.should be_false
     end
 

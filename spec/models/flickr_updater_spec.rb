@@ -496,7 +496,7 @@ describe FlickrUpdater, type: :model do
   end
 
   describe '.update_comments' do
-    let(:photo) { Photo.make }
+    let(:photo) { create :photo }
 
     it "loads comments from Flickr" do
       stub_request_to_return_one_comment
@@ -505,14 +505,14 @@ describe FlickrUpdater, type: :model do
     end
 
     it "deletes previous comments" do
-      Comment.make 'previous', photo: photo
+      comment = create :comment, photo: photo
       stub_request_to_return_one_comment
       FlickrUpdater.update_comments photo
       photo_has_the_comment_from_the_request
     end
 
     it "does not delete previous comments if the photo currently has no comments" do
-      Comment.make 'previous', photo: photo
+      create :comment, photo: photo
       stub(FlickrService.instance).photos_comments_get_list { {
         'comments' => [ {
         } ]
@@ -523,7 +523,7 @@ describe FlickrUpdater, type: :model do
     end
 
     it "leaves previous comments alone if the request for comments fails" do
-      Comment.make 'previous', photo: photo
+      create :comment, photo: photo
       stub(FlickrService.instance).photos_comments_get_list { raise FlickrService::FlickrRequestFailedError }
       FlickrUpdater.update_comments photo
       Comment.count.should == 1
@@ -531,7 +531,7 @@ describe FlickrUpdater, type: :model do
 
     def stub_request_to_return_one_comment
       # noinspection RubyArgCount
-      stub(FlickrService.instance).photos_comments_get_list(photo_id: 'photo_flickrid') { {
+      stub(FlickrService.instance).photos_comments_get_list(photo_id: photo.flickrid) { {
         'comments' => [ {
           'comment' => [ {
             'author' => 'commenter_flickrid',

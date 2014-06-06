@@ -12,7 +12,7 @@ describe Person do
 
     it 'should handle non-ASCII characters' do
       non_ascii_username = '猫娘/ nekomusume'
-      Person.make username: non_ascii_username
+      create :person, username: non_ascii_username
       Person.all[0].username.should == non_ascii_username
     end
 
@@ -20,58 +20,56 @@ describe Person do
 
   describe '.all_before' do
     it "returns all people who posted before the given date" do
-      photo = Photo.make dateadded: Time.utc(2011)
+      photo = create :photo, dateadded: Time.utc(2011)
       Person.all_before(Time.utc(2011)).should == [ photo.person ]
     end
 
     it "returns all people who guessed before the given date" do
-      guess = Guess.make added_at: Time.utc(2011)
+      guess = create :guess, added_at: Time.utc(2011)
       Person.all_before(Time.utc(2011)).should == [ guess.person ]
     end
 
     it "ignores people who did neither" do
-      Person.make
+      create :person
       Person.all_before(Time.utc(2011)).should == []
     end
 
     it "ignores people who only posted after the given date" do
-      Photo.make dateadded: Time.utc(2012)
+      create :photo, dateadded: Time.utc(2012)
       Person.all_before(Time.utc(2011)).should == []
     end
 
     it "returns all people who only guessed after the given date" do
-      Guess.make added_at: Time.utc(2012)
+      create :guess, added_at: Time.utc(2012)
       Person.all_before(Time.utc(2011)).should == []
     end
 
   end
 
   describe '.high_scorers' do
-    before do
-      @report_date = Time.utc(2011)
-    end
+    let(:report_date) { Time.utc(2011) }
 
     it "returns the three highest scorers in the given previous # of days" do
-      person = Person.make
-      Guess.make 1, person: person, commented_at: @report_date, added_at: @report_date
-      Guess.make 2, person: person, commented_at: @report_date, added_at: @report_date
-      high_scorers_returns @report_date, 1, person, 2
+      person = create :person
+      create :guess, person: person, commented_at: report_date, added_at: report_date
+      create :guess, person: person, commented_at: report_date, added_at: report_date
+      high_scorers_returns report_date, 1, person, 2
     end
 
     it "ignores guesses made before the reporting period" do
-      person = Person.make
-      Guess.make 1, person: person, commented_at: @report_date, added_at: @report_date
-      Guess.make 2, person: person, commented_at: @report_date, added_at: @report_date
-      Guess.make 3, person: person, commented_at: @report_date - 1.day - 1.second, added_at: @report_date
-      high_scorers_returns @report_date, 1, person, 2
+      person = create :person
+      create :guess, person: person, commented_at: report_date, added_at: report_date
+      create :guess, person: person, commented_at: report_date, added_at: report_date
+      create :guess, person: person, commented_at: report_date - 1.day - 1.second, added_at: report_date
+      high_scorers_returns report_date, 1, person, 2
     end
 
     it "ignores guesses added after the reporting period" do
-      person = Person.make
-      Guess.make 1, person: person, commented_at: @report_date, added_at: @report_date
-      Guess.make 2, person: person, commented_at: @report_date, added_at: @report_date
-      Guess.make 3, person: person, commented_at: @report_date, added_at: @report_date + 1.second
-      high_scorers_returns @report_date, 1, person, 2
+      person = create :person
+      create :guess, person: person, commented_at: report_date, added_at: report_date
+      create :guess, person: person, commented_at: report_date, added_at: report_date
+      create :guess, person: person, commented_at: report_date, added_at: report_date + 1.second
+      high_scorers_returns report_date, 1, person, 2
     end
 
     def high_scorers_returns(now, for_the_past_n_days, person, score)
@@ -81,43 +79,41 @@ describe Person do
     end
 
     it "ignores scores of 1" do
-      Guess.make commented_at: @report_date, added_at: @report_date
-      Person.high_scorers(@report_date, 1).should == []
+      create :guess, commented_at: report_date, added_at: report_date
+      Person.high_scorers(report_date, 1).should == []
     end
 
     it "ignores scores of 0" do
-      Photo.make
-      Person.high_scorers(@report_date, 1).should == []
+      create :photo
+      Person.high_scorers(report_date, 1).should == []
     end
 
   end
 
   describe '.top_posters' do
-    before do
-      @report_date = Time.utc(2011)
-    end
+    let(:report_date) { Time.utc(2011) }
 
     it "returns the three most frequent posters in the given previous # of days" do
-      person = Person.make
-      Photo.make 1, person: person, dateadded: @report_date
-      Photo.make 2, person: person, dateadded: @report_date
-      top_posters_returns @report_date, 1, person, 2
+      person = create :person
+      create :photo, person: person, dateadded: report_date
+      create :photo, person: person, dateadded: report_date
+      top_posters_returns report_date, 1, person, 2
     end
 
     it "ignores photos posted before the reporting period" do
-      person = Person.make
-      Photo.make 1, person: person, dateadded: @report_date
-      Photo.make 2, person: person, dateadded: @report_date
-      Photo.make 3, person: person, dateadded: @report_date - 1.day - 1.second
-      top_posters_returns @report_date, 1, person, 2
+      person = create :person
+      create :photo, person: person, dateadded: report_date
+      create :photo, person: person, dateadded: report_date
+      create :photo, person: person, dateadded: report_date - 1.day - 1.second
+      top_posters_returns report_date, 1, person, 2
     end
 
     it "ignores photos posted after the reporting period" do
-      person = Person.make
-      Photo.make 1, person: person, dateadded: @report_date
-      Photo.make 2, person: person, dateadded: @report_date
-      Photo.make 3, person: person, dateadded: @report_date + 1.second
-      top_posters_returns @report_date, 1, person, 2
+      person = create :person
+      create :photo, person: person, dateadded: report_date
+      create :photo, person: person, dateadded: report_date
+      create :photo, person: person, dateadded: report_date + 1.second
+      top_posters_returns report_date, 1, person, 2
     end
 
     def top_posters_returns(now, for_the_past_n_days, person, post_count)
@@ -127,33 +123,33 @@ describe Person do
     end
 
     it "ignores post counts of 1" do
-      Photo.make dateadded: @report_date
-      Person.top_posters(@report_date, 1).should == []
+      create :photo, dateadded: report_date
+      Person.top_posters(report_date, 1).should == []
     end
 
     it "ignores post counts of 0" do
-      Person.make
-      Person.top_posters(@report_date, 1).should == []
+      create :person
+      Person.top_posters(report_date, 1).should == []
     end
 
   end
 
   describe '.by_score' do
     it "groups people by score" do
-      person1 = Person.make 1
-      person2 = Person.make 2
+      person1 = create :person
+      person2 = create :person
       Person.by_score([ person1, person2 ], Time.utc(2011)).should == { 0 => [ person1, person2 ] }
     end
 
     it "adds up guesses" do
-      person = Person.make
-      Guess.make 1, person: person, added_at: Time.utc(2011)
-      Guess.make 2, person: person, added_at: Time.utc(2011)
+      person = create :person
+      create :guess, person: person, added_at: Time.utc(2011)
+      create :guess, person: person, added_at: Time.utc(2011)
       Person.by_score([ person ], Time.utc(2011)).should == { 2 => [ person ] }
     end
 
     it "ignores guesses from after the report date" do
-      guess = Guess.make added_at: Time.utc(2012)
+      guess = create :guess, added_at: Time.utc(2012)
       Person.by_score([ guess.person ], Time.utc(2011)).should == { 0 => [ guess.person ] }
     end
 
@@ -161,7 +157,7 @@ describe Person do
 
   describe '.add_change_in_standings' do
     before do
-      @person = Person.make 1
+      @person = create :person
       @person.post_count = 1
       @person.previous_post_count = 1
       @people = [ @person ]
@@ -183,17 +179,17 @@ describe Person do
     end
 
     it "mentions climbing" do
-      other = Person.make 2
+      other = create :person
       @people << other
       adds_change(
         { 3 => [ @person ], 2 => [ other ] },
         { 2 => [ other ], 1 => [ @person ] },
-        'climbed from 2nd to 1st place, passing 2_username')
+        "climbed from 2nd to 1st place, passing #{other.username}")
     end
 
     it "says jumped if the guesser climbed more than one place" do
-      other2 = Person.make 2
-      other3 = Person.make 3
+      other2 = create :person
+      other3 = create :person
       @people += [ other2, other3 ]
       adds_change(
         { 4 => [ @person ], 3 => [ other2 ], 2 => [ other3 ] },
@@ -202,17 +198,17 @@ describe Person do
     end
 
     it "indicates a new tie" do
-      other2 = Person.make 2
+      other2 = create :person
       @people << other2
       adds_change(
         { 2 => [ other2, @person ] },
         { 2 => [ other2 ], 1 => [ @person ] },
-        'climbed from 2nd to 1st place, tying 2_username')
+        "climbed from 2nd to 1st place, tying #{other2.username}")
     end
 
     it "doesn't name names if the guesser is tied with more than one other person" do
-      other2 = Person.make 2
-      other3 = Person.make 3
+      other2 = create :person
+      other3 = create :person
       @people += [ other2, other3 ]
       adds_change(
         { 2 => [ other2, other3, @person ] },
@@ -221,13 +217,13 @@ describe Person do
     end
 
     it "handles passing and tying at the same time" do
-      other2 = Person.make 2
-      other3 = Person.make 3
+      other2 = create :person
+      other3 = create :person
       @people += [ other2, other3 ]
       adds_change(
         { 3 => [ @person, other2 ], 2 => [ other3 ] },
         { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
-        'jumped from 3rd to 1st place, passing 3_username and tying 2_username')
+        "jumped from 3rd to 1st place, passing #{other3.username} and tying #{other2.username}")
     end
 
     Person::CLUBS.each do |club, url|
@@ -261,7 +257,7 @@ describe Person do
     end
 
     it "welcomes the guesser to the top ten" do
-      others = (2 .. 11).map { |n| Person.make n }
+      others = 10.times.map { create :person }
       @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
@@ -272,7 +268,7 @@ describe Person do
     end
 
     it "congratulates and welcomes to the top ten at the same time" do
-      others = (2 .. 11).map { |n| Person.make n }
+      others = 10.times.map { create :person }
       @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
@@ -284,7 +280,9 @@ describe Person do
 
     def adds_change(people_by_score, people_by_previous_score, expected_change)
       previous_report_date = Time.utc(2010)
+      # noinspection RubyArgCount
       stub(Person).by_score(@people, previous_report_date) { people_by_previous_score }
+      # noinspection RubyArgCount
       stub(Photo).add_posts @people, previous_report_date, :previous_post_count
       guessers = [ [ @person, [] ] ]
       Person.add_change_in_standings people_by_score, @people, previous_report_date, guessers
@@ -295,7 +293,7 @@ describe Person do
 
   describe '.add_score_and_place' do
     it "adds their place to each person" do
-      person = Person.make
+      person = create :person
       people_by_score = { 0 => [ person ] }
       Person.add_score_and_place people_by_score, :score, :place
       person.score.should == 0
@@ -303,8 +301,8 @@ describe Person do
     end
 
     it "gives a lower (numerically greater) place to people with lower scores" do
-      first = Person.make 1
-      second = Person.make 2
+      first = create :person
+      second = create :person
       people_by_score = { 1 => [ first ], 0 => [ second ] }
       Person.add_score_and_place people_by_score, :score, :place
       first.place.should == 1
@@ -312,8 +310,8 @@ describe Person do
     end
 
     it "handles ties" do
-      tied1 = Person.make 1
-      tied2 = Person.make 2
+      tied1 = create :person
+      tied2 = create :person
       people_by_score = { 0 => [ tied1, tied2 ] }
       Person.add_score_and_place people_by_score, :score, :place
       tied1.place.should == 1
@@ -321,9 +319,9 @@ describe Person do
     end
 
     it "counts the number of people above one, not the number of scores above one" do
-      tied1 = Person.make 1
-      tied2 = Person.make 2
-      third = Person.make 3
+      tied1 = create :person
+      tied2 = create :person
+      third = create :person
       people_by_score = { 1 => [ tied1, tied2 ], 0 => [ third ] }
       Person.add_score_and_place people_by_score, :score, :place
       third.place.should == 3
@@ -332,20 +330,18 @@ describe Person do
   end
 
   describe '.find_by_multiple_fields' do
-    before do
-      @person = Person.make
-    end
+    let(:person) { create :person }
 
     it 'finds a person by username' do
-      Person.find_by_multiple_fields(@person.username).should == @person
+      Person.find_by_multiple_fields(person.username).should == person
     end
 
     it 'finds a person by flickrid' do
-      Person.find_by_multiple_fields(@person.flickrid).should == @person
+      Person.find_by_multiple_fields(person.flickrid).should == person
     end
 
     it 'finds a person by GWW ID' do
-      Person.find_by_multiple_fields(@person.id.to_s).should == @person
+      Person.find_by_multiple_fields(person.id.to_s).should == person
     end
 
     it 'punts back to the home page' do
@@ -671,15 +667,17 @@ describe Person do
     end
 
     def create_people_named(username1, username2)
-      @person1 = Person.make 1, username: username1
-      @person2 = Person.make 2, username: username2
+      @person1 = create :person, username: username1
+      @person2 = create :person, username: username2
     end
 
     def stub_post_count(count1, count2)
+      # noinspection RubyArgCount
       stub(Photo).group(:person_id).stub!.count { { @person1.id => count1, @person2.id => count2 } }
     end
 
     def stub_score(count1, count2)
+      # noinspection RubyArgCount
       stub(Guess).group(:person_id).stub!.count { { @person1.id => count1, @person2.id => count2 } }
     end
 
@@ -699,14 +697,14 @@ describe Person do
 
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
-      guess = Guess.make commented_at: 4.days.ago
+      guess = create :guess, commented_at: 4.days.ago
       Person.guesses_per_day.should == { guess.person.id => 0.25 }
     end
   end
 
   describe '.posts_per_day' do
     it 'returns a map of person ID to average posts per day' do
-      photo = Photo.make dateadded: 4.days.ago
+      photo = create :photo, dateadded: 4.days.ago
       Person.posts_per_day.should == { photo.person.id => 0.25 }
     end
   end
@@ -714,8 +712,8 @@ describe Person do
   describe '.guess_speeds' do
     it 'returns a map of person ID to average seconds to guess' do
       now = Time.now
-      photo = Photo.make dateadded: now - 5
-      guess = Guess.make photo: photo, commented_at: now - 1
+      photo = create :photo, dateadded: now - 5
+      guess = create :guess, photo: photo, commented_at: now - 1
       Person.guess_speeds.should == { guess.person.id => 4 }
     end
   end
@@ -723,22 +721,22 @@ describe Person do
   describe '.be_guessed_speeds' do
     it 'returns a map of person ID to average seconds for their photos to be guessed' do
       now = Time.now
-      photo = Photo.make dateadded: now - 5
-      Guess.make photo: photo, commented_at: now - 1
+      photo = create :photo, dateadded: now - 5
+      create :guess, photo: photo, commented_at: now - 1
       Person.be_guessed_speeds.should == { photo.person.id => 4 }
     end
   end
 
   describe '.views_per_post' do
     it 'returns a map of person ID to average # of views per post' do
-      photo = Photo.make views: 1
+      photo = create :photo, views: 1
       Person.views_per_post.should == { photo.person.id => 1 }
     end
   end
 
   describe '.faves_per_post' do
     it 'returns a map of person ID to average # of faves per post' do
-      photo = Photo.make faves: 1
+      photo = create :photo, faves: 1
       Person.faves_per_post.should == { photo.person.id => 1 }
     end
   end
@@ -761,79 +759,77 @@ describe Person do
   end
 
   describe '.top_guessers' do
-    before do
-      @report_time = Time.local(2011, 1, 3)
-      @report_day = @report_time.beginning_of_day
-    end
+    let(:report_time) { Time.local 2011, 1, 3 }
+    let(:report_day) { report_time.beginning_of_day }
 
     it 'returns a structure of scores by day, week, month and year' do
       expected = expected_periods_for_one_guess_at_report_time
-      guess = Guess.make commented_at: @report_time
+      guess = create :guess, commented_at: report_time
       (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
-      Person.top_guessers(@report_time).should == expected
+      Person.top_guessers(report_time).should == expected
     end
 
     it 'handles multiple guesses in the same period' do
       expected = expected_periods_for_one_guess_at_report_time
-      guesser = Person.make
-      Guess.make 1, person: guesser, commented_at: @report_time
-      Guess.make 2, person: guesser, commented_at: @report_time + 1.minute
+      guesser = create :person
+      create :guess, person: guesser, commented_at: report_time
+      create :guess, person: guesser, commented_at: report_time + 1.minute
       (0 .. 3).each { |division| expected[division][0].scores[2] = [ guesser ] }
-      Person.top_guessers(@report_time).should == expected
+      Person.top_guessers(report_time).should == expected
     end
 
     it 'handles multiple guessers with the same scores in the same periods' do
       expected = expected_periods_for_one_guess_at_report_time
-      guess1 = Guess.make 1, commented_at: @report_time
-      guess2 = Guess.make 2, commented_at: @report_time
+      guess1 = create :guess, commented_at: report_time
+      guess2 = create :guess, commented_at: report_time
       (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess1.person, guess2.person ] }
-      Person.top_guessers(@report_time).should == expected
+      Person.top_guessers(report_time).should == expected
     end
 
     def expected_periods_for_one_guess_at_report_time
       [
-        (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
-        [ Period.new(@report_day.beginning_of_week - 1.day, @report_day + 1.day) ] +
-          (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new(@report_day.beginning_of_month, @report_day + 1.day) ] +
-          (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new(@report_day.beginning_of_year, @report_day + 1.day) ]
+        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
+          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+        [ Period.new(report_day.beginning_of_year, report_day + 1.day) ]
       ]
     end
 
     it 'handles previous years' do
       expected = [
-        (0 .. 6).map { |i| Period.starting_at @report_day - i.days, 1.day },
-        [ Period.new(@report_day.beginning_of_week - 1.day, @report_day + 1.day) ] +
-          (0 .. 4).map { |i| Period.starting_at @report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new(@report_day.beginning_of_month, @report_day + 1.day) ] +
-          (0 .. 11).map { |i| Period.starting_at @report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new(@report_day.beginning_of_year, @report_day + 1.day),
-          Period.starting_at(@report_day.beginning_of_year - 1.year, 1.year) ]
+        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
+          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+        [ Period.new(report_day.beginning_of_year, report_day + 1.day),
+          Period.starting_at(report_day.beginning_of_year - 1.year, 1.year) ]
       ]
-      guess = Guess.make commented_at: Time.local(2010, 1, 1).getutc
+      guess = create :guess, commented_at: Time.local(2010, 1, 1).getutc
       expected[2][12].scores[1] = [ guess.person ]
       expected[3][1].scores[1] = [ guess.person ]
-      Person.top_guessers(@report_time).should == expected
+      Person.top_guessers(report_time).should == expected
     end
 
   end
 
   describe '.standing' do
     it "returns the person's score position" do
-      person = Person.make
+      person = create :person
       Person.standing(person).should == [ 1, false ]
     end
 
     it "considers other players' scores" do
-      Guess.make
-      person = Person.make
+      create :guess
+      person = create :person
       Person.standing(person).should == [ 2, false ]
     end
 
     it "detects ties" do
-      guess1 = Guess.make 1
-      Guess.make 2
+      guess1 = create :guess
+      create :guess
       Person.standing(guess1.person).should == [ 1, true ]
     end
 
@@ -841,19 +837,19 @@ describe Person do
 
   describe '.posts_standing' do
     it "returns the person's post position" do
-      person = Person.make
+      person = create :person
       Person.posts_standing(person).should == [ 1, false ]
     end
 
     it "considers other players' posts" do
-      Photo.make
-      person = Person.make
+      create :photo
+      person = create :person
       Person.posts_standing(person).should == [ 2, false ]
     end
 
     it "detects ties" do
-      post1 = Photo.make 1
-      Photo.make 2
+      post1 = create :photo
+      create :photo
       Person.posts_standing(post1.person).should == [ 1, true ]
     end
 
@@ -904,38 +900,35 @@ describe Person do
   end
 
   describe '#paginated_commented_photos' do
+    let(:person) { create :person }
+
     it "returns the photos commented on by a given user" do
-      person = Person.make
-      comment = Comment.make flickrid: person.flickrid, username: person.username
+      comment = create :comment, flickrid: person.flickrid, username: person.username
       person.paginated_commented_photos(1).should == [comment.photo]
     end
 
     it "ignores photos commented on by another user" do
-      person = Person.make
-      Comment.make
+      create :comment
       person.paginated_commented_photos(1).should == []
     end
 
     it "paginates" do
-      person = Person.make
-      3.times { |n| Comment.make n, flickrid: person.flickrid, username: person.username }
+      3.times { create :comment, flickrid: person.flickrid, username: person.username }
       person.paginated_commented_photos(1, 2).length.should == 2
     end
 
     it "returns each photo only once, even if the person commented on it more than once" do
-      person = Person.make
-      photo = Photo.make
-      Comment.make 1, photo: photo, flickrid: person.flickrid, username: person.username
-      Comment.make 2, photo: photo, flickrid: person.flickrid, username: person.username
+      photo = create :photo
+      create :comment, photo: photo, flickrid: person.flickrid, username: person.username
+      create :comment, photo: photo, flickrid: person.flickrid, username: person.username
       person.paginated_commented_photos(1).should == [photo]
     end
 
     it "sorts the most recently updated photos first" do
-      person = Person.make
-      photo1 = Photo.make(1, lastupdate: 2.days.ago)
-      Comment.make 1, photo: photo1, flickrid: person.flickrid, username: person.username
-      photo2 = Photo.make(2, lastupdate: 1.days.ago)
-      Comment.make 2, photo: photo2, flickrid: person.flickrid, username: person.username
+      photo1 = create :photo, lastupdate: 2.days.ago
+      create :comment, photo: photo1, flickrid: person.flickrid, username: person.username
+      photo2 = create :photo, lastupdate: 1.days.ago
+      create :comment, photo: photo2, flickrid: person.flickrid, username: person.username
       person.paginated_commented_photos(1).should == [photo2, photo1]
     end
 
@@ -943,31 +936,30 @@ describe Person do
 
   describe '.most_points_in' do
     it 'returns a list of scorers with their scores' do
-      guess = Guess.make commented_at: Time.local(2010).getutc
+      guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.most_points_in 2010
       top_scorers.should == [ guess.person ]
       top_scorers[0].points.should == 1
     end
 
     it 'ignores guesses made before the given year' do
-      Guess.make commented_at: Time.local(2009).getutc
+      create :guess, commented_at: Time.local(2009).getutc
       Person.most_points_in(2010).should == []
     end
 
     it 'ignores guesses made after the given year' do
-      Guess.make commented_at: Time.local(2011).getutc
+      create :guess, commented_at: Time.local(2011).getutc
       Person.most_points_in(2010).should == []
     end
 
     it 'returns only the top 10 scorers' do
-      10.times do |i|
-        guess = Guess.make i.to_s + '_first_point', commented_at: Time.local(2010).getutc
-        Guess.make i.to_s + '_second_point', person: guess.person, commented_at: Time.local(2010).getutc
+      10.times do
+        guess = create :guess, commented_at: Time.local(2010).getutc
+        create :guess, person: guess.person, commented_at: Time.local(2010).getutc
       end
-      single_guess = Guess.make commented_at: Time.local(2010).getutc
+      single_guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.most_points_in 2010
       top_scorers.size.should == 10
-      #noinspection RubyResolve
       top_scorers.should_not include(single_guess.person)
     end
 
@@ -975,28 +967,28 @@ describe Person do
 
   describe '.most_posts_in' do
     it 'returns a lists of posters with their number of posts' do
-      post = Photo.make dateadded: Time.local(2010).getutc
+      post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.most_posts_in 2010
       top_posters.should == [ post.person ]
       top_posters[0].post_count.should == 1
     end
 
     it 'ignores posts before the given year' do
-      Photo.make dateadded: Time.local(2009).getutc
+      create :photo, dateadded: Time.local(2009).getutc
       Person.most_posts_in(2010).should == []
     end
 
     it 'ignores posts after the given year' do
-      Photo.make dateadded: Time.local(2011).getutc
+      create :photo, dateadded: Time.local(2011).getutc
       Person.most_posts_in(2010).should == []
     end
 
     it 'returns only the top 10 posters' do
-      10.times do |i|
-        post = Photo.make i.to_s + '_first_post', dateadded: Time.local(2010).getutc
-        Photo.make i.to_s + '_second_post', person: post.person, dateadded: Time.local(2010).getutc
+      10.times do
+        post = create :photo, dateadded: Time.local(2010).getutc
+        create :photo, person: post.person, dateadded: Time.local(2010).getutc
       end
-      single_post = Photo.make dateadded: Time.local(2010).getutc
+      single_post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.most_posts_in 2010
       top_posters.size.should == 10
       #noinspection RubyResolve
@@ -1007,40 +999,40 @@ describe Person do
 
   describe '.rookies_with_most_points_in' do
     it 'returns a list of rookies with their score' do
-      guess = Guess.make commented_at: Time.local(2010).getutc
+      guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.rookies_with_most_points_in 2010
       top_scorers.should == [ guess.person ]
       top_scorers[0].points.should == 1
     end
 
     it 'ignores people who guessed before the given year' do
-      Guess.make commented_at: Time.local(2009).getutc
+      create :guess, commented_at: Time.local(2009).getutc
       Person.rookies_with_most_points_in(2010).should == []
     end
 
     it 'ignores people who guessed for the first time in the given year but posted for the first time before the given year' do
-      guess = Guess.make commented_at: Time.local(2010).getutc
-      Photo.make 'before', person: guess.person, dateadded: Time.local(2009).getutc
+      guess = create :guess, commented_at: Time.local(2010).getutc
+      create :photo, person: guess.person, dateadded: Time.local(2009).getutc
       Person.rookies_with_most_points_in(2010).should == []
     end
 
     it 'ignores guesses made after the given year' do
-      Guess.make commented_at: Time.local(2011).getutc
+      create :guess, commented_at: Time.local(2011).getutc
       Person.rookies_with_most_points_in(2010).should == []
     end
 
     it 'ignores people who posted for the first time in the given year but guessed for the first time after the given year' do
-      post = Photo.make dateadded: Time.local(2010).getutc
-      Guess.make 'after', person: post.person, commented_at: Time.local(2011).getutc
+      post = create :photo, dateadded: Time.local(2010).getutc
+      create :guess, person: post.person, commented_at: Time.local(2011).getutc
       Person.rookies_with_most_points_in(2010).should == []
     end
 
     it 'returns only the top 10 rookie scorers' do
-      10.times do |i|
-        guess = Guess.make i.to_s + '_first_point', commented_at: Time.local(2010).getutc
-        Guess.make i.to_s + '_second_point', person: guess.person, commented_at: Time.local(2010).getutc
+      10.times do
+        guess = create :guess, commented_at: Time.local(2010).getutc
+        create :guess, person: guess.person, commented_at: Time.local(2010).getutc
       end
-      single_guess = Guess.make commented_at: Time.local(2010).getutc
+      single_guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.rookies_with_most_points_in 2010
       top_scorers.size.should == 10
       #noinspection RubyResolve
@@ -1051,40 +1043,40 @@ describe Person do
 
   describe '.rookies_with_most_posts_in' do
     it 'returns a list of rookies with their number of posts' do
-      post = Photo.make dateadded: Time.local(2010).getutc
+      post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.rookies_with_most_posts_in 2010
       top_posters.should == [ post.person ]
       top_posters[0].post_count.should == 1
     end
 
     it 'ignores people who posted before the given year' do
-      Photo.make dateadded: Time.local(2009).getutc
+      create :photo, dateadded: Time.local(2009).getutc
       Person.rookies_with_most_posts_in(2010).should == []
     end
 
     it 'ignores people who posted for the first time in the given year but guessed for the first time before the given year' do
-      post = Photo.make dateadded: Time.local(2010).getutc
-      Guess.make 'before', person: post.person, commented_at: Time.local(2009).getutc
+      post = create :photo, dateadded: Time.local(2010).getutc
+      create :guess, person: post.person, commented_at: Time.local(2009).getutc
       Person.rookies_with_most_posts_in(2010).should == []
     end
 
     it 'ignores posts made after the given year' do
-      Photo.make dateadded: Time.local(2011).getutc
+      create :photo, dateadded: Time.local(2011).getutc
       Person.rookies_with_most_posts_in(2010).should == []
     end
 
     it 'ignores people who guessed for the first time in the given year but posted for the first time after the given year' do
-      guess = Guess.make commented_at: Time.local(2010).getutc
-      Photo.make 'after', person: guess.person, dateadded: Time.local(2011).getutc
+      guess = create :guess, commented_at: Time.local(2010).getutc
+      create :photo, person: guess.person, dateadded: Time.local(2011).getutc
       Person.rookies_with_most_posts_in(2010).should == []
     end
 
     it 'returns only the top 10 rookie posters' do
-      10.times do |i|
-        post = Photo.make i.to_s + '_first_post', dateadded: Time.local(2010).getutc
-        Photo.make i.to_s + '_second_post', person: post.person, dateadded: Time.local(2010).getutc
+      10.times do
+        post = create :photo, dateadded: Time.local(2010).getutc
+        create :photo, person: post.person, dateadded: Time.local(2010).getutc
       end
-      single_post = Photo.make dateadded: Time.local(2010).getutc
+      single_post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.rookies_with_most_posts_in 2010
       top_posters.size.should == 10
       #noinspection RubyResolve
@@ -1095,7 +1087,7 @@ describe Person do
 
   describe '.update_statistics' do
     it 'initializes statistics to nil or 0' do
-      person = Person.make comments_to_guess: 1, comments_per_post: 1, comments_to_be_guessed: 1
+      person = create :person, comments_to_guess: 1, comments_per_post: 1, comments_to_be_guessed: 1
       Person.update_statistics
       person.reload
       person.comments_to_guess.should == nil
@@ -1106,10 +1098,9 @@ describe Person do
     describe 'when updating comments_to_guess' do
       before do
         commented_at = 10.seconds.ago
-        @guess = Guess.make commented_at: commented_at
-        Comment.make 'guess', photo: @guess.photo,
-          flickrid: @guess.person.flickrid, username: @guess.person.username,
-          commented_at: commented_at
+        @guess = create :guess, commented_at: commented_at
+        create :comment, photo: @guess.photo,
+          flickrid: @guess.person.flickrid, username: @guess.person.username, commented_at: commented_at
       end
 
       it 'sets the attribute to average # of comments/guess' do
@@ -1117,14 +1108,12 @@ describe Person do
       end
 
       it 'ignores comments made after the guess' do
-        Comment.make 'chitchat', photo: @guess.photo,
-          flickrid: @guess.person.flickrid, username: @guess.person.username
+        create :comment, photo: @guess.photo, flickrid: @guess.person.flickrid, username: @guess.person.username
         guesser_attribute_is_1
       end
 
       it 'ignores comments made by someone other than the guesser' do
-        Comment.make "someone else's guess",
-          photo: @guess.photo, commented_at: 11.seconds.ago
+        create :comment, photo: @guess.photo, commented_at: 11.seconds.ago
         guesser_attribute_is_1
       end
 
@@ -1138,16 +1127,15 @@ describe Person do
 
     describe 'when updating comments_per_post' do
       it 'sets the attribute to average # of comments on their post' do
-        comment = Comment.make
+        comment = create :comment
         Person.update_statistics
         comment.photo.person.reload
         comment.photo.person.comments_per_post.should == 1
       end
 
       it 'ignores comments made by the poster' do
-        photo = Photo.make
-        Comment.make photo: photo, flickrid: photo.person.flickrid,
-          username: photo.person.username
+        photo = create :photo
+        create :comment, photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
         Person.update_statistics
         photo.person.reload
         photo.person.comments_per_post.should == 0
@@ -1158,8 +1146,8 @@ describe Person do
     describe 'when updating comments_to_be_guessed' do
       before do
         commented_at = 10.seconds.ago
-        @guess = Guess.make commented_at: commented_at
-        Comment.make 'guess', photo: @guess.photo,
+        @guess = create :guess, commented_at: commented_at
+        create :comment, photo: @guess.photo,
           flickrid: @guess.person.flickrid, username: @guess.person.username,
           commented_at: commented_at
       end
@@ -1169,13 +1157,13 @@ describe Person do
       end
 
       it 'ignores comments made after the guess' do
-        Comment.make 'chitchat', photo: @guess.photo,
+        create :comment, photo: @guess.photo,
           flickrid: @guess.person.flickrid, username: @guess.person.username
         poster_attribute_is_1
       end
 
       it 'ignores comments made by the poster' do
-        Comment.make 'poster', photo: @guess.photo,
+        create :comment, photo: @guess.photo,
           flickrid: @guess.photo.person.flickrid, username: @guess.photo.person.username,
           commented_at: 11.seconds.ago
         poster_attribute_is_1
@@ -1192,22 +1180,21 @@ describe Person do
   end
 
   describe '#destroy_if_has_no_dependents' do
+    let(:person) { create :person }
+
     it 'destroys the person' do
-      person = Person.make
       person.destroy_if_has_no_dependents
       Person.count.should == 0
     end
 
     it 'but not if they have a photo' do
-      person = Person.make
-      Photo.make person: person
+      create :photo, person: person
       person.destroy_if_has_no_dependents
       Person.all.should == [ person ]
     end
 
     it 'but not if they have a guess' do
-      person = Person.make
-      Guess.make person: person
+      create :guess, person: person
       person.destroy_if_has_no_dependents
       Person.find(person.id).should == person
     end
@@ -1217,15 +1204,15 @@ describe Person do
   # Utilities
 
   def make_potential_favorite_poster(posts_by_favorite, posts_by_others)
-    favorite_poster = Person.make 'favorite_poster'
-    devoted_guesser = Person.make 'devoted_guesser'
+    favorite_poster = create :person
+    devoted_guesser = create :person
     (1 .. posts_by_favorite).each do |n|
-      photo = Photo.make n, person: favorite_poster
-      Guess.make n, person: devoted_guesser, photo: photo
+      photo = create :photo, person: favorite_poster
+      create :guess, person: devoted_guesser, photo: photo
     end
-    other_poster = Person.make 'other_poster'
+    other_poster = create :person
     ((posts_by_favorite + 1) .. (posts_by_favorite + posts_by_others)).each do |n|
-      Photo.make n, person: other_poster
+      create :photo, person: other_poster
     end
     return devoted_guesser, favorite_poster
   end

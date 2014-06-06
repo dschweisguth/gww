@@ -7,7 +7,7 @@ describe Revelation do
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
-      Revelation.make comment_text: non_ascii_text
+      create :revelation, comment_text: non_ascii_text
       Revelation.all[0].comment_text.should == non_ascii_text
     end
 
@@ -23,15 +23,15 @@ describe Revelation do
 
   describe '.longest' do
     it 'lists revelations' do
-      revelation = Revelation.make
+      revelation = create :revelation
       Revelation.longest.should == [ revelation ]
     end
 
     it 'sorts revelations by the time from post to revelation' do
-      photo1 = Photo.make 1, dateadded: Time.utc(2000)
-      revelation1 = Revelation.make photo: photo1, commented_at: Time.utc(2001)
-      photo2 = Photo.make 2, dateadded: Time.utc(2002)
-      revelation2 = Revelation.make photo: photo2, commented_at: Time.utc(2004)
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      revelation1 = create :revelation, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      revelation2 = create :revelation, photo: photo2, commented_at: Time.utc(2004)
       Revelation.longest.should == [ revelation2, revelation1 ]
     end
 
@@ -39,17 +39,17 @@ describe Revelation do
 
   describe '.all_between' do
     it 'returns all revelations between the given dates' do
-      revelation = Revelation.make added_at: Time.utc(2011, 1, 1, 0, 0, 1)
+      revelation = create :revelation, added_at: Time.utc(2011, 1, 1, 0, 0, 1)
       Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == [ revelation ]
     end
 
     it 'ignores revelations made on or before the from date' do
-      Revelation.make added_at: Time.utc(2011)
+      create :revelation, added_at: Time.utc(2011)
       Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
     end
 
     it 'ignores revelations made after the to date' do
-      Revelation.make added_at: Time.utc(2011, 1, 1, 0, 0, 2)
+      create :revelation, added_at: Time.utc(2011, 1, 1, 0, 0, 2)
       Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == []
     end
 
