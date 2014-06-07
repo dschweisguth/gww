@@ -189,8 +189,9 @@ describe Photo do
   # Used by PeopleController
 
   describe '.first_by' do
+    let(:poster) { create :person }
+
     it "returns the poster's first post" do
-      poster = create :person
       create :photo, person: poster, dateadded: Time.utc(2001)
       first = create :photo, person: poster, dateadded: Time.utc(2000)
       Photo.first_by(poster).should == first
@@ -198,14 +199,15 @@ describe Photo do
 
     it "ignores other posters' photos" do
       create :photo
-      Photo.first_by(create :person).should be_nil
+      Photo.first_by(poster).should be_nil
     end
 
   end
 
   describe '.most_recent_by' do
+    let(:poster) { create :person }
+
     it "returns the poster's most recent post" do
-      poster = create :person
       create :photo, person: poster, dateadded: Time.utc(2000)
       most_recent = create :photo, person: poster, dateadded: Time.utc(2001)
       Photo.most_recent_by(poster).should == most_recent
@@ -213,14 +215,15 @@ describe Photo do
 
     it "ignores other posters' photos" do
       create :photo
-      Photo.most_recent_by(create :person).should be_nil
+      Photo.most_recent_by(poster).should be_nil
     end
 
   end
 
   describe '.oldest_unfound' do
+    let(:poster) { create :person }
+
     it "returns the poster's oldest unfound" do
-      poster = create :person
       create :photo, person: poster, dateadded: Time.utc(2001)
       first = create :photo, person: poster, dateadded: Time.utc(2000)
       oldest_unfound = Photo.oldest_unfound poster
@@ -230,21 +233,21 @@ describe Photo do
 
     it "ignores other posters' photos" do
       create :photo
-      Photo.oldest_unfound(create :person).should be_nil
+      Photo.oldest_unfound(poster).should be_nil
     end
 
     it "considers unconfirmed photos" do
-      photo = create :photo, game_status: 'unconfirmed'
-      Photo.oldest_unfound(photo.person).should == photo
+      photo = create :photo, person: poster, game_status: 'unconfirmed'
+      Photo.oldest_unfound(poster).should == photo
     end
 
     it "ignores game statuses other than unfound and unconfirmed" do
-      photo = create :photo, game_status: 'found'
-      Photo.oldest_unfound(photo.person).should be_nil
+      photo = create :photo, person: poster, game_status: 'found'
+      Photo.oldest_unfound(poster).should be_nil
     end
 
     it "considers other posters' oldest unfounds when calculating place" do
-      create :photo, dateadded: Time.utc(2000)
+      create :photo, person: poster, dateadded: Time.utc(2000)
       next_oldest = create :photo, dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
@@ -252,7 +255,7 @@ describe Photo do
     end
 
     it "considers unconfirmed photos when calculating place" do
-      create :photo, dateadded: Time.utc(2000), game_status: 'unconfirmed'
+      create :photo, person: poster, dateadded: Time.utc(2000), game_status: 'unconfirmed'
       next_oldest = create :photo, dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
@@ -260,7 +263,7 @@ describe Photo do
     end
 
     it "ignores other posters' equally old unfounds when calculating place" do
-      create :photo, dateadded: Time.utc(2001)
+      create :photo, person: poster, dateadded: Time.utc(2001)
       next_oldest = create :photo, dateadded: Time.utc(2001)
       oldest_unfound = Photo.oldest_unfound next_oldest.person
       oldest_unfound.should == next_oldest
@@ -268,14 +271,15 @@ describe Photo do
     end
 
     it "handles a person with no photos" do
-      Photo.oldest_unfound(create :person).should be_nil
+      Photo.oldest_unfound(poster).should be_nil
     end
 
   end
 
   describe '.most_commented' do
+    let(:poster) { create :person }
+
     it "returns the poster's most-commented photo" do
-      poster = create :person
       create :photo, person: poster
       first = create :photo, person: poster, other_user_comments: 1
       create :comment, photo: first
@@ -286,7 +290,6 @@ describe Photo do
     end
 
     it "counts comments" do
-      poster = create :person
       second = create :photo, person: poster, other_user_comments: 1
       create :comment, photo: second
       first = create :photo, person: poster, other_user_comments: 2
@@ -301,35 +304,36 @@ describe Photo do
     it "ignores other posters' photos" do
       photo = create :photo, other_user_comments: 1
       create :comment, photo: photo
-      Photo.most_commented(create :person).should be_nil
+      Photo.most_commented(poster).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
       other_posters_photo = create :photo, other_user_comments: 2
       create :comment, photo: other_posters_photo
       create :comment, photo: other_posters_photo
-      photo = create :photo, other_user_comments: 1
+      photo = create :photo, person: poster, other_user_comments: 1
       create :comment, photo: photo
-      Photo.most_commented(photo.person).place.should == 2
+      Photo.most_commented(poster).place.should == 2
     end
 
     it "ignores other posters' equally commented photos when calculating place" do
       other_posters_photo = create :photo, other_user_comments: 1
       create :comment, photo: other_posters_photo
-      photo = create :photo, other_user_comments: 1
+      photo = create :photo, person: poster, other_user_comments: 1
       create :comment, photo: photo
-      Photo.most_commented(photo.person).place.should == 1
+      Photo.most_commented(poster).place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.most_commented(create :person).should be_nil
+      Photo.most_commented(poster).should be_nil
     end
 
   end
 
   describe '.most_viewed' do
+    let(:poster) { create :person }
+
     it "returns the poster's most-viewed photo" do
-      poster = create :person
       create :photo, person: poster
       first = create :photo, person: poster, views: 1
       most_viewed = Photo.most_viewed poster
@@ -339,30 +343,31 @@ describe Photo do
 
     it "ignores other posters' photos" do
       create :photo
-      Photo.most_viewed(create :person).should be_nil
+      Photo.most_viewed(poster).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
       create :photo, views: 1
-      photo = create :photo
-      Photo.most_viewed(photo.person).place.should == 2
+      photo = create :photo, person: poster
+      Photo.most_viewed(poster).place.should == 2
     end
 
     it "ignores other posters' equally viewed photos when calculating place" do
       create :photo
-      photo = create :photo
-      Photo.most_viewed(photo.person).place.should == 1
+      photo = create :photo, person: poster
+      Photo.most_viewed(poster).place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.most_viewed(create :person).should be_nil
+      Photo.most_viewed(poster).should be_nil
     end
 
   end
 
   describe '.most_faved' do
+    let(:poster) { create :person }
+
     it "returns the poster's most-faved photo" do
-      poster = create :person
       create :photo, person: poster
       first = create :photo, person: poster, faves: 1
       most_faved = Photo.most_faved poster
@@ -372,23 +377,23 @@ describe Photo do
 
     it "ignores other posters' photos" do
       create :photo
-      Photo.most_faved(create :person).should be_nil
+      Photo.most_faved(poster).should be_nil
     end
 
     it "considers other posters' photos when calculating place" do
       create :photo, faves: 1
-      photo = create :photo
-      Photo.most_faved(photo.person).place.should == 2
+      photo = create :photo, person: poster
+      Photo.most_faved(poster).place.should == 2
     end
 
     it "ignores other posters' equally faved photos when calculating place" do
       create :photo
-      photo = create :photo
-      Photo.most_faved(photo.person).place.should == 1
+      photo = create :photo, person: poster
+      Photo.most_faved(poster).place.should == 1
     end
 
     it "handles a person with no photos" do
-      Photo.most_faved(create :person).should be_nil
+      Photo.most_faved(poster).should be_nil
     end
 
   end
@@ -1344,21 +1349,21 @@ describe Photo do
   end
 
   describe '#infer_geocodes' do
-    before do
+    let(:parser) do
       street_names = %w{ 26TH VALENCIA }
       stub(Stcline).multiword_street_names { street_names }
-      @parser = Object.new
-      stub(LocationParser).new(street_names) { @parser }
-
-      @factory = RGeo::Cartesian.preferred_factory()
-
+      parser = Object.new
+      stub(LocationParser).new(street_names) { parser }
+      parser
     end
+
+    let(:factory) { RGeo::Cartesian.preferred_factory }
 
     it "infers each guessed photo's lat+long from its guess" do
       answer = create :guess, comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
+      stub(parser).parse(answer.comment_text) { [ location ] }
+      stub(Stintersection).geocode(location) { factory.point(-122, 37) }
       Photo.infer_geocodes
 
       answer.photo.reload
@@ -1370,8 +1375,8 @@ describe Photo do
     it "infers each revealed photo's lat+long from its revelation" do
       answer = create :revelation, comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location ] }
-      stub(Stintersection).geocode(location) { @factory.point(-122, 37) }
+      stub(parser).parse(answer.comment_text) { [ location ] }
+      stub(Stintersection).geocode(location) { factory.point(-122, 37) }
       Photo.infer_geocodes
 
       answer.photo.reload
@@ -1383,7 +1388,7 @@ describe Photo do
     it "removes an existing inferred geocode if the comment can't be parsed" do
       photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'An unparseable comment'
-      stub(@parser).parse(answer.comment_text) { [] }
+      stub(parser).parse(answer.comment_text) { [] }
       Photo.infer_geocodes
 
       answer.photo.reload
@@ -1396,7 +1401,7 @@ describe Photo do
       photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location ] }
+      stub(parser).parse(answer.comment_text) { [ location ] }
       stub(Stintersection).geocode(location) { nil }
       Photo.infer_geocodes
 
@@ -1411,9 +1416,9 @@ describe Photo do
       answer = create :guess, photo: photo, comment_text: 'A comment with multiple gecodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      stub(@parser).parse(answer.comment_text) { [ location1, location2 ] }
-      stub(Stintersection).geocode(location1) { @factory.point(37, -122) }
-      stub(Stintersection).geocode(location2) { @factory.point(38, -122) }
+      stub(parser).parse(answer.comment_text) { [ location1, location2 ] }
+      stub(Stintersection).geocode(location1) { factory.point(37, -122) }
+      stub(Stintersection).geocode(location2) { factory.point(38, -122) }
       Photo.infer_geocodes
 
       answer.photo.reload

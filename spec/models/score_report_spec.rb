@@ -3,14 +3,16 @@ require 'spec_helper'
 describe ScoreReport do
 
   describe '.guess_counts' do
-    it "counts the guesses in the first score report" do
+    before do
       create :guess, added_at: Time.utc(2011)
+    end
+
+    it "counts the guesses in the first score report" do
       report = create :score_report, created_at: Time.utc(2011)
       ScoreReport.guess_counts.should == { report.id => 1 }
     end
 
     it "counts the guesses in a non-first score report" do
-      create :guess, added_at: Time.utc(2011)
       create :score_report, created_at: Time.utc(2010)
       report1 = create :score_report, created_at: Time.utc(2011)
       ScoreReport.guess_counts.should == { report1.id => 1 }
@@ -19,14 +21,16 @@ describe ScoreReport do
   end
 
   describe '.revelation_counts' do
-    it "counts the revelations in the first score report" do
+    before do
       create :revelation, added_at: Time.utc(2011)
+    end
+
+    it "counts the revelations in the first score report" do
       report = create :score_report, created_at: Time.utc(2011)
       ScoreReport.revelation_counts.should == { report.id => 1 }
     end
 
     it "counts the revelations in a non-first score report" do
-      create :revelation, added_at: Time.utc(2011)
       create :score_report, created_at: Time.utc(2010)
       report1 = create :score_report, created_at: Time.utc(2011)
       ScoreReport.revelation_counts.should == { report1.id => 1 }

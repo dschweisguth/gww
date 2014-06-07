@@ -36,13 +36,12 @@ describe Comment do
   end
 
   describe '.add_selected_answer' do
-    before do
-      @now = Time.utc(2010)
-    end
+    let(:now) { Time.utc 2010 }
 
-    describe 'when adding a revelation' do
+    context 'when adding a revelation' do
+      let(:photo) { create :photo }
+
       it 'adds a revelation' do
-        photo = create :photo
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         set_time
@@ -51,7 +50,6 @@ describe Comment do
       end
 
       it 'handles a redundant username' do
-        photo = create :photo
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         set_time
@@ -60,7 +58,6 @@ describe Comment do
       end
 
       it "gets text from another user's comment" do
-        photo = create :photo
         comment = create :comment, photo: photo, commented_at: Time.utc(2011)
         set_time
         Comment.add_selected_answer comment.id, photo.person.username
@@ -68,11 +65,9 @@ describe Comment do
       end
 
       it 'updates an existing revelation' do
-        old_revelation = create :revelation
-        comment = create :comment, photo: old_revelation.photo,
-          flickrid: old_revelation.photo.person.flickrid,
-          username: old_revelation.photo.person.username,
-          commented_at: Time.utc(2011)
+        create :revelation, photo: photo
+        comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
+          username: photo.person.username, commented_at: Time.utc(2011)
         set_time
         Comment.add_selected_answer comment.id, ''
         photo_is_revealed_and_revelation_matches comment
@@ -85,11 +80,10 @@ describe Comment do
         revelation.photo.game_status.should == 'revealed'
         revelation.comment_text.should == comment.comment_text
         revelation.commented_at.should == comment.commented_at
-        revelation.added_at.should == @now
+        revelation.added_at.should == now
       end
 
       it 'deletes an existing guess' do
-        photo = create :photo
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         create :guess, photo: photo
@@ -99,7 +93,7 @@ describe Comment do
 
     end
 
-    describe 'when adding a guess' do
+    context 'when adding a guess' do
       it "adds a guess and updates the guesser if necessary" do
         guesser = create :person
         comment = create :comment, flickrid: guesser.flickrid, username: guesser.username, commented_at: Time.utc(2011)
@@ -146,7 +140,7 @@ describe Comment do
         guess.person.pathalias.should == 'pathalias_from_request'
         guess.comment_text.should == answer_comment.comment_text
         guess.commented_at.should == answer_comment.commented_at
-        guess.added_at.should == @now
+        guess.added_at.should == now
         guess.photo.game_status.should == 'found'
       end
 
@@ -210,7 +204,7 @@ describe Comment do
         guess.person.should == guesser
         guess.comment_text.should == comment.comment_text
         guess.commented_at.should == comment.commented_at
-        guess.added_at.should == @now
+        guess.added_at.should == now
         guess.photo.game_status.should == 'found'
       end
 
@@ -227,7 +221,7 @@ describe Comment do
     # those attributes don't pass by accident
     def set_time
       # noinspection RubyArgCount
-      stub(Time).now { @now }
+      stub(Time).now { now }
     end
 
   end
@@ -318,55 +312,53 @@ describe Comment do
       create(:comment).is_accepted_answer.should be_false
     end
 
-    it "returns true if a revelation was created from this comment" do
-      photo = create :photo
-      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
-      create :revelation, photo: photo, comment_text: comment.comment_text
-      comment.is_accepted_answer.should be_true
+    context "when photo is revealed" do
+      let(:photo) { create :photo }
+      let(:comment) { create :comment, photo: photo, flickrid: photo.person.flickrid }
+
+      it "returns true if a revelation was created from this comment" do
+        create :revelation, photo: photo, comment_text: comment.comment_text
+        comment.is_accepted_answer.should be_true
+      end
+
+      it "returns false if the revelation is of another photo" do
+        other_photo = create :photo, person: photo.person
+        create :revelation, photo: other_photo, comment_text: comment.comment_text
+        comment.is_accepted_answer.should be_false
+      end
+
+      it "returns false if the text doesn't match" do
+        create :revelation, photo: photo, comment_text: "something else"
+        comment.is_accepted_answer.should be_false
+      end
+
     end
 
-    it "returns false if the revelation is of another photo" do
-      photo = create :photo
-      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
-      other_photo = create :photo, person: photo.person
-      create :revelation, photo: other_photo, comment_text: comment.comment_text
-      comment.is_accepted_answer.should be_false
-    end
+    context "when photo is guessed" do
+      let(:person) { create :person }
+      let(:comment) { create :comment, flickrid: person.flickrid }
 
-    it "returns false if the text doesn't match" do
-      photo = create :photo
-      comment = create :comment, photo: photo, flickrid: photo.person.flickrid
-      create :revelation, photo: photo, comment_text: "something else"
-      comment.is_accepted_answer.should be_false
-    end
+      it "returns true if a guess was created from this comment" do
+        create :guess, photo: comment.photo, person: person, comment_text: comment.comment_text
+        comment.is_accepted_answer.should be_true
+      end
 
-    it "returns true if a guess was created from this comment" do
-      person = create :person
-      comment = create :comment, flickrid: person.flickrid
-      create :guess, photo: comment.photo, person: person, comment_text: comment.comment_text
-      comment.is_accepted_answer.should be_true
-    end
+      it "returns false if the guess is of another photo" do
+        other_photo = create :photo, person: person
+        create :guess, photo: other_photo, person: person, comment_text: comment.comment_text
+        comment.is_accepted_answer.should be_false
+      end
 
-    it "returns false if the guess is of another photo" do
-      person = create :person
-      comment = create :comment, flickrid: person.flickrid
-      other_photo = create :photo, person: person
-      create :guess, photo: other_photo, person: person, comment_text: comment.comment_text
-      comment.is_accepted_answer.should be_false
-    end
+      it "returns false if the text doesn't match" do
+        create :guess, photo: comment.photo, person: person, comment_text: "something else"
+        comment.is_accepted_answer.should be_false
+      end
 
-    it "returns false if the text doesn't match" do
-      person = create :person
-      comment = create :comment, flickrid: person.flickrid
-      create :guess, photo: comment.photo, person: person, comment_text: "something else"
-      comment.is_accepted_answer.should be_false
-    end
+      it "returns false if the guess is by another person" do
+        create :guess, photo: comment.photo, comment_text: comment.comment_text
+        comment.is_accepted_answer.should be_false
+      end
 
-    it "returns false if the guess is by another person" do
-      person = create :person
-      comment = create :comment, flickrid: person.flickrid
-      create :guess, photo: comment.photo, comment_text: comment.comment_text
-      comment.is_accepted_answer.should be_false
     end
 
   end

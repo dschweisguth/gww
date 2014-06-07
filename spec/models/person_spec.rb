@@ -156,137 +156,138 @@ describe Person do
   end
 
   describe '.add_change_in_standings' do
-    before do
-      @person = create :person
-      @person.post_count = 1
-      @person.previous_post_count = 1
-      @people = [ @person ]
-    end
+    let(:person) { create :person, post_count: 1, previous_post_count: 1 }
 
     it "congratulates a new guesser" do
-      @person.previous_post_count = 0
+      person.previous_post_count = 0
       adds_change(
-        { 1 => [ @person ] },
-        { 0 => [ @person ] },
+        [ person ],
+        { 1 => [ person ] },
+        { 0 => [ person ] },
         'scored his or her first point. Congratulations, and welcome to GWSF!')
     end
 
     it "mentions a new guesser's points after the first" do
       adds_change(
-        { 2 => [ @person ] },
-        { 0 => [ @person ] },
+        [ person ],
+        { 2 => [ person ] },
+        { 0 => [ person ] },
         'scored his or her first point (and 1 more). Congratulations!')
     end
 
     it "mentions climbing" do
       other = create :person
-      @people << other
       adds_change(
-        { 3 => [ @person ], 2 => [ other ] },
-        { 2 => [ other ], 1 => [ @person ] },
+        [ person, other ],
+        { 3 => [ person ], 2 => [ other ] },
+        { 2 => [ other ], 1 => [ person ] },
         "climbed from 2nd to 1st place, passing #{other.username}")
     end
 
     it "says jumped if the guesser climbed more than one place" do
       other2 = create :person
       other3 = create :person
-      @people += [ other2, other3 ]
       adds_change(
-        { 4 => [ @person ], 3 => [ other2 ], 2 => [ other3 ] },
-        { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
+        [ person, other2, other3 ],
+        { 4 => [ person ], 3 => [ other2 ], 2 => [ other3 ] },
+        { 3 => [ other2 ], 2 => [ other3 ], 1 => [ person ] },
         'jumped from 3rd to 1st place, passing 2 other players')
     end
 
     it "indicates a new tie" do
       other2 = create :person
-      @people << other2
       adds_change(
-        { 2 => [ other2, @person ] },
-        { 2 => [ other2 ], 1 => [ @person ] },
+        [ person, other2 ],
+        { 2 => [ other2, person ] },
+        { 2 => [ other2 ], 1 => [ person ] },
         "climbed from 2nd to 1st place, tying #{other2.username}")
     end
 
     it "doesn't name names if the guesser is tied with more than one other person" do
       other2 = create :person
       other3 = create :person
-      @people += [ other2, other3 ]
       adds_change(
-        { 2 => [ other2, other3, @person ] },
-        { 2 => [ other2, other3 ], 1 => [ @person ] },
+        [ person, other2, other3 ],
+        { 2 => [ other2, other3, person ] },
+        { 2 => [ other2, other3 ], 1 => [ person ] },
         'jumped from 3rd to 1st place, tying 2 other players')
     end
 
     it "handles passing and tying at the same time" do
       other2 = create :person
       other3 = create :person
-      @people += [ other2, other3 ]
       adds_change(
-        { 3 => [ @person, other2 ], 2 => [ other3 ] },
-        { 3 => [ other2 ], 2 => [ other3 ], 1 => [ @person ] },
+        [ person, other2, other3 ],
+        { 3 => [ person, other2 ], 2 => [ other3 ] },
+        { 3 => [ other2 ], 2 => [ other3 ], 1 => [ person ] },
         "jumped from 3rd to 1st place, passing #{other3.username} and tying #{other2.username}")
     end
 
     Person::CLUBS.each do |club, url|
       it "welcomes the guesser to the #{club} club" do
         adds_change(
-          { club => [ @person ] },
-          { club - 1 => [ @person ] },
+          [ person ],
+          { club => [ person ] },
+          { club - 1 => [ person ] },
           "Welcome to <a href=\"#{url}\">the #{club} Club</a>!")
       end
     end
 
     it "notes numeric milestones" do
       adds_change(
-        { 100 => [ @person ] },
-        { 99 => [ @person ] },
+        [ person ],
+        { 100 => [ person ] },
+        { 99 => [ person ] },
         'Congratulations on reaching 100 points!')
     end
 
     it "says passing instead of reaching when appropriate" do
       adds_change(
-        { 101 => [ @person ] },
-        { 99 => [ @person ] },
+        [ person ],
+        { 101 => [ person ] },
+        { 99 => [ person ] },
         'Congratulations on passing 100 points!')
     end
 
     it "reports club, not milestone, if both are options" do
       adds_change(
-        { 222 => [ @person ] },
-        { 199 => [ @person ] },
+        [ person ],
+        { 222 => [ person ] },
+        { 199 => [ person ] },
         'Welcome to <a href="https://www.flickr.com/photos/potatopotato/90592664/">the 222 Club</a>!')
     end
 
     it "welcomes the guesser to the top ten" do
       others = 10.times.map { create :person }
-      @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
-        others_by_score.merge({ 12 => [ @person ] }),
-        others_by_score.merge({ 1 => [ @person ] }),
+        [ person, *others ],
+        others_by_score.merge({ 12 => [ person ] }),
+        others_by_score.merge({ 1 => [ person ] }),
         'jumped from 11th to 1st place. Welcome to the top ten!')
     end
 
     it "congratulates and welcomes to the top ten at the same time" do
       others = 10.times.map { create :person }
-      @people += others
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
-        others_by_score.merge({ 100 => [ @person ] }),
-        others_by_score.merge({ 1 => [ @person ] }),
+        [ person, *others ],
+        others_by_score.merge({ 100 => [ person ] }),
+        others_by_score.merge({ 1 => [ person ] }),
         'jumped from 11th to 1st place. Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! Welcome to the top ten!')
     end
 
-    def adds_change(people_by_score, people_by_previous_score, expected_change)
+    def adds_change(people, people_by_score, people_by_previous_score, expected_change)
       previous_report_date = Time.utc(2010)
       # noinspection RubyArgCount
-      stub(Person).by_score(@people, previous_report_date) { people_by_previous_score }
+      stub(Person).by_score(people, previous_report_date) { people_by_previous_score }
       # noinspection RubyArgCount
-      stub(Photo).add_posts @people, previous_report_date, :previous_post_count
-      guessers = [ [ @person, [] ] ]
-      Person.add_change_in_standings people_by_score, @people, previous_report_date, guessers
-      @person.change_in_standing.should == expected_change
+      stub(Photo).add_posts people, previous_report_date, :previous_post_count
+      guessers = [ [ person, [] ] ]
+      Person.add_change_in_standings people_by_score, people, previous_report_date, guessers
+      person.change_in_standing.should == expected_change
     end
 
   end
@@ -816,41 +817,41 @@ describe Person do
   end
 
   describe '.standing' do
+    let(:person) { create :person }
+
     it "returns the person's score position" do
-      person = create :person
       Person.standing(person).should == [ 1, false ]
     end
 
     it "considers other players' scores" do
       create :guess
-      person = create :person
       Person.standing(person).should == [ 2, false ]
     end
 
     it "detects ties" do
-      guess1 = create :guess
+      guess1 = create :guess, person: person
       create :guess
-      Person.standing(guess1.person).should == [ 1, true ]
+      Person.standing(person).should == [ 1, true ]
     end
 
   end
 
   describe '.posts_standing' do
+    let(:person) { create :person }
+
     it "returns the person's post position" do
-      person = create :person
       Person.posts_standing(person).should == [ 1, false ]
     end
 
     it "considers other players' posts" do
       create :photo
-      person = create :person
       Person.posts_standing(person).should == [ 2, false ]
     end
 
     it "detects ties" do
-      post1 = create :photo
+      post1 = create :photo, person: person
       create :photo
-      Person.posts_standing(post1.person).should == [ 1, true ]
+      Person.posts_standing(person).should == [ 1, true ]
     end
 
   end
@@ -1096,11 +1097,12 @@ describe Person do
     end
 
     describe 'when updating comments_to_guess' do
+      let(:commented_at) { 10.seconds.ago }
+      let(:guess) { create :guess, commented_at: commented_at }
+
       before do
-        commented_at = 10.seconds.ago
-        @guess = create :guess, commented_at: commented_at
-        create :comment, photo: @guess.photo,
-          flickrid: @guess.person.flickrid, username: @guess.person.username, commented_at: commented_at
+        create :comment, photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username, commented_at: commented_at
       end
 
       it 'sets the attribute to average # of comments/guess' do
@@ -1108,19 +1110,19 @@ describe Person do
       end
 
       it 'ignores comments made after the guess' do
-        create :comment, photo: @guess.photo, flickrid: @guess.person.flickrid, username: @guess.person.username
+        create :comment, photo: guess.photo, flickrid: guess.person.flickrid, username: guess.person.username
         guesser_attribute_is_1
       end
 
       it 'ignores comments made by someone other than the guesser' do
-        create :comment, photo: @guess.photo, commented_at: 11.seconds.ago
+        create :comment, photo: guess.photo, commented_at: 11.seconds.ago
         guesser_attribute_is_1
       end
 
       def guesser_attribute_is_1
         Person.update_statistics
-        @guess.person.reload
-        @guess.person.comments_to_guess.should == 1
+        guess.person.reload
+        guess.person.comments_to_guess.should == 1
       end
 
     end
@@ -1144,12 +1146,12 @@ describe Person do
     end
 
     describe 'when updating comments_to_be_guessed' do
+      let(:commented_at) { 10.seconds.ago }
+      let(:guess) { create :guess, commented_at: commented_at }
+
       before do
-        commented_at = 10.seconds.ago
-        @guess = create :guess, commented_at: commented_at
-        create :comment, photo: @guess.photo,
-          flickrid: @guess.person.flickrid, username: @guess.person.username,
-          commented_at: commented_at
+        create :comment, photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username, commented_at: commented_at
       end
 
       it 'sets the attribute to average # of comments for their photos to be guessed' do
@@ -1157,22 +1159,21 @@ describe Person do
       end
 
       it 'ignores comments made after the guess' do
-        create :comment, photo: @guess.photo,
-          flickrid: @guess.person.flickrid, username: @guess.person.username
+        create :comment, photo: guess.photo,
+          flickrid: guess.person.flickrid, username: guess.person.username
         poster_attribute_is_1
       end
 
       it 'ignores comments made by the poster' do
-        create :comment, photo: @guess.photo,
-          flickrid: @guess.photo.person.flickrid, username: @guess.photo.person.username,
-          commented_at: 11.seconds.ago
+        create :comment, photo: guess.photo,
+          flickrid: guess.photo.person.flickrid, username: guess.photo.person.username, commented_at: 11.seconds.ago
         poster_attribute_is_1
       end
 
       def poster_attribute_is_1
         Person.update_statistics
-        @guess.photo.person.reload
-        @guess.photo.person.comments_to_be_guessed.should == 1
+        guess.photo.person.reload
+        guess.photo.person.comments_to_be_guessed.should == 1
       end
 
     end

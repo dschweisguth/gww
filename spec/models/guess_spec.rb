@@ -39,10 +39,10 @@ describe Guess do
   end
 
   describe '#destroy' do
+    let(:guess) { create :guess }
+    let(:person) { guess.person }
 
     it "destroys the guess and its person" do
-      guess = create :guess
-      person = guess.person
       guess.destroy
       Guess.any?.should be_false
       Person.exists?(person.id).should be_false
@@ -50,8 +50,6 @@ describe Guess do
     end
 
     it "leaves the person alone if they have another guess" do
-      guess = create :guess
-      person = guess.person
       create :guess, person: person
       guess.destroy
       Guess.exists?(guess.id).should be_false
@@ -60,8 +58,6 @@ describe Guess do
     end
 
     it "leaves the person alone if they have a photo" do
-      guess = create :guess
-      person = guess.person
       create :photo, person: person
       guess.destroy
       Guess.any?.should be_false
@@ -72,16 +68,16 @@ describe Guess do
   end
 
   describe '.destroy_all_by_photo_id' do
+    let(:guess) { create :guess }
+
     it 'destroys all guesses of the photo with the given id' do
-      guess = create :guess
       Guess.destroy_all_by_photo_id guess.photo.id
       Guess.any?.should be_false
     end
 
     it "ignores other photos' guesses" do
-      one_guess = create :guess
       other_guess = create :guess
-      Guess.destroy_all_by_photo_id one_guess.photo.id
+      Guess.destroy_all_by_photo_id guess.photo.id
       Guess.all.should == [ other_guess ]
     end
 
@@ -122,8 +118,9 @@ describe Guess do
   end
 
   describe '.first_by' do
+    let(:guesser) { create :person }
+
     it "returns the guesser's first guess" do
-      guesser = create :person
       create :guess, person: guesser, commented_at: Time.utc(2001)
       first = create :guess, person: guesser, commented_at: Time.utc(2000)
       Guess.first_by(guesser).should == first
@@ -131,14 +128,15 @@ describe Guess do
 
     it "ignores other players' guesses" do
       create :guess
-      Guess.first_by(create :person).should be_nil
+      Guess.first_by(guesser).should be_nil
     end
 
   end
 
   describe '.most_recent_by' do
+    let(:guesser) { create :person }
+
     it "returns the guesser's most recent guess" do
-      guesser = create :person
       create :guess, person: guesser, commented_at: Time.utc(2000)
       most_recent = create :guess, person: guesser, commented_at: Time.utc(2001)
       Guess.most_recent_by(guesser).should == most_recent
@@ -146,14 +144,15 @@ describe Guess do
 
     it "ignores other players' guesses" do
       create :guess
-      Guess.most_recent_by(create :person).should be_nil
+      Guess.most_recent_by(guesser).should be_nil
     end
 
   end
 
   describe '.oldest' do
+    let(:guesser) { create :person }
+
     it "returns the guesser's guess made the longest after the post" do
-      guesser = create :person
       photo1 = create :photo, dateadded: Time.utc(2000)
       create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
@@ -165,11 +164,10 @@ describe Guess do
 
     it "ignores other players' guesses" do
       create :guess
-      Guess.oldest(create :person).should be_nil
+      Guess.oldest(guesser).should be_nil
     end
 
     it "considers other players' guesses when calculating place" do
-      guesser = create :person
       photo1 = create :photo, dateadded: Time.utc(2000)
       guess1 = create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
@@ -180,7 +178,6 @@ describe Guess do
     end
 
     it "ignores a guess that precedes its post" do
-      guesser = create :person
       photo1 = create :photo, dateadded: Time.utc(2001)
       create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
       Guess.oldest(guesser).should == nil
@@ -189,8 +186,9 @@ describe Guess do
   end
 
   describe '.longest_lasting' do
+    let(:poster) { create :person }
+
     it "returns the poster's photo which went unfound the longest" do
-      poster = create :person
       photo1 = create :photo, person: poster, dateadded: Time.utc(2000)
       create :guess, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, person: poster, dateadded: Time.utc(2002)
@@ -201,12 +199,12 @@ describe Guess do
     end
 
     it "ignores guesses of other players' posts" do
+      create :photo, person: poster
       create :guess
-      Guess.longest_lasting(create(:photo).person).should be_nil
+      Guess.longest_lasting(poster).should be_nil
     end
 
     it "considers other posters when calculating place" do
-      poster = create :person
       photo1 = create :photo, person: poster, dateadded: Time.utc(2000)
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
@@ -217,7 +215,6 @@ describe Guess do
     end
 
     it 'ignores a guess that precedes its post' do
-      poster = create :person
       photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
       create :guess, photo: photo1, commented_at: Time.utc(2000)
       Guess.longest_lasting(poster).should == nil
@@ -226,8 +223,9 @@ describe Guess do
   end
 
   describe '.fastest' do
+    let(:guesser) { create :person }
+
     it "returns the guesser's guess made the fastest after the post" do
-      guesser = create :person
       photo1 = create :photo, dateadded: Time.utc(2002)
       create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2004)
       photo2 = create :photo, dateadded: Time.utc(2000)
@@ -239,11 +237,10 @@ describe Guess do
 
     it "ignores other players' guesses" do
       create :guess
-      Guess.fastest(create :person).should be_nil
+      Guess.fastest(guesser).should be_nil
     end
 
     it "considers other players' guesses when calculating place" do
-      guesser = create :person
       photo1 = create :photo, dateadded: Time.utc(2002)
       guess1 = create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2004)
       photo2 = create :photo, dateadded: Time.utc(2000)
@@ -254,7 +251,6 @@ describe Guess do
     end
 
     it "ignores a guess that precedes its post" do
-      guesser = create :person
       photo1 = create :photo, dateadded: Time.utc(2001)
       create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
       Guess.fastest(guesser).should == nil
@@ -263,8 +259,9 @@ describe Guess do
   end
 
   describe '.shortest_lasting' do
+    let(:poster) { create :person }
+
     it "returns the guess of the poster's photo which was made the soonest after the post" do
-      poster = create :person
       photo1 = create :photo, person: poster, dateadded: Time.utc(2002)
       create :guess, photo: photo1, commented_at: Time.utc(2004)
       photo2 = create :photo, person: poster, dateadded: Time.utc(2000)
@@ -275,12 +272,12 @@ describe Guess do
     end
 
     it "ignores guesses of other players' posts" do
+      create :photo, person: poster
       create :guess
-      Guess.shortest_lasting(create(:photo).person).should be_nil
+      Guess.shortest_lasting(poster).should be_nil
     end
 
     it "considers other posters when calculating place" do
-      poster = create :person
       photo1 = create :photo, person: poster, dateadded: Time.utc(2002)
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2004)
       photo2 = create :photo, dateadded: Time.utc(2000)
@@ -291,7 +288,6 @@ describe Guess do
     end
 
     it 'ignores a guess that precedes its post' do
-      poster = create :person
       photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
       create :guess, photo: photo1, commented_at: Time.utc(2000)
       Guess.shortest_lasting(poster).should == nil
