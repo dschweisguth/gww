@@ -9,8 +9,6 @@ Debt
 
 Spring?
 Measure Javascript coverage
-Extract methods from update_all_from_flickr
-Display count of Flickr API calls made in ditto
 Extract facades from models
 Merge revelations into guesses?
 
