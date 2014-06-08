@@ -1,5 +1,5 @@
 class Guess < ActiveRecord::Base
-  include Answer, GuessPeopleSupport
+  include Answer, GuessPeopleSupport, GuessWheresiesSupport
 
   belongs_to :photo, inverse_of: :guesses
   belongs_to :person, inverse_of: :guesses
@@ -35,18 +35,6 @@ class Guess < ActiveRecord::Base
 
   def self.shortest
     where(GUESS_AGE_IS_VALID).references(:photos).order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
-  end
-
-  def self.longest_in year
-   where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-      Time.local(year).getutc, Time.local(year + 1).getutc)
-      .order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person }).references :photos
-  end
-
-  def self.shortest_in year
-    where("#{GUESS_AGE_IS_VALID} and ? < guesses.commented_at and guesses.commented_at < ?",
-      Time.local(year).getutc, Time.local(year + 1).getutc)
-      .order(GUESS_AGE).limit(10).includes(:person, { photo: :person }).references :photos
   end
 
   def self.all_between(from, to)
