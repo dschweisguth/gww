@@ -6,9 +6,6 @@ class Guess < ActiveRecord::Base
   validates_uniqueness_of :person_id, scope: %w(photo_id comment_text)
   validates_presence_of :comment_text, :commented_at, :added_at
 
-  # Not persisted, used in views
-  attr_accessor :place
-
   after_destroy do
     person.destroy_if_has_no_dependents
   end
@@ -40,10 +37,6 @@ class Guess < ActiveRecord::Base
   def self.all_between(from, to)
     where("? < added_at and added_at <= ?", from.getutc, to.getutc)
       .order(:commented_at).includes(:person, { photo: :person })
-  end
-
-  def self.find_with_associations(person)
-    where(person_id: person).includes(photo: :person)
   end
 
   def years_old

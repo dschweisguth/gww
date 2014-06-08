@@ -1,9 +1,18 @@
 module GuessPeopleSupport
   extend ActiveSupport::Concern
 
+  included do
+    # Not persisted, used in views
+    attr_accessor :place
+  end
+
   module ClassMethods
-    G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'
-    G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
+
+    def mapped_count(person_id)
+      where(person_id: person_id)
+        .joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null')
+        .count
+    end
 
     def first_by(guesser)
       includes(photo: :person).where(person_id: guesser).order(:commented_at).first
@@ -12,6 +21,9 @@ module GuessPeopleSupport
     def most_recent_by(guesser)
       includes(photo: :person).where(person_id: guesser).order(:commented_at).last
     end
+
+    G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'
+    G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
     def oldest(guesser)
       first_guess_with_place guesser, 'guesses.person_id = ?', 'desc',
@@ -47,12 +59,10 @@ module GuessPeopleSupport
       guess
     end
 
-    def mapped_count(person_id)
-      where(person_id: person_id)
-        .joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null')
-        .count
+    def find_with_associations(person)
+      where(person_id: person).includes(photo: :person)
     end
-  
+
   end
 
 end
