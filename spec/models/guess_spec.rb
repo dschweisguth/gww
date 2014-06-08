@@ -44,25 +44,25 @@ describe Guess do
 
     it "destroys the guess and its person" do
       guess.destroy
-      Guess.any?.should be_false
-      Person.exists?(person.id).should be_false
-      Photo.exists?(guess.photo.id).should be_true
+      Guess.any?.should be_falsy
+      Person.exists?(person.id).should be_falsy
+      Photo.exists?(guess.photo.id).should be_truthy
     end
 
     it "leaves the person alone if they have another guess" do
       create :guess, person: person
       guess.destroy
-      Guess.exists?(guess.id).should be_false
-      Person.exists?(person.id).should be_true
-      Photo.exists?(guess.photo.id).should be_true
+      Guess.exists?(guess.id).should be_falsy
+      Person.exists?(person.id).should be_truthy
+      Photo.exists?(guess.photo.id).should be_truthy
     end
 
     it "leaves the person alone if they have a photo" do
       create :photo, person: person
       guess.destroy
-      Guess.any?.should be_false
-      Person.exists?(person.id).should be_true
-      Photo.exists?(guess.photo.id).should be_true
+      Guess.any?.should be_falsy
+      Person.exists?(person.id).should be_truthy
+      Photo.exists?(guess.photo.id).should be_truthy
     end
 
   end
@@ -72,7 +72,7 @@ describe Guess do
 
     it 'destroys all guesses of the photo with the given id' do
       Guess.destroy_all_by_photo_id guess.photo.id
-      Guess.any?.should be_false
+      Guess.any?.should be_falsy
     end
 
     it "ignores other photos' guesses" do

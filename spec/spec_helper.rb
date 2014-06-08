@@ -30,6 +30,8 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
 
+  config.infer_spec_type_from_file_location!
+
   # shoulda-matchers should include itself, but the following include is
   # necessary for rake spec to pass.
   config.include Shoulda::Matchers::ActionController

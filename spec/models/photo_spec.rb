@@ -66,48 +66,48 @@ describe Photo do
 
     it "destroys the photo and its person" do
       photo.destroy
-      Photo.any?.should be_false
-      Person.any?.should be_false
+      Photo.any?.should be_falsy
+      Person.any?.should be_falsy
     end
 
     it "leaves the person alone if they have another photo" do
       person = photo.person
       create :photo, person: person
       photo.destroy
-      Photo.exists?(photo.id).should be_false
-      Person.exists?(person.id).should be_true
+      Photo.exists?(photo.id).should be_falsy
+      Person.exists?(person.id).should be_truthy
     end
 
     it "leaves the person alone if they have a guess" do
       person = photo.person
       create :guess, person: person
       photo.destroy
-      Photo.exists?(photo.id).should be_false
-      Person.exists?(person.id).should be_true
+      Photo.exists?(photo.id).should be_falsy
+      Person.exists?(person.id).should be_truthy
     end
 
     it "destroys the photo's tags" do
       create :tag, photo: photo
       photo.destroy
-      Tag.any?.should be_false
+      Tag.any?.should be_falsy
     end
 
     it "destroys the photo's comments" do
       create :comment, photo: photo
       photo.destroy
-      Comment.any?.should be_false
+      Comment.any?.should be_falsy
     end
 
     it "destroys the photo's revelation" do
       create :revelation, photo: photo
       photo.destroy
-      Revelation.any?.should be_false
+      Revelation.any?.should be_falsy
     end
 
     it "destroys the photo's guesses" do
       create :guess, photo: photo
       photo.destroy
-      Guess.any?.should be_false
+      Guess.any?.should be_falsy
     end
 
   end
@@ -413,56 +413,56 @@ describe Photo do
       it "returns true if a #{game_status} photo is tagged unfoundinSF" do
         photo = create :photo, game_status: game_status
         create :tag, photo: photo, raw: 'unfoundinSF'
-        photo.has_obsolete_tags?.should be_true
+        photo.has_obsolete_tags?.should be_truthy
       end
     end
 
     it "is case-insensitive" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'UNFOUNDINSF'
-      photo.has_obsolete_tags?.should be_true
+      photo.has_obsolete_tags?.should be_truthy
     end
 
     %w(unfound unconfirmed).each do |game_status|
       it "returns false if a #{game_status} photo is tagged unfoundinSF" do
         photo = create :photo, game_status: game_status
         create :tag, photo: photo, raw: 'unfoundinSF'
-        photo.has_obsolete_tags?.should be_false
+        photo.has_obsolete_tags?.should be_falsy
       end
     end
 
     it "returns false if a found photo is tagged something else" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'unseeninSF'
-      photo.has_obsolete_tags?.should be_false
+      photo.has_obsolete_tags?.should be_falsy
     end
 
     it "returns false if a found photo is tagged both unfoundinSF and foundinSF" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'foundinSF'
-      photo.has_obsolete_tags?.should be_false
+      photo.has_obsolete_tags?.should be_falsy
     end
 
     it "returns true if a found photo is tagged both unfoundinSF and revealedinSF" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'revealedinSF'
-      photo.has_obsolete_tags?.should be_true
+      photo.has_obsolete_tags?.should be_truthy
     end
 
     it "returns false if a revealed photo is tagged both unfoundinSF and foundinSF" do
       photo = create :photo, game_status: 'revealed'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'foundinSF'
-      photo.has_obsolete_tags?.should be_false
+      photo.has_obsolete_tags?.should be_falsy
     end
 
     it "returns false if a revealed photo is tagged both unfoundinSF and revealedinSF" do
       photo = create :photo, game_status: 'revealed'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'revealedinSF'
-      photo.has_obsolete_tags?.should be_false
+      photo.has_obsolete_tags?.should be_falsy
     end
 
   end
@@ -1479,7 +1479,7 @@ describe Photo do
         it "returns true if the photo is #{game_status} and has a #{raw} tag" do
           photo = create :photo, game_status: game_status
           create :tag, photo: photo, raw: raw
-          photo.ready_to_score?.should be_true
+          photo.ready_to_score?.should be_truthy
         end
       end
     end
@@ -1487,19 +1487,19 @@ describe Photo do
     it "ignores tag case" do
       photo = create :photo, game_status: 'unfound'
       create :tag, photo: photo, raw: 'FOUNDINSF'
-      photo.ready_to_score?.should be_true
+      photo.ready_to_score?.should be_truthy
     end
 
     it "returns false if the photo is neither unfound nor unconfirmed" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'foundinSF'
-      photo.ready_to_score?.should be_false
+      photo.ready_to_score?.should be_falsy
     end
 
     it "returns false if the photo does not have a foundinSF or revealedinSF tag" do
       photo = create :photo, game_status: 'unfound'
       create :tag, photo: photo, raw: 'unfoundinSF'
-      photo.ready_to_score?.should be_false
+      photo.ready_to_score?.should be_falsy
     end
 
   end
@@ -1610,7 +1610,7 @@ describe Photo do
       it 'deletes an existing guess' do
         create :guess, photo: photo
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
-        Guess.any?.should be_false
+        Guess.any?.should be_falsy
       end
 
     end
@@ -1657,8 +1657,8 @@ describe Photo do
 
         guesses = photo.reload.guesses
         guesses.length.should == 2
-        guesses.all? { |guess| guess.photo == photo }.should be_true
-        guesses.all? { |guess| guess.person == old_guess.person }.should be_true
+        guesses.all? { |guess| guess.photo == photo }.should be_truthy
+        guesses.all? { |guess| guess.person == old_guess.person }.should be_truthy
         guesses.map(&:comment_text).should =~ [old_guess.comment_text, 'new comment text']
 
       end
@@ -1668,7 +1668,7 @@ describe Photo do
         guesser = create :person
         stub_person_request
         Photo.add_entered_answer photo.id, guesser.username, 'comment text'
-        Revelation.any?.should be_false
+        Revelation.any?.should be_falsy
       end
 
       it "blows up if an unknown username is specified" do

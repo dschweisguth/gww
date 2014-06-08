@@ -48,24 +48,24 @@ Then /^I should see search results for (\d+) photos?$/ do |photo_count|
 end
 
 Then /^I should see the photo's title$/ do
-  page.all('h2').any? { |h2| h2.has_content?(@photo.title) }.should be_true
+  page.all('h2').any? { |h2| h2.has_content?(@photo.title) }.should be_truthy
 end
 
 Then /^I should see the photo's description$/ do
-  page.all('p').any? { |p| p.has_content?(@photo.description) }.should be_true
+  page.all('p').any? { |p| p.has_content?(@photo.description) }.should be_truthy
 end
 
 Then /^I should see the photo's title with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   page.should have_content(@photo.title)
   [term1, term2].each do |term|
-    page.all('h2').any? { |h2| h2.has_css?('span[class=matched]', text: term) }.should be_true
+    page.all('h2').any? { |h2| h2.has_css?('span[class=matched]', text: term) }.should be_truthy
   end
 end
 
 Then /^I should see the photo's description with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   step "I should see the photo's description"
   [term1, term2].each do |term|
-    page.all('p').any? { |p| p.has_css?('span[class=matched]', text: term) }.should be_true
+    page.all('p').any? { |p| p.has_css?('span[class=matched]', text: term) }.should be_truthy
   end
 end
 
@@ -76,7 +76,7 @@ end
 Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   step "I should see the tag"
   [term1, term2].each do |term|
-    page.all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_true
+    page.all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_truthy
   end
 end
 
@@ -99,5 +99,5 @@ end
 
 
 Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
-  page.all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_true
+  page.all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_truthy
 end

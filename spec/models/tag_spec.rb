@@ -46,19 +46,19 @@ describe Tag do
       it "returns true if the photo is found" do
         photo = build :photo, game_status: 'found'
         tag = build :tag, photo: photo, raw: 'foundinSF'
-        tag.correct?.should be_true
+        tag.correct?.should be_truthy
       end
 
       it "returns false if the photo is not found" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'foundinSF'
-        tag.correct?.should be_false
+        tag.correct?.should be_falsy
       end
 
       it "is case-insensitive" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'FOUNDINSF'
-        tag.correct?.should be_false
+        tag.correct?.should be_falsy
       end
 
     end
@@ -68,7 +68,7 @@ describe Tag do
         it "returns true if the photo is #{game_status}" do
           photo = build :photo, game_status: game_status
           tag = build :tag, photo: photo, raw: 'unfoundinSF'
-          tag.correct?.should be_true
+          tag.correct?.should be_truthy
         end
       end
 
@@ -76,14 +76,14 @@ describe Tag do
         it "returns false if the photo is #{game_status}" do
           photo = build :photo, game_status: game_status
           tag = build :tag, photo: photo, raw: 'unfoundinSF'
-          tag.correct?.should be_false
+          tag.correct?.should be_falsy
         end
       end
 
       it "is case-insensitive" do
         photo = build :photo, game_status: 'found'
         tag = build :tag, photo: photo, raw: 'UNFOUNDINSF'
-        tag.correct?.should be_false
+        tag.correct?.should be_falsy
       end
 
     end
@@ -92,19 +92,19 @@ describe Tag do
       it "returns true if the photo is revealed" do
         photo = build :photo, game_status: 'revealed'
         tag = build :tag, photo: photo, raw: 'revealedinSF'
-        tag.correct?.should be_true
+        tag.correct?.should be_truthy
       end
 
       it "returns false if the photo is not revealed" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'revealedinSF'
-        tag.correct?.should be_false
+        tag.correct?.should be_falsy
       end
 
       it "is case-insensitive" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'REVEALEDINSF'
-        tag.correct?.should be_false
+        tag.correct?.should be_falsy
       end
 
     end

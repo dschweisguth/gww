@@ -88,7 +88,7 @@ describe Comment do
           username: photo.person.username, commented_at: Time.utc(2011)
         create :guess, photo: photo
         Comment.add_selected_answer comment.id, ''
-        Guess.any?.should be_false
+        Guess.any?.should be_falsy
       end
 
     end
@@ -166,8 +166,8 @@ describe Comment do
 
         guesses = old_guess.photo.reload.guesses
         guesses.length.should == 2
-        guesses.all? { |guess| guess.photo == old_guess.photo }.should be_true
-        guesses.all? { |guess| guess.person == old_guess.person }.should be_true
+        guesses.all? { |guess| guess.photo == old_guess.photo }.should be_truthy
+        guesses.all? { |guess| guess.person == old_guess.person }.should be_truthy
         guesses.map(&:comment_text).should =~ [old_guess.comment_text, comment.comment_text]
 
       end
@@ -179,7 +179,7 @@ describe Comment do
         create :revelation, photo: comment.photo
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        Revelation.any?.should be_false
+        Revelation.any?.should be_falsy
       end
 
       it "blows up if an unknown username is specified" do
@@ -298,18 +298,18 @@ describe Comment do
     it "returns true if the comment was made by the photo's poster" do
       photo = create :photo
       comment = create :comment, photo: photo, flickrid: photo.person.flickrid
-      comment.is_by_poster.should be_true
+      comment.is_by_poster.should be_truthy
     end
 
     it "returns false if the comment was not made by the photo's poster" do
-      create(:comment).is_by_poster.should be_false
+      create(:comment).is_by_poster.should be_falsy
     end
 
   end
 
   describe '#is_accepted_answer' do
     it "returns false if this comment has no revelations or guesses" do
-      create(:comment).is_accepted_answer.should be_false
+      create(:comment).is_accepted_answer.should be_falsy
     end
 
     context "when photo is revealed" do
@@ -318,18 +318,18 @@ describe Comment do
 
       it "returns true if a revelation was created from this comment" do
         create :revelation, photo: photo, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_true
+        comment.is_accepted_answer.should be_truthy
       end
 
       it "returns false if the revelation is of another photo" do
         other_photo = create :photo, person: photo.person
         create :revelation, photo: other_photo, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_false
+        comment.is_accepted_answer.should be_falsy
       end
 
       it "returns false if the text doesn't match" do
         create :revelation, photo: photo, comment_text: "something else"
-        comment.is_accepted_answer.should be_false
+        comment.is_accepted_answer.should be_falsy
       end
 
     end
@@ -340,23 +340,23 @@ describe Comment do
 
       it "returns true if a guess was created from this comment" do
         create :guess, photo: comment.photo, person: person, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_true
+        comment.is_accepted_answer.should be_truthy
       end
 
       it "returns false if the guess is of another photo" do
         other_photo = create :photo, person: person
         create :guess, photo: other_photo, person: person, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_false
+        comment.is_accepted_answer.should be_falsy
       end
 
       it "returns false if the text doesn't match" do
         create :guess, photo: comment.photo, person: person, comment_text: "something else"
-        comment.is_accepted_answer.should be_false
+        comment.is_accepted_answer.should be_falsy
       end
 
       it "returns false if the guess is by another person" do
         create :guess, photo: comment.photo, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_false
+        comment.is_accepted_answer.should be_falsy
       end
 
     end

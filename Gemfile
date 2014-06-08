@@ -25,7 +25,7 @@ group :test do
   gem 'rr', '1.1.2', require: false
   gem 'shoulda-matchers', '2.6.1'
   gem 'simplecov', '0.7.1', require: false
-  gem 'rspec-rails', '2.14.2'
+  gem 'rspec-rails', '2.99.0'
 end
 
 group :production do

@@ -119,7 +119,7 @@ Then /^the player "([^"]*)" should be first on the longest-lasting list with a p
   tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
   tds_in_first_row[2].text.should == username
   # Allow both "3 years" and "3 years, 1 second" to pass in case the test runs slowly
-  tds_in_first_row.last.text.start_with?("#{years} year#{if years.to_i != 1 then 's' end}").should be_true
+  tds_in_first_row.last.text.start_with?("#{years} year#{if years.to_i != 1 then 's' end}").should be_truthy
 end
 
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
