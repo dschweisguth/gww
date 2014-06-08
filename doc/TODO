@@ -7,9 +7,11 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
-Spring?
-Measure Javascript coverage
+Run rspec with warnings and address them
+After RubyMine is updated to be compatible with RSpec 3, upgrade
 Extract facades from models
+Spring
+Measure Javascript coverage
 Merge revelations into guesses?
 
 Features
