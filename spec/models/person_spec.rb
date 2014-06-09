@@ -16,6 +16,28 @@ describe Person do
 
   end
 
+  describe '#destroy_if_has_no_dependents' do
+    let(:person) { create :person }
+
+    it 'destroys the person' do
+      person.destroy_if_has_no_dependents
+      Person.count.should == 0
+    end
+
+    it 'but not if they have a photo' do
+      create :photo, person: person
+      person.destroy_if_has_no_dependents
+      Person.all.should == [ person ]
+    end
+
+    it 'but not if they have a guess' do
+      create :guess, person: person
+      person.destroy_if_has_no_dependents
+      Person.find(person.id).should == person
+    end
+
+  end
+
   describe '.find_by_multiple_fields' do
     let(:person) { create :person }
 
@@ -107,28 +129,6 @@ describe Person do
       expected[2][12].scores[1] = [ guess.person ]
       expected[3][1].scores[1] = [ guess.person ]
       Person.top_guessers(report_time).should == expected
-    end
-
-  end
-
-  describe '#destroy_if_has_no_dependents' do
-    let(:person) { create :person }
-
-    it 'destroys the person' do
-      person.destroy_if_has_no_dependents
-      Person.count.should == 0
-    end
-
-    it 'but not if they have a photo' do
-      create :photo, person: person
-      person.destroy_if_has_no_dependents
-      Person.all.should == [ person ]
-    end
-
-    it 'but not if they have a guess' do
-      create :guess, person: person
-      person.destroy_if_has_no_dependents
-      Person.find(person.id).should == person
     end
 
   end
