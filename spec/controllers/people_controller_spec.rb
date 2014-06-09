@@ -163,7 +163,7 @@ describe PeopleController do
       stub(Photo).where(person_id: @person).stub!.includes { [] }
       stub(Photo).where(is_a(String), @person) { [] }
       stub(Photo).where(person_id: @person, game_status: 'revealed') { [] }
-      stub(@person).favorite_posters_of { [] }
+      stub(@person).favoring_guessers { [] }
 
       get :show, id: @person.id
 
@@ -355,9 +355,9 @@ describe PeopleController do
 
       stub(Photo).where(person_id: @person, game_status: 'revealed') { [ build(:photo, id: 28) ] }
 
-      @favorite_poster_of = build :person, id: 4
-      @favorite_poster_of.bias = 3.6
-      stub(@person).favorite_posters_of { [ @favorite_poster_of ] }
+      @favoring_guesser = build :person, id: 4
+      @favoring_guesser.bias = 3.6
+      stub(@person).favoring_guessers { [ @favoring_guesser ] }
 
     end
 
@@ -377,7 +377,7 @@ describe PeopleController do
       response.body.should have_css 'h2', text: "#{@person.username} has posted 2 photos"
       response.body.should include '1 remains unfound'
       response.body.should include '1 was revealed'
-      response.body.should have_link @favorite_poster_of.username
+      response.body.should have_link @favoring_guesser.username
     end
 
   end

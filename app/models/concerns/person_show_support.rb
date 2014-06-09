@@ -63,8 +63,8 @@ module PersonShowSupport
     favorite_posters
   end
 
-  def favorite_posters_of
-    favorite_posters_of = Person.find_by_sql [
+  def favoring_guessers
+    favoring_guessers = Person.find_by_sql [
       %Q[
         select guessers.*,
           count(*) / (select count(*) from photos where person_id = ?) /
@@ -81,8 +81,8 @@ module PersonShowSupport
       ],
       id, id
     ]
-    favorite_posters_of.each { |fp| fp.bias = fp[:bias] }
-    favorite_posters_of
+    favoring_guessers.each { |fp| fp.bias = fp[:bias] }
+    favoring_guessers
   end
 
 end

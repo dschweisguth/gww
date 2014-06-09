@@ -61,24 +61,24 @@ describe PersonShowSupport do
 
   end
 
-  describe '#favorite_posters_of' do
+  describe '#favoring_guessers' do
     it "lists the guessers who have guessed this person #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as those guessers have guessed all posts" do
       devoted_guesser, poster = make_potential_favorite_poster(10, 15)
-      favorite_posters_of = poster.favorite_posters_of
-      favorite_posters_of.should == [ devoted_guesser ]
-      favorite_posters_of[0].bias.should == Person::MIN_BIAS_FOR_FAVORITE
+      favoring_guessers = poster.favoring_guessers
+      favoring_guessers.should == [ devoted_guesser ]
+      favoring_guessers[0].bias.should == Person::MIN_BIAS_FOR_FAVORITE
     end
 
     it "ignores a guesser who has guessed this person less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as that guesser has guessed all posts" do
       #noinspection RubyUnusedLocalVariable
       devoted_guesser, poster = make_potential_favorite_poster(10, 14)
-      poster.favorite_posters_of.should == []
+      poster.favoring_guessers.should == []
     end
 
     it "ignores a guesser who has guessed this person less than #{Person::MIN_GUESSES_FOR_FAVORITE} times" do
       #noinspection RubyUnusedLocalVariable
       devoted_guesser, poster = make_potential_favorite_poster(9, 15)
-      poster.favorite_posters_of.should == []
+      poster.favoring_guessers.should == []
     end
 
   end
