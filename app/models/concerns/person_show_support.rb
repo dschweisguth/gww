@@ -1,43 +1,40 @@
 module PersonShowSupport
   extend ActiveSupport::Concern
 
-  module ClassMethods
-    def standing(person)
-      place = 1
-      tied = false
-      scores_by_person = Guess.group(:person_id).count
-      people_by_score = scores_by_person.keys.group_by { |person_id| scores_by_person[person_id] }
-      scores = people_by_score.keys.sort { |a, b| b <=> a }
-      scores.each do |score|
-        people_with_score = people_by_score[score]
-        if people_with_score.include? person.id
-          tied = people_with_score.length > 1
-          break
-        else
-          place += people_with_score.length
-        end
+  def standing
+    place = 1
+    tied = false
+    scores_by_person = Guess.group(:person_id).count
+    people_by_score = scores_by_person.keys.group_by { |person_id| scores_by_person[person_id] }
+    scores = people_by_score.keys.sort { |a, b| b <=> a }
+    scores.each do |score|
+      people_with_score = people_by_score[score]
+      if people_with_score.include? id
+        tied = people_with_score.length > 1
+        break
+      else
+        place += people_with_score.length
       end
-      return place, tied
     end
+    return place, tied
+  end
 
-    def posts_standing(person)
-      place = 1
-      tied = false
-      posts_by_person = Photo.group(:person_id).count
-      people_by_post_count = posts_by_person.keys.group_by { |person_id| posts_by_person[person_id] }
-      post_counts = people_by_post_count.keys.sort { |a, b| b <=> a }
-      post_counts.each do |post_count|
-        people_with_post_count = people_by_post_count[post_count]
-        if people_with_post_count.include? person.id
-          tied = people_with_post_count.length > 1
-          break
-        else
-          place += people_with_post_count.length
-        end
+  def posts_standing
+    place = 1
+    tied = false
+    posts_by_person = Photo.group(:person_id).count
+    people_by_post_count = posts_by_person.keys.group_by { |person_id| posts_by_person[person_id] }
+    post_counts = people_by_post_count.keys.sort { |a, b| b <=> a }
+    post_counts.each do |post_count|
+      people_with_post_count = people_by_post_count[post_count]
+      if people_with_post_count.include? id
+        tied = people_with_post_count.length > 1
+        break
+      else
+        place += people_with_post_count.length
       end
-      return place, tied
     end
-
+    return place, tied
   end
 
   def favorite_posters

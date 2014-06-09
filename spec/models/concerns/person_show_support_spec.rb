@@ -3,18 +3,18 @@ describe PersonShowSupport do
     let(:person) { create :person }
 
     it "returns the person's score position" do
-      Person.standing(person).should == [ 1, false ]
+      person.standing.should == [ 1, false ]
     end
 
     it "considers other players' scores" do
       create :guess
-      Person.standing(person).should == [ 2, false ]
+      person.standing.should == [ 2, false ]
     end
 
     it "detects ties" do
       create :guess, person: person
       create :guess
-      Person.standing(person).should == [ 1, true ]
+      person.standing.should == [ 1, true ]
     end
 
   end
@@ -23,18 +23,18 @@ describe PersonShowSupport do
     let(:person) { create :person }
 
     it "returns the person's post position" do
-      Person.posts_standing(person).should == [ 1, false ]
+      person.posts_standing.should == [ 1, false ]
     end
 
     it "considers other players' posts" do
       create :photo
-      Person.posts_standing(person).should == [ 2, false ]
+      person.posts_standing.should == [ 2, false ]
     end
 
     it "detects ties" do
       create :photo, person: person
       create :photo
-      Person.posts_standing(person).should == [ 1, true ]
+      person.posts_standing.should == [ 1, true ]
     end
 
   end

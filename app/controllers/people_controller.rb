@@ -38,8 +38,8 @@ class PeopleController < ApplicationController
 
     @mapped_post_and_guess_count = Photo.mapped_count(@person.id) + Guess.mapped_count(@person.id)
 
-    @place, @tied = Person.standing @person
-    @posts_place, @posts_tied = Person.posts_standing @person
+    @place, @tied = @person.standing
+    @posts_place, @posts_tied = @person.posts_standing
 
     now = Time.now
     weekly_high_scorers = Person.high_scorers now, 7
