@@ -1,16 +1,16 @@
 <h2><%= @person.username %> has posted <%= pluralize @posts.length, 'photo' %></h2>
 
-<% if ! @favorite_posters_of.empty? %>
+<% if @favorite_posters_of.any? %>
 <p><%= @person.username %>'s <%= link_to (@favorite_posters_of.length == 1 ? 'nemesis' : 'nemeses'), nemeses_people_path, class: 'normal' %> <%= singularize 'are', @favorite_posters_of.length %> <%= -%>
 <% @favorite_posters_of.each_with_index do |favorite_poster_of, i| %>
 <% if 0 < i && i < @favorite_posters_of.length - 1 %>, <% elsif 0 < i %> and <% end %><%= link_to_person favorite_poster_of %> (<%= '%.1f' % favorite_poster_of.bias %>)<%= -%>
 <% end %></p>
 <% end %>
 
-<% if ! @posts.empty? %>
+<% if @posts.any? %>
 Of the photos that <%= @person.username %> has posted,<br/><br/>
 <% end %>
-<% if ! @unfound_photos.empty? %>
+<% if @unfound_photos.any? %>
 <%= @unfound_photos.length %> <%= singularize 'remain', @unfound_photos.length %> unfound<% if @unfound_photos.any? { |p| p.game_status == 'unconfirmed' } %> or <span class="unconfirmed">unconfirmed</span><% end %>:
 <span class="photo-links">
 <%   @unfound_photos.each_with_index do |photo, i| %>
@@ -19,7 +19,7 @@ Of the photos that <%= @person.username %> has posted,<br/><br/>
 </span><br/><br/>
 <% end %>
 
-<% if ! @revealed_photos.empty? %>
+<% if @revealed_photos.any? %>
 <%= @revealed_photos.length %> <%= singularize 'were', @revealed_photos.length %> revealed:
 <span class="photo-links">
 <%   @revealed_photos.each_with_index do |photo, i| %>
