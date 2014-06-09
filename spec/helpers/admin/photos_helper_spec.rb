@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::PhotosHelper do
   describe '#wrap_if' do
     it "wraps if the condition is true" do

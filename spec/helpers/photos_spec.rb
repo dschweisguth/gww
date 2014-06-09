@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Photos do
 
   describe '#url_for_flickr_photo' do

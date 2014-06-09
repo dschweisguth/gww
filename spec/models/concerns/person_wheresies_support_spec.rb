@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Person do
   describe '.most_points_in' do
     it 'returns a list of scorers with their scores' do

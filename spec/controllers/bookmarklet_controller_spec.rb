@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BookmarkletController do
   render_views
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PageCache do
   describe '#clear' do
     CACHE_DIR = Rails.root.to_s + "/public/cache"

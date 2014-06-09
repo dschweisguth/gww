@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::PhotosController do
   render_views
 

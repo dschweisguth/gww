@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PeopleController do
 
   describe 'autocomplete_usernames' do

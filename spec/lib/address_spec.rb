@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Address do
   describe '.new' do
 

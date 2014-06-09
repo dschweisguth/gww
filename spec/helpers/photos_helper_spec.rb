@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PhotosHelper do
 
   describe '#other_photos_path' do

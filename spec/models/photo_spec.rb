@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Photo do
   describe '#flickrid' do
     it { should validate_presence_of :flickrid }

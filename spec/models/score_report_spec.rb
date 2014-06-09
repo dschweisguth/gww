@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ScoreReport do
 
   describe '.guess_counts' do

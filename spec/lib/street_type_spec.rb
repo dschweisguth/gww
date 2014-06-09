@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe StreetType do
   describe '.get' do
     it "finds the type with the given name" do

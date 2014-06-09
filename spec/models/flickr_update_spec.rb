@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FlickrUpdate do
 
   describe '#member_count' do

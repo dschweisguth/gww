@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe RootController do
 
   describe 'root' do

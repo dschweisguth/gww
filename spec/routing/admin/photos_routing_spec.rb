@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::PhotosController do
 
   %w{ unfound inaccessible multipoint }.each do |action|

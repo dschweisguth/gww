@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GuessScoreReportsSupport do
   describe '.all_between' do
     it 'returns all guesses between the given dates' do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Revelation do
 
   describe '#comment_text' do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GuessesController do
 
   describe 'longest_and_shortest' do

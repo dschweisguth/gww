@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe '#have_attributes' do
   let(:person) { build :person }
 

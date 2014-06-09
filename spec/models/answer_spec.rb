@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Answer do
   include Answer
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Stcline do
   before :all do
     clear_stclines

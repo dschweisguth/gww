@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GuessWheresiesSupport do
   describe '.longest_in' do
     it 'lists guesses made in the given year sorted by time between post and guess, descending' do

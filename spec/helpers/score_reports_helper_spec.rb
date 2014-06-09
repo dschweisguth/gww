@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ScoreReportsHelper do
 
   describe '#escape_username' do

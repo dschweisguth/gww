@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Precalculator do
   describe '#calculate_statistics_and_maps' do
     it "does some work" do

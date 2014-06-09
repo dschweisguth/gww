@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Guess do
   describe '#person_id' do
     it "is unique for a given photo and comment text" do

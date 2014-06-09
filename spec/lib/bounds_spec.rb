@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Bounds do
   describe '#as_json' do
     it "jsonifies as you'd expect" do

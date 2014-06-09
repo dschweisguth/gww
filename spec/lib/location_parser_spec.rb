@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe LocationParser do
 
   it "finds no locations in the empty string" do

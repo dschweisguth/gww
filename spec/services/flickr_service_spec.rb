@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FlickrService do
   let(:service) { FlickrService.new }
 

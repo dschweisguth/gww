@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GWW::Matchers::Routing do
   include GWW::Matchers::Routing
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MultiPhotoMapSupport do
   class TestMultiPhotoMapSupporter
     include MultiPhotoMapSupport

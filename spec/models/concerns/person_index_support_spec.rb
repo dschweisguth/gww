@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PersonIndexSupport do
   describe '.all_sorted' do
     before do

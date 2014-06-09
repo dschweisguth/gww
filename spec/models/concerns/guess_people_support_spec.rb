@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GuessPeopleSupport do
   describe '.mapped_count' do
     it "counts the person's guesses of mapped photos" do

@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'controllers/score_reports_controller_spec_support'
 
 describe Admin::ScoreReportsController do

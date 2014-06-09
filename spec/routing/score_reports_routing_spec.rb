@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ScoreReportsController do
 
   describe '#index' do

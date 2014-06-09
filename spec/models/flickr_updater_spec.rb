@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FlickrUpdater, type: :model do
   describe '#update_everything' do
     it "does some work" do

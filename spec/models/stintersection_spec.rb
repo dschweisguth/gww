@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Stintersection do
 
   before :all do

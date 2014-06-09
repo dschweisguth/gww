@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe RootController do
   render_views
 

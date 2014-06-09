@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::RootController do
 
   describe 'index' do

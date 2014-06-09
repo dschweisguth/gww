@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PhotoWheresiesSupport do
   describe '.most_viewed_in_year' do
     it 'lists photos' do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Street do
   describe '.regexp' do
     it "accepts any whitespace in a multiword name" do

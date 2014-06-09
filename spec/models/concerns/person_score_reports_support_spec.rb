@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PersonScoreReportsSupport do
   describe '.all_before' do
     it "returns all people who posted before the given date" do

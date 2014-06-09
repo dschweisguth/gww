@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ActiveRecord::Base do
   describe '.only_one_exists' do
     it "returns the only instance of the object of the class that the method is called on" do

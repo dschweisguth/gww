@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PeopleHelper do
 
   describe '#other_people_path' do

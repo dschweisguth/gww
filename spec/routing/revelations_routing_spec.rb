@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe RevelationsController do
 
   describe 'longest' do

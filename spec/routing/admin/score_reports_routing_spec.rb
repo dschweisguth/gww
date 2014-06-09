@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::ScoreReportsController do
 
   describe '#index, #create' do
