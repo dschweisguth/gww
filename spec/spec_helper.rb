@@ -32,13 +32,6 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 
-  # shoulda-matchers should include itself, but the following include is
-  # necessary for rake spec to pass.
-  config.include Shoulda::Matchers::ActionController
-  # shoulda-matchers should include itself, but the following include is
-  # necessary for rake spec:rcov (but not rake spec!?!) to pass.
-  config.include Shoulda::Matchers::ActiveRecord, type: :model
-
   config.include GWW::Matchers::Model, type: :model
   config.include GWW::Matchers::Routing, type: :routing
   config.include Photos, type: :helper
