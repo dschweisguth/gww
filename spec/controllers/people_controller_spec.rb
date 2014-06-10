@@ -160,8 +160,8 @@ describe PeopleController do
       stub(Photo).most_commented(@person)
       stub(Photo).most_viewed(@person)
       stub(Photo).most_faved(@person)
-      stub(Photo).where(person_id: @person).stub!.includes.stub!.includes { [] }
-      stub(Photo).where(is_a(String), @person) { [] }
+      stub(Photo).where(person_id: @person).stub!.includes.stub!.includes { [] } # TODO Dave which one is this?
+      stub(@person).unfound_photos { [] }
       stub(Photo).where(person_id: @person, game_status: 'revealed').stub!.includes(:tags) { [] }
       stub(@person).favoring_guessers { [] }
 
@@ -351,7 +351,7 @@ describe PeopleController do
       found2.photo.guesses << found2
       stub(Photo).find_with_guesses(@person) { [ found1.photo, found2.photo ] }
 
-      stub(Photo).where(is_a(String), @person) { [ build(:photo, id: 27) ] }
+      stub(@person).unfound_photos { [ build(:photo, id: 27) ] }
 
       stub(Photo).where(person_id: @person, game_status: 'revealed').stub!.includes(:tags) { [ build(:photo, id: 28) ] }
 

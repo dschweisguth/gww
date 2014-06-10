@@ -82,4 +82,8 @@ module PersonShowSupport
     favoring_guessers
   end
 
+  def unfound_photos
+    Photo.where("person_id = ?", self).where(game_status: %w(unfound unconfirmed))
+  end
+
 end
