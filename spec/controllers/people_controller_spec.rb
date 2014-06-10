@@ -161,9 +161,9 @@ describe PeopleController do
       stub(Photo).most_viewed(@person)
       stub(Photo).most_faved(@person)
       stub(Photo).where(person_id: @person).stub!.includes.stub!.includes { [] } # TODO Dave which one is this?
-      stub(@person).unfound_photos { [] }
-      stub(Photo).where(person_id: @person, game_status: 'revealed').stub!.includes(:tags) { [] }
       stub(@person).favoring_guessers { [] }
+      stub(@person).unfound_photos { [] }
+      stub(@person).revealed_photos { [] }
 
       get :show, id: @person.id
 
@@ -190,7 +190,7 @@ describe PeopleController do
         stub_no_guesses
         stub_posts
         stub(Photo).find_with_guesses(@person) { [] }
-        stub(Photo).where(person_id: @person, game_status: 'revealed').stub!.includes(:tags) { [] }
+        stub(@person).revealed_photos { [] }
       end
 
       it "does not highlight a guessed post which is mapped and has no obsolete tags" do
@@ -258,7 +258,7 @@ describe PeopleController do
 
       def stub_revealed_post
         # noinspection RubyArgCount
-        stub(Photo).where(person_id: @person, game_status: 'revealed').stub!.includes(:tags) { [photo] }
+        stub(@person).revealed_photos { [photo] }
       end
 
     end
@@ -351,13 +351,13 @@ describe PeopleController do
       found2.photo.guesses << found2
       stub(Photo).find_with_guesses(@person) { [ found1.photo, found2.photo ] }
 
-      stub(@person).unfound_photos { [ build(:photo, id: 27) ] }
-
-      stub(Photo).where(person_id: @person, game_status: 'revealed').stub!.includes(:tags) { [ build(:photo, id: 28) ] }
-
       @favoring_guesser = build :person, id: 4
       @favoring_guesser.bias = 3.6
       stub(@person).favoring_guessers { [ @favoring_guesser ] }
+
+      stub(@person).unfound_photos { [ build(:photo, id: 27) ] }
+
+      stub(@person).revealed_photos { [ build(:photo, id: 28) ] }
 
     end
 
