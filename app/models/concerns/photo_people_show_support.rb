@@ -91,7 +91,7 @@ module PhotoPeopleShowSupport
     end
   
     def find_with_guesses(person)
-      where(person_id: person).includes(guesses: :person)
+      where(person_id: person).includes(guesses: :person).includes(:tags)
     end
 
   end
