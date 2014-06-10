@@ -103,13 +103,14 @@ describe PeopleController do
   end
 
   describe '#show' do
+    let(:person) { build :person, id: 1 }
+
     before do
-      @person = build :person, id: 1
-      @person.score = 1 # for the high_scorers methods
-      @person.post_count = 1 # for the top_posters methods
-      stub(Person).find(@person.id) { @person }
-      stub(@person).standing { [ 1, false ] }
-      stub(@person).posts_standing { [ 1, false ] }
+      person.score = 1 # for the high_scorers methods
+      person.post_count = 1 # for the top_posters methods
+      stub(Person).find(person.id) { person }
+      stub(person).standing { [ 1, false ] }
+      stub(person).posts_standing { [ 1, false ] }
 
       @now = Time.now
       stub(Time).now { @now }
@@ -119,10 +120,10 @@ describe PeopleController do
     it "renders the page" do
       stub_guesses
       stub_posts
-      get :show, id: @person.id
+      get :show, id: person.id
 
       response.should be_success
-      response.body.should have_css %Q(a[href="#{person_map_path(@person)}"]) # the link text is HTML-encoded
+      response.body.should have_css %Q(a[href="#{person_map_path(person)}"]) # the link text is HTML-encoded
       renders_bits_for_user_who_has_guessed
       renders_bits_for_user_who_has_posted
 
@@ -132,17 +133,17 @@ describe PeopleController do
       stub_no_guesses
       stub_posts
       
-      get :show, id: @person.id
+      get :show, id: person.id
 
       response.should be_success
-      response.body.should have_css %Q([href="#{person_map_path(@person)}"])
+      response.body.should have_css %Q([href="#{person_map_path(person)}"])
 
-      response.body.should include "#{@person.username} has never made a correct guess"
-      response.body.should_not include "#{@person.username} scored the most points in the last week"
-      response.body.should_not include "#{@person.username} scored the most points in the last month"
-      response.body.should include "#{@person.username} has correctly guessed 0 photos"
-      response.body.should_not include "Of the photos that #{@person.username} has guessed,"
-      response.body.should_not include "#{@person.username} is the nemesis of"
+      response.body.should include "#{person.username} has never made a correct guess"
+      response.body.should_not include "#{person.username} scored the most points in the last week"
+      response.body.should_not include "#{person.username} scored the most points in the last month"
+      response.body.should include "#{person.username} has correctly guessed 0 photos"
+      response.body.should_not include "Of the photos that #{person.username} has guessed,"
+      response.body.should_not include "#{person.username} is the nemesis of"
 
       renders_bits_for_user_who_has_posted
 
@@ -154,32 +155,32 @@ describe PeopleController do
       stub(Photo).mapped_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
-      stub(Photo).first_by(@person)
-      stub(Photo).most_recent_by(@person)
-      stub(Photo).oldest_unfound(@person)
-      stub(Photo).most_commented(@person)
-      stub(Photo).most_viewed(@person)
-      stub(Photo).most_faved(@person)
-      stub(Photo).where(person_id: @person).stub!.includes.stub!.includes { [] } # TODO Dave which one is this?
-      stub(@person).favoring_guessers { [] }
-      stub(@person).unfound_photos { [] }
-      stub(@person).revealed_photos { [] }
+      stub(Photo).first_by(person)
+      stub(Photo).most_recent_by(person)
+      stub(Photo).oldest_unfound(person)
+      stub(Photo).most_commented(person)
+      stub(Photo).most_viewed(person)
+      stub(Photo).most_faved(person)
+      stub(Photo).where(person_id: person).stub!.includes.stub!.includes { [] } # TODO Dave which one is this?
+      stub(person).favoring_guessers { [] }
+      stub(person).unfound_photos { [] }
+      stub(person).revealed_photos { [] }
 
-      get :show, id: @person.id
+      get :show, id: person.id
 
       response.should be_success
-      response.body.should have_css %Q([href="#{person_map_path(@person)}"])
+      response.body.should have_css %Q([href="#{person_map_path(person)}"])
 
       renders_bits_for_user_who_has_guessed
 
-      response.body.should include "#{@person.username} has never posted a photo to the group"
-      response.body.should_not include "#{@person.username} posted the most photos in the last week"
-      response.body.should_not include "#{@person.username} posted the most photos in the last month"
-      response.body.should have_css 'h2', text: "#{@person.username} has posted 0 photos"
-      response.body.should_not include "Of the photos that #{@person.username} has posted"
+      response.body.should include "#{person.username} has never posted a photo to the group"
+      response.body.should_not include "#{person.username} posted the most photos in the last week"
+      response.body.should_not include "#{person.username} posted the most photos in the last month"
+      response.body.should have_css 'h2', text: "#{person.username} has posted 0 photos"
+      response.body.should_not include "Of the photos that #{person.username} has posted"
       response.body.should_not include 'remains unfound'
       response.body.should_not include 'was revealed'
-      response.body.should_not include "#{@person.username}'s nemesis is"
+      response.body.should_not include "#{person.username}'s nemesis is"
 
     end
 
@@ -189,14 +190,14 @@ describe PeopleController do
       before do
         stub_no_guesses
         stub_posts
-        stub(Photo).find_with_guesses(@person) { [] }
-        stub(@person).revealed_photos { [] }
+        stub(Photo).find_with_guesses(person) { [] }
+        stub(person).revealed_photos { [] }
       end
 
       it "does not highlight a guessed post which is mapped and has no obsolete tags" do
         stub_guessed_post
         stub(photo).mapped_or_automapped? { true }
-        get :show, id: @person.id
+        get :show, id: person.id
 
         top_node.should_not have_css('.photo-links a.unmapped')
         top_node.should_not have_css('.photo-links a.needs-attention')
@@ -206,7 +207,7 @@ describe PeopleController do
       it "does not highlight a revealed post which is mapped and has no obsolete tags" do
         stub_revealed_post
         stub(photo).mapped_or_automapped? { true }
-        get :show, id: @person.id
+        get :show, id: person.id
 
         top_node.should_not have_css('.photo-links a.unmapped')
         top_node.should_not have_css('.photo-links a.needs-attention')
@@ -216,7 +217,7 @@ describe PeopleController do
       it "highlights a guessed post which is not mapped" do
         stub_guessed_post
         stub(photo).mapped_or_automapped? { false }
-        get :show, id: @person.id
+        get :show, id: person.id
 
         top_node.should have_css('.photo-links a.unmapped')
 
@@ -225,7 +226,7 @@ describe PeopleController do
       it "highlights a revealed post which is not mapped" do
         stub_revealed_post
         stub(photo).mapped_or_automapped? { false }
-        get :show, id: @person.id
+        get :show, id: person.id
 
         top_node.should have_css('.photo-links a.unmapped')
 
@@ -234,7 +235,7 @@ describe PeopleController do
       it "highlights a guessed post with an obsolete tag" do
         stub_guessed_post
         stub(photo).has_obsolete_tags? { true }
-        get :show, id: @person.id
+        get :show, id: person.id
 
         top_node.should have_css('.photo-links a.needs-attention')
 
@@ -243,7 +244,7 @@ describe PeopleController do
       it "highlights a revealed post with an obsolete tag" do
         stub_revealed_post
         stub(photo).has_obsolete_tags? { true }
-        get :show, id: @person.id
+        get :show, id: person.id
 
         top_node.should have_css('.photo-links a.needs-attention')
 
@@ -253,12 +254,12 @@ describe PeopleController do
         found1 = build :guess, photo: photo, person: build(:person, id: 2)
         photo.guesses << found1
         # noinspection RubyArgCount
-        stub(Photo).find_with_guesses(@person) { [ photo ] }
+        stub(Photo).find_with_guesses(person) { [ photo ] }
       end
 
       def stub_revealed_post
         # noinspection RubyArgCount
-        stub(@person).revealed_photos { [photo] }
+        stub(person).revealed_photos { [photo] }
       end
 
     end
@@ -268,51 +269,51 @@ describe PeopleController do
       stub(Guess).mapped_count { 0 }
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
-      stub(Guess).first_by(@person)
-      stub(Guess).most_recent_by(@person)
-      stub(Guess).oldest(@person)
-      stub(Guess).fastest(@person)
-      stub(Guess).longest_lasting(@person)
-      stub(Guess).shortest_lasting(@person)
-      stub(@person).favorite_posters { [] }
+      stub(Guess).first_by(person)
+      stub(Guess).most_recent_by(person)
+      stub(Guess).oldest(person)
+      stub(Guess).fastest(person)
+      stub(Guess).longest_lasting(person)
+      stub(Guess).shortest_lasting(person)
+      stub(person).favorite_posters { [] }
     end
 
     # noinspection RubyArgCount
     def stub_guesses
       stub(Guess).mapped_count { 1 }
 
-      stub(Person).high_scorers(@now, 7) { [ @person ] }
-      stub(Person).high_scorers(@now, 30) { [ @person ] }
+      stub(Person).high_scorers(@now, 7) { [ person ] }
+      stub(Person).high_scorers(@now, 30) { [ person ] }
 
       first_guess = build :guess
-      stub(Guess).first_by(@person) { first_guess }
+      stub(Guess).first_by(person) { first_guess }
 
       most_recent_guess = build :guess
-      stub(Guess).most_recent_by(@person) { most_recent_guess }
+      stub(Guess).most_recent_by(person) { most_recent_guess }
 
       oldest_guess = build :guess
       oldest_guess.place = 1
-      stub(Guess).oldest(@person) { oldest_guess }
+      stub(Guess).oldest(person) { oldest_guess }
 
       fastest_guess = build :guess
       fastest_guess.place = 1
-      stub(Guess).fastest(@person) { fastest_guess }
+      stub(Guess).fastest(person) { fastest_guess }
 
       longest_lasting_guess = build :guess
       longest_lasting_guess.place = 1
-      stub(Guess).longest_lasting(@person) { longest_lasting_guess }
+      stub(Guess).longest_lasting(person) { longest_lasting_guess }
 
       shortest_lasting_guess = build :guess
       shortest_lasting_guess.place = 1
-      stub(Guess).shortest_lasting(@person) { shortest_lasting_guess }
+      stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
 
       # Give the posters different IDs so that they're considered different people, we have a list of guesses from
       # more than one poster and code that handles that is tested
-      stub(Guess).find_with_associations(@person) { [build(:guess, id: 1), build(:guess, id: 2)] }
+      stub(Guess).find_with_associations(person) { [build(:guess, id: 1), build(:guess, id: 2)] }
 
       @favorite_poster = build :person, id: 3
       @favorite_poster.bias = 2.5
-      stub(@person).favorite_posters { [ @favorite_poster ] }
+      stub(person).favorite_posters { [ @favorite_poster ] }
 
     end
 
@@ -320,61 +321,61 @@ describe PeopleController do
     def stub_posts
       stub(Photo).mapped_count { 1 }
 
-      stub(Person).top_posters(@now, 7) { [ @person ] }
-      stub(Person).top_posters(@now, 30) { [ @person ] }
+      stub(Person).top_posters(@now, 7) { [ person ] }
+      stub(Person).top_posters(@now, 30) { [ person ] }
 
       first_post = build :photo, id: 21
-      stub(Photo).first_by(@person) { first_post }
+      stub(Photo).first_by(person) { first_post }
 
       most_recent_post = build :photo, id: 22
-      stub(Photo).most_recent_by(@person) { most_recent_post }
+      stub(Photo).most_recent_by(person) { most_recent_post }
 
       oldest_unfound = build :photo, id: 23
       oldest_unfound.place = 1
-      stub(Photo).oldest_unfound(@person) { oldest_unfound }
+      stub(Photo).oldest_unfound(person) { oldest_unfound }
 
       most_commented = build :photo, id: 24
       most_commented.place = 1
-      stub(Photo).most_commented(@person) { most_commented }
+      stub(Photo).most_commented(person) { most_commented }
 
       most_viewed = build :photo, id: 25
       most_viewed.place = 1
-      stub(Photo).most_viewed(@person) { most_viewed }
+      stub(Photo).most_viewed(person) { most_viewed }
 
       most_faved = build :photo, id: 26
       most_faved.place = 1
-      stub(Photo).most_faved(@person) { most_faved }
+      stub(Photo).most_faved(person) { most_faved }
 
       found1 = build :guess
       found1.photo.guesses << found1
       found2 = build :guess
       found2.photo.guesses << found2
-      stub(Photo).find_with_guesses(@person) { [ found1.photo, found2.photo ] }
+      stub(Photo).find_with_guesses(person) { [ found1.photo, found2.photo ] }
 
       @favoring_guesser = build :person, id: 4
       @favoring_guesser.bias = 3.6
-      stub(@person).favoring_guessers { [ @favoring_guesser ] }
+      stub(person).favoring_guessers { [ @favoring_guesser ] }
 
-      stub(@person).unfound_photos { [ build(:photo, id: 27) ] }
+      stub(person).unfound_photos { [ build(:photo, id: 27) ] }
 
-      stub(@person).revealed_photos { [ build(:photo, id: 28) ] }
+      stub(person).revealed_photos { [ build(:photo, id: 28) ] }
 
     end
 
     def renders_bits_for_user_who_has_guessed
-      response.body.should include "#{@person.username} is in 1st place with a score of 2."
-      response.body.should include "#{@person.username} scored the most points in the last week"
-      response.body.should include "#{@person.username} scored the most points in the last month"
-      response.body.should have_css 'h2', text: "#{@person.username} has correctly guessed 2 photos"
-      response.body.should include "Of the photos that #{@person.username} has guessed,"
+      response.body.should include "#{person.username} is in 1st place with a score of 2."
+      response.body.should include "#{person.username} scored the most points in the last week"
+      response.body.should include "#{person.username} scored the most points in the last month"
+      response.body.should have_css 'h2', text: "#{person.username} has correctly guessed 2 photos"
+      response.body.should include "Of the photos that #{person.username} has guessed,"
       response.body.should have_link @favorite_poster.username
     end
 
     def renders_bits_for_user_who_has_posted
-      response.body.should include "#{@person.username} has posted 2 photos to the group, the most"
-      response.body.should include "#{@person.username} posted the most photos in the last week"
-      response.body.should include "#{@person.username} posted the most photos in the last month"
-      response.body.should have_css 'h2', text: "#{@person.username} has posted 2 photos"
+      response.body.should include "#{person.username} has posted 2 photos to the group, the most"
+      response.body.should include "#{person.username} posted the most photos in the last week"
+      response.body.should include "#{person.username} posted the most photos in the last month"
+      response.body.should have_css 'h2', text: "#{person.username} has posted 2 photos"
       response.body.should include '1 remains unfound'
       response.body.should include '1 was revealed'
       response.body.should have_link @favoring_guesser.username
