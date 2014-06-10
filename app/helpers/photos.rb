@@ -1,6 +1,6 @@
 module Photos
   def url_for_flickr_photo(photo)
-    "https://www.flickr.com/photos/#{photo.person.pathalias || photo.person.flickrid}/#{photo.flickrid}/"
+    "https://www.flickr.com/photos/#{photo.person.identifier}/#{photo.flickrid}/"
   end
 
   def url_for_flickr_photo_in_pool(photo)

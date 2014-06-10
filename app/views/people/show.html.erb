@@ -4,18 +4,18 @@
 <%= title_and_h1 @person.username %>
 
 <p>On Flickr:
-<a href="https://www.flickr.com/people/<%= @person.pathalias || @person.flickrid %>/"><%= @person.username %>'s profile</a> -
-<a href="https://www.flickr.com/people/<%= @person.pathalias || @person.flickrid %>/photosof/">photos of <%= @person.username %></a> -
-<a href="https://www.flickr.com/photos/<%= @person.pathalias || @person.flickrid %>/"><%= @person.username %>'s photostream</a> -
-<a href="https://www.flickr.com/photos/<%= @person.pathalias || @person.flickrid %>/map/"><%= @person.username %>'s map</a> -
-<a href="https://www.flickr.com/photos/<%= @person.pathalias || @person.flickrid %>/favorites/"><%= @person.username %>'s favorites</a></p>
+<a href="https://www.flickr.com/people/<%= @person.identifier %>/">profile</a> -
+<a href="https://www.flickr.com/people/<%= @person.identifier %>/photosof/">photos of <%= @person.username %></a> -
+<a href="https://www.flickr.com/photos/<%= @person.identifier %>/">photostream</a> -
+<a href="https://www.flickr.com/photos/<%= @person.identifier %>/map/">map</a> -
+<a href="https://www.flickr.com/photos/<%= @person.identifier %>/favorites/">favorites</a></p>
 
 <p>In Guess Where SF:
-<%= link_to "#{@person.username}'s unfounds", search_photos_with_terms_path("game_status/unfound,unconfirmed/posted-by/#{@person.username}") %> -
-<%= link_to "#{@person.username}'s posts", search_photos_with_terms_path("posted-by/#{@person.username}") %> -
-<%= link_to "#{@person.username}'s guesses", person_guesses_path(@person) %> -
-<%= link_to "#{@person.username}'s comments", person_comments_path(@person, 1) %> -
-<%= link_to "#{@person.username}'s map", person_map_path(@person) %></p>
+<%= link_to "unfounds", search_photos_with_terms_path("game_status/unfound,unconfirmed/posted-by/#{@person.username}") %> -
+<%= link_to "posts", search_photos_with_terms_path("posted-by/#{@person.username}") %> -
+<%= link_to "guesses", person_guesses_path(@person) %> -
+<%= link_to "comments", person_comments_path(@person, 1) %> -
+<%= link_to "map of posts and guesses", person_map_path(@person) %></p>
 
 <h2>Standings</h2>
 

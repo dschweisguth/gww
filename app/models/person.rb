@@ -16,6 +16,10 @@ class Person < ActiveRecord::Base
     :views_per_post, :faves_per_post, :poster, :bias, :score, :previous_post_count, :place, :previous_score, :previous_place,
     :label
 
+  def identifier
+    pathalias || flickrid
+  end
+
   # Used in other classes' callbacks
   def destroy_if_has_no_dependents
     if ! Photo.where(person_id: id).exists? && ! Guess.where(person_id: id).exists?
