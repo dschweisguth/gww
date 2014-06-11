@@ -55,7 +55,7 @@ describe PersonShowSupport do
 
   end
 
-  describe '#most_recent_by' do
+  describe '#most_recent_guess' do
     let(:guesser) { create :person }
 
     it "returns the guesser's most recent guess" do
