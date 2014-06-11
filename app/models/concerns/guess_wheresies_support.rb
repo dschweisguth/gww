@@ -3,14 +3,14 @@ module GuessWheresiesSupport
 
   module ClassMethods
     def longest_in(year)
-     age_is_valid
+     with_valid_age
       .where("? < guesses.commented_at", Time.local(year).getutc)
       .where("guesses.commented_at < ?", Time.local(year + 1).getutc)
       .order("#{Guess::GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
     end
 
     def shortest_in(year)
-      age_is_valid
+      with_valid_age
         .where("? < guesses.commented_at", Time.local(year).getutc)
         .where("guesses.commented_at < ?", Time.local(year + 1).getutc)
         .order(Guess::GUESS_AGE).limit(10).includes(:person, { photo: :person })
