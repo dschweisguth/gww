@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Answer, PhotoPeopleShowSupport, PhotoWheresiesSupport
+  include Answer, PhotoWheresiesSupport
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy
@@ -61,6 +61,14 @@ class Photo < ActiveRecord::Base
   def self.posted_or_guessed_by_and_mapped(person_id, bounds, limit)
     mapped(bounds, limit).joins('left join guesses on guesses.photo_id = photos.id')
       .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id)
+  end
+
+  def has_obsolete_tags?
+    if %w(found revealed).include?(game_status)
+      raws = tags.map { |tag| tag.raw.downcase }
+      raws.include?('unfoundinsf') &&
+        ! (raws.include?('foundinsf') || game_status == 'revealed' && raws.include?('revealedinsf'))
+    end
   end
 
   # Used by PhotosController
