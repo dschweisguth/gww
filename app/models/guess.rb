@@ -29,12 +29,16 @@ class Guess < ActiveRecord::Base
     where('unix_timestamp(guesses.commented_at) > unix_timestamp(photos.dateadded)').references :photos
   end
 
+  def self.order_by_age(direction = :asc)
+    order("#{GUESS_AGE} #{direction}")
+  end
+
   def self.longest
-    with_valid_age.order("#{GUESS_AGE} desc").limit(10).includes(:person, { photo: :person })
+    with_valid_age.order_by_age(:desc).limit(10).includes(:person, { photo: :person })
   end
 
   def self.shortest
-    with_valid_age.order(GUESS_AGE).limit(10).includes(:person, { photo: :person })
+    with_valid_age.order_by_age.limit(10).includes(:person, { photo: :person })
   end
 
   def time_elapsed

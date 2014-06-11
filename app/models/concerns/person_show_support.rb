@@ -57,25 +57,25 @@ module PersonShowSupport
   G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
   def oldest_guess
-    first_guess_with_place(:guesses, 'desc',
+    first_guess_with_place(:guesses, :desc,
       "#{Guess::GUESS_AGE} > " +
         "(select max(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id)")
   end
 
   def fastest_guess
-    first_guess_with_place(:guesses, 'asc',
+    first_guess_with_place(:guesses, :asc,
       "#{Guess::GUESS_AGE} < " +
         "(select min(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})")
   end
 
   def guess_of_longest_lasting_post
-    first_guess_with_place(:photos, 'desc',
+    first_guess_with_place(:photos, :desc,
       "#{Guess::GUESS_AGE} > " +
         "(select max(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)")
   end
 
   def guess_of_shortest_lasting_post
-    first_guess_with_place(:photos, 'asc',
+    first_guess_with_place(:photos, :asc,
       "#{Guess::GUESS_AGE} < " +
         "(select min(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})")
   end
@@ -86,7 +86,7 @@ module PersonShowSupport
         .includes(:person, { photo: :person })
         .where(owned_object => { person_id: self })
         .with_valid_age
-        .order("#{Guess::GUESS_AGE} #{order}").first
+        .order_by_age(order).first
     if ! guess
       return nil
     end
