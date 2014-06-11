@@ -9,7 +9,6 @@ Debt
 
 Run rspec with warnings and address them
 After RubyMine is updated to be compatible with RSpec 3, upgrade
-Extract facades from models
 Spring
 Measure Javascript coverage
 Merge revelations into guesses?
