@@ -161,7 +161,7 @@ describe PeopleController do
       stub(Photo).most_commented(person)
       stub(Photo).most_viewed(person)
       stub(Photo).most_faved(person)
-      stub(Photo).where(person_id: person).stub!.includes.stub!.includes { [] } # TODO Dave which one is this?
+      stub(Photo).find_with_guesses { [] }
       stub(person).favoring_guessers { [] }
       stub(person).unfound_photos { [] }
       stub(person).revealed_photos { [] }
