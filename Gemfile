@@ -14,6 +14,12 @@ gem 'uglifier', '2.5.0'
 gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
 
+group :development do
+  gem 'spring', '1.1.3'
+  gem 'spring-commands-cucumber', '1.0.1'
+  gem 'spring-commands-rspec', '1.0.2'
+end
+
 group :test do
   gem 'capybara', '2.2.1'
   gem 'cucumber-rails', '1.4.1', require: false
