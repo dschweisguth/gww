@@ -57,32 +57,36 @@ module PersonShowSupport
   G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 
   def oldest_guess
-    first_guess_with_place 'guesses.person_id = ?', 'desc',
+    first_guess_with_place(:guesses, 'desc',
       "#{Guess::GUESS_AGE} > " +
-        "(select max(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id)"
+        "(select max(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id)")
   end
 
   def fastest_guess
-    first_guess_with_place 'guesses.person_id = ?', 'asc',
+    first_guess_with_place(:guesses, 'asc',
       "#{Guess::GUESS_AGE} < " +
-        "(select min(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})"
+        "(select min(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})")
   end
 
   def guess_of_longest_lasting_post
-    first_guess_with_place 'photos.person_id = ?', 'desc',
+    first_guess_with_place(:photos, 'desc',
       "#{Guess::GUESS_AGE} > " +
-        "(select max(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)"
+        "(select max(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)")
   end
 
   def guess_of_shortest_lasting_post
-    first_guess_with_place 'photos.person_id = ?', 'asc',
+    first_guess_with_place(:photos, 'asc',
       "#{Guess::GUESS_AGE} < " +
-        "(select min(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})"
+        "(select min(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})")
   end
 
-  private def first_guess_with_place(conditions, order, place_conditions)
-    guess = Guess.includes(:person, { photo: :person })
-      .where(conditions, self).where(Guess::GUESS_AGE_IS_VALID).references(:photos).order("#{Guess::GUESS_AGE} #{order}").first
+  private def first_guess_with_place(owned_object, order, place_conditions)
+    guess =
+      Guess
+        .includes(:person, { photo: :person })
+        .where(owned_object => { person_id: self })
+        .where(Guess::GUESS_AGE_IS_VALID).references(:photos)
+        .order("#{Guess::GUESS_AGE} #{order}").first
     if ! guess
       return nil
     end
