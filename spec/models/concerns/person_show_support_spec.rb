@@ -283,6 +283,16 @@ describe PersonShowSupport do
 
   end
 
+  describe '#guesses_with_associations' do
+    it "returns a person's guesses with their photos and the photos' people" do
+      guess = create :guess
+      guesses = guess.person.guesses_with_associations
+      guesses.should == [ guess ]
+      guesses[0].photo.should == guess.photo
+      guesses[0].photo.person.should == guess.photo.person
+    end
+  end
+
   describe '#favorite_posters' do
     it "lists the posters which this person has guessed #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)

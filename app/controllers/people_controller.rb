@@ -73,7 +73,7 @@ class PeopleController < ApplicationController
     @most_viewed = Photo.most_viewed @person
     @most_faved = Photo.most_faved @person
 
-    @guesses = Guess.find_with_associations @person
+    @guesses = @person.guesses_with_associations
     @favorite_posters = @person.favorite_posters
     @posters = @guesses.group_by { |guess| guess.photo.person }
       .sort do |x,y|

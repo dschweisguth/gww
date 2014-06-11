@@ -309,7 +309,7 @@ describe PeopleController do
 
       # Give the posters different IDs so that they're considered different people, we have a list of guesses from
       # more than one poster and code that handles that is tested
-      stub(Guess).find_with_associations(person) { [build(:guess, id: 1), build(:guess, id: 2)] }
+      stub(person).guesses_with_associations { [build(:guess, id: 1), build(:guess, id: 2)] }
 
       @favorite_poster = build :person, id: 3
       @favorite_poster.bias = 2.5
