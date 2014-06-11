@@ -3,15 +3,18 @@ module PhotoWheresiesSupport
 
   module ClassMethods
     def most_viewed_in(year)
-      where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc)
-        .order('views desc').limit(10).includes(:person)
+      most_loved_in year, :views
     end
   
     def most_faved_in(year)
-      where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc)
-        .order('faves desc').limit(10).includes(:person)
+      most_loved_in year, :faves
     end
   
+    def most_loved_in(year, column)
+      where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc)
+        .order("#{column} desc").limit(10).includes(:person)
+    end
+
     def most_commented_in(year)
       find_by_sql [
         %q{
