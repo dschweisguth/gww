@@ -7,7 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
-Run rspec with warnings and address them
 After RubyMine is updated to be compatible with RSpec 3, upgrade
 Spring
 Measure Javascript coverage
