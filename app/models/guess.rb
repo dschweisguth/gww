@@ -1,10 +1,13 @@
 class Guess < ActiveRecord::Base
-  include Answer, GuessPeopleSupport, GuessWheresiesSupport, GuessScoreReportsSupport
+  include Answer, GuessScoreReportsSupport, GuessWheresiesSupport
 
   belongs_to :photo, inverse_of: :guesses
   belongs_to :person, inverse_of: :guesses
   validates_uniqueness_of :person_id, scope: %w(photo_id comment_text)
   validates_presence_of :comment_text, :commented_at, :added_at
+
+  # Not persisted, used in views
+  attr_accessor :place
 
   after_destroy do
     person.destroy_if_has_no_dependents
