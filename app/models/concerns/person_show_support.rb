@@ -98,6 +98,83 @@ module PersonShowSupport
     guess
   end
 
+  def oldest_unfound_photo
+    oldest_unfound_photo = photos.includes(:person).where(game_status: %w(unfound unconfirmed)).order(:dateadded).first
+    if oldest_unfound_photo
+      oldest_unfound_photo.place = Person.count_by_sql([
+        %q{
+          select count(*)
+          from
+            (
+              select min(dateadded) min_dateadded
+              from photos where game_status in ('unfound', 'unconfirmed')
+              group by person_id
+            ) oldest_unfounds
+          where min_dateadded < ?
+        },
+        oldest_unfound_photo.dateadded
+      ]) + 1
+    end
+    oldest_unfound_photo
+  end
+
+  def most_commented_photo
+    most_commented_photo = photos.includes(:person).order('other_user_comments desc').first
+    if most_commented_photo
+      most_commented_photo.place = Person.count_by_sql([
+        %q[
+          select count(*)
+          from (
+            select max(other_user_comments) max_other_user_comments
+            from photos
+            group by person_id
+          ) max_comments
+          where max_other_user_comments > ?
+        ],
+        most_commented_photo.other_user_comments
+      ]) + 1
+      most_commented_photo
+    end
+  end
+
+  def most_viewed_photo
+    most_viewed_photo = photos.includes(:person).order('views desc').first
+    if most_viewed_photo
+      most_viewed_photo.place = Person.count_by_sql([
+        %q[
+          select count(*)
+          from (
+            select max(views) max_views
+            from photos f
+            group by person_id
+          ) most_viewed
+          where max_views > ?
+        ],
+        most_viewed_photo.views
+      ]) + 1
+    end
+    most_viewed_photo
+  end
+
+  def most_faved_photo
+    most_faved_photo = photos.includes(:person).order('faves desc').first
+    if most_faved_photo
+      most_faved_photo.place = Person.count_by_sql([
+        %q[
+          select count(*)
+          from (
+            select max(faves) max_faves
+            from photos f
+            group by person_id
+          ) most_faved
+          where max_faves > ?
+        ],
+        most_faved_photo.faves
+      ]) + 1
+    end
+    most_faved_photo
+  end
+
   def guesses_with_associations
     guesses.includes(photo: :person)
   end

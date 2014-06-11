@@ -283,6 +283,184 @@ describe PersonShowSupport do
 
   end
 
+  describe '#oldest_unfound_photo' do
+    let(:poster) { create :person }
+
+    it "returns the poster's oldest unfound" do
+      create :photo, person: poster, dateadded: Time.utc(2001)
+      first = create :photo, person: poster, dateadded: Time.utc(2000)
+      oldest_unfound = poster.oldest_unfound_photo
+      oldest_unfound.should == first
+      oldest_unfound.place.should == 1
+    end
+
+    it "ignores other posters' photos" do
+      create :photo
+      poster.oldest_unfound_photo.should be_nil
+    end
+
+    it "considers unconfirmed photos" do
+      photo = create :photo, person: poster, game_status: 'unconfirmed'
+      poster.oldest_unfound_photo.should == photo
+    end
+
+    it "ignores game statuses other than unfound and unconfirmed" do
+      create :photo, person: poster, game_status: 'found'
+      poster.oldest_unfound_photo.should be_nil
+    end
+
+    it "considers other posters' oldest unfounds when calculating place" do
+      create :photo, person: poster, dateadded: Time.utc(2000)
+      next_oldest = create :photo, dateadded: Time.utc(2001)
+      oldest_unfound = next_oldest.person.oldest_unfound_photo
+      oldest_unfound.should == next_oldest
+      oldest_unfound.place.should == 2
+    end
+
+    it "considers unconfirmed photos when calculating place" do
+      create :photo, person: poster, dateadded: Time.utc(2000), game_status: 'unconfirmed'
+      next_oldest = create :photo, dateadded: Time.utc(2001)
+      oldest_unfound = next_oldest.person.oldest_unfound_photo
+      oldest_unfound.should == next_oldest
+      oldest_unfound.place.should == 2
+    end
+
+    it "ignores other posters' equally old unfounds when calculating place" do
+      create :photo, person: poster, dateadded: Time.utc(2001)
+      next_oldest = create :photo, dateadded: Time.utc(2001)
+      oldest_unfound = next_oldest.person.oldest_unfound_photo
+      oldest_unfound.should == next_oldest
+      oldest_unfound.place.should == 1
+    end
+
+    it "handles a person with no photos" do
+      poster.oldest_unfound_photo.should be_nil
+    end
+
+  end
+
+  describe '#most_commented_photo' do
+    let(:poster) { create :person }
+
+    it "returns the poster's most-commented photo" do
+      create :photo, person: poster
+      first = create :photo, person: poster, other_user_comments: 1
+      create :comment, photo: first
+      most_commented = poster.most_commented_photo
+      most_commented.should == first
+      most_commented.other_user_comments.should == 1
+      most_commented.place.should == 1
+    end
+
+    it "counts comments" do
+      second = create :photo, person: poster, other_user_comments: 1
+      create :comment, photo: second
+      first = create :photo, person: poster, other_user_comments: 2
+      create :comment, photo: first
+      create :comment, photo: first
+      most_commented = poster.most_commented_photo
+      most_commented.should == first
+      most_commented.other_user_comments.should == 2
+      most_commented.place.should == 1
+    end
+
+    it "ignores other posters' photos" do
+      photo = create :photo, other_user_comments: 1
+      create :comment, photo: photo
+      poster.most_commented_photo.should be_nil
+    end
+
+    it "considers other posters' photos when calculating place" do
+      other_posters_photo = create :photo, other_user_comments: 2
+      create :comment, photo: other_posters_photo
+      create :comment, photo: other_posters_photo
+      photo = create :photo, person: poster, other_user_comments: 1
+      create :comment, photo: photo
+      poster.most_commented_photo.place.should == 2
+    end
+
+    it "ignores other posters' equally commented photos when calculating place" do
+      other_posters_photo = create :photo, other_user_comments: 1
+      create :comment, photo: other_posters_photo
+      photo = create :photo, person: poster, other_user_comments: 1
+      create :comment, photo: photo
+      poster.most_commented_photo.place.should == 1
+    end
+
+    it "handles a person with no photos" do
+      poster.most_commented_photo.should be_nil
+    end
+
+  end
+
+  describe '#most_viewed_photo' do
+    let(:poster) { create :person }
+
+    it "returns the poster's most-viewed photo" do
+      create :photo, person: poster
+      first = create :photo, person: poster, views: 1
+      most_viewed = poster.most_viewed_photo
+      most_viewed.should == first
+      most_viewed.place.should == 1
+    end
+
+    it "ignores other posters' photos" do
+      create :photo
+      poster.most_viewed_photo.should be_nil
+    end
+
+    it "considers other posters' photos when calculating place" do
+      create :photo, views: 1
+      create :photo, person: poster
+      poster.most_viewed_photo.place.should == 2
+    end
+
+    it "ignores other posters' equally viewed photos when calculating place" do
+      create :photo
+      create :photo, person: poster
+      poster.most_viewed_photo.place.should == 1
+    end
+
+    it "handles a person with no photos" do
+      poster.most_viewed_photo.should be_nil
+    end
+
+  end
+
+  describe '.most_faved_photo' do
+    let(:poster) { create :person }
+
+    it "returns the poster's most-faved photo" do
+      create :photo, person: poster
+      first = create :photo, person: poster, faves: 1
+      most_faved = poster.most_faved_photo
+      most_faved.should == first
+      most_faved.place.should == 1
+    end
+
+    it "ignores other posters' photos" do
+      create :photo
+      poster.most_faved_photo.should be_nil
+    end
+
+    it "considers other posters' photos when calculating place" do
+      create :photo, faves: 1
+      create :photo, person: poster
+      poster.most_faved_photo.place.should == 2
+    end
+
+    it "ignores other posters' equally faved photos when calculating place" do
+      create :photo
+      create :photo, person: poster
+      poster.most_faved_photo.place.should == 1
+    end
+
+    it "handles a person with no photos" do
+      poster.most_faved_photo.should be_nil
+    end
+
+  end
+
   describe '#guesses_with_associations' do
     it "returns a person's guesses with their photos and the photos' people" do
       guess = create :guess

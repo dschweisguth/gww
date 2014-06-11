@@ -157,10 +157,10 @@ describe PeopleController do
       stub(Person).top_posters(@now, 30) { [] }
       stub(person).first_photo
       stub(person).most_recent_photo
-      stub(Photo).oldest_unfound(person)
-      stub(Photo).most_commented(person)
-      stub(Photo).most_viewed(person)
-      stub(Photo).most_faved(person)
+      stub(person).oldest_unfound_photo
+      stub(person).most_commented_photo
+      stub(person).most_viewed_photo
+      stub(person).most_faved_photo
       stub(Photo).find_with_guesses { [] }
       stub(person).favoring_guessers { [] }
       stub(person).unfound_photos { [] }
@@ -330,21 +330,21 @@ describe PeopleController do
       most_recent_post = build :photo, id: 22
       stub(person).most_recent_photo { most_recent_post }
 
-      oldest_unfound = build :photo, id: 23
-      oldest_unfound.place = 1
-      stub(Photo).oldest_unfound(person) { oldest_unfound }
+      oldest_unfound_photo = build :photo, id: 23
+      oldest_unfound_photo.place = 1
+      stub(person).oldest_unfound_photo { oldest_unfound_photo }
 
-      most_commented = build :photo, id: 24
-      most_commented.place = 1
-      stub(Photo).most_commented(person) { most_commented }
+      most_commented_photo = build :photo, id: 24
+      most_commented_photo.place = 1
+      stub(person).most_commented_photo { most_commented_photo }
 
-      most_viewed = build :photo, id: 25
-      most_viewed.place = 1
-      stub(Photo).most_viewed(person) { most_viewed }
+      most_viewed_photo = build :photo, id: 25
+      most_viewed_photo.place = 1
+      stub(person).most_viewed_photo { most_viewed_photo }
 
-      most_faved = build :photo, id: 26
-      most_faved.place = 1
-      stub(Photo).most_faved(person) { most_faved }
+      most_faved_photo = build :photo, id: 26
+      most_faved_photo.place = 1
+      stub(person).most_faved_photo { most_faved_photo }
 
       found1 = build :guess
       found1.photo.guesses << found1
