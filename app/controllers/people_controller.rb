@@ -81,7 +81,7 @@ class PeopleController < ApplicationController
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
-    @posts = Photo.find_with_guesses @person
+    @posts = @person.photos_with_associations
     @favoring_guessers = @person.favoring_guessers
     @unfound_photos = @person.unfound_photos.to_a
     @revealed_photos = @person.revealed_photos

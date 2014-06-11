@@ -161,7 +161,7 @@ describe PeopleController do
       stub(person).most_commented_photo
       stub(person).most_viewed_photo
       stub(person).most_faved_photo
-      stub(Photo).find_with_guesses { [] }
+      stub(person).photos_with_associations { [] }
       stub(person).favoring_guessers { [] }
       stub(person).unfound_photos { [] }
       stub(person).revealed_photos { [] }
@@ -190,7 +190,7 @@ describe PeopleController do
       before do
         stub_no_guesses
         stub_posts
-        stub(Photo).find_with_guesses(person) { [] }
+        stub(person).photos_with_associations { [] }
         stub(person).revealed_photos { [] }
       end
 
@@ -254,7 +254,7 @@ describe PeopleController do
         found1 = build :guess, photo: photo, person: build(:person, id: 2)
         photo.guesses << found1
         # noinspection RubyArgCount
-        stub(Photo).find_with_guesses(person) { [ photo ] }
+        stub(person).photos_with_associations { [ photo ] }
       end
 
       def stub_revealed_post
@@ -350,7 +350,7 @@ describe PeopleController do
       found1.photo.guesses << found1
       found2 = build :guess
       found2.photo.guesses << found2
-      stub(Photo).find_with_guesses(person) { [ found1.photo, found2.photo ] }
+      stub(person).photos_with_associations { [ found1.photo, found2.photo ] }
 
       @favoring_guesser = build :person, id: 4
       @favoring_guesser.bias = 3.6

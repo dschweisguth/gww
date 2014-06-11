@@ -1,14 +1,4 @@
 describe PhotoPeopleShowSupport do
-  describe '.find_with_guesses' do
-    it "returns a person's photos, with their guesses and the guesses' people" do
-      guess = create :guess
-      photos = Photo.find_with_guesses guess.photo.person
-      photos.should == [ guess.photo ]
-      photos[0].guesses.should == [ guess ]
-      photos[0].guesses[0].person.should == guess.person
-    end
-  end
-
   describe '#has_obsolete_tags?' do
     %w(found revealed).each do |game_status|
       it "returns true if a #{game_status} photo is tagged unfoundinSF" do

@@ -202,6 +202,10 @@ module PersonShowSupport
     favorite_posters
   end
 
+  def photos_with_associations
+    photos.includes(guesses: :person).includes(:tags)
+  end
+
   def favoring_guessers
     favoring_guessers = Person.find_by_sql [
       %Q[
