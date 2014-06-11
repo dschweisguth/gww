@@ -103,6 +103,152 @@ describe PersonShowSupport do
 
   end
 
+  describe '#oldest_guess' do
+    let(:guesser) { create :person }
+
+    it "returns the guesser's guess made the longest after the post" do
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      guess2 = create :guess, person: guesser, photo: photo2, commented_at: Time.utc(2004)
+      oldest = guesser.oldest_guess
+      oldest.should == guess2
+      oldest.place.should == 1
+    end
+
+    it "ignores other players' guesses" do
+      create :guess
+      guesser.oldest_guess.should be_nil
+    end
+
+    it "considers other players' guesses when calculating place" do
+      photo1 = create :photo, dateadded: Time.utc(2000)
+      guess1 = create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      create :guess, photo: photo2, commented_at: Time.utc(2004)
+      oldest = guesser.oldest_guess
+      oldest.should == guess1
+      oldest.place.should == 2
+    end
+
+    it "ignores a guess that precedes its post" do
+      photo1 = create :photo, dateadded: Time.utc(2001)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
+      guesser.oldest_guess.should == nil
+    end
+
+  end
+
+  describe '#fastest_guess' do
+    let(:guesser) { create :person }
+
+    it "returns the guesser's guess made the fastest after the post" do
+      photo1 = create :photo, dateadded: Time.utc(2002)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, dateadded: Time.utc(2000)
+      guess2 = create :guess, person: guesser, photo: photo2, commented_at: Time.utc(2001)
+      fastest = guesser.fastest_guess
+      fastest.should == guess2
+      fastest.place.should == 1
+    end
+
+    it "ignores other players' guesses" do
+      create :guess
+      guesser.fastest_guess.should be_nil
+    end
+
+    it "considers other players' guesses when calculating place" do
+      photo1 = create :photo, dateadded: Time.utc(2002)
+      guess1 = create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, dateadded: Time.utc(2000)
+      create :guess, photo: photo2, commented_at: Time.utc(2001)
+      fastest = guesser.fastest_guess
+      fastest.should == guess1
+      fastest.place.should == 2
+    end
+
+    it "ignores a guess that precedes its post" do
+      photo1 = create :photo, dateadded: Time.utc(2001)
+      create :guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
+      guesser.fastest_guess.should == nil
+    end
+
+  end
+
+  describe '#guess_of_longest_lasting_post' do
+    let(:poster) { create :person }
+
+    it "returns the poster's photo which went unfound the longest" do
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2000)
+      create :guess, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, person: poster, dateadded: Time.utc(2002)
+      guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
+      longest_lasting = poster.guess_of_longest_lasting_post
+      longest_lasting.should == guess2
+      longest_lasting.place.should == 1
+    end
+
+    it "ignores guesses of other players' posts" do
+      create :photo, person: poster
+      create :guess
+      poster.guess_of_longest_lasting_post.should be_nil
+    end
+
+    it "considers other posters when calculating place" do
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2000)
+      guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
+      photo2 = create :photo, dateadded: Time.utc(2002)
+      create :guess, photo: photo2, commented_at: Time.utc(2004)
+      longest_lasting = poster.guess_of_longest_lasting_post
+      longest_lasting.should == guess1
+      longest_lasting.place.should == 2
+    end
+
+    it 'ignores a guess that precedes its post' do
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
+      create :guess, photo: photo1, commented_at: Time.utc(2000)
+      poster.guess_of_longest_lasting_post.should == nil
+    end
+
+  end
+
+  describe '#guess_of_shortest_lasting_post' do
+    let(:poster) { create :person }
+
+    it "returns the guess of the poster's photo which was made the soonest after the post" do
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2002)
+      create :guess, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, person: poster, dateadded: Time.utc(2000)
+      guess2 = create :guess, photo: photo2, commented_at: Time.utc(2001)
+      shortest_lasting = poster.guess_of_shortest_lasting_post
+      shortest_lasting.should == guess2
+      shortest_lasting.place.should == 1
+    end
+
+    it "ignores guesses of other players' posts" do
+      create :photo, person: poster
+      create :guess
+      poster.guess_of_shortest_lasting_post.should be_nil
+    end
+
+    it "considers other posters when calculating place" do
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2002)
+      guess1 = create :guess, photo: photo1, commented_at: Time.utc(2004)
+      photo2 = create :photo, dateadded: Time.utc(2000)
+      create :guess, photo: photo2, commented_at: Time.utc(2001)
+      shortest_lasting = poster.guess_of_shortest_lasting_post
+      shortest_lasting.should == guess1
+      shortest_lasting.place.should == 2
+    end
+
+    it 'ignores a guess that precedes its post' do
+      photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
+      create :guess, photo: photo1, commented_at: Time.utc(2000)
+      poster.guess_of_shortest_lasting_post.should == nil
+    end
+
+  end
+
   describe '#favorite_posters' do
     it "lists the posters which this person has guessed #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)

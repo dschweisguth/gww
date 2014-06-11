@@ -64,10 +64,10 @@ class PeopleController < ApplicationController
     @most_recent_guess = @person.most_recent_guess
     @most_recent_post = @person.most_recent_photo
 
-    @oldest_guess = Guess.oldest @person
-    @fastest_guess = Guess.fastest @person
-    @longest_lasting_guess = Guess.longest_lasting @person
-    @shortest_lasting_guess = Guess.shortest_lasting @person
+    @oldest_guess = @person.oldest_guess
+    @fastest_guess = @person.fastest_guess
+    @guess_of_longest_lasting_post = @person.guess_of_longest_lasting_post
+    @guess_of_shortest_lasting_post = @person.guess_of_shortest_lasting_post
     @oldest_unfound = Photo.oldest_unfound @person
     @most_commented = Photo.most_commented @person
     @most_viewed = Photo.most_viewed @person

@@ -271,10 +271,10 @@ describe PeopleController do
       stub(Person).high_scorers(@now, 30) { [] }
       stub(person).first_guess
       stub(person).most_recent_guess
-      stub(Guess).oldest(person)
-      stub(Guess).fastest(person)
-      stub(Guess).longest_lasting(person)
-      stub(Guess).shortest_lasting(person)
+      stub(person).oldest_guess
+      stub(person).fastest_guess
+      stub(person).guess_of_longest_lasting_post
+      stub(person).guess_of_shortest_lasting_post
       stub(person).favorite_posters { [] }
     end
 
@@ -293,19 +293,19 @@ describe PeopleController do
 
       oldest_guess = build :guess
       oldest_guess.place = 1
-      stub(Guess).oldest(person) { oldest_guess }
+      stub(person).oldest_guess { oldest_guess }
 
       fastest_guess = build :guess
       fastest_guess.place = 1
-      stub(Guess).fastest(person) { fastest_guess }
+      stub(person).fastest_guess { fastest_guess }
 
-      longest_lasting_guess = build :guess
-      longest_lasting_guess.place = 1
-      stub(Guess).longest_lasting(person) { longest_lasting_guess }
+      guess_of_longest_lasting_post = build :guess
+      guess_of_longest_lasting_post.place = 1
+      stub(person).guess_of_longest_lasting_post { guess_of_longest_lasting_post }
 
-      shortest_lasting_guess = build :guess
-      shortest_lasting_guess.place = 1
-      stub(Guess).shortest_lasting(person) { shortest_lasting_guess }
+      guess_of_shortest_lasting_post = build :guess
+      guess_of_shortest_lasting_post.place = 1
+      stub(person).guess_of_shortest_lasting_post { guess_of_shortest_lasting_post }
 
       # Give the posters different IDs so that they're considered different people, we have a list of guesses from
       # more than one poster and code that handles that is tested
