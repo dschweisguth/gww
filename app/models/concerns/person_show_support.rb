@@ -85,12 +85,12 @@ module PersonShowSupport
       Guess
         .includes(:person, { photo: :person })
         .where(owned_object => { person_id: self })
-        .where(Guess::GUESS_AGE_IS_VALID).references(:photos)
+        .age_is_valid
         .order("#{Guess::GUESS_AGE} #{order}").first
     if ! guess
       return nil
     end
-    guess.place = Guess.joins(:photo).where(place_conditions, self).where(Guess::GUESS_AGE_IS_VALID).count + 1
+    guess.place = Guess.joins(:photo).where(place_conditions, self).age_is_valid.count + 1
     guess
   end
 
