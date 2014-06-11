@@ -503,7 +503,7 @@ describe FlickrUpdater, type: :model do
     end
 
     it "deletes previous comments" do
-      comment = create :comment, photo: photo
+      create :comment, photo: photo
       stub_request_to_return_one_comment
       FlickrUpdater.update_comments photo
       photo_has_the_comment_from_the_request
