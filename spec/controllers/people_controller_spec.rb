@@ -285,34 +285,19 @@ describe PeopleController do
       stub(Person).high_scorers(@now, 7) { [ person ] }
       stub(Person).high_scorers(@now, 30) { [ person ] }
 
-      first_guess = build :guess
-      stub(person).first_guess { first_guess }
+      stub(person).first_guess { build :guess }
+      stub(person).most_recent_guess { build :guess }
+      stub(person).oldest_guess { build :guess, place: 1 }
+      stub(person).fastest_guess { build :guess, place: 1 }
 
-      most_recent_guess = build :guess
-      stub(person).most_recent_guess { most_recent_guess }
-
-      oldest_guess = build :guess
-      oldest_guess.place = 1
-      stub(person).oldest_guess { oldest_guess }
-
-      fastest_guess = build :guess
-      fastest_guess.place = 1
-      stub(person).fastest_guess { fastest_guess }
-
-      guess_of_longest_lasting_post = build :guess
-      guess_of_longest_lasting_post.place = 1
-      stub(person).guess_of_longest_lasting_post { guess_of_longest_lasting_post }
-
-      guess_of_shortest_lasting_post = build :guess
-      guess_of_shortest_lasting_post.place = 1
-      stub(person).guess_of_shortest_lasting_post { guess_of_shortest_lasting_post }
+      stub(person).guess_of_longest_lasting_post { build :guess, place: 1 }
+      stub(person).guess_of_shortest_lasting_post { build :guess, place: 1 }
 
       # Give the posters different IDs so that they're considered different people, we have a list of guesses from
       # more than one poster and code that handles that is tested
       stub(person).guesses_with_associations { [build(:guess, id: 1), build(:guess, id: 2)] }
 
-      @favorite_poster = build :person, id: 3
-      @favorite_poster.bias = 2.5
+      @favorite_poster = build :person, id: 3, bias: 2.5
       stub(person).favorite_posters { [ @favorite_poster ] }
 
     end
@@ -330,21 +315,10 @@ describe PeopleController do
       most_recent_post = build :photo, id: 22
       stub(person).most_recent_photo { most_recent_post }
 
-      oldest_unfound_photo = build :photo, id: 23
-      oldest_unfound_photo.place = 1
-      stub(person).oldest_unfound_photo { oldest_unfound_photo }
-
-      most_commented_photo = build :photo, id: 24
-      most_commented_photo.place = 1
-      stub(person).most_commented_photo { most_commented_photo }
-
-      most_viewed_photo = build :photo, id: 25
-      most_viewed_photo.place = 1
-      stub(person).most_viewed_photo { most_viewed_photo }
-
-      most_faved_photo = build :photo, id: 26
-      most_faved_photo.place = 1
-      stub(person).most_faved_photo { most_faved_photo }
+      stub(person).oldest_unfound_photo { build :photo, id: 23, place: 1 }
+      stub(person).most_commented_photo { build :photo, id: 24, place: 1 }
+      stub(person).most_viewed_photo { build :photo, id: 25, place: 1 }
+      stub(person).most_faved_photo { build :photo, id: 26, place: 1 }
 
       found1 = build :guess
       found1.photo.guesses << found1
@@ -352,12 +326,10 @@ describe PeopleController do
       found2.photo.guesses << found2
       stub(person).photos_with_associations { [ found1.photo, found2.photo ] }
 
-      @favoring_guesser = build :person, id: 4
-      @favoring_guesser.bias = 3.6
+      @favoring_guesser = build :person, id: 4, bias: 3.6
       stub(person).favoring_guessers { [ @favoring_guesser ] }
 
       stub(person).unfound_photos { [ build(:photo, id: 27) ] }
-
       stub(person).revealed_photos { [ build(:photo, id: 28) ] }
 
     end
