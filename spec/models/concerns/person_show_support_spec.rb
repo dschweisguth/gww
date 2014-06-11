@@ -1,4 +1,33 @@
 describe PersonShowSupport do
+  describe '#mapped_photo_count' do
+    it "counts mapped photos" do
+      photo = create :photo, accuracy: 12
+      photo.person.mapped_photo_count.should == 1
+    end
+
+    it "counts auto-mapped photos" do
+      photo = create :photo, inferred_latitude: 37
+      photo.person.mapped_photo_count.should == 1
+    end
+
+    it "ignores other people's photos" do
+      create :photo, accuracy: 12
+      other_person = create :person
+      other_person.mapped_photo_count.should == 0
+    end
+
+    it "ignores unmapped photos" do
+      photo = create :photo
+      photo.person.mapped_photo_count.should == 0
+    end
+
+    it "ignores photos mapped with an accuracy < 12" do
+      photo = create :photo, accuracy: 11
+      photo.person.mapped_photo_count.should == 0
+    end
+
+  end
+
   describe '#mapped_guess_count' do
     it "counts the person's guesses of mapped photos" do
       photo = create :photo, accuracy: 12

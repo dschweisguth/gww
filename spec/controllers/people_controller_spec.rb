@@ -152,7 +152,7 @@ describe PeopleController do
     it "handles a person who has never posted" do
       stub_guesses
 
-      stub(Photo).mapped_count { 0 }
+      stub(person).mapped_photo_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
       stub(person).first_photo
@@ -319,7 +319,7 @@ describe PeopleController do
 
     # noinspection RubyArgCount
     def stub_posts
-      stub(Photo).mapped_count { 1 }
+      stub(person).mapped_photo_count { 1 }
 
       stub(Person).top_posters(@now, 7) { [ person ] }
       stub(Person).top_posters(@now, 30) { [ person ] }
@@ -427,7 +427,7 @@ describe PeopleController do
     it "renders the page" do
       person = build :person, id: 1
       stub(Person).find(person.id) { person }
-      stub(Photo).mapped_count(person.id) { 1 }
+      stub(person).mapped_photo_count { 1 }
       stub(person).mapped_guess_count { 1 }
       json = { 'property' => 'value' }
       stub(controller).map_photos(person.id) { json }

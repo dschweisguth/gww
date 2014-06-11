@@ -186,35 +186,6 @@ describe Photo do
 
   # Used by PeopleController
 
-  describe '.mapped_count' do
-    it "counts mapped photos" do
-      photo = create :photo, accuracy: 12
-      Photo.mapped_count(photo.person.id).should == 1
-    end
-
-    it "counts auto-mapped photos" do
-      photo = create :photo, inferred_latitude: 37
-      Photo.mapped_count(photo.person.id).should == 1
-    end
-
-    it "ignores other people's photos" do
-      create :photo, accuracy: 12
-      other_person = create :person
-      Photo.mapped_count(other_person.id).should == 0
-    end
-
-    it "ignores unmapped photos" do
-      photo = create :photo
-      Photo.mapped_count(photo.person.id).should == 0
-    end
-
-    it "ignores photos mapped with an accuracy < 12" do
-      photo = create :photo, accuracy: 11
-      Photo.mapped_count(photo.person.id).should == 0
-    end
-
-  end
-
   describe '.posted_or_guessed_by_and_mapped' do
     let(:bounds) { Bounds.new 36, 38, -123, -121 }
 

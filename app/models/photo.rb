@@ -54,10 +54,6 @@ class Photo < ActiveRecord::Base
 
   # Used by PeopleController
 
-  def self.mapped_count(poster_id)
-    where(person_id: poster_id).where('accuracy >= 12 or inferred_latitude is not null').count
-  end
-
   def self.posted_or_guessed_by_and_mapped(person_id, bounds, limit)
     mapped(bounds, limit).joins('left join guesses on guesses.photo_id = photos.id')
       .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id)
