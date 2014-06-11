@@ -91,11 +91,11 @@ module PersonShowSupport
   end
 
   def unfound_photos
-    Photo.where(person_id: self).where(game_status: %w(unfound unconfirmed))
+    photos.where game_status: %w(unfound unconfirmed)
   end
 
   def revealed_photos
-    Photo.where(person_id: self).where(game_status: 'revealed').includes(:tags)
+    photos.where(game_status: 'revealed').includes(:tags)
   end
 
 end
