@@ -45,6 +45,14 @@ module PersonShowSupport
     guesses.includes(photo: :person).order(:commented_at).last
   end
 
+  def first_photo
+    photos.order(:dateadded).includes(:person).first
+  end
+
+  def most_recent_photo
+    photos.order(:dateadded).includes(:person).last
+  end
+
   def favorite_posters
     favorite_posters = Person.find_by_sql [
       %Q[

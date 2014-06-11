@@ -60,9 +60,9 @@ class PeopleController < ApplicationController
     end
 
     @first_guess = @person.first_guess
-    @first_post = Photo.first_by @person
+    @first_post = @person.first_photo
     @most_recent_guess = @person.most_recent_guess
-    @most_recent_post = Photo.most_recent_by @person
+    @most_recent_post = @person.most_recent_photo
 
     @oldest_guess = Guess.oldest @person
     @fastest_guess = Guess.fastest @person

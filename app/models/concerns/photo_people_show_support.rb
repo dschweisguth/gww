@@ -2,14 +2,6 @@ module PhotoPeopleShowSupport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def first_by(poster)
-      where(person_id: poster).order(:dateadded).includes(:person).first
-    end
-  
-    def most_recent_by(poster)
-      where(person_id: poster).order(:dateadded).includes(:person).last
-    end
-  
     def oldest_unfound(poster)
       oldest_unfound =
         includes(:person).where("person_id = ? and game_status in ('unfound', 'unconfirmed')", poster).order(:dateadded).first

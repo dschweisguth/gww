@@ -71,6 +71,38 @@ describe PersonShowSupport do
 
   end
 
+  describe '#first_photo' do
+    let(:poster) { create :person }
+
+    it "returns the poster's first post" do
+      create :photo, person: poster, dateadded: Time.utc(2001)
+      first = create :photo, person: poster, dateadded: Time.utc(2000)
+      poster.first_photo.should == first
+    end
+
+    it "ignores other posters' photos" do
+      create :photo
+      poster.first_photo.should be_nil
+    end
+
+  end
+
+  describe '#most_recent_photo' do
+    let(:poster) { create :person }
+
+    it "returns the poster's most recent post" do
+      create :photo, person: poster, dateadded: Time.utc(2000)
+      most_recent = create :photo, person: poster, dateadded: Time.utc(2001)
+      poster.most_recent_photo.should == most_recent
+    end
+
+    it "ignores other posters' photos" do
+      create :photo
+      poster.most_recent_photo.should be_nil
+    end
+
+  end
+
   describe '#favorite_posters' do
     it "lists the posters which this person has guessed #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)

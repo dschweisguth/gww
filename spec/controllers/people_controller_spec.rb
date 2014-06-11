@@ -155,8 +155,8 @@ describe PeopleController do
       stub(Photo).mapped_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
-      stub(person).first_guess
-      stub(Photo).most_recent_by(person)
+      stub(person).first_photo
+      stub(person).most_recent_photo
       stub(Photo).oldest_unfound(person)
       stub(Photo).most_commented(person)
       stub(Photo).most_viewed(person)
@@ -270,7 +270,7 @@ describe PeopleController do
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
       stub(person).first_guess
-      stub(Guess).most_recent_by(person)
+      stub(person).most_recent_guess
       stub(Guess).oldest(person)
       stub(Guess).fastest(person)
       stub(Guess).longest_lasting(person)
@@ -289,7 +289,7 @@ describe PeopleController do
       stub(person).first_guess { first_guess }
 
       most_recent_guess = build :guess
-      stub(Guess).most_recent_by(person) { most_recent_guess }
+      stub(person).most_recent_guess { most_recent_guess }
 
       oldest_guess = build :guess
       oldest_guess.place = 1
@@ -325,10 +325,10 @@ describe PeopleController do
       stub(Person).top_posters(@now, 30) { [ person ] }
 
       first_post = build :photo, id: 21
-      stub(Photo).first_by(person) { first_post }
+      stub(person).first_photo { first_post }
 
       most_recent_post = build :photo, id: 22
-      stub(Photo).most_recent_by(person) { most_recent_post }
+      stub(person).most_recent_photo { most_recent_post }
 
       oldest_unfound = build :photo, id: 23
       oldest_unfound.place = 1

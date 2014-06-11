@@ -1,36 +1,4 @@
 describe PhotoPeopleShowSupport do
-  describe '.first_by' do
-    let(:poster) { create :person }
-
-    it "returns the poster's first post" do
-      create :photo, person: poster, dateadded: Time.utc(2001)
-      first = create :photo, person: poster, dateadded: Time.utc(2000)
-      Photo.first_by(poster).should == first
-    end
-
-    it "ignores other posters' photos" do
-      create :photo
-      Photo.first_by(poster).should be_nil
-    end
-
-  end
-
-  describe '.most_recent_by' do
-    let(:poster) { create :person }
-
-    it "returns the poster's most recent post" do
-      create :photo, person: poster, dateadded: Time.utc(2000)
-      most_recent = create :photo, person: poster, dateadded: Time.utc(2001)
-      Photo.most_recent_by(poster).should == most_recent
-    end
-
-    it "ignores other posters' photos" do
-      create :photo
-      Photo.most_recent_by(poster).should be_nil
-    end
-
-  end
-
   describe '.oldest_unfound' do
     let(:poster) { create :person }
 
