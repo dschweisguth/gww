@@ -115,39 +115,4 @@ describe PersonShowSupport do
 
   end
 
-  describe '#paginated_commented_photos' do
-    let(:person) { create :person }
-
-    it "returns the photos commented on by a given user" do
-      comment = create :comment, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1).should == [comment.photo]
-    end
-
-    it "ignores photos commented on by another user" do
-      create :comment
-      person.paginated_commented_photos(1).should == []
-    end
-
-    it "paginates" do
-      3.times { create :comment, flickrid: person.flickrid, username: person.username }
-      person.paginated_commented_photos(1, 2).length.should == 2
-    end
-
-    it "returns each photo only once, even if the person commented on it more than once" do
-      photo = create :photo
-      create :comment, photo: photo, flickrid: person.flickrid, username: person.username
-      create :comment, photo: photo, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1).should == [photo]
-    end
-
-    it "sorts the most recently updated photos first" do
-      photo1 = create :photo, lastupdate: 2.days.ago
-      create :comment, photo: photo1, flickrid: person.flickrid, username: person.username
-      photo2 = create :photo, lastupdate: 1.days.ago
-      create :comment, photo: photo2, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1).should == [photo2, photo1]
-    end
-
-  end
-
 end
