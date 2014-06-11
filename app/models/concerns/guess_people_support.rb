@@ -14,14 +14,6 @@ module GuessPeopleSupport
         .count
     end
 
-    def first_by(guesser)
-      includes(photo: :person).where(person_id: guesser).order(:commented_at).first
-    end
-
-    def most_recent_by(guesser)
-      includes(photo: :person).where(person_id: guesser).order(:commented_at).last
-    end
-
     G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'
     G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
 

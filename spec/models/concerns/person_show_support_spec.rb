@@ -1,5 +1,5 @@
 describe PersonShowSupport do
-  describe '.standing' do
+  describe '#standing' do
     let(:person) { create :person }
 
     it "returns the person's score position" do
@@ -19,7 +19,7 @@ describe PersonShowSupport do
 
   end
 
-  describe '.posts_standing' do
+  describe '#posts_standing' do
     let(:person) { create :person }
 
     it "returns the person's post position" do
@@ -35,6 +35,38 @@ describe PersonShowSupport do
       create :photo, person: person
       create :photo
       person.posts_standing.should == [ 1, true ]
+    end
+
+  end
+
+  describe '#first_guess' do
+    let(:guesser) { create :person }
+
+    it "returns the guesser's first guess" do
+      create :guess, person: guesser, commented_at: Time.utc(2001)
+      first = create :guess, person: guesser, commented_at: Time.utc(2000)
+      guesser.first_guess.should == first
+    end
+
+    it "ignores other players' guesses" do
+      create :guess
+      guesser.first_guess.should be_nil
+    end
+
+  end
+
+  describe '#most_recent_by' do
+    let(:guesser) { create :person }
+
+    it "returns the guesser's most recent guess" do
+      create :guess, person: guesser, commented_at: Time.utc(2000)
+      most_recent = create :guess, person: guesser, commented_at: Time.utc(2001)
+      guesser.most_recent_guess.should == most_recent
+    end
+
+    it "ignores other players' guesses" do
+      create :guess
+      guesser.most_recent_guess.should be_nil
     end
 
   end

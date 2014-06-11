@@ -155,7 +155,7 @@ describe PeopleController do
       stub(Photo).mapped_count { 0 }
       stub(Person).top_posters(@now, 7) { [] }
       stub(Person).top_posters(@now, 30) { [] }
-      stub(Photo).first_by(person)
+      stub(person).first_guess
       stub(Photo).most_recent_by(person)
       stub(Photo).oldest_unfound(person)
       stub(Photo).most_commented(person)
@@ -269,7 +269,7 @@ describe PeopleController do
       stub(Guess).mapped_count { 0 }
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
-      stub(Guess).first_by(person)
+      stub(person).first_guess
       stub(Guess).most_recent_by(person)
       stub(Guess).oldest(person)
       stub(Guess).fastest(person)
@@ -286,7 +286,7 @@ describe PeopleController do
       stub(Person).high_scorers(@now, 30) { [ person ] }
 
       first_guess = build :guess
-      stub(Guess).first_by(person) { first_guess }
+      stub(person).first_guess { first_guess }
 
       most_recent_guess = build :guess
       stub(Guess).most_recent_by(person) { most_recent_guess }

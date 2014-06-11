@@ -59,9 +59,9 @@ class PeopleController < ApplicationController
       @monthly_top_posters = monthly_top_posters
     end
 
-    @first_guess = Guess.first_by @person
+    @first_guess = @person.first_guess
     @first_post = Photo.first_by @person
-    @most_recent_guess = Guess.most_recent_by @person
+    @most_recent_guess = @person.most_recent_guess
     @most_recent_post = Photo.most_recent_by @person
 
     @oldest_guess = Guess.oldest @person

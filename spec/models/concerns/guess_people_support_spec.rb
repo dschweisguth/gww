@@ -33,38 +33,6 @@ describe GuessPeopleSupport do
 
   end
 
-  describe '.first_by' do
-    let(:guesser) { create :person }
-
-    it "returns the guesser's first guess" do
-      create :guess, person: guesser, commented_at: Time.utc(2001)
-      first = create :guess, person: guesser, commented_at: Time.utc(2000)
-      Guess.first_by(guesser).should == first
-    end
-
-    it "ignores other players' guesses" do
-      create :guess
-      Guess.first_by(guesser).should be_nil
-    end
-
-  end
-
-  describe '.most_recent_by' do
-    let(:guesser) { create :person }
-
-    it "returns the guesser's most recent guess" do
-      create :guess, person: guesser, commented_at: Time.utc(2000)
-      most_recent = create :guess, person: guesser, commented_at: Time.utc(2001)
-      Guess.most_recent_by(guesser).should == most_recent
-    end
-
-    it "ignores other players' guesses" do
-      create :guess
-      Guess.most_recent_by(guesser).should be_nil
-    end
-
-  end
-
   describe '.oldest' do
     let(:guesser) { create :person }
 
