@@ -74,7 +74,7 @@ class Street < Struct.new :name, :type
   def self.regexp(multiword_street_name)
     multiword_street_name
       .gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)')
-      .gsub(/([A-ZA-z0-9']+\s+[A-ZA-z0-9'])(\s+[A-ZA-z0-9']+)/, '\1\.?\2')
+      .gsub(/([A-Za-z0-9']+\s+[A-Za-z0-9'])(\s+[A-Za-z0-9']+)/, '\1\.?\2')
       .gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)')
       .gsub(/\s+/, '\s+')
   end
