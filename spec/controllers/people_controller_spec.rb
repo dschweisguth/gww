@@ -266,7 +266,7 @@ describe PeopleController do
 
     # noinspection RubyArgCount
     def stub_no_guesses
-      stub(Guess).mapped_count { 0 }
+      stub(person).mapped_guess_count { 0 }
       stub(Person).high_scorers(@now, 7) { [] }
       stub(Person).high_scorers(@now, 30) { [] }
       stub(person).first_guess
@@ -280,7 +280,7 @@ describe PeopleController do
 
     # noinspection RubyArgCount
     def stub_guesses
-      stub(Guess).mapped_count { 1 }
+      stub(person).mapped_guess_count { 1 }
 
       stub(Person).high_scorers(@now, 7) { [ person ] }
       stub(Person).high_scorers(@now, 30) { [ person ] }
@@ -428,7 +428,7 @@ describe PeopleController do
       person = build :person, id: 1
       stub(Person).find(person.id) { person }
       stub(Photo).mapped_count(person.id) { 1 }
-      stub(Guess).mapped_count(person.id) { 1 }
+      stub(person).mapped_guess_count { 1 }
       json = { 'property' => 'value' }
       stub(controller).map_photos(person.id) { json }
       get :map, id: person.id

@@ -1,4 +1,38 @@
 describe PersonShowSupport do
+  describe '#mapped_guess_count' do
+    it "counts the person's guesses of mapped photos" do
+      photo = create :photo, accuracy: 12
+      guess = create :guess, photo: photo
+      guess.person.mapped_guess_count.should == 1
+    end
+
+    it "counts the person's guesses of auto-mapped photos" do
+      photo = create :photo, inferred_latitude: 37
+      guess = create :guess, photo: photo
+      guess.person.mapped_guess_count.should == 1
+    end
+
+    it "ignores others' guesses" do
+      photo = create :photo, accuracy: 12
+      create :guess, photo: photo
+      other_person = create :person
+      other_person.mapped_guess_count.should == 0
+    end
+
+    it "ignores guesses of unmapped photos" do
+      photo = create :photo
+      guess = create :guess, photo: photo
+      guess.person.mapped_guess_count.should == 0
+    end
+
+    it "ignores guesses of photos mapped with insufficient accuracy" do
+      photo = create :photo, accuracy: 11
+      guess = create :guess, photo: photo
+      guess.person.mapped_guess_count.should == 0
+    end
+
+  end
+
   describe '#standing' do
     let(:person) { create :person }
 

@@ -1,6 +1,10 @@
 module PersonShowSupport
   extend ActiveSupport::Concern
 
+  def mapped_guess_count
+    guesses.joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null').count
+  end
+
   def standing
     place = 1
     tied = false
