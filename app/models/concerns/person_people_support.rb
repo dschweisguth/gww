@@ -9,8 +9,7 @@ module PersonPeopleSupport
     def nemeses
       nemeses = find_by_sql %Q[
         select guessers.*, f.person_id poster_id,
-          count(*) / posters_posts.post_count / guessers_guesses.guess_count *
-            (select count(*) from photos) bias
+          count(*) / posters_posts.post_count / guessers_guesses.guess_count * (select count(*) from photos) bias
         from guesses g, photos f, people guessers,
           (select person_id, count(*) post_count from photos
             group by person_id having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE}) posters_posts,
@@ -33,18 +32,18 @@ module PersonPeopleSupport
     end
 
     def top_guessers(report_time)
-      days, weeks, months, years = get_periods(report_time.getlocal)
+      days, weeks, months, years = top_guesser_periods report_time.getlocal
 
       [ days, weeks, months, years ].each do |periods|
         periods.each do |period|
-          period.scores = get_scores period.start, period.finish
+          period.scores = top_guesser_scores period.start, period.finish
         end
       end
 
       return days, weeks, months, years
     end
 
-    private def get_periods(report_time)
+    private def top_guesser_periods(report_time)
       report_day = report_time.beginning_of_day
 
       days = (0 .. 6).map { |i| Period.starting_at(report_day - i.days, 1.day) }
@@ -62,26 +61,22 @@ module PersonPeopleSupport
       return days, weeks, months, years
     end
 
-    private def get_scores(begin_date, end_date)
-      scores = {}
+    private def top_guesser_scores(begin_date, end_date)
+      guessers = Person
+        .select("people.*, count(*) score")
+        .joins(:guesses)
+        .where("? <= guesses.commented_at", begin_date.getutc)
+        .where("guesses.commented_at < ?", end_date.getutc)
+        .group("people.id")
 
-      guessers = Person.find_by_sql [
-        "select p.*, count(*) score from people p, guesses g " +
-          "where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ? group by p.id",
-        begin_date.getutc, end_date.getutc ]
-      guessers.each do |guesser|
+      scores = guessers.each_with_object({}) do |guesser, scores|
         guesser.score = guesser[:score]
-        score = guesser.score
-        guessers_with_score = scores[score]
-        if guessers_with_score
-          guessers_with_score.push guesser
-        else
-          scores[score] = [ guesser ]
-        end
+        scores[guesser.score] ||= []
+        scores[guesser.score] << guesser
       end
 
       scores.values.each do |guessers_with_score|
-        guessers_with_score.replace(guessers_with_score.sort_by { |guesser| guesser.username.downcase })
+        guessers_with_score.sort_by! { |guesser| guesser.username.downcase }
       end
 
       scores
