@@ -59,10 +59,10 @@ class Stcline < ActiveRecord::Base
     from_address, to_address = cline.lf_fadd != 0 && number % 2 == cline.lf_fadd % 2 \
       ? [cline.lf_fadd, cline.lf_toadd ] : [ cline.rt_fadd, cline.rt_toadd ]
     pos = from_address == to_address ? 0.5 : (number - from_address) / (to_address - from_address)
-    point = RGeo::Cartesian.preferred_factory.point \
-      first.x + pos * (last.x - first.x), first.y + pos * (last.y - first.y)
-    logger.debug "Found #{address} at #{point.x}, #{point.y}"
-    point
+    RGeo::Cartesian.preferred_factory.point(
+      first.x + pos * (last.x - first.x), first.y + pos * (last.y - first.y)).tap do |point|
+      logger.debug "Found #{address} at #{point.x}, #{point.y}"
+    end
   end
 
 end

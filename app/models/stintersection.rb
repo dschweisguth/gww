@@ -4,16 +4,14 @@ class Stintersection < ActiveRecord::Base
     if location.respond_to? :on
       point1 = geocode_intersection location.on, location.between1
       if ! point1
-        return nil
+        return nil # return immediately for performance
       end
       point2 = geocode_intersection location.on, location.between2
       if point2
-        midpoint = point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2)
-        logger.debug "Found midpoint of #{location.on} " +
-          "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
-        midpoint
-      else
-        nil
+        point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2).tap do |midpoint|
+          logger.debug "Found midpoint of #{location.on} " +
+            "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
+        end
       end
     elsif location.respond_to? :number
       Stcline.geocode location
@@ -25,9 +23,9 @@ class Stintersection < ActiveRecord::Base
   private_class_method def self.geocode_intersection(street1, street2)
     intersections = intersections street1, street2
     if intersections.length == 1
-      point = intersections[0].SHAPE
-      logger.debug "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
-      point
+      intersections[0].SHAPE.tap do |point|
+        logger.debug "Found intersection of #{street1} and #{street2} at #{point.x}, #{point.y}."
+      end
     else
       logger.debug "Found #{intersections.length} intersections of #{street1} and #{street2}."
       nil
@@ -42,9 +40,9 @@ class Stintersection < ActiveRecord::Base
     intersections = intersections street, cross_street
     street_types = (intersections.map &:st_type).uniq
     if street_types.length == 1
-      street_type = street_types[0]
-      logger.debug "The #{street.name} that crosses #{cross_street} is a(n) #{street_type}."
-      street_type
+      street_types[0].tap do |street_type|
+        logger.debug "The #{street.name} that crosses #{cross_street} is a(n) #{street_type}."
+      end
     else
       logger.debug "Found #{street_types.length} intersections of #{street.name} and #{cross_street}."
       nil
