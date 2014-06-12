@@ -58,19 +58,19 @@ module PhotoStatisticsSupport
         logger.debug "\nInferring geocode for \"#{answer.comment_text}\" ..."
         locations = parser.parse answer.comment_text
         point =
-          if locations.empty?
-            logger.debug "Found no location."
-            nil
-          else
+          if locations.any?
             location_count += 1
-            shapes = locations.map { |location| Stintersection.geocode location }.reject &:nil?
-            if shapes.length != 1
+            shapes = locations.map { |location| Stintersection.geocode location }.compact
+            if shapes.length == 1
+              inferred_count += 1
+              shapes.first
+            else
               logger.debug "Found #{shapes.length} geocodes."
               nil
-            else
-              inferred_count += 1
-              shapes[0]
             end
+          else
+            logger.debug "Found no location."
+            nil
           end
         answer.photo.save_geocode point
       end
@@ -84,11 +84,10 @@ module PhotoStatisticsSupport
   end
 
   def save_geocode(point)
-    lat, long = point.nil? ? [ nil, nil ] : [ point.y, point.x ]
+    lat = point.try :y
+    long = point.try :x
     if inferred_latitude != lat || inferred_longitude != long
-      self.inferred_latitude = lat
-      self.inferred_longitude = long
-      save!
+      update! inferred_latitude: lat, inferred_longitude: long
     end
   end
 
