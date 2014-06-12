@@ -62,64 +62,14 @@ class FlickrUpdater
       now = Time.now.getutc
 
       parsed_photos['photo'].each do |parsed_photo|
-        # Find or create person
-        person_flickrid = parsed_photo['owner']
-        person_attrs = { username: parsed_photo['ownername'], pathalias: parsed_photo['pathalias'] }
-        if person_attrs[:pathalias] == ''
-          person_attrs[:pathalias] = person_flickrid
-        end
-        person = Person.find_by_flickrid person_flickrid
-        # Don't bother to update an existing Person. We already did that in update_all_people.
-        if ! person
-          person = Person.create!({ flickrid: person_flickrid }.merge person_attrs)
+        person, created = create_or_update_person_from parsed_photo
+        if created
           new_person_count += 1
         end
 
-        # Update or create photo
-        photo_flickrid = parsed_photo['id']
-        photo_attrs = {
-          farm: parsed_photo['farm'],
-          server: parsed_photo['server'],
-          secret: parsed_photo['secret'],
-          latitude: to_float_or_nil(parsed_photo['latitude']),
-          longitude: to_float_or_nil(parsed_photo['longitude']),
-          accuracy: to_integer_or_nil(parsed_photo['accuracy']),
-          lastupdate: Time.at(parsed_photo['lastupdate'].to_i).getutc,
-          views: parsed_photo['views'].to_i,
-          title: parsed_photo['title'],
-          description: to_string_or_nil(parsed_photo['description']),
-          seen_at: now
-        }
-        photo = Photo.find_by_flickrid photo_flickrid
-        photo_needs_update = ! photo || photo.lastupdate != photo_attrs[:lastupdate]
-        if photo_needs_update
-          begin
-            photo_attrs[:faves] = fave_count photo_flickrid
-          rescue FlickrService::FlickrRequestFailedError => e
-            Rails.logger.warn "Couldn't get faves for photo flickrid #{photo_flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
-            # This happens when a photo is private but visible to the caller because it's posted to a group of which
-            # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-            if ! photo
-              photo_attrs[:faves] = 0
-            end
-          end
-        end
-        if photo
-          photo.update! photo_attrs
-        else
-          photo = Photo.create!({
-            person_id: person.id,
-            flickrid: photo_flickrid,
-            dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
-            game_status: 'unfound'
-          }.merge photo_attrs)
+        created = create_or_update_photo_from parsed_photo, person, now
+        if created
           new_photo_count += 1
-        end
-
-        # Update comments and tags
-        if photo_needs_update
-          update_comments photo
-          update_tags photo
         end
 
       end
@@ -129,42 +79,109 @@ class FlickrUpdater
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
   end
 
+  private_class_method def self.create_or_update_person_from(parsed_photo)
+    flickrid = parsed_photo['owner']
+    attributes = { username: parsed_photo['ownername'], pathalias: parsed_photo['pathalias'] }
+    if attributes[:pathalias] == ''
+      attributes[:pathalias] = flickrid
+    end
+    person = Person.find_by_flickrid flickrid
+    # Don't bother to update an existing Person. We already did that in update_all_people.
+    if person
+      created = false
+    else
+      attributes.merge! flickrid: flickrid
+      person = Person.create! attributes
+      created = true
+    end
+    return person, created
+  end
+
+  private_class_method def self.create_or_update_photo_from(parsed_photo, person, now)
+    flickrid = parsed_photo['id']
+    photo = Photo.find_by_flickrid flickrid
+    lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
+    photo_needs_full_update = !photo || lastupdate != photo.lastupdate
+
+    attributes = { seen_at: now }
+    if photo_needs_full_update
+      attributes.merge! \
+        farm: parsed_photo['farm'],
+        server: parsed_photo['server'],
+        secret: parsed_photo['secret'],
+        title: parsed_photo['title'],
+        description: to_string_or_nil(parsed_photo['description']),
+        views: parsed_photo['views'].to_i,
+        lastupdate: lastupdate,
+        latitude: to_float_or_nil(parsed_photo['latitude']),
+        longitude: to_float_or_nil(parsed_photo['longitude']),
+        accuracy: to_integer_or_nil(parsed_photo['accuracy'])
+
+      fave_count = fave_count flickrid
+      if fave_count
+        attributes[:faves] = fave_count
+      else
+        if !photo
+          attributes[:faves] = 0
+        end
+      end
+
+    end
+
+    if photo
+      photo.update! attributes
+      created = false
+    else
+      attributes.merge! \
+        person_id: person.id,
+        flickrid: flickrid,
+        dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
+        game_status: 'unfound'
+      photo = Photo.create! attributes
+      created = true
+    end
+
+    if photo_needs_full_update
+      update_comments photo
+      update_tags photo
+    end
+
+    created
+  end
+
   def self.update_photo(photo)
     photo.person.update! person_attributes(photo.person.flickrid)
 
-    photo_info = FlickrService.instance.photos_get_info(photo_id: photo.flickrid)['photo'].first
-    lastupdate = Time.at(photo_info['dates'][0]['lastupdate'].to_i).getutc
-    if lastupdate == photo.lastupdate
-      photo.update! seen_at: Time.now
-    else
+    parsed_photo = FlickrService.instance.photos_get_info(photo_id: photo.flickrid)['photo'].first
+    lastupdate = Time.at(parsed_photo['dates'][0]['lastupdate'].to_i).getutc
+    photo_needs_full_update = lastupdate != photo.lastupdate
+    attributes = { seen_at: Time.now }
+    if photo_needs_full_update
       latitude, longitude, accuracy = location photo
-      photo.update! \
-        farm: photo_info['farm'],
-        server: photo_info['server'],
-        secret: photo_info['secret'],
-        views: photo_info['views'].to_i,
-        title: to_string_or_nil(photo_info['title']),
-        description: to_string_or_nil(photo_info['description']),
-        lastupdate: Time.at(photo_info['dates'][0]['lastupdate'].to_i).getutc,
+      attributes.merge! \
+        farm: parsed_photo['farm'],
+        server: parsed_photo['server'],
+        secret: parsed_photo['secret'],
+        title: to_string_or_nil(parsed_photo['title']),
+        description: to_string_or_nil(parsed_photo['description']),
+        views: parsed_photo['views'].to_i,
+        lastupdate: lastupdate,
         latitude: latitude,
         longitude: longitude,
-        accuracy: accuracy,
-        seen_at: Time.now
-
-      begin
-        faves = fave_count photo.flickrid
-        photo.update! faves: faves
-      rescue FlickrService::FlickrRequestFailedError => e
-        # This happens when a photo is private but visible to the caller because it's posted to a group of which
-        # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-        Rails.logger.warn "Couldn't get faves for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
+        accuracy: accuracy
+      fave_count = fave_count photo.flickrid
+      if fave_count
+        attributes[:faves] = fave_count
       end
+    end
+    photo.update! attributes
 
-      if photo_info['comments'].first.to_i > 0
+    if photo_needs_full_update
+      if parsed_photo['comments'].first.to_i > 0
         update_comments photo
       end
 
-      if photo_info['tags'].first.any?
+      if parsed_photo['tags'].first.any?
         update_tags photo
       end
 
@@ -203,8 +220,15 @@ class FlickrUpdater
   end
 
   def self.fave_count(photo_flickrid)
-    faves_xml = FlickrService.instance.photos_get_favorites photo_id: photo_flickrid, per_page: 1
-    faves_xml['photo'][0]['total'].to_i
+    begin
+      parsed_faves = FlickrService.instance.photos_get_favorites photo_id: photo_flickrid, per_page: 1
+      parsed_faves['photo'][0]['total'].to_i
+    rescue FlickrService::FlickrRequestFailedError => e
+      Rails.logger.warn "Couldn't get faves for photo flickrid #{photo_flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
+      # This happens when a photo is private but visible to the caller because it's posted to a group of which
+      # the caller is a member. Not clear yet whether this is a bug or intended behavior.
+      nil
+    end
   end
 
   def self.update_comments(photo)

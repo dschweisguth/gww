@@ -222,7 +222,7 @@ describe FlickrUpdater, type: :model do
 
     end
 
-    it "doesn't update faves, comments or tags if Flickr says the photo hasn't been updated" do
+    it "doesn't update anything except seen_at if Flickr says the photo hasn't been updated" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
       dont_allow(FlickrService.instance).fave_count
       dont_allow(FlickrUpdater).update_comments
@@ -246,17 +246,17 @@ describe FlickrUpdater, type: :model do
       Photo.only_one_exists.should have_attributes(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
-        farm: stubbed_photo[:farm],
-        server: stubbed_photo[:server],
-        secret: stubbed_photo[:secret],
-        latitude: stubbed_photo[:latitude],
-        longitude: stubbed_photo[:longitude],
-        accuracy: stubbed_photo[:accuracy],
+        farm: photo_before.farm,
+        server: photo_before.server,
+        secret: photo_before.secret,
+        latitude: photo_before.latitude,
+        longitude: photo_before.longitude,
+        accuracy: photo_before.accuracy,
         dateadded: photo_before.dateadded,
         lastupdate: photo_before.lastupdate,
-        views: stubbed_photo[:views],
-        title: stubbed_photo[:title],
-        description: stubbed_photo[:description],
+        views: photo_before.views,
+        title: photo_before.title,
+        description: photo_before.description,
         faves: photo_before.faves,
         seen_at: now
       )
@@ -266,7 +266,7 @@ describe FlickrUpdater, type: :model do
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
       mock_get_comments_and_tags
-      stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
+      stub(FlickrUpdater).fave_count { nil }
       FlickrUpdater.update_all_photos
       Photo.first.faves.should == 0
     end
@@ -274,7 +274,7 @@ describe FlickrUpdater, type: :model do
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
       mock_get_comments_and_tags
-      stub(FlickrUpdater).fave_count { raise FlickrService::FlickrRequestFailedError }
+      stub(FlickrUpdater).fave_count { nil }
       photo = create :photo, faves: 6
       FlickrUpdater.update_all_photos
       photo.reload.faves.should == 6
@@ -372,7 +372,7 @@ describe FlickrUpdater, type: :model do
       stub_get_person
       stub_get_photo
       stub_get_photo_location
-      stub(FlickrUpdater).fave_count(photo.flickrid) { raise FlickrService::FlickrRequestFailedError, "Couldn't get faves from Flickr" }
+      stub(FlickrUpdater).fave_count(photo.flickrid) { nil }
       stub(FlickrUpdater).update_comments photo
       stub(FlickrUpdater).update_tags photo
       FlickrUpdater.update_photo photo
@@ -491,6 +491,13 @@ describe FlickrUpdater, type: :model do
       } }
       FlickrUpdater.fave_count('photo_flickrid').should == 7
     end
+
+    it "returns nil if there is an error" do
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_get_favorites(photo_id: 'photo_flickrid', per_page: 1) { raise FlickrService::FlickrRequestFailedError }
+      FlickrUpdater.fave_count('photo_flickrid').should == nil
+    end
+
   end
 
   describe '.update_comments' do
