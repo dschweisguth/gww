@@ -270,6 +270,20 @@ class Photo < ActiveRecord::Base
 
   # Miscellaneous instance methods
 
+  def replace_comments(attributes_hashes)
+    transaction do
+      comments.clear
+      attributes_hashes.each { |attributes| comments.create! attributes }
+    end
+  end
+
+  def replace_tags(attributes_hashes)
+    transaction do
+      tags.clear
+      attributes_hashes.each { |attributes| tags.create! attributes }
+    end
+  end
+
   def years_old
     ((Time.now - dateadded).to_i / (365 * 24 * 60 * 60)).truncate
   end

@@ -211,17 +211,16 @@ class FlickrUpdater
     begin
       comments_xml = FlickrService.instance.photos_comments_get_list photo_id: photo.flickrid
       parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
-      if !parsed_comments.blank?
-        Comment.transaction do
-          photo.comments.clear
-          parsed_comments.each do |comment_xml|
-            photo.comments.create!(
-              flickrid: comment_xml['author'],
-              username: comment_xml['authorname'],
-              comment_text: comment_xml['content'],
-              commented_at: Time.at(comment_xml['datecreate'].to_i).getutc)
-          end
+      if parsed_comments.try :any?
+        attributes_hashes = parsed_comments.map do |parsed_comment|
+          {
+            flickrid: parsed_comment['author'],
+            username: parsed_comment['authorname'],
+            comment_text: parsed_comment['content'],
+            commented_at: Time.at(parsed_comment['datecreate'].to_i).getutc
+          }
         end
+        photo.replace_comments attributes_hashes
       end
     rescue FlickrService::FlickrRequestFailedError => e
       # This happens when a photo has been removed from the group.
@@ -233,12 +232,10 @@ class FlickrUpdater
     begin
       tags_xml = FlickrService.instance.tags_get_list_photo photo_id: photo.flickrid
       parsed_tags = tags_xml['photo'][0]['tags'][0]['tag'] || []
-      Tag.transaction do
-        photo.tags.clear
-        parsed_tags.each do |parsed_tag|
-          photo.tags.create! raw: parsed_tag['raw'], machine_tag: (parsed_tag['machine_tag'] == '1')
-        end
+      attributes_hashes = parsed_tags.map do |parsed_tag|
+        { raw: parsed_tag['raw'], machine_tag: (parsed_tag['machine_tag'] == '1') }
       end
+      photo.replace_tags attributes_hashes
     rescue FlickrService::FlickrRequestFailedError => e
       # Judging from how comments work, this probably happens when a photo has been removed from the group.
       Rails.logger.warn "Couldn't get tags for photo #{photo.id}, flickrid #{photo.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
