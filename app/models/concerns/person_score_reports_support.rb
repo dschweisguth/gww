@@ -15,41 +15,33 @@ module PersonScoreReportsSupport
     end
     
     def high_scorers(now, for_the_past_n_days)
-      utc_now = now.getutc
-      people = find_by_sql [ %q{
-        select p.*, count(*) score from people p, guesses g
-        where p.id = g.person_id and ? < g.commented_at and g.added_at <= ?
-        group by p.id having score > 1 order by score desc
-      }, utc_now - for_the_past_n_days.days, utc_now]
-      high_scorers = []
-      current_score = nil
-      people.each do |person|
-        person.score = person[:score]
-        break if high_scorers.length >= 3 && person.score < current_score
-        high_scorers << person
-        current_score = person.score
-      end
-      high_scorers
+      top_achievers :guesses, '? < guesses.commented_at and guesses.added_at <= ?', :score, now, for_the_past_n_days
     end
   
     def top_posters(now, for_the_past_n_days)
-      utc_now = now.getutc
-      people = find_by_sql [ %q{
-        select p.*, count(*) post_count from people p, photos f
-        where p.id = f.person_id and ? < f.dateadded and f.dateadded <= ?
-        group by p.id having post_count > 1 order by post_count desc
-      }, utc_now - for_the_past_n_days.days, utc_now]
-      top_posters = []
-      current_post_count = nil
-      people.each do |person|
-        person.post_count = person[:post_count]
-        break if top_posters.length >= 3 && person.post_count < current_post_count
-        top_posters << person
-        current_post_count = person.post_count
-      end
-      top_posters
+      top_achievers :photos, '? < photos.dateadded and photos.dateadded <= ?', :post_count, now, for_the_past_n_days
     end
   
+    def top_achievers(achievement, date_range, attribute, now, for_the_past_n_days)
+      utc_now = now.getutc
+      people =
+        select("people.*, count(*) as achievement_count")
+          .joins(achievement)
+          .where(date_range, utc_now - for_the_past_n_days.days, utc_now)
+          .group("people.id")
+          .having("achievement_count > 1")
+          .order("achievement_count desc, people.username")
+      current_value = nil
+      people.each_with_object([]) do |person, top_people|
+        person.send "#{attribute}=", person[:achievement_count]
+        if top_people.length >= 3 && person.send(attribute) < current_value
+          break top_people
+        end
+        top_people << person
+        current_value = person.send attribute
+      end
+    end
+
     def by_score(people, to_date)
       scores = Guess.where('added_at <= ?', to_date.getutc).group(:person_id).count
       people_by_score = {}
@@ -67,7 +59,7 @@ module PersonScoreReportsSupport
   
     CLUBS = {
       21 => "https://www.flickr.com/photos/inkvision/2976263709/",
-      65 => "https://www.flickr.com/photos/deadslow/232833608/",
+      65 => "https://www.flickr.com/photos/deadslow /232833608/",
       222 => "https://www.flickr.com/photos/potatopotato/90592664/",
       365 => "https://www.flickr.com/photos/glasser/5065771787/",
       500 => "https://www.flickr.com/photos/spine/2960364433/",

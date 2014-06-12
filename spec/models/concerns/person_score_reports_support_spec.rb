@@ -30,25 +30,46 @@ describe PersonScoreReportsSupport do
   describe '.high_scorers' do
     let(:report_date) { Time.utc(2011) }
 
-    it "returns the three highest scorers in the given previous # of days" do
+    it "returns the highest scorers in the given previous # of days" do
       person = create :person
-      create :guess, person: person, commented_at: report_date, added_at: report_date
-      create :guess, person: person, commented_at: report_date, added_at: report_date
+      2.times { create :guess, person: person, commented_at: report_date, added_at: report_date }
       high_scorers_returns report_date, 1, person, 2
+    end
+
+    it "returns only the top 3 high scorers if there is not a tie for third place" do
+      person1 = create :person
+      2.times { create :guess, person: person1, commented_at: report_date, added_at: report_date }
+      person2 = create :person
+      3.times { create :guess, person: person2, commented_at: report_date, added_at: report_date }
+      person3 = create :person
+      4.times { create :guess, person: person3, commented_at: report_date, added_at: report_date }
+      person4 = create :person
+      5.times { create :guess, person: person4, commented_at: report_date, added_at: report_date }
+      Person.high_scorers(report_date, 1).should == [person4, person3, person2]
+    end
+
+    it "returns all ties for third place" do
+      person1 = create :person, username: 'b'
+      3.times { create :guess, person: person1, commented_at: report_date, added_at: report_date }
+      person2 = create :person, username: 'a'
+      3.times { create :guess, person: person2, commented_at: report_date, added_at: report_date }
+      person3 = create :person
+      4.times { create :guess, person: person3, commented_at: report_date, added_at: report_date }
+      person4 = create :person
+      5.times { create :guess, person: person4, commented_at: report_date, added_at: report_date }
+      Person.high_scorers(report_date, 1).should == [person4, person3, person2, person1]
     end
 
     it "ignores guesses made before the reporting period" do
       person = create :person
-      create :guess, person: person, commented_at: report_date, added_at: report_date
-      create :guess, person: person, commented_at: report_date, added_at: report_date
+      2.times { create :guess, person: person, commented_at: report_date, added_at: report_date }
       create :guess, person: person, commented_at: report_date - 1.day - 1.second, added_at: report_date
       high_scorers_returns report_date, 1, person, 2
     end
 
     it "ignores guesses added after the reporting period" do
       person = create :person
-      create :guess, person: person, commented_at: report_date, added_at: report_date
-      create :guess, person: person, commented_at: report_date, added_at: report_date
+      2.times { create :guess, person: person, commented_at: report_date, added_at: report_date }
       create :guess, person: person, commented_at: report_date, added_at: report_date + 1.second
       high_scorers_returns report_date, 1, person, 2
     end
@@ -74,25 +95,46 @@ describe PersonScoreReportsSupport do
   describe '.top_posters' do
     let(:report_date) { Time.utc(2011) }
 
-    it "returns the three most frequent posters in the given previous # of days" do
+    it "returns the most frequent posters in the given previous # of days" do
       person = create :person
-      create :photo, person: person, dateadded: report_date
-      create :photo, person: person, dateadded: report_date
+      2.times { create :photo, person: person, dateadded: report_date }
       top_posters_returns report_date, 1, person, 2
+    end
+
+    it "returns only the top 3 frequent posters if there is not a tie for third place" do
+      person1 = create :person
+      2.times { create :photo, person: person1, dateadded: report_date }
+      person2 = create :person
+      3.times { create :photo, person: person2, dateadded: report_date }
+      person3 = create :person
+      4.times { create :photo, person: person3, dateadded: report_date }
+      person4 = create :person
+      5.times { create :photo, person: person4, dateadded: report_date }
+      Person.top_posters(report_date, 1).should == [person4, person3, person2]
+    end
+
+    it "returns all ties for third place" do
+      person1 = create :person, username: 'b'
+      3.times { create :photo, person: person1, dateadded: report_date }
+      person2 = create :person, username: 'a'
+      3.times { create :photo, person: person2, dateadded: report_date }
+      person3 = create :person
+      4.times { create :photo, person: person3, dateadded: report_date }
+      person4 = create :person
+      5.times { create :photo, person: person4, dateadded: report_date }
+      Person.top_posters(report_date, 1).should == [person4, person3, person2, person1]
     end
 
     it "ignores photos posted before the reporting period" do
       person = create :person
-      create :photo, person: person, dateadded: report_date
-      create :photo, person: person, dateadded: report_date
+      2.times { create :photo, person: person, dateadded: report_date }
       create :photo, person: person, dateadded: report_date - 1.day - 1.second
       top_posters_returns report_date, 1, person, 2
     end
 
     it "ignores photos posted after the reporting period" do
       person = create :person
-      create :photo, person: person, dateadded: report_date
-      create :photo, person: person, dateadded: report_date
+      2.times { create :photo, person: person, dateadded: report_date }
       create :photo, person: person, dateadded: report_date + 1.second
       top_posters_returns report_date, 1, person, 2
     end
