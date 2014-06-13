@@ -19,7 +19,7 @@ module PersonScoreReportsSupport
     def top_achievers(achievement, date_range, attribute, now, for_the_past_n_days)
       utc_now = now.getutc
       people =
-        select("people.*, count(*) as achievement_count")
+        select("people.*, count(*) achievement_count")
           .joins(achievement)
           .where(date_range, utc_now - for_the_past_n_days.days, utc_now)
           .group("people.id")
