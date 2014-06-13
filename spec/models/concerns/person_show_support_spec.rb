@@ -62,22 +62,22 @@ describe PersonShowSupport do
 
   end
 
-  describe '#standing' do
+  describe '#score_standing' do
     let(:person) { create :person }
 
     it "returns the person's score position" do
-      person.standing.should == [ 1, false ]
+      person.score_standing.should == [ 1, false ]
     end
 
     it "considers other players' scores" do
       create :guess
-      person.standing.should == [ 2, false ]
+      person.score_standing.should == [ 2, false ]
     end
 
     it "detects ties" do
       create :guess, person: person
       create :guess
-      person.standing.should == [ 1, true ]
+      person.score_standing.should == [ 1, true ]
     end
 
   end

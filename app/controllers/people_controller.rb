@@ -38,7 +38,7 @@ class PeopleController < ApplicationController
 
     @mapped_post_and_guess_count = @person.mapped_photo_count + @person.mapped_guess_count
 
-    @place, @tied = @person.standing
+    @place, @tied = @person.score_standing
     @posts_place, @posts_tied = @person.posts_standing
 
     now = Time.now

@@ -9,7 +9,7 @@ module PersonShowSupport
     guesses.joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null').count
   end
 
-  def standing
+  def score_standing
     place = 1
     tied = false
     scores_by_person = Guess.group(:person_id).count

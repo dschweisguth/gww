@@ -109,7 +109,7 @@ describe PeopleController do
       person.score = 1 # for the high_scorers methods
       person.post_count = 1 # for the top_posters methods
       stub(Person).find(person.id) { person }
-      stub(person).standing { [ 1, false ] }
+      stub(person).score_standing { [ 1, false ] }
       stub(person).posts_standing { [ 1, false ] }
 
       @now = Time.now
