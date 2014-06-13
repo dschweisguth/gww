@@ -23,42 +23,30 @@ module PersonWheresiesSupport
     end
 
     def rookies_with_most_points_in(year)
-      guessers = find_by_sql [
-        %q{
-          select p.*, count(*) points
-          from people p,
-            (select person_id, min(a.acted) joined
-              from
-                (select person_id, commented_at acted from guesses union all
-                  select person_id, dateadded acted from photos) a
-              group by person_id having ? <= joined and joined < ?) r,
-            guesses g
-          where p.id = r.person_id and p.id = g.person_id and g.commented_at < ?
-          group by p.id order by points desc limit 10
-        },
-        Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
-      ]
-      guessers.each { |guesser| guesser.points = guesser[:points] }
-      guessers
+      rookies_with_most_achievements_in year, :guesses, :commented_at, :points
     end
 
     def rookies_with_most_posts_in(year)
+      rookies_with_most_achievements_in year, :photos, :dateadded, :post_count
+    end
+
+    def rookies_with_most_achievements_in(year, achievement, date_column, count_attribute)
       rookies = find_by_sql [
-        %q{
-          select p.*, count(*) post_count
-          from people p,
-            (select person_id, min(a.acted) joined
+        %Q{
+          select people.*, count(*) achievement_count
+          from people,
+            (select person_id, min(acted.acted) joined
               from
                 (select person_id, commented_at acted from guesses union all
-                  select person_id, dateadded acted from photos) a
-              group by person_id having ? <= joined and joined < ?) r,
-            photos f
-          where p.id = r.person_id and p.id = f.person_id and f.dateadded < ?
-          group by p.id order by post_count desc limit 10
+                  select person_id, dateadded acted from photos) acted
+              group by person_id having ? <= joined and joined < ?) rookies,
+            #{achievement} achievement
+          where people.id = rookies.person_id and people.id = achievement.person_id and achievement.#{date_column} < ?
+          group by people.id order by achievement_count desc limit 10
         },
         Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
       ]
-      rookies.each { |rookie| rookie.post_count = rookie[:post_count] }
+      rookies.each { |rookie| rookie.send "#{count_attribute}=", rookie[:achievement_count] }
       rookies
     end
 
