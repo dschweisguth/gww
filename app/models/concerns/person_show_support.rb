@@ -132,41 +132,30 @@ module PersonShowSupport
   end
 
   def most_viewed_photo
-    most_viewed_photo = photos.includes(:person).order('views desc').first
-    if most_viewed_photo
-      most_viewed_photo.place = Person.count_by_sql([
-        %q[
-          select count(*)
-          from (
-            select max(views) max_views
-            from photos f
-            group by person_id
-          ) most_viewed
-          where max_views > ?
-        ],
-        most_viewed_photo.views
-      ]) + 1
-    end
-    most_viewed_photo
+    most_something_photo :views
   end
 
   def most_faved_photo
-    most_faved_photo = photos.includes(:person).order('faves desc').first
-    if most_faved_photo
-      most_faved_photo.place = Person.count_by_sql([
-        %q[
+    most_something_photo :faves
+  end
+
+  private def most_something_photo(attribute)
+    most_something_photo = photos.includes(:person).order("#{attribute} desc").first
+    if most_something_photo
+      most_something_photo.place = Person.count_by_sql([
+        %Q[
           select count(*)
           from (
-            select max(faves) max_faves
+            select max(#{attribute}) max_value
             from photos f
             group by person_id
-          ) most_faved
-          where max_faves > ?
+          ) most_something
+          where max_value > ?
         ],
-        most_faved_photo.faves
+        most_something_photo.send(attribute)
       ]) + 1
     end
-    most_faved_photo
+    most_something_photo
   end
 
   def guesses_with_associations
