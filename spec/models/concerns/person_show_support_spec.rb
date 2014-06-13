@@ -501,7 +501,7 @@ describe PersonShowSupport do
   end
 
   describe '#favorite_posters' do
-    it "lists the posters which this person has guessed #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as this person has guessed all posts" do
+    it "lists the posters which this person has guessed 2.5 or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)
       favorite_posters = guesser.favorite_posters
       favorite_posters.should == [ favorite_poster ]

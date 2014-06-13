@@ -24,11 +24,7 @@ module PersonPeopleSupport
       poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
       posters = where id: poster_ids
       posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
-      nemeses.each do |nemesis|
-        nemesis.poster = posters_by_id[nemesis[:poster_id]]
-        nemesis.bias = nemesis[:bias]
-      end
-      nemeses
+      nemeses.each { |nemesis| nemesis.poster = posters_by_id[nemesis.poster_id] }
     end
 
     def top_guessers(report_time)

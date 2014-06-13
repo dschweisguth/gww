@@ -210,9 +210,7 @@ module PersonShowSupport
   end
 
   private def biased_people(sql)
-    people = Person.find_by_sql [sql, id, id]
-    people.each { |fp| fp.bias = fp[:bias] }
-    people
+    Person.find_by_sql [sql, id, id]
   end
 
 end

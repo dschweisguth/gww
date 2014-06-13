@@ -51,10 +51,9 @@ describe PeopleController do
 
   describe '#nemeses' do
     it "renders the page" do
-      guesser = build :person, id: 666
+      guesser = build :person, id: 666, bias: 2.5
       poster = build :person, id: 777
       guesser.poster = poster
-      guesser.bias = 2.5
       stub(Person).nemeses { [ guesser ] }
       get :nemeses
 

@@ -3,23 +3,19 @@ module PersonWheresiesSupport
 
   module ClassMethods
     def most_points_in(year)
-      guessers = find_by_sql [ %q{
+      find_by_sql [ %q{
         select p.*, count(*) points from people p, guesses g
           where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ?
   	      group by p.id order by points desc limit 10
       }, Time.local(year).getutc, Time.local(year + 1).getutc ]
-      guessers.each { |guesser| guesser.points = guesser[:points] }
-      guessers
     end
 
     def most_posts_in(year)
-      posters = find_by_sql [ %q{
+      find_by_sql [ %q{
         select p.*, count(*) post_count from people p, photos f
         where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ?
         group by p.id order by post_count desc limit 10
       }, Time.local(year).getutc, Time.local(year + 1).getutc ]
-      posters.each { |poster| poster.post_count = poster[:post_count] }
-      posters
     end
 
     def rookies_with_most_points_in(year)
@@ -31,9 +27,9 @@ module PersonWheresiesSupport
     end
 
     def rookies_with_most_achievements_in(year, achievement, date_column, count_attribute)
-      rookies = find_by_sql [
+      find_by_sql [
         %Q{
-          select people.*, count(*) achievement_count
+          select people.*, count(*) #{count_attribute}
           from people,
             (select person_id, min(acted.acted) joined
               from
@@ -42,12 +38,10 @@ module PersonWheresiesSupport
               group by person_id having ? <= joined and joined < ?) rookies,
             #{achievement} achievement
           where people.id = rookies.person_id and people.id = achievement.person_id and achievement.#{date_column} < ?
-          group by people.id order by achievement_count desc limit 10
+          group by people.id order by #{count_attribute} desc limit 10
         },
         Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
       ]
-      rookies.each { |rookie| rookie.send "#{count_attribute}=", rookie[:achievement_count] }
-      rookies
     end
 
   end
