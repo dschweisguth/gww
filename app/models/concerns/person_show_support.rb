@@ -163,26 +163,21 @@ module PersonShowSupport
   end
 
   def favorite_posters
-    favorite_posters = Person.find_by_sql [
-      %Q[
-        select posters.*,
-          count(*) / posters_posts.post_count /
-            (select count(*) from guesses where person_id = ?) *
-            (select count(*) from photos) bias
-        from guesses g, photos f, people posters,
-          (select person_id, count(*) post_count from photos
-            group by person_id having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE}) posters_posts
-        where g.photo_id = f.id and
-          g.person_id = ? and f.person_id = posters.id and
-          f.person_id = posters_posts.person_id
-        group by posters.id
-        having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE} and bias >= #{Person::MIN_BIAS_FOR_FAVORITE}
-        order by bias desc
-      ],
-      id, id
+    biased_people %Q[
+      select posters.*,
+        count(*) / posters_posts.post_count /
+          (select count(*) from guesses where person_id = ?) *
+          (select count(*) from photos) bias
+      from guesses g, photos f, people posters,
+        (select person_id, count(*) post_count from photos
+          group by person_id having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE}) posters_posts
+      where g.photo_id = f.id and
+        g.person_id = ? and f.person_id = posters.id and
+        f.person_id = posters_posts.person_id
+      group by posters.id
+      having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE} and bias >= #{Person::MIN_BIAS_FOR_FAVORITE}
+      order by bias desc
     ]
-    favorite_posters.each { |fp| fp.bias = fp[:bias] }
-    favorite_posters
   end
 
   def photos_with_associations
@@ -190,25 +185,20 @@ module PersonShowSupport
   end
 
   def favoring_guessers
-    favoring_guessers = Person.find_by_sql [
-      %Q[
-        select guessers.*,
-          count(*) / (select count(*) from photos where person_id = ?) /
-            guessers_guesses.guess_count * (select count(*) from photos) bias
-        from guesses g, photos f, people guessers,
-          (select person_id, count(*) guess_count from guesses
-            group by person_id) guessers_guesses
-        where g.photo_id = f.id and
-          g.person_id = guessers.id and f.person_id = ? and
-          g.person_id = guessers_guesses.person_id
-        group by guessers.id
-        having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE} and bias >= #{Person::MIN_BIAS_FOR_FAVORITE}
-        order by bias desc
-      ],
-      id, id
+    biased_people %Q[
+      select guessers.*,
+        count(*) / (select count(*) from photos where person_id = ?) /
+          guessers_guesses.guess_count * (select count(*) from photos) bias
+      from guesses g, photos f, people guessers,
+        (select person_id, count(*) guess_count from guesses
+          group by person_id) guessers_guesses
+      where g.photo_id = f.id and
+        g.person_id = guessers.id and f.person_id = ? and
+        g.person_id = guessers_guesses.person_id
+      group by guessers.id
+      having count(*) >= #{Person::MIN_GUESSES_FOR_FAVORITE} and bias >= #{Person::MIN_BIAS_FOR_FAVORITE}
+      order by bias desc
     ]
-    favoring_guessers.each { |fp| fp.bias = fp[:bias] }
-    favoring_guessers
   end
 
   def unfound_photos
@@ -217,6 +207,12 @@ module PersonShowSupport
 
   def revealed_photos
     photos.where(game_status: 'revealed').includes(:tags)
+  end
+
+  private def biased_people(sql)
+    people = Person.find_by_sql [sql, id, id]
+    people.each { |fp| fp.bias = fp[:bias] }
+    people
   end
 
 end
