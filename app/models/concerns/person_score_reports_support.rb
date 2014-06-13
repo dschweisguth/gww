@@ -4,14 +4,8 @@ module PersonScoreReportsSupport
   module ClassMethods
     def all_before(date)
       utc_date = date.getutc
-      find_by_sql [
-          %q[
-            select p.* from people p
-            where exists (select 1 from photos where person_id = p.id and dateadded <= ?) or
-              exists (select 1 from guesses where person_id = p.id and added_at <= ?)
-          ],
-          utc_date, utc_date
-      ]
+      where "exists (select 1 from photos where person_id = people.id and dateadded <= ?) or " +
+        "exists (select 1 from guesses where person_id = people.id and added_at <= ?)", utc_date, utc_date
     end
     
     def high_scorers(now, for_the_past_n_days)
