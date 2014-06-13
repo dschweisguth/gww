@@ -53,7 +53,7 @@ module PersonScoreReportsSupport
   
     CLUBS = {
       21 => "https://www.flickr.com/photos/inkvision/2976263709/",
-      65 => "https://www.flickr.com/photos/deadslow /232833608/",
+      65 => "https://www.flickr.com/photos/deadslow/232833608/",
       222 => "https://www.flickr.com/photos/potatopotato/90592664/",
       365 => "https://www.flickr.com/photos/glasser/5065771787/",
       500 => "https://www.flickr.com/photos/spine/2960364433/",
