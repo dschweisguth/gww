@@ -38,17 +38,7 @@ module PersonScoreReportsSupport
 
     def by_score(people, to_date)
       scores = Guess.where('added_at <= ?', to_date.getutc).group(:person_id).count
-      people_by_score = {}
-      people.each do |person|
-        score = scores[person.id] || 0
-        people_with_score = people_by_score[score]
-        if ! people_with_score
-          people_with_score = []
-          people_by_score[score] = people_with_score
-        end
-        people_with_score << person
-      end
-      people_by_score
+      people.group_by { |person| scores[person.id] || 0 }
     end
   
     CLUBS = {
