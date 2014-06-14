@@ -3,9 +3,7 @@
 <% content_for :title do %>Home<% end %>
 <h1>Guess Where Watcher</h1>
 
-<% if !flash[:general_error].nil? %>
-  <p class="error"><%= raw flash[:general_error] %></p>
-<% end %>
+<%= render 'shared/flash' %>
 
 <p>Welcome to Guess Where Watcher, the <a href="https://www.flickr.com/groups/guesswheresf/">Guess Where SF</a> scoring
 application! Administrators use GWW to score guesses, and players can use it to search for photos and players,
