@@ -6,11 +6,11 @@ gem 'bundler', '1.6.2'
 gem 'foreigner', '1.6.1'
 gem 'jquery-rails', '3.1.0'
 gem 'jquery-ui-rails', '4.2.1'
-gem 'mysql2', '0.3.15'
+gem 'mysql2', '0.3.16'
 gem 'rails', '4.1.1'
 gem 'sass-rails', '4.0.3'
 gem 'therubyracer', '0.12.1', platforms: :ruby
-gem 'uglifier', '2.5.0'
+gem 'uglifier', '2.5.1'
 gem 'will_paginate', '3.0.5'
 gem 'xml-simple', '1.1.3'
 
@@ -21,13 +21,13 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '2.2.1'
+  gem 'capybara', '2.3.0'
   gem 'cucumber-rails', '1.4.1', require: false
-  gem 'database_cleaner', '1.2.0'
+  gem 'database_cleaner', '1.3.0'
   gem 'factory_girl_rails', '4.4.1'
-  gem 'jasmine', '2.0.1'
+  gem 'jasmine', '2.0.2'
   gem 'launchy', '2.4.2'
-  gem 'poltergeist', '1.5.0'
+  gem 'poltergeist', '1.5.1'
   gem 'rr', '1.1.2', require: false
   gem 'rspec-rails', '2.99.0'
   gem 'shoulda-matchers', '2.6.1', require: false
@@ -35,5 +35,5 @@ group :test do
 end
 
 group :production do
-  gem 'passenger', '4.0.41'
+  gem 'passenger', '4.0.45'
 end
