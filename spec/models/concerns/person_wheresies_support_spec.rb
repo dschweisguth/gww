@@ -24,7 +24,7 @@ describe Person do
       end
       single_guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.most_points_in 2010
-      top_scorers.size.should == 10
+      top_scorers.length.should == 10
       top_scorers.should_not include(single_guess.person)
     end
 
@@ -55,8 +55,7 @@ describe Person do
       end
       single_post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.most_posts_in 2010
-      top_posters.size.should == 10
-      #noinspection RubyResolve
+      top_posters.length.should == 10
       top_posters.should_not include(single_post.person)
     end
 
@@ -144,7 +143,6 @@ describe Person do
       single_post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.rookies_with_most_posts_in 2010
       top_posters.size.should == 10
-      #noinspection RubyResolve
       top_posters.should_not include(single_post.person)
     end
 

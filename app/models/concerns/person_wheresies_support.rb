@@ -3,19 +3,23 @@ module PersonWheresiesSupport
 
   module ClassMethods
     def most_points_in(year)
-      find_by_sql [ %q{
-        select p.*, count(*) points from people p, guesses g
-          where p.id = g.person_id and ? <= g.commented_at and g.commented_at < ?
-  	      group by p.id order by points desc limit 10
-      }, Time.local(year).getutc, Time.local(year + 1).getutc ]
+      select("people.*, count(*) points")
+        .joins(:guesses)
+        .where("? <= guesses.commented_at", Time.local(year).getutc)
+        .where("guesses.commented_at < ?", Time.local(year + 1).getutc)
+        .group(:id)
+        .order("points desc")
+        .limit 10
     end
 
     def most_posts_in(year)
-      find_by_sql [ %q{
-        select p.*, count(*) post_count from people p, photos f
-        where p.id = f.person_id and ? <= f.dateadded and f.dateadded < ?
-        group by p.id order by post_count desc limit 10
-      }, Time.local(year).getutc, Time.local(year + 1).getutc ]
+      select("people.*, count(*) post_count")
+        .joins(:photos)
+        .where("? <= photos.dateadded", Time.local(year).getutc)
+        .where("photos.dateadded < ?", Time.local(year + 1).getutc)
+        .group(:id)
+        .order("post_count desc")
+        .limit 10
     end
 
     def rookies_with_most_points_in(year)
