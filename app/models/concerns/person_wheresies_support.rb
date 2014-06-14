@@ -3,22 +3,20 @@ module PersonWheresiesSupport
 
   module ClassMethods
     def most_points_in(year)
-      select("people.*, count(*) points")
-        .joins(:guesses)
-        .where("? <= guesses.commented_at", Time.local(year).getutc)
-        .where("guesses.commented_at < ?", Time.local(year + 1).getutc)
-        .group(:id)
-        .order("points desc")
-        .limit 10
+      most_achievements_in year, :guesses, :commented_at, :points
     end
 
     def most_posts_in(year)
-      select("people.*, count(*) post_count")
-        .joins(:photos)
-        .where("? <= photos.dateadded", Time.local(year).getutc)
-        .where("photos.dateadded < ?", Time.local(year + 1).getutc)
+      most_achievements_in year, :photos, :dateadded, :post_count
+    end
+
+    private def most_achievements_in(year, achievements, date_column, count_attribute)
+      select("people.*, count(*) #{count_attribute}")
+        .joins(achievements)
+        .where("? <= #{achievements}.#{date_column}", Time.local(year).getutc)
+        .where("#{achievements}.#{date_column} < ?", Time.local(year + 1).getutc)
         .group(:id)
-        .order("post_count desc")
+        .order("#{count_attribute} desc")
         .limit 10
     end
 
@@ -30,7 +28,7 @@ module PersonWheresiesSupport
       rookies_with_most_achievements_in year, :photos, :dateadded, :post_count
     end
 
-    def rookies_with_most_achievements_in(year, achievement, date_column, count_attribute)
+    def rookies_with_most_achievements_in(year, achievements, date_column, count_attribute)
       find_by_sql [
         %Q{
           select people.*, count(*) #{count_attribute}
@@ -39,12 +37,14 @@ module PersonWheresiesSupport
               from
                 (select person_id, commented_at acted from guesses union all
                   select person_id, dateadded acted from photos) acted
-              group by person_id having ? <= joined and joined < ?) rookies,
-            #{achievement} achievement
-          where people.id = rookies.person_id and people.id = achievement.person_id and achievement.#{date_column} < ?
+              group by person_id having :year_start <= joined and joined < :year_end) rookies,
+            #{achievements} achievements
+          where people.id = rookies.person_id and
+            people.id = achievements.person_id and
+            achievements.#{date_column} < :year_end
           group by people.id order by #{count_attribute} desc limit 10
         },
-        Time.local(year).getutc, Time.local(year + 1).getutc, Time.local(year + 1).getutc
+        year_start: Time.local(year).getutc, year_end: Time.local(year + 1).getutc
       ]
     end
 
