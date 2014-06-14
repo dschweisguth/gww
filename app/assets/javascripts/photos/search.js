@@ -30,7 +30,7 @@ GWW.photos.search = function () {
               return {
                 label: item.label,
                 value: item.username
-              }
+              };
             }));
           }
         );
@@ -94,7 +94,7 @@ GWW.photos.search = function () {
 
   function addPages() {
     var matches = location.hash.match(/^#page=(\d*[1-9]+\d*)$/);
-    if (matches != null && matches.length > 0) {
+    if (matches !== null && matches.length > 0) {
       addPagesUpTo(matches[1]);
     } else {
       addPagesToFillWindow();
@@ -157,15 +157,15 @@ GWW.photos.search = function () {
     $.ajax({
       url: '/photos/search_data' + terms() + '/sorted-by/' + GWW.config.sortedBy + '/direction/' + GWW.config.direction + '/page/' + nextPageToAdd,
       success: function (data) {
-        allPagesAdded = ! /\S/.test(data)
+        allPagesAdded = ! /\S/.test(data);
         if (allPagesAdded) {
-          if (afterAllPagesAdded != null) {
+          if (afterAllPagesAdded !== null) {
             afterAllPagesAdded();
           }
         } else {
           $('#photos').append(data);
           nextPageToAdd++;
-          if (afterPageAdded != null) {
+          if (afterPageAdded !== null) {
             afterPageAdded();
           }
         }
@@ -230,11 +230,11 @@ GWW.photos.search = function () {
         names.push(name);
       }
     }
-    var terms = "";
+    var the_terms = "";
     for (name in GWW.config.terms) {
-      terms += '/' + name + '/' + GWW.config.terms[name];
+      the_terms += '/' + name + '/' + GWW.config.terms[name];
     }
-    return terms;
+    return the_terms;
   }
 
   function afterAddingPages() {
@@ -265,7 +265,7 @@ GWW.photos.search = function () {
       // TODO Dave scroll the page if necessary
       // TODO Dave do nothing if we know it was us that changed the hash?
       var matches = location.hash.match(/^#page=(\d*[1-9]+\d*)$/);
-      if (matches != null && matches.length > 0) {
+      if (matches !== null && matches.length > 0) {
         if (! allPagesAdded && nextPageToAdd <= matches[1]) {
           addPagesUpTo(matches[1]);
         }
