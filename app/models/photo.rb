@@ -34,15 +34,10 @@ class Photo < ActiveRecord::Base
 
   def self.unfound_or_unconfirmed_count_before(date)
     utc_date = date.getutc
-    count_by_sql [
-      %q[
-        select count(*) from photos p where
-          dateadded <= ? and
-          not exists (select 1 from guesses where photo_id = p.id and added_at <= ?) and
-          not exists (select 1 from revelations where photo_id = p.id and added_at <= ?)
-        ],
-        utc_date, utc_date, utc_date
-    ]
+    where("dateadded <= ?", utc_date)
+      .where("not exists (select 1 from guesses where photo_id = photos.id and added_at <= ?)", utc_date)
+      .where("not exists (select 1 from revelations where photo_id = photos.id and added_at <= ?)", utc_date)
+      .count
   end
 
   def self.add_posts(people, to_date, attr_name)
