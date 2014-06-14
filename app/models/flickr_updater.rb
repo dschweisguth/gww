@@ -56,24 +56,14 @@ class FlickrUpdater
       photos_xml = FlickrService.instance.groups_pools_get_photos group_id: FlickrService::GROUP_ID,
         per_page: 500, page: page, extras: 'geo,last_update,path_alias,views,description' # Note path_alias here but pathalias in the result
       parsed_photos = photos_xml['photos'][0]
-
       Rails.logger.info "Updating database from page #{page} ..."
-
       now = Time.now.getutc
-
       parsed_photos['photo'].each do |parsed_photo|
         person, created = create_or_update_person_from parsed_photo
-        if created
-          new_person_count += 1
-        end
-
+        new_person_count += created
         created = create_or_update_photo_from parsed_photo, person, now
-        if created
-          new_photo_count += 1
-        end
-
+        new_photo_count += created
       end
-
       page += 1
     end
     return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
@@ -88,11 +78,11 @@ class FlickrUpdater
     person = Person.find_by_flickrid flickrid
     # Don't bother to update an existing Person. We already did that in update_all_people.
     if person
-      created = false
+      created = 0
     else
       attributes.merge! flickrid: flickrid
       person = Person.create! attributes
-      created = true
+      created = 1
     end
     return person, created
   end
@@ -130,7 +120,7 @@ class FlickrUpdater
 
     if photo
       photo.update! attributes
-      created = false
+      created = 0
     else
       attributes.merge! \
         person_id: person.id,
@@ -138,7 +128,7 @@ class FlickrUpdater
         dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
         game_status: 'unfound'
       photo = Photo.create! attributes
-      created = true
+      created = 1
     end
 
     if photo_needs_full_update
