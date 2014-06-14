@@ -173,7 +173,23 @@ describe PersonScoreReportsSupport do
   describe '.add_change_in_standings' do
     let(:person) { create :person, post_count: 1, previous_post_count: 1 }
 
+    it "says nothing to a non-new guesser whose standing didn't change" do
+      adds_change(
+        [ person ],
+        { 2 => [ person ] },
+        { 1 => [ person ] },
+        '')
+    end
+
     it "congratulates a new guesser" do
+      adds_change(
+        [ person ],
+        { 1 => [ person ] },
+        { 0 => [ person ] },
+        'scored his or her first point. Congratulations!')
+    end
+
+    it "welcomes a new guesser who has not previously posted" do
       person.previous_post_count = 0
       adds_change(
         [ person ],
@@ -238,16 +254,6 @@ describe PersonScoreReportsSupport do
         "jumped from 3rd to 1st place, passing #{other3.username} and tying #{other2.username}")
     end
 
-    PersonScoreReportsSupport::ClassMethods::CLUBS.each do |club, url|
-      it "welcomes the guesser to the #{club} club" do
-        adds_change(
-          [ person ],
-          { club => [ person ] },
-          { club - 1 => [ person ] },
-          "Welcome to <a href=\"#{url}\">the #{club} Club</a>!")
-      end
-    end
-
     it "notes numeric milestones" do
       adds_change(
         [ person ],
@@ -264,12 +270,14 @@ describe PersonScoreReportsSupport do
         'Congratulations on passing 100 points!')
     end
 
-    it "reports club, not milestone, if both are options" do
-      adds_change(
-        [ person ],
-        { 222 => [ person ] },
-        { 199 => [ person ] },
-        'Welcome to <a href="https://www.flickr.com/photos/potatopotato/90592664/">the 222 Club</a>!')
+    PersonScoreReportsSupport::ClassMethods::CLUBS.each do |club, url|
+      it "welcomes the guesser to the #{club} club" do
+        adds_change(
+          [ person ],
+          { club => [ person ] },
+          { club - 1 => [ person ] },
+          "Welcome to <a href=\"#{url}\">the #{club} Club</a>!")
+      end
     end
 
     it "welcomes the guesser to the top ten" do
@@ -283,7 +291,7 @@ describe PersonScoreReportsSupport do
         'jumped from 11th to 1st place. Welcome to the top ten!')
     end
 
-    it "congratulates and welcomes to the top ten at the same time" do
+    it "congratulates on multiple achievements" do
       others = 10.times.map { create :person }
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
@@ -291,7 +299,9 @@ describe PersonScoreReportsSupport do
         [ person, *others ],
         others_by_score.merge({ 100 => [ person ] }),
         others_by_score.merge({ 1 => [ person ] }),
-        'jumped from 11th to 1st place. Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! Welcome to the top ten!')
+        'jumped from 11th to 1st place. Congratulations on reaching 100 points! ' +
+          'Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! ' +
+          'Welcome to the top ten!')
     end
 
     def adds_change(people, people_by_score, people_by_previous_score, expected_change)

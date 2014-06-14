@@ -40,7 +40,69 @@ module PersonScoreReportsSupport
       scores = Guess.where('added_at <= ?', to_date.getutc).group(:person_id).count
       people.group_by { |person| scores[person.id] || 0 }
     end
-  
+
+    # people and people_by_score contain the same people instances. guessers has different people instances.
+    # guessers: people who guessed in this reporting period and their guesses, in the form [[Person, [Guess, ...]], ...]
+    def add_change_in_standings(people_by_score, people, previous_report_date, guessers)
+      add_score_and_place people_by_score, :score, :place
+      people_by_previous_score = by_score people, previous_report_date
+      add_score_and_place people_by_previous_score, :previous_score, :previous_place
+      Photo.add_posts people, previous_report_date, :previous_post_count
+      scored_people = people.map { |person| [person, person] }.to_h
+      guessers.each do |guesser_and_guesses|
+        guesser = guesser_and_guesses[0]
+        scored_guesser = scored_people[guesser]
+        change_in_standings = change_in_standings scored_guesser, people, people_by_score
+        achievements = achievements scored_guesser
+        guesser.change_in_standing = [change_in_standings, achievements].select(&:present?).join '. '
+      end
+    end
+
+    # public only for testing
+    def add_score_and_place(people_by_score, score_attr_name, place_attr_name)
+      place = 1
+      people_by_score.sort { |a, b| b[0] <=> a[0] }.each do |score, people_with_score|
+        people_with_score.each do |person|
+          person.send "#{score_attr_name}=", score
+          person.send "#{place_attr_name}=", place
+        end
+        place += people_with_score.length
+      end
+    end
+
+    private def change_in_standings(guesser, people, people_by_score)
+      score = guesser.score
+      previous_score = guesser.previous_score
+      place = guesser.place
+      previous_place = guesser.previous_place
+      if previous_score == 0
+        "scored his or her first point#{if score > 1; " (and #{score - 1} more)" end}. " +
+          (guesser.previous_post_count == 0 ? 'Congratulations, and welcome to GWSF!' : 'Congratulations!')
+      elsif place < previous_place
+        change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
+        threats = []
+        passed = people.find_all { |person| person.previous_place < guesser.previous_place && person.place > guesser.place }
+        if passed.length == 1 || passed.any? && previous_place - place == 2
+          threats << "passing #{opponent_or_opponents passed}"
+        end
+        ties = people_by_score[score] - [guesser]
+        if ties.any?
+          threats << "tying #{opponent_or_opponents ties}"
+        end
+        if threats.any?
+          change << ", #{threats.join ' and '}"
+        end
+        change
+      end
+    end
+
+    private def opponent_or_opponents(opponents)
+      opponents.length == 1 ? opponents[0].username : "#{opponents.length} other players"
+    end
+
+    # TODO make this work for boundaries above 5000
+    MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
+
     CLUBS = {
       21 => "https://www.flickr.com/photos/inkvision/2976263709/",
       65 => "https://www.flickr.com/photos/deadslow/232833608/",
@@ -50,91 +112,26 @@ module PersonScoreReportsSupport
       540 => "https://www.flickr.com/photos/tomhilton/2780581249/",
       3300 => "https://www.flickr.com/photos/spine/3132055535/"
     }
-  
-    # TODO make this work for boundaries above 5000
-    MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
-  
-    def add_change_in_standings(people_by_score, people, previous_report_date, guessers)
-      add_score_and_place people_by_score, :score, :place
-      people_by_previous_score = Person.by_score people, previous_report_date
-      add_score_and_place people_by_previous_score, :previous_score, :previous_place
-      Photo.add_posts people, previous_report_date, :previous_post_count
-      scored_people = people.map { |person| [person, person] }.to_h
-      guessers.each do |guesser_and_guesses|
-        guesser = guesser_and_guesses[0]
-        scored_guesser = scored_people[guesser]
-        score = scored_guesser.score
-        previous_score = scored_guesser.previous_score
-        if previous_score == 0 && score > 0
-          change = 'scored his or her first point'
-          if score > 1
-            change << " (and #{score - 1} more)"
-          end
-          change << (scored_guesser.previous_post_count == 0 \
-            ? '. Congratulations, and welcome to GWSF!' \
-            : '. Congratulations!')
-        else
-          place = scored_guesser.place
-          previous_place = scored_guesser.previous_place
-          if place < previous_place
-            change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
-            passed =
-              people.find_all { |person| person.previous_place < scored_guesser.previous_place } &
-                people.find_all { |person| person.place > scored_guesser.place }
-            ties = people_by_score[score] - [ scored_guesser ]
-            show_passed = passed.length == 1 || passed.length > 0 && previous_place - place == 2
-            if show_passed || ties.length > 0
-              change << ','
-            end
-            if show_passed
-              change << " passing #{passed.length == 1 ? passed[0].username : "#{passed.length} other players" }"
-            end
-            if ties.length > 0
-              if show_passed
-                change << ' and'
-              end
-              change << ' tying '
-              change << (ties.length == 1 ? ties[0].username : "#{ties.length} other players")
-            end
-          else
-            change = ''
-          end
-          club = CLUBS.keys.find { |club| previous_score < club && club <= score }
-          milestone = club ? nil : MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
-          entered_top_ten = previous_place > 10 && place <= 10
-          if (club || milestone || entered_top_ten) && ! change.empty?
-            change << '.'
-          end
-          append(change, club) { "Welcome to <a href=\"#{CLUBS[club]}\">the #{club} Club</a>!" }
-          append(change, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
-          append(change, entered_top_ten) { 'Welcome to the top ten!' }
-        end
-        guesser.change_in_standing = change
-      end
+
+    private def achievements(guesser)
+      score = guesser.score
+      previous_score = guesser.previous_score
+      achievements = []
+      milestone = MILESTONES.find { |milestone| previous_score < milestone && milestone <= score }
+      append(achievements, milestone) { "Congratulations on #{score == milestone ? 'reaching' : 'passing'} #{milestone} points!" }
+      club = CLUBS.keys.find { |club| previous_score < club && club <= score }
+      append(achievements, club) { "Welcome to <a href=\"#{CLUBS[club]}\">the #{club} Club</a>!" }
+      entered_top_ten = guesser.previous_place > 10 && guesser.place <= 10
+      append(achievements, entered_top_ten) { 'Welcome to the top ten!' }
+      achievements.join ' '
     end
-  
-    # public only for testing
-    def add_score_and_place(people_by_score, score_attr_name, place_attr_name)
-      place = 1
-      people_by_score.keys.sort { |a, b| b <=> a }.each do |score|
-        people_with_score = people_by_score[score]
-        people_with_score.each do |person|
-          person.send "#{score_attr_name}=", score
-          person.send "#{place_attr_name}=", place
-        end
-        place += people_with_score.length
+
+    private def append(achievements, value)
+      if value
+        achievements << yield
       end
     end
 
-    private def append(change, value)
-      if value
-        if ! change.empty?
-          change << ' '
-        end
-        change << yield
-      end
-    end
-  
   end
 
 end
