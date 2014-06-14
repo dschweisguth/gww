@@ -11,17 +11,12 @@ class ScoreReport < ActiveRecord::Base
   end
 
   private_class_method def self.answer_counts(answer_table_name)
-    reports = find_by_sql [
-      %Q[
-        select current.*, count(*) count
-        from score_reports current
-          left join(score_reports previous) on (current.previous_report_id = previous.id),
-          #{answer_table_name} a
-        where ifnull(previous.created_at, ?) < a.added_at and a.added_at <= current.created_at
-        group by current.id
-      ],
-      Time.local(2005).getutc
-    ]
+    reports =
+      select("score_reports.*, count(*) count")
+        .joins("left join(score_reports previous) on (score_reports.previous_report_id = previous.id), #{answer_table_name}")
+        .where("ifnull(previous.created_at, ?) < #{answer_table_name}.added_at", Time.local(2005).getutc)
+        .where("#{answer_table_name}.added_at <= score_reports.created_at")
+        .group(:id)
     reports.map { |report| [ report.id, report[:count] ] }.to_h
   end
 

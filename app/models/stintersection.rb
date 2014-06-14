@@ -50,19 +50,16 @@ class Stintersection < ActiveRecord::Base
   end
 
   private_class_method def self.intersections(street1, street2)
-    sql = %q[
-      select i1.* from stintersections i1, stintersections i2
-      where i1.cnn = i2.cnn and i1.st_name = ? and i2.st_name = ? ]
-    args = [ sql, street1.name, street2.name ]
-    if street1.type
-      sql << ' and i1.st_type = ?'
-      args << street1.type.name
-    end
-    if street2.type
-      sql << ' and i2.st_type = ?'
-      args << street2.type.name
-    end
-    find_by_sql args
+    query = joins("join stintersections i2 on stintersections.cnn = i2.cnn")
+      .where(st_name: street1.name)
+      .where("i2.st_name = ?", street2.name)
+     if street1.type
+       query = query.where st_type: street1.type.name
+     end
+     if street2.type
+       query = query.where "i2.st_type = ?", street2.type.name
+     end
+     query
   end
 
 end
