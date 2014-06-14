@@ -71,29 +71,33 @@ module PersonScoreReportsSupport
     end
 
     private def change_in_standings(guesser, people, people_by_score)
-      score = guesser.score
-      previous_score = guesser.previous_score
-      place = guesser.place
-      previous_place = guesser.previous_place
-      if previous_score == 0
+      if guesser.previous_score == 0
+        score = guesser.score
         "scored his or her first point#{if score > 1; " (and #{score - 1} more)" end}. " +
           (guesser.previous_post_count == 0 ? 'Congratulations, and welcome to GWSF!' : 'Congratulations!')
-      elsif place < previous_place
-        change = "#{previous_place - place > 1 ? 'jumped' : 'climbed'} from #{previous_place.ordinal} to #{place.ordinal} place"
-        threats = []
-        passed = people.find_all { |person| person.previous_place < guesser.previous_place && person.place > guesser.place }
-        if passed.length == 1 || passed.any? && previous_place - place == 2
-          threats << "passing #{opponent_or_opponents passed}"
+      else
+        place = guesser.place
+        previous_place = guesser.previous_place
+        if place < previous_place
+          advancements = advancements guesser, people, people_by_score
+          (previous_place - place > 1 ? 'jumped' : 'climbed') +
+            " from #{previous_place.ordinal} to #{place.ordinal} place" +
+            if advancements.present?; ", #{advancements}" end.to_s
         end
-        ties = people_by_score[score] - [guesser]
-        if ties.any?
-          threats << "tying #{opponent_or_opponents ties}"
-        end
-        if threats.any?
-          change << ", #{threats.join ' and '}"
-        end
-        change
       end
+    end
+
+    private def advancements(guesser, people, people_by_score)
+      threats = []
+      passed = people.find_all { |person| person.previous_place < guesser.previous_place && person.place > guesser.place }
+      if passed.length == 1 || passed.any? && guesser.previous_place - guesser.place == 2
+        threats << "passing #{opponent_or_opponents passed}"
+      end
+      ties = people_by_score[guesser.score] - [guesser]
+      if ties.any?
+        threats << "tying #{opponent_or_opponents ties}"
+      end
+      threats.join ' and '
     end
 
     private def opponent_or_opponents(opponents)
