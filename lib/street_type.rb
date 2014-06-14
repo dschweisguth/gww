@@ -4,32 +4,32 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
   end
 
   INSTANCES = [
-    new('ALY',  true,   [ Synonym.new('ALLEY', false) ]),
-    new('AVE',  true,   [ Synonym.new('AVENUE', false) ]),
-    new('BLVD', true,   [ Synonym.new('BOULEVARD', false) ]),
-    new('CIR',  true,   [ Synonym.new('CIRCLE', false) ]),
-    new('CT',   true,   [ Synonym.new('COURT', false) ]),
-    new('DR',   true,   [ Synonym.new('DRIVE', false) ]),
-    new('EXPY', true,   [ Synonym.new('EXPRESSWAY', false) ]),
-    new('HL',   true,   [ Synonym.new('HILL', false) ]),
-    new('HWY',  true,   [ Synonym.new('HIGHWAY', false) ]),
-    new('LN',   true,   [ Synonym.new('LANE', false) ]),
-    new('LOOP', false,  []),
-    new('PARK', false,  []),
-    new('PATH', false,  []),
-    new('PL',   true,   [ Synonym.new('PLACE', false) ]),
-    new('PLZ',  true,   [ Synonym.new('PLAZA', false) ]),
-    new('RAMP', false,  []),
-    new('RD',   true,   [ Synonym.new('ROAD', false) ]),
-    new('ROW',  false,  []),
-    new('ST',   true,   [ Synonym.new('STREET', false) ]),
-    new('STPS', true,   [ Synonym.new('STEPS', false) ]),
-    new('STWY', true,   [ Synonym.new('STAIRS', false), Synonym.new('STAIRWAY', false) ]),
-    new('TER',  true,   [ Synonym.new('TERRACE', false) ]),
-    new('TUNL', true,   [ Synonym.new('TUNNEL', false) ]),
-    new('WALK', false,  []),
-    new('WAY',  false,  [ Synonym.new('WY', true) ])
-  ]
+    ['ALY',  true, ['ALLEY', false]],
+    ['AVE',  true, ['AVENUE', false]],
+    ['BLVD', true, ['BOULEVARD', false]],
+    ['CIR',  true, ['CIRCLE', false]],
+    ['CT',   true, ['COURT', false]],
+    ['DR',   true, ['DRIVE', false]],
+    ['EXPY', true, ['EXPRESSWAY', false]],
+    ['HL',   true, ['HILL', false]],
+    ['HWY',  true, ['HIGHWAY', false]],
+    ['LN',   true, ['LANE', false]],
+    ['LOOP', false ],
+    ['PARK', false ],
+    ['PATH', false ],
+    ['PL',   true, ['PLACE', false]],
+    ['PLZ',  true, ['PLAZA', false]],
+    ['RAMP', false ],
+    ['RD',   true, ['ROAD', false]],
+    ['ROW',  false ],
+    ['ST',   true, ['STREET', false]],
+    ['STPS', true, ['STEPS', false]],
+    ['STWY', true, ['STAIRS', false], ['STAIRWAY', false]],
+    ['TER',  true, ['TERRACE', false]],
+    ['TUNL', true, ['TUNNEL', false]],
+    ['WALK', false ],
+    ['WAY',  false,['WY', true]]
+  ].map { |name, is_abbr, *synonyms| new name, is_abbr, synonyms.map { |args| Synonym.new *args } }
 
   def self.get(name)
     if ! name
