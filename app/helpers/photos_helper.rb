@@ -13,30 +13,30 @@ module PhotosHelper
     time = time.getutc
     if time > now - 1.second
       'a moment'
-    elsif time > now - 1.minute
-      pluralize (now - time).to_i, 'second'
-    elsif time > now - 1.hour
-      minutes = now.min - time.min
-      if minutes < 0
-        minutes += 60
-      end
-      pluralize minutes, 'minute'
-    elsif time > now - 37.hours
-      hours = now.hour - time.hour
-      if hours < 0
-        hours += 24
-      end
-      pluralize hours, 'hour'
-    elsif time > now - 1.month
-      days = (now + 12.hours).yday - time.yday
-      if days < 0
-        days += 365
-      end
-      days >= 10 ? "#{(days + 4) / 7} weeks" : "#{days} days"
     else
-      months = now.month - time.month + 12 * (now.year - time.year)
-      pluralize months, 'month'
+      value, unit =
+        if time > now - 1.minute
+          [(now - time).to_i, 'second']
+        elsif time > now - 1.hour
+          [add_if_negative(now.min - time.min, 60), 'minute']
+        elsif time > now - 37.hours
+          [add_if_negative(now.hour - time.hour, 24), 'hour']
+        elsif time > now - 1.month
+          days = add_if_negative (now + 12.hours).yday - time.yday, 365
+          if days >= 10
+            [(days + 4) / 7, 'week']
+          else
+            [days, 'day']
+          end
+        else
+          [now.month - time.month + 12 * (now.year - time.year), 'month']
+        end
+      pluralize value, unit
     end + ' ago'
+  end
+
+  private def add_if_negative(value, increment)
+   value < 0 ? value + increment : value
   end
 
   def highlighted(string, text_terms, other_strings_that_count=[])
