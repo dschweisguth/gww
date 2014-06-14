@@ -114,7 +114,7 @@ module PersonIndexSupport
     end
   
     private def statistic_by_person(sql)
-      find_by_sql(sql).each_with_object({}) { | person, statistic| statistic[person.id] = person[:statistic].to_f }
+      find_by_sql(sql).each_with_object({}) { |person, statistic| statistic[person.id] = person[:statistic].to_f }
     end
   
   end
