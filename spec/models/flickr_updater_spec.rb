@@ -1,4 +1,4 @@
-describe FlickrUpdater, type: :model do
+describe FlickrUpdater do
   describe '#update_everything' do
     it "does some work" do
       mock_clear_page_cache 2
