@@ -1,17 +1,16 @@
 describe Guess do
   describe '#person_id' do
+    let(:existing) { create :guess }
+
     it "is unique for a given photo and comment text" do
-      existing = create :guess
       build(:guess, photo: existing.photo, person: existing.person, comment_text: existing.comment_text).should_not be_valid
     end
 
     it "need not be unique if the photo is different" do
-      existing = create :guess
       build(:guess, person: existing.person, comment_text: existing.comment_text).should be_valid
     end
 
     it "need not be unique if the comment_text is different" do
-      existing = create :guess
       build(:guess, photo: existing.photo, person: existing.person).should be_valid
     end
 
