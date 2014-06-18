@@ -463,7 +463,7 @@ describe Photo do
     end
 
     it "paginates" do
-      3.times { create :photo }
+      create_list :photo, 3
       Photo.all_sorted_and_paginated('username', '+', 1, 2).length.should == 2
     end
 

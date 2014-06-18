@@ -108,7 +108,7 @@ describe PersonPeopleSupport do
     end
 
     it "paginates" do
-      3.times { create :comment, flickrid: person.flickrid, username: person.username }
+      create_list :comment, 2, flickrid: person.flickrid, username: person.username
       person.paginated_commented_photos(1, 2).length.should == 2
     end
 

@@ -32,12 +32,12 @@ describe PersonScoreReportsSupport do
 
     it "returns the highest scorers in the given previous # of days" do
       person = create :person
-      2.times { create :guess, person: person, commented_at: report_date, added_at: report_date }
+      create_list :guess, 2, person: person, commented_at: report_date, added_at: report_date
       high_scorers_returns report_date, 1, person, 2
     end
 
     it "returns only the top 3 high scorers if there is not a tie for third place" do
-      person1 = person_with_guesses 2
+      person_with_guesses 2
       person2 = person_with_guesses 3
       person3 = person_with_guesses 4
       person4 = person_with_guesses 5
@@ -82,7 +82,7 @@ describe PersonScoreReportsSupport do
 
     def person_with_guesses(guess_count, options = {})
       person = create :person, options
-      guess_count.times { create :guess, person: person, commented_at: report_date, added_at: report_date }
+      create_list :guess, guess_count, person: person, commented_at: report_date, added_at: report_date
       person
     end
 
@@ -93,12 +93,12 @@ describe PersonScoreReportsSupport do
 
     it "returns the most frequent posters in the given previous # of days" do
       person = create :person
-      2.times { create :photo, person: person, dateadded: report_date }
+      create_list :photo, 2, person: person, dateadded: report_date
       top_posters_returns report_date, 1, person, 2
     end
 
     it "returns only the top 3 frequent posters if there is not a tie for third place" do
-      person1 = person_with_posts 2
+      person_with_posts 2
       person2 = person_with_posts 3
       person3 = person_with_posts 4
       person4 = person_with_posts 5
@@ -143,7 +143,7 @@ describe PersonScoreReportsSupport do
 
     def person_with_posts(post_count, options = {})
       person = create :person, options
-      post_count.times { create :photo, person: person, dateadded: report_date }
+      create_list :photo, post_count, person: person, dateadded: report_date
       person
     end
 
@@ -281,7 +281,7 @@ describe PersonScoreReportsSupport do
     end
 
     it "welcomes the guesser to the top ten" do
-      others = 10.times.map { create :person }
+      others = create_list :person, 10
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
@@ -292,7 +292,7 @@ describe PersonScoreReportsSupport do
     end
 
     it "congratulates on multiple achievements" do
-      others = 10.times.map { create :person }
+      others = create_list :person, 10
       others_by_score = {}
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
