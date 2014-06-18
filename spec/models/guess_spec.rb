@@ -119,7 +119,7 @@ describe Guess do
     it 'returns the duration in seconds from post to guess in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       guess = Guess.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
-      guess.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second';
+      guess.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second'
     end
   end
 
@@ -127,7 +127,7 @@ describe Guess do
     it 'returns the duration in days from post to guess in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       guess = Guess.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
-      guess.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
+      guess.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day'
     end
   end
 

@@ -19,7 +19,7 @@ module PersonPeopleSupport
           g.person_id = guessers.id and
           f.person_id = posters_posts.person_id and
           g.person_id = guessers_guesses.person_id
-        group by guessers.id, poster_id having count(*) >= 10 order by bias desc;
+        group by guessers.id, poster_id having count(*) >= 10 order by bias desc
       ]
       poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
       posters = where id: poster_ids

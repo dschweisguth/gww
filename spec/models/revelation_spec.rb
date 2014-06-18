@@ -57,7 +57,7 @@ describe Revelation do
     it 'returns the duration in seconds from post to revelation in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       revelation = Revelation.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
-      revelation.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second';
+      revelation.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second'
     end
   end
 
@@ -65,7 +65,7 @@ describe Revelation do
     it 'returns the duration in days from post to revelation in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       revelation = Revelation.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
-      revelation.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day';
+      revelation.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day'
     end
   end
 
