@@ -3,7 +3,7 @@ describe PeopleController do
 
   describe '#find' do
     it 'finds a person' do
-      person = build :person, id: 1
+      person = build_stubbed :person
       stub(Person).find_by_multiple_fields('username') { person }
       get :find, username: 'username'
 
@@ -25,7 +25,7 @@ describe PeopleController do
       sorted_by_param = 'score'
       order_param = '+'
 
-      person = build :person, id: 666
+      person = build_stubbed :person
       person.guess_count = 1
       person.post_count = 1
       person.score_plus_posts = 1
@@ -51,8 +51,8 @@ describe PeopleController do
 
   describe '#nemeses' do
     it "renders the page" do
-      guesser = build :person, id: 666, bias: 2.5
-      poster = build :person, id: 777
+      guesser = build_stubbed :person, bias: 2.5
+      poster = build_stubbed :person
       guesser.poster = poster
       stub(Person).nemeses { [ guesser ] }
       get :nemeses
@@ -76,8 +76,8 @@ describe PeopleController do
             (0 .. 11).map { |i| Period.starting_at(report_day.beginning_of_month - (i + 1).months, 1.month) },
           [ Period.new(report_day.beginning_of_year, report_day + 1.day) ]
       ]
-      person = build :person, id: 666
-      guess = build :guess, person: person, commented_at: report_day
+      person = build_stubbed :person
+      guess = build_stubbed :guess, person: person, commented_at: report_day
       (0 .. 3).each { |division| top_guessers[division][0].scores[1] = [ person ] }
       stub(Person).top_guessers { top_guessers }
       get :top_guessers
@@ -102,7 +102,7 @@ describe PeopleController do
   end
 
   describe '#show' do
-    let(:person) { build :person, id: 1 }
+    let(:person) { build_stubbed :person }
 
     before do
       person.score = 1 # for the high_scorers methods
@@ -184,7 +184,7 @@ describe PeopleController do
     end
 
     context "when highlighting a post" do
-      let(:photo) { build :photo, id: 1 }
+      let(:photo) { build_stubbed :photo }
 
       before do
         stub_no_guesses
@@ -250,8 +250,8 @@ describe PeopleController do
       end
 
       def stub_guessed_post
-        found1 = build :guess, photo: photo, person: build(:person, id: 2)
-        photo.guesses << found1
+        found1 = build_stubbed :guess, photo: photo, person: build_stubbed(:person)
+        stub(photo).guesses { [found1] }
         # noinspection RubyArgCount
         stub(person).photos_with_associations { [ photo ] }
       end
@@ -284,19 +284,19 @@ describe PeopleController do
       stub(Person).high_scorers(@now, 7) { [ person ] }
       stub(Person).high_scorers(@now, 30) { [ person ] }
 
-      stub(person).first_guess { build :guess }
-      stub(person).most_recent_guess { build :guess }
-      stub(person).oldest_guess { build :guess, place: 1 }
-      stub(person).fastest_guess { build :guess, place: 1 }
+      stub(person).first_guess { build_stubbed :guess }
+      stub(person).most_recent_guess { build_stubbed :guess }
+      stub(person).oldest_guess { build_stubbed :guess, place: 1 }
+      stub(person).fastest_guess { build_stubbed :guess, place: 1 }
 
-      stub(person).guess_of_longest_lasting_post { build :guess, place: 1 }
-      stub(person).guess_of_shortest_lasting_post { build :guess, place: 1 }
+      stub(person).guess_of_longest_lasting_post { build_stubbed :guess, place: 1 }
+      stub(person).guess_of_shortest_lasting_post { build_stubbed :guess, place: 1 }
 
       # Give the posters different IDs so that they're considered different people, we have a list of guesses from
       # more than one poster and code that handles that is tested
-      stub(person).guesses_with_associations { [build(:guess, id: 1), build(:guess, id: 2)] }
+      stub(person).guesses_with_associations { [build_stubbed(:guess), build_stubbed(:guess)] }
 
-      @favorite_poster = build :person, id: 3, bias: 2.5
+      @favorite_poster = build_stubbed :person, bias: 2.5
       stub(person).favorite_posters { [ @favorite_poster ] }
 
     end
@@ -308,28 +308,28 @@ describe PeopleController do
       stub(Person).top_posters(@now, 7) { [ person ] }
       stub(Person).top_posters(@now, 30) { [ person ] }
 
-      first_post = build :photo, id: 21
+      first_post = build_stubbed :photo
       stub(person).first_photo { first_post }
 
-      most_recent_post = build :photo, id: 22
+      most_recent_post = build_stubbed :photo
       stub(person).most_recent_photo { most_recent_post }
 
-      stub(person).oldest_unfound_photo { build :photo, id: 23, place: 1 }
-      stub(person).most_commented_photo { build :photo, id: 24, place: 1 }
-      stub(person).most_viewed_photo { build :photo, id: 25, place: 1 }
-      stub(person).most_faved_photo { build :photo, id: 26, place: 1 }
+      stub(person).oldest_unfound_photo { build_stubbed :photo, place: 1 }
+      stub(person).most_commented_photo { build_stubbed :photo, place: 1 }
+      stub(person).most_viewed_photo { build_stubbed :photo, place: 1 }
+      stub(person).most_faved_photo { build_stubbed :photo, place: 1 }
 
-      found1 = build :guess
-      found1.photo.guesses << found1
-      found2 = build :guess
-      found2.photo.guesses << found2
+      found1 = build_stubbed :guess
+      stub(found1.photo).guesses { [found1] }
+      found2 = build_stubbed :guess
+      stub(found2.photo).guesses { [found2] }
       stub(person).photos_with_associations { [ found1.photo, found2.photo ] }
 
-      @favoring_guesser = build :person, id: 4, bias: 3.6
+      @favoring_guesser = build_stubbed :person, bias: 3.6
       stub(person).favoring_guessers { [ @favoring_guesser ] }
 
-      stub(person).unfound_photos { [ build(:photo, id: 27) ] }
-      stub(person).revealed_photos { [ build(:photo, id: 28) ] }
+      stub(person).unfound_photos { [ build_stubbed(:photo) ] }
+      stub(person).revealed_photos { [ build_stubbed(:photo) ] }
 
     end
 
@@ -356,11 +356,11 @@ describe PeopleController do
 
   describe '#guesses' do
     it 'renders the page' do
-      guesser = build :person, id: 1
+      guesser = build_stubbed :person
       stub(Person).find(guesser.id) { guesser }
-      poster = build :person, id: 2
-      photo = build :photo, id: 1, person: poster
-      stub(Guess).where.stub!.order.stub!.includes { [ build(:guess, person: guesser, photo: photo) ] }
+      poster = build_stubbed :person
+      photo = build_stubbed :photo, person: poster
+      stub(Guess).where.stub!.order.stub!.includes { [ build_stubbed(:guess, person: guesser, photo: photo) ] }
       get :guesses, id: guesser.id
 
       response.should be_success
@@ -372,10 +372,10 @@ describe PeopleController do
 
   describe '#comments' do
     it 'renders the page' do
-      person = build :person, id: 1
+      person = build_stubbed :person
       stub(Person).find(person.id) { person }
 
-      photo = build :photo, id: 1
+      photo = build_stubbed :photo
       paginated_photos = [ photo ]
       # Stub methods from will_paginate's version of Array
       stub(paginated_photos).offset { 0 }
@@ -396,7 +396,7 @@ describe PeopleController do
 
   describe '#map' do
     it "renders the page" do
-      person = build :person, id: 1
+      person = build_stubbed :person
       stub(Person).find(person.id) { person }
       stub(person).mapped_photo_count { 1 }
       stub(person).mapped_guess_count { 1 }
@@ -429,7 +429,7 @@ describe PeopleController do
   end
 
   describe '#map_photos' do
-    let(:person) { build :person, id: 1 }
+    let(:person) { build_stubbed :person }
     let(:initial_bounds) { PeopleController::INITIAL_MAP_BOUNDS }
     let(:default_max_photos) { controller.max_map_photos }
 
@@ -455,9 +455,9 @@ describe PeopleController do
 
     # noinspection RubyArgCount
     def returns_post(bounds, game_status, color, symbol)
-      post = build :photo, id: 14, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
+      post = build_stubbed :photo, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
       controller.map_photos(person.id).should == {
         partial: false,
         bounds: bounds,
@@ -474,9 +474,9 @@ describe PeopleController do
     end
 
     it "copies an inferred geocode to the stated one" do
-      post = build :photo, id: 14, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
+      post = build_stubbed :photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
       controller.map_photos(person.id).should == {
         partial: false,
         bounds: initial_bounds,
@@ -493,8 +493,8 @@ describe PeopleController do
     end
 
     it "moves a younger post so that it doesn't completely overlap an older post with an identical location" do
-      post1 = build :photo, id: 1, latitude: 37, longitude: -122, dateadded: 1.day.ago
-      post2 = build :photo, id: 2, latitude: 37, longitude: -122
+      post1 = build_stubbed :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago
+      post2 = build_stubbed :photo, latitude: 37, longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [ post2, post1 ] }
       stub(Photo).oldest { post1 }
       photos = controller.map_photos(person.id)[:photos]
@@ -505,9 +505,9 @@ describe PeopleController do
     end
 
     it "returns a guess" do
-      photo = build :photo, id: 15, person_id: 2, latitude: 37, longitude: -122
+      photo = build_stubbed :photo, person_id: 2, latitude: 37, longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
       controller.map_photos(person.id).should == {
         partial: false,
         bounds: initial_bounds,
@@ -534,8 +534,8 @@ describe PeopleController do
 
     it "returns no more than a maximum number of photos" do
       stub(controller).max_map_photos { 1 }
-      post = build :photo, id: 14, person_id: person.id, latitude: 37, longitude: -122
-      oldest_photo = build :photo, dateadded: 1.day.ago
+      post = build_stubbed :photo, person_id: person.id, latitude: 37, longitude: -122
+      oldest_photo = build_stubbed :photo, dateadded: 1.day.ago
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, 2) { [ post, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos(person.id).should == {

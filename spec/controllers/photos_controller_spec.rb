@@ -8,7 +8,7 @@ describe PhotosController do
       page_param = '1'
 
       # Mock methods from will_paginate's version of Array
-      photo = build :photo, id: 1
+      photo = build_stubbed :photo
       paginated_photos = [ photo ]
       stub(paginated_photos).offset { 0 }
       stub(paginated_photos).total_pages { 1 }
@@ -57,9 +57,9 @@ describe PhotosController do
     end
 
     it "returns an unfound photo" do
-      photo = build :photo, id: 1, latitude: 37, longitude: -122
+      photo = build_stubbed :photo, latitude: 37, longitude: -122
       stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
       controller.map_photos.should == {
         partial: false,
         bounds: @initial_bounds,
@@ -99,9 +99,9 @@ describe PhotosController do
     end
 
     it "copies an inferred geocode to the stated one" do
-      photo = build :photo, id: 1, inferred_latitude: 37, inferred_longitude: -122
+      photo = build_stubbed :photo, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
       controller.map_photos.should == {
         partial: false,
         bounds: @initial_bounds,
@@ -119,8 +119,8 @@ describe PhotosController do
 
     it "returns no more than a maximum number of photos" do
       stub(controller).max_map_photos { 1 }
-      photo = build :photo, id: 1, latitude: 37, longitude: -122
-      oldest_photo = build :photo, dateadded: 1.day.ago
+      photo = build_stubbed :photo, latitude: 37, longitude: -122
+      oldest_photo = build_stubbed :photo, dateadded: 1.day.ago
       stub(Photo).mapped(@initial_bounds, 2) { [ photo, oldest_photo ] }
       stub(Photo).oldest { oldest_photo }
       controller.map_photos.should == {
@@ -139,8 +139,8 @@ describe PhotosController do
     end
 
     it "moves a younger photo so that it doesn't completely overlap an older photo with an identical location" do
-      photo1 = build :photo, id: 1, latitude: 37, longitude: -122, dateadded: 1.day.ago
-      photo2 = build :photo, id: 2, latitude: 37, longitude: -122
+      photo1 = build_stubbed :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago
+      photo2 = build_stubbed :photo, latitude: 37, longitude: -122
       stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo2, photo1 ] }
       stub(Photo).oldest { photo1 }
       photos = controller.map_photos[:photos]
@@ -154,7 +154,7 @@ describe PhotosController do
 
   describe '#map_popup' do
     it "renders the partial" do
-      photo = build :photo, id: 1, dateadded: Time.local(2011)
+      photo = build_stubbed :photo, dateadded: Time.local(2011)
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, id: photo.id
 
@@ -169,9 +169,9 @@ describe PhotosController do
     end
 
     it "displays guesses" do
-      photo = build :photo, id: 1, dateadded: Time.local(2011)
-      guess = build :guess, photo: photo, commented_at: Time.local(2011, 2)
-      photo.guesses << guess
+      photo = build_stubbed :photo, dateadded: Time.local(2011)
+      guess = build_stubbed :guess, photo: photo, commented_at: Time.local(2011, 2)
+      stub(photo).guesses { [guess] }
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, id: photo.id
 
@@ -182,8 +182,8 @@ describe PhotosController do
     end
 
     it "displays a revelation" do
-      photo = build :photo, id: 1, dateadded: Time.local(2011)
-      photo.revelation = build :revelation, photo: photo, commented_at: Time.local(2011, 2)
+      photo = build_stubbed :photo, dateadded: Time.local(2011)
+      stub(photo).revelation { build_stubbed :revelation, photo: photo, commented_at: Time.local(2011, 2) }
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, id: photo.id
 
@@ -196,8 +196,8 @@ describe PhotosController do
 
   describe '#unfound_data' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { build :flickr_update, created_at: Time.utc(2011) }
-      photo = build :photo
+      stub(FlickrUpdate).latest { build_stubbed :flickr_update, created_at: Time.utc(2011) }
+      photo = build_stubbed :photo
       stub(Photo).unfound_or_unconfirmed { [ photo ] }
       get :unfound_data
 
@@ -210,11 +210,11 @@ describe PhotosController do
 
   describe '#show' do
     it "renders the page" do
-      photo = build :photo, id: 1, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
-      guess = build :guess, photo: photo
-      photo.guesses << guess
+      photo = build_stubbed :photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
+      guess = build_stubbed :guess, photo: photo
+      stub(photo).guesses { [guess] }
       stub(Photo).find(photo.id) { photo }
-      comment = build :comment, photo: photo
+      comment = build_stubbed :comment, photo: photo
       stub(Comment).where(photo: photo) { [comment] }
       get :show, id: photo.id
 
@@ -243,9 +243,9 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is mapped" do
-      photo = build :photo, id: 1, latitude: 37, longitude: -122, accuracy: 12
+      photo = build_stubbed :photo, latitude: 37, longitude: -122, accuracy: 12
       stub(Photo).find(photo.id) { photo }
-      oldest = build :photo, dateadded: 1.day.ago
+      oldest = build_stubbed :photo, dateadded: 1.day.ago
       stub(Photo).oldest { oldest }
       get :show, id: photo.id
 
@@ -268,9 +268,9 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is auto-mapped" do
-      photo = build :photo, id: 1, inferred_latitude: 37, inferred_longitude: -122
+      photo = build_stubbed :photo, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).find(photo.id) { photo }
-      oldest = build :photo, dateadded: 1.day.ago
+      oldest = build_stubbed :photo, dateadded: 1.day.ago
       stub(Photo).oldest { oldest }
       get :show, id: photo.id
 
@@ -293,14 +293,14 @@ describe PhotosController do
     end
 
     it "displays tags" do
-      photo = build :photo, id: 1
+      photo = build_stubbed :photo
       stub(photo).human_tags { [
-        build(:tag, raw: 'Tag 2'),
-        build(:tag, raw: 'Tag 1'),
+        build_stubbed(:tag, raw: 'Tag 2'),
+        build_stubbed(:tag, raw: 'Tag 1'),
       ] }
       stub(photo).machine_tags { [
-        build(:tag, raw: 'Machine tag 2'),
-        build(:tag, raw: 'Machine tag 1')
+        build_stubbed(:tag, raw: 'Machine tag 2'),
+        build_stubbed(:tag, raw: 'Machine tag 1')
       ] }
       stub(Photo).find(photo.id) { photo }
       get :show, id: photo.id
@@ -311,9 +311,9 @@ describe PhotosController do
     end
 
     it "styles a foundinSF or unfoundinSF tag differently if it doesn't match the photo" do
-      photo = build :photo, id: 1
+      photo = build_stubbed :photo
       stub(Photo).find(photo.id) { photo }
-      stub(photo).human_tags { [build(:tag, raw: 'foundinSF')] }
+      stub(photo).human_tags { [build_stubbed(:tag, raw: 'foundinSF')] }
       get :show, id: photo.id
 
       response.body.should have_css 'li.incorrect'

@@ -3,9 +3,9 @@ describe GuessesController do
 
   describe '#longest_and_shortest' do
     it 'renders the page' do
-      longest = build :guess
+      longest = build_stubbed :guess
       stub(Guess).longest { [longest] }
-      shortest = build :guess
+      shortest = build_stubbed :guess
       stub(Guess).shortest { [shortest] }
       get :longest_and_shortest
 

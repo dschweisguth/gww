@@ -26,12 +26,12 @@ describe ApplicationHelper do
 
   describe '#link_to_person' do
     it 'returns a local link to the person' do
-      person = build :person, id: 1
+      person = build_stubbed :person
       helper.link_to_person(person).should == "<a href=\"#{person_path person}\">#{person.username}</a>"
     end
 
     it 'escapes HTML special characters in the username' do
-      person = build :person, id: 1, username: 'tom&jerry'
+      person = build_stubbed :person, username: 'tom&jerry'
       helper.link_to_person(person).should == "<a href=\"#{person_path person}\">tom&amp;jerry</a>"
     end
 
@@ -39,14 +39,14 @@ describe ApplicationHelper do
 
   describe '#link_to_photo' do
     it 'returns a local link to the photo' do
-      photo = build :person, id: 666
-      helper.link_to_photo(photo).should == '<a href="/photos/666">GWW</a>'
+      photo = build_stubbed :person
+      helper.link_to_photo(photo).should == %Q(<a href="/photos/#{photo.id}">GWW</a>)
     end
   end
 
   describe '#link_to_flickr_photo' do
     it "returns a link to the given photo's Flickr page, in the GWSF pool" do
-      photo = build :photo
+      photo = build_stubbed :photo
       helper.link_to_flickr_photo(photo).should ==
         "<a href=\"#{url_for_flickr_photo_in_pool photo}\">Flickr</a>"
     end
@@ -67,7 +67,7 @@ describe ApplicationHelper do
 
   describe '#thumbnail' do
     before do
-      @photo = build :photo, id: 666
+      @photo = build_stubbed :photo
     end
 
     it "returns a photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do

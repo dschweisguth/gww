@@ -3,8 +3,8 @@ describe RootController do
 
   describe '#index' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { build :flickr_update, created_at: Time.local(2011).getutc }
-      stub(ScoreReport).order.stub!.first { build :score_report, created_at: Time.local(2011).getutc }
+      stub(FlickrUpdate).latest { build_stubbed :flickr_update, created_at: Time.local(2011).getutc }
+      stub(ScoreReport).order.stub!.first { build_stubbed :score_report, created_at: Time.local(2011).getutc }
       get :index
 
       response.should be_success
@@ -14,8 +14,8 @@ describe RootController do
     end
 
     it 'reports a completed update' do
-      stub(FlickrUpdate).latest { build :flickr_update, created_at: Time.local(2011), completed_at: Time.local(2001, 1, 1, 0, 6) }
-      stub(ScoreReport).order.stub!.first { build :score_report, created_at: Time.local(2011).getutc }
+      stub(FlickrUpdate).latest { build_stubbed :flickr_update, created_at: Time.local(2011), completed_at: Time.local(2001, 1, 1, 0, 6) }
+      stub(ScoreReport).order.stub!.first { build_stubbed :score_report, created_at: Time.local(2011).getutc }
       get :index
 
       response.should be_success

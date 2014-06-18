@@ -3,7 +3,7 @@ describe Admin::PhotosController do
 
   describe 'collections' do
     before do
-      @photo = build :photo, id: 1
+      @photo = build_stubbed :photo
     end
 
     describe '#unfound' do
@@ -15,7 +15,7 @@ describe Admin::PhotosController do
 
       it "highlights a photo tagged foundinSF" do
         stub(Photo).unfound_or_unconfirmed { [ @photo ] }
-        tag = build :tag, photo: @photo, raw: 'foundinSF'
+        tag = build_stubbed :tag, photo: @photo, raw: 'foundinSF'
         stub(@photo).tags { [tag] }
         get :unfound
         tr = top_node.all('tr')[1]
@@ -52,7 +52,7 @@ describe Admin::PhotosController do
   end
 
   describe '#edit' do
-    let(:photo) { build :photo, id: 1 }
+    let(:photo) { build_stubbed :photo }
 
     before do
       stub(Photo).find_with_associations(photo.id) { photo }
@@ -117,7 +117,7 @@ describe Admin::PhotosController do
 
   describe '#edit_in_gww' do
     it 'redirects to the given photo' do
-      photo = build :photo, id: 1
+      photo = build_stubbed :photo
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -126,7 +126,7 @@ describe Admin::PhotosController do
     end
 
     it 'handles https when redirecting to a photo' do
-      photo = build :photo, id: 1
+      photo = build_stubbed :photo
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :edit_in_gww, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 

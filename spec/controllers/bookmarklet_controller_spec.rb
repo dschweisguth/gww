@@ -4,7 +4,7 @@ describe BookmarkletController do
   describe '#show' do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given photo' do
-      photo = build :photo, id: 1, flickrid: '0123456789' # must be all digits like the real thing
+      photo = build_stubbed :photo, flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :show, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -13,7 +13,7 @@ describe BookmarkletController do
     end
 
     it 'handles https when redirecting to a photo' do
-      photo = build :photo, id: 1, flickrid: '0123456789' # must be all digits like the real thing
+      photo = build_stubbed :photo, flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
       get :show, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
 
@@ -32,7 +32,7 @@ describe BookmarkletController do
 
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given person' do
-      person = create :person, pathalias: 'pathalias'
+      person = build_stubbed :person, pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
       get :show, from: "http://www.flickr.com/people/#{person.pathalias}/"
 
@@ -41,7 +41,7 @@ describe BookmarkletController do
     end
 
     it 'handles https when redirecting to a person' do
-      person = create :person, pathalias: 'pathalias'
+      person = build_stubbed :person, pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
       get :show, from: "https://www.flickr.com/people/#{person.pathalias}/"
 
@@ -69,7 +69,7 @@ describe BookmarkletController do
     end
 
     it 'handles a /photo/ URL with a person Flickr ID but no photo Flickr ID' do
-      person = create :person
+      person = build_stubbed :person
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/photos/#{person.flickrid}/"
 

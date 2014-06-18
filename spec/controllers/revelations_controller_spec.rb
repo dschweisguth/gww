@@ -3,7 +3,7 @@ describe RevelationsController do
 
   describe '#longest' do
     it 'renders the page' do
-      revelation = build :revelation
+      revelation = build_stubbed :revelation
       stub(Revelation).longest { [revelation] }
       get :longest
 

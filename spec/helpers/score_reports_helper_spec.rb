@@ -21,12 +21,12 @@ describe ScoreReportsHelper do
 
   describe '#link_to_person_url' do
     it "returns a fully qualified link to the person's page" do
-      person = build :person, id: 1
+      person = build_stubbed :person
       helper.link_to_person_url(person).should == "<a href=\"#{person_url person}\">#{person.username}</a>"
     end
 
     it "escapes HTML special characters in the person's username" do
-      person = build :person, id: 1, username: 'try&catch>me'
+      person = build_stubbed :person, username: 'try&catch>me'
       helper.link_to_person_url(person).should == "<a href=\"#{person_url person}\">try&amp;catch&gt;me</a>"
     end
 
