@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :tag do
-    association :photo
+    association :photo, strategy: :build
     sequence(:raw) { |n| "tag#{n}" }
   end
 end
