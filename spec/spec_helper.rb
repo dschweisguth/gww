@@ -57,8 +57,8 @@ RSpec.configure do |config|
     stub(FlickrService).instance.returns MockFlickrService.new
   end
 
-  config.include GWW::Matchers::Model, type: :model
-  config.include Photos, type: :controller
+  [GWW::Helpers::Model, GWW::Helpers::PageCache, GWW::Matchers::Model].each { |mod| config.include mod, type: :model }
+  [Photos, GWW::Helpers::Controller, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :controller }
   config.include Photos, type: :helper
   config.include GWW::Matchers::Routing, type: :routing
 
