@@ -50,7 +50,7 @@ describe BookmarkletController do
     end
 
     it "handles a URL with a flickrid" do
-      person = create :person
+      person = build_stubbed :person
       stub(Person).find_by_pathalias(person.flickrid) { nil }
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/people/#{person.flickrid}/"
@@ -60,6 +60,7 @@ describe BookmarkletController do
     end
 
     it 'punts an unknown person' do
+      stub(Person).find_by_pathalias('person_flickrid') { nil }
       stub(Person).find_by_flickrid('person_flickrid') { nil }
       get :show, from: "https://www.flickr.com/people/person_flickrid/"
 
@@ -70,6 +71,7 @@ describe BookmarkletController do
 
     it 'handles a /photo/ URL with a person Flickr ID but no photo Flickr ID' do
       person = build_stubbed :person
+      stub(Person).find_by_pathalias(person.flickrid) { nil }
       stub(Person).find_by_flickrid(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/photos/#{person.flickrid}/"
 

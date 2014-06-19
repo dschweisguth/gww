@@ -274,6 +274,7 @@ describe PeopleController do
       stub(person).fastest_guess
       stub(person).guess_of_longest_lasting_post
       stub(person).guess_of_shortest_lasting_post
+      stub(person).guesses_with_associations { [] }
       stub(person).favorite_posters { [] }
     end
 
@@ -292,8 +293,7 @@ describe PeopleController do
       stub(person).guess_of_longest_lasting_post { build_stubbed :guess, place: 1 }
       stub(person).guess_of_shortest_lasting_post { build_stubbed :guess, place: 1 }
 
-      # Give the posters different IDs so that they're considered different people, we have a list of guesses from
-      # more than one poster and code that handles that is tested
+      # It's important to the test that these guesses are of photos by different people with different IDs
       stub(person).guesses_with_associations { [build_stubbed(:guess), build_stubbed(:guess)] }
 
       @favorite_poster = build_stubbed :person, bias: 2.5

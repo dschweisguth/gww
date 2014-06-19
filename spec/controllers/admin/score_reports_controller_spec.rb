@@ -29,6 +29,8 @@ describe Admin::ScoreReportsController do
 
     it "doesn't allow deletion of the last report" do
       stub(ScoreReport).order { [ build_stubbed(:score_report, created_at: Time.now) ] }
+      stub(ScoreReport).guess_counts { {} }
+      stub(ScoreReport).revelation_counts { {} }
       get :index
 
       response.should be_success
@@ -38,6 +40,8 @@ describe Admin::ScoreReportsController do
 
     it "doesn't allow deletion of a report more than a day old" do
       stub(ScoreReport).order { [ build_stubbed(:score_report, created_at: Time.now - 1.day - 1.second) ] }
+      stub(ScoreReport).guess_counts { {} }
+      stub(ScoreReport).revelation_counts { {} }
       get :index
 
       response.should be_success

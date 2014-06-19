@@ -95,7 +95,7 @@ class PhotosController < ApplicationController
   caches_page :show
   def show
     @photo = Photo.find params[:id].to_i
-    @comments = Comment.where photo: @photo
+    @comments = @photo.comments
     set_config_to @photo
   end
 

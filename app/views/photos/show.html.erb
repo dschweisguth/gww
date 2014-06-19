@@ -14,7 +14,7 @@
 <%= render 'image_and_status', size: 'z' %>
 
 <p id="comments-header">Comments</p>
-<% if ! @comments.empty? %>
+<% if @comments.any? %>
   <div id="comments">
     <% @comments.each do |comment| %>
       <div class="comment">

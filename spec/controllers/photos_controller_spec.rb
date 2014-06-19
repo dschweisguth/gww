@@ -155,6 +155,8 @@ describe PhotosController do
   describe '#map_popup' do
     it "renders the partial" do
       photo = build_stubbed :photo, dateadded: Time.local(2011)
+      stub(photo).guesses { [] }
+      stub(photo).revelation { nil }
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, id: photo.id
 
@@ -172,6 +174,7 @@ describe PhotosController do
       photo = build_stubbed :photo, dateadded: Time.local(2011)
       guess = build_stubbed :guess, photo: photo, commented_at: Time.local(2011, 2)
       stub(photo).guesses { [guess] }
+      stub(photo).revelation { nil }
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, id: photo.id
 
@@ -183,6 +186,7 @@ describe PhotosController do
 
     it "displays a revelation" do
       photo = build_stubbed :photo, dateadded: Time.local(2011)
+      stub(photo).guesses { [] }
       stub(photo).revelation { build_stubbed :revelation, photo: photo, commented_at: Time.local(2011, 2) }
       stub(Photo).includes.stub!.find(photo.id) { photo }
       get :map_popup, id: photo.id
@@ -215,7 +219,9 @@ describe PhotosController do
       stub(photo).guesses { [guess] }
       stub(Photo).find(photo.id) { photo }
       comment = build_stubbed :comment, photo: photo
-      stub(Comment).where(photo: photo) { [comment] }
+      stub(photo).comments { [comment] }
+      stub(photo).human_tags { [] }
+      stub(photo).machine_tags { [] }
       get :show, id: photo.id
 
       response.should be_success
@@ -244,6 +250,11 @@ describe PhotosController do
 
     it "includes a map if the photo is mapped" do
       photo = build_stubbed :photo, latitude: 37, longitude: -122, accuracy: 12
+      stub(photo).comments { [] }
+      stub(photo).guesses { [] }
+      stub(photo).revelation { nil }
+      stub(photo).human_tags { [] }
+      stub(photo).machine_tags { [] }
       stub(Photo).find(photo.id) { photo }
       oldest = build_stubbed :photo, dateadded: 1.day.ago
       stub(Photo).oldest { oldest }
@@ -269,6 +280,11 @@ describe PhotosController do
 
     it "includes a map if the photo is auto-mapped" do
       photo = build_stubbed :photo, inferred_latitude: 37, inferred_longitude: -122
+      stub(photo).comments { [] }
+      stub(photo).guesses { [] }
+      stub(photo).revelation { nil }
+      stub(photo).human_tags { [] }
+      stub(photo).machine_tags { [] }
       stub(Photo).find(photo.id) { photo }
       oldest = build_stubbed :photo, dateadded: 1.day.ago
       stub(Photo).oldest { oldest }
@@ -294,6 +310,9 @@ describe PhotosController do
 
     it "displays tags" do
       photo = build_stubbed :photo
+      stub(photo).comments { [] }
+      stub(photo).guesses { [] }
+      stub(photo).revelation { nil }
       stub(photo).human_tags { [
         build_stubbed(:tag, raw: 'Tag 2'),
         build_stubbed(:tag, raw: 'Tag 1'),
@@ -312,8 +331,12 @@ describe PhotosController do
 
     it "styles a foundinSF or unfoundinSF tag differently if it doesn't match the photo" do
       photo = build_stubbed :photo
-      stub(Photo).find(photo.id) { photo }
+      stub(photo).comments { [] }
+      stub(photo).guesses { [] }
+      stub(photo).revelation { nil }
       stub(photo).human_tags { [build_stubbed(:tag, raw: 'foundinSF')] }
+      stub(photo).machine_tags { [] }
+      stub(Photo).find(photo.id) { photo }
       get :show, id: photo.id
 
       response.body.should have_css 'li.incorrect'

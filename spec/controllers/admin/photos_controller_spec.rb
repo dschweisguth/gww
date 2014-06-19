@@ -2,21 +2,22 @@ describe Admin::PhotosController do
   render_views
 
   describe 'collections' do
-    before do
-      @photo = build_stubbed :photo
-    end
+    let(:photo) { build_stubbed :photo }
 
     describe '#unfound' do
+      before do
+        stub(Photo).unfound_or_unconfirmed { [ photo ] }
+      end
+
       it 'renders the page' do
-        stub(Photo).unfound_or_unconfirmed { [ @photo ] }
+        stub(photo).tags { [] }
         get :unfound
         lists_photo
       end
 
       it "highlights a photo tagged foundinSF" do
-        stub(Photo).unfound_or_unconfirmed { [ @photo ] }
-        tag = build_stubbed :tag, photo: @photo, raw: 'foundinSF'
-        stub(@photo).tags { [tag] }
+        tag = build_stubbed :tag, photo: photo, raw: 'foundinSF'
+        stub(photo).tags { [tag] }
         get :unfound
         tr = top_node.all('tr')[1]
         tr.all('td')[5].text.should == 'foundinSF'
@@ -27,7 +28,8 @@ describe Admin::PhotosController do
 
     describe '#inaccessible' do
       it 'renders the page' do
-        stub(Photo).inaccessible { [ @photo ] }
+        stub(Photo).inaccessible { [ photo ] }
+        stub(photo).tags { [] }
         get :inaccessible
         lists_photo
       end
@@ -35,7 +37,8 @@ describe Admin::PhotosController do
 
     describe '#multipoint' do
       it 'renders the page' do
-        stub(Photo).multipoint { [ @photo ] }
+        stub(Photo).multipoint { [ photo ] }
+        stub(photo).tags { [] }
         get :multipoint
         lists_photo
       end
@@ -43,10 +46,10 @@ describe Admin::PhotosController do
 
     def lists_photo
       response.should be_success
-      response.body.should have_link @photo.person.username, href: person_path(@photo.person)
+      response.body.should have_link photo.person.username, href: person_path(photo.person)
       response.body.should have_css 'td', text: 'false'
       response.body.should have_css 'td', text: 'unfound'
-      response.body.should have_link 'Edit', href: edit_admin_photo_path(@photo, update_from_flickr: true)
+      response.body.should have_link 'Edit', href: edit_admin_photo_path(photo, update_from_flickr: true)
     end
 
   end
@@ -56,6 +59,10 @@ describe Admin::PhotosController do
 
     before do
       stub(Photo).find_with_associations(photo.id) { photo }
+      stub(photo).comments { [] }
+      stub(photo).guesses { [] }
+      stub(photo).revelation { nil }
+      stub(photo).tags { [] }
     end
 
     it 'renders the page without loading comments' do
