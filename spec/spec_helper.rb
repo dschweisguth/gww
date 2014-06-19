@@ -6,6 +6,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rr'
 require 'shoulda/matchers'
+require 'nulldb_rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -37,6 +38,20 @@ RSpec.configure do |config|
   config.include GWW::Matchers::Routing, type: :routing
   config.include Photos, type: :helper
   config.include Photos, type: :controller
+  %i(controller helper lib routing service support).each do |type|
+    config.include NullDB::RSpec::NullifiedDatabase, type: type
+
+    config.after :each, type: type do
+      begin
+        ActiveRecord::Base.connection.should_not have_executed(:anything)
+      rescue RSpec::Expectations::ExpectationNotMetError
+        raise RSpec::Expectations::ExpectationNotMetError,
+          "Database usage is forbidden in #{type} specs, but these SQL statements were executed: " +
+            %Q("#{ActiveRecord::Base.connection.execution_log_since_checkpoint.map(&:content).join '", "'}")
+      end
+    end
+
+  end
 
   config.before :each do
     # noinspection RubyArgCount

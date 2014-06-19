@@ -1,4 +1,4 @@
-describe StreetType do
+describe StreetType, type: :lib do
   describe '.get' do
     it "finds the type with the given name" do
       StreetType.get('St').should == StreetType.new('ST', true, [ StreetType::Synonym.new('STREET', false) ])

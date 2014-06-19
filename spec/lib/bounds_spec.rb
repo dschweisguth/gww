@@ -1,4 +1,4 @@
-describe Bounds do
+describe Bounds, type: :lib do
   describe '#as_json' do
     it "jsonifies as you'd expect" do
       Bounds.new(1, 2, 3, 4).as_json.should == {

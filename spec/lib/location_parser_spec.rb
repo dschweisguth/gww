@@ -1,4 +1,4 @@
-describe LocationParser do
+describe LocationParser, type: :lib do
 
   it "finds no locations in the empty string" do
     LocationParser.new([]).parse('').should == []

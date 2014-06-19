@@ -1,4 +1,4 @@
-describe Fixnum do
+describe Fixnum, type: :lib do
 
   describe '#ordinal' do
     expected = {

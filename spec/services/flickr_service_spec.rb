@@ -1,4 +1,4 @@
-describe FlickrService do
+describe FlickrService, type: :service do
   let(:service) { FlickrService.new }
 
   before do
