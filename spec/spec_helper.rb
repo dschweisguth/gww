@@ -30,8 +30,6 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  config.include FactoryGirl::Syntax::Methods
-
   config.infer_spec_type_from_file_location!
 
   # Prevent database usage in these spec types. Note that :lib and :service are not standard rspec-rails types,
@@ -57,9 +55,9 @@ RSpec.configure do |config|
     stub(FlickrService).instance.returns MockFlickrService.new
   end
 
-  [GWW::Helpers::Model, GWW::Helpers::PageCache, GWW::Matchers::Model].each { |mod| config.include mod, type: :model }
-  [Photos, GWW::Helpers::Controller, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :controller }
-  config.include Photos, type: :helper
+  [GWW::Factories::Model, GWW::Matchers::Model, GWW::Helpers::Model, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :model }
+  [GWW::Factories::Controller, GWW::Helpers::Controller, GWW::Helpers::PageCache, Photos].each { |mod| config.include mod, type: :controller }
+  [GWW::Factories::Controller, Photos].each { |mod| config.include mod, type: :helper }
   config.include GWW::Matchers::Routing, type: :routing
 
 end
