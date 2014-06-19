@@ -38,7 +38,7 @@ RSpec.configure do |config|
   config.include GWW::Matchers::Routing, type: :routing
   config.include Photos, type: :helper
   config.include Photos, type: :controller
-  %i(controller helper lib routing service support).each do |type|
+  %i(controller helper lib routing service).each do |type|
     config.include NullDB::RSpec::NullifiedDatabase, type: type
 
     config.after :each, type: type do
