@@ -34,11 +34,9 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 
-  config.include GWW::Matchers::Model, type: :model
-  config.include GWW::Matchers::Routing, type: :routing
-  config.include Photos, type: :helper
-  config.include Photos, type: :controller
-  %i(controller helper lib routing service).each do |type|
+  # Prevent database usage in these spec types. Note that :lib and :service are not standard rspec-rails types,
+  # so specs of those layers must be manually tagged for this mechanism to work with them.
+  %i(lib service controller helper routing).each do |type|
     config.include NullDB::RSpec::NullifiedDatabase, type: type
 
     config.after :each, type: type do
@@ -53,9 +51,15 @@ RSpec.configure do |config|
 
   end
 
+  # Prevent FlickrService usage
   config.before :each do
     # noinspection RubyArgCount
     stub(FlickrService).instance.returns MockFlickrService.new
   end
+
+  config.include GWW::Matchers::Model, type: :model
+  config.include Photos, type: :controller
+  config.include Photos, type: :helper
+  config.include GWW::Matchers::Routing, type: :routing
 
 end
