@@ -11,7 +11,7 @@ describe FlickrUpdater do
       mock(FlickrUpdater).update_all_people
       stub(Time).now { Time.utc(2011) }
       FlickrUpdater.update_everything.should == "Created 1 new photos and 2 new users. Got 3 pages out of 4."
-      update = FlickrUpdate.only_one_exists
+      update = FlickrUpdate.first_and_only
       update.member_count.should == 1492
       update.completed_at.should == Time.utc(2011)
     end
@@ -118,7 +118,7 @@ describe FlickrUpdater do
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
 
-      photo = Photo.only_one_exists
+      photo = Photo.first_and_only
 
       photo.person.should have_attributes(
         flickrid: stubbed_photo[:owner],
@@ -152,7 +152,7 @@ describe FlickrUpdater do
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos
 
-      Person.only_one_exists.should have_attributes(
+      Person.first_and_only.should have_attributes(
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
         pathalias: stubbed_photo[:owner]
@@ -168,7 +168,7 @@ describe FlickrUpdater do
       FlickrUpdater.update_all_photos.should == [ 1, 0, 1, 1 ]
 
       # Note that a username or pathalias that changes during the update is not updated
-      Person.only_one_exists.should have_the_same_attributes_as(person_before)
+      Person.first_and_only.should have_the_same_attributes_as(person_before)
 
     end
 
@@ -177,7 +177,7 @@ describe FlickrUpdater do
       stub_get_faves
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos
-      Photo.only_one_exists.description.should be_nil
+      Photo.first_and_only.description.should be_nil
     end
 
     it "uses an existing photo, and updates attributes that changed" do
@@ -200,7 +200,7 @@ describe FlickrUpdater do
         faves: 6
       FlickrUpdater.update_all_photos.should == [ 0, 0, 1, 1 ]
 
-      Photo.only_one_exists.should have_attributes(
+      Photo.first_and_only.should have_attributes(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: stubbed_photo[:farm],
@@ -243,7 +243,7 @@ describe FlickrUpdater do
         faves: 6
       FlickrUpdater.update_all_photos
 
-      Photo.only_one_exists.should have_attributes(
+      Photo.first_and_only.should have_attributes(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: photo_before.farm,
@@ -285,7 +285,7 @@ describe FlickrUpdater do
       stub_get_faves
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
-      Photo.only_one_exists.should have_attributes(
+      Photo.first_and_only.should have_attributes(
         latitude: nil,
         longitude: nil,
         accuracy: nil,

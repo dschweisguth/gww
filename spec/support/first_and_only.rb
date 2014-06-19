@@ -1,5 +1,5 @@
 class ActiveRecord::Base
-  def self.only_one_exists
+  def self.first_and_only
     all_instances = all
     if all_instances.length != 1
       raise RSpec::Expectations::ExpectationNotMetError,
