@@ -38,7 +38,7 @@ module GWW
 
         def example_call
           call = "#{@name}_path"
-          if ! @args.empty?
+          if @args.any?
             call << "(#{@args.map(&:to_s).join(', ')})"
           end
           call

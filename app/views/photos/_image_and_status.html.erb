@@ -13,14 +13,14 @@
 <% end %>
 <br/>
 
-<% if ! @photo.guesses.empty? || @photo.revelation %>
+<% if @photo.guesses.any? || @photo.revelation %>
 <table class="dark">
   <tr>
     <th>Person</th>
     <th>When</th>
     <th>Text</th>
   </tr>
-  <% if ! @photo.guesses.empty? %>
+  <% if @photo.guesses.any? %>
     <% @photo.guesses.each do |guess| %>
       <tr>
         <td><%= link_to_person guess.person %></td>

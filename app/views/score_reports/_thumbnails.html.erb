@@ -1,4 +1,4 @@
-<% if ! people.empty? %>
+<% if people.any? %>
 <%= pluralize changes.length, change_name %><%= change_verb %> by ...
 
 <% people.each do |entry| %>

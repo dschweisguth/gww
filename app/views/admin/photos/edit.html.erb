@@ -30,7 +30,7 @@
   <% end %>
 
   <p id="comments-header">Comments</p>
-  <% if ! @photo.comments.empty? %>
+  <% if @photo.comments.any? %>
     <div id="comments" class="edit">
       <% @photo.comments.each do |comment| %>
         <% is_accepted_answer = comment.is_accepted_answer %>
@@ -64,7 +64,7 @@
 
 <%= render 'photos/sidebar' %>
 
-<% if ! @photo.comments.empty? %>
+<% if @photo.comments.any? %>
   <%= form_tag(add_entered_answer_path(@photo), id: 'username_form') do %>
     <div>
       To give a point to someone other than the commenter, enter their username here
