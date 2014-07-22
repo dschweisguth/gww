@@ -2,6 +2,7 @@ source 'http://rubygems.org/'
 
 gem 'actionpack-page_caching', '1.0.2'
 gem 'activerecord-mysql2spatial-adapter', '0.4.3'
+gem 'american_date', '1.1.0'
 gem 'bundler', '1.6.2'
 gem 'foreigner', '1.6.1'
 gem 'jquery-rails', '3.1.0'

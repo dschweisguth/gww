@@ -212,6 +212,13 @@ describe PhotosController do
     end
   end
 
+  describe '#search' do
+    it "doesn't suppress an ArgumentError other than 'invalid date'" do
+      stub(Date).parse { raise ArgumentError, "dated validation" }
+      lambda { get :search, terms: 'from-date/1-1-2014/to-date/1-2-2014' }.should raise_error(ArgumentError, "dated validation")
+    end
+  end
+
   describe '#show' do
     it "renders the page" do
       photo = build_stubbed :photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33

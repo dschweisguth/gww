@@ -63,6 +63,14 @@ GWW.photos.search = function () {
       if (text.val() !== "") {
         path += "/text/" + encodeURIComponent(text.val());
       }
+      var from_date = $(this).find('[name="from_date"]');
+      if (from_date.val() !== "") {
+        path += "/from-date/" + encodeURIComponent(from_date.val().replace(/\//g, '-'));
+      }
+      var to_date = $(this).find('[name="to_date"]');
+      if (to_date.val() !== "") {
+        path += "/to-date/" + encodeURIComponent(to_date.val().replace(/\//g, '-'));
+      }
       var sortedBy = $(this).find('[name="sorted_by"]');
       if (sortedBy.val() !== null && sortedBy.val() !== "") {
         path += "/sorted-by/" + sortedBy.val();
@@ -223,16 +231,14 @@ GWW.photos.search = function () {
   }
 
   function terms() {
-    var names = [];
+    var the_terms = "";
     var name;
     for (name in GWW.config.terms) {
-      if (GWW.config.terms.hasOwnProperty(name)) {
-        names.push(name);
+      var value = GWW.config.terms[name];
+      if (name === 'from-date' || name === 'to-date') {
+        value = value.replace(/\//g, '-'); // TODO Dave do this in one place?
       }
-    }
-    var the_terms = "";
-    for (name in GWW.config.terms) {
-      the_terms += '/' + name + '/' + GWW.config.terms[name];
+      the_terms += '/' + name + '/' + value;
     }
     return the_terms;
   }

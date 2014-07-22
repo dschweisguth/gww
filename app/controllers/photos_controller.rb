@@ -45,7 +45,16 @@ class PhotosController < ApplicationController
 
   def search
     # TODO Dave fix nekomusume
-    @terms, @sorted_by, @direction = parsed_params
+    begin
+      @terms, @sorted_by, @direction = parsed_params
+    rescue ArgumentError => e
+      if e.message == 'invalid date'
+        redirect_to search_photos_with_terms_path params[:terms]
+        return
+      else
+        raise
+      end
+    end
     @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
   end
 
@@ -59,11 +68,28 @@ class PhotosController < ApplicationController
 
   private def parsed_params
     params[:terms] ||= ''
-    terms = params[:terms].split('/').each_slice(2).map { |key, value| [key.gsub('-', '_'), value] }.to_h
-    if terms['game_status']
-      terms['game_status'] = terms['game_status'].split ','
+    terms = params[:terms].split('/').each_slice(2).to_h
+    if terms['game-status']
+      terms['game-status'] = terms['game-status'].split ','
     end
-    sorted_by = terms.delete('sorted_by') || 'last-updated'
+    %w(from-date to-date).each do |field|
+      if terms[field]
+        terms[field].try :gsub!, '-', '/'
+        begin
+          Date.parse terms[field]
+        rescue ArgumentError
+          params[:terms].sub! %r(#{field}/[^/]+/), ''
+          raise
+        end
+      end
+    end
+    if terms['from-date'] && terms['to-date'] && Date.parse(terms['from-date']) > Date.parse(terms['to-date'])
+      %w(from-date to-date).each do |field|
+        params[:terms].sub! %r(#{field}/[^/]+/), ''
+      end
+      raise ArgumentError, "invalid date"
+    end
+    sorted_by = terms.delete('sorted-by') || 'last-updated'
     direction = terms.delete('direction') || '-'
     [ terms, sorted_by, direction ]
   end

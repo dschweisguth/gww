@@ -574,18 +574,18 @@ describe Photo do
     context "when specifying game_status" do
       it "returns a photo with the given status" do
         create :photo, game_status: 'found'
-        Photo.search({ 'game_status' => %w(found) }, 'last-updated', '-', 1).length.should == 1
+        Photo.search({ 'game-status' => %w(found) }, 'last-updated', '-', 1).length.should == 1
       end
 
       it "searches for photos with any of multiple statuses" do
         create :photo, game_status: 'found'
         create :photo, game_status: 'revealed'
-        Photo.search({ 'game_status' => %w(found revealed) }, 'last-updated', '-', 1).length.should == 2
+        Photo.search({ 'game-status' => %w(found revealed) }, 'last-updated', '-', 1).length.should == 2
       end
 
       it "ignores a photo with a different status" do
         create :photo, game_status: 'found'
-        Photo.search({ 'game_status' => %w(unfound) }, 'last-updated', '-', 1).length.should == 0
+        Photo.search({ 'game-status' => %w(unfound) }, 'last-updated', '-', 1).length.should == 0
       end
 
     end
@@ -593,12 +593,12 @@ describe Photo do
     context "when specifying posted_by" do
       it "returns a photo posted by the person with the given username" do
         photo = create :photo
-        Photo.search({ 'posted_by' => photo.person.username }, 'last-updated', '-', 1).length.should == 1
+        Photo.search({ 'posted-by' => photo.person.username }, 'last-updated', '-', 1).length.should == 1
       end
 
       it "ignores a photo posted by a person with a different username" do
         create :photo
-        Photo.search({ 'posted_by' => 'xyz' }, 'last-updated', '-', 1).length.should == 0
+        Photo.search({ 'posted-by' => 'xyz' }, 'last-updated', '-', 1).length.should == 0
       end
 
     end
@@ -730,7 +730,7 @@ describe Photo do
       photo1 = create :photo, game_status: 'found'
       create :photo, person: photo1.person
       create :photo, game_status: 'found'
-      Photo.search({ 'game_status' => 'found', 'posted_by' => photo1.person.username }, 'last-updated', '-', 1).length.should == 1
+      Photo.search({ 'game-status' => 'found', 'posted-by' => photo1.person.username }, 'last-updated', '-', 1).length.should == 1
     end
 
     it "sorts by last-updated, -" do

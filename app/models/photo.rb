@@ -126,11 +126,11 @@ class Photo < ActiveRecord::Base
 
   def self.search(terms, sorted_by, direction, page)
     query = all
-    if terms.has_key? 'game_status'
-      query = query.where game_status: terms['game_status']
+    if terms.has_key? 'game-status'
+      query = query.where game_status: terms['game-status']
     end
-    if terms.has_key? 'posted_by'
-      query = query.joins(:person).where people: { username: terms['posted_by'] }
+    if terms.has_key? 'posted-by'
+      query = query.joins(:person).where people: { username: terms['posted-by'] }
     end
     if terms['text']
       terms['text'].each do |words|
@@ -144,6 +144,12 @@ class Photo < ActiveRecord::Base
         query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" })
           .includes :tags, :comments # because we display them when it's a text search
       end
+    end
+    if terms.has_key? 'from-date'
+      query = query.where "? <= dateadded", Date.parse_utc_time(terms['from-date'])
+    end
+    if terms.has_key? 'to-date'
+      query = query.where "dateadded < ?", Date.parse_utc_time(terms['to-date']) + 1.day
     end
     query
       .order("#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")

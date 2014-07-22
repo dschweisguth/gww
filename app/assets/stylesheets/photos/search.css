@@ -4,7 +4,7 @@ form div, form table {
   white-space: nowrap;
 }
 
-.text-fields .label {
+.text-fields > span {
   display: inline-block;
   width: 65px;
 }
@@ -40,6 +40,11 @@ form img {
 .game-status span {
   display: inline-block;
   margin-top: 3px;
+}
+
+.date-fields > span {
+  display: inline-block;
+  width: 45px;
 }
 
 table {
