@@ -74,7 +74,7 @@ describe Admin::ScoreReportsController do
   describe '#create' do
     it "creates and redirects" do
       previous = build_stubbed :score_report
-      stub(ScoreReport).order.stub!.first { previous }
+      stub(ScoreReport).latest { previous }
       mock(ScoreReport).create! previous_report: previous
       mock_clear_page_cache
       post :create

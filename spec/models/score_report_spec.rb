@@ -50,4 +50,12 @@ describe ScoreReport do
 
   end
 
+  describe '.latest' do
+    it "returns the most recent score report" do
+      create :score_report
+      latest = create :score_report
+      ScoreReport.latest.should == latest
+    end
+  end
+
 end

@@ -24,4 +24,8 @@ class ScoreReport < ActiveRecord::Base
     where('created_at < ?', date.getutc).order('created_at desc').first
   end
 
+  def self.latest
+    order('id desc').first
+  end
+
 end
