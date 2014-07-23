@@ -360,7 +360,7 @@ describe PeopleController do
       stub(Person).find(guesser.id) { guesser }
       poster = build_stubbed :person
       photo = build_stubbed :photo, person: poster
-      stub(Guess).where.stub!.order.stub!.includes { [ build_stubbed(:guess, person: guesser, photo: photo) ] }
+      stub(guesser).guesses_with_associations_ordered_by_comments { [ build_stubbed(:guess, person: guesser, photo: photo) ] }
       get :guesses, id: guesser.id
 
       response.should be_success

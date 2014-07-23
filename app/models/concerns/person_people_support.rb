@@ -80,6 +80,10 @@ module PersonPeopleSupport
 
   end
 
+  def guesses_with_associations_ordered_by_comments
+    guesses_with_associations.order('commented_at desc')
+  end
+
   def paginated_commented_photos(page, per_page = 25)
     Photo
       .where("exists (select 1 from comments c where photos.id = c.photo_id and c.flickrid = ?)", flickrid)

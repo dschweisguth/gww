@@ -111,7 +111,7 @@ class PeopleController < ApplicationController
   caches_page :guesses
   def guesses
     @person = Person.find params[:id].to_i
-    @guesses = Guess.where(person_id: params[:id]).order('commented_at desc').includes(photo: :person)
+    @guesses = @person.guesses_with_associations_ordered_by_comments
   end
 
   caches_page :comments
