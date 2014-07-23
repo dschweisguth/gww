@@ -32,7 +32,7 @@ class PhotosController < ApplicationController
 
   caches_page :map_popup
   def map_popup
-    @photo = Photo.includes(:person, { guesses: :person }, :revelation).find params[:id].to_i
+    @photo = Photo.find_with_associations params[:id].to_i
     render partial: 'photos/map/popup'
   end
 

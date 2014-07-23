@@ -157,7 +157,7 @@ describe PhotosController do
       photo = build_stubbed :photo, dateadded: Time.local(2011)
       stub(photo).guesses { [] }
       stub(photo).revelation { nil }
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find_with_associations(photo.id) { photo }
       get :map_popup, id: photo.id
 
       response.should be_success
@@ -175,7 +175,7 @@ describe PhotosController do
       guess = build_stubbed :guess, photo: photo, commented_at: Time.local(2011, 2)
       stub(photo).guesses { [guess] }
       stub(photo).revelation { nil }
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find_with_associations(photo.id) { photo }
       get :map_popup, id: photo.id
 
       response.body.should have_link guess.person.username, href: person_path(guess.person)
@@ -188,7 +188,7 @@ describe PhotosController do
       photo = build_stubbed :photo, dateadded: Time.local(2011)
       stub(photo).guesses { [] }
       stub(photo).revelation { build_stubbed :revelation, photo: photo, commented_at: Time.local(2011, 2) }
-      stub(Photo).includes.stub!.find(photo.id) { photo }
+      stub(Photo).find_with_associations(photo.id) { photo }
       get :map_popup, id: photo.id
 
       response.body.should_not include 'Guessed by'
