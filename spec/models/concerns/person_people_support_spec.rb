@@ -97,7 +97,7 @@ describe PersonPeopleSupport do
   describe '#guesses_with_associations_ordered_by_comments' do
     it "returns a person's guesses with their photos and the photos' people" do
       guess = create :guess
-      guesses = guess.person.guesses_with_associations
+      guesses = guess.person.guesses_with_associations_ordered_by_comments
       guesses.should == [ guess ]
       guesses[0].photo.should == guess.photo
       guesses[0].photo.person.should == guess.photo.person
