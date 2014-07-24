@@ -848,6 +848,51 @@ describe Photo do
 
   end
 
+  describe '.inaccessible_count' do
+    before do
+      create :flickr_update, created_at: Time.utc(2014)
+    end
+
+    it "counts photos which have not been seen since the last Flickr update" do
+      create :photo, seen_at: Time.utc(2013)
+      Photo.inaccessible_count.should == 1
+    end
+
+    it "counts unconfirmed photos" do
+      create :photo, seen_at: Time.utc(2013), game_status: 'unconfirmed'
+      Photo.inaccessible_count.should == 1
+    end
+
+    it "ignores a photo which has been seen since the last Flickr update" do
+      create :photo, seen_at: Time.utc(2014)
+      Photo.inaccessible_count.should == 0
+    end
+
+    %w(found revealed).each do |game_status|
+      it "ignores a #{game_status} photo which has not been seen since the last Flickr update" do
+        create :photo, seen_at: Time.utc(2013), game_status: game_status
+        Photo.inaccessible_count.should == 0
+      end
+    end
+
+  end
+
+  describe '.multipoint_count' do
+    let(:photo) { create :photo }
+
+    it "counts photos with more than one guess" do
+      photo = create :photo
+      2.times { create :guess, photo: photo }
+      Photo.multipoint_count.should == 1
+    end
+
+    it "ignores a photo with only one guess" do
+      create :guess, photo: photo
+      Photo.multipoint_count.should == 0
+    end
+
+  end
+
   # Used by Admin::PhotosController
 
   describe '.inaccessible' do
@@ -878,15 +923,15 @@ describe Photo do
   end
 
   describe '.multipoint' do
+    let(:photo) { create :photo }
+
     it 'returns photos for which more than one person got a point' do
-      photo = create :photo
-      create :guess, photo: photo
-      create :guess, photo: photo
+      2.times { create :guess, photo: photo }
       Photo.multipoint.should == [ photo ]
     end
 
     it 'ignores photos for which only one person got a point' do
-      create :guess
+      create :guess, photo: photo
       Photo.multipoint.should == []
     end
 

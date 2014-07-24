@@ -5,8 +5,8 @@ describe Admin::RootController do
     it "renders the page" do
       stub(FlickrUpdate).latest { build_stubbed :flickr_update, created_at: Time.local(2011) }
       stub(Photo).unfound_or_unconfirmed_count { 111 }
-      stub(Photo).where.stub!.count { 222 }
-      stub(Guess).group(:photo_id).stub!.count { { 1 => 2, 2 => 2 }  }
+      stub(Photo).inaccessible_count { 222 }
+      stub(Photo).multipoint_count { 2 }
       get :index
 
       response.should be_success
@@ -20,8 +20,8 @@ describe Admin::RootController do
     it "reports a completed update" do
       stub(FlickrUpdate).latest { build_stubbed :flickr_update, created_at: Time.local(2011), completed_at: Time.local(2001, 1, 1, 0, 6) }
       stub(Photo).unfound_or_unconfirmed_count { 111 }
-      stub(Photo).where.stub!.count { 222 }
-      stub(Guess).group(:photo_id).stub!.count { { 1 => 2, 2 => 2 }  }
+      stub(Photo).inaccessible_count { 222 }
+      stub(Photo).multipoint_count { 2 }
       get :index
 
       response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and completed at Monday, January  1,  0:06 PST.'

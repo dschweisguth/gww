@@ -175,6 +175,14 @@ class Photo < ActiveRecord::Base
     where("game_status in ('unfound', 'unconfirmed')").count
   end
 
+  def self.inaccessible_count
+    where("seen_at < ?", FlickrUpdate.maximum(:created_at)).where("game_status in ('unfound', 'unconfirmed')").count
+  end
+
+  def self.multipoint_count
+    connection.execute("select count(*) from (#{multipoint_without_associations.to_sql}) rows").first.first.to_i
+  end
+
   # Used by Admin::PhotosController
 
   def self.inaccessible
@@ -185,8 +193,11 @@ class Photo < ActiveRecord::Base
   end
 
   def self.multipoint
-    photo_ids = Guess.group(:photo_id).count.to_a.find_all { |pair| pair[1] > 1 }.map { |pair| pair[0] }
-    order('lastupdate desc').includes(:person, :tags).find photo_ids
+    multipoint_without_associations.order('lastupdate desc').includes(:person, :tags)
+  end
+
+  def self.multipoint_without_associations
+    joins(:guesses).group("photos.id").having("count(*) > 1")
   end
 
   def ready_to_score?
