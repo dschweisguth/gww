@@ -78,20 +78,24 @@ class PhotosController < ApplicationController
         begin
           Date.parse terms[field]
         rescue ArgumentError
-          params[:terms].sub! %r(#{field}/[^/]+/), ''
+          remove_term field
           raise
         end
       end
     end
     if terms['from-date'] && terms['to-date'] && Date.parse(terms['from-date']) > Date.parse(terms['to-date'])
       %w(from-date to-date).each do |field|
-        params[:terms].sub! %r(#{field}/[^/]+/), ''
+        remove_term field
       end
       raise ArgumentError, "invalid date"
     end
     sorted_by = terms.delete('sorted-by') || 'last-updated'
     direction = terms.delete('direction') || '-'
     [ terms, sorted_by, direction ]
+  end
+
+  private def remove_term(name)
+    params[:terms].sub! %r(#{name}/[^/]+/), ''
   end
 
   private def parsed_terms(terms)
