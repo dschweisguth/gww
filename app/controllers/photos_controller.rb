@@ -74,7 +74,7 @@ class PhotosController < ApplicationController
     end
     %w(from-date to-date).each do |field|
       if terms[field]
-        terms[field].try :gsub!, '-', '/'
+        terms[field].gsub! '-', '/'
         begin
           Date.parse terms[field]
         rescue ArgumentError
