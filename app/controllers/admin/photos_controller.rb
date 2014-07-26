@@ -23,7 +23,7 @@ class Admin::PhotosController < ApplicationController
       PageCache.clear
     end
     @photo.comments.to_a
-    set_config_to @photo
+    @json = @photo.to_map_json
   end
 
   def change_game_status

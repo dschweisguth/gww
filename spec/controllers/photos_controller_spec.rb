@@ -27,7 +27,7 @@ describe PhotosController do
   describe '#map' do
     it "renders the page" do
       json = { 'property' => 'value' }
-      stub(controller).map_photos { json }
+      stub(Photo).all_for_map(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
       get :map
 
       assigns[:json].should == json.to_json
@@ -41,113 +41,17 @@ describe PhotosController do
   describe '#map_json' do
     it "renders the page" do
       json = { 'property' => 'value' }
-      stub(controller).map_photos { json }
+      stub(Photo).all_for_map(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
       get :map_json
 
       response.should be_success
       response.body.should == json.to_json
 
     end
-  end
 
-  describe '#map_photos' do
-    before do
-      @initial_bounds = PhotosController::INITIAL_MAP_BOUNDS
-      @default_max_photos = controller.max_map_photos
-    end
-
-    it "returns an unfound photo" do
-      photo = build_stubbed :photo, latitude: 37, longitude: -122
-      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
-      controller.map_photos.should == {
-        partial: false,
-        bounds: @initial_bounds,
-        photos: [
-          {
-            'id' => photo.id,
-            'latitude' => photo.latitude,
-            'longitude' => photo.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
-          }
-        ]
-      }
-    end
-
-    it "handles no photos" do
-      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [] }
-      stub(Photo).oldest { nil }
-      controller.map_photos.should == {
-        partial: false,
-        bounds: @initial_bounds,
-        photos: []
-      }
-    end
-
-    it "echos non-default bounds" do
-      bounds = Bounds.new 1, 3, 2, 4
-      stub(Photo).mapped(bounds, @default_max_photos + 1) { [] }
-      stub(Photo).oldest { nil }
-      controller.params[:sw] = '1,2'
-      controller.params[:ne] = '3,4'
-      controller.map_photos.should == {
-        partial: false,
-        bounds: bounds,
-        photos: []
-      }
-    end
-
-    it "copies an inferred geocode to the stated one" do
-      photo = build_stubbed :photo, inferred_latitude: 37, inferred_longitude: -122
-      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
-      controller.map_photos.should == {
-        partial: false,
-        bounds: @initial_bounds,
-        photos: [
-          {
-            'id' => photo.id,
-            'latitude' => photo.latitude,
-            'longitude' => photo.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
-          }
-        ]
-      }
-    end
-
-    it "returns no more than a maximum number of photos" do
-      stub(controller).max_map_photos { 1 }
-      photo = build_stubbed :photo, latitude: 37, longitude: -122
-      oldest_photo = build_stubbed :photo, dateadded: 1.day.ago
-      stub(Photo).mapped(@initial_bounds, 2) { [ photo, oldest_photo ] }
-      stub(Photo).oldest { oldest_photo }
-      controller.map_photos.should == {
-        partial: true,
-        bounds: @initial_bounds,
-        photos: [
-          {
-            'id' => photo.id,
-            'latitude' => photo.latitude,
-            'longitude' => photo.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
-          }
-        ]
-      }
-    end
-
-    it "moves a younger photo so that it doesn't completely overlap an older photo with an identical location" do
-      photo1 = build_stubbed :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago
-      photo2 = build_stubbed :photo, latitude: 37, longitude: -122
-      stub(Photo).mapped(@initial_bounds, @default_max_photos + 1) { [ photo2, photo1 ] }
-      stub(Photo).oldest { photo1 }
-      photos = controller.map_photos[:photos]
-      photos[0]['latitude'].should be_within(0.000001).of 36.999991
-      photos[0]['longitude'].should be_within(0.000001).of -122.000037
-      photos[1]['latitude'].should == 37
-      photos[1]['longitude'].should == -122
+    it "supports arbitrary bounds" do
+      stub(Photo).all_for_map(Bounds.new(0, 1, 10, 11), PhotosController::MAX_MAP_PHOTOS) { { 'property' => 'value' } }
+      get :map_json, sw: '0,10', ne: '1,11'
     end
 
   end

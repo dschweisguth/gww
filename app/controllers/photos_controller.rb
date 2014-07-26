@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  include SinglePhotoMapSupport, MultiPhotoMapSupport
+  include SinglePhotoMapSupport, MultiPhotoMapControllerSupport
 
   caches_page :index
   def index
@@ -8,26 +8,11 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    @json = map_photos.to_json
+    @json = Photo.all_for_map(bounds, MAX_MAP_PHOTOS).to_json
   end
 
   def map_json
-    render json: map_photos
-  end
-
-  def map_photos
-    photos = Photo.mapped(bounds, max_map_photos + 1)
-    partial = photos.length == max_map_photos + 1
-    if partial
-      photos.to_a.pop
-    end
-    first_photo = Photo.oldest
-    if first_photo
-      use_inferred_geocode_if_necessary(photos)
-      photos.each { |photo| prepare_for_display photo, first_photo.dateadded }
-    end
-    perturb_identical_locations photos
-    as_json partial, photos
+    render json: Photo.all_for_map(bounds, MAX_MAP_PHOTOS)
   end
 
   caches_page :map_popup
@@ -126,7 +111,7 @@ class PhotosController < ApplicationController
   def show
     @photo = Photo.find params[:id].to_i
     @comments = @photo.comments
-    set_config_to @photo
+    @json = @photo.to_map_json
   end
 
 end

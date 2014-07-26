@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  include MultiPhotoMapSupport
+  include MultiPhotoMapControllerSupport
 
   caches_page :autocomplete_usernames
   def autocomplete_usernames
@@ -126,45 +126,11 @@ class PeopleController < ApplicationController
     @person = Person.find person_id
     @posts_count = @person.mapped_photo_count
     @guesses_count = @person.mapped_guess_count
-    @json = map_photos(person_id).to_json
+    @json = Photo.for_person_for_map(person_id, bounds, MAX_MAP_PHOTOS).to_json
   end
 
   def map_json
-    render json: map_photos(params[:id].to_i)
-  end
-
-  def map_photos(person_id)
-    photos = Photo.posted_or_guessed_by_and_mapped person_id, bounds, max_map_photos + 1
-    partial = photos.length == max_map_photos + 1
-    if partial
-      photos.to_a.pop
-    end
-    first_photo = Photo.oldest
-    if first_photo
-      use_inferred_geocode_if_necessary photos
-      photos.each { |photo| prepare_for_display_for_person photo, person_id, first_photo.dateadded }
-    end
-    perturb_identical_locations photos
-    as_json partial, photos
-  end
-
-  private def prepare_for_display_for_person(photo, person_id, first_dateadded)
-    now = Time.now
-    if photo.person_id == person_id
-      if photo.game_status == 'unfound' || photo.game_status == 'unconfirmed'
-        photo.color = 'FFFF00'
-        photo.symbol = '?'
-      elsif photo.game_status == 'found'
-        photo.color = scaled_blue first_dateadded, now, photo.dateadded
-        photo.symbol = '?'
-      else # revealed
-        photo.color = scaled_red first_dateadded, now, photo.dateadded
-        photo.symbol = '-'
-      end
-    else
-      photo.color = scaled_green first_dateadded, now, photo.dateadded
-      photo.symbol = '!'
-    end
+    render json: Photo.for_person_for_map(params[:id].to_i, bounds, MAX_MAP_PHOTOS)
   end
 
 end

@@ -401,7 +401,7 @@ describe PeopleController do
       stub(person).mapped_photo_count { 1 }
       stub(person).mapped_guess_count { 1 }
       json = { 'property' => 'value' }
-      stub(controller).map_photos(person.id) { json }
+      stub(Photo).for_person_for_map(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { json }
       get :map, id: person.id
 
       assigns[:json].should == json.to_json
@@ -419,148 +419,17 @@ describe PeopleController do
   describe '#map_json' do
     it "renders the page" do
       json = { 'property' => 'value' }
-      stub(controller).map_photos(1) { json }
+      stub(Photo).for_person_for_map(1, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { json }
       get :map_json, id: 1
 
       response.should be_success
       response.body.should == json.to_json
 
     end
-  end
 
-  describe '#map_photos' do
-    let(:person) { build_stubbed :person }
-    let(:initial_bounds) { PeopleController::INITIAL_MAP_BOUNDS }
-    let(:default_max_photos) { controller.max_map_photos }
-
-    before do
-      stub(Person).find(person.id) { person }
-    end
-
-    it "returns a post" do
-      returns_post initial_bounds, 'unfound', 'FFFF00', '?'
-    end
-
-    it "configures an unconfirmed post like an unfound" do
-      returns_post initial_bounds, 'unconfirmed', 'FFFF00', '?'
-    end
-
-    it "configures a found differently" do
-      returns_post initial_bounds, 'found', '0000FC', '?'
-    end
-
-    it "configures a revealed post differently" do
-      returns_post initial_bounds, 'revealed', 'E00000', '-'
-    end
-
-    # noinspection RubyArgCount
-    def returns_post(bounds, game_status, color, symbol)
-      post = build_stubbed :photo, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
-      controller.map_photos(person.id).should == {
-        partial: false,
-        bounds: bounds,
-        photos: [
-          {
-            'id' => post.id,
-            'latitude' => post.latitude,
-            'longitude' => post.longitude,
-            'color' => color,
-            'symbol' => symbol
-          }
-        ]
-      }
-    end
-
-    it "copies an inferred geocode to the stated one" do
-      post = build_stubbed :photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [ post ] }
-      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
-      controller.map_photos(person.id).should == {
-        partial: false,
-        bounds: initial_bounds,
-        photos: [
-          {
-            'id' => post.id,
-            'latitude' => post.inferred_latitude,
-            'longitude' => post.inferred_longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
-          }
-        ]
-      }
-    end
-
-    it "moves a younger post so that it doesn't completely overlap an older post with an identical location" do
-      post1 = build_stubbed :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago
-      post2 = build_stubbed :photo, latitude: 37, longitude: -122
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [ post2, post1 ] }
-      stub(Photo).oldest { post1 }
-      photos = controller.map_photos(person.id)[:photos]
-      photos[0]['latitude'].should be_within(0.000001).of 36.999991
-      photos[0]['longitude'].should be_within(0.000001).of -122.000037
-      photos[1]['latitude'].should == 37
-      photos[1]['longitude'].should == -122
-    end
-
-    it "returns a guess" do
-      photo = build_stubbed :photo, person_id: 2, latitude: 37, longitude: -122
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [ photo ] }
-      stub(Photo).oldest { build_stubbed :photo, dateadded: 1.day.ago }
-      controller.map_photos(person.id).should == {
-        partial: false,
-        bounds: initial_bounds,
-        photos: [
-          {
-            'id' => photo.id,
-            'latitude' => photo.latitude,
-            'longitude' => photo.longitude,
-            'color' => '008000',
-            'symbol' => '!'
-          }
-        ]
-      }
-    end
-
-    it "echos non-default bounds" do
-      controller.params[:sw] = '1,2'
-      controller.params[:ne] = '3,4'
-      bounds = Bounds.new 1, 3, 2, 4
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, default_max_photos + 1) { [] }
-      stub(Photo).oldest { nil }
-      controller.map_photos(person.id)[:bounds].should == bounds
-    end
-
-    it "returns no more than a maximum number of photos" do
-      stub(controller).max_map_photos { 1 }
-      post = build_stubbed :photo, person_id: person.id, latitude: 37, longitude: -122
-      oldest_photo = build_stubbed :photo, dateadded: 1.day.ago
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, 2) { [ post, oldest_photo ] }
-      stub(Photo).oldest { oldest_photo }
-      controller.map_photos(person.id).should == {
-        partial: true,
-        bounds: initial_bounds,
-        photos: [
-          {
-            'id' => post.id,
-            'latitude' => post.latitude,
-            'longitude' => post.longitude,
-            'color' => 'FFFF00',
-            'symbol' => '?'
-          }
-        ]
-      }
-    end
-
-    it "handles no photos" do
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, initial_bounds, default_max_photos + 1) { [] }
-      stub(Photo).oldest { nil }
-      controller.map_photos(person.id).should == {
-        partial: false,
-        bounds: initial_bounds,
-        photos: []
-      }
+    it "supports arbitrary bounds" do
+      stub(Photo).for_person_for_map(1, Bounds.new(0, 1, 10, 11), PeopleController::MAX_MAP_PHOTOS) { { 'property' => 'value' } }
+      get :map_json, id: 1, sw: '0,10', ne: '1,11'
     end
 
   end
