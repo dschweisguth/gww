@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Answer, PhotoPeopleSupport, PhotoPhotosSupport, PhotoStatisticsSupport, PhotoWheresiesSupport, SinglePhotoMapSupport # TODO Dave move this include to modules that use it?
+  include Answer, PhotoPeopleSupport, PhotoPhotosSupport, PhotoStatisticsSupport, PhotoWheresiesSupport, SinglePhotoMapSupport
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy
