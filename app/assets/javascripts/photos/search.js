@@ -18,7 +18,7 @@ GWW.photos.search = function () {
         if (request.term !== "") {
           url += '/term/' + escape(request.term);
         }
-        var gameStatus = $('form select[name="game_status[]"]'); // TODO Dave refactor
+        var gameStatus = $('form select[name="game_status[]"]');
         if (gameStatus.val() !== null && gameStatus.val() !== "") {
           url += "/game-status/" + gameStatus.val();
         }
