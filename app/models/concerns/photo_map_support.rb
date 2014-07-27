@@ -1,5 +1,4 @@
 module PhotoMapSupport
-  extend ActiveSupport::Concern
 
   def use_inferred_geocode_if_necessary
     if !latitude
