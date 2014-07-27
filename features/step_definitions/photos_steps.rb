@@ -51,7 +51,6 @@ Then /^I should see search results for (\d+) photos?$/ do |photo_count|
 end
 
 Then /^the game statuses "([^"]+)" should be selected$/ do |game_statuses|
-  # TODO Dave remove page. from other step definitions
   find_field('game_status').all('option[selected]').map(&:text).should =~ game_statuses.split(',')
 end
 

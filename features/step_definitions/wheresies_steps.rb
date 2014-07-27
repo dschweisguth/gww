@@ -59,7 +59,7 @@ Then /^the headline should say that the results are preliminary$/ do
 end
 
 Then /^the player "([^"]*)" should be first on the rookies' most-points list with (\d+) points$/ do |username, points|
-  most_points_list = page.all('body > div > div > div')[0]
+  most_points_list = all('body > div > div > div')[0]
   most_points_list.should have_css 'h3', text: "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
   tds[1].text.should == username
@@ -67,7 +67,7 @@ Then /^the player "([^"]*)" should be first on the rookies' most-points list wit
 end
 
 Then /^the player "([^"]*)" should be first on the rookies' most-posts list with (\d+) posts$/ do |username, posts|
-  most_posts_list = page.all('body > div > div > div')[1]
+  most_posts_list = all('body > div > div > div')[1]
   most_posts_list.should have_css 'h3', text: "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
   tds[1].text.should == username
@@ -75,7 +75,7 @@ Then /^the player "([^"]*)" should be first on the rookies' most-posts list with
 end
 
 Then /^the player "([^"]*)" should be first on the veterans' most-points list with (\d+) points$/ do |username, points|
-  most_points_list = page.all('body > div > div > div')[2]
+  most_points_list = all('body > div > div > div')[2]
   most_points_list.should have_css 'h3', text: "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
   tds[1].text.should == username
@@ -83,7 +83,7 @@ Then /^the player "([^"]*)" should be first on the veterans' most-points list wi
 end
 
 Then /^the player "([^"]*)" should be first on the veterans' most-posts list with (\d+) posts$/ do |username, posts|
-  most_posts_list = page.all('body > div > div > div')[3]
+  most_posts_list = all('body > div > div > div')[3]
   most_posts_list.should have_css 'h3', text: "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
   tds[1].text.should == username
@@ -91,7 +91,7 @@ Then /^the player "([^"]*)" should be first on the veterans' most-posts list wit
 end
 
 Then /^the player "([^"]*)" should be first on the most-viewed list with (\d+) views$/ do |username, views|
-  most_viewed_list = page.all('body > div > div')[2]
+  most_viewed_list = all('body > div > div')[2]
   most_viewed_list.should have_css 'h2', text: "Most-viewed photos of #{Time.now.year}"
   tds = most_viewed_list.all 'td'
   tds[2].text.should == username
@@ -99,7 +99,7 @@ Then /^the player "([^"]*)" should be first on the most-viewed list with (\d+) v
 end
 
 Then /^the player "([^"]*)" should be first on the most-faved list with (\d+) faves$/ do |username, faves|
-  most_faved_list = page.all('body > div > div')[3]
+  most_faved_list = all('body > div > div')[3]
   most_faved_list.should have_css 'h2', text: "Most-faved photos of #{Time.now.year}"
   tds = most_faved_list.all 'td'
   tds[2].text.should == username
@@ -107,7 +107,7 @@ Then /^the player "([^"]*)" should be first on the most-faved list with (\d+) fa
 end
 
 Then /^the player "([^"]*)" should be first on the most-commented list with (\d+) comments?$/ do |username, comments|
-  most_commented_list = page.all('body > div > div')[4]
+  most_commented_list = all('body > div > div')[4]
   most_commented_list.should have_css 'h2', text: "Most-commented photos of #{Time.now.year}"
   tds = most_commented_list.all 'td'
   tds[2].text.should == username
@@ -115,7 +115,7 @@ Then /^the player "([^"]*)" should be first on the most-commented list with (\d+
 end
 
 Then /^the player "([^"]*)" should be first on the longest-lasting list with a photo guessed after (\d+) years$/ do |username, years|
-  longest_lasting_list = page.all('body > div > table')[0]
+  longest_lasting_list = all('body > div > table')[0]
   tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
   tds_in_first_row[2].text.should == username
   # Allow both "3 years" and "3 years, 1 second" to pass in case the test runs slowly
@@ -123,7 +123,7 @@ Then /^the player "([^"]*)" should be first on the longest-lasting list with a p
 end
 
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
-  fastest_guessed_list = page.all('body > div > table')[1]
+  fastest_guessed_list = all('body > div > table')[1]
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
   tds_in_first_row[2].text.should == username
   # Allow one more second than specified in case the test runs slowly
