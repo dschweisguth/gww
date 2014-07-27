@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  include SinglePhotoMapSupport, MultiPhotoMapControllerSupport
+  include MultiPhotoMapControllerSupport
 
   caches_page :index
   def index

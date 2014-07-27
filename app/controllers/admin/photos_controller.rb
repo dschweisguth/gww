@@ -1,5 +1,4 @@
 class Admin::PhotosController < ApplicationController
-  include SinglePhotoMapSupport
 
   caches_page :unfound
   def unfound
