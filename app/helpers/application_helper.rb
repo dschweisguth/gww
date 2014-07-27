@@ -18,7 +18,6 @@ module ApplicationHelper
     verb + 's'
   end
 
-  # TODO Dave move uses of this to other date style?
   def local_date(datetime)
     datetime.getlocal.strftime '%Y/%m/%d'
   end
