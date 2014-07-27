@@ -175,7 +175,7 @@ describe PhotosController do
         'id' => photo.id,
         'latitude' => photo.latitude.to_s,
         'longitude' => photo.longitude.to_s,
-        'color' => 'FFFF00',
+        'color' => Color::Yellow.scaled(0, 0, 0),
         'symbol' => '?'
       }
       ActiveSupport::JSON.decode(assigns[:json]).should == json
@@ -205,7 +205,7 @@ describe PhotosController do
         'id' => photo.id,
         'latitude' => photo.inferred_latitude.to_s,
         'longitude' => photo.inferred_longitude.to_s,
-        'color' => 'FFFF00',
+        'color' => Color::Yellow.scaled(0, 0, 0),
         'symbol' => '?'
       }
       ActiveSupport::JSON.decode(assigns[:json]).should == json

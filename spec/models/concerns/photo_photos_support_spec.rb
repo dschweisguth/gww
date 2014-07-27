@@ -15,7 +15,7 @@ describe PhotoPhotosSupport do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => 'FFFF00',
+            'color' => Color::Yellow.scaled(0, 0, 0),
             'symbol' => '?'
           }
         ]
@@ -56,7 +56,7 @@ describe PhotoPhotosSupport do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => 'FFFF00',
+            'color' => Color::Yellow.scaled(0, 0, 0),
             'symbol' => '?'
           }
         ]
@@ -76,7 +76,7 @@ describe PhotoPhotosSupport do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => 'FFFF00',
+            'color' => Color::Yellow.scaled(0, 0, 0),
             'symbol' => '?'
           }
         ]

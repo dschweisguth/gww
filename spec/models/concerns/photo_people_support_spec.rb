@@ -8,19 +8,19 @@ describe Photo do
     end
 
     it "returns a post" do
-      returns_post 'unfound', 'FFFF00', '?'
+      returns_post 'unfound', Color::Yellow.scaled(0, 0, 0), '?'
     end
 
     it "configures an unconfirmed post like an unfound" do
-      returns_post 'unconfirmed', 'FFFF00', '?'
+      returns_post 'unconfirmed', Color::Yellow.scaled(0, 0, 0), '?'
     end
 
     it "configures a found differently" do
-      returns_post 'found', '0000FC', '?'
+      returns_post 'found', Color::Blue.scaled(0, 1, 1), '?'
     end
 
     it "configures a revealed post differently" do
-      returns_post 'revealed', 'E00000', '-'
+      returns_post 'revealed', Color::Red.scaled(0, 1, 1), '-'
     end
 
     # noinspection RubyArgCount
@@ -56,7 +56,7 @@ describe Photo do
             'id' => post.id,
             'latitude' => post.inferred_latitude,
             'longitude' => post.inferred_longitude,
-            'color' => 'FFFF00',
+            'color' => Color::Yellow.scaled(0, 0, 0),
             'symbol' => '?'
           }
         ]
@@ -87,7 +87,7 @@ describe Photo do
             'id' => photo.id,
             'latitude' => photo.latitude,
             'longitude' => photo.longitude,
-            'color' => '008000',
+            'color' => Color::Green.scaled(0, 1, 1),
             'symbol' => '!'
           }
         ]
@@ -114,7 +114,7 @@ describe Photo do
             'id' => post.id,
             'latitude' => post.latitude,
             'longitude' => post.longitude,
-            'color' => 'FFFF00',
+            'color' => Color::Yellow.scaled(0, 0, 0),
             'symbol' => '?'
           }
         ]

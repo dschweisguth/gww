@@ -18,22 +18,20 @@ module PhotoPeopleSupport
 
   def prepare_for_person_map(person_id, first_dateadded)
     use_inferred_geocode_if_necessary
-    now = Time.now
-    if person_id == self.person_id
-      if %w(unfound unconfirmed).include? game_status
-        self.color = 'FFFF00'
-        self.symbol = '?'
-      elsif game_status == 'found'
-        self.color = Photo.scaled_blue first_dateadded, now, dateadded
-        self.symbol = '?'
-      else # revealed
-        self.color = Photo.scaled_red first_dateadded, now, dateadded
-        self.symbol = '-'
+    color, symbol =
+      if person_id == self.person_id
+        if %w(unfound unconfirmed).include? game_status
+          [Color::Yellow, '?']
+        elsif game_status == 'found'
+          [Color::Blue, '?']
+        else # revealed
+          [Color::Red, '-']
+        end
+      else
+        [Color::Green, '!']
       end
-    else
-      self.color = Photo.scaled_green first_dateadded, now, dateadded
-      self.symbol = '!'
-    end
+    self.color = color.scaled first_dateadded, Time.now, dateadded
+    self.symbol = symbol
   end
 
 end
