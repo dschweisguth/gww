@@ -43,7 +43,6 @@ describe Photo do
       }
     end
 
-    # TODO Dave this is tested elsewhere
     it "copies an inferred geocode to the stated one" do
       post = build :photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [ post ] }
@@ -63,18 +62,6 @@ describe Photo do
       }
     end
 
-    it "moves a younger post so that it doesn't completely overlap an older post with an identical location" do
-      post1 = build :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago
-      post2 = build :photo, latitude: 37, longitude: -122
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 3) { [ post2, post1 ] }
-      stub(Photo).oldest { post1 }
-      photos = Photo.for_person_for_map(person.id, bounds, 2)[:photos]
-      photos[0]['latitude'].should be_within(0.000001).of 36.999991
-      photos[0]['longitude'].should be_within(0.000001).of -122.000037
-      photos[1]['latitude'].should == 37
-      photos[1]['longitude'].should == -122
-    end
-
     it "returns a guess" do
       photo = build :photo, person_id: 2, latitude: 37, longitude: -122
       stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [ photo ] }
@@ -92,13 +79,6 @@ describe Photo do
           }
         ]
       }
-    end
-
-    it "echos non-default bounds" do
-      bounds = Bounds.new 1, 3, 2, 4
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [] }
-      stub(Photo).oldest { nil }
-      Photo.for_person_for_map(person.id, bounds, 1)[:bounds].should == bounds
     end
 
     it "returns no more than a maximum number of photos" do
