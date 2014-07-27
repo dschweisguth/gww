@@ -10,9 +10,7 @@ module PhotoPeopleSupport
         photos.to_a.pop
       end
       first_photo = Photo.oldest
-      if first_photo
-        photos.each { |photo| photo.prepare_for_person_map person_id, first_photo.dateadded }
-      end
+      photos.each { |photo| photo.prepare_for_person_map person_id, first_photo.dateadded }
       as_map_json partial, bounds, photos
     end
 
