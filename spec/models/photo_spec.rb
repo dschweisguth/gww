@@ -882,7 +882,7 @@ describe Photo do
 
     it "counts photos with more than one guess" do
       photo = create :photo
-      2.times { create :guess, photo: photo }
+      create_list :guess, 2, photo: photo
       Photo.multipoint_count.should == 1
     end
 
@@ -926,7 +926,7 @@ describe Photo do
     let(:photo) { create :photo }
 
     it 'returns photos for which more than one person got a point' do
-      2.times { create :guess, photo: photo }
+      create_list :guess, 2, photo: photo
       Photo.multipoint.should == [ photo ]
     end
 

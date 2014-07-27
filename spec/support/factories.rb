@@ -1,7 +1,7 @@
 module GWW
   module Factories
     module Model
-      delegate :build, :create, :create_list, to: FactoryGirl
+      delegate :build, :build_list, :create, :create_list, to: FactoryGirl
     end
 
     module ControllerOrHelper
