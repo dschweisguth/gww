@@ -24,14 +24,14 @@ module PhotoPeopleSupport
         self.color = 'FFFF00'
         self.symbol = '?'
       elsif game_status == 'found'
-        self.color = scaled_blue first_dateadded, now, dateadded
+        self.color = Photo.scaled_blue first_dateadded, now, dateadded
         self.symbol = '?'
       else # revealed
-        self.color = scaled_red first_dateadded, now, dateadded
+        self.color = Photo.scaled_red first_dateadded, now, dateadded
         self.symbol = '-'
       end
     else
-      self.color = scaled_green first_dateadded, now, dateadded
+      self.color = Photo.scaled_green first_dateadded, now, dateadded
       self.symbol = '!'
     end
   end
