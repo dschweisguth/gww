@@ -1,20 +1,20 @@
-form div, form table {
+form div {
   display: inline-block;
   vertical-align: top;
   white-space: nowrap;
 }
 
-.text-fields > span {
-  display: inline-block;
-  width: 65px;
-}
-
-input {
+input, select {
   margin-right: 3px;
 }
 
-input:first-of-type {
+.text-fields > input:first-of-type, .date-fields > input:first-of-type, .sort-fields > select:first-of-type, input[type=submit] {
   margin-bottom: 10px;
+}
+
+.text-fields > span {
+  display: inline-block;
+  width: 65px;
 }
 
 .ui-autocomplete {
@@ -37,9 +37,14 @@ form img {
   cursor: default;
 }
 
-.game-status span {
+.game-status > span {
   display: inline-block;
   margin-top: 3px;
+}
+
+.game-status > select {
+  vertical-align: top;
+  margin-right: 6px;
 }
 
 .date-fields > span {
@@ -47,13 +52,13 @@ form img {
   width: 45px;
 }
 
-table {
-  margin: 0;
+.sort-fields > span {
+  display: inline-block;
+  width: 63px;
 }
 
-select {
-  vertical-align: top;
-  margin-right: 6px;
+.sort-fields > select, input[type=submit] {
+  margin-top: 3px;
 }
 
 #search-help {

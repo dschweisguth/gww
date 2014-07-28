@@ -23,19 +23,15 @@
       <span>Before:</span> <%= text_field_tag 'to_date', @terms['to-date'] %>
     </div>
     <div>
-      <table><%# TODO Dave get rid of this? %>
-        <tr>
-          <td>Sorted by:</td>
-          <%# TODO Dave use a single term for dateadded throughout app %>
-          <td><%= select_tag :sorted_by, options_for_select([ [ 'Last updated', 'last-updated' ], [ 'Date added', 'date-added' ] ], selected: @sorted_by) %></td>
-        </tr>
-        <tr>
-          <td>Direction:</td>
-          <td><%= select_tag :direction, options_for_select([ '-', '+' ], selected: @direction) %></td>
-        </tr>
-      </table>
+      <div class="sort-fields">
+        <span>Sorted by:</span>
+        <%# TODO Dave use a single term for dateadded throughout app %>
+        <%= select_tag :sorted_by, options_for_select([ [ 'Last updated', 'last-updated' ], [ 'Date added', 'date-added' ] ], selected: @sorted_by) %><br/>
+        <span>Direction:</span>
+        <%= select_tag :direction, options_for_select([ '-', '+' ], selected: @direction) %>
+      </div>
       <div>
-        <%= submit_tag 'Search' %><br/><br/>
+        <%= submit_tag 'Search' %><br/>
         <%= submit_tag 'Clear form', id: 'clear' %>
       </div>
     </div>
