@@ -1,5 +1,84 @@
 describe PhotoMapSupport do
 
+  describe '.mapped' do
+    let(:bounds) { Bounds.new 0, 2, 3, 5 }
+
+    it "returns photos" do
+      photo = create :photo, latitude: 1, longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == [ photo ]
+    end
+
+    it "returns auto-mapped photos" do
+      photo = create :photo, inferred_latitude: 1, inferred_longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == [ photo ]
+    end
+
+    it "ignores unmapped photos" do
+      create :photo
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores mapped photos with accuracy < 12" do
+      create :photo, latitude: 1, longitude: 4, accuracy: 11
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores mapped photos south of the minimum latitude" do
+      create :photo, latitude: -1, longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores mapped photos north of the maximum latitude" do
+      create :photo, latitude: 3, longitude: 4, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores mapped photos west of the minimum longitude" do
+      create :photo, latitude: 1, longitude: 2, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores mapped photos east of the maximum longitude" do
+      create :photo, latitude: 1, longitude: 6, accuracy: 12
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos south of the minimum latitude" do
+      create :photo, inferred_latitude: -1, inferred_longitude: 4
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos north of the maximum latitude" do
+      create :photo, inferred_latitude: 3, inferred_longitude: 4
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos west of the minimum longitude" do
+      create :photo, inferred_latitude: 1, inferred_longitude: 2
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "ignores auto-mapped photos east of the maximum longitude" do
+      create :photo, inferred_latitude: 1, inferred_longitude: 6
+      Photo.mapped(bounds, 1).should == []
+    end
+
+    it "returns only the youngest n photos" do
+      photo = create :photo, latitude: 1, longitude: 4, accuracy: 12
+      create :photo, latitude: 1, longitude: 4, accuracy: 12, dateadded: 1.day.ago
+      Photo.mapped(bounds, 1).should == [ photo ]
+    end
+
+  end
+
+  describe '.oldest' do
+    it "returns the oldest photo" do
+      create :photo
+      photo = create :photo, dateadded: 1.day.ago
+      Photo.oldest.should == photo
+    end
+  end
+
   describe '#prepare_for_map' do
     it "copies the inferred geocode to the real one if necessary" do
       photo = build :photo, inferred_latitude: 1, inferred_longitude: 2

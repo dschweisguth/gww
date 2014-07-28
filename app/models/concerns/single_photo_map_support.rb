@@ -1,4 +1,5 @@
 module SinglePhotoMapSupport
+  extend ActiveSupport::Concern # so parent module's ClassMethods are included when this module is included
   include PhotoMapSupport
 
   def to_map_json

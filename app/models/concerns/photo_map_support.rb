@@ -1,4 +1,21 @@
 module PhotoMapSupport
+  extend ActiveSupport::Concern
+
+  module ClassMethods
+    def mapped(bounds, limit)
+      where(
+        '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
+          '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
+          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
+          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long)
+        .order('dateadded desc').limit(limit)
+    end
+
+    def oldest
+      order('dateadded').first
+    end
+
+  end
 
   def use_inferred_geocode_if_necessary
     if !latitude
