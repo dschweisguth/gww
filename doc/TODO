@@ -9,8 +9,6 @@ Debt
 
 Review globally for refactorings that were missed
 Review slow tests
-Rubocop
-rails_best_practices
 After RubyMine is updated to be compatible with RSpec 3, upgrade
 Measure Javascript coverage
 Merge revelations into guesses?
