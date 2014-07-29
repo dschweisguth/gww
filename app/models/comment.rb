@@ -19,9 +19,12 @@ class Comment < ActiveRecord::Base
   def self.remove_guess(comment_id)
     transaction do
       comment = find comment_id
-      guesses = Guess.joins(:person).where(
-        "guesses.photo_id = ? and people.flickrid = ? and guesses.comment_text = ?",
-          comment.photo_id, comment.flickrid, comment.comment_text).readonly false
+      guesses =
+        Guess.joins(:person)
+          .where("guesses.photo_id = ?", comment.photo_id)
+          .where("people.flickrid = ?", comment.flickrid)
+          .where("guesses.comment_text = ?", comment.comment_text)
+          .readonly false
       guesses.first.destroy # There can be only one Guess for a given photo, person and comment text
       photo = comment.photo
       if photo.guesses.empty?
@@ -38,7 +41,7 @@ class Comment < ActiveRecord::Base
   end
 
   def is_accepted_answer
-    is_by_poster && photo.revelation && photo.revelation.comment_text == comment_text ||
+    is_by_poster && photo.revelation.try(:comment_text) == comment_text ||
       photo.guesses.any? { |g| g.person.flickrid == flickrid && g.comment_text == comment_text }
   end
 

@@ -11,7 +11,7 @@ module PhotoWheresiesSupport
     end
   
     def most_loved_in(year, column)
-      where('? <= dateadded and dateadded < ?', Time.local(year).getutc, Time.local(year + 1).getutc)
+      where('? <= dateadded', Time.local(year).getutc).where('dateadded < ?', Time.local(year + 1).getutc)
         .order("#{column} desc").limit(10).includes(:person)
     end
 

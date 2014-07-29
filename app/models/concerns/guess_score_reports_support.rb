@@ -3,7 +3,7 @@ module GuessScoreReportsSupport
 
   module ClassMethods
     def all_between(from, to)
-      where("? < added_at and added_at <= ?", from.getutc, to.getutc)
+      where("? < added_at", from.getutc).where("added_at <= ?", to.getutc)
         .order(:commented_at).includes(:person, { photo: :person })
     end
 
