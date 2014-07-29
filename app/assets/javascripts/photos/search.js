@@ -232,6 +232,7 @@ GWW.photos.search = function () {
   }
 
   function stopLoadingAnimation() {
+    $('#loading-animation').toggle();
     clearInterval(loadingAnimationThread);
   }
 

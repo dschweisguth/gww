@@ -1,6 +1,5 @@
 Bugs
 
-Loading graphic hangs when search returns no results
 A photo which is guessed or revealed and then removed from the group remains in
   the database but is no longer updated. That means that the usernames of
   commenters on such a photo are no longer updated. See doc/old_usernames for
