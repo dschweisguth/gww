@@ -104,7 +104,7 @@ describe PhotosController do
 
   describe '#unfound_data' do
     it 'renders the page' do
-      stub(FlickrUpdate).latest { build_stubbed :flickr_update, created_at: Time.utc(2011) }
+      stub(FlickrUpdate).maximum(:created_at) { Time.utc(2011) }
       photo = build_stubbed :photo
       stub(Photo).unfound_or_unconfirmed { [ photo ] }
       get :unfound_data

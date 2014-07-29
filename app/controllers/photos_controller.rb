@@ -23,7 +23,7 @@ class PhotosController < ApplicationController
 
   # Not cached since the cached copy would have an incorrect .html extension
   def unfound_data
-    @lasttime = FlickrUpdate.latest.created_at
+    @lasttime = FlickrUpdate.maximum :created_at
     @photos = Photo.unfound_or_unconfirmed
     render formats: [:xml]
   end
