@@ -34,6 +34,7 @@ class PhotosController < ApplicationController
       @terms, @sorted_by, @direction = parsed_params
     rescue ArgumentError => e
       if e.message == 'invalid date'
+        # noinspection RubyResolve
         redirect_to search_photos_with_terms_path params[:terms]
         return
       else

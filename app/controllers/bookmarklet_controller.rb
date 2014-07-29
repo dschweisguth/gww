@@ -19,6 +19,7 @@ class BookmarkletController < ApplicationController
       person_identifier = Regexp.last_match[1]
       person = Person.find_by_pathalias(person_identifier) || Person.find_by_flickrid(person_identifier)
       if person
+        # noinspection RubyResolve
         path = person_path person
       else
         message = "Sorry, Guess Where Watcher doesn't know anything about that person. " +

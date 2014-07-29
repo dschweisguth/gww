@@ -102,6 +102,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   private def redirect_to_edit_path(id, options = {})
+    #noinspection RubyResolve
     redirect_to edit_admin_photo_path id, options
   end
 

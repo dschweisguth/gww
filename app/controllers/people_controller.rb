@@ -10,6 +10,7 @@ class PeopleController < ApplicationController
     username = params[:username]
     person = Person.find_by_multiple_fields username
     if person
+      # noinspection RubyResolve
       redirect_to person_path person
     else
       flash[:find_person_error] = username
