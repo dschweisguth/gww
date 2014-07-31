@@ -1,4 +1,4 @@
-Given /^there is an? ([^"]+) photo$/ do |game_status|
+Given /^there is an? (unfound|unconfirmed|found|revealed) photo$/ do |game_status|
   @photo = create :photo, game_status: game_status
 end
 

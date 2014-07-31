@@ -92,3 +92,16 @@ Feature: Administer photos
 
     When I follow the "Unfound or unconfirmed photos" link
     Then I should not see any photos
+
+  Scenario: Admin deletes a photo that has been deleted from Flickr
+    Given there is an inaccessible photo
+    And updating a photo from Flickr returns an error
+    When I go to the admin inaccessible photos page
+    And I follow the "Edit" link
+    Then I should see the error
+
+    When I press the "Delete this photo" button
+    Then I should be on the admin home page
+
+    When I follow the "Unfound or unconfirmed photos" link
+    Then I should not see any photos

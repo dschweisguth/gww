@@ -18,7 +18,11 @@ class Admin::PhotosController < ApplicationController
   def edit
     @photo = Photo.find_with_associations params[:id].to_i
     if params[:update_from_flickr]
-      FlickrUpdater.update_photo @photo
+      begin
+        FlickrUpdater.update_photo @photo
+      rescue FlickrService::FlickrReturnedAnError => e
+        flash[:notice] = e.message
+      end
       PageCache.clear
     end
     @photo.comments.to_a

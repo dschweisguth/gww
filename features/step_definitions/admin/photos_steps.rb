@@ -3,6 +3,15 @@ Given /^updating a photo from Flickr does nothing$/ do
   stub(FlickrUpdater).update_photo { nil }
 end
 
+Given /^there is an inaccessible photo$/ do
+  @photo = create :photo, seen_at: 1.year.ago
+end
+
+Given /^updating a photo from Flickr returns an error$/ do
+  # noinspection RubyArgCount
+  stub(FlickrUpdater).update_photo { raise FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "Photo not found" }
+end
+
 Given /^getting a person's attributes from Flickr returns what we'd expect given what's in the database$/ do
   # noinspection RubyArgCount
   stub(FlickrUpdater).person_attributes do |flickrid|
@@ -66,4 +75,8 @@ end
 
 Then /^I should not see any photos$/ do
   all('td').should be_empty
+end
+
+Then /^I should see the error$/ do
+  page.should have_content "stat = 'fail', code = 1, msg = \"Photo not found\""
 end

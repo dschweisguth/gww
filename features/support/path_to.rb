@@ -14,6 +14,8 @@ module PathTo
 
       when "the admin home page"
         admin_root_path
+      when "the admin inaccessible photos page"
+        inaccessible_admin_photos_path
       when "the photo's edit page"
         edit_admin_photo_path @photo
 
