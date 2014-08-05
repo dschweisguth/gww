@@ -12,7 +12,7 @@ gem 'rails', '4.1.1'
 gem 'sass-rails', '4.0.3'
 gem 'therubyracer', '0.12.1', platforms: :ruby
 gem 'uglifier', '2.5.1'
-gem 'will_paginate', '3.0.5'
+gem 'will_paginate', '3.0.7'
 gem 'xml-simple', '1.1.3'
 
 group :development do

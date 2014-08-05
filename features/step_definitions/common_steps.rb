@@ -26,15 +26,10 @@ When /^I fill in "([^"]+)" with "([^"]+)"$/ do |field, text|
   fill_in field, with: text
 end
 
-When /^I press the keys "([^"]+)" in the "([^"]+)" field$/ do |keys, field|
-  find(field).native.send_keys keys
-end
-
-When /^I wait until an? "([^"]+)" menu item appears$/ do |text|
+# Warning: only uses the first character of the text. Could be extended to use a specified number.
+When /^I autoselect "([^"]+)" from the "([^"]+)" field$/ do |text, field|
+  find(field).native.send_keys text[0]
   wait_for { all('a', text: text).any? }
-end
-
-When /^I click the "([^"]+)" menu item$/ do |text|
   find('a', text: text).click
 end
 

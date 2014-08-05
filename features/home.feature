@@ -9,8 +9,6 @@ Feature: Home page
     And there is a score report
     And there is a player "abcdefgh"
     When I go to the home page
-    And I press the keys "a" in the "#username" field
-    And I wait until an "abcdefgh" menu item appears
-    And I click the "abcdefgh" menu item
+    And I autoselect "abcdefgh" from the "#username" field
     And I press the "Find" button
     Then I should be on the player "abcdefgh"'s page

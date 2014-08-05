@@ -21,7 +21,7 @@ class Photo < ActiveRecord::Base
   validates_numericality_of :member_questions, only_integer: true, greater_than_or_equal_to: 0
 
   # Not persisted, used in views
-  attr_accessor :color, :symbol, :place
+  attr_accessor :color, :symbol, :place, :acted_on_at
 
   after_destroy do
     person.destroy_if_has_no_dependents

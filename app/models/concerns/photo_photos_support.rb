@@ -65,43 +65,59 @@ module PhotoPhotosSupport
       where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person, :tags)
     end
 
-    def search(terms, sorted_by, direction, page)
+    def search(terms, sorted_by, direction, page, options = {})
       query = all
-      if terms.has_key? 'game-status'
-        query = query.where game_status: terms['game-status']
-      end
-      if terms.has_key? 'posted-by'
-        query = query.joins(:person).where people: { username: terms['posted-by'] }
-      end
-      if terms['text']
-        terms['text'].each do |words|
-          clauses = [
-            "title regexp ?",
-            "description regexp ?",
-            "exists (select 1 from tags t where photos.id = t.photo_id and lower(t.raw) regexp ?)"
-          ]
-          sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
-            "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and " }))"
-          query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" })
-            .includes :tags, :comments # because we display them when it's a text search
+      if terms['did'] == 'activity' && terms.has_key?('done-by')
+        query = query.select("*", "activities.acted_at acted_on_at")
+          .joins(%q(join (
+            select f1.id, f1.dateadded acted_at from photos f1 join people p on p.id = f1.person_id and p.username = %s
+            union
+            select c.photo_id, c.commented_at from comments c where c.username = %s) activities on activities.id = photos.id
+          ) % Array.new(2, ActiveRecord::Base.sanitize(terms['done-by'])))
+        if terms.has_key? 'from-date'
+          query = query.where "? <= activities.acted_at", Date.parse_utc_time(terms['from-date'])
         end
+        if terms.has_key? 'to-date'
+          query = query.where "activities.acted_at < ?", Date.parse_utc_time(terms['to-date']) + 1.day
+        end
+        query = query
+          .order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}")
+          .includes(:person, :tags, :comments)
+        # .includes mostly doesn't work here; in general it seems not to work with queries that return the same object
+        # more than once. I posted to rubyonrails-talk 5 Aug 2014 to see whether this is a bug.
+      else
+        if terms.has_key? 'done-by'
+          query = query.joins(:person).where({ people: { username: terms['done-by'] } })
+        end
+        if terms['text']
+          terms['text'].each do |words|
+            clauses = [
+              "title regexp ?",
+              "description regexp ?",
+              "exists (select 1 from tags t where photos.id = t.photo_id and lower(t.raw) regexp ?)"
+            ]
+            sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
+              "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and " }))"
+            query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" })
+              .includes :tags, :comments # because we display them when it's a text search
+          end
+        end
+        if terms.has_key? 'game-status'
+          query = query.where game_status: terms['game-status']
+        end
+        if terms.has_key? 'from-date'
+          query = query.where "? <= dateadded", Date.parse_utc_time(terms['from-date'])
+        end
+        if terms.has_key? 'to-date'
+          query = query.where "dateadded < ?", Date.parse_utc_time(terms['to-date']) + 1.day
+        end
+        query = query
+          .order("#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
+          .includes(:person)
       end
-      if terms.has_key? 'from-date'
-        query = query.where "? <= dateadded", Date.parse_utc_time(terms['from-date'])
-      end
-      if terms.has_key? 'to-date'
-        query = query.where "dateadded < ?", Date.parse_utc_time(terms['to-date']) + 1.day
-      end
-      query
-        .order("#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
-        .includes(:person)
-        .paginate page: page, per_page: 30
+      query.paginate page: page, per_page: options[:per_page] || 30
     end
 
-  end
-
-  def comments_that_match(text_term_groups)
-    comments.select { |comment| text_term_groups.any? { |terms| terms.all? { |text| comment.comment_text =~ /\b#{text}\b/i } } }
   end
 
   def human_tags
@@ -110,6 +126,17 @@ module PhotoPhotosSupport
 
   def machine_tags
     tags.select &:machine_tag
+  end
+
+  def comments_that_match(text_term_groups)
+    comments.select { |comment| text_term_groups.any? { |terms| terms.all? { |text| comment.comment_text =~ /\b#{text}\b/i } } }
+  end
+
+  # A confusing method. Returns an array of comments which is an array for the caller's convenience but which is
+  # expected to contain only one element, the comment which led to this photo being including in activity search results.
+  def comments_made_when_acted_on
+    # For performance, expect this photo's comments to have been included and select from them in memory
+    comments.select { |comment| comment.commented_at == self[:acted_on_at] }
   end
 
 end

@@ -2,7 +2,7 @@
   <%# The outermost div is there so that the ID is at the top edge of the row so that we can scroll to the top edge %>
   <%# of the row instead of to the top edge of the image, which isn't always at the top edge of the row. %>
   <%# If we switch to images of uniform height this div can go away. %>
-  <div<% if i == 0 %> id="<%= params[:page] %>"<% end %> class="image<% if @text_terms.any? %> full<% end %>">
+  <div<% if i == 0 %> id="<%= params[:page] %>"<% end %> class="image<% if @display_fully %> full<% end %>">
     <div>
       <a href="<%= url_for_flickr_photo_in_pool(photo) %>"><%= titled_image_tag url_for_flickr_image(photo, 'm'), "" %></a>
       <div class="bg"></div>
@@ -16,28 +16,30 @@
       </div>
     </div>
   </div>
-  <% if @text_terms.any? %>
-    <% if photo.title %>
-      <h2><%= raw highlighted(h(photo.title), @text_terms) %></h2>
-    <% end %>
-    <% if photo.description %>
-      <p><%= raw highlighted(photo.description.gsub("\n", "<br/>"), @text_terms) %></p>
-    <% end %>
-    <% if photo.human_tags.any? %>
-      <ul class="tags">
-        <% raws = photo.human_tags.map &:raw %>
-        <% raws.each do |tag|%>
-          <li><%= raw highlighted(h(tag), @text_terms, raws) %></li>
-        <% end %>
-      </ul>
-    <% end %>
-    <% matching_comments = photo.comments_that_match @text_terms %>
-    <% if matching_comments.any? %>
-      <br/>
-      <% matching_comments.each do |comment| %>
-        <b><%= comment.username %></b> <%= raw highlighted(comment.comment_text, @text_terms) %><br/>
+  <% if @display_fully %>
+    <div class="text"><%# Doesn't affect display. Allows us to test where text elements appear in search results. %>
+      <% if photo.title %>
+        <h2><%= raw highlighted(h(photo.title), @text_terms) %></h2>
       <% end %>
-    <% end %>
+      <% if photo.description %>
+        <p><%= raw highlighted(photo.description.gsub("\n", "<br/>"), @text_terms) %></p>
+      <% end %>
+      <% if photo.human_tags.any? %>
+        <ul class="tags">
+          <% raws = photo.human_tags.map &:raw %>
+          <% raws.each do |tag|%>
+            <li><%= raw highlighted(h(tag), @text_terms, raws) %></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <% matching_comments = @comment_selection_criterion == 'posted' ? photo.comments_that_match(@text_terms) : photo.comments_made_when_acted_on %>
+      <% if matching_comments.any? %>
+        <br/>
+        <% matching_comments.each do |comment| %>
+          <b><%= comment.username %></b> <span class="comment-date">(<%= dmy_local_date comment.commented_at %>)</span> <%= raw highlighted(comment.comment_text, @text_terms) %><br/>
+        <% end %>
+      <% end %>
+    </div>
     <br clear="all"/>
   <% end %>
 <% end %>

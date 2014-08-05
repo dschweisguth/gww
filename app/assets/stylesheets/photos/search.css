@@ -14,7 +14,7 @@ input, select {
 
 .text-fields > span {
   display: inline-block;
-  width: 65px;
+  width: 100px;
 }
 
 .ui-autocomplete {
@@ -147,6 +147,11 @@ h2 {
 h3 {
   font-size: 14px;
   display: inline;
+}
+
+.comment-date {
+  font-size: 11px;
+  color: #bbbbbb;
 }
 
 .matched {

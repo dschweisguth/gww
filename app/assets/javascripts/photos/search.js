@@ -51,13 +51,15 @@ GWW.photos.search = function () {
     $('form').submit(function (event) {
       event.preventDefault();
       var path = '/photos/search';
+      var did = $(this).find('select[name="did"]');
+      path += "/did/" + did.val();
       var gameStatus = $(this).find('select[name="game_status[]"]');
       if (gameStatus.val() !== null && gameStatus.val() !== "") {
         path += "/game-status/" + gameStatus.val();
       }
       var postedBy = $(this).find('[name="username"]');
       if (postedBy.val() !== "") {
-        path += "/posted-by/" + encodeURIComponent(postedBy.val());
+        path += "/done-by/" + encodeURIComponent(postedBy.val());
       }
       var text = $(this).find('[name="text"]');
       if (text.val() !== "") {
@@ -72,7 +74,7 @@ GWW.photos.search = function () {
         path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
       }
       var sortedBy = $(this).find('[name="sorted_by"]');
-      if (sortedBy.val() !== null && sortedBy.val() !== "") {
+      if (sortedBy.val() !== null && sortedBy.val() !== "") { // TODO Dave these checks are unnecessary
         path += "/sorted-by/" + sortedBy.val();
       }
       var direction = $(this).find('[name="direction"]');

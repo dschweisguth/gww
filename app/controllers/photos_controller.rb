@@ -33,7 +33,7 @@ class PhotosController < ApplicationController
     begin
       @terms, @sorted_by, @direction = parsed_params
     rescue ArgumentError => e
-      if e.message == 'invalid date'
+      if ['invalid date', 'invalid search parameters'].include? e.message
         # noinspection RubyResolve
         redirect_to search_photos_with_terms_path params[:terms]
         return
@@ -49,12 +49,22 @@ class PhotosController < ApplicationController
     parsed_terms = parsed_terms terms
     @photos = Photo.search(parsed_terms, sorted_by, direction, params[:page]).to_a
     @text_terms = parsed_terms['text'] || []
+    @display_fully = @text_terms.any? || parsed_terms['did'] == 'activity'
+    @comment_selection_criterion = parsed_terms['did']
     render layout: false
   end
 
   private def parsed_params
     params[:terms] ||= ''
     terms = params[:terms].split('/').each_slice(2).to_h
+    if terms['did'] == 'activity'
+      %w(text game-status).each do |field|
+        if terms[field]
+          remove_term field
+          raise ArgumentError, "invalid search parameters"
+        end
+      end
+    end
     if terms['game-status']
       terms['game-status'] = terms['game-status'].split ','
     end
@@ -73,7 +83,7 @@ class PhotosController < ApplicationController
       %w(from-date to-date).each do |field|
         remove_term field
       end
-      raise ArgumentError, "invalid date"
+      raise ArgumentError, "invalid search parameters"
     end
     sorted_by = terms.delete('sorted-by') || 'last-updated'
     direction = terms.delete('direction') || '-'
