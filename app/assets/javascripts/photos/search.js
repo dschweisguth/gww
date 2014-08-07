@@ -257,7 +257,7 @@ GWW.photos.search = function () {
   }
 
   function setUpMetadataVisibility() {
-    $('#photos > div').hover(setMetadataVisibility('visible'), setMetadataVisibility('hidden'));
+    $('#photos > div.image').hover(setMetadataVisibility('visible'), setMetadataVisibility('hidden'));
   }
 
   function setMetadataVisibility(visibility) {
