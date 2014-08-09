@@ -53,8 +53,9 @@ class FlickrUpdater
     new_person_count = 0
     while parsed_photos.nil? || page <= parsed_photos['pages'].to_i
       Rails.logger.info "Getting page #{page} ..."
+      # Note date_taken and path_alias here but datetaken and pathalias in the result
       photos_xml = FlickrService.instance.groups_pools_get_photos group_id: FlickrService::GROUP_ID,
-        per_page: 500, page: page, extras: 'geo,last_update,path_alias,views,description' # Note path_alias here but pathalias in the result
+        per_page: 500, page: page, extras: 'description,date_taken,geo,last_update,path_alias,views'
       parsed_photos = photos_xml['photos'][0]
       Rails.logger.info "Updating database from page #{page} ..."
       now = Time.now.getutc
@@ -94,7 +95,7 @@ class FlickrUpdater
     photo_needs_full_update = !photo || lastupdate != photo.lastupdate
 
     attributes = { seen_at: now }
-    if photo_needs_full_update
+    if photo_needs_full_update || true # TODO Dave back out when datetaken is set in production
       attributes.merge! \
         farm: parsed_photo['farm'],
         server: parsed_photo['server'],
@@ -102,6 +103,7 @@ class FlickrUpdater
         title: parsed_photo['title'],
         description: to_string_or_nil(parsed_photo['description']),
         views: parsed_photo['views'].to_i,
+        datetaken: datetaken(parsed_photo['datetaken']),
         lastupdate: lastupdate,
         latitude: to_float_or_nil(parsed_photo['latitude']),
         longitude: to_float_or_nil(parsed_photo['longitude']),
@@ -155,6 +157,7 @@ class FlickrUpdater
         title: to_string_or_nil(parsed_photo['title']),
         description: to_string_or_nil(parsed_photo['description']),
         views: parsed_photo['views'].to_i,
+        datetaken: datetaken(parsed_photo['dates'][0]['taken']),
         lastupdate: lastupdate,
         latitude: latitude,
         longitude: longitude,
@@ -207,6 +210,20 @@ class FlickrUpdater
   private_class_method def self.to_string_or_nil(content)
     description = content.first
     description == {} ? nil : description
+  end
+
+  def self.datetaken(mysql_time)
+    # A few photos have times like "0000-00-00 00:00:00" or "2010-00-01 00:00:00"
+    begin
+      ActiveSupport::TimeZone['Pacific Time (US & Canada)'].parse(mysql_time).getutc
+    rescue ArgumentError => e
+      if e.message == "argument out of range"
+        Rails.logger.debug "Ignoring invalid datetaken '#{mysql_time}'"
+        nil
+      else
+        raise
+      end
+    end
   end
 
   def self.fave_count(photo_flickrid)
