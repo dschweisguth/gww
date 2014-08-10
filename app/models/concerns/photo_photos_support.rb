@@ -118,7 +118,7 @@ module PhotoPhotosSupport
           query = query.where "dateadded < ?", Date.parse_utc_time(terms['to-date']) + 1.day
         end
         query = query
-          .order("#{ORDERS[sorted_by] || 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
+          .order("#{ORDERS[sorted_by]} #{direction == '+' ? 'asc' : 'desc'}")
           .includes(:person)
       end
       query.paginate page: page, per_page: options[:per_page] || 30

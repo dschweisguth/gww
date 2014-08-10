@@ -33,7 +33,7 @@ class PhotosController < ApplicationController
     begin
       @terms, @sorted_by, @direction = parsed_params
     rescue ArgumentError => e
-      if ['invalid date', 'invalid search parameters'].include? e.message
+      if ['invalid date', 'invalid search parameters', 'invalid sorted_by'].include? e.message
         # noinspection RubyResolve
         redirect_to search_photos_with_terms_path params[:terms]
         return
@@ -60,7 +60,7 @@ class PhotosController < ApplicationController
     if terms['did'] == 'activity'
       %w(text game-status).each do |field|
         if terms[field]
-          remove_term field
+          remove_term field # TODO Dave extract duplication
           raise ArgumentError, "invalid search parameters"
         end
       end
@@ -85,7 +85,17 @@ class PhotosController < ApplicationController
       end
       raise ArgumentError, "invalid search parameters"
     end
-    sorted_by = terms.delete('sorted-by') || 'last-updated'
+    sorted_by = terms.delete 'sorted-by'
+    if sorted_by
+      valid_orders = terms['did'] == 'activity' ? 'date-taken' : %w(date-taken date-added last-updated)
+      if ! valid_orders.include?(sorted_by)
+        remove_term 'sorted-by'
+        raise ArgumentError, "invalid sorted_by"
+      end
+    else
+      sorted_by = terms['did'] == 'activity' ? 'date-taken' : 'last-updated'
+    end
+
     direction = terms.delete('direction') || '-'
     [ terms, sorted_by, direction ]
   end

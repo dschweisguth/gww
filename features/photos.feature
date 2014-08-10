@@ -225,8 +225,10 @@ Feature: Photos
     And I select "Activity" from "did"
     And I fill in "text" with "Fort Point"
     And I select "unfound" from "game_status"
+    And I select "Date added" from "sorted_by"
     And I press the "Search" button
     Then the URL should not contain "text"
     And the "text" field should be empty
     And the URL should not contain "text"
     And no "game_status" field should be selected
+    And the order "date-taken" should be selected
