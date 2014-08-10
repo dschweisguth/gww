@@ -242,49 +242,48 @@ describe FlickrUpdater do
 
     end
 
-    # TODO Dave reinstate after updating
-    # it "doesn't update anything except seen_at if Flickr says the photo hasn't been updated" do
-    #   stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
-    #   dont_allow(FlickrService.instance).fave_count
-    #   dont_allow(FlickrUpdater).update_comments
-    #   dont_allow(FlickrUpdater).update_tags
-    #   person = create :person, flickrid: 'incoming_person_flickrid'
-    #   photo_before = create :photo,
-    #     person: person,
-    #     flickrid: stubbed_photo[:id],
-    #     farm: '2',
-    #     server: 'old_server',
-    #     secret: 'old_secret',
-    #     latitude: 37.654321,
-    #     longitude: -122.123456,
-    #     accuracy: 15,
-    #     datetaken: Time.utc(2009),
-    #     dateadded: Time.utc(2010),
-    #     lastupdate: Time.utc(2010, 1, 1, 1),
-    #     views: 40,
-    #     faves: 6
-    #   FlickrUpdater.update_all_photos
-    #
-    #   Photo.first_and_only.should have_attributes(
-    #     id: photo_before.id,
-    #     flickrid: photo_before.flickrid,
-    #     farm: photo_before.farm,
-    #     server: photo_before.server,
-    #     secret: photo_before.secret,
-    #     latitude: photo_before.latitude,
-    #     longitude: photo_before.longitude,
-    #     accuracy: photo_before.accuracy,
-    #     datetaken: photo_before.datetaken,
-    #     dateadded: photo_before.dateadded,
-    #     lastupdate: photo_before.lastupdate,
-    #     views: photo_before.views,
-    #     title: photo_before.title,
-    #     description: photo_before.description,
-    #     faves: photo_before.faves,
-    #     seen_at: now
-    #   )
-    #
-    # end
+    it "doesn't update anything except seen_at if Flickr says the photo hasn't been updated" do
+      stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
+      dont_allow(FlickrService.instance).fave_count
+      dont_allow(FlickrUpdater).update_comments
+      dont_allow(FlickrUpdater).update_tags
+      person = create :person, flickrid: 'incoming_person_flickrid'
+      photo_before = create :photo,
+        person: person,
+        flickrid: stubbed_photo[:id],
+        farm: '2',
+        server: 'old_server',
+        secret: 'old_secret',
+        latitude: 37.654321,
+        longitude: -122.123456,
+        accuracy: 15,
+        datetaken: Time.utc(2009),
+        dateadded: Time.utc(2010),
+        lastupdate: Time.utc(2010, 1, 1, 1),
+        views: 40,
+        faves: 6
+      FlickrUpdater.update_all_photos
+
+      Photo.first_and_only.should have_attributes(
+        id: photo_before.id,
+        flickrid: photo_before.flickrid,
+        farm: photo_before.farm,
+        server: photo_before.server,
+        secret: photo_before.secret,
+        latitude: photo_before.latitude,
+        longitude: photo_before.longitude,
+        accuracy: photo_before.accuracy,
+        datetaken: photo_before.datetaken,
+        dateadded: photo_before.dateadded,
+        lastupdate: photo_before.lastupdate,
+        views: photo_before.views,
+        title: photo_before.title,
+        description: photo_before.description,
+        faves: photo_before.faves,
+        seen_at: now
+      )
+
+    end
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos

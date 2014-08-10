@@ -95,7 +95,7 @@ class FlickrUpdater
     photo_needs_full_update = !photo || lastupdate != photo.lastupdate
 
     attributes = { seen_at: now }
-    if photo_needs_full_update || true # TODO Dave back out when datetaken is set in production
+    if photo_needs_full_update
       attributes.merge! \
         farm: parsed_photo['farm'],
         server: parsed_photo['server'],
