@@ -65,6 +65,12 @@ module PhotoPhotosSupport
       where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person, :tags)
     end
 
+    ORDERS = {
+      'date-taken' => 'datetaken',
+      'date-added' => 'dateadded',
+      'last-updated' => 'lastupdate'
+    }
+
     def search(terms, sorted_by, direction, page, options = {})
       query = all
       if terms['did'] == 'activity' && terms.has_key?('done-by')
@@ -112,7 +118,7 @@ module PhotoPhotosSupport
           query = query.where "dateadded < ?", Date.parse_utc_time(terms['to-date']) + 1.day
         end
         query = query
-          .order("#{sorted_by == 'date-added' ? 'dateadded' : 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
+          .order("#{ORDERS[sorted_by] || 'lastupdate'} #{direction == '+' ? 'asc' : 'desc'}")
           .includes(:person)
       end
       query.paginate page: page, per_page: options[:per_page] || 30

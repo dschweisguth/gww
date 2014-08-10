@@ -423,6 +423,18 @@ describe PhotoPhotosSupport do
         Photo.search({}, 'date-added', '+', 1).should == [photo2, photo1]
       end
 
+      it "sorts by date-taken, -" do
+        photo1 = create :photo, datetaken: Time.utc(2012)
+        photo2 = create :photo, datetaken: Time.utc(2013)
+        Photo.search({}, 'date-taken', '-', 1).should == [photo2, photo1]
+      end
+
+      it "sorts by date-taken, +" do
+        photo1 = create :photo, datetaken: Time.utc(2013)
+        photo2 = create :photo, datetaken: Time.utc(2012)
+        Photo.search({}, 'date-taken', '+', 1).should == [photo2, photo1]
+      end
+
       it "paginates" do
         2.times { create :photo }
         Photo.search({}, 'last-updated', '-', 1, per_page: 1).length.should == 1
