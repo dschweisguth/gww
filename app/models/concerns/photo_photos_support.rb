@@ -70,7 +70,7 @@ module PhotoPhotosSupport
       if terms['did'] == 'activity' && terms.has_key?('done-by')
         query = query.select("*", "activities.acted_at acted_on_at")
           .joins(%q(join (
-            select f1.id, f1.dateadded acted_at from photos f1 join people p on p.id = f1.person_id and p.username = %s
+            select f1.id, f1.datetaken acted_at from photos f1 join people p on p.id = f1.person_id and p.username = %s
             union
             select c.photo_id, c.commented_at from comments c where c.username = %s) activities on activities.id = photos.id
           ) % Array.new(2, ActiveRecord::Base.sanitize(terms['done-by'])))

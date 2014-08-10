@@ -455,8 +455,8 @@ describe PhotoPhotosSupport do
       end
 
       it "searches in a date range" do
-        photos = [1, 2, 4].map { |day| create :photo, person: person, dateadded: Time.local(2014, 1, day).getutc }
-        photo = create :photo, dateadded: Time.local(2014, 1, 1).getutc
+        photos = [1, 2, 4].map { |day| create :photo, person: person, datetaken: Time.local(2014, 1, day).getutc }
+        photo = create :photo, datetaken: Time.local(2014, 1, 1).getutc
         comments = [1, 3, 4].map { |day| create :comment, flickrid: person.flickrid, username: person.username, commented_at: Time.local(2014, 1, day).getutc }
         Photo.search({ 'did' => 'activity', 'done-by' => person.username,
           'from-date' => '1/2/14', 'to-date' => '1/3/14' }, 'last-updated', '-', 1).should ==
@@ -464,12 +464,12 @@ describe PhotoPhotosSupport do
       end
 
       it "orders by activity date, descending" do
-        photos = [1, 2].map { |day| create :photo, person: person, dateadded: Time.local(2014, 1, day).getutc }
+        photos = [1, 2].map { |day| create :photo, person: person, datetaken: Time.local(2014, 1, day).getutc }
         Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1).should == photos.reverse
       end
 
       it "orders by activity date, ascending" do
-        photos = [1, 2].map { |day| create :photo, person: person, dateadded: Time.local(2014, 1, day).getutc }
+        photos = [1, 2].map { |day| create :photo, person: person, datetaken: Time.local(2014, 1, day).getutc }
         Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '+', 1).should == photos
       end
 

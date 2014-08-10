@@ -166,9 +166,9 @@ Feature: Photos
   @javascript
   Scenario: Player searches for activity
     Given there is a player "abcdefgh"
-    And player "abcdefgh" posted a photo on "1/1/14"
+    And player "abcdefgh" took a photo on "1/1/14"
     And there is a player "ijklmnop"
-    And player "ijklmnop" posted a photo on "1/2/14"
+    And player "ijklmnop" took a photo on "1/2/14"
     And player "abcdefgh" commented "Today is 1/1/14" on player "ijklmnop"'s photo on "1/3/14"
     When I go to the photos search page
     And I select "Activity" from "did"
@@ -201,10 +201,10 @@ Feature: Photos
   Scenario: Player searches for activity in a date range
     Given there is a player "abcdefgh"
     And there is a player "ijklmnop"
-    And player "abcdefgh" posted a photo on "1/1/14"
-    And player "abcdefgh" posted a photo on "1/2/14"
-    And player "abcdefgh" posted a photo on "1/4/14"
-    And player "ijklmnop" posted a photo on "1/1/14"
+    And player "abcdefgh" took a photo on "1/1/14"
+    And player "abcdefgh" took a photo on "1/2/14"
+    And player "abcdefgh" took a photo on "1/4/14"
+    And player "ijklmnop" took a photo on "1/1/14"
     And player "abcdefgh" commented "Today is 1/1/14" on player "ijklmnop"'s photo on "1/1/14"
     And player "abcdefgh" commented "Today is 1/3/14" on player "ijklmnop"'s photo on "1/3/14"
     And player "abcdefgh" commented "Today is 1/4/14" on player "ijklmnop"'s photo on "1/4/14"
@@ -217,7 +217,7 @@ Feature: Photos
     Then I should see 2 search results
     And search result 1 should be player "ijklmnop"'s photo
     And I should see the comment "Today is 1/3/14" on search result 1
-    And search result 2 should be player "abcdefgh"'s photo posted on "1/2/14"
+    And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
   @javascript
   Scenario: Player fills in fields incompatible with searching by activity

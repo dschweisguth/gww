@@ -38,8 +38,8 @@ Given /^there is a photo posted on "(\d+\/\d+\/\d+)"$/ do |date|
   create :photo, dateadded: Date.parse_utc_time(date)
 end
 
-Given /^player "([^"]+)" posted a photo on "(\d+\/\d+\/\d+)"$/ do |poster_username, date|
-  create :photo, person: Person.find_by_username(poster_username), dateadded: Date.parse_utc_time(date)
+Given /^player "([^"]+)" took a photo on "(\d+\/\d+\/\d+)"$/ do |poster_username, date|
+  create :photo, person: Person.find_by_username(poster_username), datetaken: Date.parse_utc_time(date)
 end
 
 Given /^player "([^"]+)" commented "([^"]+)" on player "([^"]+)"'s photo on "([^"]+)"$/ do |commenter_username, comment_text, poster_username, date|
@@ -86,8 +86,8 @@ Then /^search result (\d+) should be player "([^"]+)"'s photo$/ do |result_index
   result_should_be result_index, photo
 end
 
-Then /^search result (\d+) should be player "([^"]+)"'s photo posted on "([^"]+)"$/ do |result_index, poster_username, date|
-  photo = Person.find_by_username(poster_username).photos.where(dateadded: Date.parse_utc_time(date)).first
+Then /^search result (\d+) should be player "([^"]+)"'s photo taken on "([^"]+)"$/ do |result_index, poster_username, date|
+  photo = Person.find_by_username(poster_username).photos.where(datetaken: Date.parse_utc_time(date)).first
   result_should_be result_index, photo
 end
 
