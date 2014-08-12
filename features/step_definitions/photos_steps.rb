@@ -34,7 +34,7 @@ Given /^the photo has a comment "([^"]+)"$/ do |comment_text|
   @comment = create :comment, photo: @photo, comment_text: comment_text
 end
 
-Given /^there is a photo posted on "(\d+\/\d+\/\d+)"$/ do |date|
+Given /^there is a photo added on "(\d+\/\d+\/\d+)"$/ do |date|
   create :photo, dateadded: Date.parse_utc_time(date)
 end
 
@@ -142,7 +142,7 @@ Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
   all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_truthy
 end
 
-Then /^I should see a search result for the photo posted on "(\d+\/\d+\/\d+)"/ do |date|
+Then /^I should see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
   i_should_see_search_result_for_photo photo
 end
@@ -152,7 +152,7 @@ def i_should_see_search_result_for_photo(photo)
   link.should have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"])
 end
 
-Then /^I shouid not see a search result for the photo posted on "(\d+\/\d+\/\d+)"/ do |date|
+Then /^I shouid not see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
   all(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"])).should be_empty
 end

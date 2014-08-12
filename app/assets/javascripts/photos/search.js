@@ -57,9 +57,9 @@ GWW.photos.search = function () {
       if (gameStatus.val() !== null && gameStatus.val() !== "") {
         path += "/game-status/" + gameStatus.val();
       }
-      var postedBy = $(this).find('[name="username"]');
-      if (postedBy.val() !== "") {
-        path += "/done-by/" + encodeURIComponent(postedBy.val());
+      var doneBy = $(this).find('[name="username"]');
+      if (doneBy.val() !== "") {
+        path += "/done-by/" + encodeURIComponent(doneBy.val());
       }
       var text = $(this).find('[name="text"]');
       if (text.val() !== "") {

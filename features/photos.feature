@@ -124,20 +124,20 @@ Feature: Photos
 
   @javascript
   Scenario: Player searches in a date range
-    Given there is a photo posted on "12/31/13"
-    Given there is a photo posted on "1/1/14"
-    And there is a photo posted on "1/2/14"
-    And there is a photo posted on "1/3/14"
+    Given there is a photo added on "12/31/13"
+    Given there is a photo added on "1/1/14"
+    And there is a photo added on "1/2/14"
+    And there is a photo added on "1/3/14"
     When I go to the photos search page
     And I fill in "from_date" with "1/1/14"
     And I fill in "to_date" with "1/2/14"
     And I press the "Search" button
     Then the "from_date" field should contain "1/1/14"
     And the "to_date" field should contain "1/2/14"
-    And I shouid not see a search result for the photo posted on "12/31/13"
-    But I should see a search result for the photo posted on "1/1/14"
-    And I should see a search result for the photo posted on "1/2/14"
-    But I shouid not see a search result for the photo posted on "1/3/14"
+    And I shouid not see a search result for the photo added on "12/31/13"
+    But I should see a search result for the photo added on "1/1/14"
+    And I should see a search result for the photo added on "1/2/14"
+    But I shouid not see a search result for the photo added on "1/3/14"
 
   @javascript
   Scenario: Player searches with invalid dates

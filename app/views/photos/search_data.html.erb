@@ -10,8 +10,8 @@
         <% if photo.datetaken %>
           <p>Taken <%= dmy_local_date photo.datetaken %></p>
         <% end %>
-        <p>Posted <%= dmy_local_date photo.dateadded %></p>
-        <p>Last updated <%= dmy_local_date photo.lastupdate %></p>
+        <p>Added <%= dmy_local_date photo.dateadded %></p>
+        <p>Updated <%= dmy_local_date photo.lastupdate %></p>
         <div>
           <p class="by">by <%= link_to_person photo.person %></p>
           <%= link_to photo.game_status, photo_path(photo), class: 'game-status' %>

@@ -21,3 +21,13 @@ Javascript
 
 GWW uses jQuery UI's smoothness theme. Fortunately, that theme is the one
 provided by the jquery-ui-rails gem.
+
+
+Terminology
+-----------
+
+"Posted to the group" and "Added to the group" mean the same thing. "Posted"
+is used in most places. "Posted", not "added", is the opposite of "guessed".
+The noun "post" is the opposite of the noun "guess"; there is no noun "add".
+"Added" is used only when we're distinguishing the dates on which a photo
+was taken and added to the group.
