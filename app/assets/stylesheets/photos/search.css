@@ -83,16 +83,16 @@ form img {
 }
 
 .image > div > div {
-  height: 52px;
+  height: 66px;
   position: relative;
-  bottom: 60px;
+  bottom: 74px;
   padding: 8px 5px 0 5px;
   z-index: 1;
 }
 
 .image > div > div.bg {
-  bottom: 63px;
-  margin-bottom: -63px;
+  bottom: 77px;
+  margin-bottom: -77px;
   background-color: black;
   opacity: 0.5;
   visibility: hidden;
