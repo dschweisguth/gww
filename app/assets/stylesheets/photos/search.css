@@ -52,6 +52,10 @@ form img {
   width: 45px;
 }
 
+.date-fields input {
+  width: 80px;
+}
+
 .sort-fields > span {
   display: inline-block;
   width: 63px;
