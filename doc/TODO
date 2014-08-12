@@ -7,7 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
-Review globally for refactorings that were missed
 Review slow tests
 After RubyMine is updated to be compatible with RSpec 3, upgrade
 Measure Javascript coverage
