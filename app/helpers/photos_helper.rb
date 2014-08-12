@@ -62,4 +62,8 @@ module PhotosHelper
     /(?<!<span class="matched">)\b(#{term})\b/i
   end
 
+  def verbose_date(date)
+    date.getlocal.strftime '%l:%M %p, %B %e, %Y'
+  end
+
 end

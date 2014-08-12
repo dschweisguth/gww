@@ -14,7 +14,6 @@ Merge revelations into guesses?
 
 Features
 
-Display date taken on photo page
 Add a link from each photo to its activity around the time it was taken
 Add date added to tags and use it in activity search
 Support form field parameters in search page so that search from browser works

@@ -125,7 +125,7 @@ describe PhotosController do
 
   describe '#show' do
     it "renders the page" do
-      photo = build_stubbed :photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
+      photo = build_stubbed :photo, datetaken: Time.local(2009), dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
       guess = build_stubbed :guess, photo: photo
       stub(photo).guesses { [guess] }
       stub(Photo).find(photo.id) { photo }
@@ -146,7 +146,8 @@ describe PhotosController do
       table.should have_css 'td', text: guess.comment_text
       response.body.should have_css 'strong', text: comment.username
       response.body.should include comment.comment_text
-      response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
+      response.body.should include 'This photo was taken at 12:00 AM, January  1, 2009.'
+      response.body.should include 'It was added to the group at 12:00 AM, January  1, 2010.'
       response.body.should include "This photo hasn't been found or revealed yet"
       response.body.should_not include 'It was mapped by the photographer'
       response.body.should_not include 'It was auto-mapped'
@@ -156,6 +157,22 @@ describe PhotosController do
       response.body.should_not include 'GWW.config'
       response.body.should_not include 'Tags'
       response.body.should_not include 'Machine tags'
+
+    end
+
+    it "handles a photo without datetaken" do
+      photo = build_stubbed :photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
+      guess = build_stubbed :guess, photo: photo
+      stub(photo).guesses { [guess] }
+      stub(Photo).find(photo.id) { photo }
+      comment = build_stubbed :comment, photo: photo
+      stub(photo).comments { [comment] }
+      stub(photo).human_tags { [] }
+      stub(photo).machine_tags { [] }
+      get :show, id: photo.id
+
+      response.should be_success
+      response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
 
     end
 
