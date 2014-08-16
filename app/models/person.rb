@@ -1,5 +1,5 @@
 class Person < ActiveRecord::Base
-  include PersonIndexSupport, PersonShowSupport, PersonPeopleSupport, PersonScoreReportsSupport,
+  include PersonIndexSupport, PersonPhotosSupport, PersonShowSupport, PersonPeopleSupport, PersonScoreReportsSupport,
     PersonStatisticsSupport, PersonWheresiesSupport
 
   MIN_GUESSES_FOR_FAVORITE = 10

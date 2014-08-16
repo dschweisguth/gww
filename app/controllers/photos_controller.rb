@@ -114,17 +114,8 @@ class PhotosController < ApplicationController
 
   caches_page :autocomplete_usernames
   def autocomplete_usernames
-    params[:terms] ||= ''
-    terms = params[:terms].split('/').each_slice(2).to_h
-    people = Person.select("people.username, count(f.id) n").joins("left join photos f on people.id = f.person_id")
-    if terms['term']
-      people = people.where('people.username like ?', "#{terms['term']}%")
-    end
-    if terms['game-status']
-      people = people.where('game_status in (?)', terms['game-status'].split(','))
-    end
-    people = people.group("people.username").order("lower(username)")
-    people.each { |person| person.label = "#{person.username} (#{person[:n]})" }
+    terms = (params[:terms] || '').split('/').each_slice(2).to_h
+    people = Person.all_for_autocomplete terms['term'], terms['game-status'].try(:split, ',')
     render json: people, only: %i(username), methods: %i(label)
   end
 
