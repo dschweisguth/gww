@@ -148,6 +148,7 @@ describe PhotosController do
       response.body.should include comment.comment_text
       response.body.should include 'This photo was taken at 12:00 AM, January  1, 2009'
       response.body.should have_css %Q(a[href="https://www.flickr.com/photos/#{photo.person.identifier}/archives/date-taken/2009/01/01/"]), text: 'archives'
+      response.body.should have_css %Q(a[href="#{search_photos_with_terms_path "did/activity/done-by/#{photo.person.username}/from-date/12-31-2008/to-date/1-2-2009"}"]), text: 'activity'
       response.body.should include 'It was added to the group at 12:00 AM, January  1, 2010.'
       response.body.should include "This photo hasn't been found or revealed yet"
       response.body.should_not include 'It was mapped by the photographer'

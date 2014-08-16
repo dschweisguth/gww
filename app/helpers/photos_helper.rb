@@ -66,4 +66,8 @@ module PhotosHelper
     date.getlocal.strftime '%l:%M %p, %B %e, %Y'
   end
 
+  def search_url_date(date)
+    date.getlocal.strftime '%-m-%-d-%Y'
+  end
+
 end
