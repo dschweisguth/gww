@@ -2,6 +2,10 @@ module PersonPeopleSupport
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def usernames_for_autocomplete(term)
+      select(:username).where("username like ?", "#{term}%").order("lower(username)")
+    end
+
     def find_by_multiple_fields(username)
       find_by_username(username) || find_by_flickrid(username) || (username =~ /\d+/ && find_by_id(username))
     end
