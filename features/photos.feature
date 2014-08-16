@@ -219,6 +219,8 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on search result 1
     And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
+  # TODO Dave redirect away from URLs with bogus parameter values
+
   @javascript
   Scenario: Player fills in fields incompatible with searching by activity
     When I go to the photos search page
