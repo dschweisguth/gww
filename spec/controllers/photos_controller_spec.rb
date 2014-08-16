@@ -146,7 +146,8 @@ describe PhotosController do
       table.should have_css 'td', text: guess.comment_text
       response.body.should have_css 'strong', text: comment.username
       response.body.should include comment.comment_text
-      response.body.should include 'This photo was taken at 12:00 AM, January  1, 2009.'
+      response.body.should include 'This photo was taken at 12:00 AM, January  1, 2009'
+      response.body.should have_css %Q(a[href="https://www.flickr.com/photos/#{photo.person.identifier}/archives/date-taken/2009/01/01/"]), text: 'archives'
       response.body.should include 'It was added to the group at 12:00 AM, January  1, 2010.'
       response.body.should include "This photo hasn't been found or revealed yet"
       response.body.should_not include 'It was mapped by the photographer'

@@ -3,7 +3,9 @@
   <hr/>
   <div id="story">
     <% if @photo.datetaken %>
-      This photo was taken at <%= verbose_date @photo.datetaken %>.<br/>
+      This photo was taken at <%= verbose_date @photo.datetaken %>
+        (<%= link_to 'archives',
+          "https://www.flickr.com/photos/#{@photo.person.identifier}/archives/date-taken/#{@photo.datetaken.getlocal.strftime '%Y/%m/%d'}/" %>).<br/>
       It was added to the group at <%= verbose_date @photo.dateadded %>.
     <% else %>
       This photo was added to the group at <%= verbose_date @photo.dateadded %>.
