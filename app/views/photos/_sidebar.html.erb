@@ -2,12 +2,13 @@
   By <%= link_to_person @photo.person %>
   <hr/>
   <div id="story">
-    <% if @photo.datetaken %>
-      This photo was taken at <%= verbose_date @photo.datetaken %>
+    <% datetaken = @photo.datetaken %>
+    <% if datetaken %>
+      This photo was taken at <%= verbose_date datetaken %>
         (<%= link_to 'archives',
-          "#{url_for_flickr_person @photo.person}archives/date-taken/#{@photo.datetaken.getlocal.strftime '%Y/%m/%d'}/" %>,
+          "#{url_for_flickr_person @photo.person}archives/date-taken/#{datetaken.getlocal.strftime '%Y/%m/%d'}/" %>,
         <%= link_to 'activity',
-          search_photos_with_terms_path("did/activity/done-by/#{@photo.person.username}/from-date/#{search_url_date(@photo.datetaken - 1.day)}/to-date/#{search_url_date(@photo.datetaken + 1.day)}") %>).<br/>
+          search_photos_with_terms_path("did/activity/done-by/#{@photo.person.username}/from-date/#{search_url_date(datetaken - 1.day)}/to-date/#{search_url_date(datetaken + 1.day)}") %>).<br/>
       It was added to the group at <%= verbose_date @photo.dateadded %>.
     <% else %>
       This photo was added to the group at <%= verbose_date @photo.dateadded %>.
