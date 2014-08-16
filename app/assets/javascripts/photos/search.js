@@ -50,37 +50,31 @@ GWW.photos.search = function () {
   function setUpFormSubmit() {
     $('form').submit(function (event) {
       event.preventDefault();
-      var path = '/photos/search';
-      var did = $(this).find('select[name="did"]');
-      path += "/did/" + did.val();
-      var gameStatus = $(this).find('select[name="game_status[]"]');
+      var form = $(this);
+      var path = "/photos/search/did/" + form.find('select[name="did"]').val();
+      var gameStatus = form.find('select[name="game_status[]"]');
       if (gameStatus.val() !== null && gameStatus.val() !== "") {
         path += "/game-status/" + gameStatus.val();
       }
-      var doneBy = $(this).find('[name="username"]');
+      var doneBy = form.find('[name="username"]');
       if (doneBy.val() !== "") {
         path += "/done-by/" + encodeURIComponent(doneBy.val());
       }
-      var text = $(this).find('[name="text"]');
+      var text = form.find('[name="text"]');
       if (text.val() !== "") {
         path += "/text/" + encodeURIComponent(text.val());
       }
-      var from_date = $(this).find('[name="from_date"]');
+      var from_date = form.find('[name="from_date"]');
       if (from_date.val() !== "") {
         path += "/from-date/" + encodeURIComponent(escapeDate(from_date.val()));
       }
-      var to_date = $(this).find('[name="to_date"]');
+      var to_date = form.find('[name="to_date"]');
       if (to_date.val() !== "") {
         path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
       }
-      var sortedBy = $(this).find('[name="sorted_by"]');
-      if (sortedBy.val() !== null && sortedBy.val() !== "") { // TODO Dave these checks are unnecessary
-        path += "/sorted-by/" + sortedBy.val();
-      }
-      var direction = $(this).find('[name="direction"]');
-      if (direction.val() !== null && direction.val() !== "") {
-        path += "/direction/" + direction.val();
-      }
+      path +=
+        "/sorted-by/" + form.find('[name="sorted_by"]').val() +
+        "/direction/" + form.find('[name="direction"]').val();
       window.location = path;
     });
   }
