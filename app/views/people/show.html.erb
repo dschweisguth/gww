@@ -4,11 +4,11 @@
 <%= title_and_h1 @person.username %>
 
 <p>On Flickr:
-<a href="https://www.flickr.com/people/<%= @person.identifier %>/">profile</a> -
-<a href="https://www.flickr.com/people/<%= @person.identifier %>/photosof/">photos of <%= @person.username %></a> -
-<a href="https://www.flickr.com/photos/<%= @person.identifier %>/">photostream</a> -
-<a href="https://www.flickr.com/photos/<%= @person.identifier %>/map/">map</a> -
-<a href="https://www.flickr.com/photos/<%= @person.identifier %>/favorites/">favorites</a></p>
+<a href="<%= url_for_flickr_person @person %>">profile</a> -
+<a href="<%= url_for_flickr_person @person %>photosof/">photos of <%= @person.username %></a> -
+<a href="<%= url_for_flickr_photos @person %>">photostream</a> -
+<a href="<%= url_for_flickr_photos @person %>map/">map</a> -
+<a href="<%= url_for_flickr_photos @person %>favorites/">favorites</a></p>
 
 <p>In Guess Where SF:
 <%= link_to "unfounds", search_photos_with_terms_path("game_status/unfound,unconfirmed/done-by/#{@person.username}") %> -

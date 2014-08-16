@@ -123,10 +123,11 @@ describe Admin::PhotosController do
   end
 
   describe '#edit_in_gww' do
+    # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given photo' do
       photo = build_stubbed :photo
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :edit_in_gww, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
 
@@ -135,7 +136,7 @@ describe Admin::PhotosController do
     it 'handles https when redirecting to a photo' do
       photo = build_stubbed :photo
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :edit_in_gww, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
 

@@ -6,7 +6,7 @@ describe BookmarkletController do
     it 'redirects to the given photo' do
       photo = build_stubbed :photo, flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :show, from: "http://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :show, from: url_for_flickr_photo(photo)
 
       response.should redirect_to photo_path photo
 
@@ -15,7 +15,7 @@ describe BookmarkletController do
     it 'handles https when redirecting to a photo' do
       photo = build_stubbed :photo, flickrid: '0123456789' # must be all digits like the real thing
       stub(Photo).find_by_flickrid(photo.flickrid) { photo }
-      get :show, from: "https://www.flickr.com/photos/person_flickrid/#{photo.flickrid}/"
+      get :show, from: url_for_flickr_photo(photo)
 
       response.should redirect_to photo_path photo
 
@@ -34,7 +34,7 @@ describe BookmarkletController do
     it 'redirects to the given person' do
       person = build_stubbed :person, pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
-      get :show, from: "http://www.flickr.com/people/#{person.pathalias}/"
+      get :show, from: url_for_flickr_person(person)
 
       response.should redirect_to person_path person
 
@@ -43,7 +43,7 @@ describe BookmarkletController do
     it 'handles https when redirecting to a person' do
       person = build_stubbed :person, pathalias: 'pathalias'
       stub(Person).find_by_pathalias(person.pathalias) { person }
-      get :show, from: "https://www.flickr.com/people/#{person.pathalias}/"
+      get :show, from: url_for_flickr_person(person)
 
       response.should redirect_to person_path person
 
