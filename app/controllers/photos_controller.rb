@@ -60,7 +60,7 @@ class PhotosController < ApplicationController
     if terms['did'] == 'activity'
       %w(text game-status).each do |field|
         if terms[field]
-          remove_term field # TODO Dave extract duplication
+          remove_term field
           raise ArgumentError, "invalid search parameters"
         end
       end
