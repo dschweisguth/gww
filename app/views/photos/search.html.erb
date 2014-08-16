@@ -10,13 +10,13 @@
 
   <%= form_tag(search_photos_path, method: :get) do %>
     <div class="text-fields">
-      <span><%= select_tag :did, options_for_select([['Posted', 'posted'], ['Activity', 'activity']], selected: @terms['did']) %> by:</span> <%= text_field_tag 'username', @terms['done-by'] %>
+      <span><%= select_tag :did, options_for_select([%w(Posted posted), %w(Activity activity)], selected: @terms['did']) %> by:</span> <%= text_field_tag 'username', @terms['done-by'] %>
       <%= image_tag 'arrow_sans_down-16.png', size: '16x16' %><br/>
       <span>Mentions:</span> <%= text_field_tag 'text', @terms['text'] %>
       <a id="search-help-icon">?</a>
     </div>
     <div class="game-status">
-      <span>Game status:</span> <%= select_tag :game_status, options_for_select(['unfound', 'unconfirmed', 'found', 'revealed'], selected: @terms['game-status']), multiple: true %>
+      <span>Game status:</span> <%= select_tag :game_status, options_for_select(%w(unfound unconfirmed found revealed), selected: @terms['game-status']), multiple: true %>
     </div>
     <div class="date-fields">
       <span>After:</span> <%= text_field_tag 'from_date', @terms['from-date'] %><br/>
@@ -25,9 +25,9 @@
     <div>
       <div class="sort-fields">
         <span>Sorted by:</span>
-        <%= select_tag :sorted_by, options_for_select([ [ 'Date taken', 'date-taken' ], [ 'Date added', 'date-added' ], [ 'Last updated', 'last-updated' ] ], selected: @sorted_by) %><br/>
+        <%= select_tag :sorted_by, options_for_select([['Date taken', 'date-taken'], ['Date added', 'date-added'], ['Last updated', 'last-updated']], selected: @sorted_by) %><br/>
         <span>Direction:</span>
-        <%= select_tag :direction, options_for_select([ '-', '+' ], selected: @direction) %>
+        <%= select_tag :direction, options_for_select(%w(- +), selected: @direction) %>
       </div>
       <div>
         <%= submit_tag 'Search' %><br/>
