@@ -35,7 +35,7 @@
           <% end %>
         </ul>
       <% end %>
-      <% matching_comments = @comment_selection_criterion == 'posted' ? photo.comments_that_match(@text_terms) : photo.comments_made_when_acted_on %>
+      <% matching_comments = @comment_selection_criterion == 'activity' ? photo.comments_made_when_acted_on : photo.comments_that_match(@text_terms) %>
       <% if matching_comments.any? %>
         <br/>
         <% matching_comments.each do |comment| %>
