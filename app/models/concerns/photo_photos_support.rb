@@ -125,7 +125,7 @@ module PhotoPhotosSupport
   end
 
   def human_tags
-    tags.select { |tag| !tag.machine_tag }
+    tags.reject &:machine_tag
   end
 
   def machine_tags
