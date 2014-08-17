@@ -81,7 +81,7 @@ module PhotoPhotosSupport
             select c.photo_id, c.commented_at from comments c where c.username = %s) activities on activities.id = photos.id
           ) % Array.new(2, ActiveRecord::Base.sanitize(terms['done-by'])))
         if terms.has_key? 'from-date'
-          query = query.where "? <= activities.acted_at", Date.parse_utc_time(terms['from-date'])
+          query = query.where "? <= activities.acted_at", Date.parse_utc_time(terms['from-date']) # TODO Dave parse dates in parsed_terms?
         end
         if terms.has_key? 'to-date'
           query = query.where "activities.acted_at < ?", Date.parse_utc_time(terms['to-date']) + 1.day
