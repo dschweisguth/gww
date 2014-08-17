@@ -161,20 +161,20 @@ Then /^the URL should be "([^"]+)"$/ do |uri|
   current_path.should == uri
 end
 
-Then /^the URL should not contain "([^"]+)"$/ do |field|
-  current_path.should_not include(field)
-end
-
 Then /^the "([^"]+)" field should be empty$/ do |field|
   find_field(field).value.should be_blank
 end
 
-Then /^no "([^"]+)" field should be selected$/ do |field|
+Then /^no "([^"]+)" should be selected$/ do |field|
   find_field(field).all('option[selected]').should be_empty
 end
 
 Then /^the order "([^"]+)" should be selected$/ do |order|
   find_field('sorted_by').value.should == order
+end
+
+Then /^the direction "([^"]+)" should be selected$/ do |direction|
+  find_field('direction').value.should == direction
 end
 
 Then /^the date fields should be empty$/ do

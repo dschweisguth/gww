@@ -3,6 +3,10 @@ Feature: Photos
   I want to search for and sort photos by various criteria
   So that I can find the few photos I'm interested in among the thousands in the database
 
+  # TODO Dave test that terms in URL set initial state of form fields
+  # TODO Dave remove defaults from URL?
+  # TODO Dave username -> done-by
+
   @javascript
   Scenario: Player searches for all photos
     Given there is a Flickr update
@@ -10,24 +14,16 @@ Feature: Photos
     And there is a photo
     When I go to the home page
     And I follow the "Search for photos" link
-    Then I should see a search result for the photo
-
-  # TODO Dave test initial state of the page including defaults (Javascript not necessary)
-  # TODO Dave test that terms in URL set initial state of form fields
-  # TODO Dave assert that all fields contain what was entered in to them after searching
-
-  @javascript
-  Scenario: Player searches for unfound or unconfirmed photos
-    Given there is an unfound photo
-    And there is an unconfirmed photo
-    And there is a found photo
-    And there is a revealed photo
-    When I go to the photos search page
-    And I select "unfound" from "game_status"
-    And I select "unconfirmed" from "game_status"
-    And I press the "Search" button
-    Then the game statuses "unfound,unconfirmed" should be selected
-    And I should see 2 search results
+    Then the URL should be "/photos/search"
+    And the action "Posted" should be selected
+    And the "username" field should be empty
+    And the "text" field should be empty
+    And no "game_status" should be selected
+    And the "from_date" field should be empty
+    And the "to_date" field should be empty
+    And the order "last-updated" should be selected
+    And the direction "-" should be selected
+    And I should see a search result for the photo
 
   @javascript
   Scenario: Player searches for a given user's photos
@@ -38,25 +34,12 @@ Feature: Photos
     When I go to the photos search page
     And I autoselect "abcdefgh (1)" from the "#username" field
     And I press the "Search" button
-    Then the "username" field should contain "abcdefgh"
-    And I should see 1 search result
-
-  @javascript
-  Scenario: Player searches for a given user's unfound or unconfirmed photos
-    Given there is a player "abcdefgh"
-    And player "abcdefgh" has a photo
-    And player "abcdefgh" has a "found" photo
-    When I go to the photos search page
-    And I select "unfound" from "game_status"
-    And I select "unconfirmed" from "game_status"
-    And I autoselect "abcdefgh (1)" from the "#username" field
-    And I press the "Search" button
-    Then the game statuses "unfound,unconfirmed" should be selected
+    Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/sorted-by/last-updated/direction/-"
     And the "username" field should contain "abcdefgh"
     And I should see 1 search result
 
   @javascript
-  Scenario: Player searches for a string which matches only the title
+  Scenario: Player searches for a string which matches only a title
     Given there is a photo
     And the photo's "title" is "Fort Point Title"
     And the photo has a tag
@@ -64,7 +47,8 @@ Feature: Photos
     When I go to the photos search page
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
-    Then the "text" field should contain "Fort Point"
+    Then the URL should be "/photos/search/did/posted/text/Fort%20Point/sorted-by/last-updated/direction/-"
+    And the "text" field should contain "Fort Point"
     And I should see 1 search result
     And I should see the photo's title with "Fort" and "Point" highlighted
     And I should see the photo's description
@@ -79,14 +63,12 @@ Feature: Photos
     When I go to the photos search page
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
-    Then the "text" field should contain "Fort Point"
-    And I should see 1 search result
-    And I should see the photo's title
+    Then I should see the photo's title
     And I should see the photo's description
     And I should see the comment with "Fort" and "Point" highlighted
 
   @javascript
-  Scenario: Player searches for a string which matches every field
+  Scenario: Player searches for a string which matches every field of a photo
     Given there is a photo
     And the photo's "title" is "Fort Point Title"
     And the photo's "description" is "Fort Point Title"
@@ -95,36 +77,62 @@ Feature: Photos
     When I go to the photos search page
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
-    Then the "text" field should contain "Fort Point"
-    And I should see 1 search result
-    And I should see the photo's title with "Fort" and "Point" highlighted
+    Then I should see the photo's title with "Fort" and "Point" highlighted
     And I should see the photo's description with "Fort" and "Point" highlighted
     And I should see the tag with "Fort" and "Point" highlighted
     And I should see the comment with "Fort" and "Point" highlighted
 
   @javascript
-  Scenario: Player searches for a two-word string which matches two different tags
+  Scenario: Player searches for a two-word string each word of which matches a different one of a photo's tags
     Given there is a photo
     And the photo has a tag "Fort Tag"
     And the photo has a tag "Point Tag"
     When I go to the photos search page
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
-    Then the "text" field should contain "Fort Point"
-    And I should see a tag with "Fort" highlighted
+    Then I should see a tag with "Fort" highlighted
     And I should see a tag with "Point" highlighted
 
   @javascript
-  Scenario: Player searches for a comma-separated string which matches different comments
+  Scenario: Player searches for a comma-separated string each part of which matches a different one of a photo's comments
     Given there is a photo
     And the photo has a comment "It's a super-spectacular day"
     And the photo has a comment "I thought gentrification meant men dressing themselves carefully"
     When I go to the photos search page
     And I fill in "text" with "spectacular, gentrification"
     And I press the "Search" button
-    Then the "text" field should contain "spectacular, gentrification"
     Then I should see "It's a super-spectacular day" with "spectacular" highlighted
     And I should see "I thought gentrification meant men dressing themselves carefully" with "gentrification" highlighted
+
+  @javascript
+  Scenario: Player searches for unfound or unconfirmed photos
+    Given there is an unfound photo
+    And there is an unconfirmed photo
+    And there is a found photo
+    And there is a revealed photo
+    When I go to the photos search page
+    And I select "unfound" from "game_status"
+    And I select "unconfirmed" from "game_status"
+    And I press the "Search" button
+    Then the URL should be "/photos/search/did/posted/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
+    And the game statuses "unfound,unconfirmed" should be selected
+    And I should see 2 search results
+
+  # This scenario demonstrates that many search terms can be combined
+  @javascript
+  Scenario: Player searches for a given user's unfound or unconfirmed photos
+    Given there is a player "abcdefgh"
+    And player "abcdefgh" has a photo
+    And player "abcdefgh" has a "found" photo
+    When I go to the photos search page
+    And I select "unfound" from "game_status"
+    And I select "unconfirmed" from "game_status"
+    And I autoselect "abcdefgh (1)" from the "#username" field
+    And I press the "Search" button
+    Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
+    And the "username" field should contain "abcdefgh"
+    And the game statuses "unfound,unconfirmed" should be selected
+    And I should see 1 search result
 
   @javascript
   Scenario: Player searches in a date range
@@ -136,7 +144,8 @@ Feature: Photos
     And I fill in "from_date" with "1/1/14"
     And I fill in "to_date" with "1/2/14"
     And I press the "Search" button
-    Then the "from_date" field should contain "1/1/14"
+    Then the URL should be "/photos/search/did/posted/from-date/1-1-14/to-date/1-2-14/sorted-by/last-updated/direction/-"
+    And the "from_date" field should contain "1/1/14"
     And the "to_date" field should contain "1/2/14"
     And I shouid not see a search result for the photo added on "12/31/13"
     But I should see a search result for the photo added on "1/1/14"
@@ -150,8 +159,7 @@ Feature: Photos
     And I fill in "from_date" with "invalid"
     And I fill in "to_date" with "invalid"
     And I press the "Search" button
-    Then the URL should not contain "from-date"
-    And the URL should not contain "to-date"
+    Then the URL should be "/photos/search/did/posted/sorted-by/last-updated/direction/-"
     And the date fields should be empty
     And I should see 1 search result
 
@@ -162,11 +170,11 @@ Feature: Photos
     And I fill in "from_date" with "1/2/14"
     And I fill in "to_date" with "1/1/14"
     And I press the "Search" button
-    Then the URL should not contain "from-date"
-    And the URL should not contain "to-date"
+    Then the URL should be "/photos/search/did/posted/sorted-by/last-updated/direction/-"
     And the date fields should be empty
     And I should see 1 search result
 
+  # TODO Dave where did sorted-by go?
   @javascript
   Scenario: Player searches for activity
     Given there is a player "abcdefgh"
@@ -178,7 +186,8 @@ Feature: Photos
     And I select "Activity" from "did"
     And I fill in "username" with "abcdefgh"
     And I press the "Search" button
-    Then the action "Activity" should be selected
+    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/direction/-"
+    And the action "Activity" should be selected
     And I should see 2 search results
     And search result 1 should be player "ijklmnop"'s photo
     And search result 2 should be player "abcdefgh"'s photo
@@ -223,6 +232,20 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on search result 1
     And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
+  # TODO Dave where did sorted-by go?
+  @javascript
+  Scenario: Player fills in fields incompatible with searching by activity
+    When I go to the photos search page
+    And I select "Activity" from "did"
+    And I fill in "text" with "Fort Point"
+    And I select "unfound" from "game_status"
+    And I select "Date added" from "sorted_by"
+    And I press the "Search" button
+    Then the URL should be "/photos/search/did/activity/direction/-"
+    And the "text" field should be empty
+    And no "game_status" should be selected
+    And the order "date-taken" should be selected
+
   # TODO Dave combine these after rewriting redirection implementation
 
   Scenario: Player visits search URL with invalid parameter values 1
@@ -232,17 +255,3 @@ Feature: Photos
   Scenario: Player visits search URL with invalid parameter values 2
     When I go to the photos search page with the terms "game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
     Then the URL should be "/photos/search"
-
-  @javascript
-  Scenario: Player fills in fields incompatible with searching by activity
-    When I go to the photos search page
-    And I select "Activity" from "did"
-    And I fill in "text" with "Fort Point"
-    And I select "unfound" from "game_status"
-    And I select "Date added" from "sorted_by"
-    And I press the "Search" button
-    Then the URL should not contain "text"
-    And the "text" field should be empty
-    And the URL should not contain "game-status"
-    And no "game_status" field should be selected
-    And the order "date-taken" should be selected

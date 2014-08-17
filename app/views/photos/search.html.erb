@@ -10,7 +10,7 @@
 
   <%= form_tag(search_photos_path, method: :get) do %>
     <div class="text-fields">
-      <span><%= select_tag :did, options_for_select([%w(Posted posted), %w(Activity activity)], selected: @terms['did']) %> by:</span> <%= text_field_tag 'username', @terms['done-by'] %>
+      <span><%= select_tag :did, options_for_select([%w(Posted posted), %w(Activity activity)], selected: (@terms['did'] || 'posted')) %> by:</span> <%= text_field_tag 'username', @terms['done-by'] %>
       <%= image_tag 'arrow_sans_down-16.png', size: '16x16' %><br/>
       <span>Mentions:</span> <%= text_field_tag 'text', @terms['text'] %>
       <a id="search-help-icon">?</a>
