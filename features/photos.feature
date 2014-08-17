@@ -174,7 +174,6 @@ Feature: Photos
     And the date fields should be empty
     And I should see 1 search result
 
-  # TODO Dave where did sorted-by go?
   @javascript
   Scenario: Player searches for activity
     Given there is a player "abcdefgh"
@@ -186,15 +185,18 @@ Feature: Photos
     And I select "Activity" from "did"
     And I fill in "username" with "abcdefgh"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/direction/-"
+    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
     And the action "Activity" should be selected
+    And the "username" field should contain "abcdefgh"
+    And the order "date-taken" should be selected
+    And the direction "-" should be selected
     And I should see 2 search results
     And search result 1 should be player "ijklmnop"'s photo
     And search result 2 should be player "abcdefgh"'s photo
     And I should see player "abcdefgh"'s comment on player "ijklmnop"'s photo
 
   @javascript
-  Scenario: Player finds different comments by the same user
+  Scenario: Player searches for activity and finds comments by the same user on different photos
     Given there is a player "abcdefgh"
     And player "abcdefgh" has a photo
     And there is a player "ijklmnop"
@@ -232,7 +234,7 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on search result 1
     And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
-  # TODO Dave where did sorted-by go?
+  # TODO Dave actually this should go back to posted because there is no user
   @javascript
   Scenario: Player fills in fields incompatible with searching by activity
     When I go to the photos search page
@@ -241,17 +243,18 @@ Feature: Photos
     And I select "unfound" from "game_status"
     And I select "Date added" from "sorted_by"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/activity/direction/-"
+    Then the URL should be "/photos/search/did/activity/sorted-by/date-taken/direction/-"
     And the "text" field should be empty
     And no "game_status" should be selected
     And the order "date-taken" should be selected
+    And the direction "-" should be selected
 
   # TODO Dave combine these after rewriting redirection implementation
 
   Scenario: Player visits search URL with invalid parameter values 1
     When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish"
-    Then the URL should be "/photos/search"
+    Then the URL should be "/photos/search/sorted-by/last-updated"
 
   Scenario: Player visits search URL with invalid parameter values 2
     When I go to the photos search page with the terms "game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
-    Then the URL should be "/photos/search"
+    Then the URL should be "/photos/search/sorted-by/last-updated/direction/-"

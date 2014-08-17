@@ -102,7 +102,7 @@ class PhotosController < ApplicationController
     if sorted_by
       valid_orders = terms['did'] == 'activity' ? 'date-taken' : %w(date-taken date-added last-updated)
       if ! valid_orders.include?(sorted_by)
-        remove_term 'sorted-by'
+        params[:terms].sub! %r(sorted-by/#{sorted_by}), "sorted-by/#{terms['did'] == 'activity' ? 'date-taken' : 'last-updated'}"
         raise ArgumentError, "invalid sorted_by"
       end
     else
@@ -112,7 +112,7 @@ class PhotosController < ApplicationController
     direction = terms.delete 'direction'
     if direction
       if ! %w(- +).include?(direction)
-        remove_term 'direction'
+        params[:terms].sub! %r(direction/#{direction}), 'direction/-'
         raise ArgumentError, "invalid direction"
       end
     else
