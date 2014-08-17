@@ -53,12 +53,19 @@ When /^I select "([^"]+)" from "([^"]+)"$/ do |value, field_identifier|
   select value, from: field_identifier
 end
 
-Then /^I should see a search result for the photo$/ do
-  i_should_see_search_result_for_photo @photo
+Then /^I should see an image-only search result for the photo$/ do
+  i_should_see_image_only_search_result_for_photo @photo
 end
 
-Then /^I should see (\d+) search results?$/ do |result_count|
-  all('a[href^="https://www.flickr.com/photos/"]').count.should == result_count.to_i
+Then /^I should see (\d+) image-only search results?$/ do |result_count|
+  all('.image').count.should == result_count.to_i
+  all('.text').should be_empty
+end
+
+Then /^I should see (\d+) full search results?$/ do |result_count|
+  result_count = result_count.to_i
+  all('.image').count.should == result_count
+  all('.text').count.should == result_count
 end
 
 Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, option|
@@ -81,23 +88,28 @@ Then /^I should see the photo's description$/ do
   all('p').any? { |p| p.has_content?(@photo.description) }.should be_truthy
 end
 
-Then /^search result (\d+) should be player "([^"]+)"'s photo$/ do |result_index, poster_username|
-  photo = Person.find_by_username(poster_username).photos.first
-  result_should_be result_index, photo
-end
-
-Then /^search result (\d+) should be player "([^"]+)"'s photo taken on "([^"]+)"$/ do |result_index, poster_username, date|
-  photo = Person.find_by_username(poster_username).photos.where(datetaken: Date.parse_utc_time(date)).first
-  result_should_be result_index, photo
-end
-
-Then /^post search result (\d+) should be the photo added on "([^"]+)"$/ do |result_index, date|
+Then /^image-only search result (\d+) should be the photo added on "([^"]+)"$/ do |result_index, date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
+  image_only_search_result_should_be result_index, photo
+end
+
+def image_only_search_result_should_be(result_index, photo)
   result = all('.image')[result_index.to_i - 1]
   result.should have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
 end
 
-def result_should_be(result_index, photo)
+Then /^full search result (\d+) should be player "([^"]+)"'s photo$/ do |result_index, poster_username|
+  photo = Person.find_by_username(poster_username).photos.first
+  full_search_result_should_be result_index, photo
+end
+
+Then /^full search result (\d+) should be player "([^"]+)"'s photo taken on "([^"]+)"$/ do |result_index, poster_username, date|
+  photo = Person.find_by_username(poster_username).photos.where(datetaken: Date.parse_utc_time(date)).first
+  full_search_result_should_be result_index, photo
+end
+
+def full_search_result_should_be(result_index, photo)
+  image_only_search_result_should_be result_index, photo
   result = all('.text')[result_index.to_i - 1]
   result.find('h2').should have_content(photo.title)
   result.find('p').should have_content(photo.description)
@@ -148,14 +160,15 @@ Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
   all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_truthy
 end
 
-Then /^I should see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
+Then /^I should see an image-only search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
-  i_should_see_search_result_for_photo photo
+  i_should_see_image_only_search_result_for_photo photo
 end
 
-def i_should_see_search_result_for_photo(photo)
+def i_should_see_image_only_search_result_for_photo(photo)
   link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"])
   link.should have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"])
+  all('.text').should be_empty
 end
 
 Then /^I shouid not see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
@@ -181,10 +194,10 @@ Then /^I should see player "([^"]+)"'s comment on player "([^"]+)"'s photo$/ do 
   page.should have_content(comment.comment_text)
 end
 
-Then /^I should see the comment "([^"]+)" on search result (\d+)$/ do |comment, result_index|
+Then /^I should see the comment "([^"]+)" on full search result (\d+)$/ do |comment, result_index|
   all('.text')[result_index.to_i - 1].should have_content(comment)
 end
 
-Then /^I should not see the comment "([^"]+)" on search result (\d+)$/ do |comment, result_index|
+Then /^I should not see the comment "([^"]+)" on full search result (\d+)$/ do |comment, result_index|
   all('.text')[result_index.to_i - 1].should_not have_content(comment)
 end

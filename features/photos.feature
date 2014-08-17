@@ -22,7 +22,7 @@ Feature: Photos
     And the "to_date" field should be empty
     And the "sorted_by" option "Last updated" should be selected
     And the "direction" option "-" should be selected
-    And I should see a search result for the photo
+    And I should see an image-only search result for the photo
 
   @javascript
   Scenario: Player searches with non-default sorted-by and direction
@@ -35,9 +35,9 @@ Feature: Photos
     Then the URL should be "/photos/search/did/posted/sorted-by/date-added/direction/+"
     And the "sorted_by" option "Date added" should be selected
     And the "direction" option "+" should be selected
-    And I should see 2 search results
-    And post search result 1 should be the photo added on "1/1/14"
-    And post search result 2 should be the photo added on "1/2/14"
+    And I should see 2 image-only search results
+    And image-only search result 1 should be the photo added on "1/1/14"
+    And image-only search result 2 should be the photo added on "1/2/14"
 
   @javascript
   Scenario: Player searches for a given user's photos
@@ -50,7 +50,7 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/sorted-by/last-updated/direction/-"
     And the "done_by" field should contain "abcdefgh"
-    And I should see 1 search result
+    And I should see 1 image-only search result
 
   @javascript
   Scenario: Player searches for a string which matches only a title
@@ -63,7 +63,7 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/text/Fort%20Point/sorted-by/last-updated/direction/-"
     And the "text" field should contain "Fort Point"
-    And I should see 1 search result
+    And I should see 1 full search result
     And I should see the photo's title with "Fort" and "Point" highlighted
     And I should see the photo's description
     And I should see the tag
@@ -130,7 +130,7 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
     And the game statuses "unfound,unconfirmed" should be selected
-    And I should see 2 search results
+    And I should see 2 image-only search results
 
   # This scenario demonstrates that many search terms can be combined
   @javascript
@@ -146,7 +146,7 @@ Feature: Photos
     Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
     And the "done_by" field should contain "abcdefgh"
     And the game statuses "unfound,unconfirmed" should be selected
-    And I should see 1 search result
+    And I should see 1 image-only search result
 
   @javascript
   Scenario: Player searches in a date range
@@ -162,8 +162,8 @@ Feature: Photos
     And the "from_date" field should contain "1/1/14"
     And the "to_date" field should contain "1/2/14"
     And I shouid not see a search result for the photo added on "12/31/13"
-    But I should see a search result for the photo added on "1/1/14"
-    And I should see a search result for the photo added on "1/2/14"
+    But I should see an image-only search result for the photo added on "1/1/14"
+    And I should see an image-only search result for the photo added on "1/2/14"
     But I shouid not see a search result for the photo added on "1/3/14"
 
   @javascript
@@ -175,7 +175,7 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/sorted-by/last-updated/direction/-"
     And the date fields should be empty
-    And I should see 1 search result
+    And I should see 1 image-only search result
 
   @javascript
   Scenario: Player searches in a backwards date range
@@ -186,7 +186,7 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/sorted-by/last-updated/direction/-"
     And the date fields should be empty
-    And I should see 1 search result
+    And I should see 1 image-only search result
 
   @javascript
   Scenario: Player searches for activity
@@ -204,9 +204,9 @@ Feature: Photos
     And the "done_by" field should contain "abcdefgh"
     And the "sorted_by" option "Date taken" should be selected
     And the "direction" option "-" should be selected
-    And I should see 2 search results
-    And search result 1 should be player "ijklmnop"'s photo
-    And search result 2 should be player "abcdefgh"'s photo
+    And I should see 2 full search results
+    And full search result 1 should be player "ijklmnop"'s photo
+    And full search result 2 should be player "abcdefgh"'s photo
     And I should see player "abcdefgh"'s comment on player "ijklmnop"'s photo
 
   @javascript
@@ -220,11 +220,11 @@ Feature: Photos
     And I select "Activity" from "did"
     And I fill in "done_by" with "ijklmnop"
     And I press the "Search" button
-    Then I should see 2 search results
-    And I should see the comment "Today is 1/2/14" on search result 1
-    But I should not see the comment "Today is 1/1/14" on search result 1
-    And I should see the comment "Today is 1/1/14" on search result 2
-    But I should not see the comment "Today is 1/2/14" on search result 2
+    Then I should see 2 full search results
+    And I should see the comment "Today is 1/2/14" on full search result 1
+    But I should not see the comment "Today is 1/1/14" on full search result 1
+    And I should see the comment "Today is 1/1/14" on full search result 2
+    But I should not see the comment "Today is 1/2/14" on full search result 2
 
   @javascript
   Scenario: Player searches for activity in a date range
@@ -243,10 +243,10 @@ Feature: Photos
     And I fill in "from_date" with "1/2/14"
     And I fill in "to_date" with "1/3/14"
     And I press the "Search" button
-    Then I should see 2 search results
-    And search result 1 should be player "ijklmnop"'s photo
-    And I should see the comment "Today is 1/3/14" on search result 1
-    And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
+    Then I should see 2 full search results
+    And full search result 1 should be player "ijklmnop"'s photo
+    And I should see the comment "Today is 1/3/14" on full search result 1
+    And full search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
   # TODO Dave it's inconsistent that this error leads to /photos/search but others lead to URLs with sorted-by and direction
   @javascript
