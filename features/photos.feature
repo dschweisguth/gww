@@ -31,7 +31,7 @@ Feature: Photos
     And there is a player "ijklmnop"
     And player "ijklmnop" has a photo
     When I go to the photos search page
-    And I autoselect "abcdefgh (1)" from the "#done_by" field
+    And I autoselect "abcdefgh (1)" from the "done_by" field
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/sorted-by/last-updated/direction/-"
     And the "done_by" field should contain "abcdefgh"
@@ -126,7 +126,7 @@ Feature: Photos
     When I go to the photos search page
     And I select "unfound" from "game_status"
     And I select "unconfirmed" from "game_status"
-    And I autoselect "abcdefgh (1)" from the "#done_by" field
+    And I autoselect "abcdefgh (1)" from the "done_by" field
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
     And the "done_by" field should contain "abcdefgh"

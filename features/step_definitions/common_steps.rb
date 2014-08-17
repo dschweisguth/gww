@@ -28,7 +28,7 @@ end
 
 # Warning: only uses the first character of the text. Could be extended to use a specified number.
 When /^I autoselect "([^"]+)" from the "([^"]+)" field$/ do |text, field|
-  find(field).native.send_keys text[0]
+  find_field(field).native.send_keys text[0]
   wait_for { all('a', text: text).any? }
   find('a', text: text).click
 end
