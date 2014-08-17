@@ -275,6 +275,19 @@ Feature: Photos
     And the "sorted_by" option "Date taken" should be selected
     And the "direction" option "-" should be selected
 
+  # The form always submits to a canonical URL to minimize redirects.
+  # The following scenarios demonstrates that a client which goes to a non-canonical or incorrect URL
+  # is redirected to a canonical and correct one.
+
+  # TODO Dave reinstate after refactoring parameter parsing
+#  Scenario: Player visits search URL with default post search parameter values
+#    When I go to the photos search page with the terms "did/posted/sorted-by/last-updated/direction/-"
+#    Then the URL should be "/photos/search"
+#
+#  Scenario: Player visits search URL with default activity search parameter values
+#    When I go to the photos search page with the terms "did/activity/sorted-by/last-updated/direction/-"
+#    Then the URL should be "/photos/search"
+
   # TODO Dave combine these after rewriting redirection implementation
 
   Scenario: Player visits search URL with invalid parameter values 1
