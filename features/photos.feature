@@ -3,7 +3,6 @@ Feature: Photos
   I want to search for and sort photos by various criteria
   So that I can find the few photos I'm interested in among the thousands in the database
 
-  # TODO Dave remove defaults from URL?
   # TODO Dave reject unknown usernames
 
   @javascript
@@ -32,7 +31,7 @@ Feature: Photos
     And I select "Date added" from "sorted_by"
     And I select "+" from "direction"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/sorted-by/date-added/direction/+"
+    Then the URL should be "/photos/search/sorted-by/date-added/direction/+"
     And the "sorted_by" option "Date added" should be selected
     And the "direction" option "+" should be selected
     And I should see 2 image-only search results
@@ -48,7 +47,7 @@ Feature: Photos
     When I go to the photos search page
     And I autoselect "abcdefgh (1)" from the "done_by" field
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search/done-by/abcdefgh"
     And the "done_by" field should contain "abcdefgh"
     And I should see 1 image-only search result
 
@@ -61,7 +60,7 @@ Feature: Photos
     When I go to the photos search page
     And I fill in "text" with "Fort Point"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/text/Fort%20Point/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search/text/Fort%20Point"
     And the "text" field should contain "Fort Point"
     And I should see 1 full search result
     And I should see the photo's title with "Fort" and "Point" highlighted
@@ -128,7 +127,7 @@ Feature: Photos
     And I select "unfound" from "game_status"
     And I select "unconfirmed" from "game_status"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search/game-status/unfound,unconfirmed"
     And the game statuses "unfound,unconfirmed" should be selected
     And I should see 2 image-only search results
 
@@ -143,7 +142,7 @@ Feature: Photos
     And I select "unconfirmed" from "game_status"
     And I autoselect "abcdefgh (1)" from the "done_by" field
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search/done-by/abcdefgh/game-status/unfound,unconfirmed"
     And the "done_by" field should contain "abcdefgh"
     And the game statuses "unfound,unconfirmed" should be selected
     And I should see 1 image-only search result
@@ -158,7 +157,7 @@ Feature: Photos
     And I fill in "from_date" with "1/1/14"
     And I fill in "to_date" with "1/2/14"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/from-date/1-1-14/to-date/1-2-14/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search/from-date/1-1-14/to-date/1-2-14"
     And the "from_date" field should contain "1/1/14"
     And the "to_date" field should contain "1/2/14"
     And I shouid not see a search result for the photo added on "12/31/13"
@@ -173,7 +172,7 @@ Feature: Photos
     And I fill in "from_date" with "invalid"
     And I fill in "to_date" with "invalid"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search"
     And the date fields should be empty
     And I should see 1 image-only search result
 
@@ -184,7 +183,7 @@ Feature: Photos
     And I fill in "from_date" with "1/2/14"
     And I fill in "to_date" with "1/1/14"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/posted/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search"
     And the date fields should be empty
     And I should see 1 image-only search result
 
@@ -199,7 +198,7 @@ Feature: Photos
     And I select "Activity" from "did"
     And I fill in "done_by" with "abcdefgh"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
+    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh"
     And the "did" option "Activity" should be selected
     And the "done_by" field should contain "abcdefgh"
     And the "sorted_by" option "Date taken" should be selected
@@ -248,7 +247,6 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on full search result 1
     And full search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
-  # TODO Dave it's inconsistent that this error leads to /photos/search but others lead to URLs with sorted-by and direction
   @javascript
   Scenario: Player tries to search for activity without a username
     When I go to the photos search page
@@ -269,7 +267,7 @@ Feature: Photos
     And I select "unfound" from "game_status"
     And I select "Date added" from "sorted_by"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
+    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh"
     And the "did" option "Activity" should be selected
     And the "done_by" field should contain "abcdefgh"
     And the "text" field should be empty
@@ -281,8 +279,8 @@ Feature: Photos
 
   Scenario: Player visits search URL with invalid parameter values 1
     When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish"
-    Then the URL should be "/photos/search/sorted-by/last-updated"
+    Then the URL should be "/photos/search"
 
   Scenario: Player visits search URL with invalid parameter values 2
     When I go to the photos search page with the terms "game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
-    Then the URL should be "/photos/search/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search"

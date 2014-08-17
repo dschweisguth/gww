@@ -51,7 +51,11 @@ GWW.photos.search = function () {
     $('form').submit(function (event) {
       event.preventDefault();
       var form = $(this);
-      var path = "/photos/search/did/" + form.find('select[name="did"]').val();
+      var path = "/photos/search";
+      var did = form.find('select[name="did"]').val();
+      if (did !== 'posted') {
+        path += "/did/" + did;
+      }
       var doneBy = form.find('[name="done_by"]');
       if (doneBy.val() !== "") {
         path += "/done-by/" + encodeURIComponent(doneBy.val());
@@ -72,9 +76,14 @@ GWW.photos.search = function () {
       if (to_date.val() !== "") {
         path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
       }
-      path +=
-        "/sorted-by/" + form.find('[name="sorted_by"]').val() +
-        "/direction/" + form.find('[name="direction"]').val();
+      var sortedBy = form.find('[name="sorted_by"]').val();
+      if (sortedBy !== (did == 'posted' ? 'last-updated' : 'date-taken')) {
+        path += "/sorted-by/" + sortedBy;
+      }
+      var direction = form.find('[name="direction"]').val();
+      if (direction !== '-') {
+        path += "/direction/" + direction;
+      }
       window.location = path;
     });
   }
