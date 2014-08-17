@@ -32,16 +32,15 @@ class PhotosController < ApplicationController
     # TODO Dave fix nekomusume
     begin
       @terms, @sorted_by, @direction = parsed_params
+      @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
     rescue ArgumentError => e
       if ['invalid date', 'invalid search parameters', 'invalid sorted_by', 'invalid direction'].include? e.message
         # noinspection RubyResolve
         redirect_to params[:terms].present? ? search_photos_with_terms_path(params[:terms]) : search_photos_path
-        return
       else
         raise
       end
     end
-    @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
   end
 
   def search_data
