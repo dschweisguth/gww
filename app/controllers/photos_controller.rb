@@ -77,7 +77,7 @@ class PhotosController < ApplicationController
     end
 
     if terms['game-status']
-      terms['game-status'] = terms['game-status'].split ',' # TODO Dave do this in parsed_terms?
+      terms['game-status'] = terms['game-status'].split ','
       if (terms['game-status'] - %w(unfound unconfirmed found revealed)).any?
         remove_term 'game-status'
         raise ArgumentError, "invalid search parameters"
