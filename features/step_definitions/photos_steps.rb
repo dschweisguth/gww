@@ -95,6 +95,12 @@ Then /^search result (\d+) should be player "([^"]+)"'s photo taken on "([^"]+)"
   result_should_be result_index, photo
 end
 
+Then /^post search result (\d+) should be the photo added on "([^"]+)"$/ do |result_index, date|
+  photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
+  result = all('.image')[result_index.to_i - 1]
+  result.should have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
+end
+
 def result_should_be(result_index, photo)
   result = all('.text')[result_index.to_i - 1]
   result.find('h2').should have_content(photo.title)

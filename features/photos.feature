@@ -3,7 +3,6 @@ Feature: Photos
   I want to search for and sort photos by various criteria
   So that I can find the few photos I'm interested in among the thousands in the database
 
-  # TODO Dave test that terms in URL set initial state of form fields
   # TODO Dave remove defaults from URL?
   # TODO Dave reject unknown usernames
 
@@ -24,6 +23,21 @@ Feature: Photos
     And the "sorted_by" option "Last updated" should be selected
     And the "direction" option "-" should be selected
     And I should see a search result for the photo
+
+  @javascript
+  Scenario: Player searches with non-default sorted-by and direction
+    Given there is a photo added on "1/2/14"
+    And there is a photo added on "1/1/14"
+    When I go to the photos search page
+    And I select "Date added" from "sorted_by"
+    And I select "+" from "direction"
+    And I press the "Search" button
+    Then the URL should be "/photos/search/did/posted/sorted-by/date-added/direction/+"
+    And the "sorted_by" option "Date added" should be selected
+    And the "direction" option "+" should be selected
+    And I should see 2 search results
+    And post search result 1 should be the photo added on "1/1/14"
+    And post search result 2 should be the photo added on "1/2/14"
 
   @javascript
   Scenario: Player searches for a given user's photos
