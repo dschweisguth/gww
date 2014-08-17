@@ -5,6 +5,7 @@ Feature: Photos
 
   # TODO Dave test that terms in URL set initial state of form fields
   # TODO Dave remove defaults from URL?
+  # TODO Dave reject unknown usernames
 
   @javascript
   Scenario: Player searches for all photos
@@ -233,16 +234,30 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on search result 1
     And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
-  # TODO Dave actually this should go back to posted because there is no user
+  # TODO Dave it's inconsistent that this error leads to /photos/search but others lead to URLs with sorted-by and direction
   @javascript
-  Scenario: Player fills in fields incompatible with searching by activity
+  Scenario: Player tries to search for activity without a username
     When I go to the photos search page
     And I select "Activity" from "did"
+    And I press the "Search" button
+    Then the URL should be "/photos/search"
+    And the "did" option "Posted" should be selected
+    And the "sorted_by" option "Last updated" should be selected
+    And the "direction" option "-" should be selected
+
+  @javascript
+  Scenario: Player fills in fields incompatible with searching by activity
+    Given there is a player "abcdefgh"
+    When I go to the photos search page
+    And I select "Activity" from "did"
+    And I fill in "done_by" with "abcdefgh"
     And I fill in "text" with "Fort Point"
     And I select "unfound" from "game_status"
     And I select "Date added" from "sorted_by"
     And I press the "Search" button
-    Then the URL should be "/photos/search/did/activity/sorted-by/date-taken/direction/-"
+    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
+    And the "did" option "Activity" should be selected
+    And the "done_by" field should contain "abcdefgh"
     And the "text" field should be empty
     And the game statuses "" should be selected
     And the "sorted_by" option "Date taken" should be selected

@@ -64,6 +64,10 @@ class PhotosController < ApplicationController
     end
 
     if terms['did'] == 'activity'
+      if !terms['done-by']
+        remove_term 'done-by'
+        raise ArgumentError, "invalid search parameters"
+      end
       %w(text game-status).each do |field|
         if terms[field]
           remove_term field
