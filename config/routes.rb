@@ -23,8 +23,8 @@ GWW::Application.routes.draw do
   get 'photos/search' => 'photos#search', as: :search_photos # so it works without a term
   get 'photos/autocomplete_usernames/*terms' => 'photos#autocomplete_usernames'
   get 'photos/autocomplete_usernames' => 'photos#autocomplete_usernames', as: :autocomplete_photos_usernames # so it works without a term
-  get 'photos/search_data/*terms/page/:page' => 'photos#search_data'
-  get 'photos/search_data/page/:page' => 'photos#search_data' # so it works without a term
+  get 'photos/search_data/*terms/page/:page' => 'photos#search_data', as: :search_photos_data_with_terms # TODO Dave review routing specs
+  get 'photos/search_data/page/:page' => 'photos#search_data', as: :search_photos_data # so it works without a term
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', as: :photos
   resources :photos, only: %(show) do
     get :map_popup, on: :member

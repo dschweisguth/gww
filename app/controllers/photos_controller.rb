@@ -44,13 +44,22 @@ class PhotosController < ApplicationController
   end
 
   def search_data
-    terms, sorted_by, direction = parsed_params
-    parsed_terms = parsed_terms terms
-    @photos = Photo.search(parsed_terms, sorted_by, direction, params[:page]).to_a
-    @text_terms = parsed_terms['text'] || []
-    @display_fully = @text_terms.any? || parsed_terms['did'] == 'activity'
-    @comment_selection_criterion = parsed_terms['did']
-    render layout: false
+    begin
+      terms, sorted_by, direction = parsed_params
+      parsed_terms = parsed_terms terms
+      @photos = Photo.search(parsed_terms, sorted_by, direction, params[:page]).to_a
+      @text_terms = parsed_terms['text'] || []
+      @display_fully = @text_terms.any? || parsed_terms['did'] == 'activity'
+      @comment_selection_criterion = parsed_terms['did']
+      render layout: false
+    rescue ArgumentError => e
+      if ['invalid date', 'invalid search parameters', 'invalid sorted_by', 'invalid direction'].include? e.message
+        # noinspection RubyResolve
+        redirect_to params[:terms].present? ? search_photos_data_with_terms_path(params[:terms], params[:page]) : search_photos_data_path(params[:page])
+      else
+        raise
+      end
+    end
   end
 
   private def parsed_params
