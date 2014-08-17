@@ -69,10 +69,6 @@ Then /^the game statuses "([^"]*)" should be selected$/ do |game_statuses|
   find_field('game_status').all('option[selected]').map(&:text).should =~ game_statuses.split(',')
 end
 
-Then /^no game status should be selected$/ do
-  find_field('game_status').all('option[selected]').should be_empty
-end
-
 Then /^the "([^"]+)" field should contain "([^"]+)"$/ do |field, value|
   find_field(field).value.should == value
 end
