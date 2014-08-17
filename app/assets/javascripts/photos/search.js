@@ -12,7 +12,7 @@ GWW.photos.search = function () {
   }
 
   function setUpAutocomplete() {
-    $("#username").autocomplete({
+    $("#done_by").autocomplete({
       source: function (request, response) {
         var url = '/photos/autocomplete_usernames';
         if (request.term !== "") {
@@ -42,7 +42,7 @@ GWW.photos.search = function () {
       }
     });
     $("form img").click(function () {
-      $("#username").autocomplete("search", "").focus();
+      $("#done_by").autocomplete("search", "").focus();
       return false;
     });
   }
@@ -52,7 +52,7 @@ GWW.photos.search = function () {
       event.preventDefault();
       var form = $(this);
       var path = "/photos/search/did/" + form.find('select[name="did"]').val();
-      var doneBy = form.find('[name="username"]');
+      var doneBy = form.find('[name="done_by"]');
       if (doneBy.val() !== "") {
         path += "/done-by/" + encodeURIComponent(doneBy.val());
       }

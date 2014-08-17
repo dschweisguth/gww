@@ -5,7 +5,6 @@ Feature: Photos
 
   # TODO Dave test that terms in URL set initial state of form fields
   # TODO Dave remove defaults from URL?
-  # TODO Dave username -> done-by
 
   @javascript
   Scenario: Player searches for all photos
@@ -16,7 +15,7 @@ Feature: Photos
     And I follow the "Search for photos" link
     Then the URL should be "/photos/search"
     And the "did" option "Posted" should be selected
-    And the "username" field should be empty
+    And the "done_by" field should be empty
     And the "text" field should be empty
     And the game statuses "" should be selected
     And the "from_date" field should be empty
@@ -32,10 +31,10 @@ Feature: Photos
     And there is a player "ijklmnop"
     And player "ijklmnop" has a photo
     When I go to the photos search page
-    And I autoselect "abcdefgh (1)" from the "#username" field
+    And I autoselect "abcdefgh (1)" from the "#done_by" field
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/sorted-by/last-updated/direction/-"
-    And the "username" field should contain "abcdefgh"
+    And the "done_by" field should contain "abcdefgh"
     And I should see 1 search result
 
   @javascript
@@ -127,10 +126,10 @@ Feature: Photos
     When I go to the photos search page
     And I select "unfound" from "game_status"
     And I select "unconfirmed" from "game_status"
-    And I autoselect "abcdefgh (1)" from the "#username" field
+    And I autoselect "abcdefgh (1)" from the "#done_by" field
     And I press the "Search" button
     Then the URL should be "/photos/search/did/posted/done-by/abcdefgh/game-status/unfound,unconfirmed/sorted-by/last-updated/direction/-"
-    And the "username" field should contain "abcdefgh"
+    And the "done_by" field should contain "abcdefgh"
     And the game statuses "unfound,unconfirmed" should be selected
     And I should see 1 search result
 
@@ -183,11 +182,11 @@ Feature: Photos
     And player "abcdefgh" commented "Today is 1/1/14" on player "ijklmnop"'s photo on "1/3/14"
     When I go to the photos search page
     And I select "Activity" from "did"
-    And I fill in "username" with "abcdefgh"
+    And I fill in "done_by" with "abcdefgh"
     And I press the "Search" button
     Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
     And the "did" option "Activity" should be selected
-    And the "username" field should contain "abcdefgh"
+    And the "done_by" field should contain "abcdefgh"
     And the "sorted_by" option "Date taken" should be selected
     And the "direction" option "-" should be selected
     And I should see 2 search results
@@ -204,7 +203,7 @@ Feature: Photos
     And player "ijklmnop" commented "Today is 1/2/14" on player "abcdefgh"'s photo on "1/2/14"
     When I go to the photos search page
     And I select "Activity" from "did"
-    And I fill in "username" with "ijklmnop"
+    And I fill in "done_by" with "ijklmnop"
     And I press the "Search" button
     Then I should see 2 search results
     And I should see the comment "Today is 1/2/14" on search result 1
@@ -225,7 +224,7 @@ Feature: Photos
     And player "abcdefgh" commented "Today is 1/4/14" on player "ijklmnop"'s photo on "1/4/14"
     When I go to the photos search page
     And I select "Activity" from "did"
-    And I fill in "username" with "abcdefgh"
+    And I fill in "done_by" with "abcdefgh"
     And I fill in "from_date" with "1/2/14"
     And I fill in "to_date" with "1/3/14"
     And I press the "Search" button
