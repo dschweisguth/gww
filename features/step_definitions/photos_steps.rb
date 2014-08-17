@@ -61,7 +61,6 @@ Then /^I should see (\d+) search results?$/ do |result_count|
   all('a[href^="https://www.flickr.com/photos/"]').count.should == result_count.to_i
 end
 
-# TODO Dave make more succinct
 Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, option|
   find("[name=#{field}] option[selected]").text.should == option
 end
