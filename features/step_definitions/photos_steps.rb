@@ -61,8 +61,8 @@ Then /^I should see (\d+) search results?$/ do |result_count|
   all('a[href^="https://www.flickr.com/photos/"]').count.should == result_count.to_i
 end
 
-Then /^the action "([^"]+)" should be selected$/ do |action|
-  find('[name=did] option[selected]').text.should == action
+Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, option|
+  find("[name=#{field}] option[selected]").text.should == option
 end
 
 Then /^the game statuses "([^"]+)" should be selected$/ do |game_statuses|
@@ -167,14 +167,6 @@ end
 
 Then /^no "([^"]+)" should be selected$/ do |field|
   find_field(field).all('option[selected]').should be_empty
-end
-
-Then /^the order "([^"]+)" should be selected$/ do |order|
-  find_field('sorted_by').value.should == order
-end
-
-Then /^the direction "([^"]+)" should be selected$/ do |direction|
-  find_field('direction').value.should == direction
 end
 
 Then /^the date fields should be empty$/ do

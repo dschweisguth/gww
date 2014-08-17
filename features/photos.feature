@@ -15,14 +15,14 @@ Feature: Photos
     When I go to the home page
     And I follow the "Search for photos" link
     Then the URL should be "/photos/search"
-    And the action "Posted" should be selected
+    And the "did" option "Posted" should be selected
     And the "username" field should be empty
     And the "text" field should be empty
     And no "game_status" should be selected
     And the "from_date" field should be empty
     And the "to_date" field should be empty
-    And the order "last-updated" should be selected
-    And the direction "-" should be selected
+    And the "sorted_by" option "Last updated" should be selected
+    And the "direction" option "-" should be selected
     And I should see a search result for the photo
 
   @javascript
@@ -186,10 +186,10 @@ Feature: Photos
     And I fill in "username" with "abcdefgh"
     And I press the "Search" button
     Then the URL should be "/photos/search/did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
-    And the action "Activity" should be selected
+    And the "did" option "Activity" should be selected
     And the "username" field should contain "abcdefgh"
-    And the order "date-taken" should be selected
-    And the direction "-" should be selected
+    And the "sorted_by" option "Date taken" should be selected
+    And the "direction" option "-" should be selected
     And I should see 2 search results
     And search result 1 should be player "ijklmnop"'s photo
     And search result 2 should be player "abcdefgh"'s photo
@@ -246,8 +246,8 @@ Feature: Photos
     Then the URL should be "/photos/search/did/activity/sorted-by/date-taken/direction/-"
     And the "text" field should be empty
     And no "game_status" should be selected
-    And the order "date-taken" should be selected
-    And the direction "-" should be selected
+    And the "sorted_by" option "Date taken" should be selected
+    And the "direction" option "-" should be selected
 
   # TODO Dave combine these after rewriting redirection implementation
 
