@@ -12,6 +12,10 @@ Feature: Photos
     And I follow the "Search for photos" link
     Then I should see a search result for the photo
 
+  # TODO Dave test initial state of the page including defaults (Javascript not necessary)
+  # TODO Dave test that terms in URL set initial state of form fields
+  # TODO Dave assert that all fields contain what was entered in to them after searching
+
   @javascript
   Scenario: Player searches for unfound or unconfirmed photos
     Given there is an unfound photo
@@ -219,7 +223,15 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on search result 1
     And search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
-  # TODO Dave redirect away from URLs with bogus parameter values
+  # TODO Dave combine these after rewriting redirection implementation
+
+  Scenario: Player visits search URL with invalid parameter values 1
+    When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish"
+    Then the URL should be "/photos/search"
+
+  Scenario: Player visits search URL with invalid parameter values 2
+    When I go to the photos search page with the terms "game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
+    Then the URL should be "/photos/search"
 
   @javascript
   Scenario: Player fills in fields incompatible with searching by activity
@@ -231,6 +243,6 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should not contain "text"
     And the "text" field should be empty
-    And the URL should not contain "text"
+    And the URL should not contain "game-status"
     And no "game_status" field should be selected
     And the order "date-taken" should be selected

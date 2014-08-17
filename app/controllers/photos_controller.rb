@@ -33,9 +33,9 @@ class PhotosController < ApplicationController
     begin
       @terms, @sorted_by, @direction = parsed_params
     rescue ArgumentError => e
-      if ['invalid date', 'invalid search parameters', 'invalid sorted_by'].include? e.message
+      if ['invalid date', 'invalid search parameters', 'invalid sorted_by', 'invalid direction'].include? e.message
         # noinspection RubyResolve
-        redirect_to search_photos_with_terms_path params[:terms]
+        redirect_to params[:terms].present? ? search_photos_with_terms_path(params[:terms]) : search_photos_path
         return
       else
         raise
@@ -56,7 +56,13 @@ class PhotosController < ApplicationController
 
   private def parsed_params
     params[:terms] ||= ''
-    terms = params[:terms].split('/').each_slice(2).to_h
+    terms = params[:terms].split('/').each_slice(2).to_h # TODO Dave fix 500 with an odd number of components
+
+    if !['posted', 'activity', nil].include?(terms['did'])
+      remove_term 'did'
+      raise ArgumentError, "invalid search parameters"
+    end
+
     if terms['did'] == 'activity'
       %w(text game-status).each do |field|
         if terms[field]
@@ -65,9 +71,15 @@ class PhotosController < ApplicationController
         end
       end
     end
+
     if terms['game-status']
       terms['game-status'] = terms['game-status'].split ','
+      if (terms['game-status'] - %w(unfound unconfirmed found revealed)).any?
+        remove_term 'game-status'
+        raise ArgumentError, "invalid search parameters"
+      end
     end
+
     %w(from-date to-date).each do |field|
       if terms[field]
         terms[field].gsub! '-', '/'
@@ -85,6 +97,7 @@ class PhotosController < ApplicationController
       end
       raise ArgumentError, "invalid search parameters"
     end
+
     sorted_by = terms.delete 'sorted-by'
     if sorted_by
       valid_orders = terms['did'] == 'activity' ? 'date-taken' : %w(date-taken date-added last-updated)
@@ -96,12 +109,22 @@ class PhotosController < ApplicationController
       sorted_by = terms['did'] == 'activity' ? 'date-taken' : 'last-updated'
     end
 
-    direction = terms.delete('direction') || '-'
+    direction = terms.delete 'direction'
+    if direction
+      if ! %w(- +).include?(direction)
+        remove_term 'direction'
+        raise ArgumentError, "invalid direction"
+      end
+    else
+      direction = '-'
+    end
+
     [ terms, sorted_by, direction ]
   end
 
   private def remove_term(name)
-    params[:terms].sub! %r(#{name}/[^/]+/), ''
+    params[:terms].sub! %r(#{name}/[^/]+/), '' # matches if the term is anywhere but at the end or is at the end and there is a trailing /
+    params[:terms].sub! %r((?:^|/)#{name}/[^/]+$), '' # matches if the term is at the end and there is no trailing /
   end
 
   private def parsed_terms(terms)

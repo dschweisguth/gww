@@ -157,6 +157,10 @@ Then /^I shouid not see a search result for the photo added on "(\d+\/\d+\/\d+)"
   all(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"])).should be_empty
 end
 
+Then /^the URL should be "([^"]+)"$/ do |uri|
+  current_path.should == uri
+end
+
 Then /^the URL should not contain "([^"]+)"$/ do |field|
   current_path.should_not include(field)
 end
