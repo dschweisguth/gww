@@ -136,8 +136,8 @@ Feature: Photos
   @javascript
   Scenario: Player searches for a given user's unfound or unconfirmed photos
     Given there is a player "abcdefgh"
-    And player "abcdefgh" has a photo
-    And player "abcdefgh" has a "found" photo
+    And player "abcdefgh" has an unfound photo
+    And player "abcdefgh" has a found photo
     When I go to the photos search page
     And I select "unfound" from "game_status"
     And I select "unconfirmed" from "game_status"

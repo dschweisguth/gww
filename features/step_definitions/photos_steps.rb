@@ -1,21 +1,13 @@
+Given /^there is a player "([^"]+)"$/ do |username|
+  create :person, username: username
+end
+
 Given /^there is an? (unfound|unconfirmed|found|revealed) photo$/ do |game_status|
   @photo = create :photo, game_status: game_status
 end
 
 Given /^the photo's "([^"]+)" is "([^"]+)"$/ do |attribute, value|
   @photo.update! attribute => value
-end
-
-Given /^there is a player "([^"]+)"$/ do |username|
-  create :person, username: username
-end
-
-Given /^player "([^"]+)" has a photo$/ do |username|
-  create :photo, person: Person.find_by_username(username)
-end
-
-Given /^player "([^"]+)" has an? "([^"]+)" photo$/ do |username, game_status|
-  create :photo, person: Person.find_by_username(username), game_status: game_status
 end
 
 Given /^the photo has a tag$/ do
@@ -38,6 +30,14 @@ Given /^there is a photo added on "(\d+\/\d+\/\d+)"$/ do |date|
   create :photo, dateadded: Date.parse_utc_time(date)
 end
 
+Given /^player "([^"]+)" has a photo$/ do |username|
+  create :photo, person: Person.find_by_username(username)
+end
+
+Given /^player "([^"]+)" has an? (unfound|unconfirmed|found|revealed) photo$/ do |username, game_status|
+  create :photo, person: Person.find_by_username(username), game_status: game_status
+end
+
 Given /^player "([^"]+)" took a photo on "(\d+\/\d+\/\d+)"$/ do |poster_username, date|
   create :photo, person: Person.find_by_username(poster_username), datetaken: Date.parse_utc_time(date)
 end
@@ -49,8 +49,32 @@ Given /^player "([^"]+)" commented "([^"]+)" on player "([^"]+)"'s photo on "([^
     comment_text: comment_text, commented_at: Date.parse_utc_time(date)
 end
 
-When /^I select "([^"]+)" from "([^"]+)"$/ do |value, field_identifier|
-  select value, from: field_identifier
+When /^I select "([^"]+)" from "([^"]+)"$/ do |value, field|
+  select value, from: field
+end
+
+Then /^the URL should be "([^"]+)"$/ do |uri|
+  current_path.should == uri
+end
+
+Then /^the "([^"]+)" field should contain "([^"]+)"$/ do |field, value|
+  find_field(field).value.should == value
+end
+
+Then /^the "([^"]+)" field should be empty$/ do |field|
+  find_field(field).value.should be_blank
+end
+
+Then /^the date fields should be empty$/ do
+  %w(to_date from_date).each { |field| find_field(field).value.should be_blank }
+end
+
+Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, value|
+  find("[name=#{field}] option[selected]").text.should == value
+end
+
+Then /^the game statuses "([^"]*)" should be selected$/ do |game_statuses|
+  find_field('game_status').all('option[selected]').map(&:text).should =~ game_statuses.split(',')
 end
 
 Then /^I should see an image-only search result for the photo$/ do
@@ -62,30 +86,15 @@ Then /^I should see (\d+) image-only search results?$/ do |result_count|
   all('.text').should be_empty
 end
 
-Then /^I should see (\d+) full search results?$/ do |result_count|
-  result_count = result_count.to_i
-  all('.image').count.should == result_count
-  all('.text').count.should == result_count
+Then /^I should see an image-only search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
+  photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
+  i_should_see_image_only_search_result_for_photo photo
 end
 
-Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, option|
-  find("[name=#{field}] option[selected]").text.should == option
-end
-
-Then /^the game statuses "([^"]*)" should be selected$/ do |game_statuses|
-  find_field('game_status').all('option[selected]').map(&:text).should =~ game_statuses.split(',')
-end
-
-Then /^the "([^"]+)" field should contain "([^"]+)"$/ do |field, value|
-  find_field(field).value.should == value
-end
-
-Then /^I should see the photo's title$/ do
-  all('h2').any? { |h2| h2.has_content?(@photo.title) }.should be_truthy
-end
-
-Then /^I should see the photo's description$/ do
-  all('p').any? { |p| p.has_content?(@photo.description) }.should be_truthy
+def i_should_see_image_only_search_result_for_photo(photo)
+  link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"])
+  link.should have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"])
+  all('.text').should be_empty
 end
 
 Then /^image-only search result (\d+) should be the photo added on "([^"]+)"$/ do |result_index, date|
@@ -96,6 +105,12 @@ end
 def image_only_search_result_should_be(result_index, photo)
   result = all('.image')[result_index.to_i - 1]
   result.should have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
+end
+
+Then /^I should see (\d+) full search results?$/ do |result_count|
+  result_count = result_count.to_i
+  all('.image').count.should == result_count
+  all('.text').count.should == result_count
 end
 
 Then /^full search result (\d+) should be player "([^"]+)"'s photo$/ do |result_index, poster_username|
@@ -115,11 +130,24 @@ def full_search_result_should_be(result_index, photo)
   result.find('p').should have_content(photo.description)
 end
 
+Then /^I shouid not see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
+  photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
+  all(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"])).should be_empty
+end
+
+Then /^I should see the photo's title$/ do
+  all('h2').any? { |h2| h2.has_content?(@photo.title) }.should be_truthy
+end
+
 Then /^I should see the photo's title with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   page.should have_content(@photo.title)
   [term1, term2].each do |term|
     all('h2').any? { |h2| h2.has_css?('span[class=matched]', text: term) }.should be_truthy
   end
+end
+
+Then /^I should see the photo's description$/ do
+  all('p').any? { |p| p.has_content?(@photo.description) }.should be_truthy
 end
 
 Then /^I should see the photo's description with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
@@ -140,6 +168,14 @@ Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1
   end
 end
 
+Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
+  all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_truthy
+end
+
+Then /^I should not see the comment$/ do
+  page.should_not have_content(@comment.comment_text)
+end
+
 Then /^I should see the comment with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   page.should have_content(@comment.comment_text)
   [term1, term2].each do |term|
@@ -147,45 +183,9 @@ Then /^I should see the comment with "([^"]+)" and "([^"]+)" highlighted$/ do |t
   end
 end
 
-Then /^I should not see the comment$/ do
-  page.should_not have_content(@comment.comment_text)
-end
-
 Then(/^I should see "([^"]+)" with "([^"]+)" highlighted$/) do |text, term|
   page.should have_content(text)
   page.should have_css('span[class=matched]', text: term)
-end
-
-Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
-  all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }.should be_truthy
-end
-
-Then /^I should see an image-only search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
-  photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
-  i_should_see_image_only_search_result_for_photo photo
-end
-
-def i_should_see_image_only_search_result_for_photo(photo)
-  link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"])
-  link.should have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"])
-  all('.text').should be_empty
-end
-
-Then /^I shouid not see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
-  photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
-  all(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"])).should be_empty
-end
-
-Then /^the URL should be "([^"]+)"$/ do |uri|
-  current_path.should == uri
-end
-
-Then /^the "([^"]+)" field should be empty$/ do |field|
-  find_field(field).value.should be_blank
-end
-
-Then /^the date fields should be empty$/ do
-  %w(to_date from_date).each { |field| find_field(field).value.should be_blank }
 end
 
 Then /^I should see player "([^"]+)"'s comment on player "([^"]+)"'s photo$/ do |commenter_username, poster_username|
