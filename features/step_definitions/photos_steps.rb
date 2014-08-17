@@ -65,8 +65,12 @@ Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, option|
   find("[name=#{field}] option[selected]").text.should == option
 end
 
-Then /^the game statuses "([^"]+)" should be selected$/ do |game_statuses|
+Then /^the game statuses "([^"]*)" should be selected$/ do |game_statuses|
   find_field('game_status').all('option[selected]').map(&:text).should =~ game_statuses.split(',')
+end
+
+Then /^no game status should be selected$/ do
+  find_field('game_status').all('option[selected]').should be_empty
 end
 
 Then /^the "([^"]+)" field should contain "([^"]+)"$/ do |field, value|
@@ -163,10 +167,6 @@ end
 
 Then /^the "([^"]+)" field should be empty$/ do |field|
   find_field(field).value.should be_blank
-end
-
-Then /^no "([^"]+)" should be selected$/ do |field|
-  find_field(field).all('option[selected]').should be_empty
 end
 
 Then /^the date fields should be empty$/ do

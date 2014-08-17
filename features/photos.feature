@@ -18,7 +18,7 @@ Feature: Photos
     And the "did" option "Posted" should be selected
     And the "username" field should be empty
     And the "text" field should be empty
-    And no "game_status" should be selected
+    And the game statuses "" should be selected
     And the "from_date" field should be empty
     And the "to_date" field should be empty
     And the "sorted_by" option "Last updated" should be selected
@@ -245,7 +245,7 @@ Feature: Photos
     And I press the "Search" button
     Then the URL should be "/photos/search/did/activity/sorted-by/date-taken/direction/-"
     And the "text" field should be empty
-    And no "game_status" should be selected
+    And the game statuses "" should be selected
     And the "sorted_by" option "Date taken" should be selected
     And the "direction" option "-" should be selected
 
