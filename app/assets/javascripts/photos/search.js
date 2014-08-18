@@ -254,7 +254,13 @@ GWW.photos.search = function () {
       }
       uri += '/' + name + '/' + value;
     }
-    uri += '/sorted-by/' + GWW.config.sortedBy + '/direction/' + GWW.config.direction + '/page/' + nextPageToAdd;
+    if ('sortedBy' in GWW.config) {
+      uri += '/sorted-by/' + GWW.config.sortedBy;
+    }
+    if ('direction' in GWW.config) {
+      uri += '/direction/' + GWW.config.direction;
+    }
+    uri += '/page/' + nextPageToAdd;
     return uri;
   }
 

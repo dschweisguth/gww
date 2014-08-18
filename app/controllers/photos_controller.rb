@@ -32,7 +32,14 @@ class PhotosController < ApplicationController
     # TODO Dave fix nekomusume
     begin
       @terms, @sorted_by, @direction = parsed_params
-      @json = { 'terms' => @terms, 'sortedBy' => @sorted_by, 'direction' => @direction }.to_json
+      @json = { 'terms' => @terms }
+      if @sorted_by != (@terms['did'] == 'activity' ? 'date-taken' : 'last-updated')
+        @json['sortedBy'] = @sorted_by
+      end
+      if @direction != '-'
+        @json['direction'] = @direction
+      end
+      @json = @json.to_json
     rescue ArgumentError => e
       if ['invalid date', 'invalid search parameters', 'invalid sorted_by', 'invalid direction'].include? e.message
         # noinspection RubyResolve
@@ -73,6 +80,7 @@ class PhotosController < ApplicationController
 
     if terms['did'] == 'activity'
       if !terms['done-by']
+        remove_term 'did'
         raise ArgumentError, "invalid search parameters"
       end
       %w(text game-status).each do |field|
@@ -116,13 +124,17 @@ class PhotosController < ApplicationController
         remove_term 'sorted-by'
         raise ArgumentError, "invalid sorted_by"
       end
+      if sorted_by == (terms['did'] == 'activity' ? 'date-taken' : 'last-updated')
+        remove_term 'sorted-by'
+        raise ArgumentError, "invalid sorted_by"
+      end
     else
       sorted_by = terms['did'] == 'activity' ? 'date-taken' : 'last-updated'
     end
 
     direction = terms.delete 'direction'
     if direction
-      if ! %w(- +).include?(direction)
+      if direction != '+'
         remove_term 'direction'
         raise ArgumentError, "invalid direction"
       end
