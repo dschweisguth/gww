@@ -50,42 +50,46 @@ GWW.photos.search = function () {
   function setUpFormSubmit() {
     $('form').submit(function (event) {
       event.preventDefault();
-      var form = $(this);
-      var path = "/photos/search";
-      var did = form.find('select[name="did"]').val();
-      if (did !== 'posted') {
-        path += "/did/" + did;
-      }
-      var doneBy = form.find('[name="done_by"]');
-      if (doneBy.val() !== "") {
-        path += "/done-by/" + encodeURIComponent(doneBy.val());
-      }
-      var gameStatus = form.find('select[name="game_status[]"]');
-      if (gameStatus.val() !== null && gameStatus.val() !== "") {
-        path += "/game-status/" + gameStatus.val();
-      }
-      var text = form.find('[name="text"]');
-      if (text.val() !== "") {
-        path += "/text/" + encodeURIComponent(text.val());
-      }
-      var from_date = form.find('[name="from_date"]');
-      if (from_date.val() !== "") {
-        path += "/from-date/" + encodeURIComponent(escapeDate(from_date.val()));
-      }
-      var to_date = form.find('[name="to_date"]');
-      if (to_date.val() !== "") {
-        path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
-      }
-      var sortedBy = form.find('[name="sorted_by"]').val();
-      if (sortedBy !== (did == 'posted' ? 'last-updated' : 'date-taken')) {
-        path += "/sorted-by/" + sortedBy;
-      }
-      var direction = form.find('[name="direction"]').val();
-      if (direction !== '-') {
-        path += "/direction/" + direction;
-      }
-      window.location = path;
+      window.location = searchURI($(this));
     });
+  }
+
+  // This function must return a canonical search URI to minimize redirects
+  function searchURI(form) {
+    var path = "/photos/search";
+    var did = form.find('select[name="did"]').val();
+    if (did !== 'posted') {
+      path += "/did/" + did;
+    }
+    var doneBy = form.find('[name="done_by"]');
+    if (doneBy.val() !== "") {
+      path += "/done-by/" + encodeURIComponent(doneBy.val());
+    }
+    var gameStatus = form.find('select[name="game_status[]"]');
+    if (gameStatus.val() !== null && gameStatus.val() !== "") {
+      path += "/game-status/" + gameStatus.val();
+    }
+    var text = form.find('[name="text"]');
+    if (text.val() !== "") {
+      path += "/text/" + encodeURIComponent(text.val());
+    }
+    var from_date = form.find('[name="from_date"]');
+    if (from_date.val() !== "") {
+      path += "/from-date/" + encodeURIComponent(escapeDate(from_date.val()));
+    }
+    var to_date = form.find('[name="to_date"]');
+    if (to_date.val() !== "") {
+      path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
+    }
+    var sortedBy = form.find('[name="sorted_by"]').val();
+    if (sortedBy !== (did == 'posted' ? 'last-updated' : 'date-taken')) {
+      path += "/sorted-by/" + sortedBy;
+    }
+    var direction = form.find('[name="direction"]').val();
+    if (direction !== '-') {
+      path += "/direction/" + direction;
+    }
+    return path;
   }
 
   // Replaces / with - to make dates URL-safe
