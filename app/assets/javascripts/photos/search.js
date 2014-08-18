@@ -173,11 +173,10 @@ GWW.photos.search = function () {
     });
   }
 
-
   function addPage(afterPageAdded, afterAllPagesAdded) {
     startLoadingAnimation();
     $.ajax({
-      url: '/photos/search_data' + terms() + '/sorted-by/' + GWW.config.sortedBy + '/direction/' + GWW.config.direction + '/page/' + nextPageToAdd,
+      url: searchDataURI(),
       success: function (data) {
         allPagesAdded = ! /\S/.test(data);
         if (allPagesAdded) {
@@ -245,17 +244,18 @@ GWW.photos.search = function () {
     clearInterval(loadingAnimationThread);
   }
 
-  function terms() {
-    var the_terms = "";
+  function searchDataURI() {
+    var uri = '/photos/search_data';
     var name;
     for (name in GWW.config.terms) {
       var value = GWW.config.terms[name];
       if (name === 'from-date' || name === 'to-date') {
         value = escapeDate(value);
       }
-      the_terms += '/' + name + '/' + value;
+      uri += '/' + name + '/' + value;
     }
-    return the_terms;
+    uri += '/sorted-by/' + GWW.config.sortedBy + '/direction/' + GWW.config.direction + '/page/' + nextPageToAdd;
+    return uri;
   }
 
   function afterAddingPages() {
