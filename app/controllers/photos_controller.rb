@@ -73,7 +73,7 @@ class PhotosController < ApplicationController
     params[:terms] ||= ''
     terms = params[:terms].split('/').each_slice(2).to_h # TODO Dave fix 500 with an odd number of components
 
-    if !['posted', 'activity', nil].include?(terms['did'])
+    if !['activity', nil].include?(terms['did'])
       remove_term 'did'
       raise ArgumentError, "invalid search parameters"
     end

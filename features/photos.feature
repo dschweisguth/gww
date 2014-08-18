@@ -279,14 +279,14 @@ Feature: Photos
   # The following scenarios demonstrates that a client which goes to a non-canonical or incorrect URL
   # is redirected to a canonical and correct one.
 
-  # TODO Dave reinstate after refactoring parameter parsing
-#  Scenario: Player visits search URL with default post search parameter values
-#    When I go to the photos search page with the terms "did/posted/sorted-by/last-updated/direction/-"
-#    Then the URL should be "/photos/search"
-#
-#  Scenario: Player visits search URL with default activity search parameter values
-#    When I go to the photos search page with the terms "did/activity/sorted-by/last-updated/direction/-"
-#    Then the URL should be "/photos/search"
+  Scenario: Player visits search URL with default post search parameter values
+    When I go to the photos search page with the terms "did/posted/sorted-by/last-updated/direction/-"
+    Then the URL should be "/photos/search"
+
+  Scenario: Player visits search URL with default activity search parameter values
+    Given there is a player "abcdefgh"
+    When I go to the photos search page with the terms "did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
+    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh"
 
   # TODO Dave combine these after rewriting redirection implementation
 
