@@ -67,7 +67,7 @@ GWW.photos.search = function () {
     }
     var gameStatus = form.find('select[name="game_status[]"]');
     if (gameStatus.val() !== null && gameStatus.val() !== "") {
-      path += "/game-status/" + gameStatus.val();
+      path += "/game-status/" + gameStatus.val(); // Javascript automatically joins arrays with ,
     }
     var text = form.find('[name="text"]');
     if (text.val() !== "") {
