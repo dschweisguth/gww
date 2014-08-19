@@ -29,12 +29,10 @@ class PhotosController < ApplicationController
   end
 
   # TODO Dave move sorted_by and direction to hash
-  # TODO Dave parsed_params -> params_for_form
-  # TODO Dave parsed_terms -> terms_for_search
   def search
     # TODO Dave fix nekomusume
     begin
-      @terms, @sorted_by, @direction = parsed_params
+      @terms, @sorted_by, @direction = params_for_form
     rescue ArgumentError => e
       if ['invalid date', 'invalid search parameters', 'invalid sorted_by', 'invalid direction'].include? e.message
         # noinspection RubyResolve
@@ -47,8 +45,8 @@ class PhotosController < ApplicationController
 
   def search_data
     begin
-      terms, sorted_by, direction = parsed_params
-      parsed_terms = parsed_terms terms
+      terms, sorted_by, direction = params_for_form
+      parsed_terms = params_for_search terms
       @photos = Photo.search(parsed_terms, sorted_by, direction, params[:page]).to_a
       @text_terms = parsed_terms['text'] || []
       @display_fully = @text_terms.any? || parsed_terms['did'] == 'activity'
@@ -64,7 +62,7 @@ class PhotosController < ApplicationController
     end
   end
 
-  private def parsed_params
+  private def params_for_form
     params[:terms] ||= ''
     terms = params[:terms].split('/').each_slice(2).to_h # TODO Dave fix 500 with an odd number of components
 
@@ -145,7 +143,7 @@ class PhotosController < ApplicationController
     params[:terms].sub! %r((?:^|/)#{name}/[^/]+$), '' # matches if the term is at the end and there is no trailing /
   end
 
-  private def parsed_terms(terms)
+  private def params_for_search(terms)
     parsed_terms = terms.dup
     if parsed_terms['text']
       parsed_terms['text'] = parsed_terms['text'].split(/\s*,\s*/).map &:split
