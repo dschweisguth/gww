@@ -28,18 +28,13 @@ class PhotosController < ApplicationController
     render formats: [:xml]
   end
 
+  # TODO Dave move sorted_by and direction to hash
+  # TODO Dave parsed_params -> params_for_form
+  # TODO Dave parsed_terms -> terms_for_search
   def search
     # TODO Dave fix nekomusume
     begin
       @terms, @sorted_by, @direction = parsed_params
-      @json = { 'terms' => @terms }
-      if @sorted_by != (@terms['did'] == 'activity' ? 'date-taken' : 'last-updated')
-        @json['sortedBy'] = @sorted_by
-      end
-      if @direction != '-'
-        @json['direction'] = @direction
-      end
-      @json = @json.to_json
     rescue ArgumentError => e
       if ['invalid date', 'invalid search parameters', 'invalid sorted_by', 'invalid direction'].include? e.message
         # noinspection RubyResolve

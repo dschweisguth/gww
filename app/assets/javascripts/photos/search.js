@@ -245,23 +245,8 @@ GWW.photos.search = function () {
   }
 
   function searchDataURI() {
-    var uri = '/photos/search_data';
-    var name;
-    for (name in GWW.config.terms) {
-      var value = GWW.config.terms[name];
-      if (name === 'from-date' || name === 'to-date') {
-        value = escapeDate(value);
-      }
-      uri += '/' + name + '/' + value;
-    }
-    if ('sortedBy' in GWW.config) {
-      uri += '/sorted-by/' + GWW.config.sortedBy;
-    }
-    if ('direction' in GWW.config) {
-      uri += '/direction/' + GWW.config.direction;
-    }
-    uri += '/page/' + nextPageToAdd;
-    return uri;
+    var match = /\/\/[^/]+\/photos\/search([^?]*)/.exec(window.location);
+    return '/photos/search_data' + match[1] + '/page/' + nextPageToAdd;
   }
 
   function afterAddingPages() {
