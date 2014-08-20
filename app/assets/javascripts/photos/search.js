@@ -245,7 +245,7 @@ GWW.photos.search = function () {
   }
 
   function searchDataURI() {
-    var match = /\/\/[^/]+\/photos\/search([^?]*)/.exec(window.location);
+    var match = /\/\/[^/]+\/photos\/search([^?#]*)/.exec(window.location);
     return '/photos/search_data' + match[1] + '/page/' + nextPageToAdd;
   }
 
