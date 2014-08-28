@@ -8,7 +8,7 @@ module PathTo
       when "the photos search page"
         search_photos_path
       when /^the photos search page with the terms "([^"]+)"$/
-        search_photos_with_terms_path $1
+        search_photos_path $1
       when /^the player "([^"]+)"'s page$/
         person_path Person.find_by_username($1)
 

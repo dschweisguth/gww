@@ -276,7 +276,7 @@ Feature: Photos
     And the "direction" option "-" should be selected
 
   # The form always submits to a canonical URL to minimize redirects.
-  # The following scenarios demonstrates that a client which goes to a non-canonical or incorrect URL
+  # The following scenarios demonstrate that a client which goes to a non-canonical or incorrect URL
   # is redirected to a canonical and correct one.
 
   Scenario: Player visits search URL with default post search parameter values
@@ -288,12 +288,18 @@ Feature: Photos
     When I go to the photos search page with the terms "did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
     Then the URL should be "/photos/search/did/activity/done-by/abcdefgh"
 
-  # TODO Dave combine these after rewriting redirection implementation
-
-  Scenario: Player visits search URL with invalid parameter values 1
-    When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish"
+  Scenario: Player visits search URL with unparseable parameters
+    When I go to the photos search page with the terms "did"
     Then the URL should be "/photos/search"
 
-  Scenario: Player visits search URL with invalid parameter values 2
-    When I go to the photos search page with the terms "game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
+  Scenario: Player visits search URL with unknown parameter
+    When I go to the photos search page with the terms "unknown/unknown"
+    Then the URL should be "/photos/search"
+
+  Scenario: Player visits search URL with familiar but invalid parameters
+    When I go to the photos search page with the terms "page/1/per-page/1"
+    Then the URL should be "/photos/search"
+
+  Scenario: Player visits search URL with invalid values of known parameters
+    When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
     Then the URL should be "/photos/search"

@@ -229,18 +229,18 @@ describe PhotoPhotosSupport do
     context "when searching for posts" do
       it "returns all photos" do
         create :photo
-        Photo.search({}, 'last-updated', '-', 1).length.should == 1
+        search.length.should == 1
       end
 
-      context "when specifying done-by" do
+      context "when specifying done_by" do
         it "returns a photo posted by the person with the given username" do
           photo = create :photo
-          Photo.search({ 'done-by' => photo.person.username }, 'last-updated', '-', 1).length.should == 1
+          search(done_by: photo.person.username).length.should == 1
         end
 
         it "ignores a photo posted by a person with a different username" do
           create :photo
-          Photo.search({ 'done-by' => 'xyz' }, 'last-updated', '-', 1).length.should == 0
+          search(done_by: 'xyz').length.should == 0
         end
 
       end
@@ -352,7 +352,7 @@ describe PhotoPhotosSupport do
 
         it "searches for multiple groups in different attributes" do
           create :photo, title: 'one two three', description: 'four five six'
-          Photo.search({ 'text' => [['two'], ['five']] }, 'last-updated', '-', 1).length.should == 1
+          search(text: [['two'], ['five']]).length.should == 1
         end
 
         it "ignores a photo none of whose title, description, tags or comments contains the given text" do
@@ -363,7 +363,7 @@ describe PhotoPhotosSupport do
         # It is a known bug that this method finds matches in HTML tag names and attributes. Fixing that would be hard.
 
         def photos_which_mention(*text)
-          Photo.search({ 'text' => [text] }, 'last-updated', '-', 1)
+          search text: [text]
         end
 
       end
@@ -371,73 +371,78 @@ describe PhotoPhotosSupport do
       context "when specifying game_status" do
         it "returns a photo with the given status" do
           create :photo, game_status: 'found'
-          Photo.search({ 'game-status' => %w(found) }, 'last-updated', '-', 1).length.should == 1
+          search(game_status:%w(found)).length.should == 1
         end
 
         it "searches for photos with any of multiple statuses" do
           create :photo, game_status: 'found'
           create :photo, game_status: 'revealed'
-          Photo.search({ 'game-status' => %w(found revealed) }, 'last-updated', '-', 1).length.should == 2
+          search(game_status:%w(found revealed)).length.should == 2
         end
 
         it "ignores a photo with a different status" do
           create :photo, game_status: 'found'
-          Photo.search({ 'game-status' => %w(unfound) }, 'last-updated', '-', 1).length.should == 0
+          search(game_status:%w(unfound)).length.should == 0
         end
 
       end
 
       it "searches in a date range" do
-        photos = [1, 2, 3].map { |day| create :photo, dateadded: Time.local(2014, 1, day).getutc }
-        Photo.search({ 'from-date' => '1/2/14', 'to-date' => '1/2/14' }, 'last-updated', '-', 1).should == [photos[1]]
+        photos = [1, 2, 3].map { |day| create :photo, dateadded: Time.utc(2014, 1, day) }
+        search(from_date: Time.utc(2014, 1, 2), to_date: Time.utc(2014, 1, 2)).should == [photos[1]]
       end
 
       it "searches by more than one criterion" do
         photo1 = create :photo, game_status: 'found'
         create :photo, person: photo1.person
         create :photo, game_status: 'found'
-        Photo.search({ 'game-status' => 'found', 'done-by' => photo1.person.username }, 'last-updated', '-', 1).length.should == 1
+        search(game_status:'found', done_by: photo1.person.username).length.should == 1
       end
 
       it "sorts by last-updated, -" do
         photo1 = create :photo, lastupdate: Time.utc(2012)
         photo2 = create :photo, lastupdate: Time.utc(2013)
-        Photo.search({}, 'last-updated', '-', 1).should == [photo2, photo1]
+        search(sorted_by: 'last-updated').should == [photo2, photo1]
       end
 
       it "sorts by last-updated, +" do
         photo1 = create :photo, lastupdate: Time.utc(2013)
         photo2 = create :photo, lastupdate: Time.utc(2012)
-        Photo.search({}, 'last-updated', '+', 1).should == [photo2, photo1]
+        search(sorted_by: 'last-updated', direction: '+').should == [photo2, photo1]
       end
 
       it "sorts by date-added, -" do
         photo1 = create :photo, dateadded: Time.utc(2012)
         photo2 = create :photo, dateadded: Time.utc(2013)
-        Photo.search({}, 'date-added', '-', 1).should == [photo2, photo1]
+        search(sorted_by: 'date-added').should == [photo2, photo1]
       end
 
       it "sorts by date-added, +" do
         photo1 = create :photo, dateadded: Time.utc(2013)
         photo2 = create :photo, dateadded: Time.utc(2012)
-        Photo.search({}, 'date-added', '+', 1).should == [photo2, photo1]
+        search(sorted_by: 'date-added', direction: '+').should == [photo2, photo1]
       end
 
       it "sorts by date-taken, -" do
         photo1 = create :photo, datetaken: Time.utc(2012)
         photo2 = create :photo, datetaken: Time.utc(2013)
-        Photo.search({}, 'date-taken', '-', 1).should == [photo2, photo1]
+        search(sorted_by: 'date-taken').should == [photo2, photo1]
       end
 
       it "sorts by date-taken, +" do
         photo1 = create :photo, datetaken: Time.utc(2013)
         photo2 = create :photo, datetaken: Time.utc(2012)
-        Photo.search({}, 'date-taken', '+', 1).should == [photo2, photo1]
+        search(sorted_by: 'date-taken', direction: '+').should == [photo2, photo1]
       end
 
-      it "paginates" do
-        2.times { create :photo }
-        Photo.search({}, 'last-updated', '-', 1, per_page: 1).length.should == 1
+      it "limits page length" do
+        photos = [1, 2].map { |day| create :photo, lastupdate: Time.utc(2014, 1, day) }
+        search(sorted_by: 'last-updated', per_page: 1).should == [photos.last] # note that direction = -
+      end
+
+      it "returns pages after 1" do
+        photos = [1, 2].map { |day| create :photo, lastupdate: Time.utc(2014, 1, day) }
+        search(sorted_by: 'last-updated', per_page: 1, page: 2).should == [photos[0]] # note that direction = -
       end
 
     end
@@ -445,51 +450,59 @@ describe PhotoPhotosSupport do
     context "when searching for activity" do
       let(:person) { create :person }
 
-      it "returns a photo posted by the person the activity is done-by" do
+      it "returns a photo posted by the person the activity is done_by" do
         photo = create :photo, person: person
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1).should == [photo]
+        search(did: 'activity', done_by: person.username).should == [photo]
       end
 
       it "ignores a photo posted by someone else" do
         create :photo
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1).should == []
+        search(did: 'activity', done_by: person.username).should == []
       end
 
-      it "returns a photo commented on by the person the activity is done-by" do
+      it "returns a photo commented on by the person the activity is done_by" do
         comment = create :comment, flickrid: person.flickrid, username: person.username
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1).should == [comment.photo]
+        search(did: 'activity', done_by: person.username).should == [comment.photo]
       end
 
       it "ignores a photo commented on by someone else" do
         commenter = create :person
         create :comment, flickrid: commenter.flickrid, username: commenter.username
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1).should == []
+        search(did: 'activity', done_by: person.username).should == []
       end
 
       it "searches in a date range" do
-        photos = [1, 2, 4].map { |day| create :photo, person: person, datetaken: Time.local(2014, 1, day).getutc }
-        photo = create :photo, datetaken: Time.local(2014, 1, 1).getutc
+        photos = [1, 2, 4].map { |day| create :photo, person: person, datetaken: Time.utc(2014, 1, day) }
+        photo = create :photo, datetaken: Time.utc(2014, 1, 1)
         comments = [1, 3, 4].map { |day| create :comment, flickrid: person.flickrid, username: person.username, commented_at: Time.local(2014, 1, day).getutc }
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username,
-          'from-date' => '1/2/14', 'to-date' => '1/3/14' }, 'last-updated', '-', 1).should ==
+        search(did: 'activity', done_by: person.username, from_date: Time.utc(2014, 1, 2), to_date: Time.utc(2014, 1, 3)).should ==
           [comments[1].photo, photos[1]]
       end
 
       it "orders by activity date, descending" do
         photos = [1, 2].map { |day| create :photo, person: person, datetaken: Time.local(2014, 1, day).getutc }
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1).should == photos.reverse
+        search(did: 'activity', done_by: person.username).should == photos.reverse
       end
 
       it "orders by activity date, ascending" do
         photos = [1, 2].map { |day| create :photo, person: person, datetaken: Time.local(2014, 1, day).getutc }
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '+', 1).should == photos
+        search(did: 'activity', done_by: person.username, direction: '+').should == photos
       end
 
-      it "paginates" do
-        2.times { create :photo, person: person }
-        Photo.search({ 'did' => 'activity', 'done-by' => person.username }, 'last-updated', '-', 1, per_page: 1).length.should == 1
+      it "limits page length" do
+        photos = [1, 2].map { |day| create :photo, person: person, datetaken: Time.utc(2014, 1, day) }
+        search(did: 'activity', done_by: person.username, per_page: 1).should == [photos.last] # note that direction = -
       end
 
+      it "returns pages after 1" do
+        photos = [1, 2].map { |day| create :photo, person: person, datetaken: Time.utc(2014, 1, day) }
+        search(did: 'activity', done_by: person.username, per_page: 1, page: 2).should == [photos[0]] # note that direction = -
+      end
+
+    end
+
+    def search(params = {})
+      Photo.search Photo.search_defaults(params).merge(params)
     end
 
   end

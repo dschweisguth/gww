@@ -54,7 +54,7 @@ GWW.photos.search = function () {
     });
   }
 
-  // This function must return a canonical search URI to minimize redirects
+  // This function and PhotosController#uri_params must agree on the canonical parameter order
   function searchURI(form) {
     var path = "/photos/search";
     var did = form.find('select[name="did"]').val();
@@ -65,13 +65,13 @@ GWW.photos.search = function () {
     if (doneBy.val() !== "") {
       path += "/done-by/" + encodeURIComponent(doneBy.val());
     }
-    var gameStatus = form.find('select[name="game_status[]"]');
-    if (gameStatus.val() !== null && gameStatus.val() !== "") {
-      path += "/game-status/" + gameStatus.val(); // Javascript automatically joins arrays with ,
-    }
     var text = form.find('[name="text"]');
     if (text.val() !== "") {
       path += "/text/" + encodeURIComponent(text.val());
+    }
+    var gameStatus = form.find('select[name="game_status[]"]');
+    if (gameStatus.val() !== null && gameStatus.val() !== "") {
+      path += "/game-status/" + gameStatus.val(); // Javascript automatically joins arrays with ,
     }
     var from_date = form.find('[name="from_date"]');
     if (from_date.val() !== "") {

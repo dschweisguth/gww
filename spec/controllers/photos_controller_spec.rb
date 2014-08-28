@@ -116,11 +116,25 @@ describe PhotosController do
     end
   end
 
-  describe '#search' do
-    it "doesn't suppress an ArgumentError other than 'invalid date'" do
-      stub(Date).parse { raise ArgumentError, "dated validation" }
-      lambda { get :search, terms: 'from-date/1-1-2014/to-date/1-2-2014' }.should raise_error(ArgumentError, "dated validation")
+  # TODO Dave fix what happens when someone goes to /photos/search_data (which routes to /photos/:id)
+  describe '#search_data' do
+    it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
+      get :search_data, segments: 'did/posted/page/1'
+      response.should redirect_to search_photos_data_path('page/1')
     end
+
+    it "rejects a URL without a page number" do
+      get :search_data, segments: 'sorted-by/date-added'
+      response.should redirect_to search_photos_data_path('sorted-by/date-added/page/1')
+    end
+
+    it "rejects a URL with a per-page count" do
+      get :search_data, segments: 'page/1/per-page/1'
+      response.should redirect_to search_photos_data_path('page/1')
+    end
+
+    # TODO Dave reject page numbers less than 0
+
   end
 
   describe '#show' do
@@ -148,7 +162,7 @@ describe PhotosController do
       response.body.should include comment.comment_text
       response.body.should include 'This photo was taken at 12:00 AM, January  1, 2009'
       response.body.should have_css %Q(a[href="#{url_for_flickr_photos photo.person}archives/date-taken/2009/01/01/"]), text: 'archives'
-      response.body.should have_css %Q(a[href="#{search_photos_with_terms_path "did/activity/done-by/#{photo.person.username}/from-date/12-31-2008/to-date/1-2-2009"}"]), text: 'activity'
+      response.body.should have_css %Q(a[href="#{search_photos_path "did/activity/done-by/#{photo.person.username}/from-date/12-31-2008/to-date/1-2-2009"}"]), text: 'activity'
       response.body.should include 'It was added to the group at 12:00 AM, January  1, 2010.'
       response.body.should include "This photo hasn't been found or revealed yet"
       response.body.should_not include 'It was mapped by the photographer'

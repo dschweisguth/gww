@@ -19,12 +19,10 @@ GWW::Application.routes.draw do
     get :nemeses, :top_guessers, on: :collection
   end
 
-  get 'photos/search/*terms' => 'photos#search', as: :search_photos_with_terms
-  get 'photos/search' => 'photos#search', as: :search_photos # so it works without a term
+  get 'photos/search(/*segments)' => 'photos#search', as: :search_photos
   get 'photos/autocomplete_usernames/*terms' => 'photos#autocomplete_usernames'
   get 'photos/autocomplete_usernames' => 'photos#autocomplete_usernames', as: :autocomplete_photos_usernames # so it works without a term
-  get 'photos/search_data/*terms/page/:page' => 'photos#search_data', as: :search_photos_data_with_terms # TODO Dave review routing specs
-  get 'photos/search_data/page/:page' => 'photos#search_data', as: :search_photos_data # so it works without a term
+  get 'photos/search_data/*segments' => 'photos#search_data', as: :search_photos_data
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', as: :photos
   resources :photos, only: %(show) do
     get :map_popup, on: :member

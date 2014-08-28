@@ -2,7 +2,7 @@
   <%# The outermost div is there so that the ID is at the top edge of the row so that we can scroll to the top edge %>
   <%# of the row instead of to the top edge of the image, which isn't always at the top edge of the row. %>
   <%# If we switch to images of uniform height this div can go away. %>
-  <div<% if i == 0 %> id="<%= params[:page] %>"<% end %> class="image<% if @display_fully %> full<% end %>">
+  <div<% if i == 0 %> id="<%= @search_params[:page] %>"<% end %> class="image<% if @display_fully %> full<% end %>">
     <div>
       <a href="<%= url_for_flickr_photo_in_pool(photo) %>"><%= titled_image_tag url_for_flickr_image(photo, 'm'), "" %></a>
       <div class="bg"></div>
@@ -35,7 +35,7 @@
           <% end %>
         </ul>
       <% end %>
-      <% matching_comments = @comment_selection_criterion == 'activity' ? photo.comments_made_when_acted_on : photo.comments_that_match(@text_terms) %>
+      <% matching_comments = @search_params[:did] == 'activity' ? photo.comments_made_when_acted_on : photo.comments_that_match(@text_terms) %>
       <% if matching_comments.any? %>
         <br/>
         <% matching_comments.each do |comment| %>

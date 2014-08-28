@@ -56,7 +56,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   response.body.should =~ /Top posters in the last week:/
   response.body.should =~ /Top posters in the last month:/
   response.body.should =~ /6 photos have been added to the pool since the previous report/
-  response.body.should have_link '1234 unfound photos', href: search_photos_with_terms_path('game_status/unfound,unconfirmed')
+  response.body.should have_link '1234 unfound photos', href: search_photos_path('game_status/unfound,unconfirmed')
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
   participation = '2 people have made correct guesses. ' +
     '1 people have put at least one photo in the pool but not guessed any photos correctly. ' +

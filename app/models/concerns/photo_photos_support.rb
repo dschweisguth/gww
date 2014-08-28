@@ -53,6 +53,7 @@ module PhotoPhotosSupport
         photos.to_a.pop
       end
       first_photo = oldest
+      # noinspection RubyResolve
       photos.each { |photo| photo.prepare_for_map first_photo.dateadded }
       as_map_json partial, bounds, photos
     end
@@ -71,31 +72,42 @@ module PhotoPhotosSupport
       'last-updated' => 'lastupdate'
     }
 
-    def search(terms, sorted_by, direction, page, options = {})
+    def search_defaults(params)
+      {
+        did: 'posted',
+        sorted_by: params[:did] == 'activity' ? 'date-taken' : 'last-updated',
+        direction: '-',
+        page: 1,
+        per_page: 30
+      }
+    end
+
+    def search(did:, done_by: nil, text: nil, game_status: nil, from_date: nil, to_date: nil,
+      sorted_by:, direction:, page:, per_page:)
       query = all
-      if terms['did'] == 'activity' && terms.has_key?('done-by')
+      if did == 'activity' && done_by
         query = query.select("*", "activities.acted_at acted_on_at")
           .joins(%q(join (
             select f1.id, f1.datetaken acted_at from photos f1 join people p on p.id = f1.person_id and p.username = %s
             union
             select c.photo_id, c.commented_at from comments c where c.username = %s) activities on activities.id = photos.id
-          ) % Array.new(2, ActiveRecord::Base.sanitize(terms['done-by'])))
-        if terms.has_key? 'from-date'
-          query = query.where "? <= activities.acted_at", Date.parse_utc_time(terms['from-date']) # TODO Dave parse dates in parsed_terms?
+          ) % Array.new(2, ActiveRecord::Base.sanitize(done_by)))
+        if from_date
+          query = query.where "? <= activities.acted_at", from_date
         end
-        if terms.has_key? 'to-date'
-          query = query.where "activities.acted_at < ?", Date.parse_utc_time(terms['to-date']) + 1.day
+        if to_date
+          query = query.where "activities.acted_at < ?", to_date + 1.day
         end
         query = query
           .order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}")
           .includes(:person, :tags, :comments)
         # .includes mostly doesn't work here; in general it seems not to work with queries that return the same object
-        # more than once. I posted to rubyonrails-talk 5 Aug 2014 to see whether this is a bug.
+        # more than once. I posted to rubyonrails-talk 5 Aug 2014 to see whether this is a bug. # TODO Dave check back
       else
-        if terms.has_key? 'done-by'
-          query = query.joins(:person).where({ people: { username: terms['done-by'] } })
+        if done_by
+          query = query.joins(:person).where({ people: { username: done_by } })
         end
-        terms['text'].try :each do |words|
+        text.try :each do |words|
           clauses = [
             "title regexp ?",
             "description regexp ?",
@@ -106,20 +118,20 @@ module PhotoPhotosSupport
           query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" })
             .includes :tags, :comments # because we display them when it's a text search
         end
-        if terms.has_key? 'game-status'
-          query = query.where game_status: terms['game-status']
+        if game_status
+          query = query.where game_status: game_status
         end
-        if terms.has_key? 'from-date'
-          query = query.where "? <= dateadded", Date.parse_utc_time(terms['from-date'])
+        if from_date
+          query = query.where "? <= dateadded", from_date
         end
-        if terms.has_key? 'to-date'
-          query = query.where "dateadded < ?", Date.parse_utc_time(terms['to-date']) + 1.day
+        if to_date
+          query = query.where "dateadded < ?", to_date + 1.day
         end
         query = query
           .order("#{ORDERS[sorted_by]} #{direction == '+' ? 'asc' : 'desc'}")
           .includes(:person)
       end
-      query.paginate page: page, per_page: options[:per_page] || 30
+      query.paginate page: page, per_page: per_page
     end
 
   end

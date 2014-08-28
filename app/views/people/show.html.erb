@@ -11,8 +11,8 @@
 <a href="<%= url_for_flickr_photos @person %>favorites/">favorites</a></p>
 
 <p>In Guess Where SF:
-<%= link_to "unfounds", search_photos_with_terms_path("game_status/unfound,unconfirmed/done-by/#{@person.username}") %> -
-<%= link_to "posts", search_photos_with_terms_path("done-by/#{@person.username}") %> -
+<%= link_to "unfounds", search_photos_path("game_status/unfound,unconfirmed/done-by/#{@person.username}") %> -
+<%= link_to "posts", search_photos_path("done-by/#{@person.username}") %> -
 <%= link_to "guesses", person_guesses_path(@person) %> -
 <%= link_to "comments", person_comments_path(@person, 1) %> -
 <%= link_to "map of posts and guesses", person_map_path(@person) %></p>

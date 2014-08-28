@@ -8,7 +8,7 @@
         (<%= link_to 'archives',
           "#{url_for_flickr_photos @photo.person}archives/date-taken/#{datetaken.getlocal.strftime '%Y/%m/%d'}/" %>,
         <%= link_to 'activity',
-          search_photos_with_terms_path("did/activity/done-by/#{@photo.person.username}/from-date/#{search_url_date(datetaken - 1.day)}/to-date/#{search_url_date(datetaken + 1.day)}") %>).<br/>
+          search_photos_path("did/activity/done-by/#{@photo.person.username}/from-date/#{search_url_date(datetaken - 1.day)}/to-date/#{search_url_date(datetaken + 1.day)}") %>).<br/>
       It was added to the group at <%= verbose_date @photo.dateadded %>.
     <% else %>
       This photo was added to the group at <%= verbose_date @photo.dateadded %>.
