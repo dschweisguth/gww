@@ -2,6 +2,7 @@ describe PeopleController do
 
   describe 'autocomplete_usernames' do
     it { should have_named_route :autocomplete_usernames, "/autocomplete_usernames" }
+    it { should have_named_route :autocomplete_usernames, 'foo', "/autocomplete_usernames/foo" }
     it { should route(:get, '/autocomplete_usernames').to controller: 'people', action: 'autocomplete_usernames' }
     it { should route(:get, '/autocomplete_usernames/foo').to controller: 'people', action: 'autocomplete_usernames', term: 'foo' }
   end

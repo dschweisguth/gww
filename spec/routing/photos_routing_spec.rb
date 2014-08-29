@@ -6,16 +6,11 @@ describe PhotosController do
       action: 'index', sorted_by: 'foo', order: 'bar', page: '1') }
   end
 
-  %w{ map map_json unfound_data }.each do |action|
+  %w{map map_json unfound_data}.each do |action|
     describe action do
       it { should have_named_route "#{action}_photos", "/photos/#{action}" }
       it { should route(:get, "/photos/#{action}").to action: action }
     end
-  end
-
-  describe 'show' do
-    it { should have_named_route :photo, 666, '/photos/666' }
-    it { should route(:get, '/photos/666').to action: 'show', id: '666' }
   end
 
   describe 'map_popup' do
@@ -34,6 +29,18 @@ describe PhotosController do
     it { should have_named_route :search_photos_data, 'page/1', '/photos/search_data/page/1' }
     it { should route(:get, '/photos/search_data/page/1').to action: 'search_data', segments: 'page/1' }
     it { should route(:get, '/photos/search_data/foo/bar/page/1').to action: 'search_data', segments: 'foo/bar/page/1' }
+  end
+
+  describe '#autocomplete_usernames' do
+    it { should have_named_route :autocomplete_photos_usernames, "/photos/autocomplete_usernames" }
+    it { should have_named_route :autocomplete_photos_usernames, 'foo', "/photos/autocomplete_usernames/foo" }
+    it { should route(:get, '/photos/autocomplete_usernames').to controller: 'photos', action: 'autocomplete_usernames' }
+    it { should route(:get, '/photos/autocomplete_usernames/foo').to controller: 'photos', action: 'autocomplete_usernames', terms: 'foo' }
+  end
+
+  describe 'show' do
+    it { should have_named_route :photo, 666, '/photos/666' }
+    it { should route(:get, '/photos/666').to action: 'show', id: '666' }
   end
 
 end
