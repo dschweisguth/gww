@@ -88,6 +88,14 @@ module PhotosSearchSupport
       form_params.delete 'direction'
     end
 
+    if form_params.has_key? 'page'
+      begin
+        Integer form_params['page']
+      rescue ArgumentError
+        form_params.delete 'page'
+      end
+    end
+
     form_params
   end
 

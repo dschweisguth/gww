@@ -132,13 +132,16 @@ describe PhotosController do
       response.should redirect_to search_photos_data_path('sorted-by/date-added/page/1')
     end
 
+    it "removes an invalid page number" do
+      get :search_data, segments: 'page/x'
+      response.should redirect_to search_photos_data_path('page/1')
+    end
+
     # This guards against per-page leaking in to the URL from Photo#search_defaults
     it "removes a per-page count" do
       get :search_data, segments: 'page/1/per-page/1'
       response.should redirect_to search_photos_data_path('page/1')
     end
-
-    # TODO Dave reject page numbers less than 0
 
   end
 
