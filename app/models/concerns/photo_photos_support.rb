@@ -102,7 +102,9 @@ module PhotoPhotosSupport
           .order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}")
           .includes(:person, :tags, :comments)
         # .includes mostly doesn't work here; in general it seems not to work with queries that return the same object
-        # more than once. I posted to rubyonrails-talk 5 Aug 2014 to see whether this is a bug. # TODO Dave check back
+        # more than once. I posted to rubyonrails-talk to see whether this is a bug and got no response:
+        # https://groups.google.com/forum/#!searchin/rubyonrails-talk/includes/rubyonrails-talk/Pn1weH5Kz7Y/BCSS_HUdBuoJ
+        # This Rails issue might be the same: https://github.com/rails/rails/issues/16436 # TODO Dave check back
       else
         if done_by
           query = query.joins(:person).where({ people: { username: done_by } })
