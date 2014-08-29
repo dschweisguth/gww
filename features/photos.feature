@@ -3,8 +3,6 @@ Feature: Photos
   I want to search for and sort photos by various criteria
   So that I can find the few photos I'm interested in among the thousands in the database
 
-  # TODO Dave reject unknown usernames
-
   @javascript
   Scenario: Player searches for all photos
     Given there is a Flickr update
@@ -302,4 +300,9 @@ Feature: Photos
 
   Scenario: Player visits search URL with invalid values of known parameters
     When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
+    Then the URL should be "/photos/search"
+
+  Scenario: Player visits search URL with unknown username
+    Given there is a player "abcdefgh"
+    When I go to the photos search page with the terms "done-by/ijklmnop"
     Then the URL should be "/photos/search"

@@ -58,6 +58,10 @@ module PhotosSearchSupport
       end
     end
 
+    if form_params.has_key?('done-by') && !Person.exists?(username: form_params['done-by'])
+      form_params.delete 'done-by'
+    end
+
     if form_params['game-status'].try(:any?) { |game_status| !%w(unfound unconfirmed found revealed).include?(game_status) }
       form_params.delete 'game-status'
     end
