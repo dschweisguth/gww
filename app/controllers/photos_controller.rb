@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  include MultiPhotoMapControllerSupport, PhotosSearchSupport
+  include MultiPhotoMapControllerSupport
 
   caches_page :index
   def index
@@ -31,21 +31,20 @@ class PhotosController < ApplicationController
   def search
     # TODO Dave fix nekomusume
     begin
-      @search_params = add_search_defaults search_form_params
-    rescue PhotosSearchSupport::NonCanonicalSegmentsError => e
+      @search_params = SearchParamsParser.new.form_params params[:segments]
+    rescue SearchParamsParser::NonCanonicalSegmentsError => e
       redirect_to search_photos_path(e.canonical_segments)
     end
   end
 
   def search_data
     begin
-      form_params = search_form_params 'page'
-      @search_params = search_form_params_to_model add_search_defaults(form_params, 'page', 'per-page')
+      @search_params = SearchDataParamsParser.new.model_params params[:segments]
       @photos = Photo.search(@search_params).to_a
       @text_terms = @search_params[:text] || []
       @display_fully = @text_terms.any? || @search_params[:did] == 'activity'
       render layout: false
-    rescue PhotosSearchSupport::NonCanonicalSegmentsError => e
+    rescue SearchDataParamsParser::NonCanonicalSegmentsError => e
       redirect_to search_photos_data_path(e.canonical_segments)
     end
   end

@@ -1,5 +1,4 @@
-module PhotosSearchSupport
-  private
+class BaseSearchParamsParser
 
   class NonCanonicalSegmentsError < StandardError
     attr_accessor :canonical_segments
@@ -10,22 +9,25 @@ module PhotosSearchSupport
 
   end
 
-  def search_form_params(*optional_param_names)
-    uri_components = (params[:segments] || '').split '/'
+  private
+
+  def existing_form_params(segments, *optional_param_names)
+    segments ||= ''
+    uri_components = segments.split '/'
     uri_params = uri_components.length.even? ? uri_components.each_slice(2).to_h : {}
-    form_params = remove_invalid search_uri_params_to_form uri_params
+    form_params = remove_invalid uri_params_to_form uri_params
     canonical_uri_params = uri_params.select { |key, _value| form_params.has_key?(key) }
     # Add params that must be in the canonical URL even if they're not in the original URL
-    canonical_uri_params = add_search_defaults canonical_uri_params, *optional_param_names
+    canonical_uri_params = add_defaults canonical_uri_params, *optional_param_names
     canonical_uri_params = remove_uri_defaults canonical_uri_params
-    canonical_segments = segments canonical_uri_params, *optional_param_names
-    if canonical_segments != (params[:segments] || '')
+    canonical_segments = segments_from canonical_uri_params, *optional_param_names
+    if canonical_segments != segments
       raise NonCanonicalSegmentsError, canonical_segments
     end
     form_params
   end
 
-  def search_uri_params_to_form(uri_params)
+  def uri_params_to_form(uri_params)
     uri_params = uri_params.dup
     if uri_params['game-status']
       uri_params['game-status'] = uri_params['game-status'].split ','
@@ -106,14 +108,14 @@ module PhotosSearchSupport
   def remove_uri_defaults(uri_params)
     # Don't remove page or per-page regardless of value.
     # page is required in search_data URLs and invalid in search URLs. per-page is invalid in all URLs.
-    param_names_to_remove = search_param_names
-    default_params = search_defaults(uri_params).select { |key, _value| param_names_to_remove.include? key }
+    param_names_to_remove = param_names
+    default_params = defaults(uri_params).select { |key, _value| param_names_to_remove.include? key }
     uri_params.reject { |key, value| value == default_params[key] }
   end
 
   # This method and GWW.photos.search.searchURI must agree on the canonical parameter order
-  def segments(uri_params, *optional_param_names)
-    search_param_names(*optional_param_names).each_with_object("") do |name, segments|
+  def segments_from(uri_params, *optional_param_names)
+    param_names(*optional_param_names).each_with_object("") do |name, segments|
       value = uri_params[name]
       if value
         unless segments.blank?
@@ -124,34 +126,25 @@ module PhotosSearchSupport
     end
   end
 
-  def add_search_defaults(form_params, *optional_param_names)
-    param_names_to_add = search_param_names(*optional_param_names)
-    search_defaults(form_params).select { |key, _value| param_names_to_add.include? key }.merge form_params
+  def add_defaults(form_params, *optional_param_names)
+    param_names_to_add = param_names(*optional_param_names)
+    defaults(form_params).select { |key, _value| param_names_to_add.include? key }.merge form_params
   end
 
-  def search_param_names(*optional_names)
+  def param_names(*optional_names)
     %w(did done-by text game-status from-date to-date sorted-by direction) + optional_names
   end
 
-  def search_defaults(uri_params)
-    Photo.search_defaults(search_uri_keys_to_model uri_params).map { |key, value| [key.to_s.gsub(/_/, '-'), value] }.to_h
+  def defaults(uri_params)
+    Photo.search_defaults(uri_keys_to_model uri_params).transform_keys { |key| key.to_s.gsub /_/, '-' }
   end
 
-  def search_form_params_to_model(form_params)
-    model_params = search_uri_keys_to_model form_params
-    if model_params[:text]
-      model_params[:text] = model_params[:text].split(/\s*,\s*/).map &:split
-    end
-    %i(from_date to_date).each do |name|
-      if model_params[name]
-        model_params[name] = Date.parse_utc_time model_params[name]
-      end
-    end
-    model_params
+  def uri_keys_to_model(uri_params)
+    uri_params.transform_keys { |key| key.gsub(/-/, '_').to_sym }
   end
 
-  def search_uri_keys_to_model(uri_params)
-    uri_params.map { |key, value| [key.gsub(/-/, '_').to_sym, value] }.to_h
+  def transform_keys(hash)
+    hash.map { |key, value| [yield(key), value] }.to_h
   end
 
 end
