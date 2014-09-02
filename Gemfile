@@ -33,7 +33,7 @@ group :test do
   gem 'rr', '1.1.2', require: false
   gem 'rspec-rails', '2.99.0'
   gem 'shoulda-matchers', '2.6.1', require: false
-  gem 'simplecov', '0.7.1', require: false
+  gem 'simplecov', '0.9.0', require: false
 end
 
 group :production do

@@ -143,6 +143,7 @@ class BaseSearchParamsParser
     uri_params.transform_keys { |key| key.gsub(/-/, '_').to_sym }
   end
 
+  # TODO Dave either cover this method with a unit test that calls it directly or inline it (and report a bug)
   def transform_keys(hash)
     hash.map { |key, value| [yield(key), value] }.to_h
   end
