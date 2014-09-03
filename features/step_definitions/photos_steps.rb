@@ -65,10 +65,6 @@ Then /^the "([^"]+)" field should be empty$/ do |field|
   find_field(field).value.should be_blank
 end
 
-Then /^the date fields should be empty$/ do
-  %w(to_date from_date).each { |field| find_field(field).value.should be_blank }
-end
-
 Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, value|
   find("[name=#{field}] option[selected]").text.should == value
 end

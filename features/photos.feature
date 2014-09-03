@@ -164,28 +164,6 @@ Feature: Photos
     But I shouid not see a search result for the photo added on "1/3/14"
 
   @javascript
-  Scenario: Player searches with invalid dates
-    Given there is a photo
-    When I go to the photos search page
-    And I fill in "from_date" with "invalid"
-    And I fill in "to_date" with "invalid"
-    And I press the "Search" button
-    Then the URL should be "/photos/search"
-    And the date fields should be empty
-    And I should see 1 image-only search result
-
-  @javascript
-  Scenario: Player searches in a backwards date range
-    Given there is a photo
-    When I go to the photos search page
-    And I fill in "from_date" with "1/2/14"
-    And I fill in "to_date" with "1/1/14"
-    And I press the "Search" button
-    Then the URL should be "/photos/search"
-    And the date fields should be empty
-    And I should see 1 image-only search result
-
-  @javascript
   Scenario: Player searches for activity
     Given there is a player "abcdefgh"
     And player "abcdefgh" took a photo on "1/1/14"
@@ -245,64 +223,6 @@ Feature: Photos
     And I should see the comment "Today is 1/3/14" on full search result 1
     And full search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
 
-  @javascript
-  Scenario: Player tries to search for activity without a username
-    When I go to the photos search page
-    And I select "Activity" from "did"
-    And I press the "Search" button
-    Then the URL should be "/photos/search"
-    And the "did" option "Posted" should be selected
-    And the "sorted_by" option "Last updated" should be selected
-    And the "direction" option "-" should be selected
-
-  @javascript
-  Scenario: Player fills in fields incompatible with searching by activity
-    Given there is a player "abcdefgh"
-    When I go to the photos search page
-    And I select "Activity" from "did"
-    And I fill in "done_by" with "abcdefgh"
-    And I fill in "text" with "Fort Point"
-    And I select "unfound" from "game_status"
-    And I select "Date added" from "sorted_by"
-    And I press the "Search" button
-    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh"
-    And the "did" option "Activity" should be selected
-    And the "done_by" field should contain "abcdefgh"
-    And the "text" field should be empty
-    And the game statuses "" should be selected
-    And the "sorted_by" option "Date taken" should be selected
-    And the "direction" option "-" should be selected
-
-  # The form always submits to a canonical URL to minimize redirects.
-  # The following scenarios demonstrate that a client which goes to a non-canonical or incorrect URL
-  # is redirected to a canonical and correct one.
-
-  Scenario: Player visits search URL with default post search parameter values
-    When I go to the photos search page with the terms "did/posted/sorted-by/last-updated/direction/-"
-    Then the URL should be "/photos/search"
-
-  Scenario: Player visits search URL with default activity search parameter values
-    Given there is a player "abcdefgh"
-    When I go to the photos search page with the terms "did/activity/done-by/abcdefgh/sorted-by/date-taken/direction/-"
-    Then the URL should be "/photos/search/did/activity/done-by/abcdefgh"
-
-  Scenario: Player visits search URL with unparseable parameters
+  Scenario: Player visits invalid or noncanonical URL
     When I go to the photos search page with the terms "did"
-    Then the URL should be "/photos/search"
-
-  Scenario: Player visits search URL with unknown parameter
-    When I go to the photos search page with the terms "unknown/unknown"
-    Then the URL should be "/photos/search"
-
-  Scenario: Player visits search URL with familiar but invalid parameters
-    When I go to the photos search page with the terms "page/1/per-page/1"
-    Then the URL should be "/photos/search"
-
-  Scenario: Player visits search URL with invalid values of known parameters
-    When I go to the photos search page with the terms "did/something/game-status/unpossible/from-date/not-a-date/to-date/not-one-either/sorted-by/gibberish/direction/nonsense"
-    Then the URL should be "/photos/search"
-
-  Scenario: Player visits search URL with unknown username
-    Given there is a player "abcdefgh"
-    When I go to the photos search page with the terms "done-by/ijklmnop"
     Then the URL should be "/photos/search"
