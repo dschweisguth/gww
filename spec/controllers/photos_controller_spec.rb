@@ -125,31 +125,9 @@ describe PhotosController do
 
   describe '#search_data' do
     it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
-      get :search_data, segments: 'did/posted/page/1'
-      response.should redirect_to search_photos_data_path('page/1')
-    end
-
-    it "handles a URI with no search parameters" do
       get :search_data
       response.should redirect_to search_photos_data_path('page/1')
     end
-
-    it "adds a page number" do
-      get :search_data, segments: 'sorted-by/date-added'
-      response.should redirect_to search_photos_data_path('sorted-by/date-added/page/1')
-    end
-
-    it "removes an invalid page number" do
-      get :search_data, segments: 'page/x'
-      response.should redirect_to search_photos_data_path('page/1')
-    end
-
-    # This guards against per-page leaking in to the URL from Photo#search_defaults
-    it "removes a per-page count" do
-      get :search_data, segments: 'page/1/per-page/1'
-      response.should redirect_to search_photos_data_path('page/1')
-    end
-
   end
 
   describe '#show' do
