@@ -116,6 +116,13 @@ describe PhotosController do
     end
   end
 
+  describe '#search' do
+    it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
+      get :search, segments: 'did'
+      response.should redirect_to search_photos_path
+    end
+  end
+
   describe '#search_data' do
     it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
       get :search_data, segments: 'did/posted/page/1'

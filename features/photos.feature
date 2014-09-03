@@ -1,9 +1,9 @@
+@javascript
 Feature: Photos
   As a player
   I want to search for and sort photos by various criteria
   So that I can find the few photos I'm interested in among the thousands in the database
 
-  @javascript
   Scenario: Player searches for all photos
     Given there is a Flickr update
     And there is a score report
@@ -21,7 +21,6 @@ Feature: Photos
     And the "direction" option "-" should be selected
     And I should see an image-only search result for the photo
 
-  @javascript
   Scenario: Player searches with non-default sorted-by and direction
     Given there is a photo added on "1/2/14"
     And there is a photo added on "1/1/14"
@@ -36,7 +35,6 @@ Feature: Photos
     And image-only search result 1 should be the photo added on "1/1/14"
     And image-only search result 2 should be the photo added on "1/2/14"
 
-  @javascript
   Scenario: Player searches for a given user's photos
     Given there is a player "abcdefgh"
     And player "abcdefgh" has a photo
@@ -49,7 +47,6 @@ Feature: Photos
     And the "done_by" field should contain "abcdefgh"
     And I should see 1 image-only search result
 
-  @javascript
   Scenario: Player searches for a string which matches only a title
     Given there is a photo
     And the photo's "title" is "Fort Point Title"
@@ -67,7 +64,6 @@ Feature: Photos
     But I should not see the comment
 
   # This scenario is necessary because there's no way to tell a highlight in a comment from one in a different field
-  @javascript
   Scenario: Player searches for a string which matches only a comment
     Given there is a photo
     And the photo has a comment "Fort Point Comment"
@@ -78,7 +74,6 @@ Feature: Photos
     And I should see the photo's description
     And I should see the comment with "Fort" and "Point" highlighted
 
-  @javascript
   Scenario: Player searches for a string which matches every field of a photo
     Given there is a photo
     And the photo's "title" is "Fort Point Title"
@@ -93,7 +88,6 @@ Feature: Photos
     And I should see the tag with "Fort" and "Point" highlighted
     And I should see the comment with "Fort" and "Point" highlighted
 
-  @javascript
   Scenario: Player searches for a two-word string each word of which matches a different one of a photo's tags
     Given there is a photo
     And the photo has a tag "Fort Tag"
@@ -104,7 +98,6 @@ Feature: Photos
     Then I should see a tag with "Fort" highlighted
     And I should see a tag with "Point" highlighted
 
-  @javascript
   Scenario: Player searches for a comma-separated string each part of which matches a different one of a photo's comments
     Given there is a photo
     And the photo has a comment "It's a super-spectacular day"
@@ -115,7 +108,6 @@ Feature: Photos
     Then I should see "It's a super-spectacular day" with "spectacular" highlighted
     And I should see "I thought gentrification meant men dressing themselves carefully" with "gentrification" highlighted
 
-  @javascript
   Scenario: Player searches for unfound or unconfirmed photos
     Given there is an unfound photo
     And there is an unconfirmed photo
@@ -130,7 +122,6 @@ Feature: Photos
     And I should see 2 image-only search results
 
   # This scenario demonstrates that many search terms can be combined
-  @javascript
   Scenario: Player searches for a given user's unfound or unconfirmed photos
     Given there is a player "abcdefgh"
     And player "abcdefgh" has an unfound photo
@@ -145,7 +136,6 @@ Feature: Photos
     And the game statuses "unfound,unconfirmed" should be selected
     And I should see 1 image-only search result
 
-  @javascript
   Scenario: Player searches in a date range
     Given there is a photo added on "12/31/13"
     Given there is a photo added on "1/1/14"
@@ -163,7 +153,6 @@ Feature: Photos
     And I should see an image-only search result for the photo added on "1/2/14"
     But I shouid not see a search result for the photo added on "1/3/14"
 
-  @javascript
   Scenario: Player searches for activity
     Given there is a player "abcdefgh"
     And player "abcdefgh" took a photo on "1/1/14"
@@ -184,7 +173,6 @@ Feature: Photos
     And full search result 2 should be player "abcdefgh"'s photo
     And I should see player "abcdefgh"'s comment on player "ijklmnop"'s photo
 
-  @javascript
   Scenario: Player searches for activity and finds comments by the same user on different photos
     Given there is a player "abcdefgh"
     And player "abcdefgh" has a photo
@@ -201,7 +189,6 @@ Feature: Photos
     And I should see the comment "Today is 1/1/14" on full search result 2
     But I should not see the comment "Today is 1/2/14" on full search result 2
 
-  @javascript
   Scenario: Player searches for activity in a date range
     Given there is a player "abcdefgh"
     And there is a player "ijklmnop"
@@ -222,7 +209,3 @@ Feature: Photos
     And full search result 1 should be player "ijklmnop"'s photo
     And I should see the comment "Today is 1/3/14" on full search result 1
     And full search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
-
-  Scenario: Player visits invalid or noncanonical URL
-    When I go to the photos search page with the terms "did"
-    Then the URL should be "/photos/search"
