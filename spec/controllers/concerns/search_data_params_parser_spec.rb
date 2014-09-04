@@ -7,8 +7,8 @@ describe 'SearchDataParamsParser' do
         did: 'posted',
         sorted_by: 'last-updated',
         direction: '-',
-        page: '1',
-        per_page: 30 # TODO Dave that's annoying
+        page: 1,
+        per_page: 30
     end
 
     # When there are no segments params[:segments] is nil, not ''.

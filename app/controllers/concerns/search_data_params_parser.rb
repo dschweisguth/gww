@@ -16,6 +16,9 @@ class SearchDataParamsParser < BaseSearchParamsParser
         model_params[name] = Date.parse_utc_time model_params[name]
       end
     end
+    if model_params[:page]
+      model_params[:page] = model_params[:page].to_i
+    end
     model_params
   end
 
