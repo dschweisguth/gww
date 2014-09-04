@@ -84,7 +84,7 @@ describe 'SearchParamsParser' do
 
       def into(canonical_uri)
         lambda { SearchParamsParser.new.form_params segments }.
-          should raise_error(BaseSearchParamsParser::NonCanonicalSegmentsError, canonical_uri)
+          should raise_error(SearchParamsParser::NonCanonicalSegmentsError, canonical_uri)
       end
 
     end

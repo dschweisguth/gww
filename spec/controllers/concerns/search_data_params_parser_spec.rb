@@ -44,7 +44,7 @@ describe 'SearchDataParamsParser' do
 
       def into(canonical_uri)
         lambda { SearchDataParamsParser.new.model_params segments }.
-          should raise_error(BaseSearchParamsParser::NonCanonicalSegmentsError, canonical_uri)
+          should raise_error(SearchDataParamsParser::NonCanonicalSegmentsError, canonical_uri)
       end
 
     end
