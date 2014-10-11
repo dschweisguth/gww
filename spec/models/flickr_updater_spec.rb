@@ -517,7 +517,13 @@ describe FlickrUpdater do
       FlickrUpdater.fave_count('photo_flickrid').should == 7
     end
 
-    it "returns nil if there is an error" do
+    it "returns nil if there is a REXML::ParseException" do
+      # noinspection RubyArgCount
+      stub(FlickrService.instance).photos_get_favorites(photo_id: 'photo_flickrid', per_page: 1) { raise REXML::ParseException, "Oops!" }
+      FlickrUpdater.fave_count('photo_flickrid').should == nil
+    end
+
+    it "returns nil if there is a FlickrService::FlickrRequestFailedError" do
       # noinspection RubyArgCount
       stub(FlickrService.instance).photos_get_favorites(photo_id: 'photo_flickrid', per_page: 1) { raise FlickrService::FlickrRequestFailedError }
       FlickrUpdater.fave_count('photo_flickrid').should == nil
