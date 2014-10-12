@@ -59,7 +59,7 @@ class FlickrUpdater
       parsed_photos = photos_xml['photos'][0]
       Rails.logger.info "Updating database from page #{page} ..."
       now = Time.now.getutc
-      parsed_photos['photo'].each do |parsed_photo|
+      parsed_photos['photo'].try :each do |parsed_photo| # .try prevents crashes when pages is incorrectly large
         person, created = create_or_update_person_from parsed_photo
         new_person_count += created
         created = create_or_update_photo_from parsed_photo, person, now
