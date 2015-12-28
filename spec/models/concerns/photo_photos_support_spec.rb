@@ -371,18 +371,18 @@ describe PhotoPhotosSupport do
       context "when specifying game_status" do
         it "returns a photo with the given status" do
           create :photo, game_status: 'found'
-          search(game_status:%w(found)).length.should == 1
+          search(game_status: %w(found)).length.should == 1
         end
 
         it "searches for photos with any of multiple statuses" do
           create :photo, game_status: 'found'
           create :photo, game_status: 'revealed'
-          search(game_status:%w(found revealed)).length.should == 2
+          search(game_status: %w(found revealed)).length.should == 2
         end
 
         it "ignores a photo with a different status" do
           create :photo, game_status: 'found'
-          search(game_status:%w(unfound)).length.should == 0
+          search(game_status: %w(unfound)).length.should == 0
         end
 
       end
@@ -396,7 +396,7 @@ describe PhotoPhotosSupport do
         photo1 = create :photo, game_status: 'found'
         create :photo, person: photo1.person
         create :photo, game_status: 'found'
-        search(game_status:'found', done_by: photo1.person.username).length.should == 1
+        search(game_status: 'found', done_by: photo1.person.username).length.should == 1
       end
 
       it "sorts by last-updated, -" do
