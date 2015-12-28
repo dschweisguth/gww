@@ -55,6 +55,16 @@ Linux
     > make
     > make install
 
+Install required binaries
+-------------------------
+
+Mac
+    Install phantomjs 1.9.8 per
+        https://trac.macports.org/wiki/howto/InstallingOlderPort
+
+Linux
+    TODO
+
 Install ruby and friends
 ------------------------
 
