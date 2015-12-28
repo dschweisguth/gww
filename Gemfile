@@ -7,7 +7,7 @@ gem 'bundler', '1.11.2'
 gem 'foreigner', '1.6.1'
 gem 'jquery-rails', '3.1.0'
 gem 'jquery-ui-rails', '4.2.1'
-gem 'mysql2', '0.3.16'
+gem 'mysql2', '0.3.20' # 0.4 doesn't work with Rails 4.1
 gem 'rails', '4.1.14'
 gem 'sass-rails', '4.0.3'
 gem 'therubyracer', '0.12.1', platforms: :ruby
