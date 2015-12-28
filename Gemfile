@@ -2,18 +2,18 @@ source 'http://rubygems.org/'
 
 gem 'actionpack-page_caching', '1.0.2'
 gem 'activerecord-mysql2spatial-adapter', '0.4.3'
-gem 'american_date', '1.1.0'
+gem 'american_date', '1.1.1'
 gem 'bundler', '1.11.2'
-gem 'foreigner', '1.6.1'
+gem 'foreigner', '1.7.4'
 gem 'jquery-rails', '3.1.0'
 gem 'jquery-ui-rails', '4.2.1'
-gem 'mysql2', '0.3.20' # 0.4 doesn't work with Rails 4.1
+gem 'mysql2', '0.3.20' # 0.4 requires Rails 4.2
 gem 'rails', '4.1.14'
 gem 'sass-rails', '4.0.3'
 gem 'therubyracer', '0.12.1', platforms: :ruby
 gem 'uglifier', '2.5.1'
 gem 'will_paginate', '3.0.7'
-gem 'xml-simple', '1.1.3'
+gem 'xml-simple', '1.1.5'
 
 group :development do
   gem 'spring', '1.1.3'
@@ -37,5 +37,5 @@ group :test do
 end
 
 group :production do
-  gem 'passenger', '4.0.45'
+  gem 'passenger', '4.0.60'
 end
