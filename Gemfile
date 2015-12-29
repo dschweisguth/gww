@@ -10,8 +10,8 @@ gem 'jquery-ui-rails', '4.2.1'
 gem 'mysql2', '0.3.20' # 0.4 requires Rails 4.2
 gem 'rails', '4.1.14'
 gem 'sass-rails', '4.0.5'
-gem 'therubyracer', '0.12.1', platforms: :ruby
-gem 'uglifier', '2.5.1'
+gem 'therubyracer', '0.12.2', platforms: :ruby
+gem 'uglifier', '2.7.2'
 gem 'will_paginate', '3.0.7'
 gem 'xml-simple', '1.1.5'
 
