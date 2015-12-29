@@ -69,19 +69,19 @@ Linux
 Install ruby and friends
 ------------------------
 
-GWW currently requires ruby 1.9.3 and the gems listed below. The specific
-versions are not necessarily required, but they're what GWW uses at this
-writing.
+GWW currently requires the approximate Ruby version and the gems listed below.
+The specific versions are not necessarily required, but they're what GWW uses
+at this writing.
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
-> rbenv install 1.9.3-p484
-> rbenv global 1.9.3-p484
+> rbenv install 2.1.2
+> rbenv global 2.1.2
 > gem update --system
 > gem install bundler
 > gem list
-bundler (1.6.2)
-rubygems-update (2.2.2)
+bundler (1.11.2)
+rubygems-update (2.5.1)
 # plus other gems that come with Ruby
 
 Get and configure GWW
@@ -93,6 +93,7 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
+        > bundle config build.nokogiri --with-opt-dir=/opt/local
         > bundle install --without production
     Linux
         # If mysql is in /usr/local, perhaps because you installe from source
