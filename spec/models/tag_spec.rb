@@ -30,7 +30,7 @@ describe Tag do
       end
     end
 
-    # shoulda-matchers' ensure_inclusion_of doesn't test this
+    # shoulda-matchers' validate_inclusion_of doesn't test this
     it "may not be nil" do
       Tag.new(raw: 'text', machine_tag: nil).should_not be_valid
     end

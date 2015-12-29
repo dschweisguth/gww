@@ -31,7 +31,7 @@ describe Photo do
 
   describe '#game_status' do
     it { should validate_presence_of :game_status }
-    it { should ensure_inclusion_of(:game_status).in_array %w(unfound unconfirmed found revealed) }
+    it { should validate_inclusion_of(:game_status).in_array %w(unfound unconfirmed found revealed) }
   end
 
   describe '#views' do
