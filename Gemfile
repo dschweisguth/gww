@@ -28,7 +28,7 @@ group :test do
   gem 'database_cleaner', '1.5.1'
   gem 'factory_girl_rails', '4.4.1'
   gem 'jasmine', '2.0.2'
-  gem 'launchy', '2.4.2'
+  gem 'launchy', '2.4.3'
   gem 'poltergeist', '1.5.1'
   gem 'rr', '1.1.2', require: false
   gem 'rspec-rails', '2.99.0'
