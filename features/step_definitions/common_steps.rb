@@ -52,9 +52,9 @@ end
 # Takes a block which returns true when we should stop waiting
 def wait_for(delay = 1)
   seconds_waited = 0
-  while ! yield && seconds_waited < Capybara.default_wait_time
+  while ! yield && seconds_waited < Capybara.default_max_wait_time
     sleep delay
     seconds_waited += 1
   end
-  raise "Waited for #{Capybara.default_wait_time} seconds but condition did not become true" unless yield
+  raise "Waited for #{Capybara.default_max_wait_time} seconds but condition did not become true" unless yield
 end
