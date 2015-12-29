@@ -24,7 +24,7 @@ end
 group :test do
   gem 'activerecord-nulldb-adapter', '0.3.1'
   gem 'capybara', '2.5.0'
-  gem 'cucumber-rails', '1.4.1', require: false
+  gem 'cucumber-rails', '1.4.2', require: false
   gem 'database_cleaner', '1.5.1'
   gem 'factory_girl_rails', '4.4.1'
   gem 'jasmine', '2.4.0'
