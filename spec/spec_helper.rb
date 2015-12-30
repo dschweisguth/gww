@@ -36,9 +36,9 @@ RSpec.configure do |config|
   %i(lib service controller helper routing).each do |type|
     config.include NullDB::RSpec::NullifiedDatabase, type: type
 
-    config.after :each, type: type do
+    config.after :example, type: type do
       begin
-        ActiveRecord::Base.connection.should_not have_executed(:anything)
+        expect(ActiveRecord::Base.connection).not_to have_executed(:anything)
       rescue RSpec::Expectations::ExpectationNotMetError
         raise RSpec::Expectations::ExpectationNotMetError,
           "Database usage is forbidden in #{type} specs, but these SQL statements were executed: " +
@@ -49,7 +49,7 @@ RSpec.configure do |config|
   end
 
   # Prevent FlickrService usage
-  config.before :each do
+  config.before :example do
     allow(FlickrService).to receive(:instance).and_return(MockFlickrService.new)
   end
 

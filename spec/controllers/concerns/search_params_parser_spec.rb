@@ -70,9 +70,12 @@ describe 'SearchParamsParser' do
     end
 
     class FormParamsResultAsserter < Struct.new(:segments)
+      include RSpec::Matchers
+
       def into(params)
-        SearchParamsParser.new.form_params(segments).should == params
+        expect(SearchParamsParser.new.form_params(segments)).to eq(params)
       end
+
     end
 
     def parser_canonicalizes(segments)
@@ -83,8 +86,8 @@ describe 'SearchParamsParser' do
       include RSpec::Matchers
 
       def into(canonical_uri)
-        lambda { SearchParamsParser.new.form_params segments }.
-          should raise_error(SearchParamsParser::NonCanonicalSegmentsError, canonical_uri)
+        expect { SearchParamsParser.new.form_params segments }.
+          to raise_error(SearchParamsParser::NonCanonicalSegmentsError, canonical_uri)
       end
 
     end

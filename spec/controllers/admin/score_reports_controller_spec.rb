@@ -13,17 +13,17 @@ describe Admin::ScoreReportsController do
       allow(Time).to receive(:now) { Time.local(2011, 1, 2) }
       get :index
 
-      response.should be_success
+      expect(response).to be_success
       trs = top_node.all 'tr'
 
-      trs[1].should have_css 'a', text: 'Jan  2, 2011, 12:00 AM'
-      trs[1].should have_css 'td', text: '4'
-      trs[1].should have_css 'td', text: '1'
-      trs[1].should have_css 'form'
+      expect(trs[1]).to have_css 'a', text: 'Jan  2, 2011, 12:00 AM'
+      expect(trs[1]).to have_css 'td', text: '4'
+      expect(trs[1]).to have_css 'td', text: '1'
+      expect(trs[1]).to have_css 'form'
 
-      trs[2].should have_css 'a', text: 'Jan  1, 2011, 12:00 AM'
-      trs[2].should have_css 'td', text: '1'
-      trs[2].should have_css 'td', text: '0' # the page filled in the missing revelation count
+      expect(trs[2]).to have_css 'a', text: 'Jan  1, 2011, 12:00 AM'
+      expect(trs[2]).to have_css 'td', text: '1'
+      expect(trs[2]).to have_css 'td', text: '0' # the page filled in the missing revelation count
 
     end
 
@@ -33,8 +33,8 @@ describe Admin::ScoreReportsController do
       allow(ScoreReport).to receive(:revelation_counts) { {} }
       get :index
 
-      response.should be_success
-      response.should_not have_css 'form'
+      expect(response).to be_success
+      expect(response).not_to have_css 'form'
 
     end
 
@@ -44,8 +44,8 @@ describe Admin::ScoreReportsController do
       allow(ScoreReport).to receive(:revelation_counts) { {} }
       get :index
 
-      response.should be_success
-      response.should_not have_css 'form'
+      expect(response).to be_success
+      expect(response).not_to have_css 'form'
 
     end
 
@@ -79,7 +79,7 @@ describe Admin::ScoreReportsController do
       mock_clear_page_cache
       post :create
 
-      response.should redirect_to admin_score_reports_path
+      expect(response).to redirect_to admin_score_reports_path
 
     end
   end
@@ -90,7 +90,7 @@ describe Admin::ScoreReportsController do
       mock_clear_page_cache
       get :destroy, id: '666'
 
-      response.should redirect_to admin_score_reports_path
+      expect(response).to redirect_to admin_score_reports_path
 
     end
   end

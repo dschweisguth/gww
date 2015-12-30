@@ -3,36 +3,36 @@ describe Guess do
     let(:existing) { create :guess }
 
     it "is unique for a given photo and comment text" do
-      build(:guess, photo: existing.photo, person: existing.person, comment_text: existing.comment_text).should_not be_valid
+      expect(build(:guess, photo: existing.photo, person: existing.person, comment_text: existing.comment_text)).not_to be_valid
     end
 
     it "need not be unique if the photo is different" do
-      build(:guess, person: existing.person, comment_text: existing.comment_text).should be_valid
+      expect(build(:guess, person: existing.person, comment_text: existing.comment_text)).to be_valid
     end
 
     it "need not be unique if the comment_text is different" do
-      build(:guess, photo: existing.photo, person: existing.person).should be_valid
+      expect(build(:guess, photo: existing.photo, person: existing.person)).to be_valid
     end
 
   end
 
   describe '#comment_text' do
-    it { should validate_presence_of :comment_text }
+    it { is_expected.to validate_presence_of :comment_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
       create :guess, comment_text: non_ascii_text
-      Guess.all[0].comment_text.should == non_ascii_text
+      expect(Guess.all[0].comment_text).to eq(non_ascii_text)
     end
 
   end
 
   describe '#commented_at' do
-    it { should validate_presence_of :commented_at }
+    it { is_expected.to validate_presence_of :commented_at }
   end
 
   describe '#added_at' do
-    it { should validate_presence_of :added_at }
+    it { is_expected.to validate_presence_of :added_at }
   end
 
   describe '#destroy' do
@@ -41,25 +41,25 @@ describe Guess do
 
     it "destroys the guess and its person" do
       guess.destroy
-      Guess.any?.should be_falsy
-      Person.exists?(person.id).should be_falsy
-      Photo.exists?(guess.photo.id).should be_truthy
+      expect(Guess.any?).to be_falsy
+      expect(Person.exists?(person.id)).to be_falsy
+      expect(Photo.exists?(guess.photo.id)).to be_truthy
     end
 
     it "leaves the person alone if they have another guess" do
       create :guess, person: person
       guess.destroy
-      Guess.exists?(guess.id).should be_falsy
-      Person.exists?(person.id).should be_truthy
-      Photo.exists?(guess.photo.id).should be_truthy
+      expect(Guess.exists?(guess.id)).to be_falsy
+      expect(Person.exists?(person.id)).to be_truthy
+      expect(Photo.exists?(guess.photo.id)).to be_truthy
     end
 
     it "leaves the person alone if they have a photo" do
       create :photo, person: person
       guess.destroy
-      Guess.any?.should be_falsy
-      Person.exists?(person.id).should be_truthy
-      Photo.exists?(guess.photo.id).should be_truthy
+      expect(Guess.any?).to be_falsy
+      expect(Person.exists?(person.id)).to be_truthy
+      expect(Photo.exists?(guess.photo.id)).to be_truthy
     end
 
   end
@@ -69,13 +69,13 @@ describe Guess do
 
     it 'destroys all guesses of the photo with the given id' do
       Guess.destroy_all_by_photo_id guess.photo.id
-      Guess.any?.should be_falsy
+      expect(Guess.any?).to be_falsy
     end
 
     it "ignores other photos' guesses" do
       other_guess = create :guess
       Guess.destroy_all_by_photo_id guess.photo.id
-      Guess.all.should == [ other_guess ]
+      expect(Guess.all).to eq([ other_guess ])
     end
 
   end
@@ -86,13 +86,13 @@ describe Guess do
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
       guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
-      Guess.longest.should == [ guess2, guess1 ]
+      expect(Guess.longest).to eq([ guess2, guess1 ])
     end
 
     it 'ignores a guess made before it was posted' do
       photo = create :photo, dateadded: Time.utc(2011)
       create :guess, photo: photo, commented_at: Time.utc(2010)
-      Guess.longest.should == []
+      expect(Guess.longest).to eq([])
     end
 
   end
@@ -103,13 +103,13 @@ describe Guess do
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2002)
       photo2 = create :photo, dateadded: Time.utc(2003)
       guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
-      Guess.shortest.should == [ guess2, guess1 ]
+      expect(Guess.shortest).to eq([ guess2, guess1 ])
     end
 
     it 'ignores a guess made before it was posted' do
       photo = create :photo, dateadded: Time.utc(2011)
       create :guess, photo: photo, commented_at: Time.utc(2010)
-      Guess.shortest.should == []
+      expect(Guess.shortest).to eq([])
     end
 
   end
@@ -118,7 +118,7 @@ describe Guess do
     it 'returns the duration in seconds from post to guess in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       guess = Guess.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
-      guess.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second'
+      expect(guess.time_elapsed).to eq('1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second')
     end
   end
 
@@ -126,7 +126,7 @@ describe Guess do
     it 'returns the duration in days from post to guess in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       guess = Guess.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
-      guess.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day'
+      expect(guess.ymd_elapsed).to eq('1&nbsp;year, 1&nbsp;month, 1&nbsp;day')
     end
   end
 

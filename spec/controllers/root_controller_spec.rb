@@ -7,9 +7,9 @@ describe RootController do
       allow(ScoreReport).to receive(:minimum) { Time.local(2011).getutc }
       get :index
 
-      response.should be_success
-      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 40 minutes.'
-      response.body.should have_link '2011', href: wheresies_path(2011)
+      expect(response).to be_success
+      expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 40 minutes.'
+      expect(response.body).to have_link '2011', href: wheresies_path(2011)
 
     end
 
@@ -18,8 +18,8 @@ describe RootController do
       allow(ScoreReport).to receive(:minimum) { Time.local(2011).getutc }
       get :index
 
-      response.should be_success
-      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and completed at Monday, January  1,  0:06 PST.'
+      expect(response).to be_success
+      expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and completed at Monday, January  1,  0:06 PST.'
 
     end
 
@@ -28,23 +28,23 @@ describe RootController do
   describe '#about' do
     it 'renders the page' do
       get :about
-      response.should be_success
-      response.body.should have_link 'Tomas Apodaca', href: 'https://www.flickr.com/people/tma/'
+      expect(response).to be_success
+      expect(response.body).to have_link 'Tomas Apodaca', href: 'https://www.flickr.com/people/tma/'
     end
   end
 
   describe '#bookmarklet' do
     it 'renders the page' do
       get :bookmarklet
-      response.should be_success
-      response.body.should have_css 'h2', text: 'To add "View in GWW" to your bookmarks,'
+      expect(response).to be_success
+      expect(response.body).to have_css 'h2', text: 'To add "View in GWW" to your bookmarks,'
     end
   end
 
   describe '#about_auto_mapping' do
     it 'renders the page' do
       get :about_auto_mapping
-      response.should be_success
+      expect(response).to be_success
     end
   end
 

@@ -11,10 +11,10 @@ describe ScoreReportsController do
       allow(ScoreReport).to receive(:revelation_counts) { { report.id => 2 } }
       get :index
 
-      response.should be_success
-      response.body.should have_css 'td', text: 'Jan  1, 2011, 12:00 AM'
-      response.body.should have_css 'td', text: '1'
-      response.body.should have_css 'td', text: '2'
+      expect(response).to be_success
+      expect(response.body).to have_css 'td', text: 'Jan  1, 2011, 12:00 AM'
+      expect(response.body).to have_css 'td', text: '1'
+      expect(response.body).to have_css 'td', text: '2'
 
     end
   end

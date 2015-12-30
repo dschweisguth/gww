@@ -33,10 +33,10 @@ When /^I enter the third player's username$/ do
 end
 
 Then /^I should see that the photo was guessed by the commenter$/ do
-  page.should have_content("This photo was correctly guessed by ...")
+  expect(page).to have_content("This photo was correctly guessed by ...")
   tds = find('table').all 'td'
-  tds[0].text.should == @comment.username
-  tds[2].text.should == @comment.comment_text
+  expect(tds[0].text).to eq(@comment.username)
+  expect(tds[2].text).to eq(@comment.comment_text)
 end
 
 Given /^there is a photo with a comment by the poster$/ do
@@ -45,37 +45,37 @@ Given /^there is a photo with a comment by the poster$/ do
 end
 
 Then /^I should see that the photo was revealed by the poster$/ do
-  page.should have_content("This photo's location was revealed by ...")
+  expect(page).to have_content("This photo's location was revealed by ...")
   tds = find('table').all 'td'
-  tds[0].text.should == @photo.person.username
-  tds[2].text.should == @comment.comment_text
+  expect(tds[0].text).to eq(@photo.person.username)
+  expect(tds[2].text).to eq(@comment.comment_text)
 end
 
 Then /^I should see that the photo was guessed by the third player$/ do
-  page.should have_content("This photo was correctly guessed by ...")
+  expect(page).to have_content("This photo was correctly guessed by ...")
   tds = find('table').all 'td'
-  tds[0].text.should == @third_player.username
-  tds[2].text.should == @comment.comment_text
+  expect(tds[0].text).to eq(@third_player.username)
+  expect(tds[2].text).to eq(@comment.comment_text)
 end
 
 Then /^I should see that the photo was revealed by the poster with the text "([^"]+)"$/ do |text|
-  page.should have_content("This photo's location was revealed by ...")
+  expect(page).to have_content("This photo's location was revealed by ...")
   tds = find('table').all 'td'
-  tds[0].text.should == @photo.person.username
-  tds[2].text.should == text
+  expect(tds[0].text).to eq(@photo.person.username)
+  expect(tds[2].text).to eq(text)
 end
 
 Then /^I should see that the photo was guessed by the third player with the text "([^"]+)"$/ do |text|
-  page.should have_content("This photo was correctly guessed by ...")
+  expect(page).to have_content("This photo was correctly guessed by ...")
   tds = find('table').all 'td'
-  tds[0].text.should == @third_player.username
-  tds[2].text.should == text
+  expect(tds[0].text).to eq(@third_player.username)
+  expect(tds[2].text).to eq(text)
 end
 
 Then /^I should not see any photos$/ do
-  all('td').should be_empty
+  expect(all('td')).to be_empty
 end
 
 Then /^I should see the error$/ do
-  page.should have_content "stat = 'fail', code = 1, msg = \"Photo not found\""
+  expect(page).to have_content "stat = 'fail', code = 1, msg = \"Photo not found\""
 end

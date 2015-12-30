@@ -9,11 +9,11 @@ describe GuessesController do
       allow(Guess).to receive(:shortest) { [shortest] }
       get :longest_and_shortest
 
-      response.should be_success
-      response.body.should have_link longest.photo.person.username
-      response.body.should have_link shortest.person.username
-      response.body.should have_link longest.photo.person.username
-      response.body.should have_link shortest.person.username
+      expect(response).to be_success
+      expect(response.body).to have_link longest.photo.person.username
+      expect(response.body).to have_link shortest.person.username
+      expect(response.body).to have_link longest.photo.person.username
+      expect(response.body).to have_link shortest.person.username
 
     end
   end

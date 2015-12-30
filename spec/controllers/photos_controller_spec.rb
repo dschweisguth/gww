@@ -16,10 +16,10 @@ describe PhotosController do
       allow(Photo).to receive(:all_sorted_and_paginated).with(sorted_by_param, order_param, page_param, 30) { paginated_photos }
       get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
 
-      response.should be_success
-      response.body.should have_css 'h1', text: '1 photos'
-      response.body.should have_link 'posted by', href: photos_path('username', '-', 1)
-      response.body.should have_link photo.person.username, href: person_path(photo.person)
+      expect(response).to be_success
+      expect(response.body).to have_css 'h1', text: '1 photos'
+      expect(response.body).to have_link 'posted by', href: photos_path('username', '-', 1)
+      expect(response.body).to have_link photo.person.username, href: person_path(photo.person)
 
     end
   end
@@ -30,10 +30,10 @@ describe PhotosController do
       allow(Photo).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
       get :map
 
-      assigns[:json].should == json.to_json
+      expect(assigns[:json]).to eq(json.to_json)
 
-      response.should be_success
-      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
+      expect(response).to be_success
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
 
     end
   end
@@ -44,8 +44,8 @@ describe PhotosController do
       allow(Photo).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
       get :map_json
 
-      response.should be_success
-      response.body.should == json.to_json
+      expect(response).to be_success
+      expect(response.body).to eq(json.to_json)
 
     end
 
@@ -65,13 +65,13 @@ describe PhotosController do
       allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
       get :map_popup, id: photo.id
 
-      response.should be_success
+      expect(response).to be_success
       link = top_node.find %Q(a[href="#{photo_path(photo)}"])
-      link.should have_css %Q(img[src="#{url_for_flickr_image(photo, 't')}"])
-      response.body.should have_link photo.person.username, href: person_path(photo.person)
-      response.body.should include ', January  1, 2011.'
-      response.body.should_not include 'Guessed by'
-      response.body.should_not include 'Revealed'
+      expect(link).to have_css %Q(img[src="#{url_for_flickr_image(photo, 't')}"])
+      expect(response.body).to have_link photo.person.username, href: person_path(photo.person)
+      expect(response.body).to include ', January  1, 2011.'
+      expect(response.body).not_to include 'Guessed by'
+      expect(response.body).not_to include 'Revealed'
 
     end
 
@@ -83,9 +83,9 @@ describe PhotosController do
       allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
       get :map_popup, id: photo.id
 
-      response.body.should have_link guess.person.username, href: person_path(guess.person)
-      response.body.should include ', February  1, 2011.'
-      response.body.should_not include 'Revealed'
+      expect(response.body).to have_link guess.person.username, href: person_path(guess.person)
+      expect(response.body).to include ', February  1, 2011.'
+      expect(response.body).not_to include 'Revealed'
 
     end
 
@@ -96,8 +96,8 @@ describe PhotosController do
       allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
       get :map_popup, id: photo.id
 
-      response.body.should_not include 'Guessed by'
-      response.body.should include 'Revealed February  1, 2011.'
+      expect(response.body).not_to include 'Guessed by'
+      expect(response.body).to include 'Revealed February  1, 2011.'
 
     end
 
@@ -110,9 +110,9 @@ describe PhotosController do
       allow(Photo).to receive(:unfound_or_unconfirmed) { [ photo ] }
       get :unfound_data
 
-      response.should be_success
+      expect(response).to be_success
       photos = top_node.find 'photos[updated_at="1293840000"]'
-      photos.should have_css "photo[posted_by=#{photo.person.username}]"
+      expect(photos).to have_css "photo[posted_by=#{photo.person.username}]"
 
     end
   end
@@ -120,14 +120,14 @@ describe PhotosController do
   describe '#search' do
     it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
       get :search, segments: 'did'
-      response.should redirect_to search_photos_path
+      expect(response).to redirect_to search_photos_path
     end
   end
 
   describe '#search_data' do
     it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
       get :search_data
-      response.should redirect_to search_photos_data_path('page/1')
+      expect(response).to redirect_to search_photos_data_path('page/1')
     end
   end
 
@@ -143,30 +143,30 @@ describe PhotosController do
       allow(photo).to receive(:machine_tags) { [] }
       get :show, id: photo.id
 
-      response.should be_success
+      expect(response).to be_success
       link = top_node.find %Q(a[href="#{url_for_flickr_photo_in_pool(photo)}"])
-      link.should have_css %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
-      response.body.should include photo.title
-      response.body.should include photo.description
-      response.body.should include 'This photo is unfound.'
+      expect(link).to have_css %Q(img[src="#{url_for_flickr_image(photo, 'z')}"])
+      expect(response.body).to include photo.title
+      expect(response.body).to include photo.description
+      expect(response.body).to include 'This photo is unfound.'
       table = top_node.find 'table'
-      table.should have_css 'td', text: guess.person.username
-      table.should have_css 'td', text: guess.comment_text
-      response.body.should have_css 'strong', text: comment.username
-      response.body.should include comment.comment_text
-      response.body.should include 'This photo was taken at 12:00 AM, January  1, 2009'
-      response.body.should have_css %Q(a[href="#{url_for_flickr_photos photo.person}archives/date-taken/2009/01/01/"]), text: 'archives'
-      response.body.should have_css %Q(a[href="#{search_photos_path "did/activity/done-by/#{photo.person.username}/from-date/12-31-2008/to-date/1-2-2009"}"]), text: 'activity'
-      response.body.should include 'It was added to the group at 12:00 AM, January  1, 2010.'
-      response.body.should include "This photo hasn't been found or revealed yet"
-      response.body.should_not include 'It was mapped by the photographer'
-      response.body.should_not include 'It was auto-mapped'
-      response.body.should include '11 comments'
-      response.body.should include '22 views'
-      response.body.should include '33 faves'
-      response.body.should_not include 'GWW.config'
-      response.body.should_not include 'Tags'
-      response.body.should_not include 'Machine tags'
+      expect(table).to have_css 'td', text: guess.person.username
+      expect(table).to have_css 'td', text: guess.comment_text
+      expect(response.body).to have_css 'strong', text: comment.username
+      expect(response.body).to include comment.comment_text
+      expect(response.body).to include 'This photo was taken at 12:00 AM, January  1, 2009'
+      expect(response.body).to have_css %Q(a[href="#{url_for_flickr_photos photo.person}archives/date-taken/2009/01/01/"]), text: 'archives'
+      expect(response.body).to have_css %Q(a[href="#{search_photos_path "did/activity/done-by/#{photo.person.username}/from-date/12-31-2008/to-date/1-2-2009"}"]), text: 'activity'
+      expect(response.body).to include 'It was added to the group at 12:00 AM, January  1, 2010.'
+      expect(response.body).to include "This photo hasn't been found or revealed yet"
+      expect(response.body).not_to include 'It was mapped by the photographer'
+      expect(response.body).not_to include 'It was auto-mapped'
+      expect(response.body).to include '11 comments'
+      expect(response.body).to include '22 views'
+      expect(response.body).to include '33 faves'
+      expect(response.body).not_to include 'GWW.config'
+      expect(response.body).not_to include 'Tags'
+      expect(response.body).not_to include 'Machine tags'
 
     end
 
@@ -181,8 +181,8 @@ describe PhotosController do
       allow(photo).to receive(:machine_tags) { [] }
       get :show, id: photo.id
 
-      response.should be_success
-      response.body.should include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
+      expect(response).to be_success
+      expect(response.body).to include 'This photo was added to the group at 12:00 AM, January  1, 2010.'
 
     end
 
@@ -205,14 +205,14 @@ describe PhotosController do
         'color' => Color::Yellow.scaled(0, 0, 0),
         'symbol' => '?'
       }
-      ActiveSupport::JSON.decode(assigns[:json]).should == json
+      expect(ActiveSupport::JSON.decode(assigns[:json])).to eq(json)
 
-      response.should be_success
-      response.body.should include 'It was mapped by the photographer'
-      response.body.should_not include "This photo hasn't been found or revealed yet"
-      response.body.should_not include 'It was auto-mapped'
-      response.body.should have_css '#map'
-      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
+      expect(response).to be_success
+      expect(response.body).to include 'It was mapped by the photographer'
+      expect(response.body).not_to include "This photo hasn't been found or revealed yet"
+      expect(response.body).not_to include 'It was auto-mapped'
+      expect(response.body).to have_css '#map'
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
 
     end
 
@@ -235,14 +235,14 @@ describe PhotosController do
         'color' => Color::Yellow.scaled(0, 0, 0),
         'symbol' => '?'
       }
-      ActiveSupport::JSON.decode(assigns[:json]).should == json
+      expect(ActiveSupport::JSON.decode(assigns[:json])).to eq(json)
 
-      response.should be_success
-      response.body.should include 'It was auto-mapped'
-      response.body.should_not include "This photo hasn't been found or revealed yet"
-      response.body.should_not include 'It was mapped by the photographer'
-      response.body.should have_css '#map'
-      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
+      expect(response).to be_success
+      expect(response.body).to include 'It was auto-mapped'
+      expect(response.body).not_to include "This photo hasn't been found or revealed yet"
+      expect(response.body).not_to include 'It was mapped by the photographer'
+      expect(response.body).to have_css '#map'
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
 
     end
 
@@ -262,8 +262,8 @@ describe PhotosController do
       allow(Photo).to receive(:find).with(photo.id) { photo }
       get :show, id: photo.id
 
-      response.body.should =~ /Tags.*Tag 2.*Tag 1/m
-      response.body.should =~ /Machine tags.*Machine tag 2.*Machine tag 1/m
+      expect(response.body).to match(/Tags.*Tag 2.*Tag 1/m)
+      expect(response.body).to match(/Machine tags.*Machine tag 2.*Machine tag 1/m)
 
     end
 
@@ -277,7 +277,7 @@ describe PhotosController do
       allow(Photo).to receive(:find).with(photo.id) { photo }
       get :show, id: photo.id
 
-      response.body.should have_css 'li.incorrect'
+      expect(response.body).to have_css 'li.incorrect'
 
     end
 

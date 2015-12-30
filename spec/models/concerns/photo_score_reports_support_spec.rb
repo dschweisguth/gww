@@ -2,17 +2,17 @@ describe PhotoScoreReportsSupport do
   describe '.count_between' do
     it 'counts all photos between the given dates' do
       create :photo, dateadded: Time.utc(2011, 1, 1, 0, 0, 1)
-      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 1
+      expect(Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq(1)
     end
 
     it 'ignores photos made on or before the from date' do
       create :photo, dateadded: Time.utc(2011)
-      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+      expect(Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq(0)
     end
 
     it 'ignores photos made after the to date' do
       create :photo, dateadded: Time.utc(2011, 1, 1, 0, 0, 2)
-      Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1)).should == 0
+      expect(Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq(0)
     end
 
   end
@@ -20,36 +20,36 @@ describe PhotoScoreReportsSupport do
   describe '.unfound_or_unconfirmed_count_before' do
     it "counts photos added on or before and not scored on or before the given date" do
       create :photo, dateadded: Time.utc(2011)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+      expect(Photo.unfound_or_unconfirmed_count_before(Time.utc(2011))).to eq(1)
     end
 
     it "includes photos guessed after the given date" do
       photo = create :photo, dateadded: Time.utc(2011)
       create :guess, photo: photo, added_at: Time.utc(2011, 2)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+      expect(Photo.unfound_or_unconfirmed_count_before(Time.utc(2011))).to eq(1)
     end
 
     it "includes photos revealed after the given date" do
       photo = create :photo, dateadded: Time.utc(2011)
       create :revelation, photo: photo, added_at: Time.utc(2011, 2)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 1
+      expect(Photo.unfound_or_unconfirmed_count_before(Time.utc(2011))).to eq(1)
     end
 
     it "ignores photos added after the given date" do
       create :photo, dateadded: Time.utc(2011, 2)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+      expect(Photo.unfound_or_unconfirmed_count_before(Time.utc(2011))).to eq(0)
     end
 
     it "ignores photos guessed on or before the given date" do
       photo = create :photo, dateadded: Time.utc(2011)
       create :guess, photo: photo, added_at: Time.utc(2011)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+      expect(Photo.unfound_or_unconfirmed_count_before(Time.utc(2011))).to eq(0)
     end
 
     it "ignores photos revealed on or before the given date" do
       photo = create :photo, dateadded: Time.utc(2011)
       create :revelation, photo: photo, added_at: Time.utc(2011)
-      Photo.unfound_or_unconfirmed_count_before(Time.utc(2011)).should == 0
+      expect(Photo.unfound_or_unconfirmed_count_before(Time.utc(2011))).to eq(0)
     end
 
   end
@@ -60,24 +60,24 @@ describe PhotoScoreReportsSupport do
     it "adds each person's posts as an attribute" do
       create :photo, person: person, dateadded: Time.utc(2010)
       Photo.add_posts [ person ], Time.utc(2011), :post_count
-      person.post_count.should == 1
+      expect(person.post_count).to eq(1)
     end
 
     it "ignores posts made after the report date" do
       create :photo, person: person, dateadded: Time.utc(2011)
       Photo.add_posts [ person ], Time.utc(2010), :post_count
-      person.post_count.should == 0
+      expect(person.post_count).to eq(0)
     end
 
   end
 
   describe '#years_old' do
     it "returns 0 for a photo posted moments ago" do
-      create(:photo, dateadded: Time.now).years_old.should == 0
+      expect(create(:photo, dateadded: Time.now).years_old).to eq(0)
     end
 
     it "returns 1 for a photo posted moments + 1 year ago" do
-      create(:photo, dateadded: Time.now - 1.years).years_old.should == 1
+      expect(create(:photo, dateadded: Time.now - 1.years).years_old).to eq(1)
     end
 
   end
@@ -88,7 +88,7 @@ describe PhotoScoreReportsSupport do
     expected.keys.sort.each do |years_old|
       it "returns a #{expected[years_old]} star for a #{years_old}-year-old photo" do
         photo = Photo.new dateadded: now - years_old.years
-        photo.star_for_age.should == expected[years_old]
+        expect(photo.star_for_age).to eq(expected[years_old])
       end
     end
   end

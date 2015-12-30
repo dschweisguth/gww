@@ -1,4 +1,3 @@
-# noinspection RubyArgCount
 def renders_report_for(report_date, previous_report_date, action, params = {})
   person0 = build_stubbed :person
   person1 = build_stubbed :person
@@ -45,25 +44,25 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
 
   get action, params
 
-  response.should be_success
-  response.body.should have_css 'b', text: 'updated Wednesday, January  5, 12 AM'
-  response.body.should =~ /3 new guesses by .../
-  response.body.should =~ /guessed their first point/
-  response.body.should =~ /#{person2.change_in_standing}/
-  response.body.should =~ /3 photos revealed by .../
-  response.body.should =~ /Top guessers in the last week:/
-  response.body.should =~ /Top guessers in the last month:/
-  response.body.should =~ /Top posters in the last week:/
-  response.body.should =~ /Top posters in the last month:/
-  response.body.should =~ /6 photos have been added to the pool since the previous report/
-  response.body.should have_link '1234 unfound photos', href: search_photos_path('game_status/unfound,unconfirmed')
+  expect(response).to be_success
+  expect(response.body).to have_css 'b', text: 'updated Wednesday, January  5, 12 AM'
+  expect(response.body).to match(/3 new guesses by .../)
+  expect(response.body).to match(/guessed their first point/)
+  expect(response.body).to match(/#{person2.change_in_standing}/)
+  expect(response.body).to match(/3 photos revealed by .../)
+  expect(response.body).to match(/Top guessers in the last week:/)
+  expect(response.body).to match(/Top guessers in the last month:/)
+  expect(response.body).to match(/Top posters in the last week:/)
+  expect(response.body).to match(/Top posters in the last month:/)
+  expect(response.body).to match(/6 photos have been added to the pool since the previous report/)
+  expect(response.body).to have_link '1234 unfound photos', href: search_photos_path('game_status/unfound,unconfirmed')
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
   participation = '2 people have made correct guesses. ' +
     '1 people have put at least one photo in the pool but not guessed any photos correctly. ' +
     'That means that at least 3 of our 3 members have participated in the game.'
-  response.body.should =~ /#{participation}/
+  expect(response.body).to match(/#{participation}/)
   guessing = "Since the beginning of the game, 1 people have guessed one photo correctly. " +
     "Here are the 1 people who've correctly guessed two or more photos."
-  response.body.should =~ /#{guessing}/
+  expect(response.body).to match(/#{guessing}/)
 
 end

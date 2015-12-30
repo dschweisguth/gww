@@ -15,7 +15,7 @@ describe Fixnum, type: :lib do
     }
     expected.keys.sort.each do |cardinal|
       it "converts the number #{cardinal} to its ordinal, #{expected[cardinal]}" do
-        cardinal.ordinal.should == expected[cardinal]
+        expect(cardinal.ordinal).to eq(expected[cardinal])
       end
     end
   end

@@ -20,8 +20,8 @@ describe Admin::PhotosController do
         allow(photo).to receive(:tags) { [tag] }
         get :unfound
         tr = top_node.all('tr')[1]
-        tr.all('td')[5].text.should == 'foundinSF'
-        tr['class'].should == 'ready-to-score'
+        expect(tr.all('td')[5].text).to eq('foundinSF')
+        expect(tr['class']).to eq('ready-to-score')
       end
 
     end
@@ -45,11 +45,11 @@ describe Admin::PhotosController do
     end
 
     def lists_photo
-      response.should be_success
-      response.body.should have_link photo.person.username, href: person_path(photo.person)
-      response.body.should have_css 'td', text: 'false'
-      response.body.should have_css 'td', text: 'unfound'
-      response.body.should have_link 'Edit', href: edit_admin_photo_path(photo, update_from_flickr: true)
+      expect(response).to be_success
+      expect(response.body).to have_link photo.person.username, href: person_path(photo.person)
+      expect(response.body).to have_css 'td', text: 'false'
+      expect(response.body).to have_css 'td', text: 'unfound'
+      expect(response.body).to have_link 'Edit', href: edit_admin_photo_path(photo, update_from_flickr: true)
     end
 
   end
@@ -67,14 +67,14 @@ describe Admin::PhotosController do
 
     it 'renders the page without loading comments' do
       get :edit, id: photo.id
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'loads comments and renders the page' do
       allow(FlickrUpdater).to receive(:update_photo).with(photo)
       mock_clear_page_cache
       get :edit, id: photo.id, update_from_flickr: true
-      response.should be_success
+      expect(response).to be_success
     end
 
   end
@@ -84,7 +84,7 @@ describe Admin::PhotosController do
       expect(Comment).to receive(:add_selected_answer).with('2', 'username') { raise Photo::AddAnswerError, 'Sorry' }
       post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
       redirects_to_edit_path 1
-      flash[:notice].should == 'Sorry'
+      expect(flash[:notice]).to eq('Sorry')
     end
   end
 
@@ -93,7 +93,7 @@ describe Admin::PhotosController do
       expect(Photo).to receive(:add_entered_answer).with(1, 'username', 'answer text') { raise Photo::AddAnswerError, 'Sorry' }
       post :add_entered_answer, id: '1', username: 'username', answer_text: 'answer text'
       redirects_to_edit_path 1
-      flash[:notice].should == 'Sorry'
+      expect(flash[:notice]).to eq('Sorry')
     end
   end
 
@@ -111,7 +111,7 @@ describe Admin::PhotosController do
       expect(Comment).to receive(:remove_guess).with('2') { raise Comment::RemoveGuessError, 'Sorry' }
       post :remove_guess, id: '1', comment_id: '2'
       redirects_to_edit_path 1
-      flash[:notice].should == 'Sorry'
+      expect(flash[:notice]).to eq('Sorry')
     end
   end
 
@@ -146,23 +146,23 @@ describe Admin::PhotosController do
       allow(Photo).to receive(:find_by_flickrid).with('0123456789') { nil }
       get :edit_in_gww, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
-      response.should redirect_to admin_root_path
-      flash[:general_error].should =~ /Sorry/
+      expect(response).to redirect_to admin_root_path
+      expect(flash[:general_error]).to match(/Sorry/)
 
     end
 
     it 'punts unknown URLs' do
       get :edit_in_gww, from: 'http://www.notflickr.com/'
 
-      response.should redirect_to admin_root_path
-      flash[:general_error].should =~ /Hmmm/
+      expect(response).to redirect_to admin_root_path
+      expect(flash[:general_error]).to match(/Hmmm/)
 
     end
 
   end
 
   def redirects_to_edit_path(photo_or_id, options = {})
-    response.should redirect_to edit_admin_photo_path photo_or_id, options
+    expect(response).to redirect_to edit_admin_photo_path photo_or_id, options
   end
 
 end

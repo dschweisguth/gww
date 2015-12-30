@@ -2,27 +2,27 @@ describe PersonScoreReportsSupport do
   describe '.all_before' do
     it "returns all people who posted before the given date" do
       photo = create :photo, dateadded: Time.utc(2011)
-      Person.all_before(Time.utc(2011)).should == [ photo.person ]
+      expect(Person.all_before(Time.utc(2011))).to eq([ photo.person ])
     end
 
     it "returns all people who guessed before the given date" do
       guess = create :guess, added_at: Time.utc(2011)
-      Person.all_before(Time.utc(2011)).should == [ guess.person ]
+      expect(Person.all_before(Time.utc(2011))).to eq([ guess.person ])
     end
 
     it "ignores people who did neither" do
       create :person
-      Person.all_before(Time.utc(2011)).should == []
+      expect(Person.all_before(Time.utc(2011))).to eq([])
     end
 
     it "ignores people who only posted after the given date" do
       create :photo, dateadded: Time.utc(2012)
-      Person.all_before(Time.utc(2011)).should == []
+      expect(Person.all_before(Time.utc(2011))).to eq([])
     end
 
     it "returns all people who only guessed after the given date" do
       create :guess, added_at: Time.utc(2012)
-      Person.all_before(Time.utc(2011)).should == []
+      expect(Person.all_before(Time.utc(2011))).to eq([])
     end
 
   end
@@ -41,7 +41,7 @@ describe PersonScoreReportsSupport do
       person2 = person_with_guesses 3
       person3 = person_with_guesses 4
       person4 = person_with_guesses 5
-      Person.high_scorers(report_date, 1).should == [person4, person3, person2]
+      expect(Person.high_scorers(report_date, 1)).to eq([person4, person3, person2])
     end
 
     it "returns all ties for third place" do
@@ -49,7 +49,7 @@ describe PersonScoreReportsSupport do
       person2 = person_with_guesses 3, username: 'a'
       person3 = person_with_guesses 4
       person4 = person_with_guesses 5
-      Person.high_scorers(report_date, 1).should == [person4, person3, person2, person1]
+      expect(Person.high_scorers(report_date, 1)).to eq([person4, person3, person2, person1])
     end
 
     it "ignores guesses made before the reporting period" do
@@ -66,18 +66,18 @@ describe PersonScoreReportsSupport do
 
     def high_scorers_returns(now, for_the_past_n_days, person, score)
       high_scorers = Person.high_scorers now, for_the_past_n_days
-      high_scorers.should == [ person ]
-      high_scorers[0].score.should == score
+      expect(high_scorers).to eq([ person ])
+      expect(high_scorers[0].score).to eq(score)
     end
 
     it "ignores scores of 1" do
       create :guess, commented_at: report_date, added_at: report_date
-      Person.high_scorers(report_date, 1).should == []
+      expect(Person.high_scorers(report_date, 1)).to eq([])
     end
 
     it "ignores scores of 0" do
       create :photo
-      Person.high_scorers(report_date, 1).should == []
+      expect(Person.high_scorers(report_date, 1)).to eq([])
     end
 
     def person_with_guesses(guess_count, options = {})
@@ -102,7 +102,7 @@ describe PersonScoreReportsSupport do
       person2 = person_with_posts 3
       person3 = person_with_posts 4
       person4 = person_with_posts 5
-      Person.top_posters(report_date, 1).should == [person4, person3, person2]
+      expect(Person.top_posters(report_date, 1)).to eq([person4, person3, person2])
     end
 
     it "returns all ties for third place" do
@@ -110,7 +110,7 @@ describe PersonScoreReportsSupport do
       person2 = person_with_posts 3, username: 'a'
       person3 = person_with_posts 4
       person4 = person_with_posts 5
-      Person.top_posters(report_date, 1).should == [person4, person3, person2, person1]
+      expect(Person.top_posters(report_date, 1)).to eq([person4, person3, person2, person1])
     end
 
     it "ignores photos posted before the reporting period" do
@@ -127,18 +127,18 @@ describe PersonScoreReportsSupport do
 
     def top_posters_returns(now, for_the_past_n_days, person, post_count)
       top_posters = Person.top_posters now, for_the_past_n_days
-      top_posters.should == [ person ]
-      top_posters[0].post_count.should == post_count
+      expect(top_posters).to eq([ person ])
+      expect(top_posters[0].post_count).to eq(post_count)
     end
 
     it "ignores post counts of 1" do
       create :photo, dateadded: report_date
-      Person.top_posters(report_date, 1).should == []
+      expect(Person.top_posters(report_date, 1)).to eq([])
     end
 
     it "ignores post counts of 0" do
       create :person
-      Person.top_posters(report_date, 1).should == []
+      expect(Person.top_posters(report_date, 1)).to eq([])
     end
 
     def person_with_posts(post_count, options = {})
@@ -153,19 +153,19 @@ describe PersonScoreReportsSupport do
     it "groups people by score" do
       person1 = create :person
       person2 = create :person
-      Person.by_score([ person1, person2 ], Time.utc(2011)).should == { 0 => [ person1, person2 ] }
+      expect(Person.by_score([ person1, person2 ], Time.utc(2011))).to eq({ 0 => [ person1, person2 ] })
     end
 
     it "adds up guesses" do
       person = create :person
       create :guess, person: person, added_at: Time.utc(2011)
       create :guess, person: person, added_at: Time.utc(2011)
-      Person.by_score([ person ], Time.utc(2011)).should == { 2 => [ person ] }
+      expect(Person.by_score([ person ], Time.utc(2011))).to eq({ 2 => [ person ] })
     end
 
     it "ignores guesses from after the report date" do
       guess = create :guess, added_at: Time.utc(2012)
-      Person.by_score([ guess.person ], Time.utc(2011)).should == { 0 => [ guess.person ] }
+      expect(Person.by_score([ guess.person ], Time.utc(2011))).to eq({ 0 => [ guess.person ] })
     end
 
   end
@@ -310,7 +310,7 @@ describe PersonScoreReportsSupport do
       allow(Photo).to receive(:add_posts).with people, previous_report_date, :previous_post_count
       guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, previous_report_date, guessers
-      person.change_in_standing.should == expected_change
+      expect(person.change_in_standing).to eq(expected_change)
     end
 
   end
@@ -320,8 +320,8 @@ describe PersonScoreReportsSupport do
       person = create :person
       people_by_score = { 0 => [ person ] }
       Person.add_score_and_place people_by_score, :score, :place
-      person.score.should == 0
-      person.place.should == 1
+      expect(person.score).to eq(0)
+      expect(person.place).to eq(1)
     end
 
     it "gives a lower (numerically greater) place to people with lower scores" do
@@ -329,8 +329,8 @@ describe PersonScoreReportsSupport do
       second = create :person
       people_by_score = { 1 => [ first ], 0 => [ second ] }
       Person.add_score_and_place people_by_score, :score, :place
-      first.place.should == 1
-      second.place.should == 2
+      expect(first.place).to eq(1)
+      expect(second.place).to eq(2)
     end
 
     it "handles ties" do
@@ -338,8 +338,8 @@ describe PersonScoreReportsSupport do
       tied2 = create :person
       people_by_score = { 0 => [ tied1, tied2 ] }
       Person.add_score_and_place people_by_score, :score, :place
-      tied1.place.should == 1
-      tied2.place.should == 1
+      expect(tied1.place).to eq(1)
+      expect(tied2.place).to eq(1)
     end
 
     it "counts the number of people above one, not the number of scores above one" do
@@ -348,7 +348,7 @@ describe PersonScoreReportsSupport do
       third = create :person
       people_by_score = { 1 => [ tied1, tied2 ], 0 => [ third ] }
       Person.add_score_and_place people_by_score, :score, :place
-      third.place.should == 3
+      expect(third.place).to eq(3)
     end
 
   end

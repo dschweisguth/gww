@@ -3,19 +3,19 @@ describe PersonPeopleSupport do
     let(:person) { create :person }
 
     it 'finds a person by username' do
-      Person.find_by_multiple_fields(person.username).should == person
+      expect(Person.find_by_multiple_fields(person.username)).to eq(person)
     end
 
     it 'finds a person by flickrid' do
-      Person.find_by_multiple_fields(person.flickrid).should == person
+      expect(Person.find_by_multiple_fields(person.flickrid)).to eq(person)
     end
 
     it 'finds a person by GWW ID' do
-      Person.find_by_multiple_fields(person.id.to_s).should == person
+      expect(Person.find_by_multiple_fields(person.id.to_s)).to eq(person)
     end
 
     it 'punts back to the home page' do
-      Person.find_by_multiple_fields('xxx').should be_nil
+      expect(Person.find_by_multiple_fields('xxx')).to be_nil
     end
 
   end
@@ -24,15 +24,15 @@ describe PersonPeopleSupport do
     it "lists guessers and their favorite posters" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)
       nemeses = Person.nemeses
-      nemeses.should == [ guesser ]
+      expect(nemeses).to eq([ guesser ])
       nemesis = nemeses[0]
-      nemesis.poster.should == favorite_poster
-      nemesis.bias.should == 2.5
+      expect(nemesis.poster).to eq(favorite_poster)
+      expect(nemesis.bias).to eq(2.5)
     end
 
     it "ignores less than #{Person::MIN_GUESSES_FOR_FAVORITE} guesses" do
       make_potential_favorite_poster(9, 15)
-      Person.nemeses.should == []
+      expect(Person.nemeses).to eq([])
     end
 
   end
@@ -45,7 +45,7 @@ describe PersonPeopleSupport do
       expected = expected_periods_for_one_guess_at_report_time
       guess = create :guess, commented_at: report_time
       (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
-      Person.top_guessers(report_time).should == expected
+      expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
     it 'handles multiple guesses in the same period' do
@@ -54,7 +54,7 @@ describe PersonPeopleSupport do
       create :guess, person: guesser, commented_at: report_time
       create :guess, person: guesser, commented_at: report_time + 1.minute
       (0 .. 3).each { |division| expected[division][0].scores[2] = [ guesser ] }
-      Person.top_guessers(report_time).should == expected
+      expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
     it 'handles multiple guessers with the same scores in the same periods' do
@@ -62,7 +62,7 @@ describe PersonPeopleSupport do
       guess1 = create :guess, commented_at: report_time
       guess2 = create :guess, commented_at: report_time
       (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess1.person, guess2.person ] }
-      Person.top_guessers(report_time).should == expected
+      expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
     def expected_periods_for_one_guess_at_report_time
@@ -89,7 +89,7 @@ describe PersonPeopleSupport do
       guess = create :guess, commented_at: Time.local(2010, 1, 1).getutc
       expected[2][12].scores[1] = [ guess.person ]
       expected[3][1].scores[1] = [ guess.person ]
-      Person.top_guessers(report_time).should == expected
+      expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
   end
@@ -98,9 +98,9 @@ describe PersonPeopleSupport do
     it "returns a person's guesses with their photos and the photos' people" do
       guess = create :guess
       guesses = guess.person.guesses_with_associations_ordered_by_comments
-      guesses.should == [ guess ]
-      guesses[0].photo.should == guess.photo
-      guesses[0].photo.person.should == guess.photo.person
+      expect(guesses).to eq([ guess ])
+      expect(guesses[0].photo).to eq(guess.photo)
+      expect(guesses[0].photo.person).to eq(guess.photo.person)
     end
   end
 
@@ -109,24 +109,24 @@ describe PersonPeopleSupport do
 
     it "returns the photos commented on by a given user" do
       comment = create :comment, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1).should == [comment.photo]
+      expect(person.paginated_commented_photos(1)).to eq([comment.photo])
     end
 
     it "ignores photos commented on by another user" do
       create :comment
-      person.paginated_commented_photos(1).should == []
+      expect(person.paginated_commented_photos(1)).to eq([])
     end
 
     it "paginates" do
       create_list :comment, 2, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1, 2).length.should == 2
+      expect(person.paginated_commented_photos(1, 2).length).to eq(2)
     end
 
     it "returns each photo only once, even if the person commented on it more than once" do
       photo = create :photo
       create :comment, photo: photo, flickrid: person.flickrid, username: person.username
       create :comment, photo: photo, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1).should == [photo]
+      expect(person.paginated_commented_photos(1)).to eq([photo])
     end
 
     it "sorts the most recently updated photos first" do
@@ -134,7 +134,7 @@ describe PersonPeopleSupport do
       create :comment, photo: photo1, flickrid: person.flickrid, username: person.username
       photo2 = create :photo, lastupdate: 1.days.ago
       create :comment, photo: photo2, flickrid: person.flickrid, username: person.username
-      person.paginated_commented_photos(1).should == [photo2, photo1]
+      expect(person.paginated_commented_photos(1)).to eq([photo2, photo1])
     end
 
   end

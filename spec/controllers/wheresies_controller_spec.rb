@@ -6,7 +6,7 @@ describe WheresiesController do
     it "bails out if the year is invalid" do
       allow(Time).to receive(:now) { Time.local 2010 }
       allow(ScoreReport).to receive(:minimum) { Time.local(2010).getutc }
-      lambda { get :show, year: '2011' }.should raise_error ActiveRecord::RecordNotFound
+      expect { get :show, year: '2011' }.to raise_error ActiveRecord::RecordNotFound
     end
 
     it "doesn't says 'preliminary' if it's not for this year" do
@@ -23,8 +23,8 @@ describe WheresiesController do
       allow(Guess).to receive(:longest_in).with(year) { [] }
       allow(Guess).to receive(:shortest_in).with(year) { [] }
       get :show, year: year.to_s
-      response.should be_success
-      response.body.should_not have_css 'h1', text: "#{year} Wheresies (preliminary)"
+      expect(response).to be_success
+      expect(response.body).not_to have_css 'h1', text: "#{year} Wheresies (preliminary)"
     end
 
   end

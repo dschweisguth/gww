@@ -5,7 +5,7 @@ describe PhotoStatisticsSupport do
         comment = create :comment
         Photo.update_statistics
         comment.photo.reload
-        comment.photo.other_user_comments.should == 1
+        expect(comment.photo.other_user_comments).to eq(1)
       end
 
       it "ignores comments by the poster" do
@@ -13,14 +13,14 @@ describe PhotoStatisticsSupport do
         create :comment, photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
         Photo.update_statistics
         photo.reload
-        photo.other_user_comments.should == 0
+        expect(photo.other_user_comments).to eq(0)
       end
 
       it "handles photos which go from nonzero to zero comments" do
         photo = create :photo, other_user_comments: 1
         Photo.update_statistics
         photo.reload
-        photo.other_user_comments.should == 0
+        expect(photo.other_user_comments).to eq(0)
       end
 
     end
@@ -33,7 +33,7 @@ describe PhotoStatisticsSupport do
           commented_at: guess.commented_at
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_comments.should == 1
+        expect(guess.photo.member_comments).to eq(1)
       end
 
       it 'ignores comments by the poster' do
@@ -42,7 +42,7 @@ describe PhotoStatisticsSupport do
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_comments.should == 0
+        expect(guess.photo.member_comments).to eq(0)
       end
 
       it 'ignores comments by non-members' do
@@ -50,7 +50,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_comments.should == 0
+        expect(guess.photo.member_comments).to eq(0)
       end
 
       it 'counts comments other than the guess' do
@@ -63,7 +63,7 @@ describe PhotoStatisticsSupport do
           commented_at: guess.commented_at
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_comments.should == 2
+        expect(guess.photo.member_comments).to eq(2)
       end
 
       it 'ignores comments after the guess' do
@@ -76,7 +76,7 @@ describe PhotoStatisticsSupport do
           commented_at: guess.commented_at + 5
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_comments.should == 1
+        expect(guess.photo.member_comments).to eq(1)
       end
 
       # This shouldn't happen in the future, since if the poster deletes all of a photo's comments after it's guessed,
@@ -87,7 +87,7 @@ describe PhotoStatisticsSupport do
         create :guess, photo: photo
         Photo.update_statistics
         photo.reload
-        photo.member_comments.should == 0
+        expect(photo.member_comments).to eq(0)
       end
 
     end
@@ -100,7 +100,7 @@ describe PhotoStatisticsSupport do
           commented_at: guess.commented_at, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_questions.should == 1
+        expect(guess.photo.member_questions).to eq(1)
       end
 
       it 'ignores questions by the poster' do
@@ -110,7 +110,7 @@ describe PhotoStatisticsSupport do
           comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_questions.should == 0
+        expect(guess.photo.member_questions).to eq(0)
       end
 
       it 'ignores questions by non-members' do
@@ -118,7 +118,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_questions.should == 0
+        expect(guess.photo.member_questions).to eq(0)
       end
 
       it 'counts questions other than the guess' do
@@ -131,7 +131,7 @@ describe PhotoStatisticsSupport do
           commented_at: guess.commented_at, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_questions.should == 2
+        expect(guess.photo.member_questions).to eq(2)
       end
 
       it 'ignores questions after the guess' do
@@ -144,7 +144,7 @@ describe PhotoStatisticsSupport do
           commented_at: guess.commented_at + 5, comment_text: '?'
         Photo.update_statistics
         guess.photo.reload
-        guess.photo.member_questions.should == 1
+        expect(guess.photo.member_questions).to eq(1)
       end
 
       # This shouldn't happen in the future, since if the poster deletes all of a photo's comments after it's guessed,
@@ -155,7 +155,7 @@ describe PhotoStatisticsSupport do
         create :guess, photo: photo
         Photo.update_statistics
         photo.reload
-        photo.member_questions.should == 0
+        expect(photo.member_questions).to eq(0)
       end
 
     end
@@ -181,8 +181,8 @@ describe PhotoStatisticsSupport do
       Photo.infer_geocodes
 
       answer.photo.reload
-      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
+      expect(answer.photo.inferred_latitude).to eq(BigDecimal.new('37.0'))
+      expect(answer.photo.inferred_longitude).to eq(BigDecimal.new('-122.0'))
 
     end
 
@@ -194,8 +194,8 @@ describe PhotoStatisticsSupport do
       Photo.infer_geocodes
 
       answer.photo.reload
-      answer.photo.inferred_latitude.should == BigDecimal.new('37.0')
-      answer.photo.inferred_longitude.should == BigDecimal.new('-122.0')
+      expect(answer.photo.inferred_latitude).to eq(BigDecimal.new('37.0'))
+      expect(answer.photo.inferred_longitude).to eq(BigDecimal.new('-122.0'))
 
     end
 
@@ -206,8 +206,8 @@ describe PhotoStatisticsSupport do
       Photo.infer_geocodes
 
       answer.photo.reload
-      answer.photo.inferred_latitude.should == nil
-      answer.photo.inferred_longitude.should == nil
+      expect(answer.photo.inferred_latitude).to eq(nil)
+      expect(answer.photo.inferred_longitude).to eq(nil)
 
     end
 
@@ -220,8 +220,8 @@ describe PhotoStatisticsSupport do
       Photo.infer_geocodes
 
       answer.photo.reload
-      answer.photo.inferred_latitude.should == nil
-      answer.photo.inferred_longitude.should == nil
+      expect(answer.photo.inferred_latitude).to eq(nil)
+      expect(answer.photo.inferred_longitude).to eq(nil)
 
     end
 
@@ -236,8 +236,8 @@ describe PhotoStatisticsSupport do
       Photo.infer_geocodes
 
       answer.photo.reload
-      answer.photo.inferred_latitude.should == nil
-      answer.photo.inferred_longitude.should == nil
+      expect(answer.photo.inferred_latitude).to eq(nil)
+      expect(answer.photo.inferred_longitude).to eq(nil)
 
     end
 

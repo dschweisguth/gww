@@ -34,11 +34,11 @@ When /^I autoselect "([^"]+)" from the "([^"]+)" field$/ do |text, field|
 end
 
 Then /^I should be on (.*)$/ do |page_name|
-  URI.parse(current_url).path.should == path_to(page_name)
+  expect(URI.parse(current_url).path).to eq(path_to(page_name))
 end
 
 Then /^I should see "([^"]+)"$/ do |text|
-  page.should have_content(text)
+  expect(page).to have_content(text)
 end
 
 Then /^show me the page$/ do

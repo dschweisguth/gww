@@ -1,36 +1,36 @@
 describe Comment do
   describe '#flickrid' do
-    it { should validate_presence_of :flickrid }
-    it { should have_readonly_attribute :flickrid }
+    it { is_expected.to validate_presence_of :flickrid }
+    it { is_expected.to have_readonly_attribute :flickrid }
   end
 
   describe '#username' do
-    it { should validate_presence_of :username }
-    it { should have_readonly_attribute :username }
+    it { is_expected.to validate_presence_of :username }
+    it { is_expected.to have_readonly_attribute :username }
 
     it 'should handle non-ASCII characters' do
       non_ascii_username = '猫娘/ nekomusume'
       create :comment, username: non_ascii_username
-      Comment.all[0].username.should == non_ascii_username
+      expect(Comment.all[0].username).to eq(non_ascii_username)
     end
 
   end
 
   describe '#comment_text' do
-    it { should validate_presence_of :comment_text }
-    it { should have_readonly_attribute :comment_text }
+    it { is_expected.to validate_presence_of :comment_text }
+    it { is_expected.to have_readonly_attribute :comment_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
       create :comment, comment_text: non_ascii_text
-      Comment.all[0].comment_text.should == non_ascii_text
+      expect(Comment.all[0].comment_text).to eq(non_ascii_text)
     end
 
   end
 
   describe '#commented_at' do
-    it { should validate_presence_of :commented_at }
-    it { should have_readonly_attribute :commented_at }
+    it { is_expected.to validate_presence_of :commented_at }
+    it { is_expected.to have_readonly_attribute :commented_at }
   end
 
   describe '.add_selected_answer' do
@@ -73,12 +73,12 @@ describe Comment do
 
       def photo_is_revealed_and_revelation_matches(comment)
         revelations = Revelation.where photo: comment.photo
-        revelations.length.should == 1
+        expect(revelations.length).to eq(1)
         revelation = revelations[0]
-        revelation.photo.game_status.should == 'revealed'
-        revelation.comment_text.should == comment.comment_text
-        revelation.commented_at.should == comment.commented_at
-        revelation.added_at.should == now
+        expect(revelation.photo.game_status).to eq('revealed')
+        expect(revelation.comment_text).to eq(comment.comment_text)
+        expect(revelation.commented_at).to eq(comment.commented_at)
+        expect(revelation.added_at).to eq(now)
       end
 
       it 'deletes an existing guess' do
@@ -86,7 +86,7 @@ describe Comment do
           username: photo.person.username, commented_at: Time.utc(2011)
         create :guess, photo: photo
         Comment.add_selected_answer comment.id, ''
-        Guess.any?.should be_falsy
+        expect(Guess.any?).to be_falsy
       end
 
     end
@@ -107,11 +107,10 @@ describe Comment do
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        #noinspection RubyArgCount
         guess = Guess.includes(:person).find_by_photo_id comment.photo
-        guess.person.flickrid.should == comment.flickrid
-        guess.person.username.should == 'username_from_request'
-        guess.person.pathalias.should == 'pathalias_from_request'
+        expect(guess.person.flickrid).to eq(comment.flickrid)
+        expect(guess.person.username).to eq('username_from_request')
+        expect(guess.person.pathalias).to eq('pathalias_from_request')
       end
 
       it 'handles a redundant username' do
@@ -131,15 +130,15 @@ describe Comment do
         stub_person_request
         Comment.add_selected_answer answer_comment.id, scorer_comment.username
         guesses = Guess.where photo: answer_comment.photo
-        guesses.length.should == 1
+        expect(guesses.length).to eq(1)
         guess = guesses[0]
-        guess.person.flickrid.should == scorer_comment.flickrid
-        guess.person.username.should == 'username_from_request'
-        guess.person.pathalias.should == 'pathalias_from_request'
-        guess.comment_text.should == answer_comment.comment_text
-        guess.commented_at.should == answer_comment.commented_at
-        guess.added_at.should == now
-        guess.photo.game_status.should == 'found'
+        expect(guess.person.flickrid).to eq(scorer_comment.flickrid)
+        expect(guess.person.username).to eq('username_from_request')
+        expect(guess.person.pathalias).to eq('pathalias_from_request')
+        expect(guess.comment_text).to eq(answer_comment.comment_text)
+        expect(guess.commented_at).to eq(answer_comment.commented_at)
+        expect(guess.added_at).to eq(now)
+        expect(guess.photo.game_status).to eq('found')
       end
 
       it 'gives the point to another, known user' do
@@ -163,10 +162,10 @@ describe Comment do
         Comment.add_selected_answer comment.id, ''
 
         guesses = old_guess.photo.reload.guesses
-        guesses.length.should == 2
-        guesses.all? { |guess| guess.photo == old_guess.photo }.should be_truthy
-        guesses.all? { |guess| guess.person == old_guess.person }.should be_truthy
-        guesses.map(&:comment_text).should =~ [old_guess.comment_text, comment.comment_text]
+        expect(guesses.length).to eq(2)
+        expect(guesses.all? { |guess| guess.photo == old_guess.photo }).to be_truthy
+        expect(guesses.all? { |guess| guess.person == old_guess.person }).to be_truthy
+        expect(guesses.map(&:comment_text)).to match_array([old_guess.comment_text, comment.comment_text])
 
       end
 
@@ -177,12 +176,12 @@ describe Comment do
         create :revelation, photo: comment.photo
         stub_person_request
         Comment.add_selected_answer comment.id, ''
-        Revelation.any?.should be_falsy
+        expect(Revelation.any?).to be_falsy
       end
 
       it "blows up if an unknown username is specified" do
         comment = create :comment
-        lambda { Comment.add_selected_answer comment.id, 'unknown_username' }.should raise_error Photo::AddAnswerError
+        expect { Comment.add_selected_answer comment.id, 'unknown_username' }.to raise_error Photo::AddAnswerError
       end
 
       def stub_person_request
@@ -198,19 +197,19 @@ describe Comment do
 
       def photo_is_guessed(comment, guesser)
         guesses = Guess.where photo: comment.photo
-        guesses.length.should == 1
+        expect(guesses.length).to eq(1)
         guess = guesses[0]
-        guess.person.should == guesser
-        guess.comment_text.should == comment.comment_text
-        guess.commented_at.should == comment.commented_at
-        guess.added_at.should == now
-        guess.photo.game_status.should == 'found'
+        expect(guess.person).to eq(guesser)
+        expect(guess.comment_text).to eq(comment.comment_text)
+        expect(guess.commented_at).to eq(comment.commented_at)
+        expect(guess.added_at).to eq(now)
+        expect(guess.photo.game_status).to eq('found')
       end
 
       def is_updated_per_flickr(guesser)
         guesser.reload
-        guesser.username.should == 'username_from_request'
-        guesser.pathalias.should == 'pathalias_from_request'
+        expect(guesser.username).to eq('username_from_request')
+        expect(guesser.pathalias).to eq('pathalias_from_request')
       end
 
     end
@@ -233,8 +232,8 @@ describe Comment do
         comment_text: revelation.comment_text
       Comment.remove_revelation comment.id
       photo.reload
-      photo.game_status.should == 'unfound'
-      Revelation.count.should == 0
+      expect(photo.game_status).to eq('unfound')
+      expect(Revelation.count).to eq(0)
     end
 
     it "doesn't delete the revealer's revelation of another photo with the same comment" do
@@ -246,7 +245,7 @@ describe Comment do
         flickrid: photo1.person.flickrid, username: photo1.person.username,
         comment_text: revelation1.comment_text
       Comment.remove_revelation comment.id
-      Revelation.all.should == [ revelation2 ]
+      expect(Revelation.all).to eq([ revelation2 ])
     end
 
   end
@@ -260,8 +259,8 @@ describe Comment do
         comment_text: guess.comment_text
       Comment.remove_guess comment.id
       photo.reload
-      photo.game_status.should == 'unfound'
-      Guess.count.should == 0
+      expect(photo.game_status).to eq('unfound')
+      expect(Guess.count).to eq(0)
     end
 
     it "leaves the photo found if there's another guess" do
@@ -276,8 +275,8 @@ describe Comment do
         comment_text: guess2.comment_text
       Comment.remove_guess comment1.id
       photo.reload
-      photo.game_status.should == 'found'
-      Guess.all.should == [ guess2 ]
+      expect(photo.game_status).to eq('found')
+      expect(Guess.all).to eq([ guess2 ])
     end
 
     it "doesn't delete the guesser's guess of another photo with the same comment" do
@@ -287,7 +286,7 @@ describe Comment do
         flickrid: guess1.person.flickrid, username: guess1.person.username,
         comment_text: guess1.comment_text
       Comment.remove_guess comment.id
-      Guess.all.should == [ guess2 ]
+      expect(Guess.all).to eq([ guess2 ])
     end
 
   end
@@ -296,18 +295,18 @@ describe Comment do
     it "returns true if the comment was made by the photo's poster" do
       photo = create :photo
       comment = create :comment, photo: photo, flickrid: photo.person.flickrid
-      comment.is_by_poster.should be_truthy
+      expect(comment.is_by_poster).to be_truthy
     end
 
     it "returns false if the comment was not made by the photo's poster" do
-      create(:comment).is_by_poster.should be_falsy
+      expect(create(:comment).is_by_poster).to be_falsy
     end
 
   end
 
   describe '#is_accepted_answer' do
     it "returns false if this comment has no revelations or guesses" do
-      create(:comment).is_accepted_answer.should be_falsy
+      expect(create(:comment).is_accepted_answer).to be_falsy
     end
 
     context "when photo is revealed" do
@@ -316,18 +315,18 @@ describe Comment do
 
       it "returns true if a revelation was created from this comment" do
         create :revelation, photo: photo, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_truthy
+        expect(comment.is_accepted_answer).to be_truthy
       end
 
       it "returns false if the revelation is of another photo" do
         other_photo = create :photo, person: photo.person
         create :revelation, photo: other_photo, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_falsy
+        expect(comment.is_accepted_answer).to be_falsy
       end
 
       it "returns false if the text doesn't match" do
         create :revelation, photo: photo, comment_text: "something else"
-        comment.is_accepted_answer.should be_falsy
+        expect(comment.is_accepted_answer).to be_falsy
       end
 
     end
@@ -338,23 +337,23 @@ describe Comment do
 
       it "returns true if a guess was created from this comment" do
         create :guess, photo: comment.photo, person: person, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_truthy
+        expect(comment.is_accepted_answer).to be_truthy
       end
 
       it "returns false if the guess is of another photo" do
         other_photo = create :photo, person: person
         create :guess, photo: other_photo, person: person, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_falsy
+        expect(comment.is_accepted_answer).to be_falsy
       end
 
       it "returns false if the text doesn't match" do
         create :guess, photo: comment.photo, person: person, comment_text: "something else"
-        comment.is_accepted_answer.should be_falsy
+        expect(comment.is_accepted_answer).to be_falsy
       end
 
       it "returns false if the guess is by another person" do
         create :guess, photo: comment.photo, comment_text: comment.comment_text
-        comment.is_accepted_answer.should be_falsy
+        expect(comment.is_accepted_answer).to be_falsy
       end
 
     end

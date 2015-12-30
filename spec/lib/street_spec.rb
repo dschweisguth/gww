@@ -23,46 +23,46 @@ describe Street, type: :lib do
     end
 
     def matches(known, text)
-      Regexp.new(Street.regexp(known), Regexp::IGNORECASE).should match text
+      expect(Regexp.new(Street.regexp(known), Regexp::IGNORECASE)).to match text
     end
 
   end
 
   describe '#initialize' do
     it "upcases the name" do
-      Street.new('Valencia').name.should == 'VALENCIA'
+      expect(Street.new('Valencia').name).to eq('VALENCIA')
     end
 
     it "converts each run of whitespace in the name to a single space" do
-      Street.new("Willard \n North").name.should == 'WILLARD NORTH'
+      expect(Street.new("Willard \n North").name).to eq('WILLARD NORTH')
     end
 
     it "removes punctuation from and upcases the name" do
-      Street.new("John F. O'Kennedy, Jr.").name.should == 'JOHN F OKENNEDY JR'
+      expect(Street.new("John F. O'Kennedy, Jr.").name).to eq('JOHN F OKENNEDY JR')
     end
 
     it "converts ST to SAINT" do
-      Street.new('St Francis').name.should == 'SAINT FRANCIS'
+      expect(Street.new('St Francis').name).to eq('SAINT FRANCIS')
     end
 
     it "converts JUNIOR to JR" do
-      Street.new('MARTIN LUTHER KING JUNIOR').name.should == 'MARTIN LUTHER KING JR'
+      expect(Street.new('MARTIN LUTHER KING JUNIOR').name).to eq('MARTIN LUTHER KING JR')
     end
 
     it "doesn't clobber Junior (Terrace)" do
-      Street.new('JUNIOR').name.should == 'JUNIOR'
+      expect(Street.new('JUNIOR').name).to eq('JUNIOR')
     end
 
     it "canonicalizes a synonym" do
-      Street.new('DeHaro').name.should == 'DE HARO'
+      expect(Street.new('DeHaro').name).to eq('DE HARO')
     end
 
     it "converts a string street type to a real one" do
-      Street.new('Valencia', 'St').type.should == StreetType.get('St')
+      expect(Street.new('Valencia', 'St').type).to eq(StreetType.get('St'))
     end
 
     it "ignores whitespace around the input street type" do
-      Street.new('Valencia', ' St ').type.should == StreetType.get('St')
+      expect(Street.new('Valencia', ' St ').type).to eq(StreetType.get('St'))
     end
 
   end

@@ -55,77 +55,77 @@ When /^I click on this year$/ do
 end
 
 Then /^the headline should say that the results are preliminary$/ do
-  page.should have_css 'h1', text: "#{Time.now.year} Wheresies (preliminary)"
+  expect(page).to have_css 'h1', text: "#{Time.now.year} Wheresies (preliminary)"
 end
 
 Then /^the player "([^"]*)" should be first on the rookies' most-points list with (\d+) points$/ do |username, points|
   most_points_list = all('body > div > div > div')[0]
-  most_points_list.should have_css 'h3', text: "Most points in #{Time.now.year}"
+  expect(most_points_list).to have_css 'h3', text: "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
-  tds[1].text.should == username
-  tds[2].text.should == points
+  expect(tds[1].text).to eq(username)
+  expect(tds[2].text).to eq(points)
 end
 
 Then /^the player "([^"]*)" should be first on the rookies' most-posts list with (\d+) posts$/ do |username, posts|
   most_posts_list = all('body > div > div > div')[1]
-  most_posts_list.should have_css 'h3', text: "Most posts in #{Time.now.year}"
+  expect(most_posts_list).to have_css 'h3', text: "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
-  tds[1].text.should == username
-  tds[2].text.should == posts
+  expect(tds[1].text).to eq(username)
+  expect(tds[2].text).to eq(posts)
 end
 
 Then /^the player "([^"]*)" should be first on the veterans' most-points list with (\d+) points$/ do |username, points|
   most_points_list = all('body > div > div > div')[2]
-  most_points_list.should have_css 'h3', text: "Most points in #{Time.now.year}"
+  expect(most_points_list).to have_css 'h3', text: "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
-  tds[1].text.should == username
-  tds[2].text.should == points
+  expect(tds[1].text).to eq(username)
+  expect(tds[2].text).to eq(points)
 end
 
 Then /^the player "([^"]*)" should be first on the veterans' most-posts list with (\d+) posts$/ do |username, posts|
   most_posts_list = all('body > div > div > div')[3]
-  most_posts_list.should have_css 'h3', text: "Most posts in #{Time.now.year}"
+  expect(most_posts_list).to have_css 'h3', text: "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
-  tds[1].text.should == username
-  tds[2].text.should == posts
+  expect(tds[1].text).to eq(username)
+  expect(tds[2].text).to eq(posts)
 end
 
 Then /^the player "([^"]*)" should be first on the most-viewed list with (\d+) views$/ do |username, views|
   most_viewed_list = all('body > div > div')[2]
-  most_viewed_list.should have_css 'h2', text: "Most-viewed photos of #{Time.now.year}"
+  expect(most_viewed_list).to have_css 'h2', text: "Most-viewed photos of #{Time.now.year}"
   tds = most_viewed_list.all 'td'
-  tds[2].text.should == username
-  tds[6].text.should == views
+  expect(tds[2].text).to eq(username)
+  expect(tds[6].text).to eq(views)
 end
 
 Then /^the player "([^"]*)" should be first on the most-faved list with (\d+) faves$/ do |username, faves|
   most_faved_list = all('body > div > div')[3]
-  most_faved_list.should have_css 'h2', text: "Most-faved photos of #{Time.now.year}"
+  expect(most_faved_list).to have_css 'h2', text: "Most-faved photos of #{Time.now.year}"
   tds = most_faved_list.all 'td'
-  tds[2].text.should == username
-  tds[6].text.should == faves
+  expect(tds[2].text).to eq(username)
+  expect(tds[6].text).to eq(faves)
 end
 
 Then /^the player "([^"]*)" should be first on the most-commented list with (\d+) comments?$/ do |username, comments|
   most_commented_list = all('body > div > div')[4]
-  most_commented_list.should have_css 'h2', text: "Most-commented photos of #{Time.now.year}"
+  expect(most_commented_list).to have_css 'h2', text: "Most-commented photos of #{Time.now.year}"
   tds = most_commented_list.all 'td'
-  tds[2].text.should == username
-  tds[6].text.should == comments
+  expect(tds[2].text).to eq(username)
+  expect(tds[6].text).to eq(comments)
 end
 
 Then /^the player "([^"]*)" should be first on the longest-lasting list with a photo guessed after (\d+) years$/ do |username, years|
   longest_lasting_list = all('body > div > table')[0]
   tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
-  tds_in_first_row[2].text.should == username
+  expect(tds_in_first_row[2].text).to eq(username)
   # Allow both "3 years" and "3 years, 1 second" to pass in case the test runs slowly
-  tds_in_first_row.last.text.start_with?("#{years} year#{if years.to_i != 1 then 's' end}").should be_truthy
+  expect(tds_in_first_row.last.text.start_with?("#{years} year#{if years.to_i != 1 then 's' end}")).to be_truthy
 end
 
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
   fastest_guessed_list = all('body > div > table')[1]
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
-  tds_in_first_row[2].text.should == username
+  expect(tds_in_first_row[2].text).to eq(username)
   # Allow one more second than specified in case the test runs slowly
-  [ "#{seconds} second#{if seconds.to_i != 1 then 's' end}", "#{seconds.to_i + 1} seconds" ].should include(tds_in_first_row.last.text)
+  expect(["#{seconds} second#{if seconds.to_i != 1 then 's' end}", "#{seconds.to_i + 1} seconds"]).to include(tds_in_first_row.last.text)
 end

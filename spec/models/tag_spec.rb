@@ -1,38 +1,38 @@
 describe Tag do
 
   describe '#raw' do
-    it { should validate_presence_of :raw }
-    it { should have_readonly_attribute :raw }
+    it { is_expected.to validate_presence_of :raw }
+    it { is_expected.to have_readonly_attribute :raw }
 
     it "is unique for a given photo" do
       existing = create :tag, raw: 'text'
-      build(:tag, photo: existing.photo, raw: 'text').should_not be_valid
+      expect(build(:tag, photo: existing.photo, raw: 'text')).not_to be_valid
     end
 
     it "is not unique across photos" do
       create :tag, raw: 'text'
-      build(:tag, raw: 'text').should be_valid
+      expect(build(:tag, raw: 'text')).to be_valid
     end
 
   end
 
   describe '#machine_tag' do
     # Can't use validate_presence_of because that validation happens before the database default value is applied
-    it { should have_readonly_attribute :machine_tag }
+    it { is_expected.to have_readonly_attribute :machine_tag }
 
     it "defaults to false" do
-      Tag.new(raw: 'text').machine_tag.should == false
+      expect(Tag.new(raw: 'text').machine_tag).to eq(false)
     end
 
     [false, true].each do |boolean|
       it "may be #{boolean}" do
-        Tag.new(raw: 'text', machine_tag: boolean).should be_valid
+        expect(Tag.new(raw: 'text', machine_tag: boolean)).to be_valid
       end
     end
 
     # shoulda-matchers' validate_inclusion_of doesn't test this
     it "may not be nil" do
-      Tag.new(raw: 'text', machine_tag: nil).should_not be_valid
+      expect(Tag.new(raw: 'text', machine_tag: nil)).not_to be_valid
     end
 
     # There does not seem to be a way to set machine_tag to a non-nil non-boolean
@@ -44,19 +44,19 @@ describe Tag do
       it "returns true if the photo is found" do
         photo = build :photo, game_status: 'found'
         tag = build :tag, photo: photo, raw: 'foundinSF'
-        tag.correct?.should be_truthy
+        expect(tag.correct?).to be_truthy
       end
 
       it "returns false if the photo is not found" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'foundinSF'
-        tag.correct?.should be_falsy
+        expect(tag.correct?).to be_falsy
       end
 
       it "is case-insensitive" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'FOUNDINSF'
-        tag.correct?.should be_falsy
+        expect(tag.correct?).to be_falsy
       end
 
     end
@@ -66,7 +66,7 @@ describe Tag do
         it "returns true if the photo is #{game_status}" do
           photo = build :photo, game_status: game_status
           tag = build :tag, photo: photo, raw: 'unfoundinSF'
-          tag.correct?.should be_truthy
+          expect(tag.correct?).to be_truthy
         end
       end
 
@@ -74,14 +74,14 @@ describe Tag do
         it "returns false if the photo is #{game_status}" do
           photo = build :photo, game_status: game_status
           tag = build :tag, photo: photo, raw: 'unfoundinSF'
-          tag.correct?.should be_falsy
+          expect(tag.correct?).to be_falsy
         end
       end
 
       it "is case-insensitive" do
         photo = build :photo, game_status: 'found'
         tag = build :tag, photo: photo, raw: 'UNFOUNDINSF'
-        tag.correct?.should be_falsy
+        expect(tag.correct?).to be_falsy
       end
 
     end
@@ -90,19 +90,19 @@ describe Tag do
       it "returns true if the photo is revealed" do
         photo = build :photo, game_status: 'revealed'
         tag = build :tag, photo: photo, raw: 'revealedinSF'
-        tag.correct?.should be_truthy
+        expect(tag.correct?).to be_truthy
       end
 
       it "returns false if the photo is not revealed" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'revealedinSF'
-        tag.correct?.should be_falsy
+        expect(tag.correct?).to be_falsy
       end
 
       it "is case-insensitive" do
         photo = build :photo, game_status: 'unfound'
         tag = build :tag, photo: photo, raw: 'REVEALEDINSF'
-        tag.correct?.should be_falsy
+        expect(tag.correct?).to be_falsy
       end
 
     end

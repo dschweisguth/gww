@@ -16,24 +16,24 @@ describe PeopleHelper do
     def other_people_path_returns(current_criterion, current_order, requested_criterion, expected_uri)
       controller.params[:sorted_by] = current_criterion
       controller.params[:order] = current_order
-      helper.other_people_path(requested_criterion).should == expected_uri
+      expect(helper.other_people_path(requested_criterion)).to eq(expected_uri)
     end
 
   end
 
   describe '#to_four_places' do
     it 'returns the number, rounded to four places, as a string' do
-      helper.to_4_places(1.11111).should == '1.1111'
+      expect(helper.to_4_places(1.11111)).to eq('1.1111')
     end
   end
 
   describe '#infinity_or' do
     it 'returns the number, rounded to four places, as a string' do
-      helper.infinity_or(1.11111).should == '1.1111'
+      expect(helper.infinity_or(1.11111)).to eq('1.1111')
     end
 
     it 'returns HTML for infinity' do
-      helper.infinity_or(Float::MAX).should == '&#8734;'
+      expect(helper.infinity_or(Float::MAX)).to eq('&#8734;')
     end
     
   end
@@ -47,7 +47,7 @@ describe PeopleHelper do
         it "returns the alt '#{alt}' given the star :#{star}" do
           guess = Object.new
           allow(guess).to receive(:star_for_age) { star }
-          helper.star_and_alt(guess, :age).should == [ star, alt ]
+          expect(helper.star_and_alt(guess, :age)).to eq([ star, alt ])
         end
       end
     end
@@ -58,7 +58,7 @@ describe PeopleHelper do
         it "returns the alt '#{alt}' given the star :#{star}" do
           guess = Object.new
           allow(guess).to receive(:star_for_speed) { star }
-          helper.star_and_alt(guess, :speed).should == [ star, alt ]
+          expect(helper.star_and_alt(guess, :speed)).to eq([ star, alt ])
         end
       end
     end
@@ -69,7 +69,7 @@ describe PeopleHelper do
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
           allow(photo).to receive(:star_for_comments) { star }
-          helper.star_and_alt(photo, :comments).should == [ star, alt ]
+          expect(helper.star_and_alt(photo, :comments)).to eq([ star, alt ])
         end
       end
     end
@@ -80,7 +80,7 @@ describe PeopleHelper do
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
           allow(photo).to receive(:star_for_views) { star }
-          helper.star_and_alt(photo, :views).should == [ star, alt ]
+          expect(helper.star_and_alt(photo, :views)).to eq([ star, alt ])
         end
       end
     end
@@ -91,7 +91,7 @@ describe PeopleHelper do
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
           allow(photo).to receive(:star_for_faves) { star }
-          helper.star_and_alt(photo, :faves).should == [ star, alt ]
+          expect(helper.star_and_alt(photo, :faves)).to eq([ star, alt ])
         end
       end
     end
@@ -146,7 +146,7 @@ describe PeopleHelper do
       person_with_score.score = 0
       high_scorers.push person_with_score
 
-      helper.position(high_scorers, person, :score).should == expected
+      expect(helper.position(high_scorers, person, :score)).to eq(expected)
     end
 
   end
@@ -159,7 +159,7 @@ describe PeopleHelper do
     }
     expected.each_pair do |star, file_name|
       it "returns the image file name #{file_name} given the star :#{star}" do
-        helper.image_for_star(star).should == file_name
+        expect(helper.image_for_star(star)).to eq(file_name)
       end
     end
   end

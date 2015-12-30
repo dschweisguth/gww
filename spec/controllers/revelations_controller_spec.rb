@@ -7,8 +7,8 @@ describe RevelationsController do
       allow(Revelation).to receive(:longest) { [revelation] }
       get :longest
 
-      response.should be_success
-      response.body.should have_link revelation.photo.person.username
+      expect(response).to be_success
+      expect(response.body).to have_link revelation.photo.person.username
 
     end
   end

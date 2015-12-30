@@ -1,27 +1,27 @@
 describe Stcline do
-  before :all do
+  before :context do
     clear_stclines
   end
 
   describe '.street_names' do
     it "lists multiword street names" do
       Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1)
-      Stcline.multiword_street_names.should == [ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS
+      expect(Stcline.multiword_street_names).to eq([ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS)
     end
 
     it "consolidates duplicates" do
       2.times { Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1) }
-      Stcline.multiword_street_names.should == [ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS
+      expect(Stcline.multiword_street_names).to eq([ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS)
     end
 
     it "ignores one-word street names" do
       Stcline.create! street: 'VALENCIA', SHAPE: point(1, 1)
-      Stcline.multiword_street_names.should == [] + Stcline::STREET_NAME_SYNONYMS
+      expect(Stcline.multiword_street_names).to eq([] + Stcline::STREET_NAME_SYNONYMS)
     end
 
     it "ignores unwanted names" do
       Stcline.create! street: 'UNNAMED 001', SHAPE: point(1, 1)
-      Stcline.multiword_street_names.should == [] + Stcline::STREET_NAME_SYNONYMS
+      expect(Stcline.multiword_street_names).to eq([] + Stcline::STREET_NAME_SYNONYMS)
     end
 
   end
@@ -33,8 +33,8 @@ describe Stcline do
         lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
-      geocode.x.should be_within(0.001).of(2.02)
-      geocode.y.should be_within(0.001).of(5.02)
+      expect(geocode.x).to be_within(0.001).of(2.02)
+      expect(geocode.y).to be_within(0.001).of(5.02)
     end
 
     it "handles a centerline with a single address" do
@@ -42,36 +42,36 @@ describe Stcline do
         lf_fadd: 3553, lf_toadd: 3561, rt_fadd: 3560, rt_toadd: 3560,
         SHAPE: line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('3560 18th', '3560', '18th', nil)
-      geocode.x.should be_within(0.001).of(2)
-      geocode.y.should be_within(0.001).of(5)
+      expect(geocode.x).to be_within(0.001).of(2)
+      expect(geocode.y).to be_within(0.001).of(5)
     end
 
     it "ignores a too-high address range on the left side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1451, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
-      Stcline.geocode(Address.new('1449 Valencia', '1449', 'Valencia', nil)).should == nil
+      expect(Stcline.geocode(Address.new('1449 Valencia', '1449', 'Valencia', nil))).to eq(nil)
     end
 
     it "ignores a too-low address range on the left side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1449, rt_fadd: 1400, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
-      Stcline.geocode(Address.new('1451 Valencia', '1451', 'Valencia', nil)).should == nil
+      expect(Stcline.geocode(Address.new('1451 Valencia', '1451', 'Valencia', nil))).to eq(nil)
     end
 
     it "ignores a too-high address range on the right side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1450, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
-      Stcline.geocode(Address.new('1448 Valencia', '1448', 'Valencia', nil)).should == nil
+      expect(Stcline.geocode(Address.new('1448 Valencia', '1448', 'Valencia', nil))).to eq(nil)
     end
 
     it "ignores a too-low address range on the right side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1450,
         SHAPE: line(point(1, 4), point(3, 6))
-      Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil)).should == nil
+      expect(Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil))).to eq(nil)
     end
 
     it "handles missing odd address numbers when looking up an even address number" do
@@ -79,8 +79,8 @@ describe Stcline do
         lf_fadd: 0, lf_toadd: 0, rt_fadd: 1400, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
       geocode = Stcline.geocode Address.new('1450 Valencia', '1450', 'Valencia', nil)
-      geocode.x.should be_within(0.001).of(2.02)
-      geocode.y.should be_within(0.001).of(5.02)
+      expect(geocode.x).to be_within(0.001).of(2.02)
+      expect(geocode.y).to be_within(0.001).of(5.02)
     end
 
     it "declines to geocode an address which matches two centerlines" do
@@ -90,7 +90,7 @@ describe Stcline do
       Stcline.create! street: 'CALIFORNIA', st_type: 'AVE',
         lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
         SHAPE: line(point(11, 14), point(13, 16))
-      Stcline.geocode(Address.new('555 California', '555', 'California', nil)).should == nil
+      expect(Stcline.geocode(Address.new('555 California', '555', 'California', nil))).to eq(nil)
     end
 
     it "considers street type" do
@@ -101,8 +101,8 @@ describe Stcline do
         lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
         SHAPE: line(point(11, 14), point(13, 16))
       geocode = Stcline.geocode Address.new('555 California Street', '555', 'California', 'Street')
-      geocode.x.should be_within(0.001).of(2.102)
-      geocode.y.should be_within(0.001).of(5.102)
+      expect(geocode.x).to be_within(0.001).of(2.102)
+      expect(geocode.y).to be_within(0.001).of(5.102)
     end
 
     it "uses the cross street to disambiguate the street, given an address at an intersection" do
@@ -115,8 +115,8 @@ describe Stcline do
       address = Address.new('3620 19th near Guerrero', '3620', '19th', nil, 'Guerrero', nil)
       allow(Stintersection).to receive(:street_type).with(address.street, address.at) { 'ST' }
       geocode = Stcline.geocode address
-      geocode.x.should be_within(0.001).of(1.714)
-      geocode.y.should be_within(0.001).of(4.714)
+      expect(geocode.x).to be_within(0.001).of(1.714)
+      expect(geocode.y).to be_within(0.001).of(4.714)
     end
 
     it "uses the first adjacent street to disambiguate the street, given an address on a block" do
@@ -130,8 +130,8 @@ describe Stcline do
         '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
       allow(Stintersection).to receive(:street_type).with(address.street, address.between1) { 'ST' }
       geocode = Stcline.geocode address
-      geocode.x.should be_within(0.001).of(1.714)
-      geocode.y.should be_within(0.001).of(4.714)
+      expect(geocode.x).to be_within(0.001).of(1.714)
+      expect(geocode.y).to be_within(0.001).of(4.714)
     end
 
     it "uses the second adjacent street to disambiguate the street if necessary, given an address on a block" do
@@ -146,8 +146,8 @@ describe Stcline do
       allow(Stintersection).to receive(:street_type).with(address.street, address.between1) { nil }
       allow(Stintersection).to receive(:street_type).with(address.street, address.between2) { 'ST' }
       geocode = Stcline.geocode address
-      geocode.x.should be_within(0.001).of(1.714)
-      geocode.y.should be_within(0.001).of(4.714)
+      expect(geocode.x).to be_within(0.001).of(1.714)
+      expect(geocode.y).to be_within(0.001).of(4.714)
     end
 
   end

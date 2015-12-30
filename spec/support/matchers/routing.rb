@@ -22,17 +22,16 @@ module GWW
           "have a route named #{@name}, where e.g. #{example_call} == #{@expected_uri}"
         end
 
-        #noinspection RubyUnusedLocalVariable
-        def matches?(subject)
+        def matches?(_subject)
           @actual_uri = @context.send("#{@name}_path", *@args)
           @actual_uri == @expected_uri
         end
 
-        def failure_message_for_should
+        def failure_message
           "expected #{example_call} to equal #{@expected_uri}, but got #{@actual_uri}"
         end
 
-        def failure_message_for_should_not
+        def failure_message_when_negated
           "expected #{example_call} to not equal #{@expected_uri}, but it did"
         end
 

@@ -16,7 +16,7 @@ describe PhotosHelper do
     def other_photos_path_returns(current_criterion, current_order, requested_criterion, expected_uri)
       controller.params[:sorted_by] = current_criterion
       controller.params[:order] = current_order
-      helper.other_photos_path(requested_criterion).should == expected_uri
+      expect(helper.other_photos_path(requested_criterion)).to eq(expected_uri)
     end
 
   end
@@ -91,64 +91,63 @@ describe PhotosHelper do
     end
 
     def ago_returns(now, time, expected)
-      # noinspection RubyArgCount
       allow(Time).to receive(:now) { Time.utc(*now) }
-      helper.ago(Time.utc(*time)).should == expected
+      expect(helper.ago(Time.utc(*time))).to eq(expected)
     end
 
   end
 
   describe '#highlighted' do
     it "highlights a term" do
-      helper.highlighted("one two three", [['two']]).should == 'one <span class="matched">two</span> three'
+      expect(helper.highlighted("one two three", [['two']])).to eq('one <span class="matched">two</span> three')
     end
 
     it "is insensitive to term case" do
-      helper.highlighted("one two three", [['TWO']]).should == 'one <span class="matched">two</span> three'
+      expect(helper.highlighted("one two three", [['TWO']])).to eq('one <span class="matched">two</span> three')
     end
 
     it "is insensitive to string case" do
-      helper.highlighted("ONE TWO THREE", [['TWO']]).should == 'ONE <span class="matched">TWO</span> THREE'
+      expect(helper.highlighted("ONE TWO THREE", [['TWO']])).to eq('ONE <span class="matched">TWO</span> THREE')
     end
 
     it "ignores a term not within word boundaries" do
-      helper.highlighted("onetwothree", [['two']]).should == 'onetwothree'
+      expect(helper.highlighted("onetwothree", [['two']])).to eq('onetwothree')
     end
 
     it "ignores a term inside a single HTML tag" do
-      helper.highlighted('<a href="two">', [['two']]).should == '<a href="two">'
+      expect(helper.highlighted('<a href="two">', [['two']])).to eq('<a href="two">')
     end
 
     it "ignores a term inside a single HTML tag even if the term also appears outside any tag" do
-      helper.highlighted('two <a href="two">', [['two']]).should == '<span class="matched">two</span> <a href="two">'
+      expect(helper.highlighted('two <a href="two">', [['two']])).to eq('<span class="matched">two</span> <a href="two">')
     end
 
     it "highlights all terms in a group if they all match" do
-      helper.highlighted("one two three four five", [['two', 'four']]).should == 'one <span class="matched">two</span> three <span class="matched">four</span> five'
+      expect(helper.highlighted("one two three four five", [['two', 'four']])).to eq('one <span class="matched">two</span> three <span class="matched">four</span> five')
     end
 
     it "doesn't highlight any terms in a group if they don't all match" do
-      helper.highlighted("one two three", [['two', 'four']]).should == 'one two three'
+      expect(helper.highlighted("one two three", [['two', 'four']])).to eq('one two three')
     end
 
     it "considers other strings that might have contributed to the match when considering whether all terms in a group match" do
-      helper.highlighted("one two three", [['two', 'four']], ['four']).should == 'one <span class="matched">two</span> three'
+      expect(helper.highlighted("one two three", [['two', 'four']], ['four'])).to eq('one <span class="matched">two</span> three')
     end
 
     it "highlights all terms in all groups if they all match" do
-      helper.highlighted("one two three four five", [['two'], ['four']]).should == 'one <span class="matched">two</span> three <span class="matched">four</span> five'
+      expect(helper.highlighted("one two three four five", [['two'], ['four']])).to eq('one <span class="matched">two</span> three <span class="matched">four</span> five')
     end
 
     it "highlights terms in a group even if other groups don't match" do
-      helper.highlighted("one two three four five", [['two'], ['six']]).should == 'one <span class="matched">two</span> three four five'
+      expect(helper.highlighted("one two three four five", [['two'], ['six']])).to eq('one <span class="matched">two</span> three four five')
     end
 
     it "handles duplicate terms in a group" do
-      helper.highlighted("one two three", [['two', 'two']]).should == 'one <span class="matched">two</span> three'
+      expect(helper.highlighted("one two three", [['two', 'two']])).to eq('one <span class="matched">two</span> three')
     end
 
     it "handles duplicate terms in different groups" do
-      helper.highlighted("one two three", [['two'], ['two']]).should == 'one <span class="matched">two</span> three'
+      expect(helper.highlighted("one two three", [['two'], ['two']])).to eq('one <span class="matched">two</span> three')
     end
 
   end

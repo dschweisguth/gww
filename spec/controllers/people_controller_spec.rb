@@ -7,15 +7,15 @@ describe PeopleController do
       allow(Person).to receive(:find_by_multiple_fields).with('username') { person }
       get :find, username: 'username'
 
-      response.should redirect_to person_path person
+      expect(response).to redirect_to person_path person
 
     end
 
     it 'punts back to the home page' do
       allow(Person).to receive(:find_by_multiple_fields).with('xxx') { nil }
       get :find, username: 'xxx'
-      response.should redirect_to root_path
-      flash[:find_person_error].should == 'xxx'
+      expect(response).to redirect_to root_path
+      expect(flash[:find_person_error]).to eq('xxx')
     end
 
   end
@@ -42,9 +42,9 @@ describe PeopleController do
       allow(Person).to receive(:all_sorted).with(sorted_by_param, order_param) { [ person ] }
       get :index, sorted_by: sorted_by_param, order: order_param
 
-      response.should be_success
-      response.body.should have_link 'Score', href: people_path('score', '-')
-      response.body.should have_link person.username, href: person_path(person)
+      expect(response).to be_success
+      expect(response.body).to have_link 'Score', href: people_path('score', '-')
+      expect(response.body).to have_link person.username, href: person_path(person)
 
     end
   end
@@ -57,10 +57,10 @@ describe PeopleController do
       allow(Person).to receive(:nemeses) { [ guesser ] }
       get :nemeses
 
-      response.should be_success
-      response.body.should have_link guesser.username, href: person_path(guesser)
-      response.body.should have_link poster.username, href: person_path(poster)
-      response.body.should have_css 'td', text: '%.3f' % guesser.bias
+      expect(response).to be_success
+      expect(response.body).to have_link guesser.username, href: person_path(guesser)
+      expect(response.body).to have_link poster.username, href: person_path(poster)
+      expect(response.body).to have_css 'td', text: '%.3f' % guesser.bias
 
     end
   end
@@ -82,7 +82,7 @@ describe PeopleController do
       allow(Person).to receive(:top_guessers) { top_guessers }
       get :top_guessers
 
-      response.should be_success
+      expect(response).to be_success
       response_has_table "for Monday, January 03 so far ...", guess
       response_has_table "for the week of January 02 so far ...", guess
       response_has_table "for January 2011 so far ...", guess
@@ -93,10 +93,10 @@ describe PeopleController do
     def response_has_table(title, guess)
       # Restricting the class avoids the enclosing container table
       tables = top_node.all('table[class=dark]').select { |table| table.has_selector? 'th', text: title }
-      tables.count.should == 1
+      expect(tables.count).to eq(1)
       table = tables.first
-      table.should have_css 'td.opening-number', text: '1'
-      table.should have_link 'username', href: person_path(guess.person)
+      expect(table).to have_css 'td.opening-number', text: '1'
+      expect(table).to have_link 'username', href: person_path(guess.person)
     end
 
   end
@@ -121,8 +121,8 @@ describe PeopleController do
       stub_posts
       get :show, id: person.id
 
-      response.should be_success
-      response.body.should have_css %Q(a[href="#{person_map_path(person)}"]) # the link text is HTML-encoded
+      expect(response).to be_success
+      expect(response.body).to have_css %Q(a[href="#{person_map_path(person)}"]) # the link text is HTML-encoded
       renders_bits_for_user_who_has_guessed
       renders_bits_for_user_who_has_posted
 
@@ -134,15 +134,15 @@ describe PeopleController do
       
       get :show, id: person.id
 
-      response.should be_success
-      response.body.should have_css %Q([href="#{person_map_path(person)}"])
+      expect(response).to be_success
+      expect(response.body).to have_css %Q([href="#{person_map_path(person)}"])
 
-      response.body.should include "#{person.username} has never made a correct guess"
-      response.body.should_not include "#{person.username} scored the most points in the last week"
-      response.body.should_not include "#{person.username} scored the most points in the last month"
-      response.body.should include "#{person.username} has correctly guessed 0 photos"
-      response.body.should_not include "Of the photos that #{person.username} has guessed,"
-      response.body.should_not include "#{person.username} is the nemesis of"
+      expect(response.body).to include "#{person.username} has never made a correct guess"
+      expect(response.body).not_to include "#{person.username} scored the most points in the last week"
+      expect(response.body).not_to include "#{person.username} scored the most points in the last month"
+      expect(response.body).to include "#{person.username} has correctly guessed 0 photos"
+      expect(response.body).not_to include "Of the photos that #{person.username} has guessed,"
+      expect(response.body).not_to include "#{person.username} is the nemesis of"
 
       renders_bits_for_user_who_has_posted
 
@@ -167,19 +167,19 @@ describe PeopleController do
 
       get :show, id: person.id
 
-      response.should be_success
-      response.body.should have_css %Q([href="#{person_map_path(person)}"])
+      expect(response).to be_success
+      expect(response.body).to have_css %Q([href="#{person_map_path(person)}"])
 
       renders_bits_for_user_who_has_guessed
 
-      response.body.should include "#{person.username} has never posted a photo to the group"
-      response.body.should_not include "#{person.username} posted the most photos in the last week"
-      response.body.should_not include "#{person.username} posted the most photos in the last month"
-      response.body.should have_css 'h2', text: "#{person.username} has posted 0 photos"
-      response.body.should_not include "Of the photos that #{person.username} has posted"
-      response.body.should_not include 'remains unfound'
-      response.body.should_not include 'was revealed'
-      response.body.should_not include "#{person.username}'s nemesis is"
+      expect(response.body).to include "#{person.username} has never posted a photo to the group"
+      expect(response.body).not_to include "#{person.username} posted the most photos in the last week"
+      expect(response.body).not_to include "#{person.username} posted the most photos in the last month"
+      expect(response.body).to have_css 'h2', text: "#{person.username} has posted 0 photos"
+      expect(response.body).not_to include "Of the photos that #{person.username} has posted"
+      expect(response.body).not_to include 'remains unfound'
+      expect(response.body).not_to include 'was revealed'
+      expect(response.body).not_to include "#{person.username}'s nemesis is"
 
     end
 
@@ -198,8 +198,8 @@ describe PeopleController do
         allow(photo).to receive(:mapped_or_automapped?) { true }
         get :show, id: person.id
 
-        top_node.should_not have_css('.photo-links a.unmapped')
-        top_node.should_not have_css('.photo-links a.needs-attention')
+        expect(top_node).not_to have_css('.photo-links a.unmapped')
+        expect(top_node).not_to have_css('.photo-links a.needs-attention')
 
       end
 
@@ -208,8 +208,8 @@ describe PeopleController do
         allow(photo).to receive(:mapped_or_automapped?) { true }
         get :show, id: person.id
 
-        top_node.should_not have_css('.photo-links a.unmapped')
-        top_node.should_not have_css('.photo-links a.needs-attention')
+        expect(top_node).not_to have_css('.photo-links a.unmapped')
+        expect(top_node).not_to have_css('.photo-links a.needs-attention')
 
       end
 
@@ -218,7 +218,7 @@ describe PeopleController do
         allow(photo).to receive(:mapped_or_automapped?) { false }
         get :show, id: person.id
 
-        top_node.should have_css('.photo-links a.unmapped')
+        expect(top_node).to have_css('.photo-links a.unmapped')
 
       end
 
@@ -227,7 +227,7 @@ describe PeopleController do
         allow(photo).to receive(:mapped_or_automapped?) { false }
         get :show, id: person.id
 
-        top_node.should have_css('.photo-links a.unmapped')
+        expect(top_node).to have_css('.photo-links a.unmapped')
 
       end
 
@@ -236,7 +236,7 @@ describe PeopleController do
         allow(photo).to receive(:has_obsolete_tags?) { true }
         get :show, id: person.id
 
-        top_node.should have_css('.photo-links a.needs-attention')
+        expect(top_node).to have_css('.photo-links a.needs-attention')
 
       end
 
@@ -245,7 +245,7 @@ describe PeopleController do
         allow(photo).to receive(:has_obsolete_tags?) { true }
         get :show, id: person.id
 
-        top_node.should have_css('.photo-links a.needs-attention')
+        expect(top_node).to have_css('.photo-links a.needs-attention')
 
       end
 
@@ -329,22 +329,22 @@ describe PeopleController do
     end
 
     def renders_bits_for_user_who_has_guessed
-      response.body.should include "#{person.username} is in 1st place with a score of 2."
-      response.body.should include "#{person.username} scored the most points in the last week"
-      response.body.should include "#{person.username} scored the most points in the last month"
-      response.body.should have_css 'h2', text: "#{person.username} has correctly guessed 2 photos"
-      response.body.should include "Of the photos that #{person.username} has guessed,"
-      response.body.should have_link @favorite_poster.username
+      expect(response.body).to include "#{person.username} is in 1st place with a score of 2."
+      expect(response.body).to include "#{person.username} scored the most points in the last week"
+      expect(response.body).to include "#{person.username} scored the most points in the last month"
+      expect(response.body).to have_css 'h2', text: "#{person.username} has correctly guessed 2 photos"
+      expect(response.body).to include "Of the photos that #{person.username} has guessed,"
+      expect(response.body).to have_link @favorite_poster.username
     end
 
     def renders_bits_for_user_who_has_posted
-      response.body.should include "#{person.username} has posted 2 photos to the group, the most"
-      response.body.should include "#{person.username} posted the most photos in the last week"
-      response.body.should include "#{person.username} posted the most photos in the last month"
-      response.body.should have_css 'h2', text: "#{person.username} has posted 2 photos"
-      response.body.should include '1 remains unfound'
-      response.body.should include '1 was revealed'
-      response.body.should have_link @favoring_guesser.username
+      expect(response.body).to include "#{person.username} has posted 2 photos to the group, the most"
+      expect(response.body).to include "#{person.username} posted the most photos in the last week"
+      expect(response.body).to include "#{person.username} posted the most photos in the last month"
+      expect(response.body).to have_css 'h2', text: "#{person.username} has posted 2 photos"
+      expect(response.body).to include '1 remains unfound'
+      expect(response.body).to include '1 was revealed'
+      expect(response.body).to have_link @favoring_guesser.username
     end
 
   end
@@ -360,9 +360,9 @@ describe PeopleController do
       end
       get :guesses, id: guesser.id
 
-      response.should be_success
-      response.body.should have_css 'h1', text: '1 guess by username'
-      response.body.should have_link poster.username
+      expect(response).to be_success
+      expect(response.body).to have_css 'h1', text: '1 guess by username'
+      expect(response.body).to have_link poster.username
 
     end
   end
@@ -382,11 +382,11 @@ describe PeopleController do
 
       get :comments, id: person.id, page: '1'
 
-      response.should be_success
-      response.body.should have_css 'h1', text: "1 photo commented on by #{person.username}"
-      response.body.should have_link 'Flickr', href: url_for_flickr_photo_in_pool(photo)
-      response.body.should have_link 'GWW', href: photo_path(photo)
-      response.body.should have_link photo.person.username, href: person_path(photo.person)
+      expect(response).to be_success
+      expect(response.body).to have_css 'h1', text: "1 photo commented on by #{person.username}"
+      expect(response.body).to have_link 'Flickr', href: url_for_flickr_photo_in_pool(photo)
+      expect(response.body).to have_link 'GWW', href: photo_path(photo)
+      expect(response.body).to have_link photo.person.username, href: person_path(photo.person)
 
     end
   end
@@ -402,14 +402,14 @@ describe PeopleController do
         with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { json }
       get :map, id: person.id
 
-      assigns[:json].should == json.to_json
+      expect(assigns[:json]).to eq(json.to_json)
 
-      response.should be_success
-      response.body.should have_css 'input[id=posts]'
-      response.body.should have_css 'label', text: '1 mapped post (?, -)'
-      response.body.should have_css 'input[id=guesses]'
-      response.body.should have_css 'label', text: '1 mapped guess (!)'
-      response.body.should =~ /GWW\.config = #{Regexp.escape assigns[:json]};/
+      expect(response).to be_success
+      expect(response.body).to have_css 'input[id=posts]'
+      expect(response.body).to have_css 'label', text: '1 mapped post (?, -)'
+      expect(response.body).to have_css 'input[id=guesses]'
+      expect(response.body).to have_css 'label', text: '1 mapped guess (!)'
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
 
     end
   end
@@ -421,8 +421,8 @@ describe PeopleController do
         with(1, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { json }
       get :map_json, id: 1
 
-      response.should be_success
-      response.body.should == json.to_json
+      expect(response).to be_success
+      expect(response.body).to eq(json.to_json)
 
     end
 

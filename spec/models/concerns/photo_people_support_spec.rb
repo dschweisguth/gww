@@ -23,12 +23,11 @@ describe Photo do
       returns_post 'revealed', Color::Red.scaled(0, 1, 1), '-'
     end
 
-    # noinspection RubyArgCount
     def returns_post(game_status, color, symbol)
       post = build :photo, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
       allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post ] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
-      Photo.for_person_for_map(person.id, bounds, 1).should == {
+      expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq({
         partial: false,
         bounds: bounds,
         photos: [
@@ -40,14 +39,14 @@ describe Photo do
             'symbol' => symbol
           }
         ]
-      }
+      })
     end
 
     it "copies an inferred geocode to the stated one" do
       post = build :photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
       allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post ] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
-      Photo.for_person_for_map(person.id, bounds, 1).should == {
+      expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq({
         partial: false,
         bounds: bounds,
         photos: [
@@ -59,14 +58,14 @@ describe Photo do
             'symbol' => '?'
           }
         ]
-      }
+      })
     end
 
     it "returns a guess" do
       photo = build :photo, person_id: 2, latitude: 37, longitude: -122
       allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ photo ] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
-      Photo.for_person_for_map(person.id, bounds, 1).should == {
+      expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq({
         partial: false,
         bounds: bounds,
         photos: [
@@ -78,7 +77,7 @@ describe Photo do
             'symbol' => '!'
           }
         ]
-      }
+      })
     end
 
     it "returns no more than a maximum number of photos" do
@@ -86,7 +85,7 @@ describe Photo do
       oldest_photo = build :photo, dateadded: 1.day.ago
       allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post, oldest_photo ] }
       allow(Photo).to receive(:oldest) { oldest_photo }
-      Photo.for_person_for_map(person.id, bounds, 1).should == {
+      expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq({
         partial: true,
         bounds: bounds,
         photos: [
@@ -98,17 +97,17 @@ describe Photo do
             'symbol' => '?'
           }
         ]
-      }
+      })
     end
 
     it "handles no photos" do
       allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [] }
       allow(Photo).to receive(:oldest) { nil }
-      Photo.for_person_for_map(person.id, bounds, 1).should == {
+      expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq({
         partial: false,
         bounds: bounds,
         photos: []
-      }
+      })
     end
 
   end
@@ -123,20 +122,20 @@ describe Photo do
     it "ignores other people's posts" do
       create :photo, latitude: 37, longitude: -122, accuracy: 12
       other_person = create :person
-      Photo.posted_or_guessed_by_and_mapped(other_person.id, bounds, 1).should == []
+      expect(Photo.posted_or_guessed_by_and_mapped(other_person.id, bounds, 1)).to eq([])
     end
 
     it "returns photos guessed by the person" do
       photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
       guess = create :guess, photo: photo
-      Photo.posted_or_guessed_by_and_mapped(guess.person.id, bounds, 1).should == [ photo ]
+      expect(Photo.posted_or_guessed_by_and_mapped(guess.person.id, bounds, 1)).to eq([ photo ])
     end
 
     it "ignores other people's guesses" do
       photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
       create :guess, photo: photo
       other_person = create :person
-      Photo.posted_or_guessed_by_and_mapped(other_person.id, bounds, 1).should == []
+      expect(Photo.posted_or_guessed_by_and_mapped(other_person.id, bounds, 1)).to eq([])
     end
 
     it "returns auto-mapped photos" do
@@ -186,17 +185,17 @@ describe Photo do
     it "returns only the youngest n photos" do
       photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
       create :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago, accuracy: 12
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1).should == [ photo ]
+      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([ photo ])
     end
 
     def returns_post(attributes)
       photo = create :photo, attributes
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1).should == [ photo ]
+      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([ photo ])
     end
 
     def ignores_post(attributes)
       photo = create :photo, attributes
-      Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1).should == []
+      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([])
     end
 
   end
@@ -205,7 +204,7 @@ describe Photo do
     it 'returns the age with a precision of days in English' do
       photo = Photo.new dateadded: Time.utc(2000)
       allow(Time).to receive(:now) { Time.utc(2001, 2, 2, 1, 1, 1) }
-      photo.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day'
+      expect(photo.ymd_elapsed).to eq('1&nbsp;year, 1&nbsp;month, 1&nbsp;day')
     end
   end
 
@@ -214,7 +213,7 @@ describe Photo do
     expected.keys.sort.each do |other_user_comments|
       it "returns a #{expected[other_user_comments]} star for a photo with #{other_user_comments} comments" do
         photo = Photo.new other_user_comments: other_user_comments
-        photo.star_for_comments.should == expected[other_user_comments]
+        expect(photo.star_for_comments).to eq(expected[other_user_comments])
       end
     end
   end
@@ -224,7 +223,7 @@ describe Photo do
     expected.keys.sort.each do |views|
       it "returns a #{expected[views]} star for a photo with #{views} views" do
         photo = Photo.new views: views
-        photo.star_for_views.should == expected[views]
+        expect(photo.star_for_views).to eq(expected[views])
       end
     end
   end
@@ -234,7 +233,7 @@ describe Photo do
     expected.keys.sort.each do |faves|
       it "returns a #{expected[faves]} star for a photo with #{faves} faves" do
         photo = Photo.new faves: faves
-        photo.star_for_faves.should == expected[faves]
+        expect(photo.star_for_faves).to eq(expected[faves])
       end
     end
   end
@@ -244,56 +243,56 @@ describe Photo do
       it "returns true if a #{game_status} photo is tagged unfoundinSF" do
         photo = create :photo, game_status: game_status
         create :tag, photo: photo, raw: 'unfoundinSF'
-        photo.has_obsolete_tags?.should be_truthy
+        expect(photo.has_obsolete_tags?).to be_truthy
       end
     end
 
     it "is case-insensitive" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'UNFOUNDINSF'
-      photo.has_obsolete_tags?.should be_truthy
+      expect(photo.has_obsolete_tags?).to be_truthy
     end
 
     %w(unfound unconfirmed).each do |game_status|
       it "returns false if a #{game_status} photo is tagged unfoundinSF" do
         photo = create :photo, game_status: game_status
         create :tag, photo: photo, raw: 'unfoundinSF'
-        photo.has_obsolete_tags?.should be_falsy
+        expect(photo.has_obsolete_tags?).to be_falsy
       end
     end
 
     it "returns false if a found photo is tagged something else" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'unseeninSF'
-      photo.has_obsolete_tags?.should be_falsy
+      expect(photo.has_obsolete_tags?).to be_falsy
     end
 
     it "returns false if a found photo is tagged both unfoundinSF and foundinSF" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'foundinSF'
-      photo.has_obsolete_tags?.should be_falsy
+      expect(photo.has_obsolete_tags?).to be_falsy
     end
 
     it "returns true if a found photo is tagged both unfoundinSF and revealedinSF" do
       photo = create :photo, game_status: 'found'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'revealedinSF'
-      photo.has_obsolete_tags?.should be_truthy
+      expect(photo.has_obsolete_tags?).to be_truthy
     end
 
     it "returns false if a revealed photo is tagged both unfoundinSF and foundinSF" do
       photo = create :photo, game_status: 'revealed'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'foundinSF'
-      photo.has_obsolete_tags?.should be_falsy
+      expect(photo.has_obsolete_tags?).to be_falsy
     end
 
     it "returns false if a revealed photo is tagged both unfoundinSF and revealedinSF" do
       photo = create :photo, game_status: 'revealed'
       create :tag, photo: photo, raw: 'unfoundinSF'
       create :tag, photo: photo, raw: 'revealedinSF'
-      photo.has_obsolete_tags?.should be_falsy
+      expect(photo.has_obsolete_tags?).to be_falsy
     end
 
   end

@@ -8,7 +8,7 @@ describe BookmarkletController do
       allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :show, from: url_for_flickr_photo(photo)
 
-      response.should redirect_to photo_path photo
+      expect(response).to redirect_to photo_path photo
 
     end
 
@@ -17,7 +17,7 @@ describe BookmarkletController do
       allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :show, from: url_for_flickr_photo(photo)
 
-      response.should redirect_to photo_path photo
+      expect(response).to redirect_to photo_path photo
 
     end
 
@@ -25,8 +25,8 @@ describe BookmarkletController do
       allow(Photo).to receive(:find_by_flickrid).with('0123456789') { nil }
       get :show, from: 'http://www.flickr.com/photos/person_flickrid/0123456789/'
 
-      response.should redirect_to root_path
-      flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that photo/
+      expect(response).to redirect_to root_path
+      expect(flash[:general_error]).to match(/Sorry, Guess Where Watcher doesn't know anything about that photo/)
 
     end
 
@@ -36,7 +36,7 @@ describe BookmarkletController do
       allow(Person).to receive(:find_by_pathalias).with(person.pathalias) { person }
       get :show, from: url_for_flickr_person(person)
 
-      response.should redirect_to person_path person
+      expect(response).to redirect_to person_path person
 
     end
 
@@ -45,7 +45,7 @@ describe BookmarkletController do
       allow(Person).to receive(:find_by_pathalias).with(person.pathalias) { person }
       get :show, from: url_for_flickr_person(person)
 
-      response.should redirect_to person_path person
+      expect(response).to redirect_to person_path person
 
     end
 
@@ -55,7 +55,7 @@ describe BookmarkletController do
       allow(Person).to receive(:find_by_flickrid).with(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/people/#{person.flickrid}/"
 
-      response.should redirect_to person_path person
+      expect(response).to redirect_to person_path person
 
     end
 
@@ -64,8 +64,8 @@ describe BookmarkletController do
       allow(Person).to receive(:find_by_flickrid).with('person_flickrid') { nil }
       get :show, from: "https://www.flickr.com/people/person_flickrid/"
 
-      response.should redirect_to root_path
-      flash[:general_error].should =~ /Sorry, Guess Where Watcher doesn't know anything about that person/
+      expect(response).to redirect_to root_path
+      expect(flash[:general_error]).to match(/Sorry, Guess Where Watcher doesn't know anything about that person/)
 
     end
 
@@ -75,15 +75,15 @@ describe BookmarkletController do
       allow(Person).to receive(:find_by_flickrid).with(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/photos/#{person.flickrid}/"
 
-      response.should redirect_to person_path person
+      expect(response).to redirect_to person_path person
 
     end
 
     it 'punts unknown URLs' do
       get :show, from: 'http://www.notflickr.com/'
 
-      response.should redirect_to root_path
-      flash[:general_error].should =~ /Hmmm/
+      expect(response).to redirect_to root_path
+      expect(flash[:general_error]).to match(/Hmmm/)
 
     end
 

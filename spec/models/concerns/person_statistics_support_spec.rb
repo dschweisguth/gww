@@ -4,9 +4,9 @@ describe PersonStatisticsSupport do
       person = create :person, comments_to_guess: 1, comments_per_post: 1, comments_to_be_guessed: 1
       Person.update_statistics
       person.reload
-      person.comments_to_guess.should == nil
-      person.comments_per_post.should == 0
-      person.comments_to_be_guessed.should == nil
+      expect(person.comments_to_guess).to eq(nil)
+      expect(person.comments_per_post).to eq(0)
+      expect(person.comments_to_be_guessed).to eq(nil)
     end
 
     describe 'when updating comments_to_guess' do
@@ -35,7 +35,7 @@ describe PersonStatisticsSupport do
       def guesser_attribute_is_1
         Person.update_statistics
         guess.person.reload
-        guess.person.comments_to_guess.should == 1
+        expect(guess.person.comments_to_guess).to eq(1)
       end
 
     end
@@ -45,7 +45,7 @@ describe PersonStatisticsSupport do
         comment = create :comment
         Person.update_statistics
         comment.photo.person.reload
-        comment.photo.person.comments_per_post.should == 1
+        expect(comment.photo.person.comments_per_post).to eq(1)
       end
 
       it 'ignores comments made by the poster' do
@@ -53,7 +53,7 @@ describe PersonStatisticsSupport do
         create :comment, photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
         Person.update_statistics
         photo.person.reload
-        photo.person.comments_per_post.should == 0
+        expect(photo.person.comments_per_post).to eq(0)
       end
 
     end
@@ -86,7 +86,7 @@ describe PersonStatisticsSupport do
       def poster_attribute_is_1
         Person.update_statistics
         guess.photo.person.reload
-        guess.photo.person.comments_to_be_guessed.should == 1
+        expect(guess.photo.person.comments_to_be_guessed).to eq(1)
       end
 
     end

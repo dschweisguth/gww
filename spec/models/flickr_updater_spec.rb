@@ -12,10 +12,10 @@ describe FlickrUpdater do
       expect(FlickrUpdater).to receive(:update_all_photos) { [ 1, 2, 3, 4 ] }
       expect(FlickrUpdater).to receive(:update_all_people)
       allow(Time).to receive(:now) { Time.utc(2011) }
-      FlickrUpdater.update_everything.should == "Created 1 new photos and 2 new users. Got 3 pages out of 4."
+      expect(FlickrUpdater.update_everything).to eq("Created 1 new photos and 2 new users. Got 3 pages out of 4.")
       update = FlickrUpdate.first_and_only
-      update.member_count.should == 1492
-      update.completed_at.should == Time.utc(2011)
+      expect(update.member_count).to eq(1492)
+      expect(update.completed_at).to eq(Time.utc(2011))
     end
   end
 
@@ -34,8 +34,8 @@ describe FlickrUpdater do
       end
       FlickrUpdater.update_all_people
       person.reload
-      person.username.should == 'new_username'
-      person.pathalias.should == 'new_pathalias'
+      expect(person.username).to eq('new_username')
+      expect(person.pathalias).to eq('new_pathalias')
     end
 
     it "handles an error" do
@@ -45,8 +45,8 @@ describe FlickrUpdater do
       end
       FlickrUpdater.update_all_people
       person.reload
-      person.username.should == 'old_username'
-      person.pathalias.should == 'old_pathalias'
+      expect(person.username).to eq('old_username')
+      expect(person.pathalias).to eq('old_pathalias')
     end
 
   end
@@ -122,17 +122,17 @@ describe FlickrUpdater do
       stubbed_photo = stub_get_photos
       stubbed_faves = stub_get_faves
       mock_get_comments_and_tags
-      FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
+      expect(FlickrUpdater.update_all_photos).to eq([ 1, 1, 1, 1 ])
 
       photo = Photo.first_and_only
 
-      photo.person.should have_attributes(
+      expect(photo.person).to have_attributes(
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
         pathalias: stubbed_photo[:pathalias]
       )
 
-      photo.should have_attributes(
+      expect(photo).to have_attributes(
         flickrid: stubbed_photo[:id],
         farm: stubbed_photo[:farm],
         server: stubbed_photo[:server],
@@ -159,7 +159,7 @@ describe FlickrUpdater do
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos
 
-      Person.first_and_only.should have_attributes(
+      expect(Person.first_and_only).to have_attributes(
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
         pathalias: stubbed_photo[:owner]
@@ -172,10 +172,10 @@ describe FlickrUpdater do
       stub_get_faves
       mock_get_comments_and_tags
       person_before = create :person, flickrid: stubbed_photo[:owner]
-      FlickrUpdater.update_all_photos.should == [ 1, 0, 1, 1 ]
+      expect(FlickrUpdater.update_all_photos).to eq([ 1, 0, 1, 1 ])
 
       # Note that a username or pathalias that changes during the update is not updated
-      Person.first_and_only.should have_the_same_attributes_as(person_before)
+      expect(Person.first_and_only).to have_the_same_attributes_as(person_before)
 
     end
 
@@ -185,13 +185,13 @@ describe FlickrUpdater do
       stub_get_faves
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos
-      Photo.first_and_only.datetaken.should be_nil
+      expect(Photo.first_and_only.datetaken).to be_nil
     end
 
     it "propagates errors other than that which comes from an invalid datetime" do
       stub_get_photos
       allow(ActiveSupport::TimeZone['Pacific Time (US & Canada)']).to receive(:parse) { raise ArgumentError, "some other error" }
-      lambda { FlickrUpdater.update_all_photos }.should raise_error(ArgumentError, "some other error")
+      expect { FlickrUpdater.update_all_photos }.to raise_error(ArgumentError, "some other error")
     end
 
     it "handles an empty description" do
@@ -199,7 +199,7 @@ describe FlickrUpdater do
       stub_get_faves
       mock_get_comments_and_tags
       FlickrUpdater.update_all_photos
-      Photo.first_and_only.description.should be_nil
+      expect(Photo.first_and_only.description).to be_nil
     end
 
     it "uses an existing photo, and updates attributes that changed" do
@@ -221,9 +221,9 @@ describe FlickrUpdater do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      FlickrUpdater.update_all_photos.should == [ 0, 0, 1, 1 ]
+      expect(FlickrUpdater.update_all_photos).to eq([ 0, 0, 1, 1 ])
 
-      Photo.first_and_only.should have_attributes(
+      expect(Photo.first_and_only).to have_attributes(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: stubbed_photo[:farm],
@@ -268,7 +268,7 @@ describe FlickrUpdater do
         faves: 6
       FlickrUpdater.update_all_photos
 
-      Photo.first_and_only.should have_attributes(
+      expect(Photo.first_and_only).to have_attributes(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: photo_before.farm,
@@ -294,7 +294,7 @@ describe FlickrUpdater do
       mock_get_comments_and_tags
       allow(FlickrUpdater).to receive(:fave_count) { nil }
       FlickrUpdater.update_all_photos
-      Photo.first.faves.should == 0
+      expect(Photo.first.faves).to eq(0)
     end
 
     it "leaves an existing photo's faves alone if the request for faves fails" do
@@ -303,15 +303,15 @@ describe FlickrUpdater do
       allow(FlickrUpdater).to receive(:fave_count) { nil }
       photo = create :photo, faves: 6
       FlickrUpdater.update_all_photos
-      photo.reload.faves.should == 6
+      expect(photo.reload.faves).to eq(6)
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
       stub_get_photos latitude: 0, longitude: 0, accuracy: 0
       stub_get_faves
       mock_get_comments_and_tags
-      FlickrUpdater.update_all_photos.should == [ 1, 1, 1, 1 ]
-      Photo.first_and_only.should have_attributes(
+      expect(FlickrUpdater.update_all_photos).to eq([ 1, 1, 1, 1 ])
+      expect(Photo.first_and_only).to have_attributes(
         latitude: nil,
         longitude: nil,
         accuracy: nil,
@@ -337,11 +337,11 @@ describe FlickrUpdater do
       expect(FlickrUpdater).to receive(:update_tags).with photo
       FlickrUpdater.update_photo photo
 
-      photo.person.should have_attributes(
+      expect(photo.person).to have_attributes(
         username: 'new_username',
         pathalias: 'new_pathalias'
       )
-      photo.should have_attributes(
+      expect(photo).to have_attributes(
         farm: '1',
         server: 'incoming_server',
         secret: 'incoming_secret',
@@ -370,7 +370,7 @@ describe FlickrUpdater do
       allow(FlickrUpdater).to receive(:update_tags).with photo
       FlickrUpdater.update_photo photo
 
-      photo.should have_attributes(
+      expect(photo).to have_attributes(
         latitude: nil,
         longitude: nil,
         accuracy: nil
@@ -383,7 +383,7 @@ describe FlickrUpdater do
       stub_get_photo
       error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "whatever"
       allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid) { raise error }
-      lambda { FlickrUpdater.update_photo photo }.should raise_error
+      expect { FlickrUpdater.update_photo photo }.to raise_error
     end
 
     it "does not attempt to handle other errors when requesting location" do
@@ -391,7 +391,7 @@ describe FlickrUpdater do
       stub_get_photo
       error = FlickrService::FlickrRequestFailedError
       allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid) { raise error }
-      lambda { FlickrUpdater.update_photo photo }.should raise_error error
+      expect { FlickrUpdater.update_photo photo }.to raise_error error
     end
 
     it "moves on if there is an error getting faves" do
@@ -402,7 +402,7 @@ describe FlickrUpdater do
       allow(FlickrUpdater).to receive(:update_comments).with photo
       allow(FlickrUpdater).to receive(:update_tags).with photo
       FlickrUpdater.update_photo photo
-      photo.faves.should == 0
+      expect(photo.faves).to eq(0)
     end
 
     it "only updates the photo's seen_at and the person if the photo hasn't been updated, for performance" do
@@ -416,11 +416,11 @@ describe FlickrUpdater do
       expect(FlickrUpdater).not_to receive(:update_tags)
       FlickrUpdater.update_photo photo
 
-      photo.person.should have_attributes(
+      expect(photo.person).to have_attributes(
         username: 'new_username',
         pathalias: 'new_pathalias'
       )
-      photo.should have_attributes(
+      expect(photo).to have_attributes(
         farm: old_photo_attrs['farm'],
         server: old_photo_attrs['server'],
         secret: old_photo_attrs['secret'],
@@ -521,21 +521,21 @@ describe FlickrUpdater do
           'photo' => [{ 'total' => '7' }]
         }
       end
-      FlickrUpdater.fave_count('photo_flickrid').should == 7
+      expect(FlickrUpdater.fave_count('photo_flickrid')).to eq(7)
     end
 
     it "returns nil if there is a REXML::ParseException" do
       allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1) do
         raise REXML::ParseException, "Oops!"
       end
-      FlickrUpdater.fave_count('photo_flickrid').should == nil
+      expect(FlickrUpdater.fave_count('photo_flickrid')).to eq(nil)
     end
 
     it "returns nil if there is a FlickrService::FlickrRequestFailedError" do
       allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1) do
         raise FlickrService::FlickrRequestFailedError
       end
-      FlickrUpdater.fave_count('photo_flickrid').should == nil
+      expect(FlickrUpdater.fave_count('photo_flickrid')).to eq(nil)
     end
 
   end
@@ -565,8 +565,8 @@ describe FlickrUpdater do
         }
       end
       FlickrUpdater.update_comments photo
-      photo.comments.length.should == 1
-      Comment.count.should == 1
+      expect(photo.comments.length).to eq(1)
+      expect(Comment.count).to eq(1)
     end
 
     it "leaves previous comments alone if the request for comments fails" do
@@ -575,7 +575,7 @@ describe FlickrUpdater do
         raise FlickrService::FlickrRequestFailedError
       end
       FlickrUpdater.update_comments photo
-      Comment.count.should == 1
+      expect(Comment.count).to eq(1)
     end
 
     def stub_request_to_return_one_comment
@@ -594,8 +594,8 @@ describe FlickrUpdater do
     end
 
     def photo_has_the_comment_from_the_request
-      photo.comments.length.should == 1
-      photo.comments.first.should have_attributes(
+      expect(photo.comments.length).to eq(1)
+      expect(photo.comments.first).to have_attributes(
         flickrid: 'commenter_flickrid',
         username: 'commenter_username',
         comment_text: 'comment text',
@@ -611,14 +611,14 @@ describe FlickrUpdater do
     it "loads tags from Flickr" do
       stub_get_tags Tag.new(raw: 'Tag 1'), Tag.new(raw: 'Tag 2', machine_tag: true)
       FlickrUpdater.update_tags photo
-      photo.tags.map { |tag| [tag.raw, tag.machine_tag] }.should =~ [['Tag 1', false], ['Tag 2', true]]
+      expect(photo.tags.map { |tag| [tag.raw, tag.machine_tag] }).to match_array([['Tag 1', false], ['Tag 2', true]])
     end
 
     it "deletes previous tags" do
       create :tag, photo: photo, raw: 'old tag'
       stub_get_tags Tag.new(raw: 'new tag')
       FlickrUpdater.update_tags photo
-      photo.tags.map(&:raw).should == ['new tag']
+      expect(photo.tags.map(&:raw)).to eq(['new tag'])
     end
 
     def stub_get_tags(*tags)
@@ -644,7 +644,7 @@ describe FlickrUpdater do
         }
       end
       FlickrUpdater.update_tags photo
-      photo.tags.should be_empty
+      expect(photo.tags).to be_empty
     end
 
     it "leaves previous tags alone if the request for tags fails due to FlickrService::FlickrRequestFailedError" do
@@ -653,7 +653,7 @@ describe FlickrUpdater do
         raise FlickrService::FlickrRequestFailedError
       end
       FlickrUpdater.update_tags photo
-      photo.tags.map(&:raw).should == ['old tag']
+      expect(photo.tags.map(&:raw)).to eq(['old tag'])
     end
 
     it "leaves previous tags alone if the request for tags fails due to REXML::ParseException" do
@@ -662,7 +662,7 @@ describe FlickrUpdater do
         raise REXML::ParseException, "Flickr sent bad XML"
       end
       FlickrUpdater.update_tags photo
-      photo.tags.map(&:raw).should == ['old tag']
+      expect(photo.tags.map(&:raw)).to eq(['old tag'])
     end
 
   end

@@ -30,9 +30,12 @@ describe 'SearchDataParamsParser' do
     end
 
     class ModelParamsResultAsserter < Struct.new(:segments)
+      include RSpec::Matchers
+
       def into(params)
-        SearchDataParamsParser.new.model_params(segments).should == params
+        expect(SearchDataParamsParser.new.model_params(segments)).to eq(params)
       end
+
     end
 
     def parser_canonicalizes(segments)
@@ -43,8 +46,8 @@ describe 'SearchDataParamsParser' do
       include RSpec::Matchers
 
       def into(canonical_uri)
-        lambda { SearchDataParamsParser.new.model_params segments }.
-          should raise_error(SearchDataParamsParser::NonCanonicalSegmentsError, canonical_uri)
+        expect { SearchDataParamsParser.new.model_params segments }.
+          to raise_error(SearchDataParamsParser::NonCanonicalSegmentsError, canonical_uri)
       end
 
     end
@@ -54,7 +57,7 @@ describe 'SearchDataParamsParser' do
   # This test doesn't test any functionality that isn't already tested; it just completes coverage
   describe '#transform_keys' do
     it "transforms the given map's keys with the given block" do
-      SearchDataParamsParser.new.transform_keys(x: 1) { |key| key.to_s }.should == { 'x' => 1 }
+      expect(SearchDataParamsParser.new.transform_keys(x: 1) { |key| key.to_s }).to eq({ 'x' => 1 })
     end
   end
 

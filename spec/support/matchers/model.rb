@@ -34,7 +34,7 @@ module GWW
           @expected.all? { |name, value| @actual[name] == value }
         end
 
-        def failure_message_for_should
+        def failure_message
           missing_attr_names = @expected.keys - @actual.keys
           "expected attributes to be a superset of #{@expected}, but " +
             if missing_attr_names.any?
@@ -66,7 +66,7 @@ module GWW
           @actual.values_at(*@attr_names) == @expected.values_at(*@attr_names)
         end
 
-        def failure_message_for_should
+        def failure_message
           "expected #{names_and_values @expected}, but got #{names_and_values @actual}"
         end
 

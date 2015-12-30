@@ -9,11 +9,11 @@ describe Admin::RootController do
       allow(Photo).to receive(:multipoint_count) { 2 }
       get :index
 
-      response.should be_success
-      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 40 minutes.'
-      response.body.should include '(111)'
-      response.body.should include '(222)'
-      response.body.should include '(2)'
+      expect(response).to be_success
+      expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 40 minutes.'
+      expect(response.body).to include '(111)'
+      expect(response.body).to include '(222)'
+      expect(response.body).to include '(2)'
 
     end
 
@@ -26,7 +26,7 @@ describe Admin::RootController do
       allow(Photo).to receive(:multipoint_count) { 2 }
       get :index
 
-      response.body.should include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and completed at Monday, January  1,  0:06 PST.'
+      expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and completed at Monday, January  1,  0:06 PST.'
 
     end
 
@@ -36,8 +36,8 @@ describe Admin::RootController do
     it "does the update and redirects" do
       expect(FlickrUpdater).to receive(:update_everything) { "The message" }
       get :update_from_flickr
-      response.should redirect_to admin_root_path
-      flash[:notice].should == "The message"
+      expect(response).to redirect_to admin_root_path
+      expect(flash[:notice]).to eq("The message")
     end
   end
 
@@ -45,8 +45,8 @@ describe Admin::RootController do
     it "does the update and redirects" do
       expect(Precalculator).to receive(:calculate_statistics_and_maps) { "The message" }
       get :calculate_statistics_and_maps
-      response.should redirect_to admin_root_path
-      flash[:notice].should == "The message"
+      expect(response).to redirect_to admin_root_path
+      expect(flash[:notice]).to eq("The message")
     end
   end
 
@@ -54,8 +54,8 @@ describe Admin::RootController do
     it "renders the page" do
       get :bookmarklet
 
-      response.should be_success
-      response.body.should have_css %Q(a[href="#{root_bookmarklet_path}"])
+      expect(response).to be_success
+      expect(response.body).to have_css %Q(a[href="#{root_bookmarklet_path}"])
 
     end
   end

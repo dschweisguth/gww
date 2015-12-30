@@ -23,7 +23,6 @@ class Admin::ScoreReportsController < ApplicationController
   end
 
   def destroy
-    #noinspection RubyArgCount
     ScoreReport.destroy params[:id]
     PageCache.clear
     # noinspection RubyResolve

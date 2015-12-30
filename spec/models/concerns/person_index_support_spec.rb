@@ -313,7 +313,7 @@ describe PersonIndexSupport do
 
     it 'sorts the other direction, too' do
       create_people_named 'a', 'z'
-      Person.all_sorted('username', '-').should == [ @person2, @person1 ]
+      expect(Person.all_sorted('username', '-')).to eq([ @person2, @person1 ])
     end
 
     def create_people_named(username1, username2)
@@ -332,15 +332,15 @@ describe PersonIndexSupport do
     end
 
     def puts_person2_before_person1(sorted_by)
-      Person.all_sorted(sorted_by, '+').should == [ @person2, @person1 ]
+      expect(Person.all_sorted(sorted_by, '+')).to eq([ @person2, @person1 ])
     end
 
     it 'explodes if sorted_by is invalid' do
-      lambda { Person.all_sorted('hat-size', '+') }.should raise_error ArgumentError
+      expect { Person.all_sorted('hat-size', '+') }.to raise_error ArgumentError
     end
 
     it 'explodes if order is invalid' do
-      lambda { Person.all_sorted('username', '?') }.should raise_error ArgumentError
+      expect { Person.all_sorted('username', '?') }.to raise_error ArgumentError
     end
 
   end
@@ -348,14 +348,14 @@ describe PersonIndexSupport do
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = create :guess, commented_at: 4.days.ago
-      Person.guesses_per_day.should == { guess.person.id => 0.25 }
+      expect(Person.guesses_per_day).to eq({ guess.person.id => 0.25 })
     end
   end
 
   describe '.posts_per_day' do
     it 'returns a map of person ID to average posts per day' do
       photo = create :photo, dateadded: 4.days.ago
-      Person.posts_per_day.should == { photo.person.id => 0.25 }
+      expect(Person.posts_per_day).to eq({ photo.person.id => 0.25 })
     end
   end
 
@@ -364,7 +364,7 @@ describe PersonIndexSupport do
       now = Time.now
       photo = create :photo, dateadded: now - 5
       guess = create :guess, photo: photo, commented_at: now - 1
-      Person.guess_speeds.should == { guess.person.id => 4 }
+      expect(Person.guess_speeds).to eq({ guess.person.id => 4 })
     end
   end
 
@@ -373,21 +373,21 @@ describe PersonIndexSupport do
       now = Time.now
       photo = create :photo, dateadded: now - 5
       create :guess, photo: photo, commented_at: now - 1
-      Person.be_guessed_speeds.should == { photo.person.id => 4 }
+      expect(Person.be_guessed_speeds).to eq({ photo.person.id => 4 })
     end
   end
 
   describe '.views_per_post' do
     it 'returns a map of person ID to average # of views per post' do
       photo = create :photo, views: 1
-      Person.views_per_post.should == { photo.person.id => 1 }
+      expect(Person.views_per_post).to eq({ photo.person.id => 1 })
     end
   end
 
   describe '.faves_per_post' do
     it 'returns a map of person ID to average # of faves per post' do
       photo = create :photo, faves: 1
-      Person.faves_per_post.should == { photo.person.id => 1 }
+      expect(Person.faves_per_post).to eq({ photo.person.id => 1 })
     end
   end
 

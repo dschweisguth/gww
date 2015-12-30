@@ -2,19 +2,19 @@ describe ScoreReportsHelper do
 
   describe '#escape_username' do
     it 'surrounds the dot in a username that looks like a domain name with spaces' do
-      helper.escape_username('m.bibelot').should == 'm . bibelot'
+      expect(helper.escape_username('m.bibelot')).to eq('m . bibelot')
     end
 
     it 'does so regardless of capitalization' do
-      helper.escape_username('KayVee.INC').should == 'KayVee . INC'
+      expect(helper.escape_username('KayVee.INC')).to eq('KayVee . INC')
     end
 
     it 'does nothing if the dot is preceded by a space' do
-      helper.escape_username('KayVee .INC').should == 'KayVee .INC'
+      expect(helper.escape_username('KayVee .INC')).to eq('KayVee .INC')
     end
 
     it 'does nothing if the dot is followed by a space' do
-      helper.escape_username('KayVee. INC').should == 'KayVee. INC'
+      expect(helper.escape_username('KayVee. INC')).to eq('KayVee. INC')
     end
 
   end
@@ -22,12 +22,12 @@ describe ScoreReportsHelper do
   describe '#link_to_person_url' do
     it "returns a fully qualified link to the person's page" do
       person = build_stubbed :person
-      helper.link_to_person_url(person).should == "<a href=\"#{person_url person}\">#{person.username}</a>"
+      expect(helper.link_to_person_url(person)).to eq("<a href=\"#{person_url person}\">#{person.username}</a>")
     end
 
     it "escapes HTML special characters in the person's username" do
       person = build_stubbed :person, username: 'try&catch>me'
-      helper.link_to_person_url(person).should == "<a href=\"#{person_url person}\">try&amp;catch&gt;me</a>"
+      expect(helper.link_to_person_url(person)).to eq("<a href=\"#{person_url person}\">try&amp;catch&gt;me</a>")
     end
 
   end
@@ -40,7 +40,7 @@ describe ScoreReportsHelper do
     }
     expected.keys.each do |star|
       it "returns #{expected[star]} given a #{star} star" do
-        helper.image_url_for_star(star).should == expected[star]
+        expect(helper.image_url_for_star(star)).to eq(expected[star])
       end
     end
   end
