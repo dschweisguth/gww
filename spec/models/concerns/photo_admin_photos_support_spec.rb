@@ -169,13 +169,14 @@ describe PhotoAdminPhotosSupport do
       end
 
       def stub_person_request
-        # noinspection RubyArgCount
-        stub(FlickrService.instance).people_get_info { {
-          'person' => [ {
-            'username' => [ 'username_from_request' ],
-            'photosurl' => [ 'https://www.flickr.com/photos/pathalias_from_request/' ]
-          } ]
-        } }
+        allow(FlickrService.instance).to receive(:people_get_info) do
+          {
+            'person' => [{
+              'username' => ['username_from_request'],
+              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
+            }]
+          }
+        end
       end
 
     end
@@ -183,8 +184,7 @@ describe PhotoAdminPhotosSupport do
     # Specs of add_entered_answer call this immediately before calling add_selected_answer so
     # that it doesn't affect test objects' date attributes and assertions on those attributes don't pass by accident
     def set_time
-      # noinspection RubyArgCount
-      stub(Time).now { now }
+      allow(Time).to receive(:now) { now }
     end
 
   end

@@ -4,7 +4,7 @@ describe RevelationsController do
   describe '#longest' do
     it 'renders the page' do
       revelation = build_stubbed :revelation
-      stub(Revelation).longest { [revelation] }
+      allow(Revelation).to receive(:longest) { [revelation] }
       get :longest
 
       response.should be_success

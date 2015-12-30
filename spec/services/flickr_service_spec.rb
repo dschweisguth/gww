@@ -107,7 +107,7 @@ describe FlickrService, type: :service do
     end
 
     def mock_get_times_out(times)
-      mock(service).get.with_any_args.times(times) { raise Timeout::Error }
+      expect(service).to receive(:get).exactly(times).times { raise Timeout::Error }
     end
 
     def mock_get_succeeds
@@ -116,8 +116,8 @@ describe FlickrService, type: :service do
 
     def mock_get_returns(body)
       response = Object.new
-      mock(response).body { body }
-      mock(service).get.with_any_args { response }
+      expect(response).to receive(:body) { body }
+      expect(service).to receive(:get) { response }
     end
 
   end
@@ -130,7 +130,7 @@ describe FlickrService, type: :service do
 
     context "when not in tests" do
       before do
-        stub(Rails.env).test? { false }
+        allow(Rails.env).to receive(:test?) { false }
       end
 
       it "returns 0 the first time it's called" do
@@ -138,22 +138,22 @@ describe FlickrService, type: :service do
       end
 
       it "returns 1 if it's been 0 seconds since it was last called" do
-        stub(Time).now { Time.utc(2014) }
+        allow(Time).to receive(:now) { Time.utc(2014) }
         service.seconds_to_wait
         service.seconds_to_wait.should == 1
       end
 
       it "returns 0.25 if it's been 0.75 seconds since it was last called" do
-        stub(Time).now { Time.utc(2014) }
+        allow(Time).to receive(:now) { Time.utc(2014) }
         service.seconds_to_wait
-        stub(Time).now { Time.utc(2014) + 0.75.seconds }
+        allow(Time).to receive(:now) { Time.utc(2014) + 0.75.seconds }
         service.seconds_to_wait.should == 0.25
       end
 
       it "returns 0 if it's been more than 1 second since it was last called" do
-        stub(Time).now { Time.utc(2014) }
+        allow(Time).to receive(:now) { Time.utc(2014) }
         service.seconds_to_wait
-        stub(Time).now { Time.utc(2014) + 2.seconds }
+        allow(Time).to receive(:now) { Time.utc(2014) + 2.seconds }
         service.seconds_to_wait.should == 0
       end
 

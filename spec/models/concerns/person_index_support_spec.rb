@@ -1,14 +1,15 @@
 describe PersonIndexSupport do
   describe '.all_sorted' do
     before do
-      stub(Photo).group(:person_id).stub!.count { {} }
-      stub(Guess).group(:person_id).stub!.count { {} }
-      stub(Person).guesses_per_day { {} }
-      stub(Person).posts_per_day { {} }
-      stub(Person).guess_speeds { {} }
-      stub(Person).be_guessed_speeds { {} }
-      stub(Person).views_per_post { {} }
-      stub(Person).faves_per_post { {} }
+      group = double count: {}
+      allow(Photo).to receive(:group).with(:person_id) { group }
+      allow(Guess).to receive(:group).with(:person_id) { group }
+      allow(Person).to receive(:guesses_per_day) { {} }
+      allow(Person).to receive(:posts_per_day) { {} }
+      allow(Person).to receive(:guess_speeds) { {} }
+      allow(Person).to receive(:be_guessed_speeds) { {} }
+      allow(Person).to receive(:views_per_post) { {} }
+      allow(Person).to receive(:faves_per_post) { {} }
     end
 
     it 'sorts by username' do
@@ -93,42 +94,42 @@ describe PersonIndexSupport do
 
     it 'sorts by guesses per day' do
       create_people_named 'a', 'z'
-      stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 2 } }
+      allow(Person).to receive(:guesses_per_day) { { @person1.id => 1, @person2.id => 2 } }
       stub_score 2, 1
       puts_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by guesses per day, score' do
       create_people_named 'a', 'z'
-      stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:guesses_per_day) { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 2
       puts_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by guesses per day, score, username' do
       create_people_named 'z', 'a'
-      stub(Person).guesses_per_day { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:guesses_per_day) { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 1
       puts_person2_before_person1 'guesses-per-day'
     end
 
     it 'sorts by posts per day' do
       create_people_named 'a', 'z'
-      stub(Person).posts_per_day { { @person1.id => 1, @person2.id => 2 } }
+      allow(Person).to receive(:posts_per_day) { { @person1.id => 1, @person2.id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'posts-per-day'
     end
 
     it 'sorts by posts per day, post count' do
       create_people_named 'a', 'z'
-      stub(Person).posts_per_day { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:posts_per_day) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'posts-per-day'
     end
 
     it 'sorts by posts per day, post count, username' do
       create_people_named 'z', 'a'
-      stub(Person).posts_per_day { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:posts_per_day) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'posts-per-day'
     end
@@ -156,42 +157,42 @@ describe PersonIndexSupport do
 
     it 'sorts by time-to-guess' do
       create_people_named 'a', 'z'
-      stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 2 } }
+      allow(Person).to receive(:guess_speeds) { { @person1.id => 1, @person2.id => 2 } }
       stub_score 2, 1
       puts_person2_before_person1 'time-to-guess'
     end
 
     it 'sorts by time-to-guess, score' do
       create_people_named 'a', 'z'
-      stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:guess_speeds) { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 2
       puts_person2_before_person1 'time-to-guess'
     end
 
     it 'sorts by time-to-guess, score, username' do
       create_people_named 'z', 'a'
-      stub(Person).guess_speeds { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:guess_speeds) { { @person1.id => 1, @person2.id => 1 } }
       stub_score 1, 1
       puts_person2_before_person1 'time-to-guess'
     end
 
     it 'sorts by time-to-be-guessed' do
       create_people_named 'a', 'z'
-      stub(Person).be_guessed_speeds { { @person1.id => 1, @person2.id => 2 } }
+      allow(Person).to receive(:be_guessed_speeds) { { @person1.id => 1, @person2.id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it 'sorts by time-to-be-guessed, post count' do
       create_people_named 'a', 'z'
-      stub(Person).be_guessed_speeds { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:be_guessed_speeds) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it 'sorts by time-to-be-guessed, post count, username' do
       create_people_named 'z', 'a'
-      stub(Person).be_guessed_speeds { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:be_guessed_speeds) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'time-to-be-guessed'
     end
@@ -270,42 +271,42 @@ describe PersonIndexSupport do
 
     it 'sorts by views-per-post' do
       create_people_named 'a', 'z'
-      stub(Person).views_per_post { { @person1.id => 1, @person2.id => 2 } }
+      allow(Person).to receive(:views_per_post) { { @person1.id => 1, @person2.id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'views-per-post'
     end
 
     it 'sorts by views-per-post, post count' do
       create_people_named 'a', 'z'
-      stub(Person).views_per_post { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:views_per_post) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'views-per-post'
     end
 
     it 'sorts by views-per-post, post count, username' do
       create_people_named 'z', 'a'
-      stub(Person).views_per_post { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:views_per_post) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'views-per-post'
     end
 
     it 'sorts by faves-per-post' do
       create_people_named 'a', 'z'
-      stub(Person).faves_per_post { { @person1.id => 1, @person2.id => 2 } }
+      allow(Person).to receive(:faves_per_post) { { @person1.id => 1, @person2.id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'faves-per-post'
     end
 
     it 'sorts by faves-per-post, post count' do
       create_people_named 'a', 'z'
-      stub(Person).faves_per_post { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:faves_per_post) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'faves-per-post'
     end
 
     it 'sorts by faves-per-post, post count, username' do
       create_people_named 'z', 'a'
-      stub(Person).faves_per_post { { @person1.id => 1, @person2.id => 1 } }
+      allow(Person).to receive(:faves_per_post) { { @person1.id => 1, @person2.id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'faves-per-post'
     end
@@ -321,13 +322,13 @@ describe PersonIndexSupport do
     end
 
     def stub_post_count(count1, count2)
-      # noinspection RubyArgCount
-      stub(Photo).group(:person_id).stub!.count { { @person1.id => count1, @person2.id => count2 } }
+      group = double count: { @person1.id => count1, @person2.id => count2 }
+      allow(Photo).to receive(:group).with(:person_id) { group }
     end
 
     def stub_score(count1, count2)
-      # noinspection RubyArgCount
-      stub(Guess).group(:person_id).stub!.count { { @person1.id => count1, @person2.id => count2 } }
+      group = double count: { @person1.id => count1, @person2.id => count2 }
+      allow(Guess).to receive(:group).with(:person_id) { group }
     end
 
     def puts_person2_before_person1(sorted_by)

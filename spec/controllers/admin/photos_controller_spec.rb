@@ -6,18 +6,18 @@ describe Admin::PhotosController do
 
     describe '#unfound' do
       before do
-        stub(Photo).unfound_or_unconfirmed { [ photo ] }
+        allow(Photo).to receive(:unfound_or_unconfirmed) { [ photo ] }
       end
 
       it 'renders the page' do
-        stub(photo).tags { [] }
+        allow(photo).to receive(:tags) { [] }
         get :unfound
         lists_photo
       end
 
       it "highlights a photo tagged foundinSF" do
         tag = build_stubbed :tag, photo: photo, raw: 'foundinSF'
-        stub(photo).tags { [tag] }
+        allow(photo).to receive(:tags) { [tag] }
         get :unfound
         tr = top_node.all('tr')[1]
         tr.all('td')[5].text.should == 'foundinSF'
@@ -28,8 +28,8 @@ describe Admin::PhotosController do
 
     describe '#inaccessible' do
       it 'renders the page' do
-        stub(Photo).inaccessible { [ photo ] }
-        stub(photo).tags { [] }
+        allow(Photo).to receive(:inaccessible) { [ photo ] }
+        allow(photo).to receive(:tags) { [] }
         get :inaccessible
         lists_photo
       end
@@ -37,8 +37,8 @@ describe Admin::PhotosController do
 
     describe '#multipoint' do
       it 'renders the page' do
-        stub(Photo).multipoint { [ photo ] }
-        stub(photo).tags { [] }
+        allow(Photo).to receive(:multipoint) { [ photo ] }
+        allow(photo).to receive(:tags) { [] }
         get :multipoint
         lists_photo
       end
@@ -58,11 +58,11 @@ describe Admin::PhotosController do
     let(:photo) { build_stubbed :photo }
 
     before do
-      stub(Photo).find_with_associations(photo.id) { photo }
-      stub(photo).comments { [] }
-      stub(photo).guesses { [] }
-      stub(photo).revelation { nil }
-      stub(photo).tags { [] }
+      allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(photo).to receive(:comments) { [] }
+      allow(photo).to receive(:guesses) { [] }
+      allow(photo).to receive(:revelation) { nil }
+      allow(photo).to receive(:tags) { [] }
     end
 
     it 'renders the page without loading comments' do
@@ -71,7 +71,7 @@ describe Admin::PhotosController do
     end
 
     it 'loads comments and renders the page' do
-      stub(FlickrUpdater).update_photo(photo)
+      allow(FlickrUpdater).to receive(:update_photo).with(photo)
       mock_clear_page_cache
       get :edit, id: photo.id, update_from_flickr: true
       response.should be_success
@@ -81,7 +81,7 @@ describe Admin::PhotosController do
 
   describe '#add_selected_answer' do
     it "notifies the user if there was an error" do
-      mock(Comment).add_selected_answer('2', 'username') { raise Photo::AddAnswerError, 'Sorry' }
+      expect(Comment).to receive(:add_selected_answer).with('2', 'username') { raise Photo::AddAnswerError, 'Sorry' }
       post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
@@ -90,7 +90,7 @@ describe Admin::PhotosController do
 
   describe '#add_entered_answer' do
     it "notifies the user if there was an error" do
-      mock(Photo).add_entered_answer(1, 'username', 'answer text') { raise Photo::AddAnswerError, 'Sorry' }
+      expect(Photo).to receive(:add_entered_answer).with(1, 'username', 'answer text') { raise Photo::AddAnswerError, 'Sorry' }
       post :add_entered_answer, id: '1', username: 'username', answer_text: 'answer text'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
@@ -99,7 +99,7 @@ describe Admin::PhotosController do
 
   describe '#remove_revelation' do
     it "removes a revelation" do
-      mock(Comment).remove_revelation '2'
+      expect(Comment).to receive(:remove_revelation).with '2'
       mock_clear_page_cache
       post :remove_revelation, id: '1', comment_id: '2'
       redirects_to_edit_path 1
@@ -108,7 +108,7 @@ describe Admin::PhotosController do
 
   describe '#remove_guess' do
     it "notifies the user if there was an error" do
-      mock(Comment).remove_guess('2') { raise Comment::RemoveGuessError, 'Sorry' }
+      expect(Comment).to receive(:remove_guess).with('2') { raise Comment::RemoveGuessError, 'Sorry' }
       post :remove_guess, id: '1', comment_id: '2'
       redirects_to_edit_path 1
       flash[:notice].should == 'Sorry'
@@ -126,7 +126,7 @@ describe Admin::PhotosController do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it 'redirects to the given photo' do
       photo = build_stubbed :photo
-      stub(Photo).find_by_flickrid(photo.flickrid) { photo }
+      allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
@@ -135,7 +135,7 @@ describe Admin::PhotosController do
 
     it 'handles https when redirecting to a photo' do
       photo = build_stubbed :photo
-      stub(Photo).find_by_flickrid(photo.flickrid) { photo }
+      allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
@@ -143,7 +143,7 @@ describe Admin::PhotosController do
     end
 
     it 'punts an unknown photo Flickr ID' do
-      stub(Photo).find_by_flickrid('0123456789') { nil }
+      allow(Photo).to receive(:find_by_flickrid).with('0123456789') { nil }
       get :edit_in_gww, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
       response.should redirect_to admin_root_path

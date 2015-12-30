@@ -1,9 +1,9 @@
 describe Precalculator do
   describe '#calculate_statistics_and_maps' do
     it "does some work" do
-      mock(Person).update_statistics
-      mock(Photo).update_statistics
-      mock(Photo).infer_geocodes
+      expect(Person).to receive(:update_statistics)
+      expect(Photo).to receive(:update_statistics)
+      expect(Photo).to receive(:infer_geocodes)
       mock_clear_page_cache
       Precalculator.calculate_statistics_and_maps.should == "Updated statistics and maps."
     end

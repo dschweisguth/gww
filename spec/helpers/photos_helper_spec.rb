@@ -92,7 +92,7 @@ describe PhotosHelper do
 
     def ago_returns(now, time, expected)
       # noinspection RubyArgCount
-      stub(Time).now { Time.utc(*now) }
+      allow(Time).to receive(:now) { Time.utc(*now) }
       helper.ago(Time.utc(*time)).should == expected
     end
 

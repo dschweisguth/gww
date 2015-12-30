@@ -1,7 +1,7 @@
 describe 'SearchParamsParser' do
   describe '#form_params' do
     before do
-      stub(Person).exists?(username: 'known-username') { true }
+      allow(Person).to receive(:exists?).with(username: 'known-username') { true }
     end
 
     # When there are no segments params[:segments] is nil, not ''.
@@ -61,7 +61,7 @@ describe 'SearchParamsParser' do
     end
 
     it "removes an unknown username from the segments" do
-      stub(Person).exists?(username: 'unknown-username') { false }
+      allow(Person).to receive(:exists?).with(username: 'unknown-username') { false }
       parser_canonicalizes('done-by/unknown-username').into ''
     end
 

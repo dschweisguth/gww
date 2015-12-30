@@ -306,10 +306,8 @@ describe PersonScoreReportsSupport do
 
     def adds_change(people, people_by_score, people_by_previous_score, expected_change)
       previous_report_date = Time.utc(2010)
-      # noinspection RubyArgCount
-      stub(Person).by_score(people, previous_report_date) { people_by_previous_score }
-      # noinspection RubyArgCount
-      stub(Photo).add_posts people, previous_report_date, :previous_post_count
+      allow(Person).to receive(:by_score).with(people, previous_report_date) { people_by_previous_score }
+      allow(Photo).to receive(:add_posts).with people, previous_report_date, :previous_post_count
       guessers = [ [ person, [] ] ]
       Person.add_change_in_standings people_by_score, people, previous_report_date, guessers
       person.change_in_standing.should == expected_change

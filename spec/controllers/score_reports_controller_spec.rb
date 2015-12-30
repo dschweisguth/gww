@@ -6,9 +6,9 @@ describe ScoreReportsController do
   describe '#index' do
     it "renders the page" do
       report = build_stubbed :score_report, created_at: Time.local(2011)
-      stub(ScoreReport).order { [ report ] }
-      stub(ScoreReport).guess_counts { { report.id => 1 } }
-      stub(ScoreReport).revelation_counts { { report.id => 2 } }
+      allow(ScoreReport).to receive(:order) { [ report ] }
+      allow(ScoreReport).to receive(:guess_counts) { { report.id => 1 } }
+      allow(ScoreReport).to receive(:revelation_counts) { { report.id => 2 } }
       get :index
 
       response.should be_success
@@ -22,18 +22,18 @@ describe ScoreReportsController do
   describe '#show' do
     before do
       @report_date = Time.local(2011, 1, 5)
-      stub(ScoreReport).find('1') { build_stubbed :score_report, created_at: @report_date.getutc }
+      allow(ScoreReport).to receive(:find).with('1') { build_stubbed :score_report, created_at: @report_date.getutc }
     end
 
     it "renders the page" do
       previous_report_date = Time.local(2011).getutc
       previous_report = build_stubbed :score_report, created_at: previous_report_date
-      stub(ScoreReport).previous(@report_date.getutc) { previous_report }
+      allow(ScoreReport).to receive(:previous).with(@report_date.getutc) { previous_report }
       renders_report_for @report_date, previous_report_date, :show, id: '1'
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
-      stub(ScoreReport).previous(@report_date.getutc) { nil }
+      allow(ScoreReport).to receive(:previous).with(@report_date.getutc) { nil }
       renders_report_for @report_date, Time.utc(2005), :show, id: '1'
     end
 

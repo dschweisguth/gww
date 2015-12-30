@@ -4,7 +4,6 @@ require 'simplecov'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rr'
 require 'shoulda/matchers'
 require 'nulldb_rspec'
 
@@ -51,8 +50,7 @@ RSpec.configure do |config|
 
   # Prevent FlickrService usage
   config.before :each do
-    # noinspection RubyArgCount
-    stub(FlickrService).instance.returns MockFlickrService.new
+    allow(FlickrService).to receive(:instance).and_return(MockFlickrService.new)
   end
 
   [GWW::Factories::Model, GWW::Matchers::Model, GWW::Helpers::Model, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :model }

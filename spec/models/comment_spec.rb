@@ -186,13 +186,14 @@ describe Comment do
       end
 
       def stub_person_request
-        # noinspection RubyArgCount
-        stub(FlickrService.instance).people_get_info { {
-          'person' => [{
-            'username' => ['username_from_request'],
-            'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
-          }]
-        } }
+        allow(FlickrService.instance).to receive(:people_get_info) do
+          {
+            'person' => [{
+              'username' => ['username_from_request'],
+              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
+            }]
+          }
+        end
       end
 
       def photo_is_guessed(comment, guesser)
@@ -218,8 +219,7 @@ describe Comment do
     # that it doesn't affect test objects' date attributes and assertions on
     # those attributes don't pass by accident
     def set_time
-      # noinspection RubyArgCount
-      stub(Time).now { now }
+      allow(Time).to receive(:now) { now }
     end
 
   end

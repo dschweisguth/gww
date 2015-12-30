@@ -46,7 +46,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:age][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           guess = Object.new
-          stub(guess).star_for_age { star }
+          allow(guess).to receive(:star_for_age) { star }
           helper.star_and_alt(guess, :age).should == [ star, alt ]
         end
       end
@@ -57,7 +57,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:speed][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           guess = Object.new
-          stub(guess).star_for_speed { star }
+          allow(guess).to receive(:star_for_speed) { star }
           helper.star_and_alt(guess, :speed).should == [ star, alt ]
         end
       end
@@ -68,7 +68,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:comments][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
-          stub(photo).star_for_comments { star }
+          allow(photo).to receive(:star_for_comments) { star }
           helper.star_and_alt(photo, :comments).should == [ star, alt ]
         end
       end
@@ -79,7 +79,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:views][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
-          stub(photo).star_for_views { star }
+          allow(photo).to receive(:star_for_views) { star }
           helper.star_and_alt(photo, :views).should == [ star, alt ]
         end
       end
@@ -90,7 +90,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:faves][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = Object.new
-          stub(photo).star_for_faves { star }
+          allow(photo).to receive(:star_for_faves) { star }
           helper.star_and_alt(photo, :faves).should == [ star, alt ]
         end
       end

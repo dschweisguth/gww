@@ -4,7 +4,7 @@ describe Photo do
     let(:bounds) { Bounds.new 37.70571, 37.820904, -122.514381, -122.35714 }
 
     before do
-      stub(Person).find(person.id) { person }
+      allow(Person).to receive(:find).with(person.id) { person }
     end
 
     it "returns a post" do
@@ -26,8 +26,8 @@ describe Photo do
     # noinspection RubyArgCount
     def returns_post(game_status, color, symbol)
       post = build :photo, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [ post ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post ] }
+      allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       Photo.for_person_for_map(person.id, bounds, 1).should == {
         partial: false,
         bounds: bounds,
@@ -45,8 +45,8 @@ describe Photo do
 
     it "copies an inferred geocode to the stated one" do
       post = build :photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [ post ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post ] }
+      allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       Photo.for_person_for_map(person.id, bounds, 1).should == {
         partial: false,
         bounds: bounds,
@@ -64,8 +64,8 @@ describe Photo do
 
     it "returns a guess" do
       photo = build :photo, person_id: 2, latitude: 37, longitude: -122
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [ photo ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ photo ] }
+      allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       Photo.for_person_for_map(person.id, bounds, 1).should == {
         partial: false,
         bounds: bounds,
@@ -84,8 +84,8 @@ describe Photo do
     it "returns no more than a maximum number of photos" do
       post = build :photo, person_id: person.id, latitude: 37, longitude: -122
       oldest_photo = build :photo, dateadded: 1.day.ago
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [ post, oldest_photo ] }
-      stub(Photo).oldest { oldest_photo }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post, oldest_photo ] }
+      allow(Photo).to receive(:oldest) { oldest_photo }
       Photo.for_person_for_map(person.id, bounds, 1).should == {
         partial: true,
         bounds: bounds,
@@ -102,8 +102,8 @@ describe Photo do
     end
 
     it "handles no photos" do
-      stub(Photo).posted_or_guessed_by_and_mapped(person.id, bounds, 2) { [] }
-      stub(Photo).oldest { nil }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [] }
+      allow(Photo).to receive(:oldest) { nil }
       Photo.for_person_for_map(person.id, bounds, 1).should == {
         partial: false,
         bounds: bounds,
@@ -204,7 +204,7 @@ describe Photo do
   describe '#ymd_elapsed' do
     it 'returns the age with a precision of days in English' do
       photo = Photo.new dateadded: Time.utc(2000)
-      stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
+      allow(Time).to receive(:now) { Time.utc(2001, 2, 2, 1, 1, 1) }
       photo.ymd_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day'
     end
   end

@@ -113,7 +113,7 @@ describe Photo do
   describe '#time_elapsed' do
     it 'returns the age with a precision of seconds in English' do
       photo = Photo.new dateadded: Time.utc(2000)
-      stub(Time).now { Time.utc(2001, 2, 2, 1, 1, 1) }
+      allow(Time).to receive(:now) { Time.utc(2001, 2, 2, 1, 1, 1) }
       photo.time_elapsed.should == '1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second'
     end
   end

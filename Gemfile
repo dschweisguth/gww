@@ -30,7 +30,6 @@ group :test do
   gem 'jasmine', '2.4.0'
   gem 'launchy', '2.4.3'
   gem 'poltergeist', '1.8.1'
-  gem 'rr', '1.1.2', require: false
   gem 'rspec-rails', '2.99.0'
   gem 'shoulda-matchers', '2.8.0', require: false
   gem 'simplecov', '0.11.1', require: false

@@ -139,8 +139,8 @@ describe PhotoPhotosSupport do
 
     it "returns an unfound photo" do
       photo = build :photo, latitude: 37, longitude: -122
-      stub(Photo).mapped(bounds, 2) { [ photo ] }
-      stub(Photo).oldest { build :photo, dateadded: 1.day.ago }
+      allow(Photo).to receive(:mapped).with(bounds, 2) { [ photo ] }
+      allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       Photo.all_for_map(bounds, 1).should == {
         partial: false,
         bounds: bounds,
@@ -157,8 +157,8 @@ describe PhotoPhotosSupport do
     end
 
     it "handles no photos" do
-      stub(Photo).mapped(bounds, 2) { [] }
-      stub(Photo).oldest { nil }
+      allow(Photo).to receive(:mapped).with(bounds, 2) { [] }
+      allow(Photo).to receive(:oldest) { nil }
       Photo.all_for_map(bounds, 1).should == {
         partial: false,
         bounds: bounds,
@@ -169,8 +169,8 @@ describe PhotoPhotosSupport do
     it "returns no more than a maximum number of photos" do
       photo = build :photo, latitude: 37, longitude: -122
       oldest_photo = build :photo, dateadded: 1.day.ago
-      stub(Photo).mapped(bounds, 2) { [ photo, oldest_photo ] }
-      stub(Photo).oldest { oldest_photo }
+      allow(Photo).to receive(:mapped).with(bounds, 2) { [ photo, oldest_photo ] }
+      allow(Photo).to receive(:oldest) { oldest_photo }
       Photo.all_for_map(bounds, 1).should == {
         partial: true,
         bounds: bounds,

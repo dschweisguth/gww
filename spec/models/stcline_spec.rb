@@ -113,7 +113,7 @@ describe Stcline do
         lf_fadd: 3600, lf_toadd: 3698, rt_fadd: 0, rt_toadd: 0,
         SHAPE: line(point(11, 14), point(13, 16))
       address = Address.new('3620 19th near Guerrero', '3620', '19th', nil, 'Guerrero', nil)
-      stub(Stintersection).street_type(address.street, address.at) { 'ST' }
+      allow(Stintersection).to receive(:street_type).with(address.street, address.at) { 'ST' }
       geocode = Stcline.geocode address
       geocode.x.should be_within(0.001).of(1.714)
       geocode.y.should be_within(0.001).of(4.714)
@@ -128,7 +128,7 @@ describe Stcline do
         SHAPE: line(point(11, 14), point(13, 16))
       address = Address.new(
         '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
-      stub(Stintersection).street_type(address.street, address.between1) { 'ST' }
+      allow(Stintersection).to receive(:street_type).with(address.street, address.between1) { 'ST' }
       geocode = Stcline.geocode address
       geocode.x.should be_within(0.001).of(1.714)
       geocode.y.should be_within(0.001).of(4.714)
@@ -143,8 +143,8 @@ describe Stcline do
         SHAPE: line(point(11, 14), point(13, 16))
       address = Address.new(
         '3620 19th between Guerrero and Dolores', '3620', '19th', nil, 'Guerrero', nil, 'Dolores', nil)
-      stub(Stintersection).street_type(address.street, address.between1) { nil }
-      stub(Stintersection).street_type(address.street, address.between2) { 'ST' }
+      allow(Stintersection).to receive(:street_type).with(address.street, address.between1) { nil }
+      allow(Stintersection).to receive(:street_type).with(address.street, address.between2) { 'ST' }
       geocode = Stcline.geocode address
       geocode.x.should be_within(0.001).of(1.714)
       geocode.y.should be_within(0.001).of(4.714)
