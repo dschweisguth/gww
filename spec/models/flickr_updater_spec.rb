@@ -383,7 +383,7 @@ describe FlickrUpdater do
       stub_get_photo
       error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "whatever"
       allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid) { raise error }
-      expect { FlickrUpdater.update_photo photo }.to raise_error
+      expect { FlickrUpdater.update_photo photo }.to raise_error error
     end
 
     it "does not attempt to handle other errors when requesting location" do
