@@ -248,7 +248,6 @@ describe FlickrUpdater do
 
     it "doesn't update anything except seen_at if Flickr says the photo hasn't been updated" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
-      expect(FlickrService.instance).not_to receive(:fave_count)
       expect(FlickrUpdater).not_to receive(:update_comments)
       expect(FlickrUpdater).not_to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'

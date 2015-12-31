@@ -115,7 +115,7 @@ describe FlickrService, type: :service do
     end
 
     def mock_get_returns(body)
-      response = Object.new
+      response = double
       expect(response).to receive(:body) { body }
       expect(service).to receive(:get) { response }
     end

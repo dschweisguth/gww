@@ -166,7 +166,7 @@ describe PhotoStatisticsSupport do
     let(:parser) do
       street_names = %w{ 26TH VALENCIA }
       allow(Stcline).to receive(:multiword_street_names) { street_names }
-      parser = Object.new
+      parser = double
       allow(LocationParser).to receive(:new).with(street_names) { parser }
       parser
     end

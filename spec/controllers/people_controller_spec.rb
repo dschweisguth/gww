@@ -1,3 +1,5 @@
+require 'will_paginate/array'
+
 describe PeopleController do
   render_views
 
@@ -373,11 +375,7 @@ describe PeopleController do
       allow(Person).to receive(:find).with(person.id) { person }
 
       photo = build_stubbed :photo
-      paginated_photos = [ photo ]
-      # Stub methods from will_paginate's version of Array
-      allow(paginated_photos).to receive(:offset) { 0 }
-      allow(paginated_photos).to receive(:total_pages) { 1 }
-      allow(paginated_photos).to receive(:total_entries) { 1 }
+      paginated_photos = [photo].paginate
       allow(person).to receive(:paginated_commented_photos).with('1') { paginated_photos }
 
       get :comments, id: person.id, page: '1'

@@ -1,3 +1,5 @@
+require 'will_paginate/array'
+
 describe PhotosController do
   render_views
 
@@ -9,10 +11,7 @@ describe PhotosController do
 
       # Mock methods from will_paginate's version of Array
       photo = build_stubbed :photo
-      paginated_photos = [ photo ]
-      allow(paginated_photos).to receive(:offset) { 0 }
-      allow(paginated_photos).to receive(:total_pages) { 1 }
-      allow(paginated_photos).to receive(:total_entries) { 1 }
+      paginated_photos = [photo].paginate
       allow(Photo).to receive(:all_sorted_and_paginated).with(sorted_by_param, order_param, page_param, 30) { paginated_photos }
       get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
 
