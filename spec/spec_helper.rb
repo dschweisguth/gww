@@ -4,7 +4,6 @@ require 'simplecov'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'shoulda/matchers'
 require 'nulldb_rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -46,6 +45,13 @@ RSpec.configure do |config|
       end
     end
 
+  end
+
+  Shoulda::Matchers.configure do |shoulda_matchers_config|
+    shoulda_matchers_config.integrate do |with|
+      with.test_framework :rspec
+      with.library :rails
+    end
   end
 
   # Prevent FlickrService usage

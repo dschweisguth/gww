@@ -31,7 +31,7 @@ group :test do
   gem 'launchy', '2.4.3'
   gem 'poltergeist', '1.8.1'
   gem 'rspec-rails', '3.4.0'
-  gem 'shoulda-matchers', '2.8.0', require: false
+  gem 'shoulda-matchers', '3.0.1'
   gem 'simplecov', '0.11.1', require: false
 end
 

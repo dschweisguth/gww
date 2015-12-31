@@ -1,8 +1,7 @@
 describe FlickrUpdate do
 
   describe '#member_count' do
-    it { is_expected.to validate_presence_of :member_count }
-    it { is_expected.to validate_non_negative_integer :member_count }
+    it { is_expected.to validate_numericality_of(:member_count).is_greater_than_or_equal_to(0) }
     it { is_expected.to have_readonly_attribute :member_count }
   end
 

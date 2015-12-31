@@ -8,17 +8,8 @@ describe Photo do
     it { is_expected.to validate_presence_of :dateadded }
   end
 
-  describe '#latitude' do
-    it { is_expected.to validate_numericality_of :latitude }
-  end
-
-  describe '#longitude' do
-    it { is_expected.to validate_numericality_of :longitude }
-  end
-
   describe '#accuracy' do
-    it { is_expected.to validate_numericality_of :accuracy }
-    it { is_expected.to validate_non_negative_integer :accuracy }
+    it { is_expected.to validate_numericality_of(:accuracy).is_greater_than_or_equal_to(0) }
   end
 
   describe '#lastupdate' do
@@ -35,28 +26,23 @@ describe Photo do
   end
 
   describe '#views' do
-    it { is_expected.to validate_presence_of :views }
-    it { is_expected.to validate_non_negative_integer :views }
+    it { is_expected.to validate_numericality_of(:views).is_greater_than_or_equal_to(0) }
   end
 
   describe '#faves' do
-    it { is_expected.to validate_presence_of :faves }
-    it { is_expected.to validate_non_negative_integer :faves }
+    it { is_expected.to validate_numericality_of(:faves).is_greater_than_or_equal_to(0) }
   end
 
   describe '#other_user_comments' do
-    it { is_expected.to validate_presence_of :other_user_comments }
-    it { is_expected.to validate_non_negative_integer :other_user_comments }
+    it { is_expected.to validate_numericality_of(:other_user_comments).is_greater_than_or_equal_to(0) }
   end
 
   describe '#member_comments' do
-    it { is_expected.to validate_presence_of :member_comments }
-    it { is_expected.to validate_non_negative_integer :member_comments }
+    it { is_expected.to validate_numericality_of(:member_comments).is_greater_than_or_equal_to(0) }
   end
 
   describe '#member_questions' do
-    it { is_expected.to validate_presence_of :member_questions }
-    it { is_expected.to validate_non_negative_integer :member_questions }
+    it { is_expected.to validate_numericality_of(:member_questions).is_greater_than_or_equal_to(0) }
   end
 
   describe '#destroy' do
