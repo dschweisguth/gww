@@ -75,8 +75,8 @@ at this writing.
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
-> rbenv install 2.1.2
-> rbenv global 2.1.2
+> rbenv install 2.2.4
+> rbenv global 2.2.4
 > gem update --system
 > gem install bundler
 > gem list
