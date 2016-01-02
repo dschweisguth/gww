@@ -80,7 +80,7 @@ Install ruby-build per https://github.com/sstephenson/ruby-build
 > gem update --system
 > gem install bundler
 > gem list
-bundler (1.11.2)
+bundler (1.10.6)
 rubygems-update (2.5.1)
 # plus other gems that come with Ruby
 
