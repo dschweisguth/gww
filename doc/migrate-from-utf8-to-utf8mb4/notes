@@ -1,0 +1,73 @@
+Mac
+---
+
+Install mysql56:
+> port unload mysql5-server
+> port uninstall mysql5 mysql5-server
+> port install mysql56 mysql56-server
+Replace /opt/local/var/db/mysql56 with a copy of /opt/local/var/db/mysql5
+> port load mysql56-server
+> mysql_upgrade -uroot -proot
+
+Configure it to use utf8mb4 everywhere:
+> cat /opt/local/etc/mysql56/my.cnf
+[mysqld]
+init-connect='SET NAMES utf8mb4'
+init_connect='SET collation_connection = utf8mb4_unicode_ci'
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+skip-character-set-client-handshake
+> port unload mysql56-server
+> port load mysql56-server
+mysql> show variables like 'char%';
+mysql> show variables like 'collation%';
+
+Debug server startup problems by running it directly with
+> sudo -u _mysql /opt/local/lib/mysql56/bin/mysqld
+
+Convert mysql_dev:
+mysql> source convert.sql
+
+Update Rails configuration:
+> bin/rake db:structure:dump
+> bin/rake RAILS_ENV=test db:reset
+Update config/database.yml
+> bin/rake RAILS_ENV=test
+
+Restart Rails server
+
+Linux
+-----
+> script/down
+> lib/dump-gww-production
+Shut down TeamCity
+# service mysqld stop
+# mv /etc/my.cnf /etc/my-5.1.cnf
+# cd /var/lib
+# rsync -a mysql/ mysql.backup
+# yum remove mysql mysql-devel mysql-libs mysql-server # i.e. all mysql packages
+
+# wget http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+  # reached from http://dev.mysql.com/downloads/repo/
+# rpm -Uvh mysql57-community-release-el6-7.noarch.rpm
+Edit /etc/yum.repos.d/mysql-community.repo to enable MySQL 5.6
+# yum install mysql-community-server mysql-community-devel
+Add the following lines to /etc/my.cnf:
+query_cache_size=100000000
+
+init-connect='SET NAMES utf8mb4'
+init_connect='SET collation_connection = utf8mb4_unicode_ci'
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+skip-character-set-client-handshake
+# service mysqld start
+# mysql_upgrade -uroot -p
+
+Convert mysql_prod_utf8 as above
+
+Rebuild the mysql2 extension:
+> be gem uninstall mysql2
+> bundle
+
+> script/up
+Start TeamCity

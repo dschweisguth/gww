@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.1.72, for apple-darwin13.2.0 (i386)
+-- MySQL dump 10.13  Distrib 5.6.28, for osx10.9 (x86_64)
 --
--- Host: localhost    Database: gww_test
+-- Host: localhost    Database: gww_dev
 -- ------------------------------------------------------
--- Server version	5.1.72
+-- Server version	5.6.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -25,14 +25,14 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
-  `flickrid` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `comment_text` text NOT NULL,
+  `flickrid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `comment_text` text COLLATE utf8mb4_unicode_ci,
   `commented_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=888197 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +48,7 @@ CREATE TABLE `flickr_updates` (
   `member_count` int(11) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2641 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,18 +80,18 @@ CREATE TABLE `guesses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
   `person_id` int(11) NOT NULL,
-  `comment_text` text NOT NULL,
+  `comment_text` text COLLATE utf8mb4_unicode_ci,
   `commented_at` datetime NOT NULL,
   `added_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `index_guesses_on_photo_id_and_person_id_and_comment_text` (`photo_id`,`person_id`,`comment_text`(255)),
+  UNIQUE KEY `index_guesses_on_photo_id_and_person_id_and_comment_text` (`photo_id`,`person_id`,`comment_text`(191)),
   KEY `guesses_photo_id_fk` (`photo_id`),
   KEY `guesses_person_id_fk` (`person_id`),
   KEY `guesses_added_at_index` (`added_at`),
   KEY `guesses_commented_at_index` (`commented_at`),
   CONSTRAINT `guesses_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
   CONSTRAINT `guesses_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=320 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34334 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,16 +103,16 @@ DROP TABLE IF EXISTS `people`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `flickrid` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `pathalias` varchar(255) DEFAULT NULL,
+  `flickrid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pathalias` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `comments_to_guess` decimal(7,4) DEFAULT NULL,
   `comments_per_post` decimal(7,4) NOT NULL DEFAULT '0.0000',
   `comments_to_be_guessed` decimal(7,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `people_flickrid_unique` (`flickrid`),
-  UNIQUE KEY `people_username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=1187 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `people_flickrid_unique` (`flickrid`(191)),
+  UNIQUE KEY `people_username_unique` (`username`(191))
+) ENGINE=InnoDB AUTO_INCREMENT=1314 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,10 +125,10 @@ DROP TABLE IF EXISTS `photos`;
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) NOT NULL,
-  `flickrid` varchar(255) NOT NULL,
-  `farm` varchar(255) NOT NULL,
-  `server` varchar(255) NOT NULL,
-  `secret` varchar(255) NOT NULL,
+  `flickrid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `farm` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `server` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `latitude` decimal(9,6) DEFAULT NULL,
   `longitude` decimal(9,6) DEFAULT NULL,
   `accuracy` int(2) DEFAULT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE `photos` (
   `dateadded` datetime NOT NULL,
   `lastupdate` datetime NOT NULL,
   `seen_at` datetime NOT NULL,
-  `game_status` enum('unfound','unconfirmed','found','revealed') NOT NULL,
+  `game_status` enum('unfound','unconfirmed','found','revealed') COLLATE utf8mb4_unicode_ci NOT NULL,
   `views` int(11) NOT NULL,
   `faves` int(11) NOT NULL,
   `other_user_comments` int(11) NOT NULL DEFAULT '0',
@@ -144,15 +144,15 @@ CREATE TABLE `photos` (
   `member_questions` int(11) NOT NULL DEFAULT '0',
   `inferred_latitude` decimal(9,6) DEFAULT NULL,
   `inferred_longitude` decimal(9,6) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `description` text,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `photos_flickrid_unique` (`flickrid`),
+  UNIQUE KEY `photos_flickrid_unique` (`flickrid`(191)),
   KEY `photos_game_status_index` (`game_status`),
   KEY `photos_person_id_fk` (`person_id`),
   KEY `photos_dateadded_index` (`dateadded`),
   CONSTRAINT `photos_person_id_fk` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1051 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37703 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,14 +165,14 @@ DROP TABLE IF EXISTS `revelations`;
 CREATE TABLE `revelations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
-  `comment_text` text NOT NULL,
+  `comment_text` text COLLATE utf8mb4_unicode_ci,
   `commented_at` datetime NOT NULL,
   `added_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `revelations_photo_id_unique` (`photo_id`),
   KEY `revelations_added_at_index` (`added_at`),
   CONSTRAINT `revelations_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=733 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,9 +183,9 @@ DROP TABLE IF EXISTS `schema_migrations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `schema_migrations` (
-  `version` varchar(255) NOT NULL,
-  UNIQUE KEY `unique_schema_migrations` (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `version` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  UNIQUE KEY `unique_schema_migrations` (`version`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +202,7 @@ CREATE TABLE `score_reports` (
   PRIMARY KEY (`id`),
   KEY `previous_report_id_fk` (`previous_report_id`),
   CONSTRAINT `previous_report_id_fk` FOREIGN KEY (`previous_report_id`) REFERENCES `score_reports` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=686 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,7 +254,7 @@ CREATE TABLE `stclines` (
   SPATIAL KEY `SHAPE` (`SHAPE`),
   KEY `stclines_street_index` (`street`),
   KEY `stclines_st_type_index` (`st_type`)
-) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=16353 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,7 +276,7 @@ CREATE TABLE `stintersections` (
   KEY `stintersections_cnn_index` (`cnn`),
   KEY `stintersections_st_name_index` (`st_name`),
   KEY `stintersections_st_type_index` (`st_type`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=18666 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -289,12 +289,12 @@ DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `photo_id` int(11) NOT NULL,
-  `raw` varchar(255) COLLATE utf8_bin NOT NULL,
+  `raw` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `machine_tag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `index_tags_on_photo_id_and_raw` (`photo_id`,`raw`),
+  UNIQUE KEY `index_tags_on_photo_id_and_raw` (`photo_id`,`raw`(191)),
   CONSTRAINT `tags_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=304017 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -306,7 +306,7 @@ CREATE TABLE `tags` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-08-07  8:05:55
+-- Dump completed on 2016-01-02 21:07:43
 INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('13');

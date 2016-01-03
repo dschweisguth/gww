@@ -1,5 +1,5 @@
-This document describes how to install GWW on a Mac (OS 10.6, for development,
-using webrick) or Linux server (CentOS 6.5, for production, using Apache httpd
+This document describes how to install GWW on a Mac (OS 10.9, for development,
+using webrick) or Linux server (CentOS 6.7, for production, using Apache httpd
 and Phusion Passenger). It doesn't cover some things that Dave thinks are
 obvious or that are hard to document in a way that will work for everyone;
 please fill gaps as you encounter them.
@@ -9,30 +9,24 @@ Install and start mysql
 
 Mac
     If you don't already have it, install MacPorts from www.macports.org
-    > sudo port install mysql5-server
-    > sudo port load mysql5-server # as directed by the previous command
+    > sudo port install mysql56-server
+    > sudo port load mysql56-server # as directed by the previous command
     > sudo -u _mysql mysql_install_db5
-    > /opt/local/lib/mysql5/bin/mysql_secure_installation # as directed
-    > ln -s /opt/local/var/run/mysql5/mysqld.sock /tmp/mysql.sock # for ogr2ogr
+    > /opt/local/lib/mysql56/bin/mysql_secure_installation # as directed
+    > ln -s /opt/local/var/run/mysql56/mysqld.sock /tmp/mysql.sock # for ogr2ogr
     Create the following file:
-    > cat /opt/local/etc/mysql5/my.cnf 
+    > cat /opt/local/etc/mysql56/my.cnf 
     [mysqld]
-    init-connect='SET NAMES utf8'
-    init_connect='SET collation_connection = utf8_unicode_ci'
-    default-character-set=utf8 
-    default-collation=utf8_unicode_ci
-
-    [clients]
-    default-character-set=utf8
-
-    [mysql]
-    default-character-set=utf8
+    init-connect='SET NAMES utf8mb4'
+    init_connect='SET collation_connection = utf8mb4_unicode_ci'
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci
+    skip-character-set-client-handshake
 
 Linux
     TODO
     Edit /etc/my.cnf (which on Linux, unlike on Mac OS, will exist on a new
-    installation) and add each of the settings above in the appropriate
-    section.
+    installation) and add the settings above in the appropriate section.
 
 Install GDAL 1.8
 ----------------
@@ -182,9 +176,9 @@ Add something like the following to your crontab on your production server:
 Update San Francisco GIS data
 -----------------------------
 
-SFGIS data from 2011 is in the current production database, so if you're restoring from a
-production backup you have it already. If you want to update to a newer version, do the
-following:
+SFGIS data from 2011 is in the current production database, so if you're
+restoring from a production backup you have it already. If you want to update
+to a newer version, do the following:
 
 > mkdir sfgis
 > cd sfgis
