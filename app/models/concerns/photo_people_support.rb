@@ -26,12 +26,13 @@ module PhotoPeopleSupport
     use_inferred_geocode_if_necessary
     color, symbol =
       if person_id == self.person_id
-        if %w(unfound unconfirmed).include? game_status
-          [Color::Yellow, '?']
-        elsif game_status == 'found'
-          [Color::Blue, '?']
-        else # revealed
-          [Color::Red, '-']
+        case game_status
+          when 'unfound', 'unconfirmed'
+            [Color::Yellow, '?']
+          when 'found'
+            [Color::Blue, '?']
+          else # revealed
+            [Color::Red, '-']
         end
       else
         [Color::Green, '!']
