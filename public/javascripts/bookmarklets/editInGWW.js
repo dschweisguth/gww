@@ -8,7 +8,7 @@
     }, 0);
   } else {
     var match = /^(http:\/\/[^/]+\/)photos(\/\d+)/.exec(window.location);
-    if (match != null) {
+    if (match !== null) {
       setTimeout(function() {
         window.location = match[1] + 'admin/photos' + match[2] + '/edit?update_from_flickr=true' ;
       }, 0);

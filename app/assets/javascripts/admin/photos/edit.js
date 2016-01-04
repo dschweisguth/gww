@@ -25,7 +25,7 @@ GWW.admin.photos.edit = (function () {
   function copyUsernameFor(form) {
     return function () {
       form['username'].value = $('#username')[0].value;
-    }
+    };
   }
 
   function preventSubmitPartialUsernameForm() {

@@ -16,7 +16,7 @@ GWW.shared.autocomplete = (function () {
               return {
                 label: item.username,
                 value: item.username
-              }
+              };
             }));
           }
         );

@@ -1,6 +1,6 @@
 // TODO Dave add pages when scrolling backwards instead of loading all pages right away
 GWW.photos = {};
-GWW.photos.search = function () {
+GWW.photos.search = (function () {
   "use strict";
 
   function setUp() {
@@ -82,7 +82,7 @@ GWW.photos.search = function () {
       path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
     }
     var sortedBy = form.find('[name="sorted_by"]').val();
-    if (sortedBy !== (did == 'posted' ? 'last-updated' : 'date-taken')) {
+    if (sortedBy !== (did === 'posted' ? 'last-updated' : 'date-taken')) {
       path += "/sorted-by/" + sortedBy;
     }
     var direction = form.find('[name="direction"]').val();
@@ -289,5 +289,5 @@ GWW.photos.search = function () {
     setUp: setUp
   };
 
-}();
+})();
 $(GWW.photos.search.setUp);

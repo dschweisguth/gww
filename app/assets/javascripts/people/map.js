@@ -21,21 +21,20 @@ GWW.people.map = (function () {
   };
 
   var toggle = function (matcher) {
-    return function (event) {
+    return function () {
       var markerParent = this.checked ? that.map : null;
       $.each(that.markers, function (i, marker) {
         if (matcher(marker.symbol)) {
           marker.setMap(markerParent);
         }
       });
-    }
+    };
   };
 
   that.getMarkerParent = function (marker) {
     var guesses = $('#guesses');
     return guesses.length === 0 || guesses.prop('checked') && marker.symbol === '!' || $('#posts').prop('checked') && marker.symbol !== '!' ? that.map : null;
   };
-
 
   return that;
 })();

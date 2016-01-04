@@ -47,7 +47,7 @@ GWW.shared.createMap = function () {
 
     },
 
-    getMarkerParent: function (marker) {
+    getMarkerParent: function () {
       return that.map;
     }
 
