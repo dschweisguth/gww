@@ -88,6 +88,7 @@ RSpec.configure do |config|
   end
 
   [GWW::Factories::Model, GWW::Matchers::Model, GWW::Helpers::Model, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :model }
+  [GWW::Factories::Model, GWW::Matchers::Model].each { |mod| config.include mod, type: :updater }
   [GWW::Factories::ControllerOrHelper, GWW::Helpers::Controller, GWW::Helpers::PageCache, Photos].each { |mod| config.include mod, type: :controller }
   [GWW::Factories::ControllerOrHelper, Photos].each { |mod| config.include mod, type: :helper }
   config.include GWW::Matchers::Routing, type: :routing

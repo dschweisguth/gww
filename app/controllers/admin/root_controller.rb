@@ -9,7 +9,7 @@ class Admin::RootController < ApplicationController
   end
 
   def update_from_flickr
-    flash[:notice] = FlickrUpdater.update_everything
+    flash[:notice] = Updater.update
     #noinspection RubyResolve
     redirect_to admin_root_path
   end

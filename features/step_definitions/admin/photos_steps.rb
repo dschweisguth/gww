@@ -1,5 +1,5 @@
 Given /^updating a photo from Flickr does nothing$/ do
-  allow(FlickrUpdater).to receive(:update_photo) { nil }
+  allow(PhotoUpdater).to receive(:update) { nil }
 end
 
 Given /^there is an inaccessible photo$/ do
@@ -7,13 +7,13 @@ Given /^there is an inaccessible photo$/ do
 end
 
 Given /^updating a photo from Flickr returns an error$/ do
-  allow(FlickrUpdater).to receive(:update_photo) do
+  allow(PhotoUpdater).to receive(:update) do
     raise FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "Photo not found"
   end
 end
 
 Given /^getting a person's attributes from Flickr returns what we'd expect given what's in the database$/ do
-  allow(FlickrUpdater).to receive(:person_attributes) do |flickrid|
+  allow(PersonUpdater).to receive(:attributes) do |flickrid|
     source = Person.find_by_flickrid(flickrid) || Comment.find_by_flickrid(flickrid)
     { username: source.username, pathalias: source.respond_to?(:pathalias) ? source.pathalias : source.username }
   end

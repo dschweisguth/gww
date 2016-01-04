@@ -19,7 +19,7 @@ class Admin::PhotosController < ApplicationController
     @photo = Photo.find_with_associations params[:id].to_i
     if params[:update_from_flickr]
       begin
-        FlickrUpdater.update_photo @photo
+        PhotoUpdater.update @photo
       rescue FlickrService::FlickrReturnedAnError => e
         flash[:notice] = e.message
       end

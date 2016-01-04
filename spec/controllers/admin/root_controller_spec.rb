@@ -34,7 +34,7 @@ describe Admin::RootController do
 
   describe '#update_from_flickr' do
     it "does the update and redirects" do
-      expect(FlickrUpdater).to receive(:update_everything) { "The message" }
+      expect(Updater).to receive(:update) { "The message" }
       get :update_from_flickr
       expect(response).to redirect_to admin_root_path
       expect(flash[:notice]).to eq("The message")

@@ -1,52 +1,5 @@
-class FlickrUpdater
-  def self.update_everything
-    # Expire before updating so everyone sees the in-progress message
-    PageCache.clear
-    group_info = FlickrService.instance.groups_get_info group_id: FlickrService::GROUP_ID
-    member_count = group_info['group'][0]['members'][0]
-    update = FlickrUpdate.create! member_count: member_count
-    update_all_people
-    new_photo_count, new_person_count, pages_gotten, pages_available = update_all_photos
-    update.update! completed_at: Time.now.getutc
-    PageCache.clear
-    "Created #{new_photo_count} new photos and #{new_person_count} new users. Got #{pages_gotten} pages out of #{pages_available}."
-  end
-
-  ### People
-
-  def self.update_all_people
-    Person.where('id != 0').each do |person|
-      begin
-        person.update! person_attributes(person.flickrid)
-      rescue FlickrService::FlickrRequestFailedError => e
-        Rails.logger.warn "Couldn't get info for person #{person.id}, flickrid #{person.flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
-        # Ignore the error. We'll update again soon enough.
-      end
-    end
-  end
-
-  def self.create_or_update_person(flickrid)
-    person = Person.find_by_flickrid flickrid
-    attrs = person_attributes flickrid
-    if person
-      person.update! attrs
-    else
-      person = Person.create!({ flickrid: flickrid }.merge attrs)
-    end
-    person
-  end
-
-  def self.person_attributes(flickrid)
-    response = FlickrService.instance.people_get_info user_id: flickrid
-    parsed_person = response['person'][0]
-    username = parsed_person['username'][0]
-    pathalias = parsed_person['photosurl'][0].match(/https:\/\/www.flickr.com\/photos\/([^\/]+)\//)[1]
-    { username: username, pathalias: pathalias }
-  end
-
-  ### Photos
-
-  def self.update_all_photos
+class PhotoUpdater
+  def self.update_all
     page = 1
     parsed_photos = nil
     new_photo_count = 0
@@ -77,7 +30,7 @@ class FlickrUpdater
       attributes[:pathalias] = flickrid
     end
     person = Person.find_by_flickrid flickrid
-    # Don't bother to update an existing Person. We already did that in update_all_people.
+    # Don't bother to update an existing Person. We already did that in update_all.
     if person
       created = 0
     else
@@ -141,8 +94,8 @@ class FlickrUpdater
     created
   end
 
-  def self.update_photo(photo)
-    photo.person.update! person_attributes(photo.person.flickrid)
+  def self.update(photo)
+    photo.person.update! PersonUpdater.attributes(photo.person.flickrid)
 
     parsed_photo = FlickrService.instance.photos_get_info(photo_id: photo.flickrid)['photo'].first
     lastupdate = Time.at(parsed_photo['dates'][0]['lastupdate'].to_i).getutc
@@ -226,15 +179,15 @@ class FlickrUpdater
     end
   end
 
-  def self.fave_count(photo_flickrid)
+  def self.fave_count(flickrid)
     begin
-      parsed_faves = FlickrService.instance.photos_get_favorites photo_id: photo_flickrid, per_page: 1
+      parsed_faves = FlickrService.instance.photos_get_favorites photo_id: flickrid, per_page: 1
       parsed_faves['photo'][0]['total'].to_i
     rescue REXML::ParseException => e
-      Rails.logger.warn "Couldn't get faves for photo flickrid #{photo_flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
+      Rails.logger.warn "Couldn't get faves for photo flickrid #{flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
       nil
     rescue FlickrService::FlickrRequestFailedError => e
-      Rails.logger.warn "Couldn't get faves for photo flickrid #{photo_flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
+      Rails.logger.warn "Couldn't get faves for photo flickrid #{flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
       # This happens when a photo is private but visible to the caller because it's added to a group of which
       # the caller is a member. Not clear yet whether this is a bug or intended behavior.
       nil
