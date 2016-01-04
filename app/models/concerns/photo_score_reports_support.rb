@@ -1,5 +1,6 @@
 module PhotoScoreReportsSupport
   extend ActiveSupport::Concern
+  include ScoreReportsSupport
 
   module ClassMethods
     def count_between(from, to)
@@ -23,21 +24,8 @@ module PhotoScoreReportsSupport
 
   end
 
-  def years_old
-    ((Time.now - dateadded).to_i / (365 * 24 * 60 * 60)).truncate
-  end
-
-  def star_for_age
-    age = years_old
-    if age >= 3
-      :gold
-    elsif age >= 2
-      :silver
-    elsif age >= 1
-      :bronze
-    else
-      nil
-    end
+  def seconds_old
+    (Time.now - dateadded).to_i
   end
 
 end
