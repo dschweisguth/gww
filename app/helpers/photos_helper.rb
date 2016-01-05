@@ -11,32 +11,36 @@ module PhotosHelper
   def ago(time)
     now = Time.now.getutc
     time = time.getutc
-    if time > now - 1.second
+    elapsed = now - time
+    value, unit, per_next_larger_unit =
+      if elapsed < 1.second
+        [now - time, 'usec', 1000000]
+      elsif elapsed < 1.minute
+        [(now - time).to_i, 'second', 60]
+      elsif elapsed < 1.hour
+        [now.min - time.min, 'minute', 60]
+      elsif elapsed < 37.hours
+        [now.hour - time.hour, 'hour', 24]
+      elsif elapsed < 1.month
+        [(now + 12.hours).yday - time.yday, 'day', 365]
+      else
+        [now.month - time.month + 12 * (now.year - time.year), 'month', 12]
+      end
+    if value < 0
+      value += per_next_larger_unit
+    end
+
+    if unit == 'day' && value >= 10
+      value = (value + 4) / 7
+      unit = 'week'
+    end
+
+    if unit == 'usec'
       'a moment'
     else
-      value, unit =
-        if time > now - 1.minute
-          [(now - time).to_i, 'second']
-        elsif time > now - 1.hour
-          [add_if_negative(now.min - time.min, 60), 'minute']
-        elsif time > now - 37.hours
-          [add_if_negative(now.hour - time.hour, 24), 'hour']
-        elsif time > now - 1.month
-          days = add_if_negative (now + 12.hours).yday - time.yday, 365
-          if days >= 10
-            [(days + 4) / 7, 'week']
-          else
-            [days, 'day']
-          end
-        else
-          [now.month - time.month + 12 * (now.year - time.year), 'month']
-        end
       pluralize value, unit
     end + ' ago'
-  end
 
-  private def add_if_negative(value, increment)
-   value < 0 ? value + increment : value
   end
 
   def highlighted(string, text_terms, other_strings_that_count=[])
