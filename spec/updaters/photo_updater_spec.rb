@@ -192,7 +192,7 @@ describe PersonUpdater, type: :updater do
 
     end
 
-    it "doesn't update anything except seen_at if Flickr says the photo hasn't been updated" do
+    it "doesn't update anything except seen_at and views if Flickr says the photo hasn't been updated" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
       expect(PhotoUpdater).not_to receive(:update_comments)
       expect(PhotoUpdater).not_to receive(:update_tags)
@@ -225,7 +225,7 @@ describe PersonUpdater, type: :updater do
         datetaken: photo_before.datetaken,
         dateadded: photo_before.dateadded,
         lastupdate: photo_before.lastupdate,
-        views: photo_before.views,
+        views: stubbed_photo[:views],
         title: photo_before.title,
         description: photo_before.description,
         faves: photo_before.faves,

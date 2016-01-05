@@ -48,7 +48,7 @@ class PhotoUpdater
     lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
     photo_needs_full_update = !photo || lastupdate != photo.lastupdate
 
-    attributes = { seen_at: now }
+    attributes = { seen_at: now, views: parsed_photo['views'].to_i }
     if photo_needs_full_update
       attributes.merge! \
         farm: parsed_photo['farm'],
@@ -56,7 +56,6 @@ class PhotoUpdater
         secret: parsed_photo['secret'],
         title: parsed_photo['title'],
         description: to_string_or_nil(parsed_photo['description']),
-        views: parsed_photo['views'].to_i,
         datetaken: datetaken(parsed_photo['datetaken']),
         lastupdate: lastupdate,
         latitude: to_float_or_nil(parsed_photo['latitude']),
