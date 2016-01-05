@@ -61,7 +61,8 @@ describe PersonPeopleSupport do
       expected = expected_periods_for_one_guess_at_report_time
       guess1 = create :guess, commented_at: report_time
       guess2 = create :guess, commented_at: report_time
-      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess1.person, guess2.person ] }
+      guessers = [guess1.person, guess2.person].sort_by { |guesser| guesser.username.downcase }
+      (0 .. 3).each { |division| expected[division][0].scores[1] = guessers }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
