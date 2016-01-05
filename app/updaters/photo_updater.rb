@@ -30,15 +30,16 @@ class PhotoUpdater
       attributes[:pathalias] = flickrid
     end
     person = Person.find_by_flickrid flickrid
-    # Don't bother to update an existing Person. We already did that in update_all.
-    if person
-      created = 0
-    else
-      attributes.merge! flickrid: flickrid
-      person = Person.create! attributes
-      created = 1
-    end
-    return person, created
+    people_created =
+      if person
+        # For performance, assume that an existing person has already been updated by PersonUpdater.
+        0
+      else
+        attributes.merge! flickrid: flickrid
+        person = Person.create! attributes
+        1
+      end
+    return person, people_created
   end
 
   private_class_method def self.create_or_update_photo_from(parsed_photo, person, now)
