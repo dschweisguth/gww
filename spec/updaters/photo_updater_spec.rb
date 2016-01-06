@@ -236,6 +236,7 @@ describe PersonUpdater, type: :updater do
     end
 
     it "updates only seen_at if Flickr says the photo hasn't been updated and views hasn't changed" do
+      pending "Reenable after updating all faves once"
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1), views: 40
       expect(PhotoUpdater).not_to receive(:update_comments)
       expect(PhotoUpdater).not_to receive(:update_tags)
