@@ -64,7 +64,7 @@ class PhotoUpdater
         accuracy: to_integer_or_nil(parsed_photo['accuracy'])
     end
 
-    if photo_needs_full_update || views != photo.views || true # TODO Dave remove true after running once
+    if photo_needs_full_update || views != photo.views
       fave_count = fave_count flickrid
       if fave_count
         attributes[:faves] = fave_count
