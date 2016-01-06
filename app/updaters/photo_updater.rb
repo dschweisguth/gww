@@ -47,8 +47,9 @@ class PhotoUpdater
     photo = Photo.find_by_flickrid flickrid
     lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
     photo_needs_full_update = !photo || lastupdate != photo.lastupdate
+    views = parsed_photo['views'].to_i
 
-    attributes = { seen_at: now, views: parsed_photo['views'].to_i }
+    attributes = { seen_at: now, views: views }
     if photo_needs_full_update
       attributes.merge! \
         farm: parsed_photo['farm'],
@@ -61,16 +62,15 @@ class PhotoUpdater
         latitude: to_float_or_nil(parsed_photo['latitude']),
         longitude: to_float_or_nil(parsed_photo['longitude']),
         accuracy: to_integer_or_nil(parsed_photo['accuracy'])
+    end
 
+    if photo_needs_full_update || views != photo.views
       fave_count = fave_count flickrid
       if fave_count
         attributes[:faves] = fave_count
-      else
-        if !photo
-          attributes[:faves] = 0
-        end
+      elsif !photo
+        attributes[:faves] = 0
       end
-
     end
 
     if photo

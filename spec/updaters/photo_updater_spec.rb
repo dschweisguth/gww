@@ -192,8 +192,9 @@ describe PersonUpdater, type: :updater do
 
     end
 
-    it "doesn't update anything except seen_at and views if Flickr says the photo hasn't been updated" do
+    it "updates only seen_at, views and faves if Flickr says the photo hasn't been updated" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
+      stubbed_faves = stub_get_faves
       expect(PhotoUpdater).not_to receive(:update_comments)
       expect(PhotoUpdater).not_to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
@@ -228,7 +229,93 @@ describe PersonUpdater, type: :updater do
         views: stubbed_photo[:views],
         title: photo_before.title,
         description: photo_before.description,
+        faves: stubbed_faves,
+        seen_at: now
+      )
+
+    end
+
+    it "updates only seen_at if Flickr says the photo hasn't been updated and views hasn't changed" do
+      stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1), views: 40
+      expect(PhotoUpdater).not_to receive(:update_comments)
+      expect(PhotoUpdater).not_to receive(:update_tags)
+      person = create :person, flickrid: 'incoming_person_flickrid'
+      photo_before = create :photo,
+        person: person,
+        flickrid: stubbed_photo[:id],
+        farm: '2',
+        server: 'old_server',
+        secret: 'old_secret',
+        latitude: 37.654321,
+        longitude: -122.123456,
+        accuracy: 15,
+        datetaken: Time.utc(2009),
+        dateadded: Time.utc(2010),
+        lastupdate: Time.utc(2010, 1, 1, 1),
+        views: 40,
+        faves: 6
+      PhotoUpdater.update_all
+
+      expect(Photo.first_and_only).to have_attributes(
+        id: photo_before.id,
+        flickrid: photo_before.flickrid,
+        farm: photo_before.farm,
+        server: photo_before.server,
+        secret: photo_before.secret,
+        latitude: photo_before.latitude,
+        longitude: photo_before.longitude,
+        accuracy: photo_before.accuracy,
+        datetaken: photo_before.datetaken,
+        dateadded: photo_before.dateadded,
+        lastupdate: photo_before.lastupdate,
+        views: photo_before.views,
+        title: photo_before.title,
+        description: photo_before.description,
         faves: photo_before.faves,
+        seen_at: now
+      )
+
+    end
+
+    it "updates faves if Flickr says the photo has been updated but views hasn't changed" do
+      stubbed_photo = stub_get_photos views: 40
+      stubbed_faves = stub_get_faves
+      mock_get_comments_and_tags
+      person = create :person, flickrid: 'incoming_person_flickrid'
+      photo_before = create :photo,
+        person: person,
+        flickrid: 'incoming_photo_flickrid',
+        farm: '2',
+        server: 'old_server',
+        secret: 'old_secret',
+        latitude: 37.654321,
+        longitude: -122.123456,
+        accuracy: 15,
+        datetaken: Time.utc(2009),
+        dateadded: Time.utc(2010),
+        lastupdate: Time.utc(2010, 1, 1, 1),
+        views: 40,
+        faves: 6
+      expect(PhotoUpdater.update_all).to eq([ 0, 0, 1, 1 ])
+
+      expect(Photo.first_and_only).to have_attributes(
+        id: photo_before.id,
+        flickrid: photo_before.flickrid,
+        farm: stubbed_photo[:farm],
+        server: stubbed_photo[:server],
+        secret: stubbed_photo[:secret],
+        latitude: stubbed_photo[:latitude],
+        longitude: stubbed_photo[:longitude],
+        accuracy: stubbed_photo[:accuracy],
+        datetaken: stubbed_photo[:datetaken],
+        # Set dateadded only when a photo is created, so that if a photo is added to the group,
+        # removed from the group and added to the group again it retains its original dateadded.
+        dateadded: photo_before.dateadded,
+        lastupdate: stubbed_photo[:lastupdate],
+        views: photo_before.views,
+        title: stubbed_photo[:title],
+        description: stubbed_photo[:description],
+        faves: stubbed_faves,
         seen_at: now
       )
 
