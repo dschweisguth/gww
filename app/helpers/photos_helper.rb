@@ -8,7 +8,16 @@ module PhotosHelper
 
   # Returns a phrase like '24 hours ago', always with a single time unit,
   # carefully adjusted to match what Flickr shows on comments on photos.
-  def ago(time)
+  def ago_in_words(time)
+    value, unit = ago(time)
+    if unit == 'usec'
+      'a moment'
+    else
+      pluralize value, unit
+    end + ' ago'
+  end
+
+  private def ago(time)
     now = Time.now.getutc
     time = time.getutc
     elapsed = now - time
@@ -35,12 +44,7 @@ module PhotosHelper
       unit = 'week'
     end
 
-    if unit == 'usec'
-      'a moment'
-    else
-      pluralize value, unit
-    end + ' ago'
-
+    return value, unit
   end
 
   def highlighted(string, text_terms, other_strings_that_count=[])

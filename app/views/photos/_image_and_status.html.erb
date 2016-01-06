@@ -24,14 +24,14 @@
     <% @photo.guesses.each do |guess| %>
       <tr>
         <td><%= link_to_person guess.person %></td>
-        <td class="when"><%= ago guess.commented_at %></td>
+        <td class="when"><%= ago_in_words guess.commented_at %></td>
         <td><%= raw guess.comment_text %></td>
       </tr>
     <% end %>
   <% else %>
     <tr>
       <td><%= link_to_person @photo.person %></td>
-      <td class="when"><%= ago @photo.revelation.commented_at %></td>
+      <td class="when"><%= ago_in_words @photo.revelation.commented_at %></td>
       <td><%= raw @photo.revelation.comment_text %></td>
     </tr>
   <% end %>
