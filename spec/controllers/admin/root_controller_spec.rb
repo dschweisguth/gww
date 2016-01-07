@@ -10,7 +10,7 @@ describe Admin::RootController do
       get :index
 
       expect(response).to be_success
-      expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about 40 minutes.'
+      expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about an hour.'
       expect(response.body).to include '(111)'
       expect(response.body).to include '(222)'
       expect(response.body).to include '(2)'
