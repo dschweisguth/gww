@@ -153,10 +153,10 @@ describe Comment do
       end
 
       it "leaves alone an existing guess by the same guesser" do
-        old_guess = create :guess
+        old_guess = create :guess, comment_text: "existing comment"
         comment = create :comment, photo: old_guess.photo,
           flickrid: old_guess.person.flickrid, username: old_guess.person.username,
-          commented_at: Time.utc(2011)
+          commented_at: Time.utc(2011), comment_text: "new comment"
         set_time
         stub_person_request
         Comment.add_selected_answer comment.id, ''
