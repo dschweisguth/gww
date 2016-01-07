@@ -6,19 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 14
-Lint/AmbiguousOperator:
-  Exclude:
-    - 'app/controllers/concerns/multi_photo_map_controller_support.rb'
-    - 'app/controllers/concerns/search_data_params_parser.rb'
-    - 'app/models/concerns/photo_photos_support.rb'
-    - 'app/models/stcline.rb'
-    - 'app/models/stintersection.rb'
-    - 'lib/location_parser.rb'
-    - 'lib/street_type.rb'
-    - 'spec/models/concerns/multi_photo_map_support_spec.rb'
-    - 'spec/support/matchers/model.rb'
-
 # Offense count: 96
 Lint/AmbiguousRegexpLiteral:
   Exclude:
@@ -32,11 +19,6 @@ Lint/AmbiguousRegexpLiteral:
     - 'features/step_definitions/support_steps.rb'
     - 'features/step_definitions/wheresies_steps.rb'
     - 'spec/support/mock_flickr_service.rb'
-
-# Offense count: 2
-Lint/Debugger:
-  Exclude:
-    - 'features/step_definitions/common_steps.rb'
 
 # Offense count: 1
 Lint/Eval:
