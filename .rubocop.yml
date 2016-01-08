@@ -12,3 +12,7 @@ Lint/AmbiguousRegexpLiteral:
 # This cop gives false positives for Cucumber steps that aren't used.
 Lint/Debugger:
   Enabled: false
+
+# What else am I supposed to call the block variable when using find or each_with_object?
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
