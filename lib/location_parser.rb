@@ -33,7 +33,7 @@ class LocationParser
   private def find_locations(comment)
     @regexps.each_with_object([]) do |regexp, locations|
       remaining_comment = comment
-      while true
+      loop do
         match = regexp.match remaining_comment
         break if ! match
         locations <<
