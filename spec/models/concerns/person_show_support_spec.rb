@@ -509,14 +509,12 @@ describe PersonShowSupport do
     end
 
     it "ignores a poster which this person has guessed less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as this person has guessed all posts" do
-      #noinspection RubyUnusedLocalVariable
-      guesser, favorite_poster = make_potential_favorite_poster(10, 14)
+      guesser, _favorite_poster = make_potential_favorite_poster(10, 14)
       expect(guesser.favorite_posters).to eq([])
     end
 
     it "ignores a poster which this person has guessed less than #{Person::MIN_GUESSES_FOR_FAVORITE} times" do
-      #noinspection RubyUnusedLocalVariable
-      guesser, favorite_poster = make_potential_favorite_poster(9, 15)
+      guesser, _favorite_poster = make_potential_favorite_poster(9, 15)
       expect(guesser.favorite_posters).to eq([])
     end
 
@@ -541,14 +539,12 @@ describe PersonShowSupport do
     end
 
     it "ignores a guesser who has guessed this person less than #{Person::MIN_BIAS_FOR_FAVORITE} times as often as that guesser has guessed all posts" do
-      #noinspection RubyUnusedLocalVariable
-      devoted_guesser, poster = make_potential_favorite_poster(10, 14)
+      _devoted_guesser, poster = make_potential_favorite_poster(10, 14)
       expect(poster.favoring_guessers).to eq([])
     end
 
     it "ignores a guesser who has guessed this person less than #{Person::MIN_GUESSES_FOR_FAVORITE} times" do
-      #noinspection RubyUnusedLocalVariable
-      devoted_guesser, poster = make_potential_favorite_poster(9, 15)
+      _devoted_guesser, poster = make_potential_favorite_poster(9, 15)
       expect(poster.favoring_guessers).to eq([])
     end
 

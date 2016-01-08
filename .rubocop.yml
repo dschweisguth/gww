@@ -6,6 +6,8 @@ Lint/StringConversionInInterpolation:
   Enabled: true
 Lint/UnusedMethodArgument:
   Enabled: true
+Lint/UselessAssignment:
+  Enabled: true
 
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:

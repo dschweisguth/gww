@@ -473,7 +473,7 @@ describe PhotoPhotosSupport do
 
       it "searches in a date range" do
         photos = [1, 2, 4].map { |day| create :photo, person: person, datetaken: Time.utc(2014, 1, day) }
-        photo = create :photo, datetaken: Time.utc(2014, 1, 1)
+        create :photo, datetaken: Time.utc(2014, 1, 1)
         comments = [1, 3, 4].map { |day| create :comment, flickrid: person.flickrid, username: person.username, commented_at: Time.local(2014, 1, day).getutc }
         expect(search(did: 'activity', done_by: person.username, from_date: Time.utc(2014, 1, 2), to_date: Time.utc(2014, 1, 3))).to eq(
           [comments[1].photo, photos[1]]
