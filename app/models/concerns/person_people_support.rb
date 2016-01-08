@@ -26,8 +26,7 @@ module PersonPeopleSupport
         group by guessers.id, poster_id having count(*) >= 10 order by bias desc
       ]
       poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
-      posters = where id: poster_ids
-      posters_by_id = posters.each_with_object({}) { |poster, posters_by_id| posters_by_id[poster.id] = poster }
+      posters_by_id = where(id: poster_ids).index_by &:id
       nemeses.each { |nemesis| nemesis.poster = posters_by_id[nemesis.poster_id] }
     end
 
