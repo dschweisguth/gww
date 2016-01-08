@@ -2,6 +2,10 @@ inherit_from: .rubocop_todo.yml
 
 Lint/LiteralInCondition:
   Enabled: true
+Lint/StringConversionInInterpolation:
+  Enabled: true
+Lint/UnusedMethodArgument:
+  Enabled: true
 
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:

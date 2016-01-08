@@ -4,7 +4,7 @@ require 'xmlsimple'
 
 class FlickrService
   API_URL = "https://api.flickr.com/services/rest/"
-  FILE = YAML.load_file "#{Rails.root.to_s}/config/flickr_credentials.yml"
+  FILE = YAML.load_file "#{Rails.root}/config/flickr_credentials.yml"
   CREDENTIALS = FILE['flickr_credentials']
   SECRET = CREDENTIALS['secret']
   OAUTH_CONSUMER_KEY = CREDENTIALS['api_key']
