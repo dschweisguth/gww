@@ -1,7 +1,9 @@
 inherit_from: .rubocop_todo.yml
 
-# This cop reports operator usages that are correct and not ambiguous.
+# These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
+  Enabled: false
+Lint/AmbiguousRegexpLiteral:
   Enabled: false
 
 # This cop gives false positives for Cucumber steps that aren't used.
