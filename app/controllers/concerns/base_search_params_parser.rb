@@ -35,7 +35,7 @@ class BaseSearchParamsParser
     end
     %w(from-date to-date).each do |field|
       if uri_params[field]
-        uri_params[field] = uri_params[field].gsub '-', '/'
+        uri_params[field] = uri_params[field].tr '-', '/'
       end
     end
     uri_params
@@ -137,11 +137,11 @@ class BaseSearchParamsParser
   end
 
   def defaults(uri_params)
-    Photo.search_defaults(uri_keys_to_model uri_params).transform_keys { |key| key.to_s.gsub /_/, '-' }
+    Photo.search_defaults(uri_keys_to_model uri_params).transform_keys { |key| key.to_s.tr '_', '-' }
   end
 
   def uri_keys_to_model(uri_params)
-    uri_params.transform_keys { |key| key.gsub(/-/, '_').to_sym }
+    uri_params.transform_keys { |key| key.tr('-', '_').to_sym }
   end
 
   public def transform_keys(hash)

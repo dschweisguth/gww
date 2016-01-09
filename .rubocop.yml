@@ -9,6 +9,9 @@ Lint/UnusedMethodArgument:
 Lint/UselessAssignment:
   Enabled: true
 
+Performance/StringReplacement:
+  Enabled: true
+
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
   Enabled: false
