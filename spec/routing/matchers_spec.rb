@@ -25,11 +25,11 @@ describe GWW::Matchers::Routing do
     end
 
     it "asserts that the given name has a named route helper that returns the given path" do
-      is_expected.to have_named_route :no_params, '/no_params'
+      has_named_route :no_params, '/no_params'
     end
 
     it "asserts that the given name has a named route helper that returns the given path" do
-      is_expected.to have_named_route :one_param, 666, '/one_param/666'
+      has_named_route :one_param, 666, '/one_param/666'
     end
 
     it "explains why should failed" do

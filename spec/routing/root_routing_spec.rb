@@ -1,19 +1,19 @@
 describe RootController do
 
   describe 'root' do
-    it { is_expected.to have_named_route :root, '/' }
+    it { has_named_route :root, '/' }
     it { is_expected.to route(:get, '/').to action: 'index' }
   end
 
   %w{ about bookmarklet }.each do |action|
     describe action do
-      it { is_expected.to have_named_route "root_#{action}", "/#{action}" }
+      it { has_named_route "root_#{action}", "/#{action}" }
       it { is_expected.to route(:get, "/#{action}").to action: action }
     end
   end
 
   describe 'about-auto-mapping' do
-    it { is_expected.to have_named_route "root_about_auto_mapping", "/about-auto-mapping" }
+    it { has_named_route "root_about_auto_mapping", "/about-auto-mapping" }
     it { is_expected.to route(:get, "/about-auto-mapping").to action: 'about_auto_mapping' }
   end
 
