@@ -7,13 +7,13 @@ describe ScoreReport do
 
     it "counts the guesses in the first score report" do
       report = create :score_report, created_at: Time.utc(2011)
-      expect(ScoreReport.guess_counts).to eq({ report.id => 1 })
+      expect(ScoreReport.guess_counts).to eq(report.id => 1)
     end
 
     it "counts the guesses in a non-first score report" do
       create :score_report, created_at: Time.utc(2010)
       report1 = create :score_report, created_at: Time.utc(2011)
-      expect(ScoreReport.guess_counts).to eq({ report1.id => 1 })
+      expect(ScoreReport.guess_counts).to eq(report1.id => 1)
     end
 
   end
@@ -25,13 +25,13 @@ describe ScoreReport do
 
     it "counts the revelations in the first score report" do
       report = create :score_report, created_at: Time.utc(2011)
-      expect(ScoreReport.revelation_counts).to eq({ report.id => 1 })
+      expect(ScoreReport.revelation_counts).to eq(report.id => 1)
     end
 
     it "counts the revelations in a non-first score report" do
       create :score_report, created_at: Time.utc(2010)
       report1 = create :score_report, created_at: Time.utc(2011)
-      expect(ScoreReport.revelation_counts).to eq({ report1.id => 1 })
+      expect(ScoreReport.revelation_counts).to eq(report1.id => 1)
     end
 
   end

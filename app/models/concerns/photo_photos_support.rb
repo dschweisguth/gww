@@ -59,7 +59,7 @@ module PhotoPhotosSupport
     end
 
     def find_with_associations(id)
-      includes(:person, :revelation, { guesses: :person }).find id
+      includes(:person, :revelation, guesses: :person).find id
     end
 
     def unfound_or_unconfirmed
@@ -107,7 +107,7 @@ module PhotoPhotosSupport
         # This Rails issue might be the same: https://github.com/rails/rails/issues/16436 # TODO Dave check back
       else
         if done_by
-          query = query.joins(:person).where({ people: { username: done_by } })
+          query = query.joins(:person).where(people: { username: done_by })
         end
         text.try :each do |words|
           clauses = [

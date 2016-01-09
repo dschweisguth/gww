@@ -120,9 +120,9 @@ describe PhotoPhotosSupport do
       person_1_options, photo_1_options, person_2_options, photo_2_options)
 
       person1 = create :person, person_1_options
-      photo1 = create :photo, photo_1_options.merge({ person: person1 })
+      photo1 = create :photo, photo_1_options.merge(person: person1)
       person2 = create :person, person_2_options
-      photo2 = create :photo, photo_2_options.merge({ person: person2 })
+      photo2 = create :photo, photo_2_options.merge(person: person2)
       expect(Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2)).to eq([ photo2, photo1 ])
 
     end
@@ -141,7 +141,7 @@ describe PhotoPhotosSupport do
       photo = build :photo, latitude: 37, longitude: -122
       allow(Photo).to receive(:mapped).with(bounds, 2) { [ photo ] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
-      expect(Photo.all_for_map(bounds, 1)).to eq({
+      expect(Photo.all_for_map(bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
         photos: [
@@ -153,17 +153,17 @@ describe PhotoPhotosSupport do
             'symbol' => '?'
           }
         ]
-      })
+      )
     end
 
     it "handles no photos" do
       allow(Photo).to receive(:mapped).with(bounds, 2) { [] }
       allow(Photo).to receive(:oldest) { nil }
-      expect(Photo.all_for_map(bounds, 1)).to eq({
+      expect(Photo.all_for_map(bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
         photos: []
-      })
+      )
     end
 
     it "returns no more than a maximum number of photos" do
@@ -171,7 +171,7 @@ describe PhotoPhotosSupport do
       oldest_photo = build :photo, dateadded: 1.day.ago
       allow(Photo).to receive(:mapped).with(bounds, 2) { [ photo, oldest_photo ] }
       allow(Photo).to receive(:oldest) { oldest_photo }
-      expect(Photo.all_for_map(bounds, 1)).to eq({
+      expect(Photo.all_for_map(bounds, 1)).to eq(
         partial: true,
         bounds: bounds,
         photos: [
@@ -183,7 +183,7 @@ describe PhotoPhotosSupport do
             'symbol' => '?'
           }
         ]
-      })
+      )
     end
 
   end

@@ -6,26 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 56
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/BracesAroundHashParameters:
-  Exclude:
-    - 'app/models/concerns/guess_score_reports_support.rb'
-    - 'app/models/concerns/guess_wheresies_support.rb'
-    - 'app/models/concerns/person_people_support.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/concerns/photo_photos_support.rb'
-    - 'app/models/guess.rb'
-    - 'spec/controllers/concerns/search_data_params_parser_spec.rb'
-    - 'spec/lib/bounds_spec.rb'
-    - 'spec/models/concerns/multi_photo_map_support_spec.rb'
-    - 'spec/models/concerns/person_index_support_spec.rb'
-    - 'spec/models/concerns/person_score_reports_support_spec.rb'
-    - 'spec/models/concerns/photo_people_support_spec.rb'
-    - 'spec/models/concerns/photo_photos_support_spec.rb'
-    - 'spec/models/score_report_spec.rb'
-
 # Offense count: 19
 # Cop supports --auto-correct.
 # Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep.

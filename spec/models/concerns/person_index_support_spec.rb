@@ -348,14 +348,14 @@ describe PersonIndexSupport do
   describe '.guesses_per_day' do
     it 'returns a map of person ID to average guesses per day' do
       guess = create :guess, commented_at: 4.days.ago
-      expect(Person.guesses_per_day).to eq({ guess.person.id => 0.25 })
+      expect(Person.guesses_per_day).to eq(guess.person.id => 0.25)
     end
   end
 
   describe '.posts_per_day' do
     it 'returns a map of person ID to average posts per day' do
       photo = create :photo, dateadded: 4.days.ago
-      expect(Person.posts_per_day).to eq({ photo.person.id => 0.25 })
+      expect(Person.posts_per_day).to eq(photo.person.id => 0.25)
     end
   end
 
@@ -364,7 +364,7 @@ describe PersonIndexSupport do
       now = Time.now
       photo = create :photo, dateadded: now - 5
       guess = create :guess, photo: photo, commented_at: now - 1
-      expect(Person.guess_speeds).to eq({ guess.person.id => 4 })
+      expect(Person.guess_speeds).to eq(guess.person.id => 4)
     end
   end
 
@@ -373,21 +373,21 @@ describe PersonIndexSupport do
       now = Time.now
       photo = create :photo, dateadded: now - 5
       create :guess, photo: photo, commented_at: now - 1
-      expect(Person.be_guessed_speeds).to eq({ photo.person.id => 4 })
+      expect(Person.be_guessed_speeds).to eq(photo.person.id => 4)
     end
   end
 
   describe '.views_per_post' do
     it 'returns a map of person ID to average # of views per post' do
       photo = create :photo, views: 1
-      expect(Person.views_per_post).to eq({ photo.person.id => 1 })
+      expect(Person.views_per_post).to eq(photo.person.id => 1)
     end
   end
 
   describe '.faves_per_post' do
     it 'returns a map of person ID to average # of faves per post' do
       photo = create :photo, faves: 1
-      expect(Person.faves_per_post).to eq({ photo.person.id => 1 })
+      expect(Person.faves_per_post).to eq(photo.person.id => 1)
     end
   end
 

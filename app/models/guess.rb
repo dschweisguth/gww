@@ -37,11 +37,11 @@ class Guess < ActiveRecord::Base
   end
 
   def self.longest
-    with_valid_age.order_by_age(:desc).limit(10).includes(:person, { photo: :person })
+    with_valid_age.order_by_age(:desc).limit(10).includes(:person, photo: :person)
   end
 
   def self.shortest
-    with_valid_age.order_by_age.limit(10).includes(:person, { photo: :person })
+    with_valid_age.order_by_age.limit(10).includes(:person, photo: :person)
   end
 
   def time_elapsed

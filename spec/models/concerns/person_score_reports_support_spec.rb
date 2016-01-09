@@ -153,19 +153,19 @@ describe PersonScoreReportsSupport do
     it "groups people by score" do
       person1 = create :person
       person2 = create :person
-      expect(Person.by_score([ person1, person2 ], Time.utc(2011))).to eq({ 0 => [ person1, person2 ] })
+      expect(Person.by_score([ person1, person2 ], Time.utc(2011))).to eq(0 => [ person1, person2 ])
     end
 
     it "adds up guesses" do
       person = create :person
       create :guess, person: person, added_at: Time.utc(2011)
       create :guess, person: person, added_at: Time.utc(2011)
-      expect(Person.by_score([ person ], Time.utc(2011))).to eq({ 2 => [ person ] })
+      expect(Person.by_score([ person ], Time.utc(2011))).to eq(2 => [ person ])
     end
 
     it "ignores guesses from after the report date" do
       guess = create :guess, added_at: Time.utc(2012)
-      expect(Person.by_score([ guess.person ], Time.utc(2011))).to eq({ 0 => [ guess.person ] })
+      expect(Person.by_score([ guess.person ], Time.utc(2011))).to eq(0 => [ guess.person ])
     end
 
   end
@@ -286,8 +286,8 @@ describe PersonScoreReportsSupport do
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
         [ person, *others ],
-        others_by_score.merge({ 12 => [ person ] }),
-        others_by_score.merge({ 1 => [ person ] }),
+        others_by_score.merge(12 => [ person ]),
+        others_by_score.merge(1 => [ person ]),
         'jumped from 11th to 1st place. Welcome to the top ten!')
     end
 
@@ -297,8 +297,8 @@ describe PersonScoreReportsSupport do
       others.each_with_index { |other, i| others_by_score[i + 2] = [ other ] }
       adds_change(
         [ person, *others ],
-        others_by_score.merge({ 100 => [ person ] }),
-        others_by_score.merge({ 1 => [ person ] }),
+        others_by_score.merge(100 => [ person ]),
+        others_by_score.merge(1 => [ person ]),
         'jumped from 11th to 1st place. Congratulations on reaching 100 points! ' +
           'Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! ' +
           'Welcome to the top ten!')

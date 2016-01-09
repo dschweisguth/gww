@@ -90,7 +90,7 @@ module PersonPeopleSupport
   def paginated_commented_photos(page, per_page = 25)
     Photo
       .where("exists (select 1 from comments c where photos.id = c.photo_id and c.flickrid = ?)", flickrid)
-      .includes(:person, { guesses: :person })
+      .includes(:person, guesses: :person)
       .order('lastupdate desc')
       .paginate(page: page, per_page: per_page)
   end

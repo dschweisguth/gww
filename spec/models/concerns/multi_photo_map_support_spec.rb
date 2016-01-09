@@ -6,7 +6,7 @@ describe MultiPhotoMapSupport do
       photo = build :photo, latitude: 37, longitude: -122, color: Color::Yellow.scaled(0, 0, 0), symbol: '?'
       bounds = Bounds.new 1, 3, 2, 4
       partial = false
-      expect(Photo.as_map_json(partial, bounds, [photo])).to eq({
+      expect(Photo.as_map_json(partial, bounds, [photo])).to eq(
         partial: partial,
         bounds: bounds,
         photos: [
@@ -18,7 +18,7 @@ describe MultiPhotoMapSupport do
             'symbol' => '?'
           }
         ]
-      })
+      )
     end
 
     # See below for the details of how photos are moved

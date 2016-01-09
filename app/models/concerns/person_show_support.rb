@@ -81,7 +81,7 @@ module PersonShowSupport
   private def first_guess_with_place(owned_object, order, place_conditions)
     guess =
       Guess
-        .includes(:person, { photo: :person })
+        .includes(:person, photo: :person)
         .where(owned_object => { person_id: self })
         .with_valid_age
         .order_by_age(order).first
