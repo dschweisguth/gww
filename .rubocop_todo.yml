@@ -6,36 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 366
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundBlockBody:
-  Enabled: false
-
-# Offense count: 66
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Offense count: 10
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'app/controllers/concerns/score_reports_controller_support.rb'
-    - 'app/models/concerns/person_index_support.rb'
-    - 'app/models/concerns/photo_admin_photos_support.rb'
-    - 'lib/location_parser.rb'
-    - 'spec/controllers/people_controller_spec.rb'
-    - 'spec/controllers/score_reports_controller_spec_support.rb'
-    - 'spec/models/concerns/photo_photos_support_spec.rb'
-
-# Offense count: 57
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundModuleBody:
-  Enabled: false
-
 # Offense count: 9
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.
