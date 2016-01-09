@@ -18,6 +18,10 @@ Style/CaseIndentation:
 Style/DotPosition:
   EnforcedStyle: trailing
 
+Style/EmptyLines:
+  Exclude:
+    - 'lib/tasks/cucumber.rake'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
