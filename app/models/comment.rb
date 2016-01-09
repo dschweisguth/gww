@@ -20,11 +20,11 @@ class Comment < ActiveRecord::Base
     transaction do
       comment = find comment_id
       guesses =
-        Guess.joins(:person)
-          .where("guesses.photo_id = ?", comment.photo_id)
-          .where("people.flickrid = ?", comment.flickrid)
-          .where("guesses.comment_text = ?", comment.comment_text)
-          .readonly false
+        Guess.joins(:person).
+          where("guesses.photo_id = ?", comment.photo_id).
+          where("people.flickrid = ?", comment.flickrid).
+          where("guesses.comment_text = ?", comment.comment_text).
+          readonly false
       guesses.first.destroy # There can be only one Guess for a given photo, person and comment text
       photo = comment.photo
       if photo.guesses.empty?

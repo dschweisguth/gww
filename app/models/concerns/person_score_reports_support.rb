@@ -19,12 +19,12 @@ module PersonScoreReportsSupport
     def top_achievers(achievement, date_range, attribute, now, for_the_past_n_days)
       utc_now = now.getutc
       people =
-        select("people.*, count(*) achievement_count")
-          .joins(achievement)
-          .where(date_range, utc_now - for_the_past_n_days.days, utc_now)
-          .group("people.id")
-          .having("achievement_count > 1")
-          .order("achievement_count desc, people.username")
+        select("people.*, count(*) achievement_count").
+          joins(achievement).
+          where(date_range, utc_now - for_the_past_n_days.days, utc_now).
+          group("people.id").
+          having("achievement_count > 1").
+          order("achievement_count desc, people.username")
       current_value = nil
       people.each_with_object([]) do |person, top_people|
         person.send "#{attribute}=", person[:achievement_count]

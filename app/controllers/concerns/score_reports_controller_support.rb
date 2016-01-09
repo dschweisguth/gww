@@ -7,16 +7,16 @@ module ScoreReportsControllerSupport
     previous_report_date = previous_report ? previous_report.created_at : Time.utc(2005)
 
     @guesses = Guess.all_between previous_report_date, @report_date
-    @guessers = @guesses.group_by { |guess| guess.person }
-      .sort do |x, y|
+    @guessers = @guesses.group_by { |guess| guess.person }.
+      sort do |x, y|
         c = y[1].length <=> x[1].length
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end
 
     @revelations = Revelation.all_between previous_report_date, @report_date
     @revealers =
-      @revelations.group_by { | revelation| revelation.photo.person }
-      .sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
+      @revelations.group_by { | revelation| revelation.photo.person }.
+        sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
 
     people, people_by_score = people_by_score report_date
     Person.add_change_in_standings people_by_score, people, previous_report_date, @guessers

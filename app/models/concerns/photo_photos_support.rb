@@ -86,8 +86,8 @@ module PhotoPhotosSupport
       sorted_by:, direction:, page:, per_page:)
       query = all
       if did == 'activity' && done_by
-        query = query.select("*", "activities.acted_at acted_on_at")
-          .joins(%q(join (
+        query = query.select("*", "activities.acted_at acted_on_at").
+          joins(%q(join (
             select f1.id, f1.datetaken acted_at from photos f1 join people p on p.id = f1.person_id and p.username = %s
             union
             select c.photo_id, c.commented_at from comments c where c.username = %s) activities on activities.id = photos.id
@@ -98,9 +98,9 @@ module PhotoPhotosSupport
         if to_date
           query = query.where "activities.acted_at < ?", to_date + 1.day
         end
-        query = query
-          .order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}")
-          .includes(:person, :tags, :comments)
+        query = query.
+          order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}").
+          includes(:person, :tags, :comments)
         # .includes mostly doesn't work here; in general it seems not to work with queries that return the same object
         # more than once. I posted to rubyonrails-talk to see whether this is a bug and got no response:
         # https://groups.google.com/forum/#!searchin/rubyonrails-talk/includes/rubyonrails-talk/Pn1weH5Kz7Y/BCSS_HUdBuoJ
@@ -117,8 +117,8 @@ module PhotoPhotosSupport
           ]
           sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
             "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and " }))"
-          query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" })
-            .includes :tags, :comments # because we display them when it's a text search
+          query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" }).
+            includes :tags, :comments # because we display them when it's a text search
         end
         if game_status
           query = query.where game_status: game_status
@@ -129,9 +129,9 @@ module PhotoPhotosSupport
         if to_date
           query = query.where "dateadded < ?", to_date + 1.day
         end
-        query = query
-          .order("#{ORDERS[sorted_by]} #{direction == '+' ? 'asc' : 'desc'}")
-          .includes(:person)
+        query = query.
+          order("#{ORDERS[sorted_by]} #{direction == '+' ? 'asc' : 'desc'}").
+          includes(:person)
       end
       query.paginate page: page, per_page: per_page
     end

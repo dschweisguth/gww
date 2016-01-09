@@ -7,8 +7,8 @@ module PhotoMapSupport
         '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
           '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
           bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
-          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long)
-        .order('dateadded desc').limit(limit)
+          bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long).
+        order('dateadded desc').limit(limit)
     end
 
     def oldest

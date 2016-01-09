@@ -76,8 +76,8 @@ class PeopleController < ApplicationController
 
     @guesses = @person.guesses_with_associations
     @favorite_posters = @person.favorite_posters
-    @posters = @guesses.group_by { |guess| guess.photo.person }
-      .sort do |x,y|
+    @posters = @guesses.group_by { |guess| guess.photo.person }.
+      sort do |x,y|
         c = y[1].length <=> x[1].length
         c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
       end

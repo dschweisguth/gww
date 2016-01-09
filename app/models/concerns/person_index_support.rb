@@ -98,7 +98,7 @@ module PersonIndexSupport
     }
 
     private def sorted(people, sorted_by, order)
-      if !CRITERIA.has_key? sorted_by
+      if !CRITERIA.key? sorted_by
         raise ArgumentError, "#{sorted_by} is not a valid sort order"
       end
       if !['+', '-'].include? order

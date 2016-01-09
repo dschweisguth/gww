@@ -4,10 +4,10 @@ module PhotoAdminPhotosSupport
   module ClassMethods
 
     def inaccessible
-      where("seen_at < ?", FlickrUpdate.maximum(:created_at))
-        .where("game_status in ('unfound', 'unconfirmed')")
-        .order('lastupdate desc')
-        .includes(:person, :tags)
+      where("seen_at < ?", FlickrUpdate.maximum(:created_at)).
+        where("game_status in ('unfound', 'unconfirmed')").
+        order('lastupdate desc').
+        includes(:person, :tags)
     end
 
     def multipoint

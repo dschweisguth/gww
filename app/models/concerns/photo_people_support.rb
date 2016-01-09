@@ -15,9 +15,9 @@ module PhotoPeopleSupport
     end
 
     def posted_or_guessed_by_and_mapped(person_id, bounds, limit)
-      mapped(bounds, limit)
-        .joins('left join guesses on guesses.photo_id = photos.id')
-        .where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id)
+      mapped(bounds, limit).
+        joins('left join guesses on guesses.photo_id = photos.id').
+        where('photos.person_id = ? or guesses.person_id = ?', person_id, person_id)
     end
 
   end

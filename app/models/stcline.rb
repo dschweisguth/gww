@@ -22,9 +22,9 @@ class Stcline < ActiveRecord::Base
   ]
 
   def self.multiword_street_names
-    (order(:street).select('distinct(street)').map &:street)
-      .select { |name| name.include? ' ' }
-      .reject { |name| UNWANTED_STREET_NAMES.find { |pattern| pattern =~ name } } +
+    (order(:street).select('distinct(street)').map &:street).
+      select { |name| name.include? ' ' }.
+      reject { |name| UNWANTED_STREET_NAMES.find { |pattern| pattern =~ name } } +
       STREET_NAME_SYNONYMS
   end
 
@@ -46,8 +46,8 @@ class Stcline < ActiveRecord::Base
 
   private_class_method def self.find_cline(address)
     number = address.number.to_i
-    clines = where(street: address.street.name)
-      .where(
+    clines = where(street: address.street.name).
+      where(
         "(lf_fadd % 2 = :number % 2 and lf_fadd <= :number and :number <= lf_toadd) or " +
           "(rt_fadd % 2 = :number % 2 and rt_fadd <= :number and :number <= rt_toadd)",
         number: number)

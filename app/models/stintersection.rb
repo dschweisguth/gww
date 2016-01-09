@@ -51,9 +51,9 @@ class Stintersection < ActiveRecord::Base
 
   private_class_method def self.intersections(street1, street2)
     query =
-      joins("join stintersections i2 on stintersections.cnn = i2.cnn")
-        .where(st_name: street1.name)
-        .where("i2.st_name = ?", street2.name)
+      joins("join stintersections i2 on stintersections.cnn = i2.cnn").
+        where(st_name: street1.name).
+        where("i2.st_name = ?", street2.name)
     if street1.type
       query = query.where st_type: street1.type.name
     end

@@ -72,19 +72,19 @@ class Street < Struct.new :name, :type
   }
 
   def self.regexp(multiword_street_name)
-    multiword_street_name
-      .gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)')
-      .gsub(/([A-Za-z0-9']+\s+[A-Za-z0-9'])(\s+[A-Za-z0-9']+)/, '\1\.?\2')
-      .gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)')
-      .gsub(/\s+/, '\s+')
+    multiword_street_name.
+      gsub(/\bSAINT\b/, '(?:SAINT|ST\.?)').
+      gsub(/([A-Za-z0-9']+\s+[A-Za-z0-9'])(\s+[A-Za-z0-9']+)/, '\1\.?\2').
+      gsub(/(\s+)JR$/, ',?\1(?:JR\.?|JUNIOR)').
+      gsub(/\s+/, '\s+')
   end
 
   def initialize(name, type=nil)
-    sanitized_name = name.upcase
-      .gsub(/\s+/, ' ')
-      .gsub(/['.,]/, '')
-      .sub(/^ST\b/, 'SAINT')
-      .sub(/ JUNIOR$/, ' JR')
+    sanitized_name = name.upcase.
+      gsub(/\s+/, ' ').
+      gsub(/['.,]/, '').
+      sub(/^ST\b/, 'SAINT').
+      sub(/ JUNIOR$/, ' JR')
     super SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
   end
 

@@ -11,13 +11,13 @@ module PersonWheresiesSupport
     end
 
     private def most_achievements_in(year, achievements, date_column, count_attribute)
-      select("people.*, count(*) #{count_attribute}")
-        .joins(achievements)
-        .where("? <= #{achievements}.#{date_column}", Time.local(year).getutc)
-        .where("#{achievements}.#{date_column} < ?", Time.local(year + 1).getutc)
-        .group(:id)
-        .order("#{count_attribute} desc")
-        .limit 10
+      select("people.*, count(*) #{count_attribute}").
+        joins(achievements).
+        where("? <= #{achievements}.#{date_column}", Time.local(year).getutc).
+        where("#{achievements}.#{date_column} < ?", Time.local(year + 1).getutc).
+        group(:id).
+        order("#{count_attribute} desc").
+        limit 10
     end
 
     def rookies_with_most_points_in(year)
