@@ -6,15 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyElse:
-  Exclude:
-    - 'app/models/concerns/guess_score_reports_support.rb'
-    - 'app/models/concerns/photo_people_support.rb'
-    - 'app/models/concerns/score_reports_support.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/EmptyLines:

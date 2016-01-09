@@ -11,8 +11,6 @@ module ScoreReportsSupport
       :silver
     elsif age >= 1
       :bronze
-    else
-      nil
     end
   end
 

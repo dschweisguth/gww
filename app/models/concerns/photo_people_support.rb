@@ -50,8 +50,6 @@ module PhotoPeopleSupport
       :gold
     elsif other_user_comments >= 20
       :silver
-    else
-      nil
     end
   end
 
@@ -62,8 +60,6 @@ module PhotoPeopleSupport
       :silver
     elsif views >= 300
       :bronze
-    else
-      nil
     end
   end
 
@@ -74,8 +70,6 @@ module PhotoPeopleSupport
       :silver
     elsif faves >= 10
       :bronze
-    else
-      nil
     end
   end
 

@@ -19,8 +19,6 @@ module GuessScoreReportsSupport
       :gold
     elsif age <= 60
       :silver
-    else
-      nil
     end
   end
 
