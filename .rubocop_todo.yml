@@ -6,16 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: Keywords.
-Style/CommentAnnotation:
-  Exclude:
-    - 'app/controllers/photos_controller.rb'
-    - 'app/models/concerns/person_score_reports_support.rb'
-    - 'features/support/services.rb'
-    - 'lib/address.rb'
-
 # Offense count: 10
 # Cop supports --auto-correct.
 Style/DeprecatedHashMethods:

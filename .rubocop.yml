@@ -58,3 +58,5 @@ Style/BracesAroundHashParameters:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/CommentAnnotation:
+  Enabled: false
