@@ -30,3 +30,10 @@ Metrics/ParameterLists:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
+
+Style/AlignHash:
+  Enabled: false
+Style/AlignParameters:
+  Enabled: false
+Style/AsciiComments:
+  Enabled: false

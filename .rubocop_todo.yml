@@ -6,44 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 92
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle, SupportedLastArgumentHashStyles.
-Style/AlignHash:
-  Exclude:
-    - 'app/models/concerns/photo_photos_support.rb'
-    - 'app/updaters/photo_updater.rb'
-    - 'features/step_definitions/photos_steps.rb'
-    - 'features/support/poltergeist.rb'
-    - 'spec/models/comment_spec.rb'
-    - 'spec/models/concerns/person_statistics_support_spec.rb'
-    - 'spec/models/concerns/photo_statistics_support_spec.rb'
-    - 'spec/models/stcline_spec.rb'
-
-# Offense count: 60
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AlignParameters:
-  Exclude:
-    - 'app/helpers/people_helper.rb'
-    - 'app/helpers/photos_helper.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/concerns/photo_admin_photos_support.rb'
-    - 'app/models/concerns/photo_map_support.rb'
-    - 'app/models/concerns/photo_photos_support.rb'
-    - 'app/models/person.rb'
-    - 'app/models/photo.rb'
-    - 'lib/address.rb'
-    - 'spec/models/concerns/photo_photos_support_spec.rb'
-    - 'spec/rails_helper.rb'
-    - 'spec/support/first_and_only.rb'
-    - 'spec/updaters/photo_updater_spec.rb'
-
-# Offense count: 1
-Style/AsciiComments:
-  Exclude:
-    - 'db/migrate/20140522045551_alter_tags_raw_case_sensitive.rb'
-
 # Offense count: 25
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
