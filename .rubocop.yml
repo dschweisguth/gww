@@ -1,5 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
+Style/BarePercentLiterals:
+  EnforcedStyle: percent_q
+
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
   Enabled: false

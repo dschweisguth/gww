@@ -22,7 +22,7 @@ GWW::Application.routes.draw do
   get 'photos/autocomplete_usernames(/*terms)' => 'photos#autocomplete_usernames', as: :autocomplete_photos_usernames
   get 'photos/search_data(/*segments)' => 'photos#search_data', as: :search_photos_data
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', as: :photos
-  resources :photos, only: %(show) do
+  resources :photos, only: :show do
     get :map_popup, on: :member
     get :map, :map_json, :unfound_data, on: :collection
   end
