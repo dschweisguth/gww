@@ -17,7 +17,7 @@ class BaseSearchParamsParser
     uri_components = segments.split '/'
     uri_params = uri_components.length.even? ? uri_components.each_slice(2).to_h : {}
     form_params = remove_invalid uri_params_to_form uri_params
-    canonical_uri_params = uri_params.select { |key, _value| form_params.has_key?(key) }
+    canonical_uri_params = uri_params.select { |key, _value| form_params.key?(key) }
     # Add params that must be in the canonical URL even if they're not in the original URL
     canonical_uri_params = add_defaults canonical_uri_params, *optional_param_names
     canonical_uri_params = remove_uri_defaults canonical_uri_params
@@ -51,17 +51,17 @@ class BaseSearchParamsParser
     end
 
     if form_params['did'] == 'activity'
-      if !form_params.has_key?('done-by')
+      if !form_params.key?('done-by')
         form_params.delete 'did'
       end
       %w(text game-status).each do |field|
-        if form_params.has_key? field
+        if form_params.key? field
           form_params.delete field
         end
       end
     end
 
-    if form_params.has_key?('done-by') && !Person.exists?(username: form_params['done-by'])
+    if form_params.key?('done-by') && !Person.exists?(username: form_params['done-by'])
       form_params.delete 'done-by'
     end
 
@@ -70,7 +70,7 @@ class BaseSearchParamsParser
     end
 
     %w(from-date to-date).each do |field|
-      if form_params.has_key? field
+      if form_params.key? field
         begin
           Date.parse form_params[field]
         rescue ArgumentError
@@ -78,13 +78,13 @@ class BaseSearchParamsParser
         end
       end
     end
-    if form_params.has_key?('from-date') && form_params.has_key?('to-date') && Date.parse(form_params['from-date']) > Date.parse(form_params['to-date'])
+    if form_params.key?('from-date') && form_params.key?('to-date') && Date.parse(form_params['from-date']) > Date.parse(form_params['to-date'])
       %w(from-date to-date).each do |field|
         form_params.delete field
       end
     end
 
-    if form_params.has_key? 'sorted-by'
+    if form_params.key? 'sorted-by'
       valid_orders = form_params['did'] == 'activity' ? %w(date-taken) : %w(date-taken date-added last-updated)
       if !valid_orders.include?(form_params['sorted-by'])
         form_params.delete 'sorted-by'
@@ -95,7 +95,7 @@ class BaseSearchParamsParser
       form_params.delete 'direction'
     end
 
-    if form_params.has_key? 'page'
+    if form_params.key? 'page'
       begin
         Integer form_params['page']
       rescue ArgumentError

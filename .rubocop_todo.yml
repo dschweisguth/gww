@@ -6,13 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 10
-# Cop supports --auto-correct.
-Style/DeprecatedHashMethods:
-  Exclude:
-    - 'app/controllers/concerns/base_search_params_parser.rb'
-    - 'app/models/concerns/person_index_support.rb'
-
 # Offense count: 107
 # Configuration parameters: Exclude.
 Style/Documentation:
