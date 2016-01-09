@@ -7,7 +7,7 @@ module PeopleHelper
   end
 
   def to_4_places(x)
-    sprintf("%.4f", x)
+    "%.4f" % x
   end
 
   def infinity_or(x)

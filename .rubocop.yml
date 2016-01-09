@@ -28,6 +28,9 @@ Style/ExtraSpacing:
     - 'config.ru'
     - 'db/schema.rb'
 
+Style/FormatString:
+  EnforcedStyle: percent
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
