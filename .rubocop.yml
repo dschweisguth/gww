@@ -22,6 +22,12 @@ Style/EmptyLines:
   Exclude:
     - 'lib/tasks/cucumber.rake'
 
+Style/ExtraSpacing:
+  Exclude:
+    - 'bin/rails'
+    - 'config.ru'
+    - 'db/schema.rb'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary

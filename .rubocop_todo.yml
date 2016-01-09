@@ -6,16 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 9
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment.
-Style/ExtraSpacing:
-  Exclude:
-    - 'app/models/color/green.rb'
-    - 'bin/rails'
-    - 'config.ru'
-    - 'db/schema.rb'
-
 # Offense count: 8
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/FormatString:
