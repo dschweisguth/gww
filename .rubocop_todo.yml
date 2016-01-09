@@ -6,23 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 13
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'app/controllers/admin/photos_controller.rb'
-    - 'app/controllers/admin/root_controller.rb'
-    - 'app/controllers/admin/score_reports_controller.rb'
-    - 'app/helpers/admin/photos_helper.rb'
-    - 'app/models/color/blue.rb'
-    - 'app/models/color/color.rb'
-    - 'app/models/color/green.rb'
-    - 'app/models/color/red.rb'
-    - 'app/models/color/yellow.rb'
-    - 'spec/support/first_and_only.rb'
-    - 'spec/support/nulldb.rb'
-    - 'spec/support/nulldb_spatial.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/ColonMethodCall:

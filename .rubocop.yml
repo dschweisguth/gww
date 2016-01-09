@@ -56,3 +56,5 @@ Style/AsciiComments:
   Enabled: false
 Style/BracesAroundHashParameters:
   Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
