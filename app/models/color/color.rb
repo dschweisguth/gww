@@ -1,3 +1,6 @@
+module Color
+end
+
 class Color::Color
   # This method quantizes its result to reduce the number of different images that a browser must retrieve.
   def self.scaled(start_of_range, end_of_range, position)
