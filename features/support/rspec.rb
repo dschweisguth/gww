@@ -3,13 +3,13 @@ require 'rspec/mocks'
 World(RSpec::Mocks::ExampleMethods)
 
 Before do
-  RSpec::Mocks::setup
+  RSpec::Mocks.setup
 end
 
 After do
   begin
-    RSpec::Mocks::verify
+    RSpec::Mocks.verify
   ensure
-    RSpec::Mocks::teardown
+    RSpec::Mocks.teardown
   end
 end
