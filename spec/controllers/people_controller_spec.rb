@@ -72,11 +72,11 @@ describe PeopleController do
       report_day = Time.utc(2011, 1, 3)
       top_guessers = [
         (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
-          [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
-            (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-          [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
-            (0 .. 11).map { |i| Period.starting_at(report_day.beginning_of_month - (i + 1).months, 1.month) },
-          [ Period.new(report_day.beginning_of_year, report_day + 1.day) ]
+        [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +
+          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+        [Period.new(report_day.beginning_of_month, report_day + 1.day)] +
+          (0 .. 11).map { |i| Period.starting_at(report_day.beginning_of_month - (i + 1).months, 1.month) },
+        [Period.new(report_day.beginning_of_year, report_day + 1.day)]
       ]
       person = build_stubbed :person
       guess = build_stubbed :guess, person: person, commented_at: report_day
