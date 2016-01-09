@@ -52,13 +52,15 @@ class LocationParser
 
   private def remove_subsets(locations)
     # This algorithm assumes that no two locations will have the same text
-    locations.reject { |location| locations.find \
-      { |other| ! other.equal?(location) && other.text.include?(location.text) } }
+    locations.reject do |location|
+      locations.find { |other| ! other.equal?(location) && other.text.include?(location.text) }
+    end
   end
 
   private def remove_duplicates(locations)
-    locations.reject { |location| locations.find \
-      { |other| other.object_id < location.object_id && other.will_have_same_geocode_as(location) } }
+    locations.reject do |location|
+      locations.find { |other| other.object_id < location.object_id && other.will_have_same_geocode_as(location) }
+    end
   end
 
 end

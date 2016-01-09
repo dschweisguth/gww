@@ -14,8 +14,7 @@ describe PeopleController do
 
   describe 'index' do
     it { is_expected.to have_named_route :people, 'foo', 'bar', '/people/sorted-by/foo/order/bar' }
-    it { is_expected.to route(:get, '/people/sorted-by/foo/order/bar').to(
-      action: 'index', sorted_by: 'foo', order: 'bar') }
+    it { is_expected.to route(:get, '/people/sorted-by/foo/order/bar').to(action: 'index', sorted_by: 'foo', order: 'bar') }
   end
 
   %w{ nemeses top_guessers }.each do |action|

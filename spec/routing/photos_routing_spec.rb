@@ -2,8 +2,7 @@ describe PhotosController do
 
   describe 'index' do
     it { is_expected.to have_named_route :photos, 'foo', 'bar', 1, '/photos/sorted-by/foo/order/bar/page/1' }
-    it { is_expected.to route(:get, '/photos/sorted-by/foo/order/bar/page/1').to(
-      action: 'index', sorted_by: 'foo', order: 'bar', page: '1') }
+    it { is_expected.to route(:get, '/photos/sorted-by/foo/order/bar/page/1').to(action: 'index', sorted_by: 'foo', order: 'bar', page: '1') }
   end
 
   %w{map map_json unfound_data}.each do |action|
