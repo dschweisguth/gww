@@ -127,8 +127,8 @@ module PersonShowSupport
         ],
         most_commented_photo.other_user_comments
       ]) + 1
-      most_commented_photo
     end
+    most_commented_photo
   end
 
   def most_viewed_photo
