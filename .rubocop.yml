@@ -3,6 +3,10 @@ inherit_from: .rubocop_todo.yml
 Style/BarePercentLiterals:
   EnforcedStyle: percent_q
 
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
   Enabled: false
