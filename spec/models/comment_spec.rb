@@ -1,12 +1,12 @@
 describe Comment do
   describe '#flickrid' do
-    it { is_expected.to validate_presence_of :flickrid }
-    it { is_expected.to have_readonly_attribute :flickrid }
+    it { does validate_presence_of :flickrid }
+    it { does have_readonly_attribute :flickrid }
   end
 
   describe '#username' do
-    it { is_expected.to validate_presence_of :username }
-    it { is_expected.to have_readonly_attribute :username }
+    it { does validate_presence_of :username }
+    it { does have_readonly_attribute :username }
 
     it 'should handle non-ASCII characters' do
       non_ascii_username = '猫娘/ nekomusume'
@@ -17,8 +17,8 @@ describe Comment do
   end
 
   describe '#comment_text' do
-    it { is_expected.to validate_presence_of :comment_text }
-    it { is_expected.to have_readonly_attribute :comment_text }
+    it { does validate_presence_of :comment_text }
+    it { does have_readonly_attribute :comment_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
@@ -29,8 +29,8 @@ describe Comment do
   end
 
   describe '#commented_at' do
-    it { is_expected.to validate_presence_of :commented_at }
-    it { is_expected.to have_readonly_attribute :commented_at }
+    it { does validate_presence_of :commented_at }
+    it { does have_readonly_attribute :commented_at }
   end
 
   describe '.add_selected_answer' do

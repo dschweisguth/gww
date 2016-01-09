@@ -1,8 +1,8 @@
 describe Tag do
 
   describe '#raw' do
-    it { is_expected.to validate_presence_of :raw }
-    it { is_expected.to have_readonly_attribute :raw }
+    it { does validate_presence_of :raw }
+    it { does have_readonly_attribute :raw }
 
     it "is unique for a given photo" do
       existing = create :tag, raw: 'text'
@@ -18,7 +18,7 @@ describe Tag do
 
   describe '#machine_tag' do
     # Can't use validate_presence_of because that validation happens before the database default value is applied
-    it { is_expected.to have_readonly_attribute :machine_tag }
+    it { does have_readonly_attribute :machine_tag }
 
     it "defaults to false" do
       expect(Tag.new(raw: 'text').machine_tag).to eq(false)

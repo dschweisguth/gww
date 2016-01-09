@@ -1,12 +1,12 @@
 describe Person do
 
   describe '#flickrid' do
-    it { is_expected.to validate_presence_of :flickrid }
-    it { is_expected.to have_readonly_attribute :flickrid }
+    it { does validate_presence_of :flickrid }
+    it { does have_readonly_attribute :flickrid }
   end
 
   describe '#username' do
-    it { is_expected.to validate_presence_of :username }
+    it { does validate_presence_of :username }
 
     it 'should handle non-ASCII characters' do
       non_ascii_username = '猫娘/ nekomusume'

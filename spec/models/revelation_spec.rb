@@ -1,7 +1,7 @@
 describe Revelation do
 
   describe '#comment_text' do
-    it { is_expected.to validate_presence_of :comment_text }
+    it { does validate_presence_of :comment_text }
 
     it 'should handle non-ASCII characters' do
       non_ascii_text = 'π is rad'
@@ -12,11 +12,11 @@ describe Revelation do
   end
 
   describe '#commented_at' do
-    it { is_expected.to validate_presence_of :commented_at }
+    it { does validate_presence_of :commented_at }
   end
 
   describe '#added_at' do
-    it { is_expected.to validate_presence_of :added_at }
+    it { does validate_presence_of :added_at }
   end
 
   describe '.longest' do

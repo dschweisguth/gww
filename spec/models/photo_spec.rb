@@ -1,48 +1,48 @@
 describe Photo do
   describe '#flickrid' do
-    it { is_expected.to validate_presence_of :flickrid }
-    it { is_expected.to have_readonly_attribute :flickrid }
+    it { does validate_presence_of :flickrid }
+    it { does have_readonly_attribute :flickrid }
   end
 
   describe '#dateadded' do
-    it { is_expected.to validate_presence_of :dateadded }
+    it { does validate_presence_of :dateadded }
   end
 
   describe '#accuracy' do
-    it { is_expected.to validate_numericality_of(:accuracy).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:accuracy).is_greater_than_or_equal_to(0) }
   end
 
   describe '#lastupdate' do
-    it { is_expected.to validate_presence_of :lastupdate }
+    it { does validate_presence_of :lastupdate }
   end
 
   describe '#seen_at' do
-    it { is_expected.to validate_presence_of :seen_at }
+    it { does validate_presence_of :seen_at }
   end
 
   describe '#game_status' do
-    it { is_expected.to validate_presence_of :game_status }
-    it { is_expected.to validate_inclusion_of(:game_status).in_array %w(unfound unconfirmed found revealed) }
+    it { does validate_presence_of :game_status }
+    it { does validate_inclusion_of(:game_status).in_array %w(unfound unconfirmed found revealed) }
   end
 
   describe '#views' do
-    it { is_expected.to validate_numericality_of(:views).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:views).is_greater_than_or_equal_to(0) }
   end
 
   describe '#faves' do
-    it { is_expected.to validate_numericality_of(:faves).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:faves).is_greater_than_or_equal_to(0) }
   end
 
   describe '#other_user_comments' do
-    it { is_expected.to validate_numericality_of(:other_user_comments).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:other_user_comments).is_greater_than_or_equal_to(0) }
   end
 
   describe '#member_comments' do
-    it { is_expected.to validate_numericality_of(:member_comments).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:member_comments).is_greater_than_or_equal_to(0) }
   end
 
   describe '#member_questions' do
-    it { is_expected.to validate_numericality_of(:member_questions).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:member_questions).is_greater_than_or_equal_to(0) }
   end
 
   describe '#destroy' do
