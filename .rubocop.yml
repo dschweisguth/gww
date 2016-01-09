@@ -1,17 +1,5 @@
 inherit_from: .rubocop_todo.yml
 
-Lint/LiteralInCondition:
-  Enabled: true
-Lint/StringConversionInInterpolation:
-  Enabled: true
-Lint/UnusedMethodArgument:
-  Enabled: true
-Lint/UselessAssignment:
-  Enabled: true
-
-Performance/StringReplacement:
-  Enabled: true
-
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
   Enabled: false
@@ -28,24 +16,17 @@ Lint/ShadowingOuterLocalVariable:
 
 Metrics/AbcSize:
   Enabled: false
-
 Metrics/ClassLength:
   Enabled: false
-
 Metrics/CyclomaticComplexity:
   Enabled: false
-
 Metrics/LineLength:
   Enabled: false
-
 Metrics/MethodLength:
   Enabled: false
-
 Metrics/ModuleLength:
   Enabled: false
-
 Metrics/ParameterLists:
   Enabled: false
-
 Metrics/PerceivedComplexity:
   Enabled: false
