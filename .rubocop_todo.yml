@@ -6,16 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 7
-# Cop supports --auto-correct.
-Style/BlockEndNewline:
-  Exclude:
-    - 'lib/location_parser.rb'
-    - 'lib/street_type.rb'
-    - 'spec/controllers/photos_controller_spec.rb'
-    - 'spec/routing/people_routing_spec.rb'
-    - 'spec/routing/photos_routing_spec.rb'
-
 # Offense count: 56
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
