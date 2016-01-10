@@ -6,27 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 28
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SignalException:
-  Exclude:
-    - 'app/controllers/concerns/base_search_params_parser.rb'
-    - 'app/controllers/wheresies_controller.rb'
-    - 'app/models/concerns/person_index_support.rb'
-    - 'app/models/concerns/photo_admin_photos_support.rb'
-    - 'app/services/flickr_service.rb'
-    - 'features/step_definitions/admin/photos_steps.rb'
-    - 'features/step_definitions/common_steps.rb'
-    - 'lib/address.rb'
-    - 'spec/controllers/admin/photos_controller_spec.rb'
-    - 'spec/services/flickr_service_spec.rb'
-    - 'spec/support/first_and_only.rb'
-    - 'spec/support/matchers/routing.rb'
-    - 'spec/support/mock_flickr_service.rb'
-    - 'spec/updaters/person_updater_spec.rb'
-    - 'spec/updaters/photo_updater_spec.rb'
-
 # Offense count: 63
 # Cop supports --auto-correct.
 Style/SingleSpaceBeforeFirstArg:

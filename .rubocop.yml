@@ -58,6 +58,9 @@ Style/RedundantReturn:
 Style/RegexpLiteral:
   EnforcedStyle: mixed
 
+Style/SignalException:
+  EnforcedStyle: only_raise
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
