@@ -117,3 +117,5 @@ Style/NegatedIf:
   Enabled: false
 Style/Next:
   Enabled: false
+Style/RaiseArgs:
+  Enabled: false
