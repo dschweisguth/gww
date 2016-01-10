@@ -36,6 +36,10 @@ Style/HashSyntax:
   Exclude:
     - 'db/schema.rb'
 
+Style/IndentationWidth:
+  Exclude:
+    - 'lib/tasks/cucumber.rake'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
