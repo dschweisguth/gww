@@ -61,6 +61,10 @@ Style/RegexpLiteral:
 Style/SignalException:
   EnforcedStyle: only_raise
 
+Style/SingleSpaceBeforeFirstArg:
+  Exclude:
+    - 'db/schema.rb'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
