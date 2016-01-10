@@ -36,8 +36,8 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
       return nil
     end
     sanitized_name = name.chomp('.').upcase
-    INSTANCES.find do |type| type.name == sanitized_name ||
-      type.synonyms.find { |synonym| synonym.name == sanitized_name }
+    INSTANCES.find do |type|
+      type.name == sanitized_name || type.synonyms.find { |synonym| synonym.name == sanitized_name }
     end
   end
 
