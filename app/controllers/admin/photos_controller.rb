@@ -78,7 +78,6 @@ class Admin::PhotosController < ApplicationController
   def destroy
     Photo.find(params[:id]).destroy
     PageCache.clear
-    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
@@ -101,12 +100,11 @@ class Admin::PhotosController < ApplicationController
     end
     message += " If you like, you can <a href=\"#{from}\">go back where you came from</a>."
     flash[:general_error] = message
-    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
   private def redirect_to_edit_path(id, options = {})
-    #noinspection RubyResolve
+    # noinspection RubyResolve
     redirect_to edit_admin_photo_path id, options
   end
 

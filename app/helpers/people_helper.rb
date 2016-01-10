@@ -1,9 +1,7 @@
 module PeopleHelper
 
   def other_people_path(sorted_by)
-    #noinspection RubyResolve
-    people_path sorted_by,
-      sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
+    people_path sorted_by, sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
   end
 
   def to_4_places(x)

@@ -10,13 +10,11 @@ class Admin::RootController < ApplicationController
 
   def update_from_flickr
     flash[:notice] = Updater.update
-    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 
   def calculate_statistics_and_maps
     flash[:notice] = Precalculator.calculate_statistics_and_maps
-    #noinspection RubyResolve
     redirect_to admin_root_path
   end
 

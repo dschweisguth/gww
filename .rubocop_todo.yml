@@ -6,17 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 14
-# Cop supports --auto-correct.
-Style/LeadingCommentSpace:
-  Exclude:
-    - 'app/controllers/admin/photos_controller.rb'
-    - 'app/controllers/admin/root_controller.rb'
-    - 'app/helpers/people_helper.rb'
-    - 'app/helpers/photos_helper.rb'
-    - 'spec/javascripts/support/jasmine_helper.rb'
-    - 'spec/models/concerns/person_wheresies_support_spec.rb'
-
 # Offense count: 30
 # Cop supports --auto-correct.
 Style/LineEndConcatenation:

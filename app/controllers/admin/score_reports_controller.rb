@@ -25,7 +25,6 @@ class Admin::ScoreReportsController < ApplicationController
   def destroy
     ScoreReport.destroy params[:id]
     PageCache.clear
-    # noinspection RubyResolve
     redirect_to admin_score_reports_path
   end
 

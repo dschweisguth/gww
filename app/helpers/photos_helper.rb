@@ -1,9 +1,7 @@
 module PhotosHelper
 
   def other_photos_path(sorted_by)
-    #noinspection RubyResolve
-    photos_path sorted_by,
-      sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+', 1
+    photos_path sorted_by, sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+', 1
   end
 
   # Returns a phrase like '24 hours ago', always with a single time unit,
