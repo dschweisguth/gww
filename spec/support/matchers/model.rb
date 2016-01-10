@@ -1,7 +1,7 @@
 module GWW
   module Matchers
     module Model
-      def have_attributes(expected)
+      def have_attributes?(expected)
         HaveAttributes.new expected
       end
 
@@ -27,7 +27,7 @@ module GWW
 
       end
 
-      def have_the_same_attributes_as(expected)
+      def have_the_same_attributes_as?(expected)
         HaveTheSameAttributesAs.new expected
       end
 

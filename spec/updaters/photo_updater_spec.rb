@@ -72,13 +72,13 @@ describe PersonUpdater, type: :updater do
 
       photo = Photo.first_and_only
 
-      expect(photo.person).to have_attributes(
+      expect(photo.person).to have_attributes?(
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
         pathalias: stubbed_photo[:pathalias]
       )
 
-      expect(photo).to have_attributes(
+      expect(photo).to have_attributes?(
         flickrid: stubbed_photo[:id],
         farm: stubbed_photo[:farm],
         server: stubbed_photo[:server],
@@ -105,7 +105,7 @@ describe PersonUpdater, type: :updater do
       mock_get_comments_and_tags
       PhotoUpdater.update_all
 
-      expect(Person.first_and_only).to have_attributes(
+      expect(Person.first_and_only).to have_attributes?(
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
         pathalias: stubbed_photo[:owner]
@@ -121,7 +121,7 @@ describe PersonUpdater, type: :updater do
       expect(PhotoUpdater.update_all).to eq([ 1, 0, 1, 1 ])
 
       # Note that a username or pathalias that changes during the update is not updated
-      expect(Person.first_and_only).to have_the_same_attributes_as(person_before)
+      expect(Person.first_and_only).to have_the_same_attributes_as?(person_before)
 
     end
 
@@ -169,7 +169,7 @@ describe PersonUpdater, type: :updater do
         faves: 6
       expect(PhotoUpdater.update_all).to eq([ 0, 0, 1, 1 ])
 
-      expect(Photo.first_and_only).to have_attributes(
+      expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: stubbed_photo[:farm],
@@ -214,7 +214,7 @@ describe PersonUpdater, type: :updater do
         faves: 6
       PhotoUpdater.update_all
 
-      expect(Photo.first_and_only).to have_attributes(
+      expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: photo_before.farm,
@@ -256,7 +256,7 @@ describe PersonUpdater, type: :updater do
         faves: 6
       PhotoUpdater.update_all
 
-      expect(Photo.first_and_only).to have_attributes(
+      expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: photo_before.farm,
@@ -298,7 +298,7 @@ describe PersonUpdater, type: :updater do
         faves: 6
       expect(PhotoUpdater.update_all).to eq([ 0, 0, 1, 1 ])
 
-      expect(Photo.first_and_only).to have_attributes(
+      expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
         flickrid: photo_before.flickrid,
         farm: stubbed_photo[:farm],
@@ -343,7 +343,7 @@ describe PersonUpdater, type: :updater do
       stub_get_faves
       mock_get_comments_and_tags
       expect(PhotoUpdater.update_all).to eq([ 1, 1, 1, 1 ])
-      expect(Photo.first_and_only).to have_attributes(
+      expect(Photo.first_and_only).to have_attributes?(
         latitude: nil,
         longitude: nil,
         accuracy: nil,
@@ -369,11 +369,11 @@ describe PersonUpdater, type: :updater do
       expect(PhotoUpdater).to receive(:update_tags).with photo
       PhotoUpdater.update photo
 
-      expect(photo.person).to have_attributes(
+      expect(photo.person).to have_attributes?(
         username: 'new_username',
         pathalias: 'new_pathalias'
       )
-      expect(photo).to have_attributes(
+      expect(photo).to have_attributes?(
         farm: '1',
         server: 'incoming_server',
         secret: 'incoming_secret',
@@ -402,7 +402,7 @@ describe PersonUpdater, type: :updater do
       allow(PhotoUpdater).to receive(:update_tags).with photo
       PhotoUpdater.update photo
 
-      expect(photo).to have_attributes(
+      expect(photo).to have_attributes?(
         latitude: nil,
         longitude: nil,
         accuracy: nil
@@ -448,11 +448,11 @@ describe PersonUpdater, type: :updater do
       expect(PhotoUpdater).not_to receive(:update_tags)
       PhotoUpdater.update photo
 
-      expect(photo.person).to have_attributes(
+      expect(photo.person).to have_attributes?(
         username: 'new_username',
         pathalias: 'new_pathalias'
       )
-      expect(photo).to have_attributes(
+      expect(photo).to have_attributes?(
         farm: old_photo_attrs['farm'],
         server: old_photo_attrs['server'],
         secret: old_photo_attrs['secret'],
@@ -627,7 +627,7 @@ describe PersonUpdater, type: :updater do
 
     def photo_has_the_comment_from_the_request
       expect(photo.comments.length).to eq(1)
-      expect(photo.comments.first).to have_attributes(
+      expect(photo.comments.first).to have_attributes?(
         flickrid: 'commenter_flickrid',
         username: 'commenter_username',
         comment_text: 'comment text',
