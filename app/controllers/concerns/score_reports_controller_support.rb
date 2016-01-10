@@ -15,7 +15,7 @@ module ScoreReportsControllerSupport
 
     @revelations = Revelation.all_between previous_report_date, @report_date
     @revealers =
-      @revelations.group_by { | revelation| revelation.photo.person }.
+      @revelations.group_by { |revelation| revelation.photo.person }.
         sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }
 
     people, people_by_score = people_by_score report_date

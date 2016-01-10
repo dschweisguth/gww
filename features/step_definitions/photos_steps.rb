@@ -160,12 +160,12 @@ end
 Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   step "I should see the tag"
   [term1, term2].each do |term|
-    expect(all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }).to be_truthy
+    expect(all('li').any? { |li| li.has_css?('span[class=matched]', text: term) }).to be_truthy
   end
 end
 
 Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
-  expect(all('li').any? { |li|li.has_css?('span[class=matched]', text: term) }).to be_truthy
+  expect(all('li').any? { |li| li.has_css?('span[class=matched]', text: term) }).to be_truthy
 end
 
 Then /^I should not see the comment$/ do
