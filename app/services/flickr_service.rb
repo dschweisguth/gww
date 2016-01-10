@@ -99,7 +99,7 @@ class FlickrService
     params['oauth_signature'] = signature params
     "#{API_URL}?" +
       params.each_with_object('') do |param, query_string|
-        if ! query_string.empty?
+        if !query_string.empty?
           query_string << '&'
         end
         query_string << param[0] + '=' + param[1]

@@ -3,7 +3,7 @@ class Stintersection < ActiveRecord::Base
   def self.geocode(location)
     if location.respond_to? :on
       point1 = geocode_intersection location.on, location.between1
-      if ! point1
+      if !point1
         return nil # return immediately for performance
       end
       point2 = geocode_intersection location.on, location.between2

@@ -96,7 +96,7 @@ class PeopleController < ApplicationController
       post.guesses.each do |guess|
         guesser = guess.person
         guessers_guesses = guessers[guesser]
-        if ! guessers_guesses
+        if !guessers_guesses
           guessers_guesses = []
           guessers[guesser] = guessers_guesses
         end

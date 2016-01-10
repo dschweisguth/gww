@@ -32,7 +32,7 @@ class Person < ActiveRecord::Base
 
   # Used in other classes' callbacks
   def destroy_if_has_no_dependents
-    if ! Photo.where(person_id: id).exists? && ! Guess.where(person_id: id).exists?
+    if !Photo.where(person_id: id).exists? && !Guess.where(person_id: id).exists?
       destroy
     end
   end

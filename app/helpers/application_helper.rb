@@ -12,7 +12,7 @@ module ApplicationHelper
       return verb
     end
     singular = IRREGULAR_PLURAL_VERBS[verb]
-    if ! singular.nil?
+    if !singular.nil?
       return singular
     end
     verb + 's'

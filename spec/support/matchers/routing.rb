@@ -12,7 +12,7 @@ module GWW
           @name = name
           @path = "#{name}_path"
           @args = args
-          if ! args.last
+          if !args.last
             raise ArgumentError, 'The last argument must be the expected uri'
           end
           @expected_uri = args.pop

@@ -6,23 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 17
-# Cop supports --auto-correct.
-Style/SpaceAfterNot:
-  Exclude:
-    - 'app/controllers/people_controller.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/person.rb'
-    - 'app/models/photo.rb'
-    - 'app/models/stintersection.rb'
-    - 'app/services/flickr_service.rb'
-    - 'features/step_definitions/common_steps.rb'
-    - 'lib/address.rb'
-    - 'lib/location_parser.rb'
-    - 'lib/street_type.rb'
-    - 'spec/support/matchers/routing.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleInsidePipes, SupportedStyles.

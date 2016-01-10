@@ -85,7 +85,7 @@ module PersonShowSupport
         where(owned_object => { person_id: self }).
         with_valid_age.
         order_by_age(order).first
-    if ! guess
+    if !guess
       return nil
     end
     guess.place = Guess.joins(:photo).where(place_conditions, self).with_valid_age.count + 1

@@ -2,7 +2,7 @@ class LocationParser
 
   def initialize(multiword_street_names)
     names = multiword_street_names.map { |name| Street.regexp name }.join '|'
-    if ! names.empty?
+    if !names.empty?
       names += '|'
     end
     street = "(#{names}[A-Za-z0-9']+)((?:\\s+(?:#{StreetType.regexp}))?)"
@@ -35,7 +35,7 @@ class LocationParser
       remaining_comment = comment
       loop do
         match = regexp.match remaining_comment
-        break if ! match
+        break if !match
         locations <<
           case match.size
             when 5
@@ -53,7 +53,7 @@ class LocationParser
   private def remove_subsets(locations)
     # This algorithm assumes that no two locations will have the same text
     locations.reject do |location|
-      locations.find { |other| ! other.equal?(location) && other.text.include?(location.text) }
+      locations.find { |other| !other.equal?(location) && other.text.include?(location.text) }
     end
   end
 

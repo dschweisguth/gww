@@ -40,7 +40,7 @@ class Photo < ActiveRecord::Base
   end
 
   def mapped_or_automapped?
-    mapped? || ! inferred_latitude.nil?
+    mapped? || !inferred_latitude.nil?
   end
 
 end

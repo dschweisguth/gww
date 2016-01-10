@@ -32,7 +32,7 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
   ].map { |name, is_abbr, *synonyms| new name, is_abbr, synonyms.map { |args| Synonym.new *args } }
 
   def self.get(name)
-    if ! name
+    if !name
       return nil
     end
     sanitized_name = name.chomp('.').upcase
@@ -49,7 +49,7 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
   end
 
   def self.add_name(regexp, type)
-    regexp << '|' if ! regexp.empty?
+    regexp << '|' if !regexp.empty?
     regexp << type.name
     regexp << '\b'
     regexp << '\.?' if type.is_abbr
