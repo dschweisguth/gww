@@ -100,7 +100,7 @@ class PeopleController < ApplicationController
           guessers_guesses = []
           guessers[guesser] = guessers_guesses
         end
-	      guessers_guesses << post
+        guessers_guesses << post
       end
     end
     guessers.sort do |x,y|
