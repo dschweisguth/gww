@@ -114,6 +114,8 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Style/AlignArray:
+  Enabled: false
 Style/AlignHash:
   Enabled: false
 Style/AlignParameters:
@@ -151,4 +153,6 @@ Style/RaiseArgs:
 Style/RedundantBegin:
   Enabled: false
 Style/StringLiterals:
+  Enabled: false
+Style/StringLiteralsInInterpolation:
   Enabled: false

@@ -1,7 +1,7 @@
 describe LocationParser, type: :lib do
   describe '#parse' do
     let(:parser) { LocationParser.new([]) }
-    
+
     it "finds no locations in the empty string" do
       expect(parser.parse('')).to eq([])
     end
