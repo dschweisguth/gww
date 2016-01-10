@@ -1,5 +1,4 @@
 module MultiPhotoMapControllerSupport
-
   INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
   MAX_MAP_PHOTOS = 2000
 

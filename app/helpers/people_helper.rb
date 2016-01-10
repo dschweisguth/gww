@@ -1,5 +1,4 @@
 module PeopleHelper
-
   def other_people_path(sorted_by)
     people_path sorted_by, sorted_by == params[:sorted_by] && params[:order] == '+' ? '-' : '+'
   end

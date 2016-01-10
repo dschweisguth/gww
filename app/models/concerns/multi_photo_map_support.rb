@@ -3,7 +3,6 @@ module MultiPhotoMapSupport
   include PhotoMapSupport
 
   module ClassMethods
-
     def as_map_json(partial, bounds, photos)
       perturb_identical_locations photos
       {

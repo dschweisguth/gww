@@ -1,5 +1,4 @@
 class BaseSearchParamsParser
-
   class NonCanonicalSegmentsError < StandardError
     attr_accessor :canonical_segments
 

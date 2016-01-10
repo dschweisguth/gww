@@ -1,5 +1,4 @@
 class WheresiesController < ApplicationController
-
   caches_page :show
   def show
     @wheresies_years = ScoreReport.minimum(:created_at).getlocal.year..Time.now.year
@@ -17,5 +16,4 @@ class WheresiesController < ApplicationController
     @shortest_in_year = Guess.shortest_in @year
     @longest_in_year = Guess.longest_in @year
   end
-
 end

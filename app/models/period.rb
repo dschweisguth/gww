@@ -1,5 +1,4 @@
 class Period < Struct.new :start, :finish, :scores
-
   def initialize(start, finish)
     self.start = start
     self.finish = finish

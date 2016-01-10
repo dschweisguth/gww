@@ -1,5 +1,4 @@
 class Fixnum
-
   def ordinal
     string = to_s
     case string
@@ -16,5 +15,4 @@ class Fixnum
     end
     string + suffix
   end
-
 end

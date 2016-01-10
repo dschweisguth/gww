@@ -1,5 +1,4 @@
 module ScoreReportsControllerSupport
-
   private def prepare_gww_thumbnails_html(report_date)
     @report_date = report_date.getlocal
 

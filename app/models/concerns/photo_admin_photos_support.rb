@@ -2,7 +2,6 @@ module PhotoAdminPhotosSupport
   extend ActiveSupport::Concern
 
   module ClassMethods
-
     def inaccessible
       where("seen_at < ?", FlickrUpdate.maximum(:created_at)).
         where("game_status in ('unfound', 'unconfirmed')").

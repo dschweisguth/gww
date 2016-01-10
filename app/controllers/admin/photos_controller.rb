@@ -1,5 +1,4 @@
 class Admin::PhotosController < ApplicationController
-
   caches_page :unfound
   def unfound
     @photos = Photo.unfound_or_unconfirmed

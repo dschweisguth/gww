@@ -3,7 +3,6 @@ module PhotoPhotosSupport
   include MultiPhotoMapSupport
 
   module ClassMethods
-
     def all_sorted_and_paginated(sorted_by, order, page, per_page)
       paginate_by_sql(
         %Q(

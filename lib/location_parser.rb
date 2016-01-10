@@ -1,5 +1,4 @@
 class LocationParser
-
   def initialize(multiword_street_names)
     names = multiword_street_names.map { |name| Street.regexp name }.join '|'
     if !names.empty?

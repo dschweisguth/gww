@@ -1,5 +1,4 @@
 class BookmarkletController < ApplicationController
-
   def show
     from = params[:from]
     path = root_path
@@ -34,5 +33,4 @@ class BookmarkletController < ApplicationController
     flash[:general_error] = message
     redirect_to path
   end
-
 end
