@@ -8,7 +8,7 @@ module PathTo
       when "the photos search page"
         search_photos_path
       when /^the player "([^"]+)"'s page$/
-        person_path Person.find_by_username($1)
+        person_path Person.find_by_username(Regexp.last_match(1))
 
       ### Admins
 
