@@ -2,7 +2,7 @@ describe RootController do
   render_views
 
   describe '#index' do
-    it 'renders the page' do
+    it "renders the page" do
       allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, created_at: Time.local(2011).getutc }
       allow(ScoreReport).to receive(:minimum) { Time.local(2011).getutc }
       get :index
@@ -13,7 +13,7 @@ describe RootController do
 
     end
 
-    it 'reports a completed update' do
+    it "reports a completed update" do
       allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, created_at: Time.local(2011), completed_at: Time.local(2001, 1, 1, 0, 6) }
       allow(ScoreReport).to receive(:minimum) { Time.local(2011).getutc }
       get :index
@@ -26,7 +26,7 @@ describe RootController do
   end
 
   describe '#about' do
-    it 'renders the page' do
+    it "renders the page" do
       get :about
       expect(response).to be_success
       expect(response.body).to have_link 'Tomas Apodaca', href: 'https://www.flickr.com/people/tma/'
@@ -34,7 +34,7 @@ describe RootController do
   end
 
   describe '#bookmarklet' do
-    it 'renders the page' do
+    it "renders the page" do
       get :bookmarklet
       expect(response).to be_success
       expect(response.body).to have_css 'h2', text: 'To add "View in GWW" to your bookmarks,'
@@ -42,7 +42,7 @@ describe RootController do
   end
 
   describe '#about_auto_mapping' do
-    it 'renders the page' do
+    it "renders the page" do
       get :about_auto_mapping
       expect(response).to be_success
     end

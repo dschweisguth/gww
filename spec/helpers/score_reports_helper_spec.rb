@@ -1,19 +1,18 @@
 describe ScoreReportsHelper do
-
   describe '#escape_username' do
-    it 'surrounds the dot in a username that looks like a domain name with spaces' do
+    it "surrounds the dot in a username that looks like a domain name with spaces" do
       expect(helper.escape_username('m.bibelot')).to eq('m . bibelot')
     end
 
-    it 'does so regardless of capitalization' do
+    it "does so regardless of capitalization" do
       expect(helper.escape_username('KayVee.INC')).to eq('KayVee . INC')
     end
 
-    it 'does nothing if the dot is preceded by a space' do
+    it "does nothing if the dot is preceded by a space" do
       expect(helper.escape_username('KayVee .INC')).to eq('KayVee .INC')
     end
 
-    it 'does nothing if the dot is followed by a space' do
+    it "does nothing if the dot is followed by a space" do
       expect(helper.escape_username('KayVee. INC')).to eq('KayVee. INC')
     end
 

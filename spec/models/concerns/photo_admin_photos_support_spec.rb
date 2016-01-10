@@ -29,12 +29,12 @@ describe PhotoAdminPhotosSupport do
   describe '.multipoint' do
     let(:photo) { create :photo }
 
-    it 'returns photos for which more than one person got a point' do
+    it "returns photos for which more than one person got a point" do
       create_list :guess, 2, photo: photo
       expect(Photo.multipoint).to eq([photo])
     end
 
-    it 'ignores photos for which only one person got a point' do
+    it "ignores photos for which only one person got a point" do
       create :guess, photo: photo
       expect(Photo.multipoint).to eq([])
     end
@@ -50,13 +50,13 @@ describe PhotoAdminPhotosSupport do
       expect(photo.game_status).to eq('unconfirmed')
     end
 
-    it 'deletes existing guesses' do
+    it "deletes existing guesses" do
       create :guess, photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       expect(Guess.count).to eq(0)
     end
 
-    it 'deletes existing revelations' do
+    it "deletes existing revelations" do
       create :revelation, photo: photo
       Photo.change_game_status photo.id, 'unconfirmed'
       expect(Revelation.count).to eq(0)
@@ -68,12 +68,12 @@ describe PhotoAdminPhotosSupport do
     let(:now) { Time.utc 2010 }
     let(:photo) { create :photo }
 
-    context 'when adding a revelation' do
-      it 'needs a non-empty comment text' do
+    context "when adding a revelation" do
+      it "needs a non-empty comment text" do
         expect { Photo.add_entered_answer photo.id, photo.person.username, '' }.to raise_error ArgumentError
       end
 
-      it 'adds a revelation' do
+      it "adds a revelation" do
         set_time
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
         is_revealed photo, 'comment text'
@@ -85,7 +85,7 @@ describe PhotoAdminPhotosSupport do
         is_revealed photo, 'comment text'
       end
 
-      it 'updates an existing revelation' do
+      it "updates an existing revelation" do
         create :revelation, photo: photo
         set_time
         Photo.add_entered_answer photo.id, photo.person.username, 'new comment text'
@@ -100,7 +100,7 @@ describe PhotoAdminPhotosSupport do
         expect(revelation.added_at).to eq(now)
       end
 
-      it 'deletes an existing guess' do
+      it "deletes an existing guess" do
         create :guess, photo: photo
         Photo.add_entered_answer photo.id, photo.person.username, 'comment text'
         expect(Guess.any?).to be_falsy
@@ -108,8 +108,8 @@ describe PhotoAdminPhotosSupport do
 
     end
 
-    context 'when adding a guess' do
-      it 'adds a guess and updates the guesser if necessary' do
+    context "when adding a guess" do
+      it "adds a guess and updates the guesser if necessary" do
         guesser = create :person
         set_time
         stub_person_request
@@ -130,7 +130,7 @@ describe PhotoAdminPhotosSupport do
 
       end
 
-      it 'creates the guesser if necessary' do
+      it "creates the guesser if necessary" do
         comment = create :comment
         set_time
         stub_person_request
@@ -155,7 +155,7 @@ describe PhotoAdminPhotosSupport do
 
       end
 
-      it 'deletes an existing revelation' do
+      it "deletes an existing revelation" do
         create :revelation, photo: photo
         guesser = create :person
         stub_person_request

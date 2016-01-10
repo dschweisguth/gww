@@ -1,5 +1,4 @@
 describe RootController do
-
   describe 'root' do
     it { has_named_route? :root, '/' }
     it { does route(:get, '/').to action: 'index' }

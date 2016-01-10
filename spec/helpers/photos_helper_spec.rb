@@ -1,15 +1,14 @@
 describe PhotosHelper do
-
   describe '#other_photos_path' do
-    it 'returns the URI to the list sorted by the given criterion' do
+    it "returns the URI to the list sorted by the given criterion" do
       other_photos_path_returns 'date-added', '+', 'username', '/photos/sorted-by/username/order/+/page/1'
     end
 
-    it 'reverses the sort order if the list is already sorted by the given criterion' do
+    it "reverses the sort order if the list is already sorted by the given criterion" do
       other_photos_path_returns 'username', '+', 'username', '/photos/sorted-by/username/order/-/page/1'
     end
 
-    it 'restores the sort order if the list is already reverse-sorted by the given criterion' do
+    it "restores the sort order if the list is already reverse-sorted by the given criterion" do
       other_photos_path_returns 'username', '-', 'username', '/photos/sorted-by/username/order/+/page/1'
     end
 

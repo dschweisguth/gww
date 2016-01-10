@@ -1,5 +1,4 @@
 describe PeopleController do
-
   describe 'autocomplete_usernames' do
     it { has_named_route? :autocomplete_usernames, "/autocomplete_usernames" }
     it { has_named_route? :autocomplete_usernames, 'foo', "/autocomplete_usernames/foo" }

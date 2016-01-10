@@ -1,5 +1,4 @@
 describe PhotoPhotosSupport do
-
   describe '.all_sorted_and_paginated' do
     it "returns photos sorted by username" do
       all_sorted_and_paginated_reverses_photos('username',

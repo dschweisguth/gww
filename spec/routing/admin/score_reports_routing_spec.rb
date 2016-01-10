@@ -1,5 +1,4 @@
 describe Admin::ScoreReportsController do
-
   describe '#index, #create' do
     it { has_named_route? :admin_score_reports, '/admin/score_reports' }
   end

@@ -1,6 +1,6 @@
 describe PhotoStatisticsSupport do
   describe '.update_statistics' do
-    describe "when updating other user comments" do
+    context "when updating other user comments" do
       it "counts comments" do
         comment = create :comment
         Photo.update_statistics
@@ -25,8 +25,8 @@ describe PhotoStatisticsSupport do
 
     end
 
-    describe "when updating member comments" do
-      it 'counts comments on guessed photos' do
+    context "when updating member comments" do
+      it "counts comments on guessed photos" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
@@ -36,7 +36,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_comments).to eq(1)
       end
 
-      it 'ignores comments by the poster' do
+      it "ignores comments by the poster" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username
@@ -45,7 +45,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_comments).to eq(0)
       end
 
-      it 'ignores comments by non-members' do
+      it "ignores comments by non-members" do
         guess = create :guess
         create :comment, photo: guess.photo
         Photo.update_statistics
@@ -53,7 +53,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_comments).to eq(0)
       end
 
-      it 'counts comments other than the guess' do
+      it "counts comments other than the guess" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
@@ -66,7 +66,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_comments).to eq(2)
       end
 
-      it 'ignores comments after the guess' do
+      it "ignores comments after the guess" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
@@ -92,8 +92,8 @@ describe PhotoStatisticsSupport do
 
     end
 
-    describe "when updating member questions" do
-      it 'counts questions on guessed photos' do
+    context "when updating member questions" do
+      it "counts questions on guessed photos" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
@@ -103,7 +103,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_questions).to eq(1)
       end
 
-      it 'ignores questions by the poster' do
+      it "ignores questions by the poster" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username,
@@ -113,7 +113,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_questions).to eq(0)
       end
 
-      it 'ignores questions by non-members' do
+      it "ignores questions by non-members" do
         guess = create :guess
         create :comment, photo: guess.photo, comment_text: '?'
         Photo.update_statistics
@@ -121,7 +121,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_questions).to eq(0)
       end
 
-      it 'counts questions other than the guess' do
+      it "counts questions other than the guess" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
@@ -134,7 +134,7 @@ describe PhotoStatisticsSupport do
         expect(guess.photo.member_questions).to eq(2)
       end
 
-      it 'ignores questions after the guess' do
+      it "ignores questions after the guess" do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,

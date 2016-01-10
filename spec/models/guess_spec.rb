@@ -19,7 +19,7 @@ describe Guess do
   describe '#comment_text' do
     it { does validate_presence_of :comment_text }
 
-    it 'should handle non-ASCII characters' do
+    it "handles non-ASCII characters" do
       non_ascii_text = 'π is rad'
       create :guess, comment_text: non_ascii_text
       expect(Guess.all[0].comment_text).to eq(non_ascii_text)
@@ -67,7 +67,7 @@ describe Guess do
   describe '.destroy_all_by_photo_id' do
     let(:guess) { create :guess }
 
-    it 'destroys all guesses of the photo with the given id' do
+    it "destroys all guesses of the photo with the given id" do
       Guess.destroy_all_by_photo_id guess.photo.id
       expect(Guess.any?).to be_falsy
     end
@@ -81,7 +81,7 @@ describe Guess do
   end
 
   describe '.longest' do
-    it 'lists guesses sorted by time between post and guess, descending' do
+    it "lists guesses sorted by time between post and guess, descending" do
       photo1 = create :photo, dateadded: Time.utc(2000)
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
@@ -89,7 +89,7 @@ describe Guess do
       expect(Guess.longest).to eq([guess2, guess1])
     end
 
-    it 'ignores a guess made before it was posted' do
+    it "ignores a guess made before it was posted" do
       photo = create :photo, dateadded: Time.utc(2011)
       create :guess, photo: photo, commented_at: Time.utc(2010)
       expect(Guess.longest).to eq([])
@@ -98,7 +98,7 @@ describe Guess do
   end
 
   describe '.shortest' do
-    it 'lists guesses sorted by time between post and guess, ascending' do
+    it "lists guesses sorted by time between post and guess, ascending" do
       photo1 = create :photo, dateadded: Time.utc(2000)
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2002)
       photo2 = create :photo, dateadded: Time.utc(2003)
@@ -106,7 +106,7 @@ describe Guess do
       expect(Guess.shortest).to eq([guess2, guess1])
     end
 
-    it 'ignores a guess made before it was posted' do
+    it "ignores a guess made before it was posted" do
       photo = create :photo, dateadded: Time.utc(2011)
       create :guess, photo: photo, commented_at: Time.utc(2010)
       expect(Guess.shortest).to eq([])
@@ -115,7 +115,7 @@ describe Guess do
   end
 
   describe '#time_elapsed' do
-    it 'returns the duration in seconds from post to guess in English' do
+    it "returns the duration in seconds from post to guess in English" do
       photo = Photo.new dateadded: Time.utc(2000)
       guess = Guess.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
       expect(guess.time_elapsed).to eq('1&nbsp;year, 1&nbsp;month, 1&nbsp;day, 1&nbsp;hour, 1&nbsp;minute, 1&nbsp;second')
@@ -123,7 +123,7 @@ describe Guess do
   end
 
   describe '#ymd_elapsed' do
-    it 'returns the duration in days from post to guess in English' do
+    it "returns the duration in days from post to guess in English" do
       photo = Photo.new dateadded: Time.utc(2000)
       guess = Guess.new photo: photo, commented_at: Time.utc(2001, 2, 2, 1, 1, 1)
       expect(guess.ymd_elapsed).to eq('1&nbsp;year, 1&nbsp;month, 1&nbsp;day')

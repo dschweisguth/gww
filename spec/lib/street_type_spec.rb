@@ -50,7 +50,6 @@ describe StreetType, type: :lib do
   end
 
   class StructSubclass < Struct.new :name
-
   end
 
   describe '#to_s' do

@@ -1,16 +1,16 @@
 describe PhotoScoreReportsSupport do
   describe '.count_between' do
-    it 'counts all photos between the given dates' do
+    it "counts all photos between the given dates" do
       create :photo, dateadded: Time.utc(2011, 1, 1, 0, 0, 1)
       expect(Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq(1)
     end
 
-    it 'ignores photos made on or before the from date' do
+    it "ignores photos made on or before the from date" do
       create :photo, dateadded: Time.utc(2011)
       expect(Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq(0)
     end
 
-    it 'ignores photos made after the to date' do
+    it "ignores photos made after the to date" do
       create :photo, dateadded: Time.utc(2011, 1, 1, 0, 0, 2)
       expect(Photo.count_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq(0)
     end

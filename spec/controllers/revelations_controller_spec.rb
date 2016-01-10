@@ -2,7 +2,7 @@ describe RevelationsController do
   render_views
 
   describe '#longest' do
-    it 'renders the page' do
+    it "renders the page" do
       revelation = build_stubbed :revelation
       allow(Revelation).to receive(:longest) { [revelation] }
       get :longest

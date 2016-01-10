@@ -1,5 +1,4 @@
 describe Tag do
-
   describe '#raw' do
     it { does validate_presence_of :raw }
     it { does have_readonly_attribute :raw }

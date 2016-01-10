@@ -1,11 +1,10 @@
 describe ApplicationHelper do
-
   describe '#singularize' do
-    it 'replaces a plural verb with a singular one' do
+    it "replaces a plural verb with a singular one" do
       expect(helper.singularize('delete', 1)).to eq('deletes')
     end
 
-    it 'leaves the verb alone if the number is other than 1' do
+    it "leaves the verb alone if the number is other than 1" do
       expect(helper.singularize('delete', 0)).to eq('delete')
     end
 
@@ -19,18 +18,18 @@ describe ApplicationHelper do
   end
 
   describe '#local_date' do
-    it 'returns the local time as yyyy/mm/dd' do
+    it "returns the local time as yyyy/mm/dd" do
       expect(helper.local_date(Time.utc(2011))).to eq('2010/12/31')
     end
   end
 
   describe '#link_to_person' do
-    it 'returns a local link to the person' do
+    it "returns a local link to the person" do
       person = build_stubbed :person
       expect(helper.link_to_person(person)).to eq("<a href=\"#{person_path person}\">#{person.username}</a>")
     end
 
-    it 'escapes HTML special characters in the username' do
+    it "escapes HTML special characters in the username" do
       person = build_stubbed :person, username: 'tom&jerry'
       expect(helper.link_to_person(person)).to eq("<a href=\"#{person_path person}\">tom&amp;jerry</a>")
     end
@@ -38,7 +37,7 @@ describe ApplicationHelper do
   end
 
   describe '#link_to_photo' do
-    it 'returns a local link to the photo' do
+    it "returns a local link to the photo" do
       photo = build_stubbed :person
       expect(helper.link_to_photo(photo)).to eq(%Q(<a href="/photos/#{photo.id}">GWW</a>))
     end
@@ -54,13 +53,13 @@ describe ApplicationHelper do
   end
 
   describe '#titled_image_tag' do
-    it 'returns an image tag with alt and title attributes set to the given value' do
+    it "returns an image tag with alt and title attributes set to the given value" do
       expect(helper.titled_image_tag('http://the.url', 'the title')).to eq(
         '<img alt="the title" src="http://the.url" title="the title" />'
       )
     end
 
-    it 'handles additional attributes' do
+    it "handles additional attributes" do
       expect(helper.titled_image_tag('http://the.url', 'the title', additional: 'foo')).to eq(
         '<img additional="foo" alt="the title" src="http://the.url" title="the title" />'
       )

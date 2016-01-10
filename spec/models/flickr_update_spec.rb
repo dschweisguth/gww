@@ -1,5 +1,4 @@
 describe FlickrUpdate do
-
   describe '#member_count' do
     it { does validate_numericality_of(:member_count).is_greater_than_or_equal_to(0) }
     it { does have_readonly_attribute :member_count }

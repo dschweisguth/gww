@@ -8,7 +8,7 @@ describe Comment do
     it { does validate_presence_of :username }
     it { does have_readonly_attribute :username }
 
-    it 'should handle non-ASCII characters' do
+    it "handles non-ASCII characters" do
       non_ascii_username = '猫娘/ nekomusume'
       create :comment, username: non_ascii_username
       expect(Comment.all[0].username).to eq(non_ascii_username)
@@ -20,7 +20,7 @@ describe Comment do
     it { does validate_presence_of :comment_text }
     it { does have_readonly_attribute :comment_text }
 
-    it 'should handle non-ASCII characters' do
+    it "handles non-ASCII characters" do
       non_ascii_text = 'π is rad'
       create :comment, comment_text: non_ascii_text
       expect(Comment.all[0].comment_text).to eq(non_ascii_text)
@@ -36,10 +36,10 @@ describe Comment do
   describe '.add_selected_answer' do
     let(:now) { Time.utc 2010 }
 
-    context 'when adding a revelation' do
+    context "when adding a revelation" do
       let(:photo) { create :photo }
 
-      it 'adds a revelation' do
+      it "adds a revelation" do
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         set_time
@@ -47,7 +47,7 @@ describe Comment do
         photo_is_revealed_and_revelation_matches comment
       end
 
-      it 'handles a redundant username' do
+      it "handles a redundant username" do
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         set_time
@@ -62,7 +62,7 @@ describe Comment do
         photo_is_revealed_and_revelation_matches comment
       end
 
-      it 'updates an existing revelation' do
+      it "updates an existing revelation" do
         create :revelation, photo: photo
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
@@ -81,7 +81,7 @@ describe Comment do
         expect(revelation.added_at).to eq(now)
       end
 
-      it 'deletes an existing guess' do
+      it "deletes an existing guess" do
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
           username: photo.person.username, commented_at: Time.utc(2011)
         create :guess, photo: photo
@@ -91,7 +91,7 @@ describe Comment do
 
     end
 
-    context 'when adding a guess' do
+    context "when adding a guess" do
       it "adds a guess and updates the guesser if necessary" do
         guesser = create :person
         comment = create :comment, flickrid: guesser.flickrid, username: guesser.username, commented_at: Time.utc(2011)
@@ -102,7 +102,7 @@ describe Comment do
         is_updated_per_flickr guesser
       end
 
-      it 'creates the guesser if necessary' do
+      it "creates the guesser if necessary" do
         comment = create :comment
         set_time
         stub_person_request
@@ -113,7 +113,7 @@ describe Comment do
         expect(guess.person.pathalias).to eq('pathalias_from_request')
       end
 
-      it 'handles a redundant username' do
+      it "handles a redundant username" do
         guesser = create :person
         comment = create :comment, flickrid: guesser.flickrid, username: guesser.username, commented_at: Time.utc(2011)
         set_time
@@ -123,7 +123,7 @@ describe Comment do
         is_updated_per_flickr guesser
       end
 
-      it 'gives the point to another, new user' do
+      it "gives the point to another, new user" do
         scorer_comment = create :comment, flickrid: 'scorer_flickrid', username: 'scorer_person_username'
         answer_comment = create :comment, commented_at: Time.utc(2011)
         set_time
@@ -141,7 +141,7 @@ describe Comment do
         expect(guess.photo.game_status).to eq('found')
       end
 
-      it 'gives the point to another, known user' do
+      it "gives the point to another, known user" do
         scorer = create :person
         scorer_comment = create :comment, flickrid: scorer.flickrid, username: scorer.username
         answer_comment = create :comment, commented_at: Time.utc(2011)
@@ -169,7 +169,7 @@ describe Comment do
 
       end
 
-      it 'deletes an existing revelation' do
+      it "deletes an existing revelation" do
         guesser = create :person
         comment = create :comment, flickrid: guesser.flickrid,
           username: guesser.username, commented_at: Time.utc(2011)
@@ -224,7 +224,7 @@ describe Comment do
   end
 
   describe '.remove_revelation' do
-    it 'removes a revelation' do
+    it "removes a revelation" do
       revelation = create :revelation
       photo = revelation.photo
       comment = create :comment, photo: photo,
@@ -251,7 +251,7 @@ describe Comment do
   end
 
   describe '.remove_guess' do
-    it 'removes a guess' do
+    it "removes a guess" do
       guess = create :guess
       photo = guess.photo
       comment = create :comment, photo: photo,

@@ -1,5 +1,4 @@
 describe Fixnum, type: :lib do
-
   describe '#ordinal' do
     expected = {
       1 => '1st',
@@ -19,5 +18,4 @@ describe Fixnum, type: :lib do
       end
     end
   end
-
 end

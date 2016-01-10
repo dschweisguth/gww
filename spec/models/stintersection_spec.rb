@@ -1,11 +1,9 @@
 describe Stintersection do
-
   before :context do
     clear_stintersections
   end
 
   describe '.geocode' do
-
     it "converts an intersection to a lat + long" do
       make_intersection 1, '26TH', 'ST', point(1, 2)
       make_intersection 1, 'VALENCIA', 'ST', point(1, 2)

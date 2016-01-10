@@ -1,7 +1,5 @@
 describe MultiPhotoMapSupport do
-
   describe '#as_map_json' do
-
     it "returns JSON-ready data including the given indication of whether or not the list is partial, bounds and photos" do
       photo = build :photo, latitude: 37, longitude: -122, color: Color::Yellow.scaled(0, 0, 0), symbol: '?'
       bounds = Bounds.new 1, 3, 2, 4

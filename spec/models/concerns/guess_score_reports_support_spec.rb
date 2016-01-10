@@ -1,16 +1,16 @@
 describe GuessScoreReportsSupport do
   describe '.all_between' do
-    it 'returns all guesses between the given dates' do
+    it "returns all guesses between the given dates" do
       guess = create :guess, added_at: Time.utc(2011, 1, 1, 0, 0, 1)
       expect(Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([guess])
     end
 
-    it 'ignores guesses made on or before the from date' do
+    it "ignores guesses made on or before the from date" do
       create :guess, added_at: Time.utc(2011)
       expect(Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([])
     end
 
-    it 'ignores guesses made after the to date' do
+    it "ignores guesses made after the to date" do
       create :guess, added_at: Time.utc(2011, 1, 1, 0, 0, 2)
       expect(Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([])
     end
@@ -18,7 +18,7 @@ describe GuessScoreReportsSupport do
   end
 
   describe '#years_old' do
-    it 'returns the number of full years from post to guess (ignoring leap years)' do
+    it "returns the number of full years from post to guess (ignoring leap years)" do
       photo = Photo.new dateadded: Time.utc(2010)
       guess = Guess.new photo: photo, commented_at: Time.utc(2011)
       expect(guess.years_old).to eq(1)
@@ -26,7 +26,7 @@ describe GuessScoreReportsSupport do
   end
 
   describe '#seconds_old' do
-    it 'returns the number of full seconds from post to guess' do
+    it "returns the number of full seconds from post to guess" do
       photo = Photo.new dateadded: Time.utc(2010)
       guess = Guess.new photo: photo, commented_at: Time.utc(2010, 1, 1, 0, 0, 1)
       expect(guess.seconds_old).to eq(1)

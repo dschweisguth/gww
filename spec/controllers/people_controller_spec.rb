@@ -4,7 +4,7 @@ describe PeopleController do
   render_views
 
   describe '#find' do
-    it 'finds a person' do
+    it "finds a person" do
       person = build_stubbed :person
       allow(Person).to receive(:find_by_multiple_fields).with('username') { person }
       get :find, username: 'username'
@@ -13,7 +13,7 @@ describe PeopleController do
 
     end
 
-    it 'punts back to the home page' do
+    it "punts back to the home page" do
       allow(Person).to receive(:find_by_multiple_fields).with('xxx') { nil }
       get :find, username: 'xxx'
       expect(response).to redirect_to root_path
@@ -23,7 +23,7 @@ describe PeopleController do
   end
 
   describe '#index' do
-    it 'renders the page' do
+    it "renders the page" do
       sorted_by_param = 'score'
       order_param = '+'
 
@@ -68,7 +68,7 @@ describe PeopleController do
   end
 
   describe '#top_guessers' do
-    it 'renders the page' do
+    it "renders the page" do
       report_day = Time.utc(2011, 1, 3)
       top_guessers = [
         (0..6).map { |i| Period.starting_at report_day - i.days, 1.day },
@@ -352,7 +352,7 @@ describe PeopleController do
   end
 
   describe '#guesses' do
-    it 'renders the page' do
+    it "renders the page" do
       guesser = build_stubbed :person
       allow(Person).to receive(:find).with(guesser.id) { guesser }
       poster = build_stubbed :person
@@ -370,7 +370,7 @@ describe PeopleController do
   end
 
   describe '#comments' do
-    it 'renders the page' do
+    it "renders the page" do
       person = build_stubbed :person
       allow(Person).to receive(:find).with(person.id) { person }
 

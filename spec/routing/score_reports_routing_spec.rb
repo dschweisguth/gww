@@ -1,5 +1,4 @@
 describe ScoreReportsController do
-
   describe '#index' do
     it { has_named_route? :score_reports, '/score_reports' }
     it { does route(:get, '/score_reports').to action: 'index' }

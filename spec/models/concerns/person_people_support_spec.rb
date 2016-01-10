@@ -2,19 +2,19 @@ describe PersonPeopleSupport do
   describe '.find_by_multiple_fields' do
     let(:person) { create :person }
 
-    it 'finds a person by username' do
+    it "finds a person by username" do
       expect(Person.find_by_multiple_fields(person.username)).to eq(person)
     end
 
-    it 'finds a person by flickrid' do
+    it "finds a person by flickrid" do
       expect(Person.find_by_multiple_fields(person.flickrid)).to eq(person)
     end
 
-    it 'finds a person by GWW ID' do
+    it "finds a person by GWW ID" do
       expect(Person.find_by_multiple_fields(person.id.to_s)).to eq(person)
     end
 
-    it 'punts back to the home page' do
+    it "punts back to the home page" do
       expect(Person.find_by_multiple_fields('xxx')).to be_nil
     end
 
@@ -41,14 +41,14 @@ describe PersonPeopleSupport do
     let(:report_time) { Time.local 2011, 1, 3 }
     let(:report_day) { report_time.beginning_of_day }
 
-    it 'returns a structure of scores by day, week, month and year' do
+    it "returns a structure of scores by day, week, month and year" do
       expected = expected_periods_for_one_guess_at_report_time
       guess = create :guess, commented_at: report_time
       (0..3).each { |division| expected[division][0].scores[1] = [guess.person] }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
-    it 'handles multiple guesses in the same period' do
+    it "handles multiple guesses in the same period" do
       expected = expected_periods_for_one_guess_at_report_time
       guesser = create :person
       create :guess, person: guesser, commented_at: report_time
@@ -57,7 +57,7 @@ describe PersonPeopleSupport do
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
-    it 'handles multiple guessers with the same scores in the same periods' do
+    it "handles multiple guessers with the same scores in the same periods" do
       expected = expected_periods_for_one_guess_at_report_time
       guess1 = create :guess, commented_at: report_time
       guess2 = create :guess, commented_at: report_time
@@ -77,7 +77,7 @@ describe PersonPeopleSupport do
       ]
     end
 
-    it 'handles previous years' do
+    it "handles previous years" do
       expected = [
         (0..6).map { |i| Period.starting_at report_day - i.days, 1.day },
         [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +

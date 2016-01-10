@@ -27,7 +27,6 @@ describe Stcline do
   end
 
   describe '.geocode' do
-
     it "finds the lat + long of an address" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1498,

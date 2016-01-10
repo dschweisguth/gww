@@ -4,7 +4,7 @@ describe PhotosController do
   render_views
 
   describe '#index' do
-    it 'renders the page' do
+    it "renders the page" do
       sorted_by_param = 'username'
       order_param = '+'
       page_param = '1'
@@ -103,7 +103,7 @@ describe PhotosController do
   end
 
   describe '#unfound_data' do
-    it 'renders the page' do
+    it "renders the page" do
       allow(FlickrUpdate).to receive(:maximum).with(:created_at) { Time.utc(2011) }
       photo = build_stubbed :photo
       allow(Photo).to receive(:unfound_or_unconfirmed) { [photo] }

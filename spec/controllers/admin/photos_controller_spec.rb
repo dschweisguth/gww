@@ -9,7 +9,7 @@ describe Admin::PhotosController do
         allow(Photo).to receive(:unfound_or_unconfirmed) { [photo] }
       end
 
-      it 'renders the page' do
+      it "renders the page" do
         allow(photo).to receive(:tags) { [] }
         get :unfound
         lists_photo
@@ -27,7 +27,7 @@ describe Admin::PhotosController do
     end
 
     describe '#inaccessible' do
-      it 'renders the page' do
+      it "renders the page" do
         allow(Photo).to receive(:inaccessible) { [photo] }
         allow(photo).to receive(:tags) { [] }
         get :inaccessible
@@ -36,7 +36,7 @@ describe Admin::PhotosController do
     end
 
     describe '#multipoint' do
-      it 'renders the page' do
+      it "renders the page" do
         allow(Photo).to receive(:multipoint) { [photo] }
         allow(photo).to receive(:tags) { [] }
         get :multipoint
@@ -65,12 +65,12 @@ describe Admin::PhotosController do
       allow(photo).to receive(:tags) { [] }
     end
 
-    it 'renders the page without loading comments' do
+    it "renders the page without loading comments" do
       get :edit, id: photo.id
       expect(response).to be_success
     end
 
-    it 'loads comments and renders the page' do
+    it "loads comments and renders the page" do
       allow(PhotoUpdater).to receive(:update).with(photo)
       mock_clear_page_cache
       get :edit, id: photo.id, update_from_flickr: true
@@ -116,7 +116,7 @@ describe Admin::PhotosController do
   end
 
   describe '#update_from_flickr' do
-    it 'just redirects to the edit page with update_from_flickr=true' do
+    it "just redirects to the edit page with update_from_flickr=true" do
       get :update_from_flickr, id: '1'
       redirects_to_edit_path 1, update_from_flickr: true
     end
@@ -124,7 +124,7 @@ describe Admin::PhotosController do
 
   describe '#edit_in_gww' do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
-    it 'redirects to the given photo' do
+    it "redirects to the given photo" do
       photo = build_stubbed :photo
       allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :edit_in_gww, from: url_for_flickr_photo(photo)
@@ -133,7 +133,7 @@ describe Admin::PhotosController do
 
     end
 
-    it 'handles https when redirecting to a photo' do
+    it "handles https when redirecting to a photo" do
       photo = build_stubbed :photo
       allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :edit_in_gww, from: url_for_flickr_photo(photo)
@@ -142,7 +142,7 @@ describe Admin::PhotosController do
 
     end
 
-    it 'punts an unknown photo Flickr ID' do
+    it "punts an unknown photo Flickr ID" do
       allow(Photo).to receive(:find_by_flickrid).with('0123456789') { nil }
       get :edit_in_gww, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
@@ -151,7 +151,7 @@ describe Admin::PhotosController do
 
     end
 
-    it 'punts unknown URLs' do
+    it "punts unknown URLs" do
       get :edit_in_gww, from: 'http://www.notflickr.com/'
 
       expect(response).to redirect_to admin_root_path

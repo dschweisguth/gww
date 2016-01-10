@@ -1,5 +1,4 @@
 describe PhotoMapSupport do
-
   describe '.mapped' do
     let(:bounds) { Bounds.new 0, 2, 3, 5 }
 

@@ -1,5 +1,4 @@
 describe ScoreReport do
-
   describe '.guess_counts' do
     before do
       create :guess, added_at: Time.utc(2011)

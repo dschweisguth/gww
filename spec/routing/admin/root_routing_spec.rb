@@ -1,5 +1,4 @@
 describe Admin::RootController do
-
   describe 'index' do
     it { has_named_route? :admin_root, '/admin' }
     it { does route(:get, '/admin').to controller: 'admin/root', action: 'index' }

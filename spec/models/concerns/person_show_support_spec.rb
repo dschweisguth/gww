@@ -267,7 +267,7 @@ describe PersonShowSupport do
       expect(longest_lasting.place).to eq(2)
     end
 
-    it 'ignores a guess that precedes its post' do
+    it "ignores a guess that precedes its post" do
       photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
       create :guess, photo: photo1, commented_at: Time.utc(2000)
       expect(poster.guess_of_longest_lasting_post).to eq(nil)
@@ -304,7 +304,7 @@ describe PersonShowSupport do
       expect(shortest_lasting.place).to eq(2)
     end
 
-    it 'ignores a guess that precedes its post' do
+    it "ignores a guess that precedes its post" do
       photo1 = create :photo, person: poster, dateadded: Time.utc(2001)
       create :guess, photo: photo1, commented_at: Time.utc(2000)
       expect(poster.guess_of_shortest_lasting_post).to eq(nil)

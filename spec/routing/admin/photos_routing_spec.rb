@@ -1,5 +1,4 @@
 describe Admin::PhotosController do
-
   %w( unfound inaccessible multipoint ).each do |action|
     describe action do
       it { has_named_route? "#{action}_admin_photos", "/admin/photos/#{action}" }

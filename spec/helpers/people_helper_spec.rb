@@ -1,15 +1,14 @@
 describe PeopleHelper do
-
   describe '#other_people_path' do
-    it 'returns the URI to the list sorted by the given criterion' do
+    it "returns the URI to the list sorted by the given criterion" do
       other_people_path_returns 'score', '+', 'username', '/people/sorted-by/username/order/+'
     end
 
-    it 'reverses the sort order if the list is already sorted by the given criterion' do
+    it "reverses the sort order if the list is already sorted by the given criterion" do
       other_people_path_returns 'username', '+', 'username', '/people/sorted-by/username/order/-'
     end
 
-    it 'restores the sort order if the list is already reverse-sorted by the given criterion' do
+    it "restores the sort order if the list is already reverse-sorted by the given criterion" do
       other_people_path_returns 'username', '-', 'username', '/people/sorted-by/username/order/+'
     end
 
@@ -22,17 +21,17 @@ describe PeopleHelper do
   end
 
   describe '#to_four_places' do
-    it 'returns the number, rounded to four places, as a string' do
+    it "returns the number, rounded to four places, as a string" do
       expect(helper.to_4_places(1.11111)).to eq('1.1111')
     end
   end
 
   describe '#infinity_or' do
-    it 'returns the number, rounded to four places, as a string' do
+    it "returns the number, rounded to four places, as a string" do
       expect(helper.infinity_or(1.11111)).to eq('1.1111')
     end
 
-    it 'returns HTML for infinity' do
+    it "returns HTML for infinity" do
       expect(helper.infinity_or(Float::MAX)).to eq('&#8734;')
     end
     
