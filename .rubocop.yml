@@ -52,6 +52,9 @@ Style/PredicateName:
   Exclude:
     - 'spec/**/*'
 
+Style/RedundantReturn:
+  AllowMultipleReturnValues: true
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary

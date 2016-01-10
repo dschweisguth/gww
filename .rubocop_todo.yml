@@ -6,20 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'app/controllers/concerns/score_reports_controller_support.rb'
-    - 'app/helpers/people_helper.rb'
-    - 'app/helpers/photos_helper.rb'
-    - 'app/models/concerns/person_people_support.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/precalculator.rb'
-    - 'app/updaters/photo_updater.rb'
-    - 'spec/support/helpers/model.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/RedundantSelf:
