@@ -346,7 +346,7 @@ describe PersonUpdater, type: :updater do
       expect(Photo.first_and_only).to have_attributes?(
         latitude: nil,
         longitude: nil,
-        accuracy: nil,
+        accuracy: nil
       )
     end
 
@@ -386,7 +386,7 @@ describe PersonUpdater, type: :updater do
         latitude: 37.123456,
         longitude: -122.654321,
         accuracy: 16,
-        faves: 7,
+        faves: 7
       )
 
     end
