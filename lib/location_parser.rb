@@ -8,7 +8,7 @@ class LocationParser
     street = "(#{names}[A-Za-z0-9']+)((?:\\s+(?:#{StreetType.regexp}))?)"
 
     space = '[\s.,]+'
-    
+
     at_a_street =
       '(?:and|&amp;|&amp;amp;|at|@|by|just\s+\w+\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)' \
         "#{space}#{street}"

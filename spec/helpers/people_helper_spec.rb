@@ -34,7 +34,7 @@ describe PeopleHelper do
     it "returns HTML for infinity" do
       expect(helper.infinity_or(Float::MAX)).to eq('&#8734;')
     end
-    
+
   end
 
   STARS = [nil, :bronze, :silver, :gold]

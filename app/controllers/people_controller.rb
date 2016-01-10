@@ -87,7 +87,7 @@ class PeopleController < ApplicationController
     @unfound_photos = @person.unfound_photos.to_a
     @revealed_photos = @person.revealed_photos
     @guessers = group_by_guessers @posts
-    
+
   end
 
   private def group_by_guessers(posts)

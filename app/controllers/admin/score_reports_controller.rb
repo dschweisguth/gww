@@ -1,6 +1,6 @@
 class Admin::ScoreReportsController < ApplicationController
   include ScoreReportsControllerSupport
-  
+
   caches_page :index
   def index
     @score_reports = ScoreReport.order('id desc')

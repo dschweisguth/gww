@@ -85,6 +85,10 @@ Style/TrailingBlankLines:
   Exclude:
     - 'features/support/env.rb'
 
+Style/TrailingWhitespace:
+  Exclude:
+    - 'features/support/env.rb'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary

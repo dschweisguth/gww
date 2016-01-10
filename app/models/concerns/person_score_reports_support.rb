@@ -7,15 +7,15 @@ module PersonScoreReportsSupport
       where "exists (select 1 from photos where person_id = people.id and dateadded <= ?) or " \
         "exists (select 1 from guesses where person_id = people.id and added_at <= ?)", utc_date, utc_date
     end
-    
+
     def high_scorers(now, for_the_past_n_days)
       top_achievers :guesses, '? < guesses.commented_at and guesses.added_at <= ?', :score, now, for_the_past_n_days
     end
-  
+
     def top_posters(now, for_the_past_n_days)
       top_achievers :photos, '? < photos.dateadded and photos.dateadded <= ?', :post_count, now, for_the_past_n_days
     end
-  
+
     def top_achievers(achievement, date_range, attribute, now, for_the_past_n_days)
       utc_now = now.getutc
       people =

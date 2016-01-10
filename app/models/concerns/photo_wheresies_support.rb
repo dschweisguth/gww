@@ -5,11 +5,11 @@ module PhotoWheresiesSupport
     def most_viewed_in(year)
       most_loved_in year, :views
     end
-  
+
     def most_faved_in(year)
       most_loved_in year, :faves
     end
-  
+
     def most_loved_in(year, column)
       where('? <= dateadded', Time.local(year).getutc).where('dateadded < ?', Time.local(year + 1).getutc).
         order("#{column} desc").limit(10).includes(:person)

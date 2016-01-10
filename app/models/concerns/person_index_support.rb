@@ -42,14 +42,14 @@ module PersonIndexSupport
         from guesses group by person_id
       }, Time.now.getutc]
     end
-  
+
     def posts_per_day
       statistic_by_person [%q{
         select person_id id, count(*) / datediff(?, min(dateadded)) statistic
         from photos group by person_id
       }, Time.now.getutc]
     end
-  
+
     def guess_speeds
       statistic_by_person %q{
         select g.person_id id, avg(unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)) statistic
@@ -58,7 +58,7 @@ module PersonIndexSupport
         group by g.person_id
       }
     end
-  
+
     def be_guessed_speeds
       statistic_by_person %q{
         select p.person_id id, avg(unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)) statistic
@@ -67,19 +67,19 @@ module PersonIndexSupport
         group by p.person_id
       }
     end
-  
+
     def views_per_post
       statistic_by_person 'select person_id id, avg(views) statistic from photos group by person_id'
     end
-    
+
     def faves_per_post
       statistic_by_person 'select person_id id, avg(faves) statistic from photos group by person_id'
     end
-  
+
     private def statistic_by_person(sql)
       find_by_sql(sql).each_with_object({}) { |person, statistic| statistic[person.id] = person[:statistic].to_f }
     end
-  
+
     CRITERIA = {
       'username' => %i(downcased_username),
       'score' => %i(guess_count post_count downcased_username),

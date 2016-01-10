@@ -131,7 +131,7 @@ describe PeopleController do
     it "handles a person who has never guessed" do
       stub_no_guesses
       stub_posts
-      
+
       get :show, id: person.id
 
       expect(response).to be_success
