@@ -46,6 +46,12 @@ Style/MultilineOperationIndentation:
 Style/NumericLiterals:
   MinDigits: 15
 
+Style/PredicateName:
+  NamePrefixBlacklist:
+    - is_
+  Exclude:
+    - 'spec/**/*'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
