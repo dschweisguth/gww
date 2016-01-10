@@ -1,13 +1,18 @@
 inherit_from: .rubocop_todo.yml
 
+AllCops:
+  Exclude:
+    - 'bin/rails'
+    - 'config.ru'
+    - 'db/schema.rb'
+    - 'features/support/env.rb'
+    - 'lib/tasks/cucumber.rake'
+    - 'spec/spec_helper.rb'
+
 # Customized cops
 
 Style/BarePercentLiterals:
   EnforcedStyle: percent_q
-
-Style/BlockComments:
-  Exclude:
-    - 'spec/spec_helper.rb'
 
 Style/BlockDelimiters:
   EnforcedStyle: line_count_based
@@ -18,27 +23,11 @@ Style/CaseIndentation:
 Style/DotPosition:
   EnforcedStyle: trailing
 
-Style/EmptyLines:
-  Exclude:
-    - 'lib/tasks/cucumber.rake'
-
-Style/ExtraSpacing:
-  Exclude:
-    - 'bin/rails'
-    - 'config.ru'
-    - 'db/schema.rb'
-
 Style/FormatString:
   EnforcedStyle: percent
 
 Style/HashSyntax:
   Enabled: true
-  Exclude:
-    - 'db/schema.rb'
-
-Style/IndentationWidth:
-  Exclude:
-    - 'lib/tasks/cucumber.rake'
 
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
@@ -61,14 +50,6 @@ Style/RegexpLiteral:
 Style/SignalException:
   EnforcedStyle: only_raise
 
-Style/SingleSpaceBeforeFirstArg:
-  Exclude:
-    - 'db/schema.rb'
-
-Style/SpaceAroundOperators:
-  Exclude:
-    - 'db/schema.rb'
-
 Style/SpaceInsideBlockBraces:
   Enabled: true
 
@@ -77,17 +58,6 @@ Style/SpaceInsideBrackets:
 
 Style/SpaceInsideHashLiteralBraces:
   Enabled: true
-  Exclude:
-    - 'ds/schema.rb'
-    - 'lib/tasks/cucumber.rake'
-
-Style/TrailingBlankLines:
-  Exclude:
-    - 'features/support/env.rb'
-
-Style/TrailingWhitespace:
-  Exclude:
-    - 'features/support/env.rb'
 
 # Disabled cops
 
