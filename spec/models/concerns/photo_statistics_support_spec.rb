@@ -164,7 +164,7 @@ describe PhotoStatisticsSupport do
 
   describe '#infer_geocodes' do
     let(:parser) do
-      street_names = %w{ 26TH VALENCIA }
+      street_names = %w( 26TH VALENCIA )
       allow(Stcline).to receive(:multiword_street_names) { street_names }
       parser = double
       allow(LocationParser).to receive(:new).with(street_names) { parser }

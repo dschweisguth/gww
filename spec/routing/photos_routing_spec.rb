@@ -5,7 +5,7 @@ describe PhotosController do
     it { does route(:get, '/photos/sorted-by/foo/order/bar/page/1').to(action: 'index', sorted_by: 'foo', order: 'bar', page: '1') }
   end
 
-  %w{map map_json unfound_data}.each do |action|
+  %w(map map_json unfound_data).each do |action|
     describe action do
       it { has_named_route "#{action}_photos", "/photos/#{action}" }
       it { does route(:get, "/photos/#{action}").to action: action }

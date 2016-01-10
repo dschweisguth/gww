@@ -5,7 +5,7 @@ describe Admin::RootController do
     it { does route(:get, '/admin').to controller: 'admin/root', action: 'index' }
   end
 
-  %w{ update_from_flickr calculate_statistics_and_maps }.each do |action|
+  %w( update_from_flickr calculate_statistics_and_maps ).each do |action|
     describe action do
       it { has_named_route action, "/admin/#{action}" }
       it { does route(:post, "/admin/#{action}").to controller: 'admin/root', action: action }

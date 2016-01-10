@@ -5,7 +5,7 @@ describe RootController do
     it { does route(:get, '/').to action: 'index' }
   end
 
-  %w{ about bookmarklet }.each do |action|
+  %w( about bookmarklet ).each do |action|
     describe action do
       it { has_named_route "root_#{action}", "/#{action}" }
       it { does route(:get, "/#{action}").to action: action }

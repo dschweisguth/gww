@@ -6,12 +6,12 @@ module PhotoPhotosSupport
 
     def all_sorted_and_paginated(sorted_by, order, page, per_page)
       paginate_by_sql(
-        %Q[
+        %Q(
           select p.*
             from photos p, people poster
             where p.person_id = poster.id
             order by #{order_by(sorted_by, order)}
-        ],
+        ),
         page: page, per_page: per_page)
     end
 

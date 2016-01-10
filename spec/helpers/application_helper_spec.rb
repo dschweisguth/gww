@@ -75,13 +75,13 @@ describe ApplicationHelper do
 
     it "returns a photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
       expect(helper.thumbnail(@photo)).to eq(
-        %Q{<a href="#{photo_path @photo}"><img alt="" src="#{url_for_flickr_image @photo, 't'}" title="" /></a>}
+        %Q(<a href="#{photo_path @photo}"><img alt="" src="#{url_for_flickr_image @photo, 't'}" title="" /></a>)
       )
     end
 
     it "returns a photo's thumbnail with non-empty alt and title wrapped in a link to the photo's page" do
       expect(helper.thumbnail(@photo, "alt text")).to eq(
-        %Q{<a href="#{photo_path @photo}"><img alt="alt text" src="#{url_for_flickr_image @photo, 't'}" title="alt text" /></a>}
+        %Q(<a href="#{photo_path @photo}"><img alt="alt text" src="#{url_for_flickr_image @photo, 't'}" title="alt text" /></a>)
       )
     end
 
