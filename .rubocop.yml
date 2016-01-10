@@ -75,6 +75,12 @@ Style/SpaceInsideBlockBraces:
 Style/SpaceInsideBrackets:
   Enabled: true
 
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: true
+  Exclude:
+    - 'ds/schema.rb'
+    - 'lib/tasks/cucumber.rake'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
