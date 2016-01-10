@@ -8,16 +8,6 @@
 
 # Offense count: 5
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, MinBodyLength, SupportedStyles.
-Style/Next:
-  Exclude:
-    - 'app/controllers/concerns/base_search_params_parser.rb'
-    - 'app/helpers/photos_helper.rb'
-    - 'app/models/concerns/multi_photo_map_support.rb'
-    - 'app/models/concerns/person_index_support.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
 Style/NumericLiterals:
   MinDigits: 15
 

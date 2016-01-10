@@ -106,3 +106,5 @@ Style/MultilineTernaryOperator:
   Enabled: false
 Style/NegatedIf:
   Enabled: false
+Style/Next:
+  Enabled: false
