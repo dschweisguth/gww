@@ -21,7 +21,7 @@ describe PhotosController do
     it { has_named_route? :search_photos, '/photos/search' }
     it { has_named_route? :search_photos, 'game-status/unfound,unconfirmed', '/photos/search/game-status/unfound,unconfirmed' }
     it { does route(:get, '/photos/search').to action: 'search' }
-    it { does route(:get, '/photos/search/foo/bar').to(action: 'search', segments: 'foo/bar' ) }
+    it { does route(:get, '/photos/search/foo/bar').to(action: 'search', segments: 'foo/bar') }
   end
 
   describe 'search_data' do
