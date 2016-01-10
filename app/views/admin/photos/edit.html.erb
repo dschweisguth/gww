@@ -33,12 +33,12 @@
   <% if @photo.comments.any? %>
     <div id="comments" class="edit">
       <% @photo.comments.each do |comment| %>
-        <% is_accepted_answer = comment.is_accepted_answer %>
+        <% is_accepted_answer = comment.accepted_answer? %>
         <% if is_accepted_answer then %>
-          <%= form_tag comment.is_by_poster ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
+          <%= form_tag comment.by_poster? ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
             <div>
               <%= hidden_field_tag 'comment_id', comment.id, id: nil %>
-              <%= submit_tag(comment.is_by_poster ? 'Remove this revelation' : 'Remove this guess') %>
+              <%= submit_tag(comment.by_poster? ? 'Remove this revelation' : 'Remove this guess') %>
             </div>
           <% end %>
         <% else %>
@@ -46,13 +46,13 @@
             <div>
               <%= hidden_field_tag 'comment_id', comment.id, id: nil %>
               <%= hidden_field_tag 'username', nil, id: nil %>
-              <%= submit_tag (comment.is_by_poster ? 'Accept this revelation' : 'Add this guess') %>
+              <%= submit_tag (comment.by_poster? ? 'Accept this revelation' : 'Add this guess') %>
             </div>
           <% end %>
         <% end %>
         <div class="comment">
           <strong><%= comment.username %></strong> <span class="ago">(<%= ago_in_words comment.commented_at %>)</span><br/>
-          <%= raw wrap_if(comment.is_by_poster, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
+          <%= raw wrap_if(comment.by_poster?, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
         </div>
         <br/>
       <% end %>

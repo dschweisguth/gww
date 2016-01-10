@@ -10,9 +10,7 @@
 # Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist.
 Style/PredicateName:
   Exclude:
-    - 'app/models/comment.rb'
     - 'app/models/concerns/photo_people_support.rb'
-    - 'spec/models/comment_spec.rb'
     - 'spec/models/concerns/photo_admin_photos_support_spec.rb'
     - 'spec/support/helpers/routing.rb'
     - 'spec/support/matchers/model.rb'

@@ -291,22 +291,22 @@ describe Comment do
 
   end
 
-  describe '#is_by_poster' do
+  describe '#by_poster?' do
     it "returns true if the comment was made by the photo's poster" do
       photo = create :photo
       comment = create :comment, photo: photo, flickrid: photo.person.flickrid
-      expect(comment.is_by_poster).to be_truthy
+      expect(comment.by_poster?).to be_truthy
     end
 
     it "returns false if the comment was not made by the photo's poster" do
-      expect(create(:comment).is_by_poster).to be_falsy
+      expect(create(:comment).by_poster?).to be_falsy
     end
 
   end
 
-  describe '#is_accepted_answer' do
+  describe '#accepted_answer?' do
     it "returns false if this comment has no revelations or guesses" do
-      expect(create(:comment).is_accepted_answer).to be_falsy
+      expect(create(:comment).accepted_answer?).to be_falsy
     end
 
     context "when photo is revealed" do
@@ -315,18 +315,18 @@ describe Comment do
 
       it "returns true if a revelation was created from this comment" do
         create :revelation, photo: photo, comment_text: comment.comment_text
-        expect(comment.is_accepted_answer).to be_truthy
+        expect(comment.accepted_answer?).to be_truthy
       end
 
       it "returns false if the revelation is of another photo" do
         other_photo = create :photo, person: photo.person
         create :revelation, photo: other_photo, comment_text: comment.comment_text
-        expect(comment.is_accepted_answer).to be_falsy
+        expect(comment.accepted_answer?).to be_falsy
       end
 
       it "returns false if the text doesn't match" do
         create :revelation, photo: photo, comment_text: "something else"
-        expect(comment.is_accepted_answer).to be_falsy
+        expect(comment.accepted_answer?).to be_falsy
       end
 
     end
@@ -337,23 +337,23 @@ describe Comment do
 
       it "returns true if a guess was created from this comment" do
         create :guess, photo: comment.photo, person: person, comment_text: comment.comment_text
-        expect(comment.is_accepted_answer).to be_truthy
+        expect(comment.accepted_answer?).to be_truthy
       end
 
       it "returns false if the guess is of another photo" do
         other_photo = create :photo, person: person
         create :guess, photo: other_photo, person: person, comment_text: comment.comment_text
-        expect(comment.is_accepted_answer).to be_falsy
+        expect(comment.accepted_answer?).to be_falsy
       end
 
       it "returns false if the text doesn't match" do
         create :guess, photo: comment.photo, person: person, comment_text: "something else"
-        expect(comment.is_accepted_answer).to be_falsy
+        expect(comment.accepted_answer?).to be_falsy
       end
 
       it "returns false if the guess is by another person" do
         create :guess, photo: comment.photo, comment_text: comment.comment_text
-        expect(comment.is_accepted_answer).to be_falsy
+        expect(comment.accepted_answer?).to be_falsy
       end
 
     end

@@ -36,12 +36,12 @@ class Comment < ActiveRecord::Base
   class RemoveGuessError < StandardError
   end
 
-  def is_by_poster
+  def by_poster?
     flickrid == photo.person.flickrid
   end
 
-  def is_accepted_answer
-    is_by_poster && photo.revelation.try(:comment_text) == comment_text ||
+  def accepted_answer?
+    by_poster? && photo.revelation.try(:comment_text) == comment_text ||
       photo.guesses.any? { |g| g.person.flickrid == flickrid && g.comment_text == comment_text }
   end
 
