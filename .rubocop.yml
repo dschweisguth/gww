@@ -136,3 +136,5 @@ Style/StringLiteralsInInterpolation:
   Enabled: false
 Style/StructInheritance:
   Enabled: false
+Style/UnneededPercentQ:
+  Enabled: false

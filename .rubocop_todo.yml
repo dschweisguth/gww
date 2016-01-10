@@ -6,24 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 32
-# Cop supports --auto-correct.
-Style/UnneededPercentQ:
-  Exclude:
-    - 'app/models/concerns/person_index_support.rb'
-    - 'app/models/concerns/person_people_support.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/concerns/person_statistics_support.rb'
-    - 'app/models/concerns/person_wheresies_support.rb'
-    - 'app/models/concerns/photo_photos_support.rb'
-    - 'app/models/concerns/photo_statistics_support.rb'
-    - 'features/step_definitions/photos_steps.rb'
-    - 'spec/controllers/admin/root_controller_spec.rb'
-    - 'spec/controllers/people_controller_spec.rb'
-    - 'spec/controllers/photos_controller_spec.rb'
-    - 'spec/helpers/application_helper_spec.rb'
-    - 'spec/models/matchers_spec.rb'
-
 # Offense count: 8
 # Cop supports --auto-correct.
 # Configuration parameters: WordRegex.
