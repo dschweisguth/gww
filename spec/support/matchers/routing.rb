@@ -2,7 +2,7 @@ module GWW
   module Matchers
     module Routing
 
-      def have_named_route(name, *args)
+      def have_named_route?(name, *args)
         HaveNamedRoute.new(self, name, *args)
       end
 

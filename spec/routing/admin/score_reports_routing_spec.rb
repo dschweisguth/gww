@@ -1,7 +1,7 @@
 describe Admin::ScoreReportsController do
 
   describe '#index, #create' do
-    it { has_named_route :admin_score_reports, '/admin/score_reports' }
+    it { has_named_route? :admin_score_reports, '/admin/score_reports' }
   end
 
   describe '#index' do
@@ -9,7 +9,7 @@ describe Admin::ScoreReportsController do
   end
 
   describe '#new' do
-    it { has_named_route :new_admin_score_report, '/admin/score_reports/new' }
+    it { has_named_route? :new_admin_score_report, '/admin/score_reports/new' }
     it { does route(:get, '/admin/score_reports/new').to controller: 'admin/score_reports', action: 'new' }
   end
 
@@ -18,7 +18,7 @@ describe Admin::ScoreReportsController do
   end
 
   describe '#destroy' do
-    it { has_named_route :admin_score_report, 666, '/admin/score_reports/666' }
+    it { has_named_route? :admin_score_report, 666, '/admin/score_reports/666' }
     it { does route(:delete, '/admin/score_reports/666').to controller: 'admin/score_reports', action: 'destroy', id: '666' }
   end
 
