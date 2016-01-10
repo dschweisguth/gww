@@ -40,9 +40,9 @@ module GWW
       jquery-ui/autocomplete.js
     )
     config.assets.precompile +=
-      Find.find('vendor/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub /^vendor\/assets\/javascripts\//, '' } +
-        Find.find('app/assets/stylesheets').select { |file| file.end_with? '.css' }.map { |file| file.sub /^app\/assets\/stylesheets\//, '' } +
-        Find.find('app/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub /^app\/assets\/javascripts\//, '' }
+      Find.find('vendor/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub %r{^vendor/assets/javascripts/}, '' } +
+        Find.find('app/assets/stylesheets').select { |file| file.end_with? '.css' }.map { |file| file.sub %r{^app/assets/stylesheets/}, '' } +
+        Find.find('app/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub %r{^app/assets/javascripts/}, '' }
 
     config.colorize_logging = false
 

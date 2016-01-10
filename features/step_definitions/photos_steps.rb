@@ -26,7 +26,7 @@ Given /^the photo has a comment "([^"]+)"$/ do |comment_text|
   @comment = create :comment, photo: @photo, comment_text: comment_text
 end
 
-Given /^there is a photo added on "(\d+\/\d+\/\d+)"$/ do |date|
+Given %r{^there is a photo added on "(\d+/\d+/\d+)"$} do |date|
   create :photo, dateadded: Date.parse_utc_time(date)
 end
 
@@ -38,7 +38,7 @@ Given /^player "([^"]+)" has an? (unfound|unconfirmed|found|revealed) photo$/ do
   create :photo, person: Person.find_by_username(username), game_status: game_status
 end
 
-Given /^player "([^"]+)" took a photo on "(\d+\/\d+\/\d+)"$/ do |poster_username, date|
+Given %r{^player "([^"]+)" took a photo on "(\d+/\d+/\d+)"$} do |poster_username, date|
   create :photo, person: Person.find_by_username(poster_username), datetaken: Date.parse_utc_time(date)
 end
 
@@ -82,7 +82,7 @@ Then /^I should see (\d+) image-only search results?$/ do |result_count|
   expect(all('.text')).to be_empty
 end
 
-Then /^I should see an image-only search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
+Then %r{^I should see an image-only search result for the photo added on "(\d+/\d+/\d+)"} do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
   i_should_see_image_only_search_result_for_photo photo
 end
@@ -126,7 +126,7 @@ def full_search_result_should_be(result_index, photo)
   expect(result.find('p')).to have_content(photo.description)
 end
 
-Then /^I shouid not see a search result for the photo added on "(\d+\/\d+\/\d+)"/ do |date|
+Then %r{^I shouid not see a search result for the photo added on "(\d+/\d+/\d+)"} do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
   expect(all(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))).to be_empty
 end

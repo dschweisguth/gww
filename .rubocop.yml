@@ -55,6 +55,9 @@ Style/PredicateName:
 Style/RedundantReturn:
   AllowMultipleReturnValues: true
 
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
