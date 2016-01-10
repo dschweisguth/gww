@@ -116,7 +116,7 @@ module PhotoPhotosSupport
             "exists (select 1 from tags t where photos.id = t.photo_id and lower(t.raw) regexp ?)"
           ]
           sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
-            "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and " }))"
+            "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and "}))"
           query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "[[:<:]]#{word.downcase}[[:>:]]" }).
             includes :tags, :comments # because we display them when it's a text search
         end
