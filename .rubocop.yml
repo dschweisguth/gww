@@ -119,3 +119,5 @@ Style/Next:
   Enabled: false
 Style/RaiseArgs:
   Enabled: false
+Style/RedundantBegin:
+  Enabled: false
