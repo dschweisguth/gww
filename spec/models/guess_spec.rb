@@ -75,7 +75,7 @@ describe Guess do
     it "ignores other photos' guesses" do
       other_guess = create :guess
       Guess.destroy_all_by_photo_id guess.photo.id
-      expect(Guess.all).to eq([ other_guess ])
+      expect(Guess.all).to eq([other_guess])
     end
 
   end
@@ -86,7 +86,7 @@ describe Guess do
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
       guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
-      expect(Guess.longest).to eq([ guess2, guess1 ])
+      expect(Guess.longest).to eq([guess2, guess1])
     end
 
     it 'ignores a guess made before it was posted' do
@@ -103,7 +103,7 @@ describe Guess do
       guess1 = create :guess, photo: photo1, commented_at: Time.utc(2002)
       photo2 = create :photo, dateadded: Time.utc(2003)
       guess2 = create :guess, photo: photo2, commented_at: Time.utc(2004)
-      expect(Guess.shortest).to eq([ guess2, guess1 ])
+      expect(Guess.shortest).to eq([guess2, guess1])
     end
 
     it 'ignores a guess made before it was posted' do

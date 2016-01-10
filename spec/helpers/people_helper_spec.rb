@@ -38,7 +38,7 @@ describe PeopleHelper do
     
   end
 
-  STARS = [ nil, :bronze, :silver, :gold ]
+  STARS = [nil, :bronze, :silver, :gold]
 
   describe '#star_and_alt' do
     describe 'for age' do
@@ -46,7 +46,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:age][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           guess = double star_for_age: star
-          expect(helper.star_and_alt(guess, :age)).to eq([ star, alt ])
+          expect(helper.star_and_alt(guess, :age)).to eq([star, alt])
         end
       end
     end
@@ -56,7 +56,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:speed][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           guess = double star_for_speed: star
-          expect(helper.star_and_alt(guess, :speed)).to eq([ star, alt ])
+          expect(helper.star_and_alt(guess, :speed)).to eq([star, alt])
         end
       end
     end
@@ -66,7 +66,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:comments][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = double star_for_comments: star
-          expect(helper.star_and_alt(photo, :comments)).to eq([ star, alt ])
+          expect(helper.star_and_alt(photo, :comments)).to eq([star, alt])
         end
       end
     end
@@ -76,7 +76,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:views][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = double star_for_views: star
-          expect(helper.star_and_alt(photo, :views)).to eq([ star, alt ])
+          expect(helper.star_and_alt(photo, :views)).to eq([star, alt])
         end
       end
     end
@@ -86,7 +86,7 @@ describe PeopleHelper do
         alt = PeopleHelper::ALT[:faves][star]
         it "returns the alt '#{alt}' given the star :#{star}" do
           photo = double star_for_faves: star
-          expect(helper.star_and_alt(photo, :faves)).to eq([ star, alt ])
+          expect(helper.star_and_alt(photo, :faves)).to eq([star, alt])
         end
       end
     end

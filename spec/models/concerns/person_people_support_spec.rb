@@ -24,7 +24,7 @@ describe PersonPeopleSupport do
     it "lists guessers and their favorite posters" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)
       nemeses = Person.nemeses
-      expect(nemeses).to eq([ guesser ])
+      expect(nemeses).to eq([guesser])
       nemesis = nemeses[0]
       expect(nemesis.poster).to eq(favorite_poster)
       expect(nemesis.bias).to eq(2.5)
@@ -44,7 +44,7 @@ describe PersonPeopleSupport do
     it 'returns a structure of scores by day, week, month and year' do
       expected = expected_periods_for_one_guess_at_report_time
       guess = create :guess, commented_at: report_time
-      (0 .. 3).each { |division| expected[division][0].scores[1] = [ guess.person ] }
+      (0 .. 3).each { |division| expected[division][0].scores[1] = [guess.person] }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
@@ -53,7 +53,7 @@ describe PersonPeopleSupport do
       guesser = create :person
       create :guess, person: guesser, commented_at: report_time
       create :guess, person: guesser, commented_at: report_time + 1.minute
-      (0 .. 3).each { |division| expected[division][0].scores[2] = [ guesser ] }
+      (0 .. 3).each { |division| expected[division][0].scores[2] = [guesser] }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
@@ -69,27 +69,27 @@ describe PersonPeopleSupport do
     def expected_periods_for_one_guess_at_report_time
       [
         (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
-        [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
+        [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +
           (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+        [Period.new(report_day.beginning_of_month, report_day + 1.day)] +
           (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new(report_day.beginning_of_year, report_day + 1.day) ]
+        [Period.new(report_day.beginning_of_year, report_day + 1.day)]
       ]
     end
 
     it 'handles previous years' do
       expected = [
         (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
-        [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
+        [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +
           (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
-        [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+        [Period.new(report_day.beginning_of_month, report_day + 1.day)] +
           (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
-        [ Period.new(report_day.beginning_of_year, report_day + 1.day),
-          Period.starting_at(report_day.beginning_of_year - 1.year, 1.year) ]
+        [Period.new(report_day.beginning_of_year, report_day + 1.day),
+         Period.starting_at(report_day.beginning_of_year - 1.year, 1.year)]
       ]
       guess = create :guess, commented_at: Time.local(2010, 1, 1).getutc
-      expected[2][12].scores[1] = [ guess.person ]
-      expected[3][1].scores[1] = [ guess.person ]
+      expected[2][12].scores[1] = [guess.person]
+      expected[3][1].scores[1] = [guess.person]
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
@@ -99,7 +99,7 @@ describe PersonPeopleSupport do
     it "returns a person's guesses with their photos and the photos' people" do
       guess = create :guess
       guesses = guess.person.guesses_with_associations_ordered_by_comments
-      expect(guesses).to eq([ guess ])
+      expect(guesses).to eq([guess])
       expect(guesses[0].photo).to eq(guess.photo)
       expect(guesses[0].photo.person).to eq(guess.photo.person)
     end

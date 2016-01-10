@@ -22,7 +22,7 @@ describe Revelation do
   describe '.longest' do
     it 'lists revelations' do
       revelation = create :revelation
-      expect(Revelation.longest).to eq([ revelation ])
+      expect(Revelation.longest).to eq([revelation])
     end
 
     it 'sorts revelations by the time from post to revelation' do
@@ -30,7 +30,7 @@ describe Revelation do
       revelation1 = create :revelation, photo: photo1, commented_at: Time.utc(2001)
       photo2 = create :photo, dateadded: Time.utc(2002)
       revelation2 = create :revelation, photo: photo2, commented_at: Time.utc(2004)
-      expect(Revelation.longest).to eq([ revelation2, revelation1 ])
+      expect(Revelation.longest).to eq([revelation2, revelation1])
     end
 
   end
@@ -38,7 +38,7 @@ describe Revelation do
   describe '.all_between' do
     it 'returns all revelations between the given dates' do
       revelation = create :revelation, added_at: Time.utc(2011, 1, 1, 0, 0, 1)
-      expect(Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([ revelation ])
+      expect(Revelation.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([revelation])
     end
 
     it 'ignores revelations made on or before the from date' do

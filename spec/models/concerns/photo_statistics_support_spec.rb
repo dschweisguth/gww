@@ -176,7 +176,7 @@ describe PhotoStatisticsSupport do
     it "infers each guessed photo's lat+long from its guess" do
       answer = create :guess, comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      allow(parser).to receive(:parse).with(answer.comment_text) { [ location ] }
+      allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
       allow(Stintersection).to receive(:geocode).with(location) { factory.point(-122, 37) }
       Photo.infer_geocodes
 
@@ -189,7 +189,7 @@ describe PhotoStatisticsSupport do
     it "infers each revealed photo's lat+long from its revelation" do
       answer = create :revelation, comment_text: 'A parseable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      allow(parser).to receive(:parse).with(answer.comment_text) { [ location ] }
+      allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
       allow(Stintersection).to receive(:geocode).with(location) { factory.point(-122, 37) }
       Photo.infer_geocodes
 
@@ -215,7 +215,7 @@ describe PhotoStatisticsSupport do
       photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      allow(parser).to receive(:parse).with(answer.comment_text) { [ location ] }
+      allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
       allow(Stintersection).to receive(:geocode).with(location) { nil }
       Photo.infer_geocodes
 
@@ -230,7 +230,7 @@ describe PhotoStatisticsSupport do
       answer = create :guess, photo: photo, comment_text: 'A comment with multiple gecodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
-      allow(parser).to receive(:parse).with(answer.comment_text) { [ location1, location2 ] }
+      allow(parser).to receive(:parse).with(answer.comment_text) { [location1, location2] }
       allow(Stintersection).to receive(:geocode).with(location1) { factory.point(37, -122) }
       allow(Stintersection).to receive(:geocode).with(location2) { factory.point(38, -122) }
       Photo.infer_geocodes

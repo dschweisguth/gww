@@ -16,7 +16,7 @@ describe Street, type: :lib do
       end
     end
 
-    [ ' Jr', ', Jr', ' Junior', ', Junior' ].each do |title|
+    [' Jr', ', Jr', ' Junior', ', Junior'].each do |title|
       it "accepts '#{title}' as a way of writing Junior" do
         matches 'COLIN P KELLY JR', "Colin P Kelly#{title}"
       end

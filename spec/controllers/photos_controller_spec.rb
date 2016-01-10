@@ -106,7 +106,7 @@ describe PhotosController do
     it 'renders the page' do
       allow(FlickrUpdate).to receive(:maximum).with(:created_at) { Time.utc(2011) }
       photo = build_stubbed :photo
-      allow(Photo).to receive(:unfound_or_unconfirmed) { [ photo ] }
+      allow(Photo).to receive(:unfound_or_unconfirmed) { [photo] }
       get :unfound_data
 
       expect(response).to be_success

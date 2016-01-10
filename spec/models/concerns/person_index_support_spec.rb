@@ -313,7 +313,7 @@ describe PersonIndexSupport do
 
     it 'sorts the other direction, too' do
       create_people_named 'a', 'z'
-      expect(Person.all_sorted('username', '-')).to eq([ @person2, @person1 ])
+      expect(Person.all_sorted('username', '-')).to eq([@person2, @person1])
     end
 
     def create_people_named(username1, username2)
@@ -332,7 +332,7 @@ describe PersonIndexSupport do
     end
 
     def puts_person2_before_person1(sorted_by)
-      expect(Person.all_sorted(sorted_by, '+')).to eq([ @person2, @person1 ])
+      expect(Person.all_sorted(sorted_by, '+')).to eq([@person2, @person1])
     end
 
     it 'explodes if sorted_by is invalid' do

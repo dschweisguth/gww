@@ -1,15 +1,15 @@
 describe StreetType, type: :lib do
   describe '.get' do
     it "finds the type with the given name" do
-      expect(StreetType.get('St')).to eq(StreetType.new('ST', true, [ StreetType::Synonym.new('STREET', false) ]))
+      expect(StreetType.get('St')).to eq(StreetType.new('ST', true, [StreetType::Synonym.new('STREET', false)]))
     end
 
     it "ignores a trailing period" do
-      expect(StreetType.get('St.')).to eq(StreetType.new('ST', true, [ StreetType::Synonym.new('STREET', false) ]))
+      expect(StreetType.get('St.')).to eq(StreetType.new('ST', true, [StreetType::Synonym.new('STREET', false)]))
     end
 
     it "finds the type with the given synonym" do
-      expect(StreetType.get('Street')).to eq(StreetType.new('ST', true, [ StreetType::Synonym.new('STREET', false) ]))
+      expect(StreetType.get('Street')).to eq(StreetType.new('ST', true, [StreetType::Synonym.new('STREET', false)]))
     end
 
   end

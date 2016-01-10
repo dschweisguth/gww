@@ -25,7 +25,7 @@ describe Photo do
 
     def returns_post(game_status, color, symbol)
       post = build :photo, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
-      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post ] }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [post] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
@@ -44,7 +44,7 @@ describe Photo do
 
     it "copies an inferred geocode to the stated one" do
       post = build :photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
-      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post ] }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [post] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
@@ -63,7 +63,7 @@ describe Photo do
 
     it "returns a guess" do
       photo = build :photo, person_id: 2, latitude: 37, longitude: -122
-      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ photo ] }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [photo] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
@@ -83,7 +83,7 @@ describe Photo do
     it "returns no more than a maximum number of photos" do
       post = build :photo, person_id: person.id, latitude: 37, longitude: -122
       oldest_photo = build :photo, dateadded: 1.day.ago
-      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [ post, oldest_photo ] }
+      allow(Photo).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [post, oldest_photo] }
       allow(Photo).to receive(:oldest) { oldest_photo }
       expect(Photo.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: true,
@@ -128,7 +128,7 @@ describe Photo do
     it "returns photos guessed by the person" do
       photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
       guess = create :guess, photo: photo
-      expect(Photo.posted_or_guessed_by_and_mapped(guess.person.id, bounds, 1)).to eq([ photo ])
+      expect(Photo.posted_or_guessed_by_and_mapped(guess.person.id, bounds, 1)).to eq([photo])
     end
 
     it "ignores other people's guesses" do
@@ -185,12 +185,12 @@ describe Photo do
     it "returns only the youngest n photos" do
       photo = create :photo, latitude: 37, longitude: -122, accuracy: 12
       create :photo, latitude: 37, longitude: -122, dateadded: 1.day.ago, accuracy: 12
-      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([ photo ])
+      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([photo])
     end
 
     def returns_post(attributes)
       photo = create :photo, attributes
-      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([ photo ])
+      expect(Photo.posted_or_guessed_by_and_mapped(photo.person.id, bounds, 1)).to eq([photo])
     end
 
     def ignores_post(attributes)

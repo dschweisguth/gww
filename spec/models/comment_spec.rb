@@ -245,7 +245,7 @@ describe Comment do
         flickrid: photo1.person.flickrid, username: photo1.person.username,
         comment_text: revelation1.comment_text
       Comment.remove_revelation comment.id
-      expect(Revelation.all).to eq([ revelation2 ])
+      expect(Revelation.all).to eq([revelation2])
     end
 
   end
@@ -276,7 +276,7 @@ describe Comment do
       Comment.remove_guess comment1.id
       photo.reload
       expect(photo.game_status).to eq('found')
-      expect(Guess.all).to eq([ guess2 ])
+      expect(Guess.all).to eq([guess2])
     end
 
     it "doesn't delete the guesser's guess of another photo with the same comment" do
@@ -286,7 +286,7 @@ describe Comment do
         flickrid: guess1.person.flickrid, username: guess1.person.username,
         comment_text: guess1.comment_text
       Comment.remove_guess comment.id
-      expect(Guess.all).to eq([ guess2 ])
+      expect(Guess.all).to eq([guess2])
     end
 
   end

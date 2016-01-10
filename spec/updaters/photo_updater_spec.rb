@@ -68,7 +68,7 @@ describe PersonUpdater, type: :updater do
       stubbed_photo = stub_get_photos
       stubbed_faves = stub_get_faves
       mock_get_comments_and_tags
-      expect(PhotoUpdater.update_all).to eq([ 1, 1, 1, 1 ])
+      expect(PhotoUpdater.update_all).to eq([1, 1, 1, 1])
 
       photo = Photo.first_and_only
 
@@ -118,7 +118,7 @@ describe PersonUpdater, type: :updater do
       stub_get_faves
       mock_get_comments_and_tags
       person_before = create :person, flickrid: stubbed_photo[:owner]
-      expect(PhotoUpdater.update_all).to eq([ 1, 0, 1, 1 ])
+      expect(PhotoUpdater.update_all).to eq([1, 0, 1, 1])
 
       # Note that a username or pathalias that changes during the update is not updated
       expect(Person.first_and_only).to have_the_same_attributes_as?(person_before)
@@ -167,7 +167,7 @@ describe PersonUpdater, type: :updater do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      expect(PhotoUpdater.update_all).to eq([ 0, 0, 1, 1 ])
+      expect(PhotoUpdater.update_all).to eq([0, 0, 1, 1])
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -296,7 +296,7 @@ describe PersonUpdater, type: :updater do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      expect(PhotoUpdater.update_all).to eq([ 0, 0, 1, 1 ])
+      expect(PhotoUpdater.update_all).to eq([0, 0, 1, 1])
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -342,7 +342,7 @@ describe PersonUpdater, type: :updater do
       stub_get_photos latitude: 0, longitude: 0, accuracy: 0
       stub_get_faves
       mock_get_comments_and_tags
-      expect(PhotoUpdater.update_all).to eq([ 1, 1, 1, 1 ])
+      expect(PhotoUpdater.update_all).to eq([1, 1, 1, 1])
       expect(Photo.first_and_only).to have_attributes?(
         latitude: nil,
         longitude: nil,

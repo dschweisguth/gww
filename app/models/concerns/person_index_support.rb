@@ -37,17 +37,17 @@ module PersonIndexSupport
     end
 
     def guesses_per_day
-      statistic_by_person [ %q{
+      statistic_by_person [%q{
         select person_id id, count(*) / datediff(?, min(commented_at)) statistic
         from guesses group by person_id
-      }, Time.now.getutc ]
+      }, Time.now.getutc]
     end
   
     def posts_per_day
-      statistic_by_person [ %q{
+      statistic_by_person [%q{
         select person_id id, count(*) / datediff(?, min(dateadded)) statistic
         from photos group by person_id
-      }, Time.now.getutc ]
+      }, Time.now.getutc]
     end
   
     def guess_speeds

@@ -11,7 +11,7 @@ describe Updater do
           }]
         }
       end
-      expect(PhotoUpdater).to receive(:update_all) { [ 1, 2, 3, 4 ] }
+      expect(PhotoUpdater).to receive(:update_all) { [1, 2, 3, 4] }
       expect(PersonUpdater).to receive(:update_all)
       allow(Time).to receive(:now) { Time.utc(2011) }
       expect(Updater.update).to eq("Created 1 new photos and 2 new users. Got 3 pages out of 4.")

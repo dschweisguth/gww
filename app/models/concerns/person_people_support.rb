@@ -33,7 +33,7 @@ module PersonPeopleSupport
     def top_guessers(report_time)
       days, weeks, months, years = top_guesser_periods report_time.getlocal
 
-      [ days, weeks, months, years ].each do |periods|
+      [days, weeks, months, years].each do |periods|
         periods.each do |period|
           period.scores = top_guesser_scores period.start, period.finish
         end
@@ -47,14 +47,14 @@ module PersonPeopleSupport
 
       days = (0 .. 6).map { |i| Period.starting_at(report_day - i.days, 1.day) }
 
-      weeks = [ Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day) ] +
+      weeks = [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +
         (1 .. 5).map { |i| Period.starting_at(report_day.beginning_of_week - i.weeks - 1.day, 1.week) }
 
-      months = [ Period.new(report_day.beginning_of_month, report_day + 1.day) ] +
+      months = [Period.new(report_day.beginning_of_month, report_day + 1.day)] +
         (1 .. 12).map { |i| Period.starting_at(report_day.beginning_of_month - i.month, 1.month) }
 
       years_of_guessing = report_day.getutc.year - Guess.first.commented_at.year
-      years = [ Period.new(report_day.beginning_of_year, report_day + 1.day) ] +
+      years = [Period.new(report_day.beginning_of_year, report_day + 1.day)] +
         (1 .. years_of_guessing).map { |i| Period.starting_at(report_day.beginning_of_year - i.years, 1.year) }
 
       return days, weeks, months, years

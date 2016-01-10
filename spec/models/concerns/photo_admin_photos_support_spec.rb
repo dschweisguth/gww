@@ -6,12 +6,12 @@ describe PhotoAdminPhotosSupport do
 
     it "lists photos not seen since the last update" do
       photo = create :photo, seen_at: Time.utc(2010)
-      expect(Photo.inaccessible).to eq([ photo ])
+      expect(Photo.inaccessible).to eq([photo])
     end
 
     it "includes unconfirmed photos" do
       photo = create :photo, seen_at: Time.utc(2010), game_status: 'unconfirmed'
-      expect(Photo.inaccessible).to eq([ photo ])
+      expect(Photo.inaccessible).to eq([photo])
     end
 
     it "ignores photos seen since the last update" do
@@ -31,7 +31,7 @@ describe PhotoAdminPhotosSupport do
 
     it 'returns photos for which more than one person got a point' do
       create_list :guess, 2, photo: photo
-      expect(Photo.multipoint).to eq([ photo ])
+      expect(Photo.multipoint).to eq([photo])
     end
 
     it 'ignores photos for which only one person got a point' do

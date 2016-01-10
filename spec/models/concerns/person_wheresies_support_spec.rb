@@ -3,7 +3,7 @@ describe Person do
     it 'returns a list of scorers with their scores' do
       guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.most_points_in 2010
-      expect(top_scorers).to eq([ guess.person ])
+      expect(top_scorers).to eq([guess.person])
       expect(top_scorers[0].points).to eq(1)
     end
 
@@ -35,7 +35,7 @@ describe Person do
     it 'returns a lists of posters with their number of posts' do
       post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.most_posts_in 2010
-      expect(top_posters).to eq([ post.person ])
+      expect(top_posters).to eq([post.person])
       expect(top_posters[0].post_count).to eq(1)
     end
 
@@ -67,7 +67,7 @@ describe Person do
     it 'returns a list of rookies with their score' do
       guess = create :guess, commented_at: Time.local(2010).getutc
       top_scorers = Person.rookies_with_most_points_in 2010
-      expect(top_scorers).to eq([ guess.person ])
+      expect(top_scorers).to eq([guess.person])
       expect(top_scorers[0].points).to eq(1)
     end
 
@@ -111,7 +111,7 @@ describe Person do
     it 'returns a list of rookies with their number of posts' do
       post = create :photo, dateadded: Time.local(2010).getutc
       top_posters = Person.rookies_with_most_posts_in 2010
-      expect(top_posters).to eq([ post.person ])
+      expect(top_posters).to eq([post.person])
       expect(top_posters[0].post_count).to eq(1)
     end
 

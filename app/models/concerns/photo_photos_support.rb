@@ -16,26 +16,26 @@ module PhotoPhotosSupport
     end
 
     SORTED_BY = {
-      'username' => { secondary: [ 'date-added' ],
+      'username' => { secondary: ['date-added'],
         column: 'lower(poster.username)', default_order: '+' },
-      'date-added' => { secondary: [ 'username' ],
+      'date-added' => { secondary: ['username'],
         column: 'dateadded', default_order: '-' },
-      'last-updated' => { secondary: [ 'username' ],
+      'last-updated' => { secondary: ['username'],
         column: 'lastupdate', default_order: '-' },
-      'views' => { secondary: [ 'username' ],
+      'views' => { secondary: ['username'],
         column: 'views', default_order: '-' },
-      'faves' => { secondary: [ 'username' ],
+      'faves' => { secondary: ['username'],
         column: 'faves', default_order: '-' },
-      'comments' => { secondary: [ 'username' ],
+      'comments' => { secondary: ['username'],
         column: 'other_user_comments', default_order: '-' },
-      'member-comments' => { secondary: [ 'date-added', 'username' ],
+      'member-comments' => { secondary: ['date-added', 'username'],
         column: 'member_comments', default_order: '-' },
-      'member-questions' => { secondary: [ 'date-added', 'username' ],
+      'member-questions' => { secondary: ['date-added', 'username'],
         column: 'member_questions', default_order: '-' }
     }
 
     private def order_by(sorted_by, order)
-      term_names = [ sorted_by, *SORTED_BY[sorted_by][:secondary] ]
+      term_names = [sorted_by, *SORTED_BY[sorted_by][:secondary]]
       terms = term_names.map do |term_name|
         term = SORTED_BY[term_name][:column]
         if SORTED_BY[term_name][:default_order] != order

@@ -6,7 +6,7 @@ describe ScoreReportsController do
   describe '#index' do
     it "renders the page" do
       report = build_stubbed :score_report, created_at: Time.local(2011)
-      allow(ScoreReport).to receive(:order) { [ report ] }
+      allow(ScoreReport).to receive(:order) { [report] }
       allow(ScoreReport).to receive(:guess_counts) { { report.id => 1 } }
       allow(ScoreReport).to receive(:revelation_counts) { { report.id => 2 } }
       get :index

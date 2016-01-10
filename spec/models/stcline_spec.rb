@@ -6,12 +6,12 @@ describe Stcline do
   describe '.street_names' do
     it "lists multiword street names" do
       Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1)
-      expect(Stcline.multiword_street_names).to eq([ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS)
+      expect(Stcline.multiword_street_names).to eq(['SAN JOSE'] + Stcline::STREET_NAME_SYNONYMS)
     end
 
     it "consolidates duplicates" do
       2.times { Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1) }
-      expect(Stcline.multiword_street_names).to eq([ 'SAN JOSE' ] + Stcline::STREET_NAME_SYNONYMS)
+      expect(Stcline.multiword_street_names).to eq(['SAN JOSE'] + Stcline::STREET_NAME_SYNONYMS)
     end
 
     it "ignores one-word street names" do

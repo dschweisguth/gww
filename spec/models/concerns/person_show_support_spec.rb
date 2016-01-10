@@ -66,18 +66,18 @@ describe PersonShowSupport do
     let(:person) { create :person }
 
     it "returns the person's score position" do
-      expect(person.score_standing).to eq([ 1, false ])
+      expect(person.score_standing).to eq([1, false])
     end
 
     it "considers other players' scores" do
       create :guess
-      expect(person.score_standing).to eq([ 2, false ])
+      expect(person.score_standing).to eq([2, false])
     end
 
     it "detects ties" do
       create :guess, person: person
       create :guess
-      expect(person.score_standing).to eq([ 1, true ])
+      expect(person.score_standing).to eq([1, true])
     end
 
   end
@@ -86,18 +86,18 @@ describe PersonShowSupport do
     let(:person) { create :person }
 
     it "returns the person's post position" do
-      expect(person.posts_standing).to eq([ 1, false ])
+      expect(person.posts_standing).to eq([1, false])
     end
 
     it "considers other players' posts" do
       create :photo
-      expect(person.posts_standing).to eq([ 2, false ])
+      expect(person.posts_standing).to eq([2, false])
     end
 
     it "detects ties" do
       create :photo, person: person
       create :photo
-      expect(person.posts_standing).to eq([ 1, true ])
+      expect(person.posts_standing).to eq([1, true])
     end
 
   end
@@ -494,7 +494,7 @@ describe PersonShowSupport do
     it "returns a person's guesses with their photos and the photos' people" do
       guess = create :guess
       guesses = guess.person.guesses_with_associations
-      expect(guesses).to eq([ guess ])
+      expect(guesses).to eq([guess])
       expect(guesses[0].photo).to eq(guess.photo)
       expect(guesses[0].photo.person).to eq(guess.photo.person)
     end
@@ -504,7 +504,7 @@ describe PersonShowSupport do
     it "lists the posters which this person has guessed 2.5 or more times as often as this person has guessed all posts" do
       guesser, favorite_poster = make_potential_favorite_poster(10, 15)
       favorite_posters = guesser.favorite_posters
-      expect(favorite_posters).to eq([ favorite_poster ])
+      expect(favorite_posters).to eq([favorite_poster])
       expect(favorite_posters[0].bias).to eq(Person::MIN_BIAS_FOR_FAVORITE)
     end
 
@@ -524,8 +524,8 @@ describe PersonShowSupport do
     it "returns the person's photos, with their guesses and the guesses' people" do
       guess = create :guess
       photos = guess.photo.person.photos_with_associations
-      expect(photos).to eq([ guess.photo ])
-      expect(photos[0].guesses).to eq([ guess ])
+      expect(photos).to eq([guess.photo])
+      expect(photos[0].guesses).to eq([guess])
       expect(photos[0].guesses[0].person).to eq(guess.person)
     end
   end
@@ -534,7 +534,7 @@ describe PersonShowSupport do
     it "lists the guessers who have guessed this person #{Person::MIN_BIAS_FOR_FAVORITE} or more times as often as those guessers have guessed all posts" do
       devoted_guesser, poster = make_potential_favorite_poster(10, 15)
       favoring_guessers = poster.favoring_guessers
-      expect(favoring_guessers).to eq([ devoted_guesser ])
+      expect(favoring_guessers).to eq([devoted_guesser])
       expect(favoring_guessers[0].bias).to eq(Person::MIN_BIAS_FOR_FAVORITE)
     end
 

@@ -105,7 +105,7 @@ module PersonScoreReportsSupport
     end
 
     # TODO make this work for boundaries above 5000
-    MILESTONES = [ 100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000 ]
+    MILESTONES = [100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
 
     CLUBS = {
       21 => "https://www.flickr.com/photos/inkvision/2976263709/",

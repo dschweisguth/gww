@@ -2,7 +2,7 @@ describe GuessScoreReportsSupport do
   describe '.all_between' do
     it 'returns all guesses between the given dates' do
       guess = create :guess, added_at: Time.utc(2011, 1, 1, 0, 0, 1)
-      expect(Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([ guess ])
+      expect(Guess.all_between(Time.utc(2011), Time.utc(2011, 1, 1, 0, 0, 1))).to eq([guess])
     end
 
     it 'ignores guesses made on or before the from date' do

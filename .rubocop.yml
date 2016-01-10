@@ -72,6 +72,9 @@ Style/SpaceAroundOperators:
 Style/SpaceInsideBlockBraces:
   Enabled: true
 
+Style/SpaceInsideBrackets:
+  Enabled: true
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary

@@ -59,13 +59,13 @@ describe PhotoScoreReportsSupport do
 
     it "adds each person's posts as an attribute" do
       create :photo, person: person, dateadded: Time.utc(2010)
-      Photo.add_posts [ person ], Time.utc(2011), :post_count
+      Photo.add_posts [person], Time.utc(2011), :post_count
       expect(person.post_count).to eq(1)
     end
 
     it "ignores posts made after the report date" do
       create :photo, person: person, dateadded: Time.utc(2011)
-      Photo.add_posts [ person ], Time.utc(2010), :post_count
+      Photo.add_posts [person], Time.utc(2010), :post_count
       expect(person.post_count).to eq(0)
     end
 

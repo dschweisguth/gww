@@ -5,12 +5,12 @@ describe PhotoMapSupport do
 
     it "returns photos" do
       photo = create :photo, latitude: 1, longitude: 4, accuracy: 12
-      expect(Photo.mapped(bounds, 1)).to eq([ photo ])
+      expect(Photo.mapped(bounds, 1)).to eq([photo])
     end
 
     it "returns auto-mapped photos" do
       photo = create :photo, inferred_latitude: 1, inferred_longitude: 4, accuracy: 12
-      expect(Photo.mapped(bounds, 1)).to eq([ photo ])
+      expect(Photo.mapped(bounds, 1)).to eq([photo])
     end
 
     it "ignores unmapped photos" do
@@ -66,7 +66,7 @@ describe PhotoMapSupport do
     it "returns only the youngest n photos" do
       photo = create :photo, latitude: 1, longitude: 4, accuracy: 12
       create :photo, latitude: 1, longitude: 4, accuracy: 12, dateadded: 1.day.ago
-      expect(Photo.mapped(bounds, 1)).to eq([ photo ])
+      expect(Photo.mapped(bounds, 1)).to eq([photo])
     end
 
   end

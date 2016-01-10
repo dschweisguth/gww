@@ -33,7 +33,7 @@ class Stcline < ActiveRecord::Base
     if cline
       number = address.number.to_i
       from_address, to_address = cline.lf_fadd != 0 && number % 2 == cline.lf_fadd % 2 \
-        ? [cline.lf_fadd, cline.lf_toadd ] : [ cline.rt_fadd, cline.rt_toadd ]
+        ? [cline.lf_fadd, cline.lf_toadd] : [cline.rt_fadd, cline.rt_toadd]
       pos = from_address == to_address ? 0.5 : (number - from_address) / (to_address - from_address)
       first = cline.SHAPE.points.first
       last = cline.SHAPE.points.last

@@ -17,7 +17,7 @@ describe PhotoPhotosSupport do
       person = create :person
       photo1 = create :photo, person: person, dateadded: Time.utc(2010)
       photo2 = create :photo, person: person, dateadded: Time.utc(2011)
-      expect(Photo.all_sorted_and_paginated('username', '+', 1, 2)).to eq([ photo2, photo1 ])
+      expect(Photo.all_sorted_and_paginated('username', '+', 1, 2)).to eq([photo2, photo1])
     end
 
     it "returns photos sorted by dateadded" do
@@ -123,7 +123,7 @@ describe PhotoPhotosSupport do
       photo1 = create :photo, photo_1_options.merge(person: person1)
       person2 = create :person, person_2_options
       photo2 = create :photo, photo_2_options.merge(person: person2)
-      expect(Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2)).to eq([ photo2, photo1 ])
+      expect(Photo.all_sorted_and_paginated(sorted_by, '+', 1, 2)).to eq([photo2, photo1])
 
     end
 
@@ -139,7 +139,7 @@ describe PhotoPhotosSupport do
 
     it "returns an unfound photo" do
       photo = build :photo, latitude: 37, longitude: -122
-      allow(Photo).to receive(:mapped).with(bounds, 2) { [ photo ] }
+      allow(Photo).to receive(:mapped).with(bounds, 2) { [photo] }
       allow(Photo).to receive(:oldest) { build :photo, dateadded: 1.day.ago }
       expect(Photo.all_for_map(bounds, 1)).to eq(
         partial: false,
@@ -169,7 +169,7 @@ describe PhotoPhotosSupport do
     it "returns no more than a maximum number of photos" do
       photo = build :photo, latitude: 37, longitude: -122
       oldest_photo = build :photo, dateadded: 1.day.ago
-      allow(Photo).to receive(:mapped).with(bounds, 2) { [ photo, oldest_photo ] }
+      allow(Photo).to receive(:mapped).with(bounds, 2) { [photo, oldest_photo] }
       allow(Photo).to receive(:oldest) { oldest_photo }
       expect(Photo.all_for_map(bounds, 1)).to eq(
         partial: true,
@@ -202,7 +202,7 @@ describe PhotoPhotosSupport do
       guess = create :guess, photo: photo_in
       photo_out = Photo.find_with_associations photo_in.id
       expect(photo_out.person).to eq(photo_in.person)
-      expect(photo_out.guesses).to eq([ guess ])
+      expect(photo_out.guesses).to eq([guess])
       expect(photo_out.guesses[0].person).to eq(guess.person)
     end
 
@@ -212,7 +212,7 @@ describe PhotoPhotosSupport do
     %w(unfound unconfirmed).each do |game_status|
       it "returns #{game_status} photos" do
         photo = create :photo, game_status: game_status
-        expect(Photo.unfound_or_unconfirmed).to eq([ photo ])
+        expect(Photo.unfound_or_unconfirmed).to eq([photo])
       end
     end
 

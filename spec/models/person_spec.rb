@@ -27,7 +27,7 @@ describe Person do
     it 'but not if they have a photo' do
       create :photo, person: person
       person.destroy_if_has_no_dependents
-      expect(Person.all).to eq([ person ])
+      expect(Person.all).to eq([person])
     end
 
     it 'but not if they have a guess' do

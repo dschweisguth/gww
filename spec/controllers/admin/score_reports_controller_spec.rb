@@ -7,7 +7,7 @@ describe Admin::ScoreReportsController do
     it "renders the page" do
       report2 = build_stubbed :score_report, created_at: Time.local(2011, 1, 2)
       report1 = build_stubbed :score_report, created_at: Time.local(2011)
-      allow(ScoreReport).to receive(:order) { [ report2, report1 ] }
+      allow(ScoreReport).to receive(:order) { [report2, report1] }
       allow(ScoreReport).to receive(:guess_counts) { { report2.id => 4, report1.id => 3 } }
       allow(ScoreReport).to receive(:revelation_counts) { { report2.id => 1 } }
       allow(Time).to receive(:now) { Time.local(2011, 1, 2) }
@@ -28,7 +28,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of the last report" do
-      allow(ScoreReport).to receive(:order) { [ build_stubbed(:score_report, created_at: Time.now) ] }
+      allow(ScoreReport).to receive(:order) { [build_stubbed(:score_report, created_at: Time.now)] }
       allow(ScoreReport).to receive(:guess_counts) { {} }
       allow(ScoreReport).to receive(:revelation_counts) { {} }
       get :index
@@ -39,7 +39,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of a report more than a day old" do
-      allow(ScoreReport).to receive(:order) { [ build_stubbed(:score_report, created_at: Time.now - 1.day - 1.second) ] }
+      allow(ScoreReport).to receive(:order) { [build_stubbed(:score_report, created_at: Time.now - 1.day - 1.second)] }
       allow(ScoreReport).to receive(:guess_counts) { {} }
       allow(ScoreReport).to receive(:revelation_counts) { {} }
       get :index

@@ -6,7 +6,7 @@ describe Admin::PhotosController do
 
     describe '#unfound' do
       before do
-        allow(Photo).to receive(:unfound_or_unconfirmed) { [ photo ] }
+        allow(Photo).to receive(:unfound_or_unconfirmed) { [photo] }
       end
 
       it 'renders the page' do
@@ -28,7 +28,7 @@ describe Admin::PhotosController do
 
     describe '#inaccessible' do
       it 'renders the page' do
-        allow(Photo).to receive(:inaccessible) { [ photo ] }
+        allow(Photo).to receive(:inaccessible) { [photo] }
         allow(photo).to receive(:tags) { [] }
         get :inaccessible
         lists_photo
@@ -37,7 +37,7 @@ describe Admin::PhotosController do
 
     describe '#multipoint' do
       it 'renders the page' do
-        allow(Photo).to receive(:multipoint) { [ photo ] }
+        allow(Photo).to receive(:multipoint) { [photo] }
         allow(photo).to receive(:tags) { [] }
         get :multipoint
         lists_photo
