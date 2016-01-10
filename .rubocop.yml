@@ -150,3 +150,5 @@ Style/RaiseArgs:
   Enabled: false
 Style/RedundantBegin:
   Enabled: false
+Style/StringLiterals:
+  Enabled: false
