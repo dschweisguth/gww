@@ -45,7 +45,7 @@ module PhotosHelper
     return value, unit
   end
 
-  def highlighted(string, text_terms, other_strings_that_count=[])
+  def highlighted(string, text_terms, other_strings_that_count = [])
     # Copy the string to be highlighted, remove HTML and use that when scanning for matches
     strings_that_count = [string.gsub(/<[^>]+>/, '')] + other_strings_that_count
     substrings = string.split /(<[^<]+>)/

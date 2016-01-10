@@ -79,7 +79,7 @@ class Street < Struct.new :name, :type
       gsub(/\s+/, '\s+')
   end
 
-  def initialize(name, type=nil)
+  def initialize(name, type = nil)
     sanitized_name = name.upcase.
       gsub(/\s+/, ' ').
       gsub(/['.,]/, '').
