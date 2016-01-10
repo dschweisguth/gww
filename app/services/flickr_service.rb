@@ -92,7 +92,7 @@ class FlickrService
       'oauth_consumer_key' => OAUTH_CONSUMER_KEY,
       'oauth_token' => OAUTH_TOKEN,
       'oauth_timestamp' => Time.now.to_i.to_s,
-      'oauth_nonce' => rand(10 ** 8).to_s.rjust(8, '0'),
+      'oauth_nonce' => rand(10**8).to_s.rjust(8, '0'),
       'method' => api_method
     }
     params.merge! extra_params.map { |name, value| [name.to_s, value.to_s] }.to_h
@@ -124,7 +124,7 @@ class FlickrService
       get(url).body
     rescue StandardError, Timeout::Error => e
       failure_count += 1
-      sleep_time = retry_quantum * (2 ** failure_count)
+      sleep_time = retry_quantum * (2**failure_count)
       warning = e.message
       if failure_count <= 3
         warning += "; sleeping #{sleep_time} seconds and retrying ..."

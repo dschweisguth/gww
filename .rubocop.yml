@@ -65,6 +65,10 @@ Style/SingleSpaceBeforeFirstArg:
   Exclude:
     - 'db/schema.rb'
 
+Style/SpaceAroundOperators:
+  Exclude:
+    - 'db/schema.rb'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary

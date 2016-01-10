@@ -54,7 +54,7 @@ module PeopleHelper
 
   def position(high_scorers, person, attr)
     position = 0
-    score_for_this_position = 1.0/0
+    score_for_this_position = 1.0 / 0
     high_scorers.each_with_index do |high_scorer, i|
       if high_scorer.send(attr) < score_for_this_position
         position = i + 1
