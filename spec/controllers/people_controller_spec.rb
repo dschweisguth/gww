@@ -1,8 +1,6 @@
 require 'will_paginate/array'
 
 describe PeopleController do
-  render_views
-
   describe '#find' do
     it "finds a person" do
       person = build_stubbed :person

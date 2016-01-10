@@ -1,6 +1,4 @@
 describe RevelationsController do
-  render_views
-
   describe '#longest' do
     it "renders the page" do
       revelation = build_stubbed :revelation
@@ -12,5 +10,4 @@ describe RevelationsController do
 
     end
   end
-
 end

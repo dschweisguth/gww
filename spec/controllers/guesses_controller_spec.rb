@@ -1,6 +1,4 @@
 describe GuessesController do
-  render_views
-
   describe '#longest_and_shortest' do
     it "renders the page" do
       longest = build_stubbed :guess
@@ -17,5 +15,4 @@ describe GuessesController do
 
     end
   end
-  
 end

@@ -1,8 +1,6 @@
 require 'controllers/score_reports_controller_spec_support'
 
 describe Admin::ScoreReportsController do
-  render_views
-
   describe '#index' do
     it "renders the page" do
       report2 = build_stubbed :score_report, created_at: Time.local(2011, 1, 2)

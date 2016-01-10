@@ -87,6 +87,8 @@ RSpec.configure do |config|
     allow(FlickrService).to receive(:instance).and_return(MockFlickrService.new)
   end
 
+  config.render_views
+
   config.include GWW::Helpers::RSpec
   [GWW::Factories::Model, GWW::Matchers::Model, GWW::Helpers::Model, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :model }
   [GWW::Factories::Model, GWW::Matchers::Model].each { |mod| config.include mod, type: :updater }

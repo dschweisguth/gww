@@ -1,6 +1,4 @@
 describe Admin::PhotosController do
-  render_views
-
   describe 'collections' do
     let(:photo) { build_stubbed :photo }
 

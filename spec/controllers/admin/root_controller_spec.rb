@@ -1,6 +1,4 @@
 describe Admin::RootController do
-  render_views
-
   describe '#index' do
     it "renders the page" do
       allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, created_at: Time.local(2011) }

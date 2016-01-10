@@ -1,6 +1,4 @@
 describe BookmarkletController do
-  render_views
-
   describe '#show' do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it "redirects to the given photo" do

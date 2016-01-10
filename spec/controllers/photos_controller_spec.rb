@@ -1,8 +1,6 @@
 require 'will_paginate/array'
 
 describe PhotosController do
-  render_views
-
   describe '#index' do
     it "renders the page" do
       sorted_by_param = 'username'

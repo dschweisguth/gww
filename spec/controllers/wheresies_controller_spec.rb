@@ -1,8 +1,5 @@
 describe WheresiesController do
-  render_views
-
   describe '#show' do
-
     it "bails out if the year is invalid" do
       allow(Time).to receive(:now) { Time.local 2010 }
       allow(ScoreReport).to receive(:minimum) { Time.local(2010).getutc }
@@ -28,5 +25,4 @@ describe WheresiesController do
     end
 
   end
-
 end
