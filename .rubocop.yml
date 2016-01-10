@@ -81,6 +81,10 @@ Style/SpaceInsideHashLiteralBraces:
     - 'ds/schema.rb'
     - 'lib/tasks/cucumber.rake'
 
+Style/TrailingBlankLines:
+  Exclude:
+    - 'features/support/env.rb'
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
