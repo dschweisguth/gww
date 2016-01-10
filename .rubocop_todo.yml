@@ -6,13 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/SpaceAfterComma:
-  Exclude:
-    - 'app/controllers/people_controller.rb'
-    - 'lib/street_type.rb'
-
 # Offense count: 17
 # Cop supports --auto-correct.
 Style/SpaceAfterNot:

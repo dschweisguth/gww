@@ -28,7 +28,7 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
     ['TER',  true, ['TERRACE', false]],
     ['TUNL', true, ['TUNNEL', false]],
     ['WALK', false ],
-    ['WAY',  false,['WY', true]]
+    ['WAY',  false, ['WY', true]]
   ].map { |name, is_abbr, *synonyms| new name, is_abbr, synonyms.map { |args| Synonym.new *args } }
 
   def self.get(name)
