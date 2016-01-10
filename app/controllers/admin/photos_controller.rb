@@ -91,7 +91,7 @@ class Admin::PhotosController < ApplicationController
         return
       else
         message = "Sorry, Guess Where Watcher doesn't know anything about " \
-	        "that photo. Perhaps it hasn't been added to Guess Where SF, " \
+          "that photo. Perhaps it hasn't been added to Guess Where SF, " \
           "or perhaps GWW hasn't updated since it was added."
       end
     else

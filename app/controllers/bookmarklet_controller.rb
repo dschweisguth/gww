@@ -11,7 +11,7 @@ class BookmarkletController < ApplicationController
         path = photo_path photo
       else
         message = "Sorry, Guess Where Watcher doesn't know anything about " \
-	        "that photo. Perhaps it hasn't been added to Guess Where SF, " \
+          "that photo. Perhaps it hasn't been added to Guess Where SF, " \
           "or perhaps GWW hasn't updated since it was added. " \
           "If you like, you can <a href=\"#{from}\">go back where you came from</a>."
       end
