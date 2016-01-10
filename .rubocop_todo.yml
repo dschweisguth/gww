@@ -8,14 +8,6 @@
 
 # Offense count: 2
 # Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-Style/SymbolProc:
-  Exclude:
-    - 'app/controllers/concerns/score_reports_controller_support.rb'
-    - 'spec/controllers/concerns/search_data_params_parser_spec.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
 Style/Tab:
   Exclude:
     - 'app/controllers/admin/photos_controller.rb'

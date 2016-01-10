@@ -57,7 +57,7 @@ describe 'SearchDataParamsParser' do
   # This test doesn't test any functionality that isn't already tested; it just completes coverage
   describe '#transform_keys' do
     it "transforms the given map's keys with the given block" do
-      expect(SearchDataParamsParser.new.transform_keys(x: 1) { |key| key.to_s }).to eq('x' => 1)
+      expect(SearchDataParamsParser.new.transform_keys(x: 1, &:to_s)).to eq('x' => 1)
     end
   end
 
