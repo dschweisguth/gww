@@ -43,6 +43,9 @@ Style/IndentationWidth:
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+Style/NumericLiterals:
+  MinDigits: 15
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
