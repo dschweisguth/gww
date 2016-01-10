@@ -6,23 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 18
-# Cop supports --auto-correct.
-Style/NegatedIf:
-  Exclude:
-    - 'app/controllers/concerns/base_search_params_parser.rb'
-    - 'app/controllers/people_controller.rb'
-    - 'app/controllers/wheresies_controller.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'app/models/concerns/person_index_support.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/concerns/photo_map_support.rb'
-    - 'app/models/stintersection.rb'
-    - 'app/services/flickr_service.rb'
-    - 'lib/location_parser.rb'
-    - 'lib/street_type.rb'
-    - 'spec/support/matchers/routing.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, MinBodyLength, SupportedStyles.

@@ -104,3 +104,5 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
+Style/NegatedIf:
+  Enabled: false
