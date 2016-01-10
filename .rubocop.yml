@@ -138,3 +138,5 @@ Style/StructInheritance:
   Enabled: false
 Style/UnneededPercentQ:
   Enabled: false
+Style/WordArray:
+  Enabled: false
