@@ -16,7 +16,7 @@ describe LocationParser, type: :lib do
       expect(parser.parse(text)).to eq([Intersection.new(text, '26th', nil, 'Valencia', nil)])
     end
 
-    %w( between bet bet. betw betw. btwn btwn. ).each do |between|
+    %w(between bet bet. betw betw. btwn btwn.).each do |between|
       it "finds a block delimited with '#{between}'" do
         text = "Valencia #{between} 25th and 26th"
         expect(parser.parse(text)).to eq([Block.new(text, 'Valencia', nil, '25th', nil, '26th', nil)])

@@ -4,13 +4,13 @@ describe Street, type: :lib do
       matches 'CHARLES J BRENHAM', "Charles \n J \n Brenham"
     end
 
-    %w( Saint St St. ).each do |title|
+    %w(Saint St St.).each do |title|
       it "accepts #{title} as an abbreviation for Saint" do
         matches 'SAINT FRANCIS', "#{title} Francis"
       end
     end
 
-    %w( J J. ).each do |initial|
+    %w(J J.).each do |initial|
       it "accepts #{initial} as a middle initial" do
         matches 'CHARLES J BRENHAM', "Charles #{initial} Brenham"
       end

@@ -16,7 +16,7 @@ describe PeopleController do
     it { does route(:get, '/people/sorted-by/foo/order/bar').to(action: 'index', sorted_by: 'foo', order: 'bar') }
   end
 
-  %w( nemeses top_guessers ).each do |action|
+  %w(nemeses top_guessers).each do |action|
     describe action do
       it { has_named_route? "#{action}_people", "/people/#{action}" }
       it { does route(:get, "/people/#{action}").to action: action }
@@ -28,7 +28,7 @@ describe PeopleController do
     it { does route(:get, '/people/666').to action: 'show', id: '666' }
   end
 
-  %w( guesses map map_json ).each do |action|
+  %w(guesses map map_json).each do |action|
     describe action do
       it { has_named_route? "person_#{action}", 666, "/people/666/#{action}" }
       it { does route(:get, "/people/666/#{action}").to action: action, id: '666' }
