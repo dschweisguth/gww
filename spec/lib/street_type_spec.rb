@@ -49,9 +49,6 @@ describe StreetType, type: :lib do
 
   end
 
-  class StructSubclass < Struct.new :name
-  end
-
   describe '#to_s' do
     it "returns a nice string" do
       expect(StreetType.get('St').to_s).to eq('#<StreetType:ST>')

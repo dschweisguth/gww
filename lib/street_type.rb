@@ -1,7 +1,5 @@
 class StreetType < Struct.new :name, :is_abbr, :synonyms
-
-  class Synonym < Struct.new :name, :is_abbr
-  end
+  Synonym = Struct.new :name, :is_abbr
 
   INSTANCES = [
     ['ALY',  true, ['ALLEY', false]],
