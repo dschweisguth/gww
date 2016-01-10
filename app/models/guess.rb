@@ -45,11 +45,11 @@ class Guess < ActiveRecord::Base
   end
 
   def time_elapsed
-    time_elapsed_between self.photo.dateadded, self.commented_at
+    time_elapsed_between photo.dateadded, commented_at
   end
 
   def ymd_elapsed
-    ymd_elapsed_between self.photo.dateadded, self.commented_at
+    ymd_elapsed_between photo.dateadded, commented_at
   end
 
 end
