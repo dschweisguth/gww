@@ -53,11 +53,11 @@ module PhotoAdminPhotosSupport
         selected_flickrid
       else
         Person.find_by_username(entered_username).try(:flickrid) ||
-        Comment.find_by_username(entered_username).try(:flickrid) ||
-        raise(AddAnswerError,
-          "Sorry; GWW hasn't seen any posts or comments by #{entered_username} yet, " \
-            "so doesn't know enough about them to award them a point. " \
-            "Did you spell their username correctly?")
+          Comment.find_by_username(entered_username).try(:flickrid) ||
+          raise(AddAnswerError,
+            "Sorry; GWW hasn't seen any posts or comments by #{entered_username} yet, " \
+              "so doesn't know enough about them to award them a point. " \
+              "Did you spell their username correctly?")
       end
     transaction do
       if guesser_flickrid == person.flickrid

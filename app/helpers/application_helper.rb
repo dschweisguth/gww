@@ -59,7 +59,7 @@ module ApplicationHelper
   def head_javascript(*custom)
     content_for :head do
       javascript_include_tag('application', *custom) + "\n" +
-      csrf_meta_tags
+        csrf_meta_tags
     end
   end
 

@@ -26,7 +26,7 @@ module Answer
       ['minutes', :min, 60],
       ['seconds', :sec, 60]
     ].
-    map do |unit, method, number_in_next_largest_unit|
+      map do |unit, method, number_in_next_largest_unit|
       value = utc_to.send(method) - utc_from.send(method)
       if value < 0
         value += number_in_next_largest_unit

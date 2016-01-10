@@ -40,6 +40,9 @@ Style/IndentationWidth:
   Exclude:
     - 'lib/tasks/cucumber.rake'
 
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 # Disabled cops
 
 # These cops want parentheses that really aren't necessary
