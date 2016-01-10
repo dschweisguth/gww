@@ -44,7 +44,7 @@ describe PersonPeopleSupport do
     it 'returns a structure of scores by day, week, month and year' do
       expected = expected_periods_for_one_guess_at_report_time
       guess = create :guess, commented_at: report_time
-      (0 .. 3).each { |division| expected[division][0].scores[1] = [guess.person] }
+      (0..3).each { |division| expected[division][0].scores[1] = [guess.person] }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
@@ -53,7 +53,7 @@ describe PersonPeopleSupport do
       guesser = create :person
       create :guess, person: guesser, commented_at: report_time
       create :guess, person: guesser, commented_at: report_time + 1.minute
-      (0 .. 3).each { |division| expected[division][0].scores[2] = [guesser] }
+      (0..3).each { |division| expected[division][0].scores[2] = [guesser] }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
@@ -62,28 +62,28 @@ describe PersonPeopleSupport do
       guess1 = create :guess, commented_at: report_time
       guess2 = create :guess, commented_at: report_time
       guessers = [guess1.person, guess2.person].sort_by { |guesser| guesser.username.downcase }
-      (0 .. 3).each { |division| expected[division][0].scores[1] = guessers }
+      (0..3).each { |division| expected[division][0].scores[1] = guessers }
       expect(Person.top_guessers(report_time)).to eq(expected)
     end
 
     def expected_periods_for_one_guess_at_report_time
       [
-        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        (0..6).map { |i| Period.starting_at report_day - i.days, 1.day },
         [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +
-          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+          (0..4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
         [Period.new(report_day.beginning_of_month, report_day + 1.day)] +
-          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+          (0..11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
         [Period.new(report_day.beginning_of_year, report_day + 1.day)]
       ]
     end
 
     it 'handles previous years' do
       expected = [
-        (0 .. 6).map { |i| Period.starting_at report_day - i.days, 1.day },
+        (0..6).map { |i| Period.starting_at report_day - i.days, 1.day },
         [Period.new(report_day.beginning_of_week - 1.day, report_day + 1.day)] +
-          (0 .. 4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
+          (0..4).map { |i| Period.starting_at report_day.beginning_of_week - 1.day - (i + 1).weeks, 1.week },
         [Period.new(report_day.beginning_of_month, report_day + 1.day)] +
-          (0 .. 11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
+          (0..11).map { |i| Period.starting_at report_day.beginning_of_month - (i + 1).months, 1.month },
         [Period.new(report_day.beginning_of_year, report_day + 1.day),
          Period.starting_at(report_day.beginning_of_year - 1.year, 1.year)]
       ]
