@@ -56,25 +56,25 @@ module PersonShowSupport
 
   def oldest_guess
     first_guess_with_place(:guesses, :desc,
-      "#{Guess::GUESS_AGE} > " +
+      "#{Guess::GUESS_AGE} > " \
         "(select max(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id)")
   end
 
   def fastest_guess
     first_guess_with_place(:guesses, :asc,
-      "#{Guess::GUESS_AGE} < " +
+      "#{Guess::GUESS_AGE} < " \
         "(select min(#{G_AGE}) from guesses g, photos p where g.person_id = ? and g.photo_id = p.id and #{G_AGE_IS_VALID})")
   end
 
   def guess_of_longest_lasting_post
     first_guess_with_place(:photos, :desc,
-      "#{Guess::GUESS_AGE} > " +
+      "#{Guess::GUESS_AGE} > " \
         "(select max(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ?)")
   end
 
   def guess_of_shortest_lasting_post
     first_guess_with_place(:photos, :asc,
-      "#{Guess::GUESS_AGE} < " +
+      "#{Guess::GUESS_AGE} < " \
         "(select min(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})")
   end
 

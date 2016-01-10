@@ -48,7 +48,7 @@ class Stcline < ActiveRecord::Base
     number = address.number.to_i
     clines = where(street: address.street.name).
       where(
-        "(lf_fadd % 2 = :number % 2 and lf_fadd <= :number and :number <= lf_toadd) or " +
+        "(lf_fadd % 2 = :number % 2 and lf_fadd <= :number and :number <= lf_toadd) or " \
           "(rt_fadd % 2 = :number % 2 and rt_fadd <= :number and :number <= rt_toadd)",
         number: number)
     if address.street.type

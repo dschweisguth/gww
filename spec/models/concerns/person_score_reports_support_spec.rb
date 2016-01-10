@@ -299,8 +299,8 @@ describe PersonScoreReportsSupport do
         [ person, *others ],
         others_by_score.merge(100 => [ person ]),
         others_by_score.merge(1 => [ person ]),
-        'jumped from 11th to 1st place. Congratulations on reaching 100 points! ' +
-          'Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! ' +
+        'jumped from 11th to 1st place. Congratulations on reaching 100 points! ' \
+          'Welcome to <a href="https://www.flickr.com/photos/inkvision/2976263709/">the 21 Club</a>! ' \
           'Welcome to the top ten!')
     end
 

@@ -60,9 +60,9 @@ module PhotoStatisticsSupport
         counts[1] += geocoded_one
       end
       finish = Time.now
-      logger.info "Examined #{answer_count} photos " +
-        "(#{finish - start} s, #{(finish - start) / answer_count} s/photo); " +
-        "located #{located_count} photos (#{'%.1f' % (100.0 * located_count / answer_count)}% success); " +
+      logger.info "Examined #{answer_count} photos " \
+        "(#{finish - start} s, #{(finish - start) / answer_count} s/photo); " \
+        "located #{located_count} photos (#{'%.1f' % (100.0 * located_count / answer_count)}% success); " \
         "geocoded #{inferred_count} photos (#{'%.1f' % (100.0 * inferred_count / answer_count)}% success)"
     end
 

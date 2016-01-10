@@ -10,7 +10,7 @@ class LocationParser
     space = '[\s.,]+'
     
     at_a_street =
-      '(?:and|&amp;|&amp;amp;|at|@|by|just\s+\w+\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)' +
+      '(?:and|&amp;|&amp;amp;|at|@|by|just\s+\w+\s+of|just\s+past|looking(?:\s+\w+)?\s+(?:at|to|towards?)|near)' \
         "#{space}#{street}"
     between_streets =
       "(?:between|(?:betw?|btwn)\\.?)#{space}#{street}#{space}(?:and|&amp;|&amp;amp;)#{space}#{street}"

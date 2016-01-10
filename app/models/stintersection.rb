@@ -9,7 +9,7 @@ class Stintersection < ActiveRecord::Base
       point2 = geocode_intersection location.on, location.between2
       if point2
         point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2).tap do |midpoint|
-          logger.debug "Found midpoint of #{location.on} " +
+          logger.debug "Found midpoint of #{location.on} " \
             "between #{location.between1} and #{location.between2} at #{midpoint.x}, #{midpoint.y}."
         end
       end

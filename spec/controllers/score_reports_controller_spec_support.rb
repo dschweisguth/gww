@@ -57,11 +57,11 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   expect(response.body).to match(/6 photos have been added to the pool since the previous report/)
   expect(response.body).to have_link '1234 unfound photos', href: search_photos_path('game_status/unfound,unconfirmed')
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
-  participation = '2 people have made correct guesses. ' +
-    '1 people have put at least one photo in the pool but not guessed any photos correctly. ' +
+  participation = '2 people have made correct guesses. ' \
+    '1 people have put at least one photo in the pool but not guessed any photos correctly. ' \
     'That means that at least 3 of our 3 members have participated in the game.'
   expect(response.body).to match(/#{participation}/)
-  guessing = "Since the beginning of the game, 1 people have guessed one photo correctly. " +
+  guessing = "Since the beginning of the game, 1 people have guessed one photo correctly. " \
     "Here are the 1 people who've correctly guessed two or more photos."
   expect(response.body).to match(/#{guessing}/)
 

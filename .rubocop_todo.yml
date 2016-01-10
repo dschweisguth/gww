@@ -6,24 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 30
-# Cop supports --auto-correct.
-Style/LineEndConcatenation:
-  Exclude:
-    - 'app/controllers/admin/photos_controller.rb'
-    - 'app/controllers/bookmarklet_controller.rb'
-    - 'app/models/concerns/person_score_reports_support.rb'
-    - 'app/models/concerns/person_show_support.rb'
-    - 'app/models/concerns/photo_admin_photos_support.rb'
-    - 'app/models/concerns/photo_map_support.rb'
-    - 'app/models/concerns/photo_statistics_support.rb'
-    - 'app/models/stcline.rb'
-    - 'app/models/stintersection.rb'
-    - 'lib/address.rb'
-    - 'lib/location_parser.rb'
-    - 'spec/controllers/score_reports_controller_spec_support.rb'
-    - 'spec/models/concerns/person_score_reports_support_spec.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/MultilineBlockLayout:

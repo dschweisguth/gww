@@ -4,7 +4,7 @@ module PhotoMapSupport
   module ClassMethods
     def mapped(bounds, limit)
       where(
-        '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' +
+        '(accuracy >= 12 and latitude between ? and ? and longitude between ? and ?) or ' \
           '(inferred_latitude between ? and ? and inferred_longitude between ? and ?)',
           bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long,
           bounds.min_lat, bounds.max_lat, bounds.min_long, bounds.max_long).
