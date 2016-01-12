@@ -76,11 +76,7 @@ class PeopleController < ApplicationController
 
     @guesses = @person.guesses_with_associations
     @favorite_posters = @person.favorite_posters
-    @posters = @guesses.group_by { |guess| guess.photo.person }.
-      sort do |x, y|
-        c = y[1].length <=> x[1].length
-        c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
-      end
+    @posters = Person.sort_by_photo_count_and_username(@guesses.group_by { |guess| guess.photo.person })
 
     @posts = @person.photos_with_associations
     @favoring_guessers = @person.favoring_guessers
@@ -91,8 +87,7 @@ class PeopleController < ApplicationController
   end
 
   private def group_by_guessers(posts)
-    guessers = {}
-    posts.each do |post|
+    guessers = posts.each_with_object({}) do |post, guessers|
       post.guesses.each do |guess|
         guesser = guess.person
         guessers_guesses = guessers[guesser]
@@ -103,10 +98,7 @@ class PeopleController < ApplicationController
         guessers_guesses << post
       end
     end
-    guessers.sort do |x, y|
-      c = y[1].length <=> x[1].length
-      c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
-    end
+    Person.sort_by_photo_count_and_username guessers
   end
 
   caches_page :guesses

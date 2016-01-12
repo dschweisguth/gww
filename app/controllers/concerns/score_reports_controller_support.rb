@@ -6,11 +6,7 @@ module ScoreReportsControllerSupport
     previous_report_date = previous_report ? previous_report.created_at : Time.utc(2005)
 
     @guesses = Guess.all_between previous_report_date, @report_date
-    @guessers = @guesses.group_by(&:person).
-      sort do |x, y|
-        c = y[1].length <=> x[1].length
-        c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
-      end
+    @guessers = Person.sort_by_photo_count_and_username @guesses.group_by(&:person)
 
     @revelations = Revelation.all_between previous_report_date, @report_date
     @revealers =

@@ -37,4 +37,11 @@ class Person < ActiveRecord::Base
     end
   end
 
+  def self.sort_by_photo_count_and_username(photos_by_actor)
+    photos_by_actor.sort do |x, y|
+      c = y[1].length <=> x[1].length
+      c != 0 ? c : x[0].username.downcase <=> y[0].username.downcase
+    end
+  end
+
 end
