@@ -1,9 +1,8 @@
 class Tag < ActiveRecord::Base
   belongs_to :photo, inverse_of: :tags
 
-  validates_presence_of :raw
-  validates_uniqueness_of :raw, scope: :photo_id
-  validates_inclusion_of :machine_tag, in: [false, true]
+  validates :raw, presence: true, uniqueness: { scope: :photo_id }
+  validates :machine_tag, inclusion: { in: [false, true] }
 
   attr_readonly :raw, :machine_tag
 

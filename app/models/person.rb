@@ -5,7 +5,7 @@ class Person < ActiveRecord::Base
   MIN_GUESSES_FOR_FAVORITE = 10
   MIN_BIAS_FOR_FAVORITE = 2.5
 
-  validates_presence_of :flickrid, :username
+  validates :flickrid, :username, presence: true
   attr_readonly :flickrid
 
   has_many :photos, inverse_of: :person

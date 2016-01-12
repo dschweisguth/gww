@@ -92,6 +92,15 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+# The Rails date and time cops might be valid, but everything seems to be working fine so I'm blowing them off.
+
+Rails/Date:
+  Enabled: false
+Rails/PluralizationGrammar:
+  Enabled: false
+Rails/TimeZone:
+  Enabled: false
+
 Style/AlignArray:
   Enabled: false
 Style/AlignHash:

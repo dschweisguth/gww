@@ -2,7 +2,7 @@ class Revelation < ActiveRecord::Base
   include Answer
 
   belongs_to :photo, inverse_of: :revelation
-  validates_presence_of :comment_text, :commented_at, :added_at
+  validates :comment_text, :commented_at, :added_at, presence: true
 
   def self.longest
     order('unix_timestamp(revelations.commented_at) - unix_timestamp(photos.dateadded) desc').
