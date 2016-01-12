@@ -1,6 +1,6 @@
 class BaseSearchParamsParser
   class NonCanonicalSegmentsError < StandardError
-    attr_accessor :canonical_segments
+    attr_reader :canonical_segments
 
     def initialize(canonical_segments)
       super # so we can see canonical_segments when the exception is printed
