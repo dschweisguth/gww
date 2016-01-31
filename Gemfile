@@ -9,7 +9,7 @@ gem 'jquery-rails', '3.1.4' # 4.* requires Rails 4.2
 gem 'jquery-ui-rails', '5.0.5'
 gem 'mysql2', '0.3.20' # 0.4 requires Rails 4.2
 gem 'rails', '4.1.14'
-gem 'sass-rails', '4.0.5'
+gem 'sass-rails', '5.0.4'
 gem 'therubyracer', '0.12.2', platforms: :ruby
 gem 'uglifier', '2.7.2'
 gem 'will_paginate', '3.0.7'
