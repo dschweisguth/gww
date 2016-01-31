@@ -23,16 +23,16 @@ group :development do
 end
 
 group :test do
-  gem 'activerecord-nulldb-adapter', '0.3.1'
-  gem 'capybara', '2.5.0'
-  gem 'cucumber-rails', '1.4.2', require: false
+  gem 'activerecord-nulldb-adapter', '0.3.2'
+  gem 'capybara', '2.6.2'
+  gem 'cucumber-rails', '1.4.3', require: false
   gem 'database_cleaner', '1.5.1'
   gem 'factory_girl_rails', '4.5.0'
   gem 'jasmine', '2.4.0'
   gem 'launchy', '2.4.3'
   gem 'poltergeist', '1.8.1'
-  gem 'rspec-rails', '3.4.0'
-  gem 'shoulda-matchers', '3.0.1'
+  gem 'rspec-rails', '3.4.1'
+  gem 'shoulda-matchers', '3.1.1'
   gem 'simplecov', '0.11.1', require: false
 end
 
