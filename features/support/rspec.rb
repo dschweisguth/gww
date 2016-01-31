@@ -1,4 +1,7 @@
+require 'rspec/core'
 require 'rspec/mocks'
+
+require_relative '../../spec/support/expectations_and_mocks'
 
 World(RSpec::Mocks::ExampleMethods)
 
