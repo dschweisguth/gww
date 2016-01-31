@@ -17,7 +17,7 @@ gem 'xml-simple', '1.1.5'
 
 group :development do
   gem 'rubocop'
-  gem 'spring', '1.6.1'
+  gem 'spring', '1.6.2'
   gem 'spring-commands-cucumber', '1.0.1'
   gem 'spring-commands-rspec', '1.0.4'
 end
