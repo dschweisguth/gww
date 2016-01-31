@@ -3,7 +3,7 @@ source 'http://rubygems.org/'
 gem 'actionpack-page_caching', '1.0.2'
 gem 'activerecord-mysql2spatial-adapter', '0.4.3'
 gem 'american_date', '1.1.1'
-gem 'bundler', '1.10.6' # 1.11.0 and later cause inability to load bundler/setup
+gem 'bundler', '1.11.2'
 gem 'foreigner', '1.7.4'
 gem 'jquery-rails', '3.1.4' # 4.* requires Rails 4.2
 gem 'jquery-ui-rails', '5.0.5'
