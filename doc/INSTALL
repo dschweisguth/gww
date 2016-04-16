@@ -140,7 +140,7 @@ Install Phusion Passenger
       configuration to enable GWW's .htaccess:
       AllowOverride AuthConfig FileInfo
     - enable both HTTP and HTTPS access to GWW's public directory.
-      (The bookmarklets use HTTPs.) It is difficult to document that fully in a
+      (The bookmarklets use HTTPS.) It is difficult to document that fully in a
       way that will work for everyone, so ask.
 
 Put the server-up .htaccess in place
