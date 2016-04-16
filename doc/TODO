@@ -8,7 +8,7 @@ A photo which is guessed or revealed and then removed from the group remains in
 Debt
 
 Review slow tests
-After RubyMine is updated to be compatible with RSpec 3, upgrade
+Refactor concerns to presenters/decorators
 Measure Javascript coverage
 Merge revelations into guesses?
 
