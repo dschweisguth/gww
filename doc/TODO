@@ -7,6 +7,7 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
+Ruby 2.3.2 or later (there's a bug in rubygems in 2.3.1)
 Review slow tests
 Refactor concerns to presenters/decorators
 Measure Javascript coverage
@@ -14,6 +15,7 @@ Merge revelations into guesses?
 
 Features
 
+Third-party tagging of locations
 Add date added to tags and use it in activity search
 Support form field parameters in search page so that search from browser works
 Allow search term exclusion with a leading -
