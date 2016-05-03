@@ -3,7 +3,7 @@ source 'http://rubygems.org/'
 gem 'actionpack-page_caching'
 gem 'activerecord-mysql2spatial-adapter'
 gem 'american_date'
-gem 'bundler', '1.11.2'
+gem 'bundler', '1.12.1'
 gem 'foreigner'
 gem 'jquery-rails', '~> 3.1.4' # 4.* requires Rails 4.2
 gem 'jquery-ui-rails'

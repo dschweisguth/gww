@@ -221,7 +221,7 @@ DEPENDENCIES
   activerecord-mysql2spatial-adapter
   activerecord-nulldb-adapter
   american_date
-  bundler (= 1.11.2)
+  bundler (= 1.12.1)
   capybara
   cucumber-rails
   database_cleaner
@@ -249,4 +249,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   1.11.2
+   1.12.1
