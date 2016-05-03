@@ -29,7 +29,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'jasmine'
   gem 'launchy'
-  gem 'phantomjs', '1.9.8' # Used by jasmine. This is the most recent version available from MacPorts.
+  gem 'phantomjs', '1.9.8' # Used by jasmine. Pinned to the most recent version available from MacPorts, which is used by poltergeist.
   gem 'poltergeist'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
@@ -37,5 +37,5 @@ group :test do
 end
 
 group :production do
-  gem 'passenger', '5.0.23'
+  gem 'passenger'
 end

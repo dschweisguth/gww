@@ -108,7 +108,7 @@ GEM
       mini_portile2 (~> 2.0.0.rc2)
     parser (2.3.1.0)
       ast (~> 2.2)
-    passenger (5.0.23)
+    passenger (5.0.28)
       rack
       rake (>= 0.8.1)
     phantomjs (1.9.8.0)
@@ -231,7 +231,7 @@ DEPENDENCIES
   jquery-ui-rails
   launchy
   mysql2 (~> 0.3.20)
-  passenger (= 5.0.23)
+  passenger
   phantomjs (= 1.9.8)
   poltergeist
   rails (~> 4.1.15)
