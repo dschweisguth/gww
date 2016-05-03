@@ -32,8 +32,8 @@ Feature: Photos
     And the "sorted_by" option "Date added" should be selected
     And the "direction" option "+" should be selected
     And I should see 2 image-only search results
-    And image-only search result 1 should be the photo added on "1/1/14"
-    And image-only search result 2 should be the photo added on "1/2/14"
+    And image-only search result 1 of 2 should be the photo added on "1/1/14"
+    And image-only search result 2 of 2 should be the photo added on "1/2/14"
 
   Scenario: Player searches for a given user's photos
     Given there is a player "abcdefgh"
@@ -148,10 +148,10 @@ Feature: Photos
     Then the URL should be "/photos/search/from-date/1-1-14/to-date/1-2-14"
     And the "from_date" field should contain "1/1/14"
     And the "to_date" field should contain "1/2/14"
-    And I shouid not see a search result for the photo added on "12/31/13"
+    And I should not see a search result for the photo added on "12/31/13"
     But I should see an image-only search result for the photo added on "1/1/14"
     And I should see an image-only search result for the photo added on "1/2/14"
-    But I shouid not see a search result for the photo added on "1/3/14"
+    But I should not see a search result for the photo added on "1/3/14"
 
   Scenario: Player searches for activity
     Given there is a player "abcdefgh"
@@ -169,8 +169,8 @@ Feature: Photos
     And the "sorted_by" option "Date taken" should be selected
     And the "direction" option "-" should be selected
     And I should see 2 full search results
-    And full search result 1 should be player "ijklmnop"'s photo
-    And full search result 2 should be player "abcdefgh"'s photo
+    And full search result 1 of 2 should be player "ijklmnop"'s photo
+    And full search result 2 of 2 should be player "abcdefgh"'s photo
     And I should see player "abcdefgh"'s comment on player "ijklmnop"'s photo
 
   Scenario: Player searches for activity and finds comments by the same user on different photos
@@ -184,10 +184,10 @@ Feature: Photos
     And I fill in "done_by" with "ijklmnop"
     And I press the "Search" button
     Then I should see 2 full search results
-    And I should see the comment "Today is 1/2/14" on full search result 1
-    But I should not see the comment "Today is 1/1/14" on full search result 1
-    And I should see the comment "Today is 1/1/14" on full search result 2
-    But I should not see the comment "Today is 1/2/14" on full search result 2
+    And I should see the comment "Today is 1/2/14" on full search result 1 of 2
+    But I should not see the comment "Today is 1/1/14" on full search result 1 of 2
+    And I should see the comment "Today is 1/1/14" on full search result 2 of 2
+    But I should not see the comment "Today is 1/2/14" on full search result 2 of 2
 
   Scenario: Player searches for activity in a date range
     Given there is a player "abcdefgh"
@@ -206,6 +206,6 @@ Feature: Photos
     And I fill in "to_date" with "1/3/14"
     And I press the "Search" button
     Then I should see 2 full search results
-    And full search result 1 should be player "ijklmnop"'s photo
-    And I should see the comment "Today is 1/3/14" on full search result 1
-    And full search result 2 should be player "abcdefgh"'s photo taken on "1/2/14"
+    And full search result 1 of 2 should be player "ijklmnop"'s photo
+    And I should see the comment "Today is 1/3/14" on full search result 1 of 2
+    And full search result 2 of 2 should be player "abcdefgh"'s photo taken on "1/2/14"

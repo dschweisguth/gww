@@ -70,7 +70,8 @@ Then /^the "([^"]+)" option "([^"]+)" should be selected$/ do |field, value|
 end
 
 Then /^the game statuses "([^"]*)" should be selected$/ do |game_statuses|
-  expect(find_field('game_status').all('option[selected]').map(&:text)).to match_array(game_statuses.split(','))
+  game_statuses = game_statuses.split(',')
+  expect(all('#game_status option[selected]', count: game_statuses.count).map(&:text)).to match_array(game_statuses)
 end
 
 Then /^I should see an image-only search result for the photo$/ do
@@ -78,8 +79,8 @@ Then /^I should see an image-only search result for the photo$/ do
 end
 
 Then /^I should see (\d+) image-only search results?$/ do |result_count|
-  expect(all('.image').count).to eq(result_count.to_i)
-  expect(all('.text')).to be_empty
+  expect(page).to have_css('.image', count: result_count.to_i)
+  expect(page).to have_no_css('.text')
 end
 
 Then %r{^I should see an image-only search result for the photo added on "(\d+/\d+/\d+)"} do |date|
@@ -90,66 +91,66 @@ end
 def i_should_see_image_only_search_result_for_photo(photo)
   link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"])
   expect(link).to have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"])
-  expect(all('.text')).to be_empty
+  expect(page).to have_no_css('.text')
 end
 
-Then /^image-only search result (\d+) should be the photo added on "([^"]+)"$/ do |result_index, date|
+Then /^image-only search result (\d+) of (\d+) should be the photo added on "([^"]+)"$/ do |result_index, result_count, date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
-  image_only_search_result_should_be result_index, photo
+  image_only_search_result_should_be result_index, result_count, photo
 end
 
-def image_only_search_result_should_be(result_index, photo)
-  result = all('.image')[result_index.to_i - 1]
+def image_only_search_result_should_be(result_index, result_count, photo)
+  result = all('.image', count: result_count)[result_index.to_i - 1]
   expect(result).to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
 end
 
 Then /^I should see (\d+) full search results?$/ do |result_count|
   result_count = result_count.to_i
-  expect(all('.image').count).to eq(result_count)
-  expect(all('.text').count).to eq(result_count)
+  expect(page).to have_css('.image', count: result_count)
+  expect(page).to have_css('.text', count: result_count)
 end
 
-Then /^full search result (\d+) should be player "([^"]+)"'s photo$/ do |result_index, poster_username|
+Then /^full search result (\d+) of (\d+) should be player "([^"]+)"'s photo$/ do |result_index, result_count, poster_username|
   photo = Person.find_by_username(poster_username).photos.first
-  full_search_result_should_be result_index, photo
+  full_search_result_should_be result_index, result_count, photo
 end
 
-Then /^full search result (\d+) should be player "([^"]+)"'s photo taken on "([^"]+)"$/ do |result_index, poster_username, date|
+Then /^full search result (\d+) of (\d+) should be player "([^"]+)"'s photo taken on "([^"]+)"$/ do |result_index, result_count, poster_username, date|
   photo = Person.find_by_username(poster_username).photos.where(datetaken: Date.parse_utc_time(date)).first
-  full_search_result_should_be result_index, photo
+  full_search_result_should_be result_index, result_count, photo
 end
 
-def full_search_result_should_be(result_index, photo)
-  image_only_search_result_should_be result_index, photo
-  result = all('.text')[result_index.to_i - 1]
+def full_search_result_should_be(result_index, result_count, photo)
+  image_only_search_result_should_be result_index, result_count, photo
+  result = all('.text', count: result_count)[result_index.to_i - 1]
   expect(result.find('h2')).to have_content(photo.title)
   expect(result.find('p')).to have_content(photo.description)
 end
 
-Then %r{^I shouid not see a search result for the photo added on "(\d+/\d+/\d+)"} do |date|
+Then %r{^I should not see a search result for the photo added on "(\d+/\d+/\d+)"} do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
-  expect(all(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))).to be_empty
+  expect(page).to have_no_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
 end
 
 Then /^I should see the photo's title$/ do
-  expect(all('h2').any? { |h2| h2.has_content?(@photo.title) }).to be_truthy
+  expect(page).to have_css('h2', text: @photo.title)
 end
 
 Then /^I should see the photo's title with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   expect(page).to have_content(@photo.title)
   [term1, term2].each do |term|
-    expect(all('h2').any? { |h2| h2.has_css?('span[class=matched]', text: term) }).to be_truthy
+    expect(page).to have_css('h2 span[class=matched]', text: term)
   end
 end
 
 Then /^I should see the photo's description$/ do
-  expect(all('p').any? { |p| p.has_content?(@photo.description) }).to be_truthy
+  expect(page).to have_css('p', text: @photo.description)
 end
 
 Then /^I should see the photo's description with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   step "I should see the photo's description"
   [term1, term2].each do |term|
-    expect(all('p').any? { |p| p.has_css?('span[class=matched]', text: term) }).to be_truthy
+    expect(page).to have_css('p span[class=matched]', text: term)
   end
 end
 
@@ -160,12 +161,12 @@ end
 Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|
   step "I should see the tag"
   [term1, term2].each do |term|
-    expect(all('li').any? { |li| li.has_css?('span[class=matched]', text: term) }).to be_truthy
+    expect(page).to have_css('li span[class=matched]', text: term)
   end
 end
 
 Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
-  expect(all('li').any? { |li| li.has_css?('span[class=matched]', text: term) }).to be_truthy
+  expect(page).to have_css('li span[class=matched]', text: term)
 end
 
 Then /^I should not see the comment$/ do
@@ -190,10 +191,10 @@ Then /^I should see player "([^"]+)"'s comment on player "([^"]+)"'s photo$/ do 
   expect(page).to have_content(comment.comment_text)
 end
 
-Then /^I should see the comment "([^"]+)" on full search result (\d+)$/ do |comment, result_index|
-  expect(all('.text')[result_index.to_i - 1]).to have_content(comment)
+Then /^I should see the comment "([^"]+)" on full search result (\d+) of (\d+)$/ do |comment, result_index, result_count|
+  expect(all('.text', count: result_count)[result_index.to_i - 1]).to have_content(comment)
 end
 
-Then /^I should not see the comment "([^"]+)" on full search result (\d+)$/ do |comment, result_index|
-  expect(all('.text')[result_index.to_i - 1]).not_to have_content(comment)
+Then /^I should not see the comment "([^"]+)" on full search result (\d+) of (\d+)$/ do |comment, result_index, result_count|
+  expect(all('.text', count: result_count)[result_index.to_i - 1]).not_to have_content(comment)
 end
