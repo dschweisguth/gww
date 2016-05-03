@@ -29,6 +29,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'jasmine'
   gem 'launchy'
+  gem 'phantomjs', '1.9.8' # Used by jasmine. This is the most recent version available from MacPorts.
   gem 'poltergeist'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
