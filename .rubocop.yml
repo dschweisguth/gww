@@ -93,6 +93,9 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Performance/RedundantMerge:
+  Enabled: false
+
 # The Rails date and time cops might be valid, but everything seems to be working fine so I'm blowing them off.
 
 Rails/Date:
