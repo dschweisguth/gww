@@ -29,10 +29,3 @@ Style/Alias:
 Style/ConditionalAssignment:
   Exclude:
     - 'lib/fixnum.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: SupportedStyles, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Style/IndentArray:
-  EnforcedStyle: consistent

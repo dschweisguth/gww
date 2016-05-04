@@ -95,7 +95,7 @@ module PersonShowSupport
   def oldest_unfound_photo
     oldest_unfound_photo = photos.includes(:person).where(game_status: %w(unfound unconfirmed)).order(:dateadded).first
     if oldest_unfound_photo
-      oldest_unfound_photo.place = Person.count_by_sql([
+      oldest_unfound_photo.place = place_by_sql(
         %q{
           select count(*)
           from
@@ -107,7 +107,7 @@ module PersonShowSupport
           where min_dateadded < ?
         },
         oldest_unfound_photo.dateadded
-      ]) + 1
+      )
     end
     oldest_unfound_photo
   end
@@ -115,7 +115,7 @@ module PersonShowSupport
   def most_commented_photo
     most_commented_photo = photos.includes(:person).order('other_user_comments desc').first
     if most_commented_photo
-      most_commented_photo.place = Person.count_by_sql([
+      most_commented_photo.place = place_by_sql(
         %q[
           select count(*)
           from (
@@ -126,7 +126,7 @@ module PersonShowSupport
           where max_other_user_comments > ?
         ],
         most_commented_photo.other_user_comments
-      ]) + 1
+      )
     end
     most_commented_photo
   end
@@ -142,7 +142,7 @@ module PersonShowSupport
   private def most_something_photo(attribute)
     most_something_photo = photos.includes(:person).order("#{attribute} desc").first
     if most_something_photo
-      most_something_photo.place = Person.count_by_sql([
+      most_something_photo.place = place_by_sql(
         %Q[
           select count(*)
           from (
@@ -153,9 +153,13 @@ module PersonShowSupport
           where max_value > ?
         ],
         most_something_photo.send(attribute)
-      ]) + 1
+      )
     end
     most_something_photo
+  end
+
+  private def place_by_sql(sql, *args)
+    Person.count_by_sql([sql, *args]) + 1
   end
 
   def guesses_with_associations
