@@ -43,10 +43,3 @@ Style/IndentArray:
 # SupportedStyles: aligned, indented
 Style/MultilineMethodCallIndentation:
   Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: aligned, indented
-Style/MultilineOperationIndentation:
-  Enabled: false

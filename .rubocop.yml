@@ -30,9 +30,6 @@ Style/FormatString:
 Style/HashSyntax:
   Enabled: true
 
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
-
 Style/NumericLiterals:
   MinDigits: 15
 
@@ -129,6 +126,8 @@ Style/EmptyLinesAroundModuleBody:
 Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
+  Enabled: false
+Style/MultilineOperationIndentation:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
