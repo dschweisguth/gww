@@ -515,7 +515,7 @@ describe PersonUpdater, type: :updater do
               'taken' => Time.utc(2010).strftime("%Y-%m-%d %H-%M-%S"),
               'lastupdate' => lastupdate.to_i.to_s
             }],
-            'comments' => ["#{comments}"],
+            'comments' => [comments.to_s],
             'tags' => [
               # The response is structured differently if there are no tags than if there are tags
               if tags.any?
