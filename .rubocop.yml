@@ -134,6 +134,8 @@ Style/MultilineTernaryOperator:
   Enabled: false
 Style/NegatedIf:
   Enabled: false
+Style/NestedParenthesizedCalls:
+  Enabled: false
 Style/Next:
   Enabled: false
 Style/RaiseArgs:
