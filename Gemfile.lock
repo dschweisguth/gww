@@ -111,7 +111,7 @@ GEM
     passenger (5.0.28)
       rack
       rake (>= 0.8.1)
-    phantomjs (1.9.8.0)
+    phantomjs (2.1.1.0)
     poltergeist (1.9.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -232,7 +232,7 @@ DEPENDENCIES
   launchy
   mysql2 (~> 0.3.20)
   passenger
-  phantomjs (= 1.9.8)
+  phantomjs
   poltergeist
   rails (~> 4.1.15)
   rspec-rails

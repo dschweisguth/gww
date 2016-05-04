@@ -54,10 +54,6 @@ Install required binaries
 
 Mac
     > port install libxml2
-    Install phantomjs 1.9.8 per https://trac.macports.org/wiki/howto/InstallingOlderPort :
-    > svn checkout -r 132640 https://svn.macports.org/repository/macports/trunk/dports/www/phantomjs
-    > cd phantomjs
-    > sudo port install
 
 Linux
     TODO
