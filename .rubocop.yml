@@ -127,6 +127,8 @@ Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
+Style/MultilineMethodCallIndentation:
+  Enabled: false
 Style/MultilineOperationIndentation:
   Enabled: false
 Style/MultilineTernaryOperator:
