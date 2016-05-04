@@ -12,6 +12,9 @@ AllCops:
 
 # Customized cops
 
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
 Style/BarePercentLiterals:
   EnforcedStyle: percent_q
 

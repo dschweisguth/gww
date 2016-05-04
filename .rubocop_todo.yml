@@ -12,12 +12,3 @@
 Performance/RedundantMerge:
   Exclude:
     - 'app/updaters/photo_updater.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Exclude:
-    - 'spec/support/nulldb.rb'
-    - 'spec/support/nulldb_spatial.rb'
