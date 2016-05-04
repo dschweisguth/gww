@@ -105,7 +105,7 @@ module PersonScoreReportsSupport
     end
 
     # TODO make this work for boundaries above 5000
-    MILESTONES = [100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
+    MILESTONES = [100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000].freeze
 
     CLUBS = {
       21 => "https://www.flickr.com/photos/inkvision/2976263709/",
@@ -115,7 +115,7 @@ module PersonScoreReportsSupport
       500 => "https://www.flickr.com/photos/spine/2960364433/",
       540 => "https://www.flickr.com/photos/tomhilton/2780581249/",
       3300 => "https://www.flickr.com/photos/spine/3132055535/"
-    }
+    }.freeze
 
     private def achievements(guesser)
       score = guesser.score

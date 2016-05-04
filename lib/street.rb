@@ -69,7 +69,7 @@ class Street < Struct.new :name, :type
     'TIMOTHY PFLUEGER' => 'CHELSEA',
     'TRACY' => 'KENNETH REXROTH',
     'VERMEHR' => 'VER MEHR'
-  }
+  }.freeze
 
   def self.regexp(multiword_street_name)
     multiword_street_name.

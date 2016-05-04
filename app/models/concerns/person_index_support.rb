@@ -95,7 +95,7 @@ module PersonIndexSupport
       'comments-to-be-guessed' => %i(comments_to_be_guessed post_count downcased_username),
       'views-per-post' => %i(views_per_post post_count downcased_username),
       'faves-per-post' => %i(faves_per_post post_count downcased_username)
-    }
+    }.freeze
 
     private def sorted(people, sorted_by, order)
       if !CRITERIA.key? sorted_by

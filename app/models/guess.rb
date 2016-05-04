@@ -26,7 +26,7 @@ class Guess < ActiveRecord::Base
   # for consistency. Possibly setting the database timezone to UTC would be a
   # better solution.
 
-  GUESS_AGE = 'unix_timestamp(guesses.commented_at) - unix_timestamp(photos.dateadded)'
+  GUESS_AGE = 'unix_timestamp(guesses.commented_at) - unix_timestamp(photos.dateadded)'.freeze
 
   def self.with_valid_age
     where('unix_timestamp(guesses.commented_at) > unix_timestamp(photos.dateadded)').references :photos

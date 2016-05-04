@@ -37,7 +37,7 @@ describe PeopleHelper do
 
   end
 
-  STARS = [nil, :bronze, :silver, :gold]
+  STARS = [nil, :bronze, :silver, :gold].freeze
 
   describe '#star_and_alt' do
     describe 'for age' do

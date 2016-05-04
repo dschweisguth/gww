@@ -44,7 +44,7 @@ module PeopleHelper
       silver: '30 or more faves',
       gold: '100 or more faves'
     }
-  }
+  }.freeze
 
   def star_and_alt(trophy, reason)
     star = trophy.send "star_for_#{reason}"

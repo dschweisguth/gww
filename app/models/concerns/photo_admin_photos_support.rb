@@ -40,7 +40,7 @@ module PhotoAdminPhotosSupport
     %w(unfound unconfirmed).include?(game_status) && tags.any? { |tag| %w(foundinsf revealedinsf).include? tag.raw.downcase }
   end
 
-  GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf)
+  GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf).freeze
 
   def game_status_tags
     tags.select { |tag| GAME_STATUS_TAGS.include?(tag.raw.downcase) }.sort_by { |tag| GAME_STATUS_TAGS.index tag.raw.downcase }

@@ -31,7 +31,7 @@ module PhotoPhotosSupport
         column: 'member_comments', default_order: '-' },
       'member-questions' => { secondary: ['date-added', 'username'],
         column: 'member_questions', default_order: '-' }
-    }
+    }.freeze
 
     private def order_by(sorted_by, order)
       term_names = [sorted_by, *SORTED_BY[sorted_by][:secondary]]
@@ -69,7 +69,7 @@ module PhotoPhotosSupport
       'date-taken' => 'datetaken',
       'date-added' => 'dateadded',
       'last-updated' => 'lastupdate'
-    }
+    }.freeze
 
     def search_defaults(params)
       {

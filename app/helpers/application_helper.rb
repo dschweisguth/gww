@@ -5,7 +5,7 @@ module ApplicationHelper
     'are' => 'is',
     'were' => 'was',
     'have' => 'has'
-  }
+  }.freeze
 
   def singularize(verb, number)
     if number != 1

@@ -51,8 +51,8 @@ module PersonShowSupport
     photos.order(:dateadded).includes(:person).last
   end
 
-  G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'
-  G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'
+  G_AGE = 'unix_timestamp(g.commented_at) - unix_timestamp(p.dateadded)'.freeze
+  G_AGE_IS_VALID = 'unix_timestamp(g.commented_at) > unix_timestamp(p.dateadded)'.freeze
 
   def oldest_guess
     first_guess_with_place(:guesses, :desc,

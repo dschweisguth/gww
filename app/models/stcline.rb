@@ -6,7 +6,7 @@ class Stcline < ActiveRecord::Base
     'SGT JOHN V YOUNG',
     'SO VAN NESS',
     'TIMOTHY PFLUEGER'
-  ]
+  ].freeze
 
   UNWANTED_STREET_NAMES = [
     /^FORT MASON /,
@@ -18,7 +18,7 @@ class Stcline < ActiveRecord::Base
     /\bON$/,
     / HP$/,
     / TI$/
-  ]
+  ].freeze
 
   def self.multiword_street_names
     (order(:street).select('distinct(street)').map &:street).
