@@ -108,7 +108,7 @@ module PhotoPhotosSupport
         if done_by
           query = query.joins(:person).where(people: { username: done_by })
         end
-        text.try :each do |words|
+        text&.each do |words|
           clauses = [
             "title regexp ?",
             "description regexp ?",

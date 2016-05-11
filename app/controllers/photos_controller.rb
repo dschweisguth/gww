@@ -52,7 +52,7 @@ class PhotosController < ApplicationController
   caches_page :autocomplete_usernames
   def autocomplete_usernames
     terms = (params[:terms] || '').split('/').each_slice(2).to_h
-    people = Person.all_for_autocomplete terms['term'], terms['game-status'].try(:split, ',')
+    people = Person.all_for_autocomplete terms['term'], terms['game-status']&.split(',')
     render json: people, only: %i(username), methods: %i(label)
   end
 

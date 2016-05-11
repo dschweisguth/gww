@@ -41,7 +41,7 @@ class Comment < ActiveRecord::Base
   end
 
   def accepted_answer?
-    by_poster? && photo.revelation.try(:comment_text) == comment_text ||
+    by_poster? && photo.revelation&.comment_text == comment_text ||
       photo.guesses.any? { |g| g.person.flickrid == flickrid && g.comment_text == comment_text }
   end
 

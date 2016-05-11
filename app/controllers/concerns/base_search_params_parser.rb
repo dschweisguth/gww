@@ -64,7 +64,7 @@ class BaseSearchParamsParser
       form_params.delete 'done-by'
     end
 
-    if form_params['game-status'].try(:any?) { |game_status| !game_status.in? %w(unfound unconfirmed found revealed) }
+    if form_params['game-status']&.any? { |game_status| !game_status.in? %w(unfound unconfirmed found revealed) }
       form_params.delete 'game-status'
     end
 

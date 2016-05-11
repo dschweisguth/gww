@@ -12,7 +12,7 @@ class PhotoUpdater
       parsed_photos = photos_xml['photos'][0]
       Rails.logger.info "Updating database from page #{page} ..."
       now = Time.now.getutc
-      parsed_photos['photo'].try :each do |parsed_photo| # .try prevents crashes when pages is incorrectly large
+      parsed_photos['photo']&.each do |parsed_photo| # &. prevents crashes when pages is incorrectly large
         person, created = create_or_update_person_from parsed_photo
         new_person_count += created
         created = create_or_update_photo_from parsed_photo, person, now
@@ -198,12 +198,12 @@ class PhotoUpdater
     begin
       comments_xml = FlickrService.instance.photos_comments_get_list photo_id: photo.flickrid
       parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
-      if parsed_comments.try :any?
+      if parsed_comments&.any?
         attributes_hashes = parsed_comments.map do |parsed_comment|
           {
             flickrid: parsed_comment['author'],
             username: parsed_comment['authorname'],
-            comment_text: parsed_comment['content'].try(:scrub), # we got non-UTF8 text once
+            comment_text: parsed_comment['content']&.scrub, # we got non-UTF8 text once
             commented_at: Time.at(parsed_comment['datecreate'].to_i).getutc
           }
         end

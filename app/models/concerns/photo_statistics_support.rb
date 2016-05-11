@@ -84,8 +84,8 @@ module PhotoStatisticsSupport
   end
 
   def update_geocode!(point)
-    lat = point.try :y
-    long = point.try :x
+    lat = point&.y
+    long = point&.x
     if inferred_latitude != lat || inferred_longitude != long
       update! inferred_latitude: lat, inferred_longitude: long
     end

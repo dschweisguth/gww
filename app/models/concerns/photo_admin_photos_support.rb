@@ -51,8 +51,8 @@ module PhotoAdminPhotosSupport
       if entered_username.empty?
         selected_flickrid
       else
-        Person.find_by_username(entered_username).try(:flickrid) ||
-          Comment.find_by_username(entered_username).try(:flickrid) ||
+        Person.find_by_username(entered_username)&.flickrid ||
+          Comment.find_by_username(entered_username)&.flickrid ||
           raise(AddAnswerError,
             "Sorry; GWW hasn't seen any posts or comments by #{entered_username} yet, " \
               "so doesn't know enough about them to award them a point. " \
@@ -88,7 +88,7 @@ module PhotoAdminPhotosSupport
     update! game_status: 'found'
     guesser = PersonUpdater.create_or_update guesser_flickrid
     Guess.create! photo: self, person: guesser, commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc
-    revelation.try :destroy
+    revelation&.destroy
   end
 
 end
