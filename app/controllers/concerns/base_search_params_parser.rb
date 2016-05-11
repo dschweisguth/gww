@@ -45,7 +45,7 @@ class BaseSearchParamsParser
   def remove_invalid(form_params)
     form_params = form_params.dup
 
-    if ![nil, 'posted', 'activity'].include?(form_params['did'])
+    if !form_params['did'].in?([nil, 'posted', 'activity'])
       form_params.delete 'did'
     end
 
@@ -64,7 +64,7 @@ class BaseSearchParamsParser
       form_params.delete 'done-by'
     end
 
-    if form_params['game-status'].try(:any?) { |game_status| !%w(unfound unconfirmed found revealed).include?(game_status) }
+    if form_params['game-status'].try(:any?) { |game_status| !game_status.in? %w(unfound unconfirmed found revealed) }
       form_params.delete 'game-status'
     end
 
@@ -90,7 +90,7 @@ class BaseSearchParamsParser
       end
     end
 
-    if ![nil, '-', '+'].include? form_params['direction']
+    if !form_params['direction'].in?([nil, '-', '+'])
       form_params.delete 'direction'
     end
 

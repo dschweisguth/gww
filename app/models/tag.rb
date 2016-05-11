@@ -10,7 +10,7 @@ class Tag < ActiveRecord::Base
     ! (
       case raw.downcase
         when 'unfoundinsf'
-          ! %w(unfound unconfirmed).include?(photo.game_status)
+          !photo.game_status.in?(%w(unfound unconfirmed))
         when 'foundinsf'
           photo.game_status != 'found'
         when 'revealedinsf'

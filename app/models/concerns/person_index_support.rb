@@ -101,7 +101,7 @@ module PersonIndexSupport
       if !CRITERIA.key? sorted_by
         raise ArgumentError, "#{sorted_by} is not a valid sort order"
       end
-      if !['+', '-'].include? order
+      if !order.in?(['+', '-'])
         raise ArgumentError, "#{order} is not a valid sort direction"
       end
 

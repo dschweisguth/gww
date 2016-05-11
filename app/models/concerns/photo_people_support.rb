@@ -74,7 +74,7 @@ module PhotoPeopleSupport
   end
 
   def has_obsolete_tags?
-    if %w(found revealed).include?(game_status)
+    if game_status.in?(%w(found revealed))
       raws = tags.map { |tag| tag.raw.downcase }
       raws.include?('unfoundinsf') &&
         ! (raws.include?('foundinsf') || game_status == 'revealed' && raws.include?('revealedinsf'))

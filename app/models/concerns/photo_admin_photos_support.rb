@@ -37,13 +37,13 @@ module PhotoAdminPhotosSupport
   end
 
   def ready_to_score?
-    %w(unfound unconfirmed).include?(game_status) && tags.any? { |tag| %w(foundinsf revealedinsf).include? tag.raw.downcase }
+    game_status.in?(%w(unfound unconfirmed)) && tags.any? { |tag| tag.raw.downcase.in?(%w(foundinsf revealedinsf)) }
   end
 
   GAME_STATUS_TAGS = %w(unfoundinsf foundinsf revealedinsf).freeze
 
   def game_status_tags
-    tags.select { |tag| GAME_STATUS_TAGS.include?(tag.raw.downcase) }.sort_by { |tag| GAME_STATUS_TAGS.index tag.raw.downcase }
+    tags.select { |tag| tag.raw.downcase.in?(GAME_STATUS_TAGS) }.sort_by { |tag| GAME_STATUS_TAGS.index tag.raw.downcase }
   end
 
   def answer(selected_flickrid, entered_username, answer_text, answered_at)
