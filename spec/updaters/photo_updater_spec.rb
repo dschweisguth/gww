@@ -1,4 +1,4 @@
-describe PersonUpdater, type: :updater do
+describe PhotoUpdater, type: :updater do
   describe '.update_all' do
     let!(:now) { Time.utc 2014 }
 
