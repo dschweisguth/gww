@@ -110,6 +110,7 @@ describe Comment do
         guess = Guess.includes(:person).find_by_photo_id comment.photo
         expect(guess.person.flickrid).to eq(comment.flickrid)
         expect(guess.person.username).to eq('username_from_request')
+        expect(guess.person.realname).to eq('realname_from_request')
         expect(guess.person.pathalias).to eq('pathalias_from_request')
       end
 
@@ -189,6 +190,7 @@ describe Comment do
           {
             'person' => [{
               'username' => ['username_from_request'],
+              'realname' => ['realname_from_request'],
               'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
             }]
           }

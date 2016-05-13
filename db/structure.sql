@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.28, for osx10.9 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.30, for osx10.9 (x86_64)
 --
 -- Host: localhost    Database: gww_dev
 -- ------------------------------------------------------
--- Server version	5.6.28
+-- Server version	5.6.30
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -32,7 +32,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `comments_photo_id_fk` (`photo_id`),
   CONSTRAINT `comments_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=888197 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=888201 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,6 +109,7 @@ CREATE TABLE `people` (
   `comments_to_guess` decimal(7,4) DEFAULT NULL,
   `comments_per_post` decimal(7,4) NOT NULL DEFAULT '0.0000',
   `comments_to_be_guessed` decimal(7,4) DEFAULT NULL,
+  `realname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `people_flickrid_unique` (`flickrid`(191)),
   UNIQUE KEY `people_username_unique` (`username`(191))
@@ -294,7 +295,7 @@ CREATE TABLE `tags` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_tags_on_photo_id_and_raw` (`photo_id`,`raw`(191)),
   CONSTRAINT `tags_photo_id_fk` FOREIGN KEY (`photo_id`) REFERENCES `photos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=304017 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=304021 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -306,7 +307,7 @@ CREATE TABLE `tags` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-01-02 21:07:43
+-- Dump completed on 2016-05-13 13:59:23
 INSERT INTO schema_migrations (version) VALUES ('12');
 
 INSERT INTO schema_migrations (version) VALUES ('13');
@@ -376,6 +377,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140522045551');
 INSERT INTO schema_migrations (version) VALUES ('20140523230659');
 
 INSERT INTO schema_migrations (version) VALUES ('20140807030617');
+
+INSERT INTO schema_migrations (version) VALUES ('20160513205554');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

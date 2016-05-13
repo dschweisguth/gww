@@ -126,6 +126,7 @@ describe PhotoAdminPhotosSupport do
 
         guesser.reload
         expect(guesser.username).to eq('username_from_request')
+        expect(guesser.realname).to eq('realname_from_request')
         expect(guesser.pathalias).to eq('pathalias_from_request')
 
       end
@@ -138,6 +139,7 @@ describe PhotoAdminPhotosSupport do
         guess = Guess.includes(:person).find_by_photo_id photo
         expect(guess.person.flickrid).to eq(comment.flickrid)
         expect(guess.person.username).to eq('username_from_request')
+        expect(guess.person.realname).to eq('realname_from_request')
         expect(guess.person.pathalias).to eq('pathalias_from_request')
       end
 
@@ -172,6 +174,7 @@ describe PhotoAdminPhotosSupport do
           {
             'person' => [{
               'username' => ['username_from_request'],
+              'realname' => ['realname_from_request'],
               'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
             }]
           }

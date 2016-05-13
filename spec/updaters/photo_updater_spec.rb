@@ -495,6 +495,7 @@ describe PhotoUpdater, type: :updater do
         {
           'person' => [{
             'username' => ['new_username'],
+            'realname' => ['new_realname'],
             'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
           }]
         }
