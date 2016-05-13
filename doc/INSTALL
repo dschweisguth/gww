@@ -73,7 +73,7 @@ Install ruby-build per https://github.com/sstephenson/ruby-build
 > gem install bundler
 > gem list
 bundler (1.12.3)
-rubygems-update (2.5.1)
+rubygems-update (2.6.4)
 # plus other gems that come with Ruby
 
 Get and configure GWW
