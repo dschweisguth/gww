@@ -30,5 +30,22 @@ describe PersonUpdater, type: :updater do
       expect(person.pathalias).to eq('old_pathalias')
     end
 
+    it "handles a missing realname" do
+      person = create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias'
+      allow(FlickrService.instance).to receive(:people_get_info) do
+        {
+          'person' => [{
+            'username' => ['new_username'],
+            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
+          }]
+        }
+      end
+      PersonUpdater.update_all
+      person.reload
+      expect(person.username).to eq('new_username')
+      expect(person.realname).to be_nil # if a user hides their real name, updating should forget it
+      expect(person.pathalias).to eq('new_pathalias')
+    end
+
   end
 end

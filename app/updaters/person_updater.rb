@@ -25,7 +25,7 @@ class PersonUpdater
     response = FlickrService.instance.people_get_info user_id: flickrid
     parsed_person = response['person'][0]
     username = parsed_person['username'][0]
-    realname = parsed_person['realname'][0]
+    realname = parsed_person.dig 'realname', 0
     pathalias = parsed_person['photosurl'][0].match(%r{https://www.flickr.com/photos/([^\/]+)/})[1]
     { username: username, realname: realname, pathalias: pathalias }
   end
