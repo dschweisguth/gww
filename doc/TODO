@@ -7,7 +7,6 @@ A photo which is guessed or revealed and then removed from the group remains in
 
 Debt
 
-Ruby 2.3.2 or later (there's a bug in rubygems in 2.3.1)
 Review slow tests
 Refactor concerns to presenters/decorators
 Measure Javascript coverage
