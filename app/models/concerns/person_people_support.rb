@@ -2,7 +2,7 @@ module PersonPeopleSupport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def usernames_for_autocomplete(term)
+    def autocompletions(term)
       select(:username, :realname).
         where("username like ? or realname like ?", "#{term}%", "#{term}%").order("lower(username)").
         map { |person| { label: person.autocompletion_label, value: person.username } }

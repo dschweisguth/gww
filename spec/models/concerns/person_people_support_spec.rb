@@ -1,19 +1,19 @@
 describe PersonPeopleSupport do
-  describe '.usernames_for_autocomplete' do
+  describe '.autocompletions' do
     let(:person) { create :person }
 
     it "matches a username" do
-      expect(Person.usernames_for_autocomplete(person.username.slice(0, 3))).
+      expect(Person.autocompletions(person.username.slice(0, 3))).
         to eq([{ value: person.username, label: person.autocompletion_label }])
     end
 
     it "matches a real name" do
-      expect(Person.usernames_for_autocomplete(person.realname.slice(0, 3))).
+      expect(Person.autocompletions(person.realname.slice(0, 3))).
         to eq([{ value: person.username, label: person.autocompletion_label }])
     end
 
     it "doesn't match if it shouldn't" do
-      expect(Person.usernames_for_autocomplete("abc")).to eq([])
+      expect(Person.autocompletions("abc")).to eq([])
     end
 
   end

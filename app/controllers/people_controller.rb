@@ -3,7 +3,7 @@ class PeopleController < ApplicationController
 
   caches_page :autocompletions
   def autocompletions
-    render json: Person.usernames_for_autocomplete(params[:term])
+    render json: Person.autocompletions(params[:term])
   end
 
   def find
