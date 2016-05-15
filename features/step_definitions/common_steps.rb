@@ -1,3 +1,7 @@
+Given /^there is a player "([^"]+)"$/ do |username|
+  create :person, username: username
+end
+
 Given /^there is a photo$/ do
   @photo = create :photo
 end
