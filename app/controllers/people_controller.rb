@@ -1,8 +1,8 @@
 class PeopleController < ApplicationController
   include MultiPhotoMapControllerSupport
 
-  caches_page :autocomplete_usernames
-  def autocomplete_usernames
+  caches_page :autocompletions
+  def autocompletions
     render json: Person.usernames_for_autocomplete(params[:term])
   end
 

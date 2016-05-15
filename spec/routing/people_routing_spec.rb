@@ -1,9 +1,9 @@
 describe PeopleController do
-  describe 'autocomplete_usernames' do
-    it { has_named_route? :autocomplete_usernames, "/autocomplete_usernames" }
-    it { has_named_route? :autocomplete_usernames, 'foo', "/autocomplete_usernames/foo" }
-    it { does route(:get, '/autocomplete_usernames').to controller: 'people', action: 'autocomplete_usernames' }
-    it { does route(:get, '/autocomplete_usernames/foo').to controller: 'people', action: 'autocomplete_usernames', term: 'foo' }
+  describe 'autocompletions' do
+    it { has_named_route? :autocompletions, "/autocompletions" }
+    it { has_named_route? :autocompletions, 'foo', "/autocompletions/foo" }
+    it { does route(:get, '/autocompletions').to controller: 'people', action: 'autocompletions' }
+    it { does route(:get, '/autocompletions/foo').to controller: 'people', action: 'autocompletions', term: 'foo' }
   end
 
   describe 'find' do

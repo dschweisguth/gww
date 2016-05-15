@@ -7,7 +7,7 @@ GWW::Application.routes.draw do
 
   resources :score_reports, only: %i(index show)
 
-  get 'autocomplete_usernames(/:term)' => 'people#autocomplete_usernames', as: :autocomplete_usernames
+  get 'autocompletions(/:term)' => 'people#autocompletions', as: :autocompletions
   get 'people/find' => 'people#find', as: :find_person
   get 'people/sorted-by/:sorted_by/order/:order' => 'people#index', as: :people
   %w(guesses map map_json).each do |action|
