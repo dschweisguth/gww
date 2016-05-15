@@ -29,7 +29,6 @@ class PhotosController < ApplicationController
   end
 
   def search
-    # TODO Dave fix nekomusume
     begin
       @search_params = SearchParamsParser.new.form_params params[:segments]
     rescue SearchParamsParser::NonCanonicalSegmentsError => e
