@@ -6,7 +6,7 @@ module PersonPeopleSupport
       select(:username, :realname).
         where("username like ? or realname like ?", "#{term}%", "#{term}%").
         order("lower(username)").
-        map { |person| { label: person.autocompletion_label, value: person.username } }
+        map { |person| { label: person.username_and_realname, value: person.username } }
     end
 
     def find_by_multiple_fields(username)
@@ -86,7 +86,7 @@ module PersonPeopleSupport
 
   end
 
-  def autocompletion_label
+  def username_and_realname
     realname.present? && realname != username ? "#{username} (#{realname})" : username
   end
 

@@ -4,12 +4,12 @@ describe PersonPeopleSupport do
 
     it "matches a username" do
       expect(Person.autocompletions(person.username.slice(0, 3))).
-        to eq([{ value: person.username, label: person.autocompletion_label }])
+        to eq([{ value: person.username, label: person.username_and_realname }])
     end
 
     it "matches a real name" do
       expect(Person.autocompletions(person.realname.slice(0, 3))).
-        to eq([{ value: person.username, label: person.autocompletion_label }])
+        to eq([{ value: person.username, label: person.username_and_realname }])
     end
 
     it "doesn't match if it shouldn't" do
@@ -114,20 +114,20 @@ describe PersonPeopleSupport do
 
   end
 
-  describe '#autocompletion_label' do
+  describe '#username_and_realname' do
     it "returns 'username (real name)' for a user that has a real name" do
       person = build :person
-      expect(person.autocompletion_label).to eq("#{person.username} (#{person.realname})")
+      expect(person.username_and_realname).to eq("#{person.username} (#{person.realname})")
     end
 
     it "returns 'username' for a user that has no real name" do
       person = build :person, realname: nil
-      expect(person.autocompletion_label).to eq(person.username)
+      expect(person.username_and_realname).to eq(person.username)
     end
 
     it "returns 'username' for a user whose username and real name are identical" do
       person = build :person, username: "the same string", realname: "the same string"
-      expect(person.autocompletion_label).to eq(person.username)
+      expect(person.username_and_realname).to eq(person.username)
     end
 
   end

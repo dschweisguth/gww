@@ -122,7 +122,7 @@ describe PeopleController do
       get :show, id: person.id
 
       expect(response).to be_success
-      expect(response.body).to have_css 'h1', text: person.autocompletion_label
+      expect(response.body).to have_css 'h1', text: person.username_and_realname
       expect(response.body).to have_css %Q(a[href="#{person_map_path(person)}"]) # the link text is HTML-encoded
       renders_bits_for_user_who_has_guessed
       renders_bits_for_user_who_has_posted
