@@ -1,7 +1,7 @@
 <%= head_javascript 'shared/aboutAutoMapping' %>
 <% content_for :head do javascript_tag '$(GWW.shared.aboutAutoMapping.setUp);' end %>
 <%= sandwich 'people/breadcrumbs' do %>
-<%= title_and_h1 @person.username %>
+<%= title_and_h1 @person.autocompletion_label %>
 
 <p>On Flickr:
 <a href="<%= url_for_flickr_person @person %>">profile</a> -
