@@ -11,14 +11,7 @@ GWW.shared.autocomplete = (function () {
         $.getJSON(
           '/autocomplete_usernames/' + escape(request.term),
           {},
-          function (data) {
-            response($.map(data, function (item) {
-              return {
-                label: item.username,
-                value: item.username
-              };
-            }));
-          }
+          response
         );
       },
       minLength: 0,

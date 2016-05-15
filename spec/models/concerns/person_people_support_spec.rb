@@ -1,4 +1,23 @@
 describe PersonPeopleSupport do
+  describe '.usernames_for_autocomplete' do
+    let(:person) { create :person }
+
+    it "matches a username" do
+      expect(Person.usernames_for_autocomplete(person.username.slice(0, 3))).
+        to eq([{ value: person.username, label: person.autocompletion_label }])
+    end
+
+    it "matches a real name" do
+      expect(Person.usernames_for_autocomplete(person.realname.slice(0, 3))).
+        to eq([{ value: person.username, label: person.autocompletion_label }])
+    end
+
+    it "doesn't match if it shouldn't" do
+      expect(Person.usernames_for_autocomplete("abc")).to eq([])
+    end
+
+  end
+
   describe '.find_by_multiple_fields' do
     let(:person) { create :person }
 
@@ -91,6 +110,24 @@ describe PersonPeopleSupport do
       expected[2][12].scores[1] = [guess.person]
       expected[3][1].scores[1] = [guess.person]
       expect(Person.top_guessers(report_time)).to eq(expected)
+    end
+
+  end
+
+  describe '#autocompletion_label' do
+    it "returns 'username (real name)' for a user that has a real name" do
+      person = build :person
+      expect(person.autocompletion_label).to eq("#{person.username} (#{person.realname})")
+    end
+
+    it "returns 'username' for a user that has no real name" do
+      person = build :person, realname: nil
+      expect(person.autocompletion_label).to eq(person.username)
+    end
+
+    it "returns 'username' for a user whose username and real name are identical" do
+      person = build :person, username: "the same string", realname: "the same string"
+      expect(person.autocompletion_label).to eq(person.username)
     end
 
   end

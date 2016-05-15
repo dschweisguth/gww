@@ -3,7 +3,9 @@ module PersonPeopleSupport
 
   module ClassMethods
     def usernames_for_autocomplete(term)
-      select(:username).where("username like ?", "#{term}%").order("lower(username)")
+      select(:username, :realname).
+        where("username like ? or realname like ?", "#{term}%", "#{term}%").order("lower(username)").
+        map { |person| { label: person.autocompletion_label, value: person.username } }
     end
 
     def find_by_multiple_fields(username)
@@ -81,6 +83,10 @@ module PersonPeopleSupport
       scores
     end
 
+  end
+
+  def autocompletion_label
+    realname.present? && realname != username ? "#{username} (#{realname})" : username
   end
 
   def guesses_with_associations_ordered_by_comments
