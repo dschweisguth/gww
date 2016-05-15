@@ -4,7 +4,8 @@ module PersonPeopleSupport
   module ClassMethods
     def autocompletions(term)
       select(:username, :realname).
-        where("username like ? or realname like ?", "#{term}%", "#{term}%").order("lower(username)").
+        where("username like ? or realname like ?", "#{term}%", "#{term}%").
+        order("lower(username)").
         map { |person| { label: person.autocompletion_label, value: person.username } }
     end
 
