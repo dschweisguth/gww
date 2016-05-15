@@ -19,7 +19,7 @@ GWW::Application.routes.draw do
   end
 
   get 'photos/search(/*segments)' => 'photos#search', as: :search_photos
-  get 'photos/autocomplete_usernames(/*terms)' => 'photos#autocomplete_usernames', as: :autocomplete_photos_usernames
+  get 'photos/person_autocompletions(/*terms)' => 'photos#person_autocompletions', as: :autocomplete_photos_usernames
   get 'photos/search_data(/*segments)' => 'photos#search_data', as: :search_photos_data
   get 'photos/sorted-by/:sorted_by/order/:order/page/:page' => 'photos#index', as: :photos
   resources :photos, only: :show do

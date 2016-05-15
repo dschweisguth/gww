@@ -15,7 +15,7 @@ class Person < ActiveRecord::Base
   attr_accessor :change_in_standing, :downcased_username, :guess_count, :post_count, :score_plus_posts,
     :guesses_per_day, :posts_per_day, :posts_per_guess, :guess_speed, :be_guessed_speed,
     :views_per_post, :faves_per_post, :poster, :bias, :score, :previous_post_count, :place, :previous_score, :previous_place,
-    :label, :points, :poster_id
+    :points, :poster_id
 
   # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor
   after_initialize do

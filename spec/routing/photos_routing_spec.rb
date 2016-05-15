@@ -29,11 +29,11 @@ describe PhotosController do
     it { does route(:get, '/photos/search_data/foo/bar/page/1').to action: 'search_data', segments: 'foo/bar/page/1' }
   end
 
-  describe '#autocomplete_usernames' do
-    it { has_named_route? :autocomplete_photos_usernames, "/photos/autocomplete_usernames" }
-    it { has_named_route? :autocomplete_photos_usernames, 'foo', "/photos/autocomplete_usernames/foo" }
-    it { does route(:get, '/photos/autocomplete_usernames').to controller: 'photos', action: 'autocomplete_usernames' }
-    it { does route(:get, '/photos/autocomplete_usernames/foo').to controller: 'photos', action: 'autocomplete_usernames', terms: 'foo' }
+  describe '#person_autocompletions' do
+    it { has_named_route? :autocomplete_photos_usernames, "/photos/person_autocompletions" }
+    it { has_named_route? :autocomplete_photos_usernames, 'foo', "/photos/person_autocompletions/foo" }
+    it { does route(:get, '/photos/person_autocompletions').to controller: 'photos', action: 'person_autocompletions' }
+    it { does route(:get, '/photos/person_autocompletions/foo').to controller: 'photos', action: 'person_autocompletions', terms: 'foo' }
   end
 
   describe 'show' do

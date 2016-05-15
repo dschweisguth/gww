@@ -14,7 +14,7 @@ GWW.photos.search = (function () {
   function setUpAutocomplete() {
     $("#done_by").autocomplete({
       source: function (request, response) {
-        var url = '/photos/autocomplete_usernames';
+        var url = '/photos/person_autocompletions';
         if (request.term !== "") {
           url += '/term/' + escape(request.term);
         }
@@ -22,18 +22,7 @@ GWW.photos.search = (function () {
         if (gameStatus.val() !== null && gameStatus.val() !== "") {
           url += "/game-status/" + gameStatus.val();
         }
-        $.getJSON(
-          url,
-          {},
-          function (data) {
-            response($.map(data, function (item) {
-              return {
-                label: item.label,
-                value: item.username
-              };
-            }));
-          }
-        );
+        $.getJSON(url, {}, response);
       },
       minLength: 0,
       open: function () {
