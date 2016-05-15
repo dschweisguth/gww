@@ -1,3 +1,7 @@
+Given /^there is a player "([^"]+)" with the real name "([^"]+)"$/ do |username, realname|
+  create :person, username: username, realname: realname
+end
+
 Given /^there is an? (unfound|unconfirmed|found|revealed) photo$/ do |game_status|
   @photo = create :photo, game_status: game_status
 end

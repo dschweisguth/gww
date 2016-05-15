@@ -36,12 +36,12 @@ Feature: Photos
     And image-only search result 2 of 2 should be the photo added on "1/2/14"
 
   Scenario: Player searches for a given user's photos
-    Given there is a player "abcdefgh"
+    Given there is a player "abcdefgh" with the real name "ABCDEFGH"
     And player "abcdefgh" has a photo
     And there is a player "ijklmnop"
     And player "ijklmnop" has a photo
     When I go to the photos search page
-    And I autoselect "abcdefgh (1)" from the "done_by" field
+    And I autoselect "abcdefgh (ABCDEFGH, 1)" from the "done_by" field
     And I press the "Search" button
     Then the URL should be "/photos/search/done-by/abcdefgh"
     And the "done_by" field should contain "abcdefgh"
@@ -123,13 +123,13 @@ Feature: Photos
 
   # This scenario demonstrates that many search terms can be combined
   Scenario: Player searches for a given user's unfound or unconfirmed photos
-    Given there is a player "abcdefgh"
+    Given there is a player "abcdefgh" with the real name "ABCDEFGH"
     And player "abcdefgh" has an unfound photo
     And player "abcdefgh" has a found photo
     When I go to the photos search page
     And I select "unfound" from "game_status"
     And I select "unconfirmed" from "game_status"
-    And I autoselect "abcdefgh (1)" from the "done_by" field
+    And I autoselect "abcdefgh (ABCDEFGH, 1)" from the "done_by" field
     And I press the "Search" button
     Then the URL should be "/photos/search/done-by/abcdefgh/game-status/unfound,unconfirmed"
     And the "done_by" field should contain "abcdefgh"

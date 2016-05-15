@@ -3,7 +3,7 @@ module PersonPhotosSupport
 
   module ClassMethods
     def photo_search_autocompletions(username, game_statuses)
-      people = Person.select("username, count(f.id) photo_count").joins("left join photos f on people.id = f.person_id")
+      people = Person.select("username, realname, count(f.id) photo_count").joins("left join photos f on people.id = f.person_id")
       if username
         people = people.where 'username like ?', "#{username}%"
       end
@@ -12,12 +12,15 @@ module PersonPhotosSupport
       end
       people.
         group("username").order("lower(username)").
-        map { |person| { value: person.username, label: person.photo_search_autocompletion_label } }
+        map do |person|
+          person.photo_count = person[:photo_count]
+          { value: person.username, label: person.photo_search_autocompletion_label }
+        end
     end
   end
 
   def photo_search_autocompletion_label
-    "#{username} (#{self[:photo_count]})"
+    "#{username} (#{if realname && realname != username then "#{realname}, " end}#{photo_count})"
   end
 
 end
