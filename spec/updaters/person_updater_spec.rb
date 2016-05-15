@@ -1,7 +1,8 @@
 describe PersonUpdater, type: :updater do
   describe '.update_all' do
+    let!(:person) { create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias' }
+
     it "updates an existing user's username, realname and pathalias" do
-      person = create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias'
       allow(FlickrService.instance).to receive(:people_get_info) do
         {
           'person' => [{
@@ -11,27 +12,17 @@ describe PersonUpdater, type: :updater do
           }]
         }
       end
-      PersonUpdater.update_all
-      person.reload
-      expect(person.username).to eq('new_username')
-      expect(person.realname).to eq('new_realname')
-      expect(person.pathalias).to eq('new_pathalias')
+      update_all_and_expect_person_to_have username: 'new_username', realname: 'new_realname', pathalias: 'new_pathalias'
     end
 
     it "handles an error" do
-      person = create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias'
       allow(FlickrService.instance).to receive(:people_get_info) do
         raise FlickrService::FlickrRequestFailedError, "Couldn't get info from Flickr"
       end
-      PersonUpdater.update_all
-      person.reload
-      expect(person.username).to eq('old_username')
-      expect(person.realname).to eq('old_realname')
-      expect(person.pathalias).to eq('old_pathalias')
+      update_all_and_expect_person_to_have username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias'
     end
 
     it "handles a missing realname" do
-      person = create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias'
       allow(FlickrService.instance).to receive(:people_get_info) do
         {
           'person' => [{
@@ -40,11 +31,29 @@ describe PersonUpdater, type: :updater do
           }]
         }
       end
+      # if a user hides their real name, updating should forget it
+      update_all_and_expect_person_to_have username: 'new_username', realname: nil, pathalias: 'new_pathalias'
+    end
+
+    it "handles an empty realname" do
+      allow(FlickrService.instance).to receive(:people_get_info) do
+        {
+          'person' => [{
+            'username' => ['new_username'],
+            'realname' => [{}],
+            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
+          }]
+        }
+      end
+      # if a user hides their real name, updating should forget it
+      update_all_and_expect_person_to_have username: 'new_username', realname: nil, pathalias: 'new_pathalias'
+    end
+
+    def update_all_and_expect_person_to_have(attrs)
       PersonUpdater.update_all
       person.reload
-      expect(person.username).to eq('new_username')
-      expect(person.realname).to be_nil # if a user hides their real name, updating should forget it
-      expect(person.pathalias).to eq('new_pathalias')
+      relevant_attrs = person.attributes.symbolize_keys.slice *attrs.keys
+      expect(relevant_attrs).to eq(attrs)
     end
 
   end
