@@ -5,7 +5,7 @@ module PersonPhotosSupport
     def photo_search_autocompletions(username, game_statuses)
       people = Person.select("username, realname, count(f.id) photo_count").joins("left join photos f on people.id = f.person_id")
       if username
-        people = people.where 'username like ?', "#{username}%"
+        people = people.where 'username like ? or realname like ?', "#{username}%", "#{username}%"
       end
       if game_statuses
         people = people.where 'game_status in (?)', game_statuses
