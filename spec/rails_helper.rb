@@ -58,9 +58,9 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # Prevent database usage in these spec types. Note that :lib, :service and :value are not standard rspec-rails types,
-  # so specs of those layers must be manually tagged for this mechanism to work with them.
-  %i(controller helper lib routing service value).each do |type|
+  # Prevent database usage in these spec types. Note that :initializer, :service and :value are not standard rspec-rails
+  # types, so specs of those layers must be manually tagged for this mechanism to work with them.
+  %i(controller helper initializer routing service value).each do |type|
     config.include NullDB::RSpec::NullifiedDatabase, type: type
 
     config.after :example, type: type do
