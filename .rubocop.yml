@@ -3,12 +3,12 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
-    - 'bin/rails'
-    - 'config.ru'
-    - 'db/schema.rb'
-    - 'features/support/env.rb'
-    - 'lib/tasks/cucumber.rake'
-    - 'spec/spec_helper.rb'
+    - bin/rails
+    - config.ru
+    - db/schema.rb
+    - features/support/env.rb
+    - lib/tasks/cucumber.rake
+    - spec/spec_helper.rb
 
 # Customized cops
 
