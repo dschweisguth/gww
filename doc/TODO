@@ -15,17 +15,13 @@ Merge revelations into guesses?
 Features
 
 Third-party tagging of locations
-Add date added to tags and use it in activity search
 Support form field parameters in search page so that search from browser works
 Allow search term exclusion with a leading -
-Use flic.kr URLs in score report
 Parse
 - single-block streets
 - "1535 7th, on the west side between Kirkham and Lawton"
 - Mount and Mt(.)
 - "Market Street and Seventh Street?"
-Include tags and comment in update
-  Order unfound list by most recent comment or tag
 Post scores to Flickr group automatically
 Add last-updated dates to photos which
   - reflect only things relevant to scoring
@@ -38,8 +34,6 @@ Determine neighborhoods from locations and geocodes
 Determine whether a guess is a guess by the presence of known streets, place names, etc.
 In the list of unfounds, highlight photos which if guessed would enter the longest-to-find list
 Track interestingness
-Combine a player's posts, guesses and comments into a single activity stream
-Do the same for all players?
 Write an admin page that reports on bogus data
   Photos that have guesses or revelations but have game_status unfound
   Photos that are guessed by the owner of the photo
