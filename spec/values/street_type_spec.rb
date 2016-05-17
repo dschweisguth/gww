@@ -1,4 +1,4 @@
-describe StreetType, type: :lib do
+describe StreetType, type: :value do
   describe '.get' do
     it "finds the type with the given name" do
       expect(StreetType.get('St')).to eq(StreetType.new('ST', true, [StreetType::Synonym.new('STREET', false)]))

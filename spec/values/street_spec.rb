@@ -1,4 +1,4 @@
-describe Street, type: :lib do
+describe Street, type: :value do
   describe '.regexp' do
     it "accepts any whitespace in a multiword name" do
       matches 'CHARLES J BRENHAM', "Charles \n J \n Brenham"

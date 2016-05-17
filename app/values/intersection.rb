@@ -1,5 +1,3 @@
-require 'two_streets'
-
 class Intersection < Struct.new :text, :at1, :at2
   include TwoStreets
 

@@ -29,7 +29,7 @@ module GWW
     # config.i18n.default_locale = :de
     config.i18n.enforce_available_locales = false
 
-    config.autoload_paths += %W(#{config.root}/app/services #{config.root}/app/updaters)
+    config.autoload_paths += %W(#{config.root}/app/services #{config.root}/app/updaters #{config.root}/app/values)
 
     config.active_record.schema_format = :sql
 

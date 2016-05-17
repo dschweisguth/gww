@@ -1,4 +1,4 @@
-describe LocationParser, type: :lib do
+describe LocationParser, type: :value do
   describe '#parse' do
     let(:parser) { LocationParser.new([]) }
 

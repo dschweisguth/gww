@@ -1,5 +1,3 @@
-require 'two_streets'
-
 class Block < Struct.new :text, :on, :between1, :between2
   include TwoStreets
 

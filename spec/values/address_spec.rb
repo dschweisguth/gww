@@ -1,4 +1,4 @@
-describe Address, type: :lib do
+describe Address, type: :value do
   describe '.new' do
 
     it "makes a plain address" do
