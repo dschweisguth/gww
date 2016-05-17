@@ -10,10 +10,8 @@ engines:
     enabled: true
     config:
       languages:
-      - ruby
       - javascript
-      - python
-      - php
+      - ruby
   eslint:
     enabled: true
   fixme:
@@ -22,21 +20,15 @@ engines:
     enabled: true
 ratings:
   paths:
-  - Gemfile.lock
-  - "**.erb"
-  - "**.haml"
-  - "**.rb"
-  - "**.rhtml"
-  - "**.slim"
-  - "**.css"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
+  - **.css
+  - **.erb
+  - **.js
+  - **.rb
 exclude_paths:
-- config/**/*
+- Gemfile.lock
+- config/*
+- config/environments/**/**
+- config/*
 - db/**/*
 - features/**/*
 - lib/tasks/cucumber.rake
