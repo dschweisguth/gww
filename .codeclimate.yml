@@ -20,10 +20,10 @@ engines:
     enabled: true
 ratings:
   paths:
-  - **.css
-  - **.erb
-  - **.js
-  - **.rb
+  - "**.css"
+  - "**.erb"
+  - "**.js"
+  - "**.rb"
 exclude_paths:
 - Gemfile.lock
 - config/*
