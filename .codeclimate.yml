@@ -25,7 +25,6 @@ ratings:
   - "**.js"
   - "**.rb"
 exclude_paths:
-- Gemfile.lock
 - config/*
 - config/environments/**/**
 - config/*
