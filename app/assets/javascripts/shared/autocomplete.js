@@ -22,5 +22,5 @@ GWW.shared.autocomplete = (function () {
     });
   }
 
-})();
+}());
 $(GWW.shared.autocomplete.setUp);

@@ -10,4 +10,4 @@
     alert('Try it on a Flickr photo page or a page which belongs to a Flickr user.');
   }
   return false;
-})();
+}());

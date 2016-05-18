@@ -11,4 +11,4 @@ GWW.photos.map = (function () {
 
   return that;
 
-})();
+}());

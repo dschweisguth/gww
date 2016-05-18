@@ -29,4 +29,4 @@ GWW.shared.singlePhotoMap = (function () {
 
   };
 
-})();
+}());

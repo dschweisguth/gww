@@ -11,4 +11,4 @@ GWW.shared.aboutAutoMapping = (function () {
     }
   };
 
-})();
+}());

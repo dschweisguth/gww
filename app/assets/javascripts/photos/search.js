@@ -278,5 +278,5 @@ GWW.photos.search = (function () {
     setUp: setUp
   };
 
-})();
+}());
 $(GWW.photos.search.setUp);

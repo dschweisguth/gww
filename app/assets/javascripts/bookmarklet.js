@@ -13,4 +13,4 @@
     document.body.appendChild(script);
   };
 
-})();
+}());

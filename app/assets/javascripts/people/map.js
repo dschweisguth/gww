@@ -37,4 +37,4 @@ GWW.people.map = (function () {
   };
 
   return that;
-})();
+}());

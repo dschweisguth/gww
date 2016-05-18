@@ -39,4 +39,4 @@ GWW.admin.photos.edit = (function () {
     });
   }
 
-})();
+}());
