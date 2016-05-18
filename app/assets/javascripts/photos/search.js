@@ -15,11 +15,11 @@ GWW.photos.search = (function () {
     $("#done_by").autocomplete({
       source: function (request, response) {
         var url = '/photos/person_autocompletions';
-        if (request.term !== "") {
+        if (request.term) {
           url += '/term/' + escape(request.term);
         }
         var gameStatus = $('form select[name="game_status[]"]');
-        if (gameStatus.val() !== null && gameStatus.val() !== "") {
+        if (gameStatus.val()) {
           url += "/game-status/" + gameStatus.val();
         }
         $.getJSON(url, {}, response);
@@ -51,23 +51,23 @@ GWW.photos.search = (function () {
       path += "/did/" + did;
     }
     var doneBy = form.find('[name="done_by"]');
-    if (doneBy.val() !== "") {
+    if (doneBy.val()) {
       path += "/done-by/" + encodeURIComponent(doneBy.val());
     }
     var text = form.find('[name="text"]');
-    if (text.val() !== "") {
+    if (text.val()) {
       path += "/text/" + encodeURIComponent(text.val());
     }
     var gameStatus = form.find('select[name="game_status[]"]');
-    if (gameStatus.val() !== null && gameStatus.val() !== "") {
+    if (gameStatus.val()) {
       path += "/game-status/" + gameStatus.val(); // Javascript automatically joins arrays with ,
     }
     var from_date = form.find('[name="from_date"]');
-    if (from_date.val() !== "") {
+    if (from_date.val()) {
       path += "/from-date/" + encodeURIComponent(escapeDate(from_date.val()));
     }
     var to_date = form.find('[name="to_date"]');
-    if (to_date.val() !== "") {
+    if (to_date.val()) {
       path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
     }
     var sortedBy = form.find('[name="sorted_by"]').val();
