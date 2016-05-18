@@ -213,17 +213,17 @@ GWW.photos.search = (function () {
   }
 
   function moveDotLeft(element) {
-    $(element).animate({ left: '+=' + distanceToMove }, 800,
-      function () {
-        $(element).css('z-index', '-100');
-      }
-    );
+    moveDot(element, true);
   }
 
   function moveDotRight(element) {
-    $(element).animate({ left: '-=' + distanceToMove }, 800,
+    moveDot(element, false);
+  }
+
+  function moveDot(element, left) {
+    $(element).animate({ left: (left ? '+=' : '-=') + distanceToMove }, 800,
       function () {
-        $(element).css('z-index', '100');
+        $(element).css('z-index', (left ? '-100' : '100'));
       }
     );
   }
