@@ -1,7 +1,5 @@
 ---
 engines:
-  brakeman:
-    enabled: true
   bundler-audit:
     enabled: true
   csslint:
@@ -25,7 +23,6 @@ ratings:
 exclude_paths:
 - config/*
 - config/environments/**/**
-- config/*
 - db/**/*
 - features/**/*
 - lib/tasks/cucumber.rake
