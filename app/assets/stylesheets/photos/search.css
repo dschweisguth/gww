@@ -94,7 +94,7 @@ form img {
   z-index: 1;
 }
 
-.image > div > div.bg {
+.image > div > .bg {
   bottom: 77px;
   margin-bottom: -77px;
   background-color: black;
@@ -111,7 +111,7 @@ form img {
   visibility: hidden;
 }
 
-.image > div > div p.by {
+.image > div > div .by {
   visibility: visible;
 }
 
