@@ -51,7 +51,7 @@ GWW.shared.createMap = function () {
       return that.map;
     }
 
-};
+  };
 
   var loadMarkers = function () {
     if (loadMarkersFromPage) {
