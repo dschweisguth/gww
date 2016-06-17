@@ -8,7 +8,7 @@ class Admin::RootController < ApplicationController
   end
 
   def update_from_flickr
-    flash[:notice] = Updater.update
+    flash[:notice] = FlickrUpdateJob::Job.run
     redirect_to admin_root_path
   end
 

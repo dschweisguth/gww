@@ -86,7 +86,7 @@ module PhotoAdminPhotosSupport
 
   private def guess(comment_text, commented_at, guesser_flickrid)
     update! game_status: 'found'
-    guesser = PersonUpdater.create_or_update guesser_flickrid
+    guesser = FlickrUpdateJob::PersonUpdater.create_or_update guesser_flickrid
     Guess.create! photo: self, person: guesser, commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc
     revelation&.destroy
   end

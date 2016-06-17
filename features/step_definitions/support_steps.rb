@@ -7,5 +7,5 @@ Given /^screenshotting has been neutered$/ do
 end
 
 When /^I do something that calls FlickrService and forget to stub it out then it should explode$/ do
-  expect { Updater.update }.to raise_error RuntimeError
+  expect { FlickrUpdateJob::Job.run }.to raise_error RuntimeError
 end

@@ -1,4 +1,4 @@
-describe PersonUpdater, type: :updater do
+describe FlickrUpdateJob::PersonUpdater, type: :job do
   describe '.update_all' do
     let!(:person) { create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias' }
 
@@ -50,7 +50,7 @@ describe PersonUpdater, type: :updater do
     end
 
     def update_all_and_expect_person_to_have(attrs)
-      PersonUpdater.update_all
+      FlickrUpdateJob::PersonUpdater.update_all
       person.reload
       relevant_attrs = person.attributes.symbolize_keys.slice *attrs.keys
       expect(relevant_attrs).to eq(attrs)

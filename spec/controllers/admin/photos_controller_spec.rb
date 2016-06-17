@@ -69,7 +69,7 @@ describe Admin::PhotosController do
     end
 
     it "loads comments and renders the page" do
-      allow(PhotoUpdater).to receive(:update).with(photo)
+      allow(FlickrUpdateJob::PhotoUpdater).to receive(:update).with(photo)
       mock_clear_page_cache
       get :edit, id: photo.id, update_from_flickr: true
       expect(response).to be_success
