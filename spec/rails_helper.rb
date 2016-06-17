@@ -91,7 +91,7 @@ RSpec.configure do |config|
 
   config.include GWW::Helpers::RSpec
   [GWW::Factories::Model, GWW::Matchers::Model, GWW::Helpers::Model, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :model }
-  [GWW::Factories::Model, GWW::Matchers::Model].each { |mod| config.include mod, type: :job }
+  [GWW::Factories::Model, GWW::Matchers::Model, GWW::Helpers::PageCache].each { |mod| config.include mod, type: :job }
   [GWW::Factories::ControllerOrHelper, GWW::Helpers::Controller, GWW::Helpers::PageCache, Photos].each { |mod| config.include mod, type: :controller }
   [GWW::Factories::ControllerOrHelper, Photos].each { |mod| config.include mod, type: :helper }
   [GWW::Helpers::Routing, GWW::Matchers::Routing].each { |mod| config.include mod, type: :routing }

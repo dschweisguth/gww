@@ -41,7 +41,7 @@ describe Admin::RootController do
 
   describe '#calculate_statistics_and_maps' do
     it "does the update and redirects" do
-      expect(Precalculator).to receive(:calculate_statistics_and_maps) { "The message" }
+      expect(PrecalculatorJob::Job).to receive(:run) { "The message" }
       get :calculate_statistics_and_maps
       expect(response).to redirect_to admin_root_path
       expect(flash[:notice]).to eq("The message")

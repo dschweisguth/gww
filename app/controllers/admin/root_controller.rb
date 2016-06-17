@@ -13,7 +13,7 @@ class Admin::RootController < ApplicationController
   end
 
   def calculate_statistics_and_maps
-    flash[:notice] = Precalculator.calculate_statistics_and_maps
+    flash[:notice] = PrecalculatorJob::Job.run
     redirect_to admin_root_path
   end
 
