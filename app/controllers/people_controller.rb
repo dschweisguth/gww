@@ -20,7 +20,7 @@ class PeopleController < ApplicationController
 
   caches_page :index
   def index
-    @people = Person.all_sorted params[:sorted_by], params[:order]
+    @people = PeopleIndexPerson.all_sorted params[:sorted_by], params[:order]
   end
 
   caches_page :nemeses

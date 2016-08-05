@@ -25,7 +25,7 @@ describe PeopleController do
       sorted_by_param = 'score'
       order_param = '+'
 
-      person = build_stubbed :person
+      person = build_stubbed :people_index_person
       person.guess_count = 1
       person.post_count = 1
       person.score_plus_posts = 1
@@ -39,7 +39,7 @@ describe PeopleController do
       person.comments_to_be_guessed = 1.0
       person.views_per_post = 1.0
       person.faves_per_post = 1.0
-      allow(Person).to receive(:all_sorted).with(sorted_by_param, order_param) { [person] }
+      allow(PeopleIndexPerson).to receive(:all_sorted).with(sorted_by_param, order_param) { [person] }
       get :index, sorted_by: sorted_by_param, order: order_param
 
       expect(response).to be_success
