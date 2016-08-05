@@ -29,6 +29,8 @@ module GWW
     # config.i18n.default_locale = :de
     config.i18n.enforce_available_locales = false
 
+    config.autoload_paths += Dir["#{config.root}/app/models/specialists/*"]
+
     config.active_record.schema_format = :sql
 
     # Put the following in application.rb so we can test it in development

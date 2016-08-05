@@ -6,4 +6,9 @@ FactoryGirl.define do
     commented_at { Time.now }
     added_at { Time.now }
   end
+
+  factory :wheresies_guess, parent: :guess, class: WheresiesGuess do
+    association :person, factory: :wheresies_person, strategy: :build
+  end
+
 end

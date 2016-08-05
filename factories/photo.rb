@@ -14,4 +14,9 @@ FactoryGirl.define do
     sequence(:description) { |n| "Description #{n}" }
     faves 0
   end
+
+  factory :wheresies_photo, parent: :photo, class: WheresiesPhoto do
+    association :person, factory: :wheresies_person, strategy: :build
+  end
+
 end

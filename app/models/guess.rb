@@ -1,5 +1,5 @@
 class Guess < ActiveRecord::Base
-  include Answer, GuessScoreReportsSupport, GuessWheresiesSupport
+  include Answer, GuessScoreReportsSupport
 
   belongs_to :photo, inverse_of: :guesses
   belongs_to :person, inverse_of: :guesses

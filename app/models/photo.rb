@@ -1,6 +1,6 @@
 class Photo < ActiveRecord::Base
   include Answer, PhotoAdminPhotosSupport, PhotoAdminRootSupport, PhotoFlickrUpdateSupport, PhotoPeopleSupport,
-    PhotoPhotosSupport, PhotoScoreReportsSupport, PhotoStatisticsSupport, PhotoWheresiesSupport, SinglePhotoMapSupport
+    PhotoPhotosSupport, PhotoScoreReportsSupport, PhotoStatisticsSupport, SinglePhotoMapSupport
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy
