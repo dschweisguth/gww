@@ -7,6 +7,16 @@ FactoryGirl.define do
     added_at { Time.now }
   end
 
+  factory :people_guess, parent: :guess, class: PeopleGuess do
+    association :person, factory: :people_person, strategy: :build
+    association :photo, factory: :people_photo, strategy: :build
+  end
+
+  factory :people_show_guess, parent: :guess, class: PeopleShowGuess do
+    association :person, factory: :people_show_person, strategy: :build
+    association :photo, factory: :people_show_photo, strategy: :build
+  end
+
   factory :score_reports_guess, parent: :guess, class: ScoreReportsGuess do
     association :person, factory: :score_reports_person, strategy: :build
     association :photo, factory: :score_reports_photo, strategy: :build

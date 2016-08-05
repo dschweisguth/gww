@@ -1,13 +1,9 @@
-module PersonShowSupport
-  extend ActiveSupport::Concern
+class PeopleShowPerson < Person
+  extend PersonScoreSupport
+  include PersonPeopleSupport
 
-  def mapped_photo_count
-    photos.where('accuracy >= 12 or inferred_latitude is not null').count
-  end
-
-  def mapped_guess_count
-    guesses.joins(:photo).where('photos.accuracy >= 12 || photos.inferred_latitude is not null').count
-  end
+  has_many :photos, inverse_of: :person, class_name: 'PeopleShowPhoto', foreign_key: 'person_id'
+  has_many :guesses, inverse_of: :person, class_name: 'PeopleShowGuess', foreign_key: 'person_id'
 
   def score_standing
     standing Guess
@@ -78,9 +74,10 @@ module PersonShowSupport
         "(select min(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})")
   end
 
+  # TODO Dave tap
   private def first_guess_with_place(owned_object, order, place_conditions)
     guess =
-      Guess.
+      PeopleShowGuess.
         includes(:person, photo: :person).
         where(owned_object => { person_id: self }).
         with_valid_age.
@@ -88,12 +85,14 @@ module PersonShowSupport
     if !guess
       return nil
     end
-    guess.place = Guess.joins(:photo).where(place_conditions, self).with_valid_age.count + 1
+    guess.place = PeopleShowGuess.joins(:photo).where(place_conditions, self).with_valid_age.count + 1
     guess
   end
 
   def oldest_unfound_photo
-    oldest_unfound_photo = photos.includes(:person).where(game_status: %w(unfound unconfirmed)).order(:dateadded).first
+    oldest_unfound_photo =
+      PeopleShowPhoto.where(person_id: id).includes(:person).where(game_status: %w(unfound unconfirmed)).
+        order(:dateadded).first
     if oldest_unfound_photo
       oldest_unfound_photo.place = place_by_sql(
         %q{
@@ -112,6 +111,7 @@ module PersonShowSupport
     oldest_unfound_photo
   end
 
+  # TODO Dave merge this into most_something_photo?
   def most_commented_photo
     most_commented_photo = photos.includes(:person).order('other_user_comments desc').first
     if most_commented_photo
@@ -159,7 +159,7 @@ module PersonShowSupport
   end
 
   private def place_by_sql(sql, *args)
-    Person.count_by_sql([sql, *args]) + 1
+    self.class.count_by_sql([sql, *args]) + 1
   end
 
   def guesses_with_associations
@@ -214,7 +214,7 @@ module PersonShowSupport
   end
 
   private def biased_people(sql)
-    Person.find_by_sql [sql, id, id]
+    self.class.find_by_sql [sql, id, id]
   end
 
 end

@@ -1,4 +1,6 @@
 module GuessScoreSupport
+  include ScoreSupport
+
   def star_for_speed
     age = seconds_old
     if age <= 10

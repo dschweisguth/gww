@@ -1,6 +1,5 @@
 class Person < ActiveRecord::Base
-  extend PersonScoreSupport # TODO Dave move down to PeoplePerson
-  include PersonPhotosSupport, PersonShowSupport, PersonPeopleSupport, PersonStatisticsSupport
+  include PersonPhotosSupport, PersonStatisticsSupport
 
   MIN_GUESSES_FOR_FAVORITE = 10
   MIN_BIAS_FOR_FAVORITE = 2.5

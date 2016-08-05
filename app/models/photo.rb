@@ -1,7 +1,6 @@
 class Photo < ActiveRecord::Base
-  include Answer, PhotoAdminPhotosSupport, PhotoAdminRootSupport, PhotoFlickrUpdateSupport, PhotoPeopleSupport,
-    PhotoPhotosSupport, PhotoStatisticsSupport, SinglePhotoMapSupport,
-    ScoreReportsSupport, PhotoScoreSupport # TODO Dave move down to PeoplePhoto
+  include Answer, PhotoAdminPhotosSupport, PhotoAdminRootSupport, PhotoFlickrUpdateSupport,
+    PhotoPhotosSupport, PhotoStatisticsSupport, SinglePhotoMapSupport
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy

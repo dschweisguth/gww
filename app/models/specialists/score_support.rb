@@ -1,4 +1,4 @@
-module ScoreReportsSupport
+module ScoreSupport
   def years_old
     (seconds_old / (365 * 24 * 60 * 60)).truncate
   end

@@ -3,12 +3,12 @@ class PeopleController < ApplicationController
 
   caches_page :autocompletions
   def autocompletions
-    render json: Person.autocompletions(params[:term])
+    render json: PeoplePerson.autocompletions(params[:term])
   end
 
   def find
     username = params[:username]
-    person = Person.find_by_multiple_fields username
+    person = PeoplePerson.find_by_multiple_fields username
     if person
       # noinspection RubyResolve
       redirect_to person_path person
@@ -25,17 +25,17 @@ class PeopleController < ApplicationController
 
   caches_page :nemeses
   def nemeses
-    @nemeses = Person.nemeses
+    @nemeses = PeoplePerson.nemeses
   end
 
   caches_page :top_guessers
   def top_guessers
-    @days, @weeks, @months, @years = Person.top_guessers Time.now
+    @days, @weeks, @months, @years = PeoplePerson.top_guessers Time.now
   end
 
   caches_page :show
   def show
-    @person = Person.find params[:id].to_i
+    @person = PeopleShowPerson.find params[:id].to_i
 
     @mapped_post_and_guess_count = @person.mapped_photo_count + @person.mapped_guess_count
 
@@ -43,19 +43,19 @@ class PeopleController < ApplicationController
     @posts_place, @posts_tied = @person.posts_standing
 
     now = Time.now
-    weekly_high_scorers = Person.high_scorers now, 7
+    weekly_high_scorers = PeopleShowPerson.high_scorers now, 7
     if weekly_high_scorers.include? @person
       @weekly_high_scorers = weekly_high_scorers
     end
-    monthly_high_scorers = Person.high_scorers now, 30
+    monthly_high_scorers = PeopleShowPerson.high_scorers now, 30
     if monthly_high_scorers.include? @person
       @monthly_high_scorers = monthly_high_scorers
     end
-    weekly_top_posters = Person.top_posters now, 7
+    weekly_top_posters = PeopleShowPerson.top_posters now, 7
     if weekly_top_posters.include? @person
       @weekly_top_posters = weekly_top_posters
     end
-    monthly_top_posters = Person.top_posters now, 30
+    monthly_top_posters = PeopleShowPerson.top_posters now, 30
     if monthly_top_posters.include? @person
       @monthly_top_posters = monthly_top_posters
     end
@@ -76,7 +76,7 @@ class PeopleController < ApplicationController
 
     @guesses = @person.guesses_with_associations
     @favorite_posters = @person.favorite_posters
-    @posters = Person.sort_by_photo_count_and_username(@guesses.group_by { |guess| guess.photo.person })
+    @posters = PeopleShowPerson.sort_by_photo_count_and_username(@guesses.group_by { |guess| guess.photo.person })
 
     @posts = @person.photos_with_associations
     @favoring_guessers = @person.favoring_guessers
@@ -98,32 +98,32 @@ class PeopleController < ApplicationController
         guessers_guesses << post
       end
     end
-    Person.sort_by_photo_count_and_username guessers
+    PeopleShowPerson.sort_by_photo_count_and_username guessers
   end
 
   caches_page :guesses
   def guesses
-    @person = Person.find params[:id].to_i
+    @person = PeoplePerson.find params[:id].to_i
     @guesses = @person.guesses_with_associations_ordered_by_comments
   end
 
   caches_page :comments
   def comments
-    @person = Person.find params[:id].to_i
+    @person = PeoplePerson.find params[:id].to_i
     @photos = @person.paginated_commented_photos params[:page]
   end
 
   caches_page :map
   def map
     person_id = params[:id].to_i
-    @person = Person.find person_id
+    @person = PeoplePerson.find person_id
     @posts_count = @person.mapped_photo_count
     @guesses_count = @person.mapped_guess_count
-    @json = Photo.for_person_for_map(person_id, bounds, MAX_MAP_PHOTOS).to_json
+    @json = PeoplePhoto.for_person_for_map(person_id, bounds, MAX_MAP_PHOTOS).to_json
   end
 
   def map_json
-    render json: Photo.for_person_for_map(params[:id].to_i, bounds, MAX_MAP_PHOTOS)
+    render json: PeoplePhoto.for_person_for_map(params[:id].to_i, bounds, MAX_MAP_PHOTOS)
   end
 
 end

@@ -1,5 +1,5 @@
 class ScoreReportsPhoto < Photo
-  include ScoreReportsSupport, PhotoScoreSupport
+  include ScoreSupport, PhotoScoreSupport
 
   belongs_to :person, inverse_of: :photos, class_name: 'ScoreReportsPerson', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :photo, dependent: :destroy, class_name: 'ScoreReportsGuess', foreign_key: 'photo_id'

@@ -15,6 +15,14 @@ FactoryGirl.define do
     faves 0
   end
 
+  factory :people_photo, parent: :photo, class: PeoplePhoto do
+    association :person, factory: :people_person, strategy: :build
+  end
+
+  factory :people_show_photo, parent: :photo, class: PeopleShowPhoto do
+    association :person, factory: :people_show_person, strategy: :build
+  end
+
   factory :score_reports_photo, parent: :photo, class: ScoreReportsPhoto do
     association :person, factory: :score_reports_person, strategy: :build
   end

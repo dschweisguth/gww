@@ -12,7 +12,9 @@ FactoryGirl.define do
     pathalias { username }
   end
 
+  factory :people_person, parent: :person, class: PeoplePerson
   factory :people_index_person, parent: :person, class: PeopleIndexPerson
+  factory :people_show_person, parent: :person, class: PeopleShowPerson
   factory :score_reports_person, parent: :person, class: ScoreReportsPerson
   factory :wheresies_person, parent: :person, class: WheresiesPerson
 
