@@ -9,6 +9,7 @@ FactoryGirl.define do
 
   factory :wheresies_guess, parent: :guess, class: WheresiesGuess do
     association :person, factory: :wheresies_person, strategy: :build
+    association :photo, factory: :wheresies_photo, strategy: :build
   end
 
 end

@@ -1,4 +1,7 @@
 class WheresiesPerson < Person
+  has_many :photos, inverse_of: :person, class_name: 'WheresiesPhoto', foreign_key: 'person_id'
+  has_many :guesses, inverse_of: :person, class_name: 'WheresiesGuess', foreign_key: 'person_id'
+
   def self.most_points_in(year)
     most_achievements_in year, :guesses, :commented_at, :points
   end

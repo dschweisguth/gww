@@ -1,4 +1,7 @@
 class WheresiesPhoto < Photo
+  belongs_to :person, inverse_of: :photos, class_name: 'WheresiesPerson', foreign_key: 'person_id'
+  has_many :guesses, inverse_of: :photo, dependent: :destroy, class_name: 'WheresiesGuess', foreign_key: 'photo_id'
+
   def self.most_viewed_in(year)
     most_loved_in year, :views
   end

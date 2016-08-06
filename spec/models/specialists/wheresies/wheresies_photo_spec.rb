@@ -12,12 +12,12 @@ describe WheresiesPhoto do
     end
 
     it "ignores photos from before the year" do
-      create :photo, dateadded: Time.local(2009).getutc
+      create :wheresies_photo, dateadded: Time.local(2009).getutc
       expect(WheresiesPhoto.most_viewed_in(2010)).to eq([])
     end
 
     it "ignores photos from after the year" do
-      create :photo, dateadded: Time.local(2011).getutc
+      create :wheresies_photo, dateadded: Time.local(2011).getutc
       expect(WheresiesPhoto.most_viewed_in(2010)).to eq([])
     end
 
@@ -36,12 +36,12 @@ describe WheresiesPhoto do
     end
 
     it "ignores photos from before the year" do
-      create :photo, dateadded: Time.local(2009).getutc
+      create :wheresies_photo, dateadded: Time.local(2009).getutc
       expect(WheresiesPhoto.most_faved_in(2010)).to eq([])
     end
 
     it "ignores photos from after the year" do
-      create :photo, dateadded: Time.local(2011).getutc
+      create :wheresies_photo, dateadded: Time.local(2011).getutc
       expect(WheresiesPhoto.most_faved_in(2010)).to eq([])
     end
 
@@ -64,19 +64,19 @@ describe WheresiesPhoto do
     end
 
     it "ignores photos from before the year" do
-      photo = create :photo, dateadded: Time.local(2009).getutc
+      photo = create :wheresies_photo, dateadded: Time.local(2009).getutc
       create :comment, photo: photo
       expect(WheresiesPhoto.most_commented_in(2010)).to eq([])
     end
 
     it "ignores photos from after the year" do
-      photo = create :photo, dateadded: Time.local(2011).getutc
+      photo = create :wheresies_photo, dateadded: Time.local(2011).getutc
       create :comment, photo: photo
       expect(WheresiesPhoto.most_commented_in(2010)).to eq([])
     end
 
     it "ignores comments by the poster" do
-      photo = create :photo, dateadded: Time.local(2010).getutc
+      photo = create :wheresies_photo, dateadded: Time.local(2010).getutc
       create :comment, photo: photo, flickrid: photo.person.flickrid
       expect(WheresiesPhoto.most_commented_in(2010)).to eq([])
     end
