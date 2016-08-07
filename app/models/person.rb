@@ -11,19 +11,7 @@ class Person < ActiveRecord::Base
   has_many :guesses, inverse_of: :person
 
   # Not persisted, used in views
-  attr_accessor :change_in_standing, :downcased_username, :guess_count, :post_count, :score_plus_posts,
-    :guesses_per_day, :posts_per_day, :posts_per_guess, :guess_speed, :be_guessed_speed,
-    :views_per_post, :faves_per_post, :poster, :bias, :score, :previous_post_count, :place, :previous_score, :previous_place,
-    :photo_count, :points, :poster_id
-
-  # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor
-  after_initialize do
-    %w(bias points post_count poster_id).each do |attribute_name|
-      unless send attribute_name
-        send "#{attribute_name}=", attributes[attribute_name]
-      end
-    end
-  end
+  attr_accessor :photo_count
 
   def identifier
     pathalias || flickrid

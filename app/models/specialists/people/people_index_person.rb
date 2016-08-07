@@ -1,4 +1,8 @@
 class PeopleIndexPerson < Person
+  # Not persisted, used in views
+  attr_accessor :downcased_username, :guess_count, :post_count, :score_plus_posts, :guesses_per_day, :posts_per_day,
+    :posts_per_guess, :guess_speed, :be_guessed_speed, :views_per_post, :faves_per_post
+
   def self.all_sorted(sorted_by, order)
     people = all
     add_attrs_to_sort_on people

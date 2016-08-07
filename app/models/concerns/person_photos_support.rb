@@ -1,3 +1,4 @@
+# TODO Dave when converting this to a specialist, move Person#photo_count to that specialist
 module PersonPhotosSupport
   extend ActiveSupport::Concern
 

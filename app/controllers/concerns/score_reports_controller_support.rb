@@ -8,7 +8,7 @@ module ScoreReportsControllerSupport
     @guesses = ScoreReportsGuess.all_between previous_report_date, @report_date
     @guessers = ScoreReportsPerson.sort_by_photo_count_and_username @guesses.group_by(&:person)
 
-    @revelations = Revelation.all_between previous_report_date, @report_date
+    @revelations = ScoreReportsRevelation.all_between previous_report_date, @report_date
     @revealers =
       @revelations.group_by { |revelation| revelation.photo.person }.
         sort { |x, y| x[0].username.downcase <=> y[0].username.downcase }

@@ -102,11 +102,9 @@ describe PeopleController do
   end
 
   describe '#show' do
-    let(:person) { build_stubbed :people_show_person }
+    let(:person) { build_stubbed :people_show_person, score: 1, post_count: 1 }
 
     before do
-      person.score = 1 # for the high_scorers methods
-      person.post_count = 1 # for the top_posters methods
       allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
       allow(person).to receive(:score_standing) { [1, false] }
       allow(person).to receive(:posts_standing) { [1, false] }
@@ -321,7 +319,7 @@ describe PeopleController do
       allow(found2.photo).to receive(:guesses) { [found2] }
       allow(person).to receive(:photos_with_associations) { [found1.photo, found2.photo] }
 
-      @favoring_guesser = build_stubbed :person, bias: 3.6
+      @favoring_guesser = build_stubbed :people_show_person, bias: 3.6
       allow(person).to receive(:favoring_guessers) { [@favoring_guesser] }
 
       allow(person).to receive(:unfound_photos) { [build_stubbed(:people_show_photo)] }

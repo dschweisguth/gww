@@ -4,6 +4,18 @@ class PeoplePerson < Person
   has_many :photos, inverse_of: :person, class_name: 'PeoplePhoto', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :person, class_name: 'PeopleGuess', foreign_key: 'person_id'
 
+  # Not persisted, used in views
+  attr_accessor :poster, :bias, :poster_id
+
+  # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor
+  after_initialize do
+    %w(bias poster_id).each do |attribute_name|
+      unless send attribute_name
+        send "#{attribute_name}=", attributes[attribute_name]
+      end
+    end
+  end
+
   def self.autocompletions(term)
     select(:username, :realname).
       where("username like ? or realname like ?", "#{term}%", "#{term}%").
@@ -75,7 +87,6 @@ class PeoplePerson < Person
       group("people.id")
 
     scores = guessers.each_with_object({}) do |guesser, scores|
-      guesser.score = guesser[:score]
       scores[guesser.score] ||= []
       scores[guesser.score] << guesser
     end

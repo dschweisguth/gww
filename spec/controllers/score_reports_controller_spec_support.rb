@@ -1,20 +1,20 @@
 def renders_report_for(report_date, previous_report_date, action, params = {})
-  person0 = build_stubbed :person
-  person1 = build_stubbed :person
-  person2 = build_stubbed :person
+  person0 = build_stubbed :score_reports_person
+  person1 = build_stubbed :score_reports_person
+  person2 = build_stubbed :score_reports_person
   person2.change_in_standing = 'guessed their first point. Congratulations!'
 
-  guess11 = build_stubbed :guess, person: person1
-  guess21 = build_stubbed :guess, person: person2
-  guess22 = build_stubbed :guess, person: person2
+  guess11 = build_stubbed :score_reports_guess, person: person1
+  guess21 = build_stubbed :score_reports_guess, person: person2
+  guess22 = build_stubbed :score_reports_guess, person: person2
   allow(ScoreReportsGuess).to receive(:all_between).with(previous_report_date, report_date.getutc) { [guess11, guess21, guess22] }
 
-  revealed_photo11 = build_stubbed :photo, person: person1
-  revealed_photo21 = build_stubbed :photo, person: person2
-  revealed_photo22 = build_stubbed :photo, person: person2
-  revelation11 = build_stubbed :revelation, photo: revealed_photo11
-  revelation21 = build_stubbed :revelation, photo: revealed_photo21
-  revelation22 = build_stubbed :revelation, photo: revealed_photo22
+  revealed_photo11 = build_stubbed :score_reports_photo, person: person1
+  revealed_photo21 = build_stubbed :score_reports_photo, person: person2
+  revealed_photo22 = build_stubbed :score_reports_photo, person: person2
+  revelation11 = build_stubbed :score_reports_revelation, photo: revealed_photo11
+  revelation21 = build_stubbed :score_reports_revelation, photo: revealed_photo21
+  revelation22 = build_stubbed :score_reports_revelation, photo: revealed_photo22
   allow(Revelation).to receive(:all_between).with(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
 
   allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 7) { [person2, person1] }

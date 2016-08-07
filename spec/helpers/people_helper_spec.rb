@@ -126,10 +126,10 @@ describe PeopleHelper do
     end
 
     def position_returns(higher_scores, expected)
-      person = Person.new
+      person = PeopleShowPerson.new
 
       high_scorers = higher_scores.map do |score|
-        higher_scorer = Person.new
+        higher_scorer = PeopleShowPerson.new
         higher_scorer.score = score
         higher_scorer
       end
