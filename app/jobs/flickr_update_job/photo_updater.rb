@@ -52,8 +52,8 @@ module FlickrUpdateJob
 
       attributes = { seen_at: now, views: views }
       if photo_needs_full_update
-        attributes.merge! \
-        farm: parsed_photo['farm'],
+        attributes.merge!(
+          farm: parsed_photo['farm'],
           server: parsed_photo['server'],
           secret: parsed_photo['secret'],
           title: parsed_photo['title'],
@@ -63,6 +63,7 @@ module FlickrUpdateJob
           latitude: to_float_or_nil(parsed_photo['latitude']),
           longitude: to_float_or_nil(parsed_photo['longitude']),
           accuracy: to_integer_or_nil(parsed_photo['accuracy'])
+        )
       end
 
       if photo_needs_full_update || views != photo.views
@@ -78,11 +79,12 @@ module FlickrUpdateJob
         photo.update! attributes
         created = 0
       else
-        attributes.merge! \
-        person_id: person.id,
+        attributes.merge!(
+          person_id: person.id,
           flickrid: flickrid,
           dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
           game_status: 'unfound'
+        )
         photo = Photo.create! attributes
         created = 1
       end
@@ -104,8 +106,8 @@ module FlickrUpdateJob
       attributes = { seen_at: Time.now }
       if photo_needs_full_update
         latitude, longitude, accuracy = location photo
-        attributes.merge! \
-        farm: parsed_photo['farm'],
+        attributes.merge!(
+          farm: parsed_photo['farm'],
           server: parsed_photo['server'],
           secret: parsed_photo['secret'],
           title: to_string_or_nil(parsed_photo['title']),
@@ -116,6 +118,7 @@ module FlickrUpdateJob
           latitude: latitude,
           longitude: longitude,
           accuracy: accuracy
+        )
         fave_count = fave_count photo.flickrid
         if fave_count
           attributes[:faves] = fave_count
