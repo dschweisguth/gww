@@ -4,7 +4,6 @@ class PeoplePerson < Person
   has_many :photos, inverse_of: :person, class_name: 'PeoplePhoto', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :person, class_name: 'PeopleGuess', foreign_key: 'person_id'
 
-  # Not persisted, used in views
   attr_accessor :poster, :bias, :poster_id
 
   # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor

@@ -16,7 +16,6 @@ class Photo < ActiveRecord::Base
   validates :views, :faves, :other_user_comments, :member_comments, :member_questions,
     numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
-  # Not persisted, used in views
   attr_accessor :color, :symbol, :place, :acted_on_at
 
   after_destroy do

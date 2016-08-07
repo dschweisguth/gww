@@ -10,7 +10,6 @@ class Person < ActiveRecord::Base
   has_many :photos, inverse_of: :person
   has_many :guesses, inverse_of: :person
 
-  # Not persisted, used in views
   attr_accessor :photo_count
 
   def identifier

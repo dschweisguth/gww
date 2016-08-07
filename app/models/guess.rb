@@ -6,7 +6,6 @@ class Guess < ActiveRecord::Base
   validates :person_id, uniqueness: { scope: %w(photo_id comment_text) }
   validates :comment_text, :commented_at, :added_at, presence: true
 
-  # Not persisted, used in views
   attr_accessor :place
 
   after_destroy do

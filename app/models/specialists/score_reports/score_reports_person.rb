@@ -4,7 +4,6 @@ class ScoreReportsPerson < Person
   has_many :photos, inverse_of: :person, class_name: 'ScoreReportsPhoto', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :person, class_name: 'ScoreReportsGuess', foreign_key: 'person_id'
 
-  # Not persisted, used in views
   attr_accessor :change_in_standing, :post_count, :previous_post_count, :score, :previous_score, :place, :previous_place
 
   def self.all_before(date)
