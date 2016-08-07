@@ -1,5 +1,5 @@
-describe Answer do
-  include Answer
+describe Ageable do
+  include Ageable
 
   describe '#time_elapsed_between' do
     it "returns the age with a precision of seconds in English" do

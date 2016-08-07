@@ -1,5 +1,5 @@
 class Revelation < ActiveRecord::Base
-  include Answer
+  include Ageable
 
   belongs_to :photo, inverse_of: :revelation
   validates :comment_text, :commented_at, :added_at, presence: true
@@ -15,7 +15,6 @@ class Revelation < ActiveRecord::Base
     where('? < added_at', from.getutc).where('added_at <= ?', to.getutc).includes(photo: :person)
   end
 
-  # TODO Dave move the following two methods from this class and Guess to Answer
   def time_elapsed
     time_elapsed_between photo.dateadded, commented_at
   end

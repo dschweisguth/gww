@@ -1,4 +1,4 @@
-module Answer
+module Ageable
   def time_elapsed_between(from, to)
     time_elapsed_between_in_words from, to, %w(years months days hours minutes seconds)
   end

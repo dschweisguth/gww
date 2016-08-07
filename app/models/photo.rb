@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Answer, PhotoAdminPhotosSupport, PhotoAdminRootSupport, PhotoFlickrUpdateSupport,
+  include Ageable, PhotoAdminPhotosSupport, PhotoAdminRootSupport, PhotoFlickrUpdateSupport,
     PhotoPhotosSupport, PhotoStatisticsSupport, SinglePhotoMapSupport
 
   belongs_to :person, inverse_of: :photos
