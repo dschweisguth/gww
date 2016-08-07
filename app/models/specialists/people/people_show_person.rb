@@ -111,24 +111,8 @@ class PeopleShowPerson < Person
     oldest_unfound_photo
   end
 
-  # TODO Dave merge this into most_something_photo?
   def most_commented_photo
-    most_commented_photo = photos.includes(:person).order('other_user_comments desc').first
-    if most_commented_photo
-      most_commented_photo.place = place_by_sql(
-        %q[
-          select count(*)
-          from (
-            select max(other_user_comments) max_other_user_comments
-            from photos
-            group by person_id
-          ) max_comments
-          where max_other_user_comments > ?
-        ],
-        most_commented_photo.other_user_comments
-      )
-    end
-    most_commented_photo
+    most_something_photo :other_user_comments
   end
 
   def most_viewed_photo
@@ -147,7 +131,7 @@ class PeopleShowPerson < Person
           select count(*)
           from (
             select max(#{attribute}) max_value
-            from photos f
+            from photos
             group by person_id
           ) most_something
           where max_value > ?

@@ -456,7 +456,7 @@ describe PeopleShowPerson do
 
   end
 
-  describe '.most_faved_photo' do
+  describe '#most_faved_photo' do
     let(:poster) { create :people_show_person }
 
     it "returns the poster's most-faved photo" do
