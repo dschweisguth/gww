@@ -79,23 +79,21 @@ class PeoplePerson < Person
   private_class_method :top_guesser_periods
 
   def self.top_guesser_scores(begin_date, end_date)
-    guessers = PeoplePerson.
+    PeoplePerson.
       select("people.*, count(*) score").
       joins(:guesses).
       where("? <= guesses.commented_at", begin_date.getutc).
       where("guesses.commented_at < ?", end_date.getutc).
-      group("people.id")
-
-    scores = guessers.each_with_object({}) do |guesser, scores|
-      scores[guesser.score] ||= []
-      scores[guesser.score] << guesser
-    end
-
-    scores.values.each do |guessers_with_score|
-      guessers_with_score.sort_by! { |guesser| guesser.username.downcase }
-    end
-
-    scores
+      group("people.id").
+      each_with_object({}) do |guesser, scores|
+        scores[guesser.score] ||= []
+        scores[guesser.score] << guesser
+      end.
+      tap do |scores|
+        scores.values.each do |guessers_with_score|
+          guessers_with_score.sort_by! { |guesser| guesser.username.downcase }
+        end
+      end
   end
   private_class_method :top_guesser_scores
 

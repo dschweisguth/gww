@@ -86,41 +86,44 @@ class PeopleShowPerson < Person
         "(select min(#{G_AGE}) from guesses g, photos p where g.photo_id = p.id and p.person_id = ? and #{G_AGE_IS_VALID})")
   end
 
-  # TODO Dave tap
   private def first_guess_with_place(owned_object, order, place_conditions)
-    guess =
-      PeopleShowGuess.
-        includes(:person, photo: :person).
-        where(owned_object => { person_id: self }).
-        with_valid_age.
-        order_by_age(order).first
-    if !guess
-      return nil
-    end
-    guess.place = PeopleShowGuess.joins(:photo).where(place_conditions, self).with_valid_age.count + 1
-    guess
+    PeopleShowGuess.
+      includes(:person, photo: :person).
+      where(owned_object => { person_id: self }).
+      with_valid_age.
+      order_by_age(order).
+      first.
+      tap do |guess|
+        if guess
+          guess.place = PeopleShowGuess.joins(:photo).where(place_conditions, self).with_valid_age.count + 1
+        end
+      end
   end
 
   def oldest_unfound_photo
-    oldest_unfound_photo =
-      PeopleShowPhoto.where(person_id: id).includes(:person).where(game_status: %w(unfound unconfirmed)).
-        order(:dateadded).first
-    if oldest_unfound_photo
-      oldest_unfound_photo.place = place_by_sql(
-        %q{
-          select count(*)
-          from
-            (
-              select min(dateadded) min_dateadded
-              from photos where game_status in ('unfound', 'unconfirmed')
-              group by person_id
-            ) oldest_unfounds
-          where min_dateadded < ?
-        },
-        oldest_unfound_photo.dateadded
-      )
-    end
-    oldest_unfound_photo
+    PeopleShowPhoto.
+      where(person_id: id).
+      includes(:person).
+      where(game_status: %w(unfound unconfirmed)).
+      order(:dateadded).
+      first.
+      tap do |photo|
+        if photo
+          photo.place = place_by_sql(
+            %q{
+              select count(*)
+              from
+                (
+                  select min(dateadded) min_dateadded
+                  from photos where game_status in ('unfound', 'unconfirmed')
+                  group by person_id
+                ) oldest_unfounds
+              where min_dateadded < ?
+            },
+            photo.dateadded
+          )
+        end
+      end
   end
 
   def most_commented_photo
@@ -136,22 +139,25 @@ class PeopleShowPerson < Person
   end
 
   private def most_something_photo(attribute)
-    most_something_photo = photos.includes(:person).order("#{attribute} desc").first
-    if most_something_photo
-      most_something_photo.place = place_by_sql(
-        %Q[
-          select count(*)
-          from (
-            select max(#{attribute}) max_value
-            from photos
-            group by person_id
-          ) most_something
-          where max_value > ?
-        ],
-        most_something_photo.send(attribute)
-      )
-    end
-    most_something_photo
+    photos.
+      includes(:person).
+      order("#{attribute} desc").
+      first.tap do |photo|
+        if photo
+          photo.place = place_by_sql(
+            %Q[
+              select count(*)
+              from (
+                select max(#{attribute}) max_value
+                from photos
+                group by person_id
+              ) most_something
+              where max_value > ?
+            ],
+            photo.send(attribute)
+          )
+        end
+      end
   end
 
   private def place_by_sql(sql, *args)
