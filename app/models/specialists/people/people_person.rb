@@ -41,7 +41,7 @@ class PeoplePerson < Person
         g.person_id = guessers_guesses.person_id
       group by guessers.id, poster_id having count(*) >= 10 order by bias desc
     ]
-    poster_ids = nemeses.map { |nemesis| nemesis[:poster_id] }.uniq
+    poster_ids = nemeses.map(&:poster_id).uniq
     posters_by_id = where(id: poster_ids).index_by &:id
     nemeses.each { |nemesis| nemesis.poster = posters_by_id[nemesis.poster_id] }
   end
