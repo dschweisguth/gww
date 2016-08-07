@@ -15,20 +15,11 @@ FactoryGirl.define do
     faves 0
   end
 
-  factory :people_photo, parent: :photo, class: PeoplePhoto do
-    association :person, factory: :people_person, strategy: :build
-  end
-
-  factory :people_show_photo, parent: :photo, class: PeopleShowPhoto do
-    association :person, factory: :people_show_person, strategy: :build
-  end
-
-  factory :score_reports_photo, parent: :photo, class: ScoreReportsPhoto do
-    association :person, factory: :score_reports_person, strategy: :build
-  end
-
-  factory :wheresies_photo, parent: :photo, class: WheresiesPhoto do
-    association :person, factory: :wheresies_person, strategy: :build
+  [PeoplePhoto, PeopleShowPhoto, ScoreReportsPhoto, WheresiesPhoto].each do |specialist_class|
+    factory_name = specialist_class.name.underscore
+    factory factory_name, parent: :photo, class: specialist_class do
+      association :person, factory: factory_name.sub(/photo$/, 'person'), strategy: :build
+    end
   end
 
 end
