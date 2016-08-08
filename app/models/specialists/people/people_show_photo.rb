@@ -4,6 +4,8 @@ class PeopleShowPhoto < Photo
   belongs_to :person, inverse_of: :photos, class_name: 'PeopleShowPerson', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :photo, dependent: :destroy, class_name: 'PeopleShowGuess', foreign_key: 'photo_id'
 
+  attr_accessor :place
+
   def ymd_elapsed
     ymd_elapsed_between dateadded, Time.now
   end
