@@ -1,10 +1,10 @@
 describe Admin::PhotosController do
   describe 'collections' do
-    let(:photo) { build_stubbed :photo }
+    let(:photo) { build_stubbed :admin_photos_photo }
 
     describe '#unfound' do
       before do
-        allow(Photo).to receive(:unfound_or_unconfirmed) { [photo] }
+        allow(AdminPhotosPhoto).to receive(:unfound_or_unconfirmed) { [photo] }
       end
 
       it "renders the page" do
@@ -26,7 +26,7 @@ describe Admin::PhotosController do
 
     describe '#inaccessible' do
       it "renders the page" do
-        allow(Photo).to receive(:inaccessible) { [photo] }
+        allow(AdminPhotosPhoto).to receive(:inaccessible) { [photo] }
         allow(photo).to receive(:tags) { [] }
         get :inaccessible
         lists_photo
@@ -35,7 +35,7 @@ describe Admin::PhotosController do
 
     describe '#multipoint' do
       it "renders the page" do
-        allow(Photo).to receive(:multipoint) { [photo] }
+        allow(AdminPhotosPhoto).to receive(:multipoint) { [photo] }
         allow(photo).to receive(:tags) { [] }
         get :multipoint
         lists_photo
@@ -53,10 +53,10 @@ describe Admin::PhotosController do
   end
 
   describe '#edit' do
-    let(:photo) { build_stubbed :photo }
+    let(:photo) { build_stubbed :admin_photos_photo }
 
     before do
-      allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(AdminPhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
       allow(photo).to receive(:comments) { [] }
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { nil }
@@ -79,7 +79,9 @@ describe Admin::PhotosController do
 
   describe '#add_selected_answer' do
     it "notifies the user if there was an error" do
-      expect(Comment).to receive(:add_selected_answer).with('2', 'username') { raise Photo::AddAnswerError, 'Sorry' }
+      expect(Comment).to receive(:add_selected_answer).with('2', 'username') do
+        raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
+      end
       post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
       redirects_to_edit_path 1
       expect(flash[:notice]).to eq('Sorry')
@@ -88,7 +90,9 @@ describe Admin::PhotosController do
 
   describe '#add_entered_answer' do
     it "notifies the user if there was an error" do
-      expect(Photo).to receive(:add_entered_answer).with(1, 'username', 'answer text') { raise Photo::AddAnswerError, 'Sorry' }
+      expect(AdminPhotosPhoto).to receive(:add_entered_answer).with(1, 'username', 'answer text') do
+        raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
+      end
       post :add_entered_answer, id: '1', username: 'username', answer_text: 'answer text'
       redirects_to_edit_path 1
       expect(flash[:notice]).to eq('Sorry')
@@ -123,8 +127,8 @@ describe Admin::PhotosController do
   describe '#edit_in_gww' do
     # This test is probably obsolete, in that Flickr seems to always use https now. But leave it in for a while just in case.
     it "redirects to the given photo" do
-      photo = build_stubbed :photo
-      allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
+      photo = build_stubbed :admin_photos_photo
+      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
@@ -132,8 +136,8 @@ describe Admin::PhotosController do
     end
 
     it "handles https when redirecting to a photo" do
-      photo = build_stubbed :photo
-      allow(Photo).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
+      photo = build_stubbed :admin_photos_photo
+      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
       get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
@@ -141,7 +145,7 @@ describe Admin::PhotosController do
     end
 
     it "punts an unknown photo Flickr ID" do
-      allow(Photo).to receive(:find_by_flickrid).with('0123456789') { nil }
+      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with('0123456789') { nil }
       get :edit_in_gww, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
       expect(response).to redirect_to admin_root_path

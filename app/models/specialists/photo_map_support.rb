@@ -1,6 +1,8 @@
 module PhotoMapSupport
   extend ActiveSupport::Concern
 
+  attr_accessor :color, :symbol
+
   module ClassMethods
     def mapped(bounds, limit)
       where(

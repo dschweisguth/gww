@@ -1,38 +1,35 @@
-module PhotoAdminPhotosSupport
-  extend ActiveSupport::Concern
+class AdminPhotosPhoto < Photo
+  include PhotosPhotoSupport
 
-  module ClassMethods
-    def inaccessible
-      where("seen_at < ?", FlickrUpdate.maximum(:created_at)).
-        where("game_status in ('unfound', 'unconfirmed')").
-        order('lastupdate desc').
-        includes(:person, :tags)
+  def self.inaccessible
+    where("seen_at < ?", FlickrUpdate.maximum(:created_at)).
+      where("game_status in ('unfound', 'unconfirmed')").
+      order('lastupdate desc').
+      includes(:person, :tags)
+  end
+
+  def self.multipoint
+    multipoint_without_associations.order('lastupdate desc').includes(:person, :tags)
+  end
+
+  def self.change_game_status(id, status)
+    transaction do
+      Guess.destroy_all_by_photo_id id
+      Revelation.where(photo_id: id).destroy_all
+      find(id).update! game_status: status
+    end
+  end
+
+  def self.add_entered_answer(photo_id, username, answer_text)
+    if answer_text.empty?
+      raise ArgumentError, 'answer_text may not be empty'
     end
 
-    def multipoint
-      multipoint_without_associations.order('lastupdate desc').includes(:person, :tags)
+    photo = includes(:person, :revelation).find photo_id
+    if username.empty?
+      username = photo.person.username
     end
-
-    def change_game_status(id, status)
-      transaction do
-        Guess.destroy_all_by_photo_id id
-        Revelation.where(photo_id: id).destroy_all
-        find(id).update! game_status: status
-      end
-    end
-
-    def add_entered_answer(photo_id, username, answer_text)
-      if answer_text.empty?
-        raise ArgumentError, 'answer_text may not be empty'
-      end
-
-      photo = Photo.includes(:person, :revelation).find photo_id
-      if username.empty?
-        username = photo.person.username
-      end
-      photo.answer nil, username, answer_text, Time.now.getutc
-
-    end
+    photo.answer nil, username, answer_text, Time.now.getutc
 
   end
 

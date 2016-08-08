@@ -1,21 +1,21 @@
 class Admin::PhotosController < ApplicationController
   caches_page :unfound
   def unfound
-    @photos = Photo.unfound_or_unconfirmed
+    @photos = AdminPhotosPhoto.unfound_or_unconfirmed
   end
 
   caches_page :inaccessible
   def inaccessible
-    @photos = Photo.inaccessible
+    @photos = AdminPhotosPhoto.inaccessible
   end
 
   caches_page :multipoint
   def multipoint
-    @photos = Photo.multipoint
+    @photos = AdminPhotosPhoto.multipoint
   end
 
   def edit
-    @photo = Photo.find_with_associations params[:id].to_i
+    @photo = AdminPhotosPhoto.find_with_associations params[:id].to_i
     if params[:update_from_flickr]
       begin
         FlickrUpdateJob::PhotoUpdater.update @photo
@@ -29,7 +29,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def change_game_status
-    Photo.change_game_status params[:id], params[:commit]
+    AdminPhotosPhoto.change_game_status params[:id], params[:commit]
     PageCache.clear
     redirect_to_edit_path params[:id]
   end
@@ -37,7 +37,7 @@ class Admin::PhotosController < ApplicationController
   def add_selected_answer
     begin
       Comment.add_selected_answer params[:comment_id], params[:username]
-    rescue Photo::AddAnswerError => e
+    rescue AdminPhotosPhoto::AddAnswerError => e
       flash[:notice] = e.message
     end
     PageCache.clear
@@ -46,8 +46,8 @@ class Admin::PhotosController < ApplicationController
 
   def add_entered_answer
     begin
-      Photo.add_entered_answer params[:id].to_i, params[:username], params[:answer_text]
-    rescue Photo::AddAnswerError => e
+      AdminPhotosPhoto.add_entered_answer params[:id].to_i, params[:username], params[:answer_text]
+    rescue AdminPhotosPhoto::AddAnswerError => e
       flash[:notice] = e.message
     end
     PageCache.clear
@@ -75,7 +75,7 @@ class Admin::PhotosController < ApplicationController
   end
 
   def destroy
-    Photo.find(params[:id]).destroy
+    AdminPhotosPhoto.find(params[:id]).destroy
     PageCache.clear
     redirect_to admin_root_path
   end
@@ -84,7 +84,7 @@ class Admin::PhotosController < ApplicationController
     from = params[:from]
     if from =~ %r{^https?://www.flickr.com/photos/[^/]+/(\d+)}
       flickrid = Regexp.last_match[1]
-      photo = Photo.find_by_flickrid flickrid
+      photo = AdminPhotosPhoto.find_by_flickrid flickrid
       if photo
         redirect_to_edit_path photo, update_from_flickr: true
         return

@@ -136,7 +136,7 @@ class BaseSearchParamsParser
   end
 
   def defaults(uri_params)
-    Photo.search_defaults(uri_keys_to_model uri_params).transform_keys { |key| key.to_s.tr '_', '-' }
+    PhotosPhoto.search_defaults(uri_keys_to_model uri_params).transform_keys { |key| key.to_s.tr '_', '-' }
   end
 
   def uri_keys_to_model(uri_params)

@@ -8,9 +8,9 @@ describe PhotosController do
       page_param = '1'
 
       # Mock methods from will_paginate's version of Array
-      photo = build_stubbed :photo
+      photo = build_stubbed :photos_photo
       paginated_photos = [photo].paginate
-      allow(Photo).to receive(:all_sorted_and_paginated).with(sorted_by_param, order_param, page_param, 30) { paginated_photos }
+      allow(PhotosPhoto).to receive(:all_sorted_and_paginated).with(sorted_by_param, order_param, page_param, 30) { paginated_photos }
       get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
 
       expect(response).to be_success
@@ -24,7 +24,7 @@ describe PhotosController do
   describe '#map' do
     it "renders the page" do
       json = { 'property' => 'value' }
-      allow(Photo).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
+      allow(PhotosPhoto).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
       get :map
 
       expect(assigns[:json]).to eq(json.to_json)
@@ -38,7 +38,7 @@ describe PhotosController do
   describe '#map_json' do
     it "renders the page" do
       json = { 'property' => 'value' }
-      allow(Photo).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
+      allow(PhotosPhoto).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
       get :map_json
 
       expect(response).to be_success
@@ -47,7 +47,7 @@ describe PhotosController do
     end
 
     it "supports arbitrary bounds" do
-      allow(Photo).to receive(:all_for_map).
+      allow(PhotosPhoto).to receive(:all_for_map).
         with(Bounds.new(0, 1, 10, 11), PhotosController::MAX_MAP_PHOTOS) { { 'property' => 'value' } }
       get :map_json, sw: '0,10', ne: '1,11'
     end
@@ -56,10 +56,10 @@ describe PhotosController do
 
   describe '#map_popup' do
     it "renders the partial" do
-      photo = build_stubbed :photo, dateadded: Time.local(2011)
+      photo = build_stubbed :photos_photo, dateadded: Time.local(2011)
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { nil }
-      allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
       get :map_popup, id: photo.id
 
       expect(response).to be_success
@@ -73,11 +73,11 @@ describe PhotosController do
     end
 
     it "displays guesses" do
-      photo = build_stubbed :photo, dateadded: Time.local(2011)
+      photo = build_stubbed :photos_photo, dateadded: Time.local(2011)
       guess = build_stubbed :guess, photo: photo, commented_at: Time.local(2011, 2)
       allow(photo).to receive(:guesses) { [guess] }
       allow(photo).to receive(:revelation) { nil }
-      allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
       get :map_popup, id: photo.id
 
       expect(response.body).to have_link guess.person.username, href: person_path(guess.person)
@@ -87,10 +87,10 @@ describe PhotosController do
     end
 
     it "displays a revelation" do
-      photo = build_stubbed :photo, dateadded: Time.local(2011)
+      photo = build_stubbed :photos_photo, dateadded: Time.local(2011)
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { build_stubbed :revelation, photo: photo, commented_at: Time.local(2011, 2) }
-      allow(Photo).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
       get :map_popup, id: photo.id
 
       expect(response.body).not_to include 'Guessed by'
@@ -103,8 +103,8 @@ describe PhotosController do
   describe '#unfound_data' do
     it "renders the page" do
       allow(FlickrUpdate).to receive(:maximum).with(:created_at) { Time.utc(2011) }
-      photo = build_stubbed :photo
-      allow(Photo).to receive(:unfound_or_unconfirmed) { [photo] }
+      photo = build_stubbed :photos_photo
+      allow(PhotosPhoto).to receive(:unfound_or_unconfirmed) { [photo] }
       get :unfound_data
 
       expect(response).to be_success
@@ -130,10 +130,10 @@ describe PhotosController do
 
   describe '#show' do
     it "renders the page" do
-      photo = build_stubbed :photo, datetaken: Time.local(2009), dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
+      photo = build_stubbed :photos_photo, datetaken: Time.local(2009), dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
       guess = build_stubbed :guess, photo: photo
       allow(photo).to receive(:guesses) { [guess] }
-      allow(Photo).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
       comment = build_stubbed :comment, photo: photo
       allow(photo).to receive(:comments) { [comment] }
       allow(photo).to receive(:human_tags) { [] }
@@ -168,10 +168,10 @@ describe PhotosController do
     end
 
     it "handles a photo without datetaken" do
-      photo = build_stubbed :photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
+      photo = build_stubbed :photos_photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
       guess = build_stubbed :guess, photo: photo
       allow(photo).to receive(:guesses) { [guess] }
-      allow(Photo).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
       comment = build_stubbed :comment, photo: photo
       allow(photo).to receive(:comments) { [comment] }
       allow(photo).to receive(:human_tags) { [] }
@@ -184,15 +184,15 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is mapped" do
-      photo = build_stubbed :photo, latitude: 37, longitude: -122, accuracy: 12
+      photo = build_stubbed :photos_photo, latitude: 37, longitude: -122, accuracy: 12
       allow(photo).to receive(:comments) { [] }
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { nil }
       allow(photo).to receive(:human_tags) { [] }
       allow(photo).to receive(:machine_tags) { [] }
-      allow(Photo).to receive(:find).with(photo.id) { photo }
-      oldest = build_stubbed :photo, dateadded: 1.day.ago
-      allow(Photo).to receive(:oldest) { oldest }
+      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      oldest = build_stubbed :photos_photo, dateadded: 1.day.ago
+      allow(PhotosPhoto).to receive(:oldest) { oldest }
       get :show, id: photo.id
 
       json = {
@@ -214,15 +214,15 @@ describe PhotosController do
     end
 
     it "includes a map if the photo is auto-mapped" do
-      photo = build_stubbed :photo, inferred_latitude: 37, inferred_longitude: -122
+      photo = build_stubbed :photos_photo, inferred_latitude: 37, inferred_longitude: -122
       allow(photo).to receive(:comments) { [] }
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { nil }
       allow(photo).to receive(:human_tags) { [] }
       allow(photo).to receive(:machine_tags) { [] }
-      allow(Photo).to receive(:find).with(photo.id) { photo }
-      oldest = build_stubbed :photo, dateadded: 1.day.ago
-      allow(Photo).to receive(:oldest) { oldest }
+      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      oldest = build_stubbed :photos_photo, dateadded: 1.day.ago
+      allow(PhotosPhoto).to receive(:oldest) { oldest }
       get :show, id: photo.id
 
       json = {
@@ -244,7 +244,7 @@ describe PhotosController do
     end
 
     it "displays tags" do
-      photo = build_stubbed :photo
+      photo = build_stubbed :photos_photo
       allow(photo).to receive(:comments) { [] }
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { nil }
@@ -254,7 +254,7 @@ describe PhotosController do
       allow(photo).to(receive(:machine_tags)) do
         [build_stubbed(:tag, raw: 'Machine tag 2'), build_stubbed(:tag, raw: 'Machine tag 1')]
       end
-      allow(Photo).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
       get :show, id: photo.id
 
       expect(response.body).to match(/Tags.*Tag 2.*Tag 1/m)
@@ -263,13 +263,13 @@ describe PhotosController do
     end
 
     it "styles a foundinSF or unfoundinSF tag differently if it doesn't match the photo" do
-      photo = build_stubbed :photo
+      photo = build_stubbed :photos_photo
       allow(photo).to receive(:comments) { [] }
       allow(photo).to receive(:guesses) { [] }
       allow(photo).to receive(:revelation) { nil }
       allow(photo).to receive(:human_tags) { [build_stubbed(:tag, raw: 'foundinSF')] }
       allow(photo).to receive(:machine_tags) { [] }
-      allow(Photo).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
       get :show, id: photo.id
 
       expect(response.body).to have_css 'li.incorrect'

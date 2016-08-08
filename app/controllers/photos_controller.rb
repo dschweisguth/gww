@@ -3,28 +3,28 @@ class PhotosController < ApplicationController
 
   caches_page :index
   def index
-    @photos = Photo.all_sorted_and_paginated params[:sorted_by], params[:order], params[:page], 30
+    @photos = PhotosPhoto.all_sorted_and_paginated params[:sorted_by], params[:order], params[:page], 30
   end
 
   caches_page :map
   def map
-    @json = Photo.all_for_map(bounds, MAX_MAP_PHOTOS).to_json
+    @json = PhotosPhoto.all_for_map(bounds, MAX_MAP_PHOTOS).to_json
   end
 
   def map_json
-    render json: Photo.all_for_map(bounds, MAX_MAP_PHOTOS)
+    render json: PhotosPhoto.all_for_map(bounds, MAX_MAP_PHOTOS)
   end
 
   caches_page :map_popup
   def map_popup
-    @photo = Photo.find_with_associations params[:id].to_i
+    @photo = PhotosPhoto.find_with_associations params[:id].to_i
     render partial: 'photos/map/popup'
   end
 
   # Not cached since the cached copy would have an incorrect .html extension
   def unfound_data
     @lasttime = FlickrUpdate.maximum :created_at
-    @photos = Photo.unfound_or_unconfirmed
+    @photos = PhotosPhoto.unfound_or_unconfirmed
     render formats: [:xml]
   end
 
@@ -39,7 +39,7 @@ class PhotosController < ApplicationController
   def search_data
     begin
       @search_params = SearchDataParamsParser.new.model_params params[:segments]
-      @photos = Photo.search(@search_params).to_a
+      @photos = PhotosPhoto.search(@search_params).to_a
       @text_terms = @search_params[:text] || []
       @display_fully = @text_terms.any? || @search_params[:did] == 'activity'
       render layout: false
@@ -57,7 +57,7 @@ class PhotosController < ApplicationController
 
   caches_page :show
   def show
-    @photo = Photo.find params[:id].to_i
+    @photo = PhotosPhoto.find params[:id].to_i
     @comments = @photo.comments
     @json = @photo.to_map_json
   end

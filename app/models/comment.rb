@@ -3,9 +3,10 @@ class Comment < ActiveRecord::Base
   validates :flickrid, :username, :comment_text, :commented_at, presence: true
   attr_readonly :flickrid, :username, :comment_text, :commented_at
 
+  # TODO Dave extract AdminPhotosComment
   def self.add_selected_answer(comment_id, username)
     comment = find comment_id
-    comment.photo.answer comment.flickrid, username, comment.comment_text, comment.commented_at
+    AdminPhotosPhoto.where(id: comment.photo_id).first.answer comment.flickrid, username, comment.comment_text, comment.commented_at
   end
 
   def self.remove_revelation(comment_id)

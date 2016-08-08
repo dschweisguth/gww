@@ -37,7 +37,7 @@ describe Comment do
     let(:now) { Time.utc 2010 }
 
     context "when adding a revelation" do
-      let(:photo) { create :photo }
+      let(:photo) { create :admin_photos_photo }
 
       it "adds a revelation" do
         comment = create :comment, photo: photo, flickrid: photo.person.flickrid,
@@ -182,7 +182,7 @@ describe Comment do
 
       it "blows up if an unknown username is specified" do
         comment = create :comment
-        expect { Comment.add_selected_answer comment.id, 'unknown_username' }.to raise_error Photo::AddAnswerError
+        expect { Comment.add_selected_answer comment.id, 'unknown_username' }.to raise_error AdminPhotosPhoto::AddAnswerError
       end
 
       def stub_person_request

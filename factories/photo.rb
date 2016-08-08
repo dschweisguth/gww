@@ -22,4 +22,7 @@ FactoryGirl.define do
     end
   end
 
+  factory :photos_photo, parent: :photo, class: PhotosPhoto
+  factory :admin_photos_photo, parent: :photo, class: AdminPhotosPhoto
+
 end

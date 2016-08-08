@@ -1,6 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Ageable, PhotoAdminPhotosSupport, PhotoAdminRootSupport, PhotoFlickrUpdateSupport,
-    PhotoPhotosSupport, PhotoStatisticsSupport, SinglePhotoMapSupport
+  include Ageable, PhotoAdminRootSupport, PhotoFlickrUpdateSupport, PhotoStatisticsSupport
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy
@@ -16,7 +15,7 @@ class Photo < ActiveRecord::Base
   validates :views, :faves, :other_user_comments, :member_comments, :member_questions,
     numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
-  attr_accessor :color, :symbol, :place, :acted_on_at
+  attr_accessor :place
 
   after_destroy do
     person.destroy_if_has_no_dependents
