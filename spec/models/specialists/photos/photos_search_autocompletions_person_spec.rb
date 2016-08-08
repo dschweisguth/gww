@@ -1,11 +1,7 @@
 describe PhotosSearchAutocompletionsPerson do
   describe '.photo_search_autocompletions' do
-    let(:person) { create :photos_search_autocompletions_person }
-
     context "person has no photos" do
-      before do
-        person.photo_count = 0
-      end
+      let(:person) { create :photos_search_autocompletions_person, photo_count: 0 }
 
       it "finds a username" do
         expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, nil)).to eq([autocompletion(person)])
@@ -21,17 +17,19 @@ describe PhotosSearchAutocompletionsPerson do
     end
 
     it "counts a photo by the person with the given game status" do
+      person = create :photos_search_autocompletions_person, photo_count: 1
       create :photo, person: person, game_status: 'unfound'
-      person.photo_count = 1
       expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, 'unfound')).to eq([autocompletion(person)])
     end
 
     it "ignores a photo by another person" do
+      person = create :photos_search_autocompletions_person
       create :photo, game_status: 'unfound'
       expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, 'unfound')).to eq([])
     end
 
     it "ignores a photo with a different game status" do
+      person = create :photos_search_autocompletions_person
       create :photo, person: person, game_status: 'found'
       expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, 'unfound')).to eq([])
     end

@@ -126,21 +126,11 @@ describe PeopleHelper do
     end
 
     def position_returns(higher_scores, expected)
-      person = PeopleShowPerson.new
-
-      high_scorers = higher_scores.map do |score|
-        higher_scorer = PeopleShowPerson.new
-        higher_scorer.score = score
-        higher_scorer
-      end
-      # Clone the person before setting their score to simulate the caller's
-      # situation, where the people in the first argument have :score but the
-      # second argument does not.
-      person_with_score = person.clone
-      person_with_score.score = 0
-      high_scorers.push person_with_score
-
-      expect(helper.position(high_scorers, person, :score)).to eq(expected)
+      high_scorers = higher_scores.map { |score| build_stubbed :people_show_person, high_score: score } +
+        [build_stubbed(:people_show_person, id: 0, high_score: 0)]
+      # Simulate the caller's situation, where high_scorers have :high_score but person does not.
+      person = build_stubbed :people_show_person, id: 0
+      expect(helper.position(high_scorers, person, :high_score)).to eq(expected)
     end
 
   end

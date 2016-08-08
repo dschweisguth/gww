@@ -1,7 +1,7 @@
 def renders_report_for(report_date, previous_report_date, action, params = {})
   person0 = build_stubbed :score_reports_person
-  person1 = build_stubbed :score_reports_person
-  person2 = build_stubbed :score_reports_person
+  person1 = build_stubbed :score_reports_person, high_score: 1, top_post_count: 1
+  person2 = build_stubbed :score_reports_person, high_score: 2, top_post_count: 2
   person2.change_in_standing = 'guessed their first point. Congratulations!'
 
   guess11 = build_stubbed :score_reports_guess, person: person1

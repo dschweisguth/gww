@@ -12,8 +12,41 @@ FactoryGirl.define do
     pathalias { username }
   end
 
-  [PeoplePerson, PeopleIndexPerson, PeopleShowPerson, PhotosSearchAutocompletionsPerson, ScoreReportsPerson, WheresiesPerson].each do |specialist_class|
-    factory specialist_class.name.underscore, parent: :person, class: specialist_class
+  {
+    PeopleIndexPerson => [],
+    PeoplePerson => [:bias],
+    PeopleShowPerson => [:bias, :high_score, :top_post_count],
+    PhotosSearchAutocompletionsPerson => [:photo_count],
+    ScoreReportsPerson => [:high_score, :top_post_count],
+    WheresiesPerson => []
+  }.each do |specialist_class, traits|
+    options = {parent: :person, class: specialist_class}
+    if traits.any?
+      options[:traits] = traits
+    end
+    factory specialist_class.name.underscore, options
+  end
+
+  {
+    photo_count: :build,
+    bias: :stub,
+    high_score: :stub,
+    top_post_count: :stub
+  }.each do |trait_name, callback|
+    trait trait_name do
+      transient do
+        send trait_name, nil
+      end
+
+      after(callback) do |person, evaluator|
+        if evaluator.send trait_name
+          person.define_singleton_method(trait_name) do
+            evaluator.send trait_name
+          end
+        end
+      end
+
+    end
   end
 
 end

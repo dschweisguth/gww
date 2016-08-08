@@ -102,7 +102,7 @@ describe PeopleController do
   end
 
   describe '#show' do
-    let(:person) { build_stubbed :people_show_person, score: 1, post_count: 1 }
+    let(:person) { build_stubbed :people_show_person, high_score: 1, top_post_count: 1 }
 
     before do
       allow(PeopleShowPerson).to receive(:find).with(person.id) { person }

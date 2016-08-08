@@ -2,17 +2,6 @@ class WheresiesPerson < Person
   has_many :photos, inverse_of: :person, class_name: 'WheresiesPhoto', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :person, class_name: 'WheresiesGuess', foreign_key: 'person_id'
 
-  attr_accessor :points
-
-  # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor
-  after_initialize do
-    %w(points).each do |attribute_name|
-      unless send attribute_name
-        send "#{attribute_name}=", attributes[attribute_name]
-      end
-    end
-  end
-
   def self.most_points_in(year)
     most_achievements_in year, :guesses, :commented_at, :points
   end

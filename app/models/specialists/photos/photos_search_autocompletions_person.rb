@@ -1,15 +1,4 @@
 class PhotosSearchAutocompletionsPerson < Person
-  attr_accessor :photo_count
-
-  # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor
-  after_initialize do
-    %w(photo_count).each do |attribute_name|
-      unless send attribute_name
-        send "#{attribute_name}=", attributes[attribute_name]
-      end
-    end
-  end
-
   def self.photo_search_autocompletions(username, game_statuses)
     people = select("username, realname, count(f.id) photo_count").joins("left join photos f on people.id = f.person_id")
     if username

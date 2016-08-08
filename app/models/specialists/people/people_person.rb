@@ -4,16 +4,7 @@ class PeoplePerson < Person
   has_many :photos, inverse_of: :person, class_name: 'PeoplePhoto', foreign_key: 'person_id'
   has_many :guesses, inverse_of: :person, class_name: 'PeopleGuess', foreign_key: 'person_id'
 
-  attr_accessor :poster, :bias, :poster_id
-
-  # Copy attribute filled by select or find_by_sql to attribute defined by attr_accessor
-  after_initialize do
-    %w(bias poster_id).each do |attribute_name|
-      unless send attribute_name
-        send "#{attribute_name}=", attributes[attribute_name]
-      end
-    end
-  end
+  attr_accessor :poster
 
   def self.autocompletions(term)
     select(:username, :realname).

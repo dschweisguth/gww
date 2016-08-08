@@ -39,7 +39,7 @@ describe ScoreReportsPerson do
     def high_scorers_returns(now, for_the_past_n_days, person, score)
       high_scorers = ScoreReportsPerson.high_scorers now, for_the_past_n_days
       expect(high_scorers).to eq([person])
-      expect(high_scorers[0].score).to eq(score)
+      expect(high_scorers[0].high_score).to eq(score)
     end
 
     it "ignores scores of 1" do
@@ -100,7 +100,7 @@ describe ScoreReportsPerson do
     def top_posters_returns(now, for_the_past_n_days, person, post_count)
       top_posters = ScoreReportsPerson.top_posters now, for_the_past_n_days
       expect(top_posters).to eq([person])
-      expect(top_posters[0].post_count).to eq(post_count)
+      expect(top_posters[0].top_post_count).to eq(post_count)
     end
 
     it "ignores post counts of 1" do

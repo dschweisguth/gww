@@ -59,7 +59,9 @@ module PeopleHelper
         position = i + 1
         score_for_this_position = high_scorer.send attr
       end
-      break if high_scorer == person
+      if high_scorer == person
+        break
+      end
     end
     {
       1 => '',
