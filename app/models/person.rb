@@ -1,5 +1,5 @@
 class Person < ActiveRecord::Base
-  include PersonPhotosSupport, PersonStatisticsSupport
+  include PersonStatisticsSupport
 
   MIN_GUESSES_FOR_FAVORITE = 10
   MIN_BIAS_FOR_FAVORITE = 2.5
@@ -9,8 +9,6 @@ class Person < ActiveRecord::Base
 
   has_many :photos, inverse_of: :person
   has_many :guesses, inverse_of: :person
-
-  attr_accessor :photo_count
 
   def identifier
     pathalias || flickrid

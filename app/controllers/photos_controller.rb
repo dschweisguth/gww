@@ -51,7 +51,7 @@ class PhotosController < ApplicationController
   caches_page :person_autocompletions
   def person_autocompletions
     terms = (params[:terms] || '').split('/').each_slice(2).to_h
-    data = Person.photo_search_autocompletions terms['term'], terms['game-status']&.split(',')
+    data = PhotosSearchAutocompletionsPerson.photo_search_autocompletions terms['term'], terms['game-status']&.split(',')
     render json: data
   end
 

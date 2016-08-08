@@ -12,7 +12,7 @@ FactoryGirl.define do
     pathalias { username }
   end
 
-  [PeoplePerson, PeopleIndexPerson, PeopleShowPerson, ScoreReportsPerson, WheresiesPerson].each do |specialist_class|
+  [PeoplePerson, PeopleIndexPerson, PeopleShowPerson, PhotosSearchAutocompletionsPerson, ScoreReportsPerson, WheresiesPerson].each do |specialist_class|
     factory specialist_class.name.underscore, parent: :person, class: specialist_class
   end
 
