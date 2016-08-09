@@ -17,7 +17,7 @@ class ScoreReport < ActiveRecord::Base
         where("ifnull(previous.created_at, ?) < #{answer_table_name}.added_at", Time.local(2005).getutc).
         where("#{answer_table_name}.added_at <= score_reports.created_at").
         group(:id)
-    reports.map { |report| [report.id, report[:count]] }.to_h
+    reports.map { |report| [report.id, report.count] }.to_h
   end
 
   def self.previous(date)
