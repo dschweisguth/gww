@@ -49,10 +49,7 @@ class ScoreReportsPerson < Person
   def self.change_in_standings(guesser, people, people_by_score)
     if guesser.previous_score == 0
       score = guesser.score
-      "scored his or her first point#{
-      if score > 1 then
-        " (and #{score - 1} more)"
-      end}. " +
+      "scored his or her first point#{if score > 1 then " (and #{score - 1} more)" end}. " +
         (guesser.previous_post_count == 0 ? 'Congratulations, and welcome to GWSF!' : 'Congratulations!')
     else
       place = guesser.place
@@ -61,9 +58,7 @@ class ScoreReportsPerson < Person
         advancements = advancements guesser, people, people_by_score
         (previous_place - place > 1 ? 'jumped' : 'climbed') +
           " from #{previous_place.ordinal} to #{place.ordinal} place" +
-          if advancements.present? then
-            ", #{advancements}"
-          end.to_s
+          if advancements.present? then ", #{advancements}" end.to_s
       end
     end
   end

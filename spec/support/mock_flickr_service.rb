@@ -3,7 +3,7 @@ class MockFlickrService
     raise "#{self.class.name.sub /^Mock/, ''}.instance.#{name} is not allowed in tests"
   end
 
-  def respond_to?(method, _include_all=false)
+  def respond_to?(method, _include_all = false)
     %i(
       initialize
       groups_get_info

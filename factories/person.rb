@@ -20,7 +20,7 @@ FactoryGirl.define do
     ScoreReportsPerson => [:high_score, :top_post_count],
     WheresiesPerson => []
   }.each do |specialist_class, traits|
-    options = {parent: :person, class: specialist_class}
+    options = { parent: :person, class: specialist_class }
     if traits.any?
       options[:traits] = traits
     end

@@ -135,6 +135,8 @@ Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
 Style/MultilineMethodCallIndentation:
   Enabled: false
 Style/MultilineOperationIndentation:
