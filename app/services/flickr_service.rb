@@ -122,7 +122,7 @@ class FlickrService
     failure_count = 0
     begin
       get(url).body
-    rescue StandardError, Timeout::Error => e
+    rescue => e
       failure_count += 1
       sleep_time = retry_quantum * (2**failure_count)
       warning = e.message
