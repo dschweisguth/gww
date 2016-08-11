@@ -1,6 +1,4 @@
 class Person < ActiveRecord::Base
-  include PersonStatisticsSupport
-
   MIN_GUESSES_FOR_FAVORITE = 10
   MIN_BIAS_FOR_FAVORITE = 2.5
 

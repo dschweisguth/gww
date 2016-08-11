@@ -18,6 +18,7 @@ FactoryGirl.define do
     PeopleShowPerson => [:bias, :high_score, :top_post_count],
     PhotosSearchAutocompletionsPerson => [:photo_count],
     ScoreReportsPerson => [:high_score, :top_post_count],
+    StatisticsPerson => [],
     WheresiesPerson => []
   }.each do |specialist_class, traits|
     options = { parent: :person, class: specialist_class }
