@@ -60,8 +60,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     end
 
     def mock_get_comments_and_tags
-      expect(described_class).to receive(:update_comments).with an_instance_of(Photo)
-      expect(described_class).to receive(:update_tags).with an_instance_of(Photo)
+      expect(described_class).to receive(:update_comments).with an_instance_of(FlickrUpdatePhoto)
+      expect(described_class).to receive(:update_tags).with an_instance_of(FlickrUpdatePhoto)
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
@@ -153,7 +153,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       stubbed_faves = stub_get_faves
       mock_get_comments_and_tags
       person = create :person, flickrid: 'incoming_person_flickrid'
-      photo_before = create :photo,
+      photo_before = create :flickr_update_photo,
         person: person,
         flickrid: 'incoming_photo_flickrid',
         farm: '2',
@@ -198,7 +198,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       expect(described_class).not_to receive(:update_comments)
       expect(described_class).not_to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
-      photo_before = create :photo,
+      photo_before = create :flickr_update_photo,
         person: person,
         flickrid: stubbed_photo[:id],
         farm: '2',
@@ -240,7 +240,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       expect(described_class).not_to receive(:update_comments)
       expect(described_class).not_to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
-      photo_before = create :photo,
+      photo_before = create :flickr_update_photo,
         person: person,
         flickrid: stubbed_photo[:id],
         farm: '2',
@@ -282,7 +282,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       stubbed_faves = stub_get_faves
       mock_get_comments_and_tags
       person = create :person, flickrid: 'incoming_person_flickrid'
-      photo_before = create :photo,
+      photo_before = create :flickr_update_photo,
         person: person,
         flickrid: 'incoming_photo_flickrid',
         farm: '2',
@@ -333,7 +333,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       stub_get_photos
       mock_get_comments_and_tags
       allow(described_class).to receive(:fave_count) { nil }
-      photo = create :photo, faves: 6
+      photo = create :flickr_update_photo, faves: 6
       described_class.update_all
       expect(photo.reload.faves).to eq(6)
     end
@@ -353,7 +353,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
   end
 
   describe '.update' do
-    let(:photo) { create :photo }
+    let(:photo) { create :flickr_update_photo }
     let!(:now) { Time.utc 2014 }
 
     before do
@@ -574,7 +574,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
   end
 
   describe '.update_comments' do
-    let(:photo) { create :photo }
+    let(:photo) { create :flickr_update_photo }
 
     it "loads comments from Flickr" do
       stub_request_to_return_one_comment
@@ -639,7 +639,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
   end
 
   describe '.update_tags' do
-    let(:photo) { create :photo }
+    let(:photo) { create :flickr_update_photo }
 
     it "loads tags from Flickr" do
       stub_get_tags Tag.new(raw: 'Tag 1'), Tag.new(raw: 'Tag 2', machine_tag: true)

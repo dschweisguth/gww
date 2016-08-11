@@ -24,5 +24,6 @@ FactoryGirl.define do
 
   factory :photos_photo, parent: :photo, class: PhotosPhoto
   factory :admin_photos_photo, parent: :photo, class: AdminPhotosPhoto
+  factory :flickr_update_photo, parent: :photo, class: FlickrUpdatePhoto
 
 end

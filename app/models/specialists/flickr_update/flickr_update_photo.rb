@@ -1,4 +1,4 @@
-module PhotoFlickrUpdateSupport
+class FlickrUpdatePhoto < Photo
   def replace_comments(attributes_hashes)
     transaction do
       comments.clear

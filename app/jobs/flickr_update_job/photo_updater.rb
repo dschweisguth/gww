@@ -45,7 +45,7 @@ module FlickrUpdateJob
 
     private_class_method def self.create_or_update_photo_from(parsed_photo, person, now)
       flickrid = parsed_photo['id']
-      photo = Photo.find_by_flickrid flickrid
+      photo = FlickrUpdatePhoto.find_by_flickrid flickrid
       lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
       photo_needs_full_update = !photo || lastupdate != photo.lastupdate
       views = parsed_photo['views'].to_i
@@ -85,7 +85,7 @@ module FlickrUpdateJob
           dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
           game_status: 'unfound'
         )
-        photo = Photo.create! attributes
+        photo = FlickrUpdatePhoto.create! attributes
         created = 1
       end
 
