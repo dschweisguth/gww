@@ -19,6 +19,10 @@ class Photo < ActiveRecord::Base
     person.destroy_if_has_no_dependents
   end
 
+  def self.find_with_associations(id)
+    includes(:person, :revelation, guesses: :person).find id
+  end
+
   def self.multipoint_without_associations
     joins(:guesses).group("photos.id").having("count(*) > 1")
   end

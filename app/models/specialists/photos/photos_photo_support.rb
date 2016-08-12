@@ -3,14 +3,9 @@ module PhotosPhotoSupport
   include PhotoMapSupport
 
   module ClassMethods
-    def find_with_associations(id)
-      includes(:person, :revelation, guesses: :person).find id
-    end
-
     def unfound_or_unconfirmed
       where("game_status in ('unfound', 'unconfirmed')").order('lastupdate desc').includes(:person, :tags)
     end
-
   end
 
   def human_tags

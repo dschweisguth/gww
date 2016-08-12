@@ -15,15 +15,16 @@ class Admin::PhotosController < ApplicationController
   end
 
   def edit
-    @photo = AdminPhotosPhoto.find_with_associations params[:id].to_i
+    photo = FlickrUpdatePhoto.find_with_associations params[:id].to_i
     if params[:update_from_flickr]
       begin
-        FlickrUpdateJob::PhotoUpdater.update @photo
+        FlickrUpdateJob::PhotoUpdater.update photo
       rescue FlickrService::FlickrReturnedAnError => e
         flash[:notice] = e.message
       end
       PageCache.clear
     end
+    @photo = AdminPhotosPhoto.find_with_associations params[:id].to_i
     @photo.comments.to_a
     @json = @photo.to_map_json
   end

@@ -96,6 +96,26 @@ describe Photo do
 
   end
 
+  describe '.find_with_associations' do
+    let(:photo_in) { create :photos_photo }
+
+    it "returns a revealed photo with all of its associated objects" do
+      revelation = create :revelation, photo: photo_in
+      photo_out = PhotosPhoto.find_with_associations photo_in.id
+      expect(photo_out.person).to eq(photo_in.person)
+      expect(photo_out.revelation).to eq(revelation)
+    end
+
+    it "returns a guessed photo with all of its associated objects" do
+      guess = create :guess, photo: photo_in
+      photo_out = PhotosPhoto.find_with_associations photo_in.id
+      expect(photo_out.person).to eq(photo_in.person)
+      expect(photo_out.guesses).to eq([guess])
+      expect(photo_out.guesses[0].person).to eq(guess.person)
+    end
+
+  end
+
   describe '#time_elapsed' do
     it "returns the age with a precision of seconds in English" do
       photo = Photo.new dateadded: Time.utc(2000)

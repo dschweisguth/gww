@@ -53,25 +53,27 @@ describe Admin::PhotosController do
   end
 
   describe '#edit' do
-    let(:photo) { build_stubbed :admin_photos_photo }
+    let(:flickr_update_photo) { build_stubbed :flickr_update_photo, id: 1 }
+    let(:admin_photos_photo) { build_stubbed :admin_photos_photo, id: 1 }
 
     before do
-      allow(AdminPhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
-      allow(photo).to receive(:comments) { [] }
-      allow(photo).to receive(:guesses) { [] }
-      allow(photo).to receive(:revelation) { nil }
-      allow(photo).to receive(:tags) { [] }
+      allow(FlickrUpdatePhoto).to receive(:find_with_associations).with(flickr_update_photo.id) { flickr_update_photo }
+      allow(AdminPhotosPhoto).to receive(:find_with_associations).with(admin_photos_photo.id) { admin_photos_photo }
+      allow(admin_photos_photo).to receive(:comments) { [] }
+      allow(admin_photos_photo).to receive(:guesses) { [] }
+      allow(admin_photos_photo).to receive(:revelation) { nil }
+      allow(admin_photos_photo).to receive(:tags) { [] }
     end
 
     it "renders the page without loading comments" do
-      get :edit, id: photo.id
+      get :edit, id: admin_photos_photo.id
       expect(response).to be_success
     end
 
     it "loads comments and renders the page" do
-      allow(FlickrUpdateJob::PhotoUpdater).to receive(:update).with(photo)
+      allow(FlickrUpdateJob::PhotoUpdater).to receive(:update).with(flickr_update_photo)
       mock_clear_page_cache
-      get :edit, id: photo.id, update_from_flickr: true
+      get :edit, id: admin_photos_photo.id, update_from_flickr: true
       expect(response).to be_success
     end
 
