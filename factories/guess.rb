@@ -7,7 +7,7 @@ FactoryGirl.define do
     added_at { Time.now }
   end
 
-  [PeopleGuess, PeopleShowGuess, ScoreReportsGuess, WheresiesGuess].each do |specialist_class|
+  [PeopleGuess, PeopleShowGuess, ScoreReportsGuess, StatisticsGuess, WheresiesGuess].each do |specialist_class|
     factory_name = specialist_class.name.underscore
     factory factory_name, parent: :guess, class: specialist_class do
       association :person, factory: factory_name.sub(/guess$/, 'person'), strategy: :build

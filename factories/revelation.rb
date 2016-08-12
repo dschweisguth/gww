@@ -10,4 +10,8 @@ FactoryGirl.define do
     association :photo, factory: :score_reports_photo, strategy: :build
   end
 
+  factory :statistics_revelation, parent: :revelation, class: StatisticsRevelation do
+    association :photo, factory: :statistics_photo, strategy: :build
+  end
+
 end

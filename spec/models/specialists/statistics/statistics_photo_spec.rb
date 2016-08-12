@@ -1,24 +1,24 @@
-describe PhotoStatisticsSupport do
+describe StatisticsPhoto do
   describe '.update_statistics' do
     context "when updating other user comments" do
       it "counts comments" do
         comment = create :comment
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         comment.photo.reload
         expect(comment.photo.other_user_comments).to eq(1)
       end
 
       it "ignores comments by the poster" do
-        photo = create :photo
+        photo = create :statistics_photo
         create :comment, photo: photo, flickrid: photo.person.flickrid, username: photo.person.username
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         photo.reload
         expect(photo.other_user_comments).to eq(0)
       end
 
       it "handles photos which go from nonzero to zero comments" do
-        photo = create :photo, other_user_comments: 1
-        Photo.update_statistics
+        photo = create :statistics_photo, other_user_comments: 1
+        StatisticsPhoto.update_statistics
         photo.reload
         expect(photo.other_user_comments).to eq(0)
       end
@@ -31,7 +31,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_comments).to eq(1)
       end
@@ -40,7 +40,7 @@ describe PhotoStatisticsSupport do
         guess = create :guess
         create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_comments).to eq(0)
       end
@@ -48,7 +48,7 @@ describe PhotoStatisticsSupport do
       it "ignores comments by non-members" do
         guess = create :guess
         create :comment, photo: guess.photo
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_comments).to eq(0)
       end
@@ -61,7 +61,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_comments).to eq(2)
       end
@@ -74,7 +74,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at + 5
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_comments).to eq(1)
       end
@@ -83,9 +83,9 @@ describe PhotoStatisticsSupport do
       # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
       # didn't work that way
       it "handles photos which go from nonzero to zero comments" do
-        photo = create :photo, member_comments: 1
+        photo = create :statistics_photo, member_comments: 1
         create :guess, photo: photo
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         photo.reload
         expect(photo.member_comments).to eq(0)
       end
@@ -98,7 +98,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_questions).to eq(1)
       end
@@ -108,7 +108,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username,
           comment_text: '?'
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_questions).to eq(0)
       end
@@ -116,7 +116,7 @@ describe PhotoStatisticsSupport do
       it "ignores questions by non-members" do
         guess = create :guess
         create :comment, photo: guess.photo, comment_text: '?'
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_questions).to eq(0)
       end
@@ -129,7 +129,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_questions).to eq(2)
       end
@@ -142,7 +142,7 @@ describe PhotoStatisticsSupport do
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at + 5, comment_text: '?'
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         guess.photo.reload
         expect(guess.photo.member_questions).to eq(1)
       end
@@ -151,9 +151,9 @@ describe PhotoStatisticsSupport do
       # the Flickr update process will keep the old comments, but it did happen back when the Flickr update process
       # didn't work that way
       it "handles photos which go from nonzero to zero comments" do
-        photo = create :photo, member_questions: 1
+        photo = create :statistics_photo, member_questions: 1
         create :guess, photo: photo
-        Photo.update_statistics
+        StatisticsPhoto.update_statistics
         photo.reload
         expect(photo.member_questions).to eq(0)
       end
@@ -178,7 +178,7 @@ describe PhotoStatisticsSupport do
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
       allow(Stintersection).to receive(:geocode).with(location) { factory.point(-122, 37) }
-      Photo.infer_geocodes
+      StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
       expect(answer.photo.inferred_latitude).to eq(BigDecimal.new('37.0'))
@@ -191,7 +191,7 @@ describe PhotoStatisticsSupport do
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
       allow(Stintersection).to receive(:geocode).with(location) { factory.point(-122, 37) }
-      Photo.infer_geocodes
+      StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
       expect(answer.photo.inferred_latitude).to eq(BigDecimal.new('37.0'))
@@ -200,10 +200,10 @@ describe PhotoStatisticsSupport do
     end
 
     it "removes an existing inferred geocode if the comment can't be parsed" do
-      photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
+      photo = create :statistics_photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'An unparseable comment'
       allow(parser).to receive(:parse).with(answer.comment_text) { [] }
-      Photo.infer_geocodes
+      StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
       expect(answer.photo.inferred_latitude).to eq(nil)
@@ -212,12 +212,12 @@ describe PhotoStatisticsSupport do
     end
 
     it "removes an existing inferred geocode if the location can't be geocoded" do
-      photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
+      photo = create :statistics_photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
       allow(Stintersection).to receive(:geocode).with(location) { nil }
-      Photo.infer_geocodes
+      StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
       expect(answer.photo.inferred_latitude).to eq(nil)
@@ -226,14 +226,14 @@ describe PhotoStatisticsSupport do
     end
 
     it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
-      photo = create :photo, inferred_latitude: 37, inferred_longitude: -122
+      photo = create :statistics_photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'A comment with multiple gecodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       allow(parser).to receive(:parse).with(answer.comment_text) { [location1, location2] }
       allow(Stintersection).to receive(:geocode).with(location1) { factory.point(37, -122) }
       allow(Stintersection).to receive(:geocode).with(location2) { factory.point(38, -122) }
-      Photo.infer_geocodes
+      StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
       expect(answer.photo.inferred_latitude).to eq(nil)

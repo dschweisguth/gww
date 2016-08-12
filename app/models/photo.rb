@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  include Ageable, PhotoStatisticsSupport
+  include Ageable
 
   belongs_to :person, inverse_of: :photos
   has_many :comments, inverse_of: :photo, dependent: :destroy

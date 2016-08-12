@@ -1,4 +1,7 @@
 class StatisticsPerson < Person
+  has_many :photos, inverse_of: :person, class_name: 'StatisticsPhoto', foreign_key: 'person_id'
+  has_many :guesses, inverse_of: :person, class_name: 'StatisticsGuess', foreign_key: 'person_id'
+
   def self.update_statistics
     update_all comments_to_guess: nil, comments_per_post: 0, comments_to_be_guessed: nil
     update_statistic :comments_to_guess, %q{
