@@ -16,7 +16,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
           farm: '1',
           server: 'incoming_server',
           secret: 'incoming_secret',
-          datetaken: Time.local(2010), # local because we assume that the photo was taken in SF
+          datetaken: sf_time(2010),
           dateadded: Time.utc(2011),
           latitude: 37.123456,
           longitude: -122.654321,
@@ -380,7 +380,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
         views: 50,
         title: 'The title',
         description: 'The description',
-        datetaken: Time.local(2010), # local because we assume that the photo was taken in SF
+        datetaken: sf_time(2010),
         lastupdate: Time.utc(2011, 1, 1, 1),
         seen_at: now,
         latitude: 37.123456,
@@ -698,6 +698,11 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       expect(photo.tags.map(&:raw)).to eq(['old tag'])
     end
 
+  end
+
+  # The class under test assumes that all photos are taken in SF
+  def sf_time(year)
+    ActiveSupport::TimeZone['Pacific Time (US & Canada)'].local(year)
   end
 
 end
