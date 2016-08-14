@@ -7,7 +7,6 @@ describe RootController do
 
       expect(response).to be_success
       expect(response.body).to include 'The most recent update from Flickr began Saturday, January  1,  0:00 PST and is still running. An update takes about an hour.'
-      expect(response.body).to have_link '2011', href: wheresies_path(2011)
 
     end
 
