@@ -14,6 +14,11 @@ Given /^there is a score report$/ do
   create :score_report
 end
 
+Given /^there has been enough activity for the home page to be displayed without error$/ do
+  step "there is a Flickr update"
+  step "there is a score report"
+end
+
 When /^I go to (.*)$/ do |page_name|
   visit path_to(page_name)
 end
