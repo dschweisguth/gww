@@ -26,4 +26,14 @@ FactoryGirl.define do
   factory :admin_photos_photo, parent: :photo, class: AdminPhotosPhoto
   factory :flickr_update_photo, parent: :photo, class: FlickrUpdatePhoto
 
+  factory :guessed_photo, parent: :photo do
+    game_status 'found'
+
+    after(:create) do |photo|
+      comment = create :comment, photo: photo
+      create :guess, comment_text: comment.comment_text, photo: photo
+    end
+
+  end
+
 end

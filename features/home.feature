@@ -13,8 +13,7 @@ Feature: Home page
 
   @javascript
   Scenario: Player finds a player by username
-    Given there is a Flickr update
-    And there is a score report
+    Given there has been enough activity for the home page to be displayed without error
     And there is a player "abcdefgh"
     When I go to the home page
     And I autoselect "abcdefgh" from the "username" field
