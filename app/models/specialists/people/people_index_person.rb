@@ -8,7 +8,7 @@ class PeopleIndexPerson < Person
     sorted people, sorted_by, order
   end
 
-  def self.add_attrs_to_sort_on(people)
+  private_class_method def self.add_attrs_to_sort_on(people)
     post_counts = Photo.group(:person_id).count
     guess_counts = Guess.group(:person_id).count
     guesses_per_days = PeopleIndexPerson.guesses_per_day
@@ -35,7 +35,6 @@ class PeopleIndexPerson < Person
     end
 
   end
-  private_class_method :add_attrs_to_sort_on
 
   def self.guesses_per_day
     statistic_by_person [%q{
@@ -77,10 +76,9 @@ class PeopleIndexPerson < Person
     statistic_by_person 'select person_id id, avg(faves) statistic from photos group by person_id'
   end
 
-  def self.statistic_by_person(sql)
+  private_class_method def self.statistic_by_person(sql)
     find_by_sql(sql).each_with_object({}) { |person, statistic| statistic[person.id] = person[:statistic].to_f }
   end
-  private_class_method :statistic_by_person
 
   CRITERIA = {
     'username' => %i(downcased_username),
@@ -99,7 +97,7 @@ class PeopleIndexPerson < Person
     'faves-per-post' => %i(faves_per_post post_count downcased_username)
   }.freeze
 
-  def self.sorted(people, sorted_by, order)
+  private_class_method def self.sorted(people, sorted_by, order)
     if !CRITERIA.key? sorted_by
       raise ArgumentError, "#{sorted_by} is not a valid sort order"
     end
@@ -122,6 +120,5 @@ class PeopleIndexPerson < Person
       order == '+' ? total_comparison : -total_comparison
     end
   end
-  private_class_method :sorted
 
 end

@@ -44,11 +44,10 @@ class StatisticsPerson < Person
     }
   end
 
-  def self.update_statistic(attribute, sql)
+  private_class_method def self.update_statistic(attribute, sql)
     find_by_sql(sql).each do |person|
       person.update_attribute attribute, person[:statistic]
     end
   end
-  private_class_method :update_statistic
 
 end

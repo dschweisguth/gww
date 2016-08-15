@@ -66,7 +66,7 @@ class StatisticsPhoto < Photo
       "geocoded #{inferred_count} photos (#{'%.1f' % (100.0 * inferred_count / answer_count)}% success)"
   end
 
-  def self.unique_geocode(locations)
+  private_class_method def self.unique_geocode(locations)
     if locations.any?
       shapes = locations.map { |location| Stintersection.geocode location }.compact
       if shapes.length == 1
@@ -80,7 +80,6 @@ class StatisticsPhoto < Photo
       [nil, 0, 0]
     end
   end
-  private_class_method :unique_geocode
 
   def update_geocode!(point)
     lat = point&.y

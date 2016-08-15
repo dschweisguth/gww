@@ -46,7 +46,7 @@ class ScoreReportsPerson < Person
     end
   end
 
-  def self.change_in_standings(guesser, people, people_by_score)
+  private_class_method def self.change_in_standings(guesser, people, people_by_score)
     if guesser.previous_score == 0
       score = guesser.score
       "scored his or her first point#{if score > 1 then " (and #{score - 1} more)" end}. " +
@@ -62,9 +62,8 @@ class ScoreReportsPerson < Person
       end
     end
   end
-  private_class_method :change_in_standings
 
-  def self.advancements(guesser, people, people_by_score)
+  private_class_method def self.advancements(guesser, people, people_by_score)
     threats = []
     passed = people.find_all { |person| person.previous_place < guesser.previous_place && person.place > guesser.place }
     if passed.length == 1 || passed.any? && guesser.previous_place - guesser.place == 2
@@ -76,12 +75,10 @@ class ScoreReportsPerson < Person
     end
     threats.join ' and '
   end
-  private_class_method :advancements
 
-  def self.opponent_or_opponents(opponents)
+  private_class_method def self.opponent_or_opponents(opponents)
     opponents.length == 1 ? opponents[0].username : "#{opponents.length} other players"
   end
-  private_class_method :opponent_or_opponents
 
   # TODO make this work for boundaries above 5000
   MILESTONES = [100, 200, 300, 400, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000].freeze
@@ -96,7 +93,7 @@ class ScoreReportsPerson < Person
     3300 => "https://www.flickr.com/photos/spine/3132055535/"
   }.freeze
 
-  def self.achievements(guesser)
+  private_class_method def self.achievements(guesser)
     score = guesser.score
     previous_score = guesser.previous_score
     achievements = []
@@ -108,13 +105,11 @@ class ScoreReportsPerson < Person
     append(achievements, entered_top_ten) { 'Welcome to the top ten!' }
     achievements.join ' '
   end
-  private_class_method :achievements
 
-  def self.append(achievements, value)
+  private_class_method def self.append(achievements, value)
     if value
       achievements << yield
     end
   end
-  private_class_method :append
 
 end

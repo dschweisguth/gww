@@ -10,7 +10,7 @@ class WheresiesPerson < Person
     most_achievements_in year, :photos, :dateadded, :post_count
   end
 
-  def self.most_achievements_in(year, achievements, date_column, count_attribute)
+  private_class_method def self.most_achievements_in(year, achievements, date_column, count_attribute)
     select("people.*, count(*) #{count_attribute}").
       joins(achievements).
       where("? <= #{achievements}.#{date_column}", Time.local(year).getutc).
@@ -19,7 +19,6 @@ class WheresiesPerson < Person
       order("#{count_attribute} desc").
       limit 10
   end
-  private_class_method :most_achievements_in
 
   def self.rookies_with_most_points_in(year)
     rookies_with_most_achievements_in year, :guesses, :commented_at, :points
@@ -29,7 +28,7 @@ class WheresiesPerson < Person
     rookies_with_most_achievements_in year, :photos, :dateadded, :post_count
   end
 
-  def self.rookies_with_most_achievements_in(year, achievements, date_column, count_attribute)
+  private_class_method def self.rookies_with_most_achievements_in(year, achievements, date_column, count_attribute)
     find_by_sql [
       %Q{
           select people.*, count(*) #{count_attribute}
@@ -48,6 +47,5 @@ class WheresiesPerson < Person
       year_start: Time.local(year).getutc, year_end: Time.local(year + 1).getutc
     ]
   end
-  private_class_method :rookies_with_most_achievements_in
 
 end

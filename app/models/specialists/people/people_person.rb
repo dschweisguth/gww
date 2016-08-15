@@ -49,7 +49,7 @@ class PeoplePerson < Person
     return days, weeks, months, years
   end
 
-  def self.top_guesser_periods(report_time)
+  private_class_method def self.top_guesser_periods(report_time)
     report_day = report_time.beginning_of_day
 
     days = (0..6).map { |i| Period.starting_at(report_day - i.days, 1.day) }
@@ -66,9 +66,8 @@ class PeoplePerson < Person
 
     return days, weeks, months, years
   end
-  private_class_method :top_guesser_periods
 
-  def self.top_guesser_scores(begin_date, end_date)
+  private_class_method def self.top_guesser_scores(begin_date, end_date)
     PeoplePerson.
       select("people.*, count(*) score").
       joins(:guesses).
@@ -85,7 +84,6 @@ class PeoplePerson < Person
         end
       end
   end
-  private_class_method :top_guesser_scores
 
   def guesses_with_associations_ordered_by_comments
     guesses.includes(photo: :person).order('commented_at desc')

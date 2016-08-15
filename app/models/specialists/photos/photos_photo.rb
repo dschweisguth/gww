@@ -31,7 +31,7 @@ class PhotosPhoto < Photo
       column: 'member_questions', default_order: '-' }
   }.freeze
 
-  def self.order_by(sorted_by, order)
+  private_class_method def self.order_by(sorted_by, order)
     term_names = [sorted_by, *SORTED_BY[sorted_by][:secondary]]
     terms = term_names.map do |term_name|
       term = SORTED_BY[term_name][:column]
@@ -42,7 +42,6 @@ class PhotosPhoto < Photo
     end
     terms.join ', '
   end
-  private_class_method :order_by
 
   def self.all_for_map(bounds, max_count)
     photos = mapped bounds, max_count + 1
