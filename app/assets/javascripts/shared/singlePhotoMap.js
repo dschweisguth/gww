@@ -5,12 +5,12 @@ GWW.shared.singlePhotoMap = (function () {
     setUp: function () {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=GWW.shared.singlePhotoMap.mapsAPIIsLoadedCallback';
+      script.src = 'http://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=GWW.shared.singlePhotoMap.mapsAPIIsLoadedCallback';
       document.body.appendChild(script);
     },
 
     mapsAPIIsLoadedCallback: function () {
-      var photo = GWW.config;
+      var photo = GWW.config.photo;
       var center = new google.maps.LatLng(photo.latitude, photo.longitude);
       var map = new google.maps.Map($('#map')[0], {
         zoom: 15,

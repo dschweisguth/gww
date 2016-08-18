@@ -31,5 +31,21 @@ end
 
 Then(/^I should see the photo on the map$/) do
   # Test that the JSON necessary to display the photo is on the page. TODO run Javascript and inspect the map.
-  expect(page.body).to include(%Q("photos":[{"id":#{@photo.id},"latitude":"#{@photo.latitude}","longitude":"#{@photo.longitude}","color":"FCFC00","symbol":"?"}]))
+  json_data = {
+    api_key: google_maps_api_key,
+    photos: {
+      partial: false,
+      bounds: MultiPhotoMapControllerSupport::INITIAL_MAP_BOUNDS.as_json,
+      photos: [
+        {
+          id: @photo.id,
+          latitude: @photo.latitude,
+          longitude: @photo.longitude,
+          color: Color::Yellow.scaled(0, 1, 0),
+          symbol: '?'
+        }
+      ]
+    }
+  }
+  expect(page.body).to include("GWW.config = #{json_data.to_json}")
 end

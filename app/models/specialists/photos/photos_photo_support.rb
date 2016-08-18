@@ -16,12 +16,12 @@ module PhotosPhotoSupport
     tags.select &:machine_tag
   end
 
-  def to_map_json
+  def as_map_json
     if mapped_or_automapped?
       first_photo = self.class.oldest
       use_inferred_geocode_if_necessary
       prepare_for_map first_photo.dateadded
-      to_json only: %i(id latitude longitude), methods: %i(color symbol)
+      as_json only: %i(id latitude longitude), methods: %i(color symbol)
     end
   end
 

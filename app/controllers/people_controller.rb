@@ -115,15 +115,14 @@ class PeopleController < ApplicationController
 
   caches_page :map
   def map
-    person_id = params[:id].to_i
-    @person = PeoplePerson.find person_id
+    @person = PeoplePerson.find params[:id].to_i
     @posts_count = @person.mapped_photo_count
     @guesses_count = @person.mapped_guess_count
-    @json = PeoplePhoto.for_person_for_map(person_id, bounds, MAX_MAP_PHOTOS).to_json
+    @json = map_json_data.to_json
   end
 
-  def map_json
-    render json: PeoplePhoto.for_person_for_map(params[:id].to_i, bounds, MAX_MAP_PHOTOS)
+  private def map_photos_json_data
+    PeoplePhoto.for_person_for_map(params[:id].to_i, bounds, MAX_MAP_PHOTOS)
   end
 
 end

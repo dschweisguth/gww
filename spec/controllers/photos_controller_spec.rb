@@ -3,12 +3,13 @@ require 'will_paginate/array'
 describe PhotosController do
   describe '#map_json' do
     it "renders the page" do
-      json = { 'property' => 'value' }
-      allow(PhotosPhoto).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
+      photos_json_data = { 'property' => 'value' }
+      allow(PhotosPhoto).to receive(:all_for_map).
+        with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { photos_json_data }
       get :map_json
 
       expect(response).to be_success
-      expect(response.body).to eq(json.to_json)
+      expect(response.body).to eq(controller.with_google_maps_api_key(photos: photos_json_data).to_json)
 
     end
 
@@ -161,14 +162,16 @@ describe PhotosController do
       allow(PhotosPhoto).to receive(:oldest) { oldest }
       get :show, id: photo.id
 
-      json = {
-        'id' => photo.id,
-        'latitude' => photo.latitude.to_s,
-        'longitude' => photo.longitude.to_s,
-        'color' => Color::Yellow.scaled(0, 0, 0),
-        'symbol' => '?'
-      }
-      expect(ActiveSupport::JSON.decode(assigns[:json])).to eq(json)
+      json = controller.with_google_maps_api_key(
+        photo: {
+          id: photo.id,
+          latitude: photo.latitude.to_s,
+          longitude: photo.longitude.to_s,
+          color: Color::Yellow.scaled(0, 0, 0),
+          symbol: '?'
+        }
+      ).to_json
+      expect(assigns[:json]).to eq(json)
 
       expect(response).to be_success
       expect(response.body).to include 'It was mapped by the photographer'
@@ -191,14 +194,16 @@ describe PhotosController do
       allow(PhotosPhoto).to receive(:oldest) { oldest }
       get :show, id: photo.id
 
-      json = {
-        'id' => photo.id,
-        'latitude' => photo.inferred_latitude.to_s,
-        'longitude' => photo.inferred_longitude.to_s,
-        'color' => Color::Yellow.scaled(0, 0, 0),
-        'symbol' => '?'
-      }
-      expect(ActiveSupport::JSON.decode(assigns[:json])).to eq(json)
+      json = controller.with_google_maps_api_key(
+        photo: {
+          id: photo.id,
+          latitude: photo.inferred_latitude.to_s,
+          longitude: photo.inferred_longitude.to_s,
+          color: Color::Yellow.scaled(0, 0, 0),
+          symbol: '?'
+        }
+      ).to_json
+      expect(assigns[:json]).to eq(json)
 
       expect(response).to be_success
       expect(response.body).to include 'It was auto-mapped'

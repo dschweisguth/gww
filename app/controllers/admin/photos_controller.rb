@@ -1,4 +1,6 @@
 class Admin::PhotosController < ApplicationController
+  include MapControllerSupport
+
   caches_page :unfound
   def unfound
     @photos = AdminPhotosPhoto.unfound_or_unconfirmed
@@ -26,7 +28,7 @@ class Admin::PhotosController < ApplicationController
     end
     @photo = AdminPhotosPhoto.find_with_associations params[:id].to_i
     @photo.comments.to_a
-    @json = @photo.to_map_json
+    set_map_json_from_photo
   end
 
   def change_game_status

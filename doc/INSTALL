@@ -97,8 +97,12 @@ Configure
         Edit, change usernames if you want different ones, and choose passwords
     Configure Flickr credentials
         Construct a Flickr API secret, key, oauth token and oauth token secret manually per the API documentation
-	> cp config/flickr_credentials{_template,}.yml
-	Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
+        > cp config/flickr_credentials{_template,}.yml
+        Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
+    Configure Google Maps credentials
+        Make a Google Maps browser key per https://developers.google.com/maps/documentation/javascript/get-api-key#key
+        > cp config/google_maps{_template}.yml
+        Edit and fill in your key
 
 Create database users and databases
 -----------------------------------

@@ -8,11 +8,11 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    @json = PhotosPhoto.all_for_map(bounds, MAX_MAP_PHOTOS).to_json
+    @json = map_json_data.to_json
   end
 
-  def map_json
-    render json: PhotosPhoto.all_for_map(bounds, MAX_MAP_PHOTOS)
+  private def map_photos_json_data
+    PhotosPhoto.all_for_map(bounds, MAX_MAP_PHOTOS)
   end
 
   caches_page :map_popup
@@ -59,7 +59,7 @@ class PhotosController < ApplicationController
   def show
     @photo = PhotosPhoto.find params[:id].to_i
     @comments = @photo.comments
-    @json = @photo.to_map_json
+    set_map_json_from_photo
   end
 
 end

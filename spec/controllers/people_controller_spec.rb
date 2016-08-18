@@ -393,12 +393,12 @@ describe PeopleController do
       allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
       allow(person).to receive(:mapped_photo_count) { 1 }
       allow(person).to receive(:mapped_guess_count) { 1 }
-      json = { 'property' => 'value' }
+      photos_json_data = { 'property' => 'value' }
       allow(PeoplePhoto).to receive(:for_person_for_map).
-        with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { json }
+        with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { photos_json_data }
       get :map, id: person.id
 
-      expect(assigns[:json]).to eq(json.to_json)
+      expect(assigns[:json]).to eq(controller.with_google_maps_api_key(photos: photos_json_data).to_json)
 
       expect(response).to be_success
       expect(response.body).to have_css 'input[id=posts]'
@@ -412,13 +412,13 @@ describe PeopleController do
 
   describe '#map_json' do
     it "renders the page" do
-      json = { 'property' => 'value' }
+      photos_json_data = { 'property' => 'value' }
       allow(PeoplePhoto).to receive(:for_person_for_map).
-        with(1, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { json }
+        with(1, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { photos_json_data }
       get :map_json, id: 1
 
       expect(response).to be_success
-      expect(response.body).to eq(json.to_json)
+      expect(response.body).to eq(controller.with_google_maps_api_key(photos: photos_json_data).to_json)
 
     end
 

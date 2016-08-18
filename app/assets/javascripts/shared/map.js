@@ -13,7 +13,7 @@ GWW.shared.createMap = function () {
     setUp: function (callbackName) {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'http://maps.google.com/maps/api/js?v=3.4&sensor=false&callback=' + callbackName;
+      script.src = 'http://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=' + callbackName;
       document.body.appendChild(script);
     },
 
@@ -72,12 +72,12 @@ GWW.shared.createMap = function () {
       jsonBounds.min_long <= mapBounds.getSouthWest().lng() && mapBounds.getNorthEast().lng() <= jsonBounds.max_long);
   };
 
-  var showMarkers = function (photos) {
-    jsonIncludedAllMarkers = ! photos.partial;
-    jsonBounds = photos.bounds;
+  var showMarkers = function (config) {
+    jsonIncludedAllMarkers = ! config.photos.partial;
+    jsonBounds = config.photos.bounds;
     $.each(that.markers, function (i, marker) { marker.setMap(null); });
     that.markers.length = 0;
-    $.each(photos.photos, function (i, photo) {
+    $.each(config.photos.photos, function (i, photo) {
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
         icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
