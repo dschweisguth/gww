@@ -7,6 +7,8 @@ module PathTo
         root_path
       when /^the photos page sorted by (.*)$/
         photos_path sorted_by: Regexp.last_match(1), order: '+', page: 1
+      when "the photos map page"
+        map_photos_path
       when "the photos search page"
         search_photos_path
       when /^the player "([^"]+)"'s page$/

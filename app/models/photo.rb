@@ -11,6 +11,7 @@ class Photo < ActiveRecord::Base
   attr_readonly :person, :flickrid
   validates :latitude, :longitude, numericality: { allow_nil: true }
   validates :accuracy, numericality: { allow_nil: true, only_integer: true, greater_than_or_equal_to: 0 }
+  # TODO Dave validate that latitude, longitude and accuracy are all null or all not null
   validates :game_status, inclusion: { in: %w(unfound unconfirmed found revealed) }
   validates :views, :faves, :other_user_comments, :member_comments, :member_questions,
     numericality: { only_integer: true, greater_than_or_equal_to: 0 }

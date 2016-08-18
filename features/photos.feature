@@ -14,3 +14,10 @@ Feature: Photos
 
     When I follow the "posted by" link
     Then the photo added by "username1" should appear before the photo added by "username2"
+
+  @javascript
+  Scenario: Player views map of all photos
+    Given there is a mapped photo
+    And I go to the photos map page
+    Then I should see the photo on the map
+

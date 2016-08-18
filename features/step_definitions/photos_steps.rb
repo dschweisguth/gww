@@ -24,3 +24,12 @@ end
 Then(/^the photo added by "([^"]*)" should appear before the photo added by "([^"]*)"$/) do |username1, username2|
   expect(page.body.index username1).to be < page.body.index(username2)
 end
+
+Given(/^there is a mapped photo$/) do
+  @photo = create :mapped_photo
+end
+
+Then(/^I should see the photo on the map$/) do
+  # Test that the JSON necessary to display the photo is on the page. TODO run Javascript and inspect the map.
+  expect(page.body).to include(%Q("photos":[{"id":#{@photo.id},"latitude":"#{@photo.latitude}","longitude":"#{@photo.longitude}","color":"FCFC00","symbol":"?"}]))
+end

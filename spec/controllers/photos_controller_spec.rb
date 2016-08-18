@@ -1,20 +1,6 @@
 require 'will_paginate/array'
 
 describe PhotosController do
-  describe '#map' do
-    it "renders the page" do
-      json = { 'property' => 'value' }
-      allow(PhotosPhoto).to receive(:all_for_map).with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { json }
-      get :map
-
-      expect(assigns[:json]).to eq(json.to_json)
-
-      expect(response).to be_success
-      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
-
-    end
-  end
-
   describe '#map_json' do
     it "renders the page" do
       json = { 'property' => 'value' }
