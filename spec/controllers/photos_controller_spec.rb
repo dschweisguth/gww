@@ -1,26 +1,6 @@
 require 'will_paginate/array'
 
 describe PhotosController do
-  describe '#index' do
-    it "renders the page" do
-      sorted_by_param = 'username'
-      order_param = '+'
-      page_param = '1'
-
-      # Mock methods from will_paginate's version of Array
-      photo = build_stubbed :photos_photo
-      paginated_photos = [photo].paginate
-      allow(PhotosPhoto).to receive(:all_sorted_and_paginated).with(sorted_by_param, order_param, page_param, 30) { paginated_photos }
-      get :index, sorted_by: sorted_by_param, order: order_param, page: page_param
-
-      expect(response).to be_success
-      expect(response.body).to have_css 'h1', text: '1 photos'
-      expect(response.body).to have_link 'posted by', href: photos_path('username', '-', 1)
-      expect(response.body).to have_link photo.person.username, href: person_path(photo.person)
-
-    end
-  end
-
   describe '#map' do
     it "renders the page" do
       json = { 'property' => 'value' }
