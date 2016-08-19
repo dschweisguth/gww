@@ -110,15 +110,6 @@ describe Admin::PhotosController do
     end
   end
 
-  describe '#remove_guess' do
-    it "notifies the user if there was an error" do
-      expect(Comment).to receive(:remove_guess).with('2') { raise Comment::RemoveGuessError, 'Sorry' }
-      post :remove_guess, id: '1', comment_id: '2'
-      redirects_to_edit_path 1
-      expect(flash[:notice]).to eq('Sorry')
-    end
-  end
-
   describe '#update_from_flickr' do
     it "just redirects to the edit page with update_from_flickr=true" do
       get :update_from_flickr, id: '1'

@@ -34,9 +34,6 @@ class Comment < ActiveRecord::Base
     end
   end
 
-  class RemoveGuessError < StandardError
-  end
-
   def by_poster?
     flickrid == photo.person.flickrid
   end
