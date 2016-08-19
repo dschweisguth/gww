@@ -31,7 +31,7 @@ end
 
 Then(/^I should see the photo on the map$/) do
   # Test that the JSON necessary to display the photo is on the page. TODO run Javascript and inspect the map.
-  json_data = {
+  page_config = {
     api_key: google_maps_api_key,
     photos: {
       partial: false,
@@ -47,5 +47,5 @@ Then(/^I should see the photo on the map$/) do
       ]
     }
   }
-  expect(page.body).to include("GWW.config = #{json_data.to_json}")
+  expect(page.body).to include("GWW.config = #{page_config.to_json};")
 end

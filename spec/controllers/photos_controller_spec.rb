@@ -162,7 +162,12 @@ describe PhotosController do
       allow(PhotosPhoto).to receive(:oldest) { oldest }
       get :show, id: photo.id
 
-      json = controller.with_google_maps_api_key(
+      expect(response).to be_success
+      expect(response.body).to include 'It was mapped by the photographer'
+      expect(response.body).not_to include "This photo hasn't been found or revealed yet"
+      expect(response.body).not_to include 'It was auto-mapped'
+      expect(response.body).to have_css '#map'
+      page_config = controller.with_google_maps_api_key(
         photo: {
           id: photo.id,
           latitude: photo.latitude.to_s,
@@ -170,15 +175,8 @@ describe PhotosController do
           color: Color::Yellow.scaled(0, 0, 0),
           symbol: '?'
         }
-      ).to_json
-      expect(assigns[:json]).to eq(json)
-
-      expect(response).to be_success
-      expect(response.body).to include 'It was mapped by the photographer'
-      expect(response.body).not_to include "This photo hasn't been found or revealed yet"
-      expect(response.body).not_to include 'It was auto-mapped'
-      expect(response.body).to have_css '#map'
-      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
+      )
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape page_config.to_json};/)
 
     end
 
@@ -194,7 +192,12 @@ describe PhotosController do
       allow(PhotosPhoto).to receive(:oldest) { oldest }
       get :show, id: photo.id
 
-      json = controller.with_google_maps_api_key(
+      expect(response).to be_success
+      expect(response.body).to include 'It was auto-mapped'
+      expect(response.body).not_to include "This photo hasn't been found or revealed yet"
+      expect(response.body).not_to include 'It was mapped by the photographer'
+      expect(response.body).to have_css '#map'
+      page_config = controller.with_google_maps_api_key(
         photo: {
           id: photo.id,
           latitude: photo.inferred_latitude.to_s,
@@ -202,15 +205,8 @@ describe PhotosController do
           color: Color::Yellow.scaled(0, 0, 0),
           symbol: '?'
         }
-      ).to_json
-      expect(assigns[:json]).to eq(json)
-
-      expect(response).to be_success
-      expect(response.body).to include 'It was auto-mapped'
-      expect(response.body).not_to include "This photo hasn't been found or revealed yet"
-      expect(response.body).not_to include 'It was mapped by the photographer'
-      expect(response.body).to have_css '#map'
-      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
+      )
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape page_config.to_json};/)
 
     end
 

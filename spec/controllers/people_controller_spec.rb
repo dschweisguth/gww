@@ -398,14 +398,13 @@ describe PeopleController do
         with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { photos_json_data }
       get :map, id: person.id
 
-      expect(assigns[:json]).to eq(controller.with_google_maps_api_key(photos: photos_json_data).to_json)
-
       expect(response).to be_success
       expect(response.body).to have_css 'input[id=posts]'
       expect(response.body).to have_css 'label', text: '1 mapped post (?, -)'
       expect(response.body).to have_css 'input[id=guesses]'
       expect(response.body).to have_css 'label', text: '1 mapped guess (!)'
-      expect(response.body).to match(/GWW\.config = #{Regexp.escape assigns[:json]};/)
+      page_config = controller.with_google_maps_api_key(photos: photos_json_data)
+      expect(response.body).to match(/GWW\.config = #{Regexp.escape page_config.to_json};/)
 
     end
   end

@@ -1,6 +1,6 @@
 <%= head_javascript %>
 <% content_for :head do %>
-  <% if @json then %>
+  <% if @page_config then %>
     <%= javascript_include_tag 'shared/singlePhotoMap' %>
     <%= javascript_tag '$(GWW.shared.singlePhotoMap.setUp);' %>
   <% else %>

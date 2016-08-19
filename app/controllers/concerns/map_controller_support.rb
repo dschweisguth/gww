@@ -4,7 +4,7 @@ module MapControllerSupport
   private def set_map_json_from_photo
     map_json = @photo.as_map_json
     if map_json
-      @json = with_google_maps_api_key(photo: map_json).to_json
+      page_config.merge! with_google_maps_api_key(photo: map_json)
     end
   end
 

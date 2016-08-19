@@ -8,7 +8,7 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    @json = map_json_data.to_json
+    page_config.merge! map_json_data
   end
 
   private def map_photos_json_data

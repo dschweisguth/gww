@@ -2,7 +2,7 @@
 <%= head_javascript 'jquery-ui/autocomplete', 'shared/autocomplete', 'admin/photos/edit' %>
 <% content_for :head do %>
   <%= javascript_tag '$(GWW.admin.photos.edit.setUp);' %>
-  <% if @json %>
+  <% if @page_config %>
     <%= javascript_include_tag 'shared/singlePhotoMap' %>
     <%= javascript_tag '$(GWW.shared.singlePhotoMap.setUp);' %>
   <% else %>

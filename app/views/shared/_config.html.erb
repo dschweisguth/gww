@@ -1,5 +1,5 @@
-<% if @json %>
+<% if @page_config %>
 <script type="text/javascript">
-  GWW.config = <%= raw @json %>;
+  GWW.config = <%= raw @page_config.to_json %>;
 </script>
 <% end %>
