@@ -20,6 +20,9 @@ Feature: Photos
     When I go to the photos map page
     Then I should see the photo on the initial map
 
+    When I click on the photo's marker
+    Then I should see the map popup
+
     When I zoom the map to 37.73, 37.74, -122.51, -122.50
     Then I should see the photo on the map zoomed to 37.73, 37.74, -122.51, -122.50
 

@@ -34,6 +34,14 @@ Then /^I should see the photo on the initial map$/ do
   expect(page.body).to include("GWW.config = #{page_config_json MultiPhotoMapControllerSupport::INITIAL_MAP_BOUNDS, [@photo]};")
 end
 
+When /^I click on the photo's marker$/ do
+  visit map_popup_photo_path(@photo)
+end
+
+Then /^I should see the map popup$/ do
+  expect(page).to have_css(%Q(a[href="#{photo_path @photo}"]))
+end
+
 When /^I zoom the map to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)$/ do |min_lat, max_lat, min_long, max_long|
   get map_json_photos_path, sw: "#{min_lat},#{min_long}", ne: "#{max_lat},#{max_long}"
 end
