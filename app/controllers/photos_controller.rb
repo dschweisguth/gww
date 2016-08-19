@@ -1,5 +1,5 @@
 class PhotosController < ApplicationController
-  include MultiPhotoMapControllerSupport
+  include MultiPhotoMapControllerSupport, SinglePhotoMapControllerSupport
 
   caches_page :index
   def index
@@ -8,7 +8,7 @@ class PhotosController < ApplicationController
 
   caches_page :map
   def map
-    page_config.merge! map_json_data
+    add_map_photos_to_page_config
   end
 
   private def map_photos_json_data
@@ -59,7 +59,7 @@ class PhotosController < ApplicationController
   def show
     @photo = PhotosPhoto.find params[:id].to_i
     @comments = @photo.comments
-    set_map_json_from_photo
+    add_map_photo_to_page_config
   end
 
 end

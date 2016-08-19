@@ -1,14 +1,16 @@
 module MultiPhotoMapControllerSupport
   include MapControllerSupport
 
-  MAX_MAP_PHOTOS = 2000
+  def add_map_photos_to_page_config
+    add_map_data_to_page_config map_json_data
+  end
 
   def map_json
-    render json: map_json_data
+    render json: with_google_maps_api_key(map_json_data)
   end
 
   private def map_json_data
-    with_google_maps_api_key photos: map_photos_json_data
+    { photos: map_photos_json_data }
   end
 
   INITIAL_MAP_BOUNDS = Bounds.new 37.70571, 37.820904, -122.514381, -122.35714
@@ -22,5 +24,7 @@ module MultiPhotoMapControllerSupport
       INITIAL_MAP_BOUNDS
     end
   end
+
+  MAX_MAP_PHOTOS = 2000
 
 end

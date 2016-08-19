@@ -118,7 +118,7 @@ class PeopleController < ApplicationController
     @person = PeoplePerson.find params[:id].to_i
     @posts_count = @person.mapped_photo_count
     @guesses_count = @person.mapped_guess_count
-    page_config.merge! map_json_data
+    add_map_photos_to_page_config
   end
 
   private def map_photos_json_data

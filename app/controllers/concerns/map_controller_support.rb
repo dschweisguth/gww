@@ -1,11 +1,8 @@
 module MapControllerSupport
   include GoogleMapsConfig
 
-  private def set_map_json_from_photo
-    map_json = @photo.as_map_json
-    if map_json
-      page_config.merge! with_google_maps_api_key(photo: map_json)
-    end
+  private def add_map_data_to_page_config(map_data)
+    @page_config = with_google_maps_api_key map_data
   end
 
   # public only for use in tests
