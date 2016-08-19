@@ -47,20 +47,6 @@ describe PhotosController do
 
   end
 
-  describe '#unfound_data' do
-    it "renders the page" do
-      allow(FlickrUpdate).to receive(:maximum).with(:created_at) { Time.utc(2011) }
-      photo = build_stubbed :photos_photo
-      allow(PhotosPhoto).to receive(:unfound_or_unconfirmed) { [photo] }
-      get :unfound_data
-
-      expect(response).to be_success
-      photos = top_node.find 'photos[updated_at="1293840000"]'
-      expect(photos).to have_css "photo[posted_by=#{photo.person.username}]"
-
-    end
-  end
-
   describe '#search' do
     it "redirects away from an invalid and/or noncanonical URI to a canonical one" do
       get :search, segments: 'did'

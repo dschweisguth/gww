@@ -79,3 +79,19 @@ def page_config_json(bounds, photos)
     }
   }.to_json
 end
+
+When(/^I request the unfound data$/) do
+  get unfound_data_photos_path
+end
+
+Then /^I should see that the data was updated when the Flickr update started$/ do
+  expect(top_data_node).to have_css(%Q(photos[updated_at="#{@flickr_update.created_at.to_i}"]))
+end
+
+Then /^I should see data for the photo$/ do
+  expect(top_data_node).to have_css("photo[posted_by=#{@photo.person.username}]")
+end
+
+def top_data_node
+  Capybara.string(last_response.body)
+end

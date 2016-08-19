@@ -7,7 +7,7 @@ Given /^there is a photo$/ do
 end
 
 Given /^there is a Flickr update$/ do
-  create :flickr_update
+  @flickr_update = create :flickr_update
 end
 
 Given /^there is a score report$/ do

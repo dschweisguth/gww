@@ -28,3 +28,10 @@ Feature: Photos
 
     When I zoom the map to 37.74, 37.75, -122.50, -122.49
     Then I should see the map zoomed to 37.74, 37.75, -122.50, -122.49 but no photos
+
+  Scenario: David Gallagher's software lists unfound photos
+    Given there is a Flickr update
+    And there is a photo
+    When I request the unfound data
+    Then I should see that the data was updated when the Flickr update started
+    And I should see data for the photo
