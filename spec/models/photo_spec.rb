@@ -8,8 +8,16 @@ describe Photo do
     it { does validate_presence_of :dateadded }
   end
 
+  describe '#latitude' do
+    it { does validate_numericality_of(:latitude).allow_nil }
+  end
+
+  describe '#longitude' do
+    it { does validate_numericality_of(:longitude).allow_nil }
+  end
+
   describe '#accuracy' do
-    it { does validate_numericality_of(:accuracy).is_greater_than_or_equal_to(0) }
+    it { does validate_numericality_of(:accuracy).is_greater_than_or_equal_to(0).allow_nil }
   end
 
   describe '#latitude, #longitude, #accuracy' do
