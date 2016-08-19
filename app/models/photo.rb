@@ -16,7 +16,7 @@ class Photo < ActiveRecord::Base
     are_nil = attrs.map { |attr| photo.send(attr).nil? }
     if ! (are_nil.none? || are_nil.all?)
       attrs.each do |attr|
-        photo.errors.add attr, "must be nil if any of #{attrs.to_sentence(last_word_connector: ' or ')} is nil, but is #{photo.send(attr) || 'nil'}"
+        photo.errors.add attr, "must be nil only if all of #{attrs.to_sentence} are nil, but is #{photo.send(attr) || 'nil'}"
       end
     end
   end
@@ -28,7 +28,7 @@ class Photo < ActiveRecord::Base
     attrs = %i(inferred_latitude inferred_longitude)
     if photo.inferred_latitude.nil? ^ photo.inferred_longitude.nil?
       attrs.each do |attr|
-        photo.errors.add attr, "must be nil if any of #{attrs.to_sentence(last_word_connector: ' or ')} is nil, but is #{photo.send(attr) || 'nil'}"
+        photo.errors.add attr, "must be nil only if both #{attrs.join ' and '} are nil, but is #{photo.send(attr) || 'nil'}"
       end
     end
   end
