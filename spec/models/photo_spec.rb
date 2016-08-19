@@ -80,6 +80,33 @@ describe Photo do
     it { does validate_numericality_of(:member_questions).is_greater_than_or_equal_to(0) }
   end
 
+  describe '#inferred_latitude' do
+    it { does validate_numericality_of(:inferred_latitude).allow_nil }
+  end
+
+  describe '#inferred_longitude' do
+    it { does validate_numericality_of(:inferred_longitude).allow_nil }
+  end
+
+  describe '#inferred_latitude, #inferred_longitude' do
+    it "is valid if both are absent" do
+      expect(build(:photo, inferred_latitude: nil, inferred_longitude: nil)).to be_valid
+    end
+
+    it "is valid if both are present" do
+      expect(build(:photo, inferred_latitude: 0, inferred_longitude: 0)).to be_valid
+    end
+
+    %i(inferred_latitude inferred_longitude).each do |attr|
+      it "is invalid if only #{attr} is absent" do
+        attrs = { inferred_latitude: 0, inferred_longitude: 0 }
+        attrs[attr] = nil
+        expect(build(:photo, attrs)).not_to be_valid
+      end
+    end
+
+  end
+
   describe '#destroy' do
     let(:photo) { create :photo }
 

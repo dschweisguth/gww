@@ -6,7 +6,7 @@ describe PeopleShowPerson do
     end
 
     it "counts auto-mapped photos" do
-      photo = create :people_show_photo, inferred_latitude: 37
+      photo = create :people_show_photo, inferred_latitude: 37, inferred_longitude: -122
       expect(photo.person.mapped_photo_count).to eq(1)
     end
 
@@ -36,7 +36,7 @@ describe PeopleShowPerson do
     end
 
     it "counts the person's guesses of auto-mapped photos" do
-      photo = create :people_show_photo, inferred_latitude: 37
+      photo = create :people_show_photo, inferred_latitude: 37, inferred_longitude: -122
       guess = create :people_show_guess, photo: photo
       expect(guess.person.mapped_guess_count).to eq(1)
     end
