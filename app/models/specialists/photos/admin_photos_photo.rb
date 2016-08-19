@@ -1,6 +1,11 @@
 class AdminPhotosPhoto < Photo
   include PhotosPhotoSupport
 
+  belongs_to :person, inverse_of: :photos, class_name: 'AdminPhotosPerson', foreign_key: 'person_id'
+  has_many :comments, inverse_of: :photo, class_name: 'AdminPhotosComment', foreign_key: 'photo_id', dependent: :destroy
+  has_many :guesses, inverse_of: :photo, class_name: 'AdminPhotosGuess', foreign_key: 'photo_id', dependent: :destroy
+  has_one :revelation, inverse_of: :photo, class_name: 'AdminPhotosRevelation', foreign_key: 'photo_id', dependent: :destroy
+
   def self.inaccessible
     where("seen_at < ?", FlickrUpdate.maximum(:created_at)).
       where("game_status in ('unfound', 'unconfirmed')").
@@ -14,8 +19,8 @@ class AdminPhotosPhoto < Photo
 
   def self.change_game_status(id, status)
     transaction do
-      Guess.destroy_all_by_photo_id id
-      Revelation.where(photo_id: id).destroy_all
+      AdminPhotosGuess.destroy_all_by_photo_id id
+      AdminPhotosRevelation.where(photo_id: id).destroy_all
       find(id).update! game_status: status
     end
   end
@@ -48,8 +53,8 @@ class AdminPhotosPhoto < Photo
       if entered_username.empty?
         selected_flickrid
       else
-        Person.find_by_username(entered_username)&.flickrid ||
-          Comment.find_by_username(entered_username)&.flickrid ||
+        AdminPhotosPerson.find_by_username(entered_username)&.flickrid ||
+          AdminPhotosComment.find_by_username(entered_username)&.flickrid ||
           raise(AddAnswerError,
             "Sorry; GWW hasn't seen any posts or comments by #{entered_username} yet, " \
               "so doesn't know enough about them to award them a point. " \
@@ -74,7 +79,7 @@ class AdminPhotosPhoto < Photo
     if revelation
       revelation.update! revelation_attrs
     else
-      Revelation.create!({ photo: self }.merge revelation_attrs)
+      AdminPhotosRevelation.create!({ photo: self }.merge revelation_attrs)
     end
 
     guesses.destroy_all
@@ -84,7 +89,8 @@ class AdminPhotosPhoto < Photo
   private def guess(comment_text, commented_at, guesser_flickrid)
     update! game_status: 'found'
     guesser = FlickrUpdateJob::PersonUpdater.create_or_update guesser_flickrid
-    Guess.create! photo: self, person: guesser, commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc
+    guesser = AdminPhotosPerson.find guesser.id
+    AdminPhotosGuess.create! photo: self, person: guesser, commented_at: commented_at, comment_text: comment_text, added_at: Time.now.getutc
     revelation&.destroy
   end
 

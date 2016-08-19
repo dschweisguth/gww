@@ -15,7 +15,7 @@ FactoryGirl.define do
     faves 0
   end
 
-  [PeoplePhoto, PeopleShowPhoto, ScoreReportsPhoto, StatisticsPhoto, WheresiesPhoto].each do |specialist_class|
+  [AdminPhotosPhoto, PeoplePhoto, PeopleShowPhoto, ScoreReportsPhoto, StatisticsPhoto, WheresiesPhoto].each do |specialist_class|
     factory_name = specialist_class.name.underscore
     factory factory_name, parent: :photo, class: specialist_class do
       association :person, factory: factory_name.sub(/photo$/, 'person'), strategy: :build
@@ -23,7 +23,6 @@ FactoryGirl.define do
   end
 
   factory :photos_photo, parent: :photo, class: PhotosPhoto
-  factory :admin_photos_photo, parent: :photo, class: AdminPhotosPhoto
   factory :flickr_update_photo, parent: :photo, class: FlickrUpdatePhoto
 
   factory :guessed_photo, parent: :photo do

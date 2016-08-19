@@ -30,12 +30,12 @@ describe AdminPhotosPhoto do
     let(:photo) { create :admin_photos_photo }
 
     it "returns photos for which more than one person got a point" do
-      create_list :guess, 2, photo: photo
+      create_list :admin_photos_guess, 2, photo: photo
       expect(AdminPhotosPhoto.multipoint).to eq([photo])
     end
 
     it "ignores photos for which only one person got a point" do
-      create :guess, photo: photo
+      create :admin_photos_guess, photo: photo
       expect(AdminPhotosPhoto.multipoint).to eq([])
     end
 
@@ -51,13 +51,13 @@ describe AdminPhotosPhoto do
     end
 
     it "deletes existing guesses" do
-      create :guess, photo: photo
+      create :admin_photos_guess, photo: photo
       AdminPhotosPhoto.change_game_status photo.id, 'unconfirmed'
       expect(Guess.count).to eq(0)
     end
 
     it "deletes existing revelations" do
-      create :revelation, photo: photo
+      create :admin_photos_revelation, photo: photo
       AdminPhotosPhoto.change_game_status photo.id, 'unconfirmed'
       expect(Revelation.count).to eq(0)
     end
@@ -86,7 +86,7 @@ describe AdminPhotosPhoto do
       end
 
       it "updates an existing revelation" do
-        create :revelation, photo: photo
+        create :admin_photos_revelation, photo: photo
         set_time
         AdminPhotosPhoto.add_entered_answer photo.id, photo.person.username, 'new comment text'
         is_revealed photo, 'new comment text'
@@ -101,7 +101,7 @@ describe AdminPhotosPhoto do
       end
 
       it "deletes an existing guess" do
-        create :guess, photo: photo
+        create :admin_photos_guess, photo: photo
         AdminPhotosPhoto.add_entered_answer photo.id, photo.person.username, 'comment text'
         expect(Guess.any?).to be_falsy
       end
@@ -110,7 +110,7 @@ describe AdminPhotosPhoto do
 
     context "when adding a guess" do
       it "adds a guess and updates the guesser if necessary" do
-        guesser = create :person
+        guesser = create :admin_photos_person
         set_time
         stub_person_request
         AdminPhotosPhoto.add_entered_answer photo.id, guesser.username, 'comment text'
@@ -132,7 +132,7 @@ describe AdminPhotosPhoto do
       end
 
       it "creates the guesser if necessary" do
-        comment = create :comment
+        comment = create :admin_photos_comment
         set_time
         stub_person_request
         AdminPhotosPhoto.add_entered_answer photo.id, comment.username, 'comment text'
@@ -144,7 +144,7 @@ describe AdminPhotosPhoto do
       end
 
       it "leaves alone an existing guess by the same guesser" do
-        old_guess = create :guess, photo: photo
+        old_guess = create :admin_photos_guess, photo: photo
         set_time
         stub_person_request
         AdminPhotosPhoto.add_entered_answer photo.id, old_guess.person.username, 'new comment text'
@@ -158,8 +158,8 @@ describe AdminPhotosPhoto do
       end
 
       it "deletes an existing revelation" do
-        create :revelation, photo: photo
-        guesser = create :person
+        create :admin_photos_revelation, photo: photo
+        guesser = create :admin_photos_person
         stub_person_request
         AdminPhotosPhoto.add_entered_answer photo.id, guesser.username, 'comment text'
         expect(Revelation.any?).to be_falsy

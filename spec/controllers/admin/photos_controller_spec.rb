@@ -81,7 +81,7 @@ describe Admin::PhotosController do
 
   describe '#add_selected_answer' do
     it "notifies the user if there was an error" do
-      expect(Comment).to receive(:add_selected_answer).with('2', 'username') do
+      expect(AdminPhotosComment).to receive(:add_selected_answer).with('2', 'username') do
         raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
       end
       post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
@@ -103,7 +103,7 @@ describe Admin::PhotosController do
 
   describe '#remove_revelation' do
     it "removes a revelation" do
-      expect(Comment).to receive(:remove_revelation).with '2'
+      expect(AdminPhotosComment).to receive(:remove_revelation).with '2'
       mock_clear_page_cache
       post :remove_revelation, id: '1', comment_id: '2'
       redirects_to_edit_path 1

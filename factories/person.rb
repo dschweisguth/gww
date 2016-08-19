@@ -13,6 +13,7 @@ FactoryGirl.define do
   end
 
   {
+    AdminPhotosPerson => [],
     PeopleIndexPerson => [],
     PeoplePerson => [:bias],
     PeopleShowPerson => [:bias, :high_score, :top_post_count],

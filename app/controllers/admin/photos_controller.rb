@@ -39,7 +39,7 @@ class Admin::PhotosController < ApplicationController
 
   def add_selected_answer
     begin
-      Comment.add_selected_answer params[:comment_id], params[:username]
+      AdminPhotosComment.add_selected_answer params[:comment_id], params[:username]
     rescue AdminPhotosPhoto::AddAnswerError => e
       flash[:notice] = e.message
     end
@@ -58,13 +58,13 @@ class Admin::PhotosController < ApplicationController
   end
 
   def remove_revelation
-    Comment.remove_revelation params[:comment_id]
+    AdminPhotosComment.remove_revelation params[:comment_id]
     PageCache.clear
     redirect_to_edit_path params[:id]
   end
 
   def remove_guess
-    Comment.remove_guess params[:comment_id]
+    AdminPhotosComment.remove_guess params[:comment_id]
     PageCache.clear
     redirect_to_edit_path params[:id]
   end
