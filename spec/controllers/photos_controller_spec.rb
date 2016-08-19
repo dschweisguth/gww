@@ -1,26 +1,6 @@
 require 'will_paginate/array'
 
 describe PhotosController do
-  describe '#map_json' do
-    it "renders the page" do
-      photos_json_data = { 'property' => 'value' }
-      allow(PhotosPhoto).to receive(:all_for_map).
-        with(PhotosController::INITIAL_MAP_BOUNDS, PhotosController::MAX_MAP_PHOTOS) { photos_json_data }
-      get :map_json
-
-      expect(response).to be_success
-      expect(response.body).to eq(controller.with_google_maps_api_key(photos: photos_json_data).to_json)
-
-    end
-
-    it "supports arbitrary bounds" do
-      allow(PhotosPhoto).to receive(:all_for_map).
-        with(Bounds.new(0, 1, 10, 11), PhotosController::MAX_MAP_PHOTOS) { { 'property' => 'value' } }
-      get :map_json, sw: '0,10', ne: '1,11'
-    end
-
-  end
-
   describe '#map_popup' do
     it "renders the partial" do
       photo = build_stubbed :photos_photo, dateadded: Time.local(2011)

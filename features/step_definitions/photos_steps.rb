@@ -25,27 +25,49 @@ Then(/^the photo added by "([^"]*)" should appear before the photo added by "([^
   expect(page.body.index username1).to be < page.body.index(username2)
 end
 
-Given(/^there is a mapped photo$/) do
-  @photo = create :mapped_photo
+Given(/^there is a photo mapped at (\d+\.\d+), (-?\d+\.\d+)$/) do |latitude, longitude|
+  @photo = create :mapped_photo, latitude: latitude, longitude: longitude
 end
 
-Then(/^I should see the photo on the map$/) do
+Then(/^I should see the photo on the initial map$/) do
   # Test that the JSON necessary to display the photo is on the page. TODO run Javascript and inspect the map.
-  page_config = {
+  expect(page.body).to include("GWW.config = #{page_config_json MultiPhotoMapControllerSupport::INITIAL_MAP_BOUNDS, [@photo]};")
+end
+
+When /^I zoom the map to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)$/ do |min_lat, max_lat, min_long, max_long|
+  get map_json_photos_path, sw: "#{min_lat},#{min_long}", ne: "#{max_lat},#{max_long}"
+end
+
+Then(/^I should see the photo on the map zoomed to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)$/) do |min_lat, max_lat, min_long, max_long|
+  # Test that the JSON necessary to display the photo is in the response. TODO run Javascript and inspect the map.
+  page_config_json = page_config_json bounds_json_data(min_lat, max_lat, min_long, max_long), [@photo]
+  expect(last_response.body).to eq(page_config_json)
+end
+
+Then(/^I should see the map zoomed to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+) but no photos$/) do |min_lat, max_lat, min_long, max_long|
+  page_config_json = page_config_json bounds_json_data(min_lat, max_lat, min_long, max_long), []
+  expect(last_response.body).to eq(page_config_json)
+end
+
+def bounds_json_data(min_lat, max_lat, min_long, max_long)
+  Bounds.new(*[min_lat, max_lat, min_long, max_long].map(&:to_f))
+end
+
+def page_config_json(bounds, photos)
+  {
     api_key: google_maps_api_key,
     photos: {
       partial: false,
-      bounds: MultiPhotoMapControllerSupport::INITIAL_MAP_BOUNDS.as_json,
-      photos: [
+      bounds: bounds.as_json,
+      photos: photos.map do |photo|
         {
-          id: @photo.id,
-          latitude: @photo.latitude,
-          longitude: @photo.longitude,
+          id: photo.id,
+          latitude: photo.latitude,
+          longitude: photo.longitude,
           color: Color::Yellow.scaled(0, 1, 0),
           symbol: '?'
         }
-      ]
+      end
     }
-  }
-  expect(page.body).to include("GWW.config = #{page_config.to_json};")
+  }.to_json
 end

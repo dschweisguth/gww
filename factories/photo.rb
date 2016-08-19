@@ -37,9 +37,7 @@ FactoryGirl.define do
   end
 
   factory :mapped_photo, parent: :photo do
-    latitude 37.735697
-    longitude -122.504264
-    accuracy 16
+    accuracy 16 # the highest and most frequently observed accuracy, so a reasonable default
   end
 
 end

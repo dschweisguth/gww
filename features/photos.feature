@@ -16,6 +16,12 @@ Feature: Photos
     Then the photo added by "username1" should appear before the photo added by "username2"
 
   Scenario: Player views map of all photos
-    Given there is a mapped photo
-    And I go to the photos map page
-    Then I should see the photo on the map
+    Given there is a photo mapped at 37.735697, -122.504264
+    When I go to the photos map page
+    Then I should see the photo on the initial map
+
+    When I zoom the map to 37.73, 37.74, -122.51, -122.50
+    Then I should see the photo on the map zoomed to 37.73, 37.74, -122.51, -122.50
+
+    When I zoom the map to 37.74, 37.75, -122.50, -122.49
+    Then I should see the map zoomed to 37.74, 37.75, -122.50, -122.49 but no photos
