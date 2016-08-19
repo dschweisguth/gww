@@ -14,7 +14,7 @@ Given /^there is a guessed photo$/ do
   @photo = create :guessed_photo
 end
 
-Then(/^I should see "([^"]*)" in a new window$/) do |text|
+Then /^I should see "([^"]*)" in a new window$/ do |text|
   within_window(windows.last) do
     expect(page).to have_content(text)
   end

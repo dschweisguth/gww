@@ -165,7 +165,7 @@ Then /^I should see the tag with "([^"]+)" and "([^"]+)" highlighted$/ do |term1
   end
 end
 
-Then(/^I should see a tag with "([^"]*)" highlighted$/) do |term|
+Then /^I should see a tag with "([^"]*)" highlighted$/ do |term|
   expect(page).to have_css('li span[class=matched]', text: term)
 end
 
@@ -180,7 +180,7 @@ Then /^I should see the comment with "([^"]+)" and "([^"]+)" highlighted$/ do |t
   end
 end
 
-Then(/^I should see "([^"]+)" with "([^"]+)" highlighted$/) do |text, term|
+Then /^I should see "([^"]+)" with "([^"]+)" highlighted$/ do |text, term|
   expect(page).to have_content(text)
   expect(page).to have_css('span[class=matched]', text: term)
 end

@@ -21,15 +21,15 @@ And %r(^the photo added on "(\d+/\d+/\d+)" should appear before the photo added 
   expect(page.body.index url1).to be < page.body.index(url2)
 end
 
-Then(/^the photo added by "([^"]*)" should appear before the photo added by "([^"]*)"$/) do |username1, username2|
+Then /^the photo added by "([^"]*)" should appear before the photo added by "([^"]*)"$/ do |username1, username2|
   expect(page.body.index username1).to be < page.body.index(username2)
 end
 
-Given(/^there is a photo mapped at (\d+\.\d+), (-?\d+\.\d+)$/) do |latitude, longitude|
+Given /^there is a photo mapped at (\d+\.\d+), (-?\d+\.\d+)$/ do |latitude, longitude|
   @photo = create :mapped_photo, latitude: latitude, longitude: longitude
 end
 
-Then(/^I should see the photo on the initial map$/) do
+Then /^I should see the photo on the initial map$/ do
   # Test that the JSON necessary to display the photo is on the page. TODO run Javascript and inspect the map.
   expect(page.body).to include("GWW.config = #{page_config_json MultiPhotoMapControllerSupport::INITIAL_MAP_BOUNDS, [@photo]};")
 end
@@ -38,13 +38,13 @@ When /^I zoom the map to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)$/ do
   get map_json_photos_path, sw: "#{min_lat},#{min_long}", ne: "#{max_lat},#{max_long}"
 end
 
-Then(/^I should see the photo on the map zoomed to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)$/) do |min_lat, max_lat, min_long, max_long|
+Then /^I should see the photo on the map zoomed to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)$/ do |min_lat, max_lat, min_long, max_long|
   # Test that the JSON necessary to display the photo is in the response. TODO run Javascript and inspect the map.
   page_config_json = page_config_json bounds_json_data(min_lat, max_lat, min_long, max_long), [@photo]
   expect(last_response.body).to eq(page_config_json)
 end
 
-Then(/^I should see the map zoomed to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+) but no photos$/) do |min_lat, max_lat, min_long, max_long|
+Then /^I should see the map zoomed to (\d+\.\d+), (\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+) but no photos$/ do |min_lat, max_lat, min_long, max_long|
   page_config_json = page_config_json bounds_json_data(min_lat, max_lat, min_long, max_long), []
   expect(last_response.body).to eq(page_config_json)
 end
