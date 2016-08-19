@@ -12,6 +12,33 @@ describe Photo do
     it { does validate_numericality_of(:accuracy).is_greater_than_or_equal_to(0) }
   end
 
+  describe '#latitude, #longitude, #accuracy' do
+    it "is valid if all are absent" do
+      expect(build(:photo, latitude: nil, longitude: nil, accuracy: nil)).to be_valid
+    end
+
+    it "is valid if all are present" do
+      expect(build(:photo, latitude: 0, longitude: 0, accuracy: 0)).to be_valid
+    end
+
+    %i(latitude longitude accuracy).each do |attr|
+      it "is invalid if only #{attr} is absent" do
+        attrs = { latitude: 0, longitude: 0, accuracy: 0 }
+        attrs[attr] = nil
+        expect(build(:photo, attrs)).not_to be_valid
+      end
+    end
+
+    %i(latitude longitude accuracy).each do |attr|
+      it "is invalid if only #{attr} is present" do
+        attrs = { latitude: nil, longitude: nil, accuracy: nil }
+        attrs[attr] = 0
+        expect(build(:photo, attrs)).not_to be_valid
+      end
+    end
+
+  end
+
   describe '#lastupdate' do
     it { does validate_presence_of :lastupdate }
   end

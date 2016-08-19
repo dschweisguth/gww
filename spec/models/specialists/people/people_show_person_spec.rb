@@ -1,7 +1,7 @@
 describe PeopleShowPerson do
   describe '#mapped_photo_count' do
     it "counts mapped photos" do
-      photo = create :people_show_photo, accuracy: 12
+      photo = create :people_show_photo, latitude: 0, longitude: 0, accuracy: 12
       expect(photo.person.mapped_photo_count).to eq(1)
     end
 
@@ -11,7 +11,7 @@ describe PeopleShowPerson do
     end
 
     it "ignores other people's photos" do
-      create :people_show_photo, accuracy: 12
+      create :people_show_photo, latitude: 0, longitude: 0, accuracy: 12
       other_person = create :people_show_person
       expect(other_person.mapped_photo_count).to eq(0)
     end
@@ -22,7 +22,7 @@ describe PeopleShowPerson do
     end
 
     it "ignores photos mapped with an accuracy < 12" do
-      photo = create :people_show_photo, accuracy: 11
+      photo = create :people_show_photo, latitude: 0, longitude: 0, accuracy: 11
       expect(photo.person.mapped_photo_count).to eq(0)
     end
 
@@ -30,7 +30,7 @@ describe PeopleShowPerson do
 
   describe '#mapped_guess_count' do
     it "counts the person's guesses of mapped photos" do
-      photo = create :people_show_photo, accuracy: 12
+      photo = create :people_show_photo, latitude: 0, longitude: 0, accuracy: 12
       guess = create :people_show_guess, photo: photo
       expect(guess.person.mapped_guess_count).to eq(1)
     end
@@ -42,7 +42,7 @@ describe PeopleShowPerson do
     end
 
     it "ignores others' guesses" do
-      photo = create :people_show_photo, accuracy: 12
+      photo = create :people_show_photo, latitude: 0, longitude: 0, accuracy: 12
       create :people_show_guess, photo: photo
       other_person = create :people_show_person
       expect(other_person.mapped_guess_count).to eq(0)
@@ -55,7 +55,7 @@ describe PeopleShowPerson do
     end
 
     it "ignores guesses of photos mapped with insufficient accuracy" do
-      photo = create :people_show_photo, accuracy: 11
+      photo = create :people_show_photo, latitude: 0, longitude: 0, accuracy: 11
       guess = create :people_show_guess, photo: photo
       expect(guess.person.mapped_guess_count).to eq(0)
     end

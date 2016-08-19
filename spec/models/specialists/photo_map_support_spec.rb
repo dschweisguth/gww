@@ -8,7 +8,7 @@ describe PhotoMapSupport do
     end
 
     it "returns auto-mapped photos" do
-      photo = create :photos_photo, inferred_latitude: 1, inferred_longitude: 4, accuracy: 12
+      photo = create :photos_photo, inferred_latitude: 1, inferred_longitude: 4
       expect(PhotosPhoto.mapped(bounds, 1)).to eq([photo])
     end
 
