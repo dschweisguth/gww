@@ -55,13 +55,13 @@ describe ApplicationHelper do
   describe '#titled_image_tag' do
     it "returns an image tag with alt and title attributes set to the given value" do
       expect(helper.titled_image_tag('http://the.url', 'the title')).to eq(
-        '<img alt="the title" src="http://the.url" title="the title" />'
+        '<img alt="the title" title="the title" src="http://the.url" />'
       )
     end
 
     it "handles additional attributes" do
       expect(helper.titled_image_tag('http://the.url', 'the title', additional: 'foo')).to eq(
-        '<img additional="foo" alt="the title" src="http://the.url" title="the title" />'
+        '<img alt="the title" title="the title" additional="foo" src="http://the.url" />'
       )
     end
 
@@ -74,13 +74,13 @@ describe ApplicationHelper do
 
     it "returns a photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
       expect(helper.thumbnail(@photo)).to eq(
-        %Q(<a href="#{photo_path @photo}"><img alt="" src="#{url_for_flickr_image @photo, 't'}" title="" /></a>)
+        %Q(<a href="#{photo_path @photo}"><img alt="" title="" src="#{url_for_flickr_image @photo, 't'}" /></a>)
       )
     end
 
     it "returns a photo's thumbnail with non-empty alt and title wrapped in a link to the photo's page" do
       expect(helper.thumbnail(@photo, "alt text")).to eq(
-        %Q(<a href="#{photo_path @photo}"><img alt="alt text" src="#{url_for_flickr_image @photo, 't'}" title="alt text" /></a>)
+        %Q(<a href="#{photo_path @photo}"><img alt="alt text" title="alt text" src="#{url_for_flickr_image @photo, 't'}" /></a>)
       )
     end
 
@@ -97,7 +97,7 @@ describe ApplicationHelper do
     it "adds the default Javascript includes and the CSRF protection data to the head" do
       helper.head_javascript
       content_for_head = helper.content_for(:head)
-      expect(content_for_head).to include 'application.js'
+      expect(content_for_head).to match /application-\w+.js/
       # Can't test that CSRF stuff is present since test controller doesn't have protect_from_forgery
     end
 

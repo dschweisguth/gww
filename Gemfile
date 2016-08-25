@@ -2,13 +2,15 @@
 source 'https://rubygems.org/'
 
 gem 'actionpack-page_caching'
-gem 'activerecord-mysql2spatial-adapter'
+# See https://github.com/rgeo/activerecord-mysql2spatial-adapter/issues/12
+gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/activerecord-mysql2spatial-adapter.git', tag: 'v0.5.0-dump-schema'
 gem 'american_date'
-gem 'foreigner'
 gem 'jquery-rails', '~> 3.1.4' # 4.* requires Rails 4.2
 gem 'jquery-ui-rails'
 gem 'mysql2', '~> 0.3.20' # 0.4 requires Rails 4.2
-gem 'rails', '~> 4.1.15'
+gem 'rails', '~> 4.2.0'
+# See https://github.com/rgeo/rgeo-activerecord/issues/23
+gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
 gem 'sass-rails'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
