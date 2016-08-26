@@ -7,7 +7,7 @@ gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/
 gem 'american_date'
 gem 'jquery-rails', '~> 3.1.4' # 4.* requires Rails 4.2
 gem 'jquery-ui-rails'
-gem 'mysql2', '~> 0.3.20' # 0.4 requires Rails 4.2
+gem 'mysql2'
 gem 'rails', '~> 4.2.0'
 # See https://github.com/rgeo/rgeo-activerecord/issues/23
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
