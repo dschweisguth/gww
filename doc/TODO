@@ -13,6 +13,7 @@ Merge revelations into guesses?
 
 Features
 
+Auto-map photo when guess or revelation is added or removed
 Third-party tagging of locations
 Support form field parameters in search page so that search from browser works
 Allow search term exclusion with a leading -
