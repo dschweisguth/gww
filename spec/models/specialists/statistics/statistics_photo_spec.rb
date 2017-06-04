@@ -26,8 +26,11 @@ describe StatisticsPhoto do
     end
 
     context "when updating member comments" do
+      # In most of the tests in this section, reload the guess to run commented_at through the database
+      # to avoid failures due to different treatment of fractional seconds
+
       it "counts comments on guessed photos" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
@@ -37,7 +40,7 @@ describe StatisticsPhoto do
       end
 
       it "ignores comments by the poster" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username
         StatisticsPhoto.update_statistics
@@ -46,7 +49,7 @@ describe StatisticsPhoto do
       end
 
       it "ignores comments by non-members" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo
         StatisticsPhoto.update_statistics
         guess.photo.reload
@@ -54,7 +57,7 @@ describe StatisticsPhoto do
       end
 
       it "counts comments other than the guess" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at - 5
@@ -67,7 +70,7 @@ describe StatisticsPhoto do
       end
 
       it "ignores comments after the guess" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at
@@ -93,8 +96,11 @@ describe StatisticsPhoto do
     end
 
     context "when updating member questions" do
+      # In most of the tests in this section, reload the guess to run commented_at through the database
+      # to avoid failures due to different treatment of fractional seconds
+
       it "counts questions on guessed photos" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'
@@ -104,7 +110,7 @@ describe StatisticsPhoto do
       end
 
       it "ignores questions by the poster" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.photo.person.flickrid, username: guess.photo.person.username,
           comment_text: '?'
@@ -114,7 +120,7 @@ describe StatisticsPhoto do
       end
 
       it "ignores questions by non-members" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo, comment_text: '?'
         StatisticsPhoto.update_statistics
         guess.photo.reload
@@ -122,7 +128,7 @@ describe StatisticsPhoto do
       end
 
       it "counts questions other than the guess" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at - 5, comment_text: '?'
@@ -135,7 +141,7 @@ describe StatisticsPhoto do
       end
 
       it "ignores questions after the guess" do
-        guess = create :guess
+        guess = (create :guess).tap &:reload
         create :comment, photo: guess.photo,
           flickrid: guess.person.flickrid, username: guess.person.username,
           commented_at: guess.commented_at, comment_text: '?'

@@ -10,12 +10,12 @@ describe StatisticsPerson do
     end
 
     describe 'when updating comments_to_guess' do
-      let(:commented_at) { 10.seconds.ago }
-      let(:guess) { create :guess, commented_at: commented_at }
+      # Run commented_at through the database to avoid failures due to different treatment of fractional seconds
+      let(:guess) { (create :guess, commented_at: 10.seconds.ago).tap &:reload }
 
       before do
         create :comment, photo: guess.photo,
-          flickrid: guess.person.flickrid, username: guess.person.username, commented_at: commented_at
+          flickrid: guess.person.flickrid, username: guess.person.username, commented_at: guess.commented_at
       end
 
       it "sets the attribute to average # of comments/guess" do
@@ -59,12 +59,12 @@ describe StatisticsPerson do
     end
 
     describe 'when updating comments_to_be_guessed' do
-      let(:commented_at) { 10.seconds.ago }
-      let(:guess) { create :guess, commented_at: commented_at }
+      # Run commented_at through the database to avoid failures due to different treatment of fractional seconds
+      let(:guess) { (create :guess, commented_at: 10.seconds.ago).tap &:reload }
 
       before do
         create :comment, photo: guess.photo,
-          flickrid: guess.person.flickrid, username: guess.person.username, commented_at: commented_at
+          flickrid: guess.person.flickrid, username: guess.person.username, commented_at: guess.commented_at
       end
 
       it "sets the attribute to average # of comments for their photos to be guessed" do
