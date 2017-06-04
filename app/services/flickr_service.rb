@@ -64,6 +64,7 @@ class FlickrService
       raise FlickrRequestFailedError, "Response was not XML: #{xml}"
     end
     xml.delete! "\u0003" # This fixes a crash when updating one old photo's comments
+    xml.gsub! /&(?!(?:amp|lt|gt|quot|apos);)/, '&amp;' # Another fix for occasional invalid XML
     parsed_xml = XmlSimple.xml_in xml
     if parsed_xml['stat'] != 'ok'
       # One way we get here is if we request information we don't have access to, e.g. a deleted user
