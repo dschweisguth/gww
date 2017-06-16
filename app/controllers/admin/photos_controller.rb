@@ -24,7 +24,7 @@ class Admin::PhotosController < ApplicationController
       rescue FlickrService::FlickrReturnedAnError => e
         flash[:notice] = e.message
       end
-      PageCache.clear
+      ::PageCache.clear
     end
     @photo = AdminPhotosPhoto.find_with_associations params[:id].to_i
     @photo.comments.to_a
@@ -33,7 +33,7 @@ class Admin::PhotosController < ApplicationController
 
   def change_game_status
     AdminPhotosPhoto.change_game_status params[:id], params[:commit]
-    PageCache.clear
+    ::PageCache.clear
     redirect_to_edit_path params[:id]
   end
 
@@ -43,7 +43,7 @@ class Admin::PhotosController < ApplicationController
     rescue AdminPhotosPhoto::AddAnswerError => e
       flash[:notice] = e.message
     end
-    PageCache.clear
+    ::PageCache.clear
     redirect_to_edit_path params[:id]
   end
 
@@ -53,19 +53,19 @@ class Admin::PhotosController < ApplicationController
     rescue AdminPhotosPhoto::AddAnswerError => e
       flash[:notice] = e.message
     end
-    PageCache.clear
+    ::PageCache.clear
     redirect_to_edit_path params[:id]
   end
 
   def remove_revelation
     AdminPhotosComment.remove_revelation params[:comment_id]
-    PageCache.clear
+    ::PageCache.clear
     redirect_to_edit_path params[:id]
   end
 
   def remove_guess
     AdminPhotosComment.remove_guess params[:comment_id]
-    PageCache.clear
+    ::PageCache.clear
     redirect_to_edit_path params[:id]
   end
 
@@ -75,7 +75,7 @@ class Admin::PhotosController < ApplicationController
 
   def destroy
     AdminPhotosPhoto.find(params[:id]).destroy
-    PageCache.clear
+    ::PageCache.clear
     redirect_to admin_root_path
   end
 

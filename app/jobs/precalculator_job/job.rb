@@ -4,7 +4,7 @@ module PrecalculatorJob
       StatisticsPerson.update_statistics
       StatisticsPhoto.update_statistics
       StatisticsPhoto.infer_geocodes
-      PageCache.clear
+      ::PageCache.clear
       "Updated statistics and maps."
     end
   end

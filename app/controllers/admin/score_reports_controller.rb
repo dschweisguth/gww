@@ -17,14 +17,14 @@ class Admin::ScoreReportsController < ApplicationController
   def create
     previous = ScoreReport.latest
     ScoreReport.create! previous_report: previous
-    PageCache.clear
+    ::PageCache.clear
     # noinspection RubyResolve
     redirect_to admin_score_reports_path
   end
 
   def destroy
     ScoreReport.destroy params[:id]
-    PageCache.clear
+    ::PageCache.clear
     redirect_to admin_score_reports_path
   end
 
