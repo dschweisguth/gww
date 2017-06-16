@@ -6,7 +6,7 @@ gem 'actionpack-page_caching'
 gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/activerecord-mysql2spatial-adapter.git', tag: 'v0.5.0-dump-schema'
 gem 'american_date'
 gem 'jquery-rails'
-gem 'jquery-ui-rails', '~> 5.0'
+gem 'jquery-ui-rails', '~> 5.0' # JQuery UI 6 sets up functions in a way that PhantomJS can't handle
 gem 'mysql2'
 gem 'rails', '~> 4.2.0'
 # See https://github.com/rgeo/rgeo-activerecord/issues/23
