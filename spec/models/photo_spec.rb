@@ -8,12 +8,24 @@ describe Photo do
     it { does validate_presence_of :dateadded }
   end
 
+  # It's disturbing that we can't test latitude and longitude with shoulda-matchers but we can test accuracy
+
   describe '#latitude' do
-    it { does validate_numericality_of(:latitude).allow_nil }
+    # See below for tests of valid cases
+
+    it "may not be a non-number" do
+      expect { build(:photo).latitude = "foo" }.to raise_error ArgumentError, 'invalid value for BigDecimal(): "foo"'
+    end
+
   end
 
   describe '#longitude' do
-    it { does validate_numericality_of(:longitude).allow_nil }
+    # See below for tests of valid cases
+
+    it "may not be a non-number" do
+      expect { build(:photo).longitude = "foo" }.to raise_error ArgumentError, 'invalid value for BigDecimal(): "foo"'
+    end
+
   end
 
   describe '#accuracy' do
@@ -81,11 +93,21 @@ describe Photo do
   end
 
   describe '#inferred_latitude' do
-    it { does validate_numericality_of(:inferred_latitude).allow_nil }
+    # See below for tests of valid cases
+
+    it "may not be a non-number" do
+      expect { build(:photo).inferred_latitude = "foo" }.to raise_error ArgumentError, 'invalid value for BigDecimal(): "foo"'
+    end
+
   end
 
   describe '#inferred_longitude' do
-    it { does validate_numericality_of(:inferred_longitude).allow_nil }
+    # See below for tests of valid cases
+
+    it "may not be a non-number" do
+      expect { build(:photo).inferred_longitude = "foo" }.to raise_error ArgumentError, 'invalid value for BigDecimal(): "foo"'
+    end
+
   end
 
   describe '#inferred_latitude, #inferred_longitude' do

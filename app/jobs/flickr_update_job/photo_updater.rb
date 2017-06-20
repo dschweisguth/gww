@@ -174,7 +174,7 @@ module FlickrUpdateJob
       begin
         ActiveSupport::TimeZone['Pacific Time (US & Canada)'].parse(mysql_time).getutc
       rescue ArgumentError => e
-        if e.message == "argument out of range"
+        if e.message.end_with? "out of range"
           Rails.logger.debug "Ignoring invalid datetaken '#{mysql_time}'"
           nil
         else
