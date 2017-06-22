@@ -118,6 +118,7 @@ GEM
     json (2.1.0)
     launchy (2.4.3)
       addressable (~> 2.3)
+    libv8 (3.16.14.19)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.6)
@@ -175,6 +176,7 @@ GEM
     rainbow (2.2.2)
       rake
     rake (12.0.0)
+    ref (2.0.0)
     rgeo (0.6.0)
     rspec-core (3.6.0)
       rspec-support (~> 3.6.0)
@@ -228,6 +230,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    therubyracer (0.12.3)
+      libv8 (~> 3.16.14.15)
+      ref
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.7)
@@ -274,9 +279,10 @@ DEPENDENCIES
   spring
   spring-commands-cucumber
   spring-commands-rspec
+  therubyracer
   uglifier
   will_paginate
   xml-simple
 
 BUNDLED WITH
-   1.15.1
+   1.12.3
