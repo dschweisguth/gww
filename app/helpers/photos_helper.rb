@@ -64,7 +64,7 @@ module PhotosHelper
   end
 
   private def contains_as_word(term)
-    /(?<!<span class="matched">)\b(#{term})\b/i
+    /(?<!<span class="matched">)(?i)\b(#{term})\b/
   end
 
   def verbose_date(date)

@@ -149,6 +149,11 @@ describe PhotosHelper do
       expect(helper.highlighted("one two three", [['two'], ['two']])).to eq('one <span class="matched">two</span> three')
     end
 
+    it "handles exotic characters" do
+      expect(helper.highlighted("Maybe a Lavender Web Site Wasn’t How to Attract Women", [['wasn’t']])).
+        to eq('Maybe a Lavender Web Site <span class="matched">Wasn’t</span> How to Attract Women')
+    end
+
   end
 
 end
