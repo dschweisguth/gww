@@ -1,4 +1,4 @@
-class Fixnum
+class Integer
   def ordinal
     string = to_s
     suffix =

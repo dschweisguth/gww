@@ -1,4 +1,4 @@
-describe Fixnum, type: :initializer do
+describe Integer, type: :initializer do
   describe '#ordinal' do
     expected = {
       1 => '1st',
