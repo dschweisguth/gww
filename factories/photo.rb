@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :photo do
     association :person, strategy: :build
     flickrid { "1#{rand 10000000000}" }

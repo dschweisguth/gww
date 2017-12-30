@@ -30,7 +30,7 @@ group :test do
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'jasmine'
   gem 'launchy'
   gem 'phantomjs', require: 'phantomjs/poltergeist'

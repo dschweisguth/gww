@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :comment do
     association :photo, strategy: :build
     flickrid { "#{rand 100000000}@N#{'%02d' % rand(10)}" }

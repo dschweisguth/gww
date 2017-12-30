@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :guess do
     association :photo, strategy: :build
     association :person, strategy: :build

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :revelation do
     association :photo, strategy: :build
     sequence(:comment_text) { |n| "comment text #{n}" }
