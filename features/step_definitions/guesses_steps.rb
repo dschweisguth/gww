@@ -5,5 +5,5 @@ Given /^there are guesses made from 1 to (\d+) seconds after their photos were a
   photo = create :photo, dateadded: now
   guesser = create :person
 
-  n.to_i.times { |i| create :guess, photo: photo, person: guesser, commented_at: now + i + 1 }
+  n.times { |i| create :guess, photo: photo, person: guesser, commented_at: now + i + 1 }
 end

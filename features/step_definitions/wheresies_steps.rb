@@ -12,24 +12,24 @@ Given /^there is a player "([^"]*)" with no guesses from previous years$/ do |us
 end
 
 Given /^the player "([^"]*)" scored (\d+) points? this year$/ do |username, score|
-  score.to_i.times do
+  score.times do
     photo = create :photo, dateadded: 1.day.ago # prevent these guesses from showing up on the fastest-guessed list
     create :guess, person: Person.find_by_username(username), photo: photo
   end
 end
 
 Given /^the player "([^"]*)" posted (\d+) photos? this year$/ do |username, photo_count|
-  photo_count.to_i.times { create :photo, person: Person.find_by_username(username) }
+  photo_count.times { create :photo, person: Person.find_by_username(username) }
 end
 
 Given /^a player "([^"]*)" posted a photo with (\d+) views?$/ do |username, views|
   player = create :person, username: username
-  create :photo, person: player, views: views.to_i
+  create :photo, person: player, views: views
 end
 
 Given /^a player "([^"]*)" posted a photo with (\d+) faves?$/ do |username, faves|
   player = create :person, username: username
-  create :photo, person: player, faves: faves.to_i
+  create :photo, person: player, faves: faves
 end
 
 Given /^a player "([^"]*)" posted a photo with a comment$/ do |username|
@@ -40,13 +40,13 @@ end
 
 Given /^a player "([^"]*)" guessed a photo after (\d+) years?$/ do |username, years|
   player = create :person, username: username
-  photo = create :photo, dateadded: years.to_i.years.ago
+  photo = create :photo, dateadded: years.years.ago
   create :guess, person: player, photo: photo
 end
 
 Given /^a player "([^"]*)" guessed a photo after (\d+) seconds?$/ do |username, seconds|
   player = create :person, username: username
-  photo = create :photo, dateadded: seconds.to_i.seconds.ago
+  photo = create :photo, dateadded: seconds.seconds.ago
   create :guess, person: player, photo: photo
 end
 
@@ -63,7 +63,7 @@ Then /^the player "([^"]*)" should be first on the rookies' most-points list wit
   expect(most_points_list).to have_css 'h3', text: "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
   expect(tds[1].text).to eq(username)
-  expect(tds[2].text).to eq(points)
+  expect(tds[2].text).to eq(points.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the rookies' most-posts list with (\d+) posts$/ do |username, posts|
@@ -71,7 +71,7 @@ Then /^the player "([^"]*)" should be first on the rookies' most-posts list with
   expect(most_posts_list).to have_css 'h3', text: "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
   expect(tds[1].text).to eq(username)
-  expect(tds[2].text).to eq(posts)
+  expect(tds[2].text).to eq(posts.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the veterans' most-points list with (\d+) points$/ do |username, points|
@@ -79,7 +79,7 @@ Then /^the player "([^"]*)" should be first on the veterans' most-points list wi
   expect(most_points_list).to have_css 'h3', text: "Most points in #{Time.now.year}"
   tds = most_points_list.all 'td'
   expect(tds[1].text).to eq(username)
-  expect(tds[2].text).to eq(points)
+  expect(tds[2].text).to eq(points.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the veterans' most-posts list with (\d+) posts$/ do |username, posts|
@@ -87,7 +87,7 @@ Then /^the player "([^"]*)" should be first on the veterans' most-posts list wit
   expect(most_posts_list).to have_css 'h3', text: "Most posts in #{Time.now.year}"
   tds = most_posts_list.all 'td'
   expect(tds[1].text).to eq(username)
-  expect(tds[2].text).to eq(posts)
+  expect(tds[2].text).to eq(posts.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the most-viewed list with (\d+) views$/ do |username, views|
@@ -95,7 +95,7 @@ Then /^the player "([^"]*)" should be first on the most-viewed list with (\d+) v
   expect(most_viewed_list).to have_css 'h2', text: "Most-viewed photos of #{Time.now.year}"
   tds = most_viewed_list.all 'td'
   expect(tds[2].text).to eq(username)
-  expect(tds[6].text).to eq(views)
+  expect(tds[6].text).to eq(views.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the most-faved list with (\d+) faves$/ do |username, faves|
@@ -103,7 +103,7 @@ Then /^the player "([^"]*)" should be first on the most-faved list with (\d+) fa
   expect(most_faved_list).to have_css 'h2', text: "Most-faved photos of #{Time.now.year}"
   tds = most_faved_list.all 'td'
   expect(tds[2].text).to eq(username)
-  expect(tds[6].text).to eq(faves)
+  expect(tds[6].text).to eq(faves.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the most-commented list with (\d+) comments?$/ do |username, comments|
@@ -111,7 +111,7 @@ Then /^the player "([^"]*)" should be first on the most-commented list with (\d+
   expect(most_commented_list).to have_css 'h2', text: "Most-commented photos of #{Time.now.year}"
   tds = most_commented_list.all 'td'
   expect(tds[2].text).to eq(username)
-  expect(tds[6].text).to eq(comments)
+  expect(tds[6].text).to eq(comments.to_s)
 end
 
 Then /^the player "([^"]*)" should be first on the longest-lasting list with a photo guessed after (\d+) years$/ do |username, years|
@@ -119,7 +119,7 @@ Then /^the player "([^"]*)" should be first on the longest-lasting list with a p
   tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
   expect(tds_in_first_row[2].text).to eq(username)
   # Allow both "3 years" and "3 years, 1 second" to pass in case the test runs slowly
-  expect(tds_in_first_row.last.text.start_with?("#{years} year#{if years.to_i != 1 then 's' end}")).to be_truthy
+  expect(tds_in_first_row.last.text.start_with?("#{years} year#{if years != 1 then 's' end}")).to be_truthy
 end
 
 Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
@@ -127,5 +127,5 @@ Then /^the player "([^"]*)" should be first on the fastest-guessed list with a p
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
   expect(tds_in_first_row[2].text).to eq(username)
   # Allow one more second than specified in case the test runs slowly
-  expect(["#{seconds} second#{if seconds.to_i != 1 then 's' end}", "#{seconds.to_i + 1} seconds"]).to include(tds_in_first_row.last.text)
+  expect(["#{seconds} second#{if seconds != 1 then 's' end}", "#{seconds + 1} seconds"]).to include(tds_in_first_row.last.text)
 end

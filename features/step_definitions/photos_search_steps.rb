@@ -79,7 +79,7 @@ Then /^I should see an image-only search result for the photo$/ do
 end
 
 Then /^I should see (\d+) image-only search results?$/ do |result_count|
-  expect(page).to have_css('.image', count: result_count.to_i)
+  expect(page).to have_css('.image', count: result_count)
   expect(page).to have_no_css('.text')
 end
 
@@ -100,12 +100,11 @@ Then /^image-only search result (\d+) of (\d+) should be the photo added on "([^
 end
 
 def image_only_search_result_should_be(result_index, result_count, photo)
-  result = all('.image', count: result_count)[result_index.to_i - 1]
+  result = all('.image', count: result_count)[result_index - 1]
   expect(result).to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
 end
 
 Then /^I should see (\d+) full search results?$/ do |result_count|
-  result_count = result_count.to_i
   expect(page).to have_css('.image', count: result_count)
   expect(page).to have_css('.text', count: result_count)
 end
@@ -122,7 +121,7 @@ end
 
 def full_search_result_should_be(result_index, result_count, photo)
   image_only_search_result_should_be result_index, result_count, photo
-  result = all('.text', count: result_count)[result_index.to_i - 1]
+  result = all('.text', count: result_count)[result_index - 1]
   expect(result.find('h2')).to have_content(photo.title)
   expect(result.find('p')).to have_content(photo.description)
 end
@@ -192,9 +191,9 @@ Then /^I should see player "([^"]+)"'s comment on player "([^"]+)"'s photo$/ do 
 end
 
 Then /^I should see the comment "([^"]+)" on full search result (\d+) of (\d+)$/ do |comment, result_index, result_count|
-  expect(all('.text', count: result_count)[result_index.to_i - 1]).to have_content(comment)
+  expect(all('.text', count: result_count)[result_index - 1]).to have_content(comment)
 end
 
 Then /^I should not see the comment "([^"]+)" on full search result (\d+) of (\d+)$/ do |comment, result_index, result_count|
-  expect(all('.text', count: result_count)[result_index.to_i - 1]).not_to have_content(comment)
+  expect(all('.text', count: result_count)[result_index - 1]).not_to have_content(comment)
 end
