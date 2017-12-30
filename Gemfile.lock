@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/dschweisguth/activerecord-mysql2spatial-adapter.git
-  revision: f14b07f57213b1978105a9eda15ef081d7ae7ca4
+  revision: c1e9495cfa0e7356624940248eaff562655a72f3
   branch: v0.5.2-ar-4.2-compatibility
   specs:
     activerecord-mysql2spatial-adapter (0.5.2)
