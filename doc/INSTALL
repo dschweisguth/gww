@@ -70,11 +70,11 @@ Install ruby-build per https://github.com/sstephenson/ruby-build
 > RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.4.1
 > rbenv global 2.4.1
 > gem update --system
+> gem --version
+2.7.4
 > gem install bundler
-> gem list
-bundler (1.12.3)
-rubygems-update (2.6.4)
-# plus other gems that come with Ruby
+> gem list bundler
+bundler (1.16.1, default: 1.16.0)
 
 Get and configure GWW
 ---------------------
@@ -88,7 +88,7 @@ Install gems
         > bundle config build.nokogiri --with-opt-dir=/opt/local
         > bundle install --without production
     Linux
-        # If mysql is in /usr/local, perhaps because you installe from source
+        # If mysql is in /usr/local, perhaps because you installed from source
         > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
         > bundle install --deployment --without test
 Configure
