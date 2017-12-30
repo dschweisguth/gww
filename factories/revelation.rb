@@ -13,16 +13,4 @@ FactoryBot.define do
     end
   end
 
-  # factory :admin_photos_revelation, parent: :revelation, class: AdminPhotosRevelation do
-  #   association :photo, factory: :admin_photos_photo, strategy: :build
-  # end
-  #
-  # factory :score_reports_revelation, parent: :revelation, class: ScoreReportsRevelation do
-  #   association :photo, factory: :score_reports_photo, strategy: :build
-  # end
-  #
-  # factory :statistics_revelation, parent: :revelation, class: StatisticsRevelation do
-  #   association :photo, factory: :statistics_photo, strategy: :build
-  # end
-
 end
