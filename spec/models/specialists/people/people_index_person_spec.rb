@@ -361,7 +361,7 @@ describe PeopleIndexPerson do
 
   describe '.guess_speeds' do
     it "returns a map of person ID to average seconds to guess" do
-      now = Time.now
+      now = Time.now.round
       photo = create :photo, dateadded: now - 5
       guess = create :guess, photo: photo, commented_at: now - 1
       expect(PeopleIndexPerson.guess_speeds).to eq(guess.person.id => 4)
@@ -370,7 +370,7 @@ describe PeopleIndexPerson do
 
   describe '.be_guessed_speeds' do
     it "returns a map of person ID to average seconds for their photos to be guessed" do
-      now = Time.now
+      now = Time.now.round
       photo = create :photo, dateadded: now - 5
       create :guess, photo: photo, commented_at: now - 1
       expect(PeopleIndexPerson.be_guessed_speeds).to eq(photo.person.id => 4)
