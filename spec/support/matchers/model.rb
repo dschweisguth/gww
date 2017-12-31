@@ -21,7 +21,7 @@ module GWW
             if missing_attr_names.any?
               "#{missing_attr_names} #{missing_attr_names.size == 1 ? 'was' : 'were'} missing"
             else
-              "they included #{@expected.select { |name, value| @actual[name] != value }.map { |name, _| [name, @actual[name]] }.to_h}"
+              "they included #{@expected.reject { |name, value| @actual[name] == value }.map { |name, _| [name, @actual[name]] }.to_h}"
             end
         end
 

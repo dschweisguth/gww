@@ -123,12 +123,12 @@ describe FlickrService, type: :service do
     it "reraises an end tag error with a message including the offending XML" do
       allow(service).to receive(:submit) { "<head><meta></head>" }
       expect { service.request 'flickr.test.login' }.to raise_error(
-        FlickrService::FlickrRequestFailedError, /Got 'missing end tag' when parsing Flickr XML: <head><meta><\/head>/)
+        FlickrService::FlickrRequestFailedError, %r(Got 'missing end tag' when parsing Flickr XML: <head><meta></head>))
     end
 
     it "just reraises other parsing errors" do
       allow(service).to receive(:submit) { "<head>" }
-      expect { service.request 'flickr.test.login' }.to raise_error(REXML::ParseException, /No close tag for \/head/)
+      expect { service.request 'flickr.test.login' }.to raise_error(REXML::ParseException, %r(No close tag for /head))
     end
 
   end

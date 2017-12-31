@@ -1,4 +1,4 @@
-xml.instruct! :xml, version:"1.0", encoding:"utf-8"
+xml.instruct! :xml, version: "1.0", encoding: "utf-8"
 xml.photos "updated_at" => @lasttime.to_i,
            "total" => @photos.length do
   @photos.each do |photo|
