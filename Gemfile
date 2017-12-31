@@ -19,7 +19,7 @@ gem 'will_paginate'
 gem 'xml-simple'
 
 group :development do
-  gem 'rubocop', '~> 0.49.0'
+  gem 'rubocop', '~> 0.52.0' # yoked to .codeclimate.yml
   gem 'spring'
   gem 'spring-commands-cucumber'
   gem 'spring-commands-rspec'

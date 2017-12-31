@@ -37,7 +37,7 @@ describe ScoreReportsHelper do
       silver: 'https://farm9.staticflickr.com/8470/8143764201_c938bf6bea_o.gif',
       gold:   'https://farm9.staticflickr.com/8050/8143796020_85a314ced3_o.gif'
     }
-    expected.keys.each do |star|
+    expected.each_key do |star|
       it "returns #{expected[star]} given a #{star} star" do
         expect(helper.image_url_for_star(star)).to eq(expected[star])
       end

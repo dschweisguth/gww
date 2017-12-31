@@ -79,7 +79,7 @@ class PeoplePerson < Person
         scores[guesser.score] << guesser
       end.
       tap do |scores|
-        scores.values.each do |guessers_with_score|
+        scores.each_value do |guessers_with_score|
           guessers_with_score.sort_by! { |guesser| guesser.username.downcase }
         end
       end

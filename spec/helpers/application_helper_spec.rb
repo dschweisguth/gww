@@ -9,7 +9,7 @@ describe ApplicationHelper do
     end
 
     expected = { 'are' => 'is', 'were' => 'was', 'have' => 'has' }
-    expected.keys.each do |plural|
+    expected.each_key do |plural|
       it "singularizes the irregular plural verb #{plural} to #{expected[plural]}" do
         expect(helper.singularize(plural, 1)).to eq(expected[plural])
       end

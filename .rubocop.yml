@@ -1,7 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Exclude:
     - bin/rails
     - config.ru
@@ -12,6 +12,18 @@ AllCops:
 
 # Customized cops
 
+Layout/CaseIndentation:
+  IndentOneStep: true
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Naming/PredicateName:
+  NamePrefixBlacklist:
+    - is_
+  Exclude:
+    - 'spec/**/*'
+
 Style/Alias:
   EnforcedStyle: prefer_alias_method
 
@@ -21,26 +33,20 @@ Style/BarePercentLiterals:
 Style/BlockDelimiters:
   EnforcedStyle: line_count_based
 
-Style/CaseIndentation:
-  IndentOneStep: true
-
-Style/DotPosition:
-  EnforcedStyle: trailing
-
 Style/FormatString:
   EnforcedStyle: percent
-
-Style/HashSyntax:
-  Enabled: true
 
 Style/NumericLiterals:
   MinDigits: 15
 
-Style/PredicateName:
-  NamePrefixBlacklist:
-    - is_
-  Exclude:
-    - 'spec/**/*'
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%i': '()'
+    '%I': '()'
+    '%r': '()'
+    '%w': '()'
+    '%W': '()'
 
 Style/RedundantReturn:
   AllowMultipleReturnValues: true
@@ -51,16 +57,36 @@ Style/RegexpLiteral:
 Style/SignalException:
   EnforcedStyle: only_raise
 
-Style/SpaceInsideBlockBraces:
-  Enabled: true
-
-Style/SpaceInsideBrackets:
-  Enabled: true
-
-Style/SpaceInsideHashLiteralBraces:
-  Enabled: true
-
 # Disabled cops
+
+Layout/AlignArray:
+  Enabled: false
+Layout/AlignHash:
+  Enabled: false
+Layout/AlignParameters:
+  Enabled: false
+# Doesn't handle per-method access modifiers
+Layout/EmptyLinesAroundArguments:
+  Enabled: false
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+Layout/EmptyLinesAroundMethodBody:
+  Enabled: false
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/MultilineOperationIndentation:
+  Enabled: false
+Layout/SpaceAfterNot:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
 
 # These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
@@ -68,7 +94,7 @@ Lint/AmbiguousOperator:
 Lint/AmbiguousRegexpLiteral:
   Enabled: false
 
-# This cop gives false positives for Cucumber steps that aren't used.
+# Gives false positives for Cucumber steps that aren't used
 Lint/Debugger:
   Enabled: false
 
@@ -76,7 +102,13 @@ Lint/Debugger:
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
 
+# Objects to a usage needed to implement OAuth signing
+Lint/UriEscapeUnescape:
+  Enabled: false
+
 Metrics/AbcSize:
+  Enabled: false
+Metrics/BlockLength:
   Enabled: false
 Metrics/ClassLength:
   Enabled: false
@@ -105,12 +137,6 @@ Rails/PluralizationGrammar:
 Rails/TimeZone:
   Enabled: false
 
-Style/AlignArray:
-  Enabled: false
-Style/AlignHash:
-  Enabled: false
-Style/AlignParameters:
-  Enabled: false
 Style/AsciiComments:
   Enabled: false
 Style/BracesAroundHashParameters:
@@ -121,13 +147,7 @@ Style/CommentAnnotation:
   Enabled: false
 Style/Documentation:
   Enabled: false
-Style/EmptyLinesAroundBlockBody:
-  Enabled: false
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-Style/EmptyLinesAroundMethodBody:
-  Enabled: false
-Style/EmptyLinesAroundModuleBody:
+Style/FormatStringToken:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
@@ -137,13 +157,9 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/MethodMissing:
   Enabled: false
+Style/MixinGrouping:
+  Enabled: false
 Style/MultilineBlockChain:
-  Enabled: false
-Style/MultilineMethodCallBraceLayout:
-  Enabled: false
-Style/MultilineMethodCallIndentation:
-  Enabled: false
-Style/MultilineOperationIndentation:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
@@ -159,7 +175,8 @@ Style/RaiseArgs:
   Enabled: false
 Style/RedundantBegin:
   Enabled: false
-Style/SpaceAfterNot:
+# Gives false positive on Cucumber step definitions
+Style/RegexpLiteral:
   Enabled: false
 Style/StringLiterals:
   Enabled: false
