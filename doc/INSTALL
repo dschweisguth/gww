@@ -10,9 +10,8 @@ Install and start mysql
 Mac
     If you don't already have it, install MacPorts from www.macports.org
     > sudo port install mysql56-server
-    > sudo port load mysql56-server # as directed by the previous command
-    > sudo -u _mysql mysql_install_db5
-    > /opt/local/lib/mysql56/bin/mysql_secure_installation # as directed
+    > sudo port load mysql56-server
+    > /opt/local/lib/mysql56/bin/mysql_secure_installation
     > ln -s /opt/local/var/run/mysql56/mysqld.sock /tmp/mysql.sock # for ogr2ogr
     Create the following file:
     > cat /opt/local/etc/mysql56/my.cnf 
@@ -53,7 +52,7 @@ Install required binaries
 -------------------------
 
 Mac
-    > port install libxml2 readline # current readline required for irb history
+    > port install readline # irb needs current readline to save history across sessions
 
 Linux
     TODO
@@ -67,14 +66,14 @@ at this writing.
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
-> RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.4.3
-> rbenv global 2.4.3
+> RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.4.4
+> rbenv global 2.4.4
 > gem update --system
 > gem --version
-2.7.4
+2.7.7
 > gem install bundler
 > gem list bundler
-bundler (1.16.1, default: 1.16.0)
+bundler (1.16.3, default: 1.16.2)
 
 Get and configure GWW
 ---------------------
@@ -85,8 +84,7 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-        > bundle config build.nokogiri --with-opt-dir=/opt/local
-        > bundle install --without production
+        > bundle --without production
     Linux
         # If mysql is in /usr/local, perhaps because you installed from source
         > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
