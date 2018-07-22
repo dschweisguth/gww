@@ -27,7 +27,7 @@ group :development do
 end
 
 group :test do
-  gem 'activerecord-nulldb-adapter'
+  gem 'activerecord-nulldb-adapter', '0.3.8'
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
