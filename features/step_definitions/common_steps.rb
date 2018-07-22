@@ -62,12 +62,28 @@ Then /^show me the screen$/ do
   save_screenshot 'screenshot.png'
 end
 
+Given(/^Capybara\.default_max_wait_time is (\d+\.\d+) s$/) do |default_max_wait_time|
+  allow(Capybara).to receive(:default_max_wait_time) { default_max_wait_time.to_f }
+end
+
+When(/^I wait_for something that takes (\d+(?:\.\d+)?) s with an interval of (\d+\.\d+) s then the thing happens/) do |time_to_wait, interval|
+  start_time = Time.now.to_f
+  wait_for(interval.to_f) { Time.now.to_f - start_time > time_to_wait.to_f }
+end
+
+When(/^I wait_for something that takes (\d+\.\d+) s with an interval of (\d+\.\d+) s then the thing doesn't happen$/) do |time_to_wait, interval|
+  start_time = Time.now.to_f
+  expect { wait_for(interval.to_f) { Time.now.to_f - start_time > time_to_wait.to_f } }.to raise_error RuntimeError
+end
+
 # Takes a block which returns true when we should stop waiting
-def wait_for(delay = 1)
+def wait_for(interval = 1)
   seconds_waited = 0
   while !yield && seconds_waited < Capybara.default_max_wait_time
-    sleep delay
-    seconds_waited += 1
+    sleep interval
+    seconds_waited += interval
   end
-  raise "Waited for #{Capybara.default_max_wait_time} seconds but condition did not become true" unless yield
+  if !yield
+    raise "Waited for #{Capybara.default_max_wait_time} seconds but condition did not become true"
+  end
 end

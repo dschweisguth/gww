@@ -13,3 +13,13 @@ Feature: Cucumber support code
 
   Scenario: Developer neglects to stub calls to FlickrService out of a feature
     When I do something that calls FlickrService and forget to stub it out then it should explode
+
+  Scenario: Developer waits for something which is already true
+    When I wait_for something that takes 0 s with an interval of 0.1 s then the thing happens
+
+  Scenario: Developer waits for something which takes a moment to become true
+    When I wait_for something that takes 0.15 s with an interval of 0.1 s then the thing happens
+
+  Scenario: Developer waits for something which never becomes true
+    Given Capybara.default_max_wait_time is 0.1 s
+    When I wait_for something that takes 0.2 s with an interval of 0.1 s then the thing doesn't happen
