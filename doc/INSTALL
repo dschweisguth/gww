@@ -66,14 +66,14 @@ at this writing.
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
-> RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.4.4
-> rbenv global 2.4.4
+> RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.5.1
+> rbenv global 2.5.1
 > gem update --system
 > gem --version
 2.7.7
 > gem install bundler
 > gem list bundler
-bundler (1.16.3, default: 1.16.2)
+bundler (1.16.6, default: 1.16.2)
 
 Get and configure GWW
 ---------------------
