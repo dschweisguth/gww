@@ -8,11 +8,11 @@ FactoryBot.define do
     dateadded { Time.now }
     lastupdate { Time.now }
     seen_at { Time.now }
-    game_status 'unfound'
-    views 0
+    game_status { 'unfound' }
+    views { 0 }
     sequence(:title) { |n| "Title #{n}" }
     sequence(:description) { |n| "Description #{n}" }
-    faves 0
+    faves { 0 }
   end
 
   [AdminPhotosPhoto, PeoplePhoto, PeopleShowPhoto, ScoreReportsPhoto, StatisticsPhoto, WheresiesPhoto].each do |specialist_class|
@@ -26,7 +26,7 @@ FactoryBot.define do
   factory :flickr_update_photo, parent: :photo, class: FlickrUpdatePhoto
 
   factory :guessed_photo, parent: :photo do
-    game_status 'found'
+    game_status { 'found' }
 
     after(:create) do |photo|
       comment = create :comment, photo: photo
@@ -36,7 +36,7 @@ FactoryBot.define do
   end
 
   factory :mapped_photo, parent: :photo do
-    accuracy 16 # the highest and most frequently observed accuracy, so a reasonable default
+    accuracy { 16 } # the highest and most frequently observed accuracy, so a reasonable default
   end
 
 end
