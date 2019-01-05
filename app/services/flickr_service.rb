@@ -68,6 +68,7 @@ class FlickrService
     begin
       parsed_xml = XmlSimple.xml_in xml
     rescue REXML::ParseException => e
+      # TODO Dave remove this case, which should no longer occur now that we handle response status 502
       if e.message.include? "Missing end tag"
         raise FlickrRequestFailedError, "Got 'missing end tag' when parsing Flickr XML: #{xml}"
       else
@@ -130,7 +131,11 @@ class FlickrService
   private def get(url)
     failure_count = 0
     begin
-      get_once(url).body
+      response = get_once(url)
+      if response.code == '502'
+        raise StandardError, "Got response status 502"
+      end
+      response.body
     rescue StandardError => e
       failure_count += 1
       sleep_time = retry_quantum * (2**failure_count)

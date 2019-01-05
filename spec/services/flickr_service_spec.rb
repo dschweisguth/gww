@@ -60,12 +60,17 @@ describe FlickrService, type: :service do
     end
 
     it "raises an error if the response is not XML, such as when there's an OAuth problem" do
-      mock_get_once_returns "oauth_problem=signature_invalid"
+      mock_get_once_returns "oauth_problem=signature_invalid", '401'
       request_fails
     end
 
     it "raises an error if stat != ok" do
-      mock_get_once_returns '<rsp stat="fail"><err code="1" msg="User not found"/></rsp>'
+      mock_get_once_returns '<rsp stat="fail"><err code="1" msg="User not found"/></rsp>', '200'
+      request_fails
+    end
+
+    it "raises an error if the response has status 502" do
+      allow(service).to receive(:get_once) { double code: '502' }
       request_fails
     end
 
@@ -111,12 +116,14 @@ describe FlickrService, type: :service do
     end
 
     def mock_get_once_succeeds
-      mock_get_once_returns '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>'
+      mock_get_once_returns(
+        '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>',
+        '200'
+      )
     end
 
-    def mock_get_once_returns(body)
-      response = double
-      expect(response).to receive(:body) { body }
+    def mock_get_once_returns(body, code)
+      response = double body: body, code: code
       expect(service).to receive(:get_once) { response }
     end
 
