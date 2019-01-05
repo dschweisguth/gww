@@ -69,9 +69,11 @@ describe FlickrService, type: :service do
       request_fails
     end
 
-    it "raises an error if the response has status 502" do
-      allow(service).to receive(:get_once) { double code: '502' }
-      request_fails
+    %w(502 504).each do |code|
+      it "raises an error if the response has status #{code}" do
+        allow(service).to receive(:get_once) { double code: code }
+        request_fails
+      end
     end
 
     it "retries a failed request once" do

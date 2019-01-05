@@ -132,7 +132,7 @@ class FlickrService
     failure_count = 0
     begin
       response = get_once(url)
-      if response.code == '502'
+      if response.code.in? %w(502 504)
         raise StandardError, "Got response status 502"
       end
       response.body
