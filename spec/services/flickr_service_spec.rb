@@ -60,12 +60,12 @@ describe FlickrService, type: :service do
     end
 
     it "raises an error if the response is not XML, such as when there's an OAuth problem" do
-      mock_get_once_returns "oauth_problem=signature_invalid", '401'
+      stub_get_once_returns "oauth_problem=signature_invalid", '401'
       request_fails
     end
 
     it "raises an error if stat != ok" do
-      mock_get_once_returns '<rsp stat="fail"><err code="1" msg="User not found"/></rsp>', '200'
+      stub_get_once_returns '<rsp stat="fail"><err code="1" msg="User not found"/></rsp>', '200'
       request_fails
     end
 
@@ -75,19 +75,19 @@ describe FlickrService, type: :service do
     end
 
     it "retries a failed request once" do
-      mock_get_once_times_out 1
-      mock_get_once_succeeds
+      stub_get_once_times_out 1
+      stub_get_once_succeeds
       request_succeeds
     end
 
     it "retries a failed request thrice" do
-      mock_get_once_times_out 3
-      mock_get_once_succeeds
+      stub_get_once_times_out 3
+      stub_get_once_succeeds
       request_succeeds
     end
 
     it "gives up after four failures" do
-      mock_get_once_times_out 4
+      stub_get_once_times_out 4
       request_fails
     end
 
@@ -111,20 +111,19 @@ describe FlickrService, type: :service do
       expect { service.request 'flickr.test.login' }.to raise_error FlickrService::FlickrRequestFailedError
     end
 
-    def mock_get_once_times_out(times)
-      expect(service).to receive(:get_once).exactly(times).times { raise Timeout::Error }
+    def stub_get_once_times_out(times)
+      allow(service).to receive(:get_once).exactly(times).times { raise Timeout::Error }
     end
 
-    def mock_get_once_succeeds
-      mock_get_once_returns(
+    def stub_get_once_succeeds
+      stub_get_once_returns(
         '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>',
         '200'
       )
     end
 
-    def mock_get_once_returns(body, code)
-      response = double body: body, code: code
-      expect(service).to receive(:get_once) { response }
+    def stub_get_once_returns(body, code)
+      allow(service).to receive(:get_once) { double(body: body, code: code) }
     end
 
     it "reraises an end tag error with a message including the offending XML" do
