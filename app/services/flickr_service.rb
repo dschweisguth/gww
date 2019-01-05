@@ -59,7 +59,7 @@ class FlickrService
   def request(api_method, extra_params = {})
     sleep seconds_to_wait
     url = api_url api_method, extra_params
-    xml = submit url
+    xml = get url
     if xml !~ /<.*?>/m
       raise FlickrRequestFailedError, "Response was not XML: #{xml}"
     end
@@ -127,10 +127,10 @@ class FlickrService
     URI.encode string, /[^\w\-.~]/
   end
 
-  private def submit(url)
+  private def get(url)
     failure_count = 0
     begin
-      get(url).body
+      get_once(url).body
     rescue StandardError => e
       failure_count += 1
       sleep_time = retry_quantum * (2**failure_count)
@@ -149,7 +149,7 @@ class FlickrService
   end
 
   # public so that it can be mocked in tests
-  def get(url)
+  def get_once(url)
     uri = URI.parse url
     http = Net::HTTP.new uri.host, uri.port
     http.use_ssl = true

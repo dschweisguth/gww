@@ -60,29 +60,29 @@ describe FlickrService, type: :service do
     end
 
     it "raises an error if the response is not XML, such as when there's an OAuth problem" do
-      mock_get_returns "oauth_problem=signature_invalid"
+      mock_get_once_returns "oauth_problem=signature_invalid"
       request_fails
     end
 
     it "raises an error if stat != ok" do
-      mock_get_returns '<rsp stat="fail"><err code="1" msg="User not found"/></rsp>'
+      mock_get_once_returns '<rsp stat="fail"><err code="1" msg="User not found"/></rsp>'
       request_fails
     end
 
     it "retries a failed request once" do
-      mock_get_times_out 1
-      mock_get_succeeds
+      mock_get_once_times_out 1
+      mock_get_once_succeeds
       request_succeeds
     end
 
     it "retries a failed request thrice" do
-      mock_get_times_out 3
-      mock_get_succeeds
+      mock_get_once_times_out 3
+      mock_get_once_succeeds
       request_succeeds
     end
 
     it "gives up after four failures" do
-      mock_get_times_out 4
+      mock_get_once_times_out 4
       request_fails
     end
 
@@ -106,28 +106,28 @@ describe FlickrService, type: :service do
       expect { service.request 'flickr.test.login' }.to raise_error FlickrService::FlickrRequestFailedError
     end
 
-    def mock_get_times_out(times)
-      expect(service).to receive(:get).exactly(times).times { raise Timeout::Error }
+    def mock_get_once_times_out(times)
+      expect(service).to receive(:get_once).exactly(times).times { raise Timeout::Error }
     end
 
-    def mock_get_succeeds
-      mock_get_returns '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>'
+    def mock_get_once_succeeds
+      mock_get_once_returns '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>'
     end
 
-    def mock_get_returns(body)
+    def mock_get_once_returns(body)
       response = double
       expect(response).to receive(:body) { body }
-      expect(service).to receive(:get) { response }
+      expect(service).to receive(:get_once) { response }
     end
 
     it "reraises an end tag error with a message including the offending XML" do
-      allow(service).to receive(:submit) { "<head><meta></head>" }
+      allow(service).to receive(:get) { "<head><meta></head>" }
       expect { service.request 'flickr.test.login' }.to raise_error(
         FlickrService::FlickrRequestFailedError, %r(Got 'missing end tag' when parsing Flickr XML: <head><meta></head>))
     end
 
     it "just reraises other parsing errors" do
-      allow(service).to receive(:submit) { "<head>" }
+      allow(service).to receive(:get) { "<head>" }
       expect { service.request 'flickr.test.login' }.to raise_error(REXML::ParseException, %r(No close tag for /head))
     end
 
