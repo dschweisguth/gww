@@ -10,6 +10,7 @@ FactoryBot.define do
     realname { "First Last#{number}" }
     flickrid { "#{rand 100000000}@N#{'%02d' % rand(10)}" }
     pathalias { username }
+    ispro { false }
   end
 
   {
