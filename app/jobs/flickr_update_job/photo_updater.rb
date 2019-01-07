@@ -14,7 +14,7 @@ module FlickrUpdateJob
         Rails.logger.info "Updating database from page #{page} ..."
         now = Time.now.getutc
         parsed_photos['photo']&.each do |parsed_photo| # &. prevents crashes when pages is incorrectly large
-          person, created = create_or_update_person_from parsed_photo
+          person, created = find_or_create_person_from parsed_photo
           new_person_count += created
           created = create_or_update_photo_from parsed_photo, person, now
           new_photo_count += created
@@ -24,25 +24,21 @@ module FlickrUpdateJob
       return new_photo_count, new_person_count, page - 1, parsed_photos['pages'].to_i
     end
 
-    private_class_method def self.create_or_update_person_from(parsed_photo)
+    private_class_method def self.find_or_create_person_from(parsed_photo)
       flickrid = parsed_photo['owner']
-      attributes = {
-        username: parsed_photo['ownername'],
-        pathalias: parsed_photo['pathalias'],
-        ispro: parsed_photo['ispro'] == '1',
-        photos_count: 0 # TODO Dave this results in this attribute being incorrect until the next update
-      }
-      if attributes[:pathalias] == ''
-        attributes[:pathalias] = flickrid
-      end
       person = Person.find_by_flickrid flickrid
       people_created =
         if person
           # For performance, assume that an existing person has already been updated by PersonUpdater.
           0
         else
-          attributes.merge! flickrid: flickrid
-          person = Person.create! attributes
+          person = Person.create!(
+            flickrid: flickrid,
+            username: parsed_photo['ownername'],
+            pathalias: parsed_photo['pathalias'] == '' ? flickrid : parsed_photo['pathalias'],
+            ispro: parsed_photo['ispro'] == '1',
+            photos_count: 0 # TODO Dave this results in this attribute being incorrect until the next update
+          )
           1
         end
       return person, people_created
