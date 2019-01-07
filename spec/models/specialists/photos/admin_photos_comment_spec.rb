@@ -73,12 +73,9 @@ describe AdminPhotosComment do
         set_time
         stub_person_request
         AdminPhotosComment.add_selected_answer comment.id, ''
-        guess = AdminPhotosGuess.includes(:person).find_by_photo_id comment.photo
-        expect(guess.person.flickrid).to eq(comment.flickrid)
-        expect(guess.person.username).to eq('username_from_request')
-        expect(guess.person.realname).to eq('realname_from_request')
-        expect(guess.person.pathalias).to eq('pathalias_from_request')
-        expect(guess.person.ispro).to be true
+        guesser = AdminPhotosGuess.includes(:person).find_by_photo_id(comment.photo).person
+        expect(guesser.flickrid).to eq(comment.flickrid)
+        has_attributes_per_flickr guesser
       end
 
       it "handles a redundant username" do
@@ -101,9 +98,7 @@ describe AdminPhotosComment do
         expect(guesses.length).to eq(1)
         guess = guesses[0]
         expect(guess.person.flickrid).to eq(scorer_comment.flickrid)
-        expect(guess.person.username).to eq('username_from_request')
-        expect(guess.person.pathalias).to eq('pathalias_from_request')
-        expect(guess.person.ispro).to be true
+        has_attributes_per_flickr guess.person
         expect(guess.comment_text).to eq(answer_comment.comment_text)
         expect(guess.commented_at).to eq(answer_comment.commented_at)
         expect(guess.added_at).to eq(now)
@@ -179,7 +174,12 @@ describe AdminPhotosComment do
 
       def is_updated_per_flickr(guesser)
         guesser.reload
+        has_attributes_per_flickr(guesser)
+      end
+
+      def has_attributes_per_flickr(guesser)
         expect(guesser.username).to eq('username_from_request')
+        expect(guesser.realname).to eq('realname_from_request')
         expect(guesser.pathalias).to eq('pathalias_from_request')
         expect(guesser.ispro).to be true
       end
