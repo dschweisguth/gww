@@ -125,10 +125,7 @@ describe AdminPhotosPhoto do
         expect(guess.photo.game_status).to eq('found')
 
         guesser.reload
-        expect(guesser.username).to eq('username_from_request')
-        expect(guesser.realname).to eq('realname_from_request')
-        expect(guesser.pathalias).to eq('pathalias_from_request')
-        expect(guesser.ispro).to be true
+        has_attributes_from_flickr(guesser)
 
       end
 
@@ -139,10 +136,7 @@ describe AdminPhotosPhoto do
         AdminPhotosPhoto.add_entered_answer photo.id, comment.username, 'comment text'
         guess = Guess.includes(:person).find_by_photo_id photo
         expect(guess.person.flickrid).to eq(comment.flickrid)
-        expect(guess.person.username).to eq('username_from_request')
-        expect(guess.person.realname).to eq('realname_from_request')
-        expect(guess.person.pathalias).to eq('pathalias_from_request')
-        expect(guess.person.ispro).to be true
+        has_attributes_from_flickr(guess.person)
       end
 
       it "leaves alone an existing guess by the same guesser" do
@@ -178,10 +172,23 @@ describe AdminPhotosPhoto do
               'username' => ['username_from_request'],
               'realname' => ['realname_from_request'],
               'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/'],
-              'ispro' => '1'
+              'ispro' => '1',
+              'photos' => [
+                {
+                  'count' => [1]
+                }
+              ]
             }]
           }
         end
+      end
+
+      def has_attributes_from_flickr(guesser)
+        expect(guesser.username).to eq('username_from_request')
+        expect(guesser.realname).to eq('realname_from_request')
+        expect(guesser.pathalias).to eq('pathalias_from_request')
+        expect(guesser.ispro).to be true
+        expect(guesser.photos_count).to eq(1)
       end
 
     end

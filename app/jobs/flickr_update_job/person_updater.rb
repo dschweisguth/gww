@@ -33,8 +33,9 @@ module FlickrUpdateJob
       end
       pathalias = parsed_person['photosurl'][0].match(%r{https://www.flickr.com/photos/([^\/]+)/})[1]
       ispro = parsed_person['ispro'][0] == '1'
+      photos_count = parsed_person['photos'][0]['count'][0].to_i
 
-      { username: username, realname: realname, pathalias: pathalias, ispro: ispro }
+      { username: username, realname: realname, pathalias: pathalias, ispro: ispro, photos_count: photos_count }
     end
 
   end

@@ -78,7 +78,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
         pathalias: stubbed_photo[:pathalias],
-        ispro: stubbed_photo[:ispro]
+        ispro: stubbed_photo[:ispro],
+        photos_count: 0
       )
 
       expect(photo).to have_attributes?(
@@ -374,7 +375,9 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
 
       expect(photo.person).to have_attributes?(
         username: 'new_username',
-        pathalias: 'new_pathalias'
+        pathalias: 'new_pathalias',
+        ispro: true,
+        photos_count: 1
       )
       expect(photo).to have_attributes?(
         farm: '1',
@@ -500,7 +503,12 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
             'username' => ['new_username'],
             'realname' => ['new_realname'],
             'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
-            'ispro' => '1'
+            'ispro' => '1',
+            'photos' => [
+              {
+                'count' => [1]
+              }
+            ]
           }]
         }
       end

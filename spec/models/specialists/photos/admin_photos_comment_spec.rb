@@ -155,7 +155,12 @@ describe AdminPhotosComment do
               'username' => ['username_from_request'],
               'realname' => ['realname_from_request'],
               'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/'],
-              'ispro' => '1'
+              'ispro' => '1',
+              'photos' => [
+                {
+                  'count' => [1]
+                }
+              ]
             }]
           }
         end
@@ -182,6 +187,7 @@ describe AdminPhotosComment do
         expect(guesser.realname).to eq('realname_from_request')
         expect(guesser.pathalias).to eq('pathalias_from_request')
         expect(guesser.ispro).to be true
+        expect(guesser.photos_count).to eq(1)
       end
 
     end

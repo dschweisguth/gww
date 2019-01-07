@@ -29,7 +29,8 @@ module FlickrUpdateJob
       attributes = {
         username: parsed_photo['ownername'],
         pathalias: parsed_photo['pathalias'],
-        ispro: parsed_photo['ispro'] == '1'
+        ispro: parsed_photo['ispro'] == '1',
+        photos_count: 0 # TODO Dave this results in this attribute being incorrect until the next update
       }
       if attributes[:pathalias] == ''
         attributes[:pathalias] = flickrid
