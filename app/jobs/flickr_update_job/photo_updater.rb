@@ -9,7 +9,7 @@ module FlickrUpdateJob
         Rails.logger.info "Getting page #{page} ..."
         # Note date_taken and path_alias here but datetaken and pathalias in the result
         photos_xml = FlickrService.instance.groups_pools_get_photos group_id: FlickrService::GROUP_ID,
-          per_page: 500, page: page, extras: 'description,date_taken,geo,last_update,path_alias,views'
+          per_page: 500, page: page, extras: 'description,date_taken,geo,ispro,last_update,path_alias,views'
         parsed_photos = photos_xml['photos'][0]
         Rails.logger.info "Updating database from page #{page} ..."
         now = Time.now.getutc
@@ -26,7 +26,11 @@ module FlickrUpdateJob
 
     private_class_method def self.create_or_update_person_from(parsed_photo)
       flickrid = parsed_photo['owner']
-      attributes = { username: parsed_photo['ownername'], pathalias: parsed_photo['pathalias'] }
+      attributes = {
+        username: parsed_photo['ownername'],
+        pathalias: parsed_photo['pathalias'],
+        ispro: parsed_photo['ispro'] == '1'
+      }
       if attributes[:pathalias] == ''
         attributes[:pathalias] = flickrid
       end

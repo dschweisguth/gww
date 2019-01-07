@@ -128,6 +128,7 @@ describe AdminPhotosPhoto do
         expect(guesser.username).to eq('username_from_request')
         expect(guesser.realname).to eq('realname_from_request')
         expect(guesser.pathalias).to eq('pathalias_from_request')
+        expect(guesser.ispro).to be true
 
       end
 
@@ -141,6 +142,7 @@ describe AdminPhotosPhoto do
         expect(guess.person.username).to eq('username_from_request')
         expect(guess.person.realname).to eq('realname_from_request')
         expect(guess.person.pathalias).to eq('pathalias_from_request')
+        expect(guess.person.ispro).to be true
       end
 
       it "leaves alone an existing guess by the same guesser" do
@@ -175,7 +177,8 @@ describe AdminPhotosPhoto do
             'person' => [{
               'username' => ['username_from_request'],
               'realname' => ['realname_from_request'],
-              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
+              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/'],
+              'ispro' => '1'
             }]
           }
         end

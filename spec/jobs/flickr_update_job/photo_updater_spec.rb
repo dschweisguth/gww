@@ -13,6 +13,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
           owner: 'incoming_person_flickrid',
           ownername: 'incoming_username',
           pathalias: 'incoming_pathalias',
+          ispro: true,
           farm: '1',
           server: 'incoming_server',
           secret: 'incoming_secret',
@@ -35,6 +36,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
               'owner' => stubbed_photo[:owner],
               'ownername' => stubbed_photo[:ownername],
               'pathalias' => stubbed_photo[:pathalias],
+              'ispro' => stubbed_photo[:ispro] ? '1' : '0',
               'farm' => stubbed_photo[:farm],
               'server' => stubbed_photo[:server],
               'secret' => stubbed_photo[:secret],
@@ -75,7 +77,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       expect(photo.person).to have_attributes?(
         flickrid: stubbed_photo[:owner],
         username: stubbed_photo[:ownername],
-        pathalias: stubbed_photo[:pathalias]
+        pathalias: stubbed_photo[:pathalias],
+        ispro: stubbed_photo[:ispro]
       )
 
       expect(photo).to have_attributes?(
@@ -496,7 +499,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
           'person' => [{
             'username' => ['new_username'],
             'realname' => ['new_realname'],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
+            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+            'ispro' => '1'
           }]
         }
       end

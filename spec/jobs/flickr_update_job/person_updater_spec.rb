@@ -1,6 +1,6 @@
 describe FlickrUpdateJob::PersonUpdater, type: :job do
   describe '.update_all' do
-    let!(:person) { create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias' }
+    let!(:person) { create :person, username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias', ispro: false }
 
     it "updates an existing user's username, realname and pathalias" do
       allow(FlickrService.instance).to receive(:people_get_info) do
@@ -8,18 +8,21 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
           'person' => [{
             'username' => ['new_username'],
             'realname' => ['new_realname'],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
+            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+            'ispro' => '1'
           }]
         }
       end
-      update_all_and_expect_person_to_have username: 'new_username', realname: 'new_realname', pathalias: 'new_pathalias'
+      update_all_and_expect_person_to_have(
+        username: 'new_username', realname: 'new_realname', pathalias: 'new_pathalias', ispro: true)
     end
 
     it "handles an error" do
       allow(FlickrService.instance).to receive(:people_get_info) do
         raise FlickrService::FlickrRequestFailedError, "Couldn't get info from Flickr"
       end
-      update_all_and_expect_person_to_have username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias'
+      update_all_and_expect_person_to_have(
+        username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias', ispro: false)
     end
 
     it "handles a missing realname" do
@@ -27,12 +30,14 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
         {
           'person' => [{
             'username' => ['new_username'],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
+            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+            'ispro' => '1'
           }]
         }
       end
       # if a user hides their real name, updating should forget it
-      update_all_and_expect_person_to_have username: 'new_username', realname: nil, pathalias: 'new_pathalias'
+      update_all_and_expect_person_to_have(
+        username: 'new_username', realname: nil, pathalias: 'new_pathalias', ispro: true)
     end
 
     it "handles an empty realname" do
@@ -41,12 +46,14 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
           'person' => [{
             'username' => ['new_username'],
             'realname' => [{}],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/']
+            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+            'ispro' => '1'
           }]
         }
       end
       # if a user hides their real name, updating should forget it
-      update_all_and_expect_person_to_have username: 'new_username', realname: nil, pathalias: 'new_pathalias'
+      update_all_and_expect_person_to_have(
+        username: 'new_username', realname: nil, pathalias: 'new_pathalias', ispro: true)
     end
 
     def update_all_and_expect_person_to_have(attrs)

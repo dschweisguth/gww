@@ -78,6 +78,7 @@ describe AdminPhotosComment do
         expect(guess.person.username).to eq('username_from_request')
         expect(guess.person.realname).to eq('realname_from_request')
         expect(guess.person.pathalias).to eq('pathalias_from_request')
+        expect(guess.person.ispro).to be true
       end
 
       it "handles a redundant username" do
@@ -102,6 +103,7 @@ describe AdminPhotosComment do
         expect(guess.person.flickrid).to eq(scorer_comment.flickrid)
         expect(guess.person.username).to eq('username_from_request')
         expect(guess.person.pathalias).to eq('pathalias_from_request')
+        expect(guess.person.ispro).to be true
         expect(guess.comment_text).to eq(answer_comment.comment_text)
         expect(guess.commented_at).to eq(answer_comment.commented_at)
         expect(guess.added_at).to eq(now)
@@ -157,7 +159,8 @@ describe AdminPhotosComment do
             'person' => [{
               'username' => ['username_from_request'],
               'realname' => ['realname_from_request'],
-              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/']
+              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/'],
+              'ispro' => '1'
             }]
           }
         end
@@ -178,6 +181,7 @@ describe AdminPhotosComment do
         guesser.reload
         expect(guesser.username).to eq('username_from_request')
         expect(guesser.pathalias).to eq('pathalias_from_request')
+        expect(guesser.ispro).to be true
       end
 
     end
