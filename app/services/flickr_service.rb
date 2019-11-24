@@ -20,6 +20,7 @@ class FlickrService
   attr_accessor :retry_quantum
 
   def initialize
+    @response_code = nil
     @retry_quantum = 30
   end
 
@@ -70,7 +71,7 @@ class FlickrService
     rescue REXML::ParseException => e
       # TODO Dave remove this case, which should no longer occur now that we handle response status 502
       if e.message.include? "Missing end tag"
-        raise FlickrRequestFailedError, "Got 'missing end tag' when parsing Flickr XML: #{xml}"
+        raise FlickrRequestFailedError, "Got 'missing end tag' with response code #{@response_code} when parsing Flickr XML: #{xml}"
       else
         raise
       end
@@ -132,6 +133,7 @@ class FlickrService
     failure_count = 0
     begin
       response = get_once(url)
+      @response_code = response.code
       if response.code.in? %w(502 504)
         raise StandardError, "Got response status 502"
       end
