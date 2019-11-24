@@ -13,7 +13,7 @@ gem 'mysql2'
 gem 'rails', '~> 4.2.0'
 # See https://github.com/rgeo/rgeo-activerecord/issues/23
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
-gem 'sass-rails'
+gem 'sass-rails', '~> 5.0' # 6.0 doesn't compile in production
 gem 'sprockets', '~> 3.7' # 4.0 requires a manifest which I don't feel like writing right now
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
