@@ -14,6 +14,7 @@ gem 'rails', '~> 4.2.0'
 # See https://github.com/rgeo/rgeo-activerecord/issues/23
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
 gem 'sass-rails'
+gem 'sprockets', '~> 3.7' # 4.0 requires a manifest which I don't feel like writing right now
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 gem 'will_paginate'
@@ -31,7 +32,7 @@ group :test do
   gem 'capybara'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '~> 4.11' # 5.0 removes static attributes
   gem 'jasmine'
   gem 'launchy'
   gem 'phantomjs', require: 'phantomjs/poltergeist'
