@@ -132,7 +132,7 @@ class FlickrService
   private def get(url)
     failure_count = 0
     begin
-      response = get_once(url)
+      response = get_once url
       @response_code = response.code
       if response.code.in? %w(500 502 504)
         raise StandardError, "Got response status #{response.code}"
