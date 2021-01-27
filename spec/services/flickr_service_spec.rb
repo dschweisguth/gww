@@ -69,7 +69,7 @@ describe FlickrService, type: :service do
       request_fails
     end
 
-    %w(500 502 504).each do |code|
+    %w(500 502 503 504).each do |code|
       it "raises an error if the response has status #{code}" do
         allow(service).to receive(:get_once) { double code: code }
         request_fails

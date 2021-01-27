@@ -138,7 +138,7 @@ class FlickrService
     begin
       response = get_once url
       @response_code = response.code
-      if response.code.in? %w(500 502 504)
+      if response.code.in? %w(500 502 503 504)
         raise StandardError, "Got response status #{response.code}"
       end
       response.body
