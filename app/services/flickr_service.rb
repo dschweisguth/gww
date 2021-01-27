@@ -66,16 +66,7 @@ class FlickrService
     end
     xml.delete! "\u0003" # This fixes a crash when updating one old photo's comments
     xml.gsub! /&(?!(?:amp|lt|gt|quot|apos);)/, '&amp;' # Another fix for occasional invalid XML
-    begin
-      parsed_xml = XmlSimple.xml_in xml
-    rescue REXML::ParseException => e
-      # TODO Dave remove this case, which should no longer occur now that we handle response status 502
-      if e.message.include? "Missing end tag"
-        raise FlickrRequestFailedError, "Got 'missing end tag' with response code #{@response_code} when parsing Flickr XML: #{xml}"
-      else
-        raise
-      end
-    end
+    parsed_xml = XmlSimple.xml_in xml
     if parsed_xml['stat'] != 'ok'
       # One way we get here is if we request information we don't have access to, e.g. a deleted user
       err = parsed_xml['err'].first
