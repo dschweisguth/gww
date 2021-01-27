@@ -78,11 +78,7 @@ class FlickrService
     end
     if parsed_xml['stat'] != 'ok'
       # One way we get here is if we request information we don't have access to, e.g. a deleted user
-      errs = parsed_xml['err']
-      if !errs
-        raise parsed_xml.inspect
-      end
-      err = errs.first
+      err = parsed_xml['err'].first
       raise FlickrReturnedAnError.new(stat: parsed_xml['stat'], code: err['code'].to_i, msg: err['msg'])
     end
     parsed_xml
