@@ -88,6 +88,8 @@ Install gems
     Linux
         # If mysql is in /usr/local, perhaps because you installed from source
         > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
+        # If your glibc is too old for nokogiri 1.11+
+        > bundle config set force_ruby_platform true
         > bundle install --deployment --without test
 Configure
     Configure database credentials
