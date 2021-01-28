@@ -84,11 +84,14 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-        > bundle --without production
+        > bundle config set --local without production
+        > bundle
     Linux
-        # If mysql is in /usr/local, perhaps because you installed from source
-        > bundle config build.mysql2 --with-mysql-config=/usr/local/mysql/bin/mysql_config
-        > bundle install --deployment --without test
+        > bundle config set --local deployment true
+        > bundle config set --local frozen true
+	> bundle config set --local path vendor/bundle
+        > bundle config set --local without development test
+        > bundle
 Configure
     Configure database credentials
         > cp config/database{_template,}.yml
