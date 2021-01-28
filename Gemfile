@@ -10,6 +10,7 @@ gem 'american_date'
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '~> 5.0' # JQuery UI 6 sets up functions in a way that PhantomJS can't handle
 gem 'mysql2'
+gem 'nokogiri', '~>1.10.5' # guesswheresf.org can't run 1.11
 gem 'rails', '~> 4.2.0'
 # See https://github.com/rgeo/rgeo-activerecord/issues/23
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'

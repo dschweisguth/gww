@@ -144,7 +144,7 @@ GEM
     multi_json (1.14.1)
     multi_test (0.1.2)
     mysql2 (0.3.21)
-    nokogiri (1.10.5)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     parallel (1.19.1)
     parser (2.6.5.0)
@@ -285,6 +285,7 @@ DEPENDENCIES
   jquery-ui-rails (~> 5.0)
   launchy
   mysql2
+  nokogiri (~> 1.10.5)
   passenger
   phantomjs
   poltergeist
