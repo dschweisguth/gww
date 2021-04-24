@@ -187,8 +187,8 @@ describe StatisticsPhoto do
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
-      expect(answer.photo.inferred_latitude).to eq(BigDecimal.new('37.0'))
-      expect(answer.photo.inferred_longitude).to eq(BigDecimal.new('-122.0'))
+      expect(answer.photo.inferred_latitude).to eq(BigDecimal('37.0'))
+      expect(answer.photo.inferred_longitude).to eq(BigDecimal('-122.0'))
 
     end
 
@@ -200,8 +200,8 @@ describe StatisticsPhoto do
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
-      expect(answer.photo.inferred_latitude).to eq(BigDecimal.new('37.0'))
-      expect(answer.photo.inferred_longitude).to eq(BigDecimal.new('-122.0'))
+      expect(answer.photo.inferred_latitude).to eq(BigDecimal('37.0'))
+      expect(answer.photo.inferred_longitude).to eq(BigDecimal('-122.0'))
 
     end
 
