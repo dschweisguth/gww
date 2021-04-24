@@ -37,6 +37,17 @@ describe PeopleHelper do
 
   end
 
+  describe '#infinity_or_days' do
+    it "returns the given number of seconds, converted to days, rounded to four places, as a string" do
+      expect(helper.infinity_or_days(86410.0)).to eq('1.0001')
+    end
+
+    it "returns HTML for infinity" do
+      expect(helper.infinity_or_days(Float::MAX)).to eq('&#8734;')
+    end
+
+  end
+
   STARS = [nil, :bronze, :silver, :gold].freeze
 
   describe '#star_and_alt' do

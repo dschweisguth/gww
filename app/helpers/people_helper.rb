@@ -8,7 +8,11 @@ module PeopleHelper
   end
 
   def infinity_or(x)
-    x == Float::MAX ? '&#8734;' : to_4_places(x)
+    x == Float::MAX ? '&#8734;' : to_4_places(block_given? ? yield(x) : x)
+  end
+
+  def infinity_or_days(seconds)
+    infinity_or(seconds) { |seconds| seconds / 86400 }
   end
 
   def thumbnail_with_alt(photo)
