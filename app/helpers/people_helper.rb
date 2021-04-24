@@ -7,12 +7,22 @@ module PeopleHelper
     "%.4f" % x
   end
 
+  HTML_INFINITY = '&#8734;'
+
   def infinity_or(x)
-    x == Float::MAX ? '&#8734;' : to_4_places(block_given? ? yield(x) : x)
+    x == Float::MAX ? HTML_INFINITY : to_4_places(block_given? ? yield(x) : x)
   end
 
   def infinity_or_days(seconds)
     infinity_or(seconds) { |seconds| seconds / 86400 }
+  end
+
+  ALMOST_INFINITY = Float::MAX - 10 ** 302
+
+  # Represents any number as infinity which is as large as, or nearly as large as, the number to which Float::MAX is
+  # rounded by being assigned to a precision 7 scale 4 ActiveRecord attribute
+  def almost_infinity_or(x)
+    x > ALMOST_INFINITY ? HTML_INFINITY : to_4_places(x)
   end
 
   def thumbnail_with_alt(photo)

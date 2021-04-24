@@ -48,6 +48,17 @@ describe PeopleHelper do
 
   end
 
+  describe '#almost_infinity_or' do
+    it "returns the number, rounded to four places, as a string" do
+      expect(helper.almost_infinity_or(1.11111)).to eq('1.1111')
+    end
+
+    it "returns HTML for a very large number" do
+      expect(helper.almost_infinity_or(Float::MAX - 10 ** 301)).to eq('&#8734;')
+    end
+
+  end
+
   STARS = [nil, :bronze, :silver, :gold].freeze
 
   describe '#star_and_alt' do
