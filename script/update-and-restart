@@ -10,8 +10,8 @@ cd `dirname $0`/..
 script/down
 git fetch --tags
 git checkout `git tag | ruby -e 'puts STDIN.readlines.sort_by { |s| s[6, s.length - 6].to_i }.last'`
-bundle
-bundle exec rake RAILS_ENV=production db:migrate assets:precompile
+bundle _1.17.3_
+bundle _1.17.3_ exec rake RAILS_ENV=production db:migrate assets:precompile
 touch tmp/restart.txt
 rm -rf public/cache
 mkdir public/cache

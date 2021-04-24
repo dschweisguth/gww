@@ -10,7 +10,7 @@ Install and start mysql
 Mac
     If you don't already have it, install MacPorts from www.macports.org
     > sudo port install mysql56-server
-    > sudo port load mysql56-server
+    # and follow the instructions in its output
     > /opt/local/lib/mysql56/bin/mysql_secure_installation
     > ln -s /opt/local/var/run/mysql56/mysqld.sock /tmp/mysql.sock # for ogr2ogr
     Create the following file:
@@ -21,6 +21,11 @@ Mac
     character-set-server=utf8mb4
     collation-server=utf8mb4_unicode_ci
     skip-character-set-client-handshake
+    > sudo port load mysql56-server
+    > sudo port select mysql mysql56
+
+      If this step fails due to the absence of a manpage, appease it by
+      creating a zero-length file.
 
 Linux
     TODO
@@ -70,10 +75,10 @@ Install ruby-build per https://github.com/sstephenson/ruby-build
 > rbenv global 2.5.8
 > gem update --system
 > gem --version
-3.2.7
-> gem install bundler
+3.2.16
+> gem install bundler --version 1.17.3
 > gem list bundler
-bundler (2.2.7, default: 2.2.7)
+bundler (2.2.16, 1.17.3)
 
 Get and configure GWW
 ---------------------
@@ -84,14 +89,14 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-        > bundle config set --local without production
-        > bundle
+        > bundle _1.17.3_ config set --local without production
+        > bundle _1.17.3_
     Linux
-        > bundle config set --local deployment true
-        > bundle config set --local frozen true
-	> bundle config set --local path vendor/bundle
-        > bundle config set --local without development test
-        > bundle
+        > bundle _1.17.3_ config set --local deployment true
+        > bundle _1.17.3_ config set --local frozen true
+	> bundle _1.17.3_ config set --local path vendor/bundle
+        > bundle _1.17.3_ config set --local without development test
+        > bundle _1.17.3_
 Configure
     Configure database credentials
         > cp config/database{_template,}.yml
