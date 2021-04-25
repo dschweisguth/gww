@@ -18,6 +18,7 @@ gem 'sass-rails', '~> 5.0' # 6.0 doesn't compile in production
 gem 'sprockets', '~> 3.7' # 4.0 requires a manifest which I don't feel like writing right now
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
+gem 'warning'
 gem 'will_paginate'
 gem 'xml-simple'
 

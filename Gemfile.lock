@@ -260,6 +260,7 @@ GEM
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.7.0)
+    warning (1.2.0)
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -302,6 +303,7 @@ DEPENDENCIES
   sprockets (~> 3.7)
   therubyracer
   uglifier
+  warning
   will_paginate
   xml-simple
 
