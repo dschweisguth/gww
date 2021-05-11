@@ -89,14 +89,14 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-        > bundle _1.17.3_ config set --local without production
-        > bundle _1.17.3_
+        > bundle config set --local without production
+        > bundle
     Linux
-        > bundle _1.17.3_ config set --local deployment true
-        > bundle _1.17.3_ config set --local frozen true
-	> bundle _1.17.3_ config set --local path vendor/bundle
-        > bundle _1.17.3_ config set --local without development test
-        > bundle _1.17.3_
+        > bundle config set --local deployment true
+        > bundle config set --local frozen true
+	> bundle config set --local path vendor/bundle
+        > bundle config set --local without development test
+        > bundle
 Configure
     Configure database credentials
         > cp config/database{_template,}.yml
