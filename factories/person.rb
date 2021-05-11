@@ -31,26 +31,64 @@ FactoryBot.define do
     factory specialist_class.name.underscore, options
   end
 
-  {
-    photo_count: :build,
-    bias: :stub,
-    high_score: :stub,
-    top_post_count: :stub
-  }.each do |trait_name, callback|
-    trait trait_name do
-      transient do
-        send trait_name, nil
-      end
+  trait :photo_count do
+    transient do
+      photo_count { nil }
+    end
 
-      after(callback) do |person, evaluator|
-        if evaluator.send trait_name
-          person.define_singleton_method(trait_name) do
-            evaluator.send trait_name
-          end
+    after(:build) do |person, evaluator|
+      if evaluator.photo_count
+        person.define_singleton_method(:photo_count) do
+          evaluator.photo_count
         end
       end
-
     end
+
+  end
+
+  trait :bias do
+    transient do
+      bias { nil }
+    end
+
+    after(:stub) do |person, evaluator|
+      if evaluator.bias
+        person.define_singleton_method(:bias) do
+          evaluator.bias
+        end
+      end
+    end
+
+  end
+
+  trait :high_score do
+    transient do
+      high_score { nil }
+    end
+
+    after(:stub) do |person, evaluator|
+      if evaluator.high_score
+        person.define_singleton_method(:high_score) do
+          evaluator.high_score
+        end
+      end
+    end
+
+  end
+
+  trait :top_post_count do
+    transient do
+      top_post_count { nil }
+    end
+
+    after(:stub) do |person, evaluator|
+      if evaluator.top_post_count
+        person.define_singleton_method(:top_post_count) do
+          evaluator.top_post_count
+        end
+      end
+    end
+
   end
 
 end
