@@ -51,7 +51,7 @@ Given /^a player "([^"]*)" guessed a photo after (\d+) seconds?$/ do |username, 
 end
 
 When /^I click on this year$/ do
-  click_link Time.now.year
+  click_link Time.now.year.to_s
 end
 
 Then /^the headline should say that the results are preliminary$/ do
