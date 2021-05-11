@@ -35,7 +35,7 @@ group :test do
   gem 'capybara'
   gem 'cucumber-rails', '~> 2.0.0', require: false # 2.1 breaks all features
   gem 'database_cleaner'
-  gem 'factory_bot_rails', '~> 4.11' # 5.0 removes static attributes
+  gem 'factory_bot_rails'
   gem 'jasmine'
   gem 'launchy'
   gem 'phantomjs', require: 'phantomjs/poltergeist'
