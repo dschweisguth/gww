@@ -280,6 +280,7 @@ DEPENDENCIES
   capybara
   cucumber-rails (~> 2.0.0)
   database_cleaner
+  execjs (~> 2.7.0)
   factory_bot_rails (~> 4.11)
   jasmine
   jquery-rails

@@ -7,6 +7,7 @@ gem 'actionpack-page_caching'
 gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/activerecord-mysql2spatial-adapter.git',
   branch: 'v0.5.2-ar-4.2-compatibility'
 gem 'american_date'
+gem 'execjs', '~> 2.7.0' # 2.8.0 fails to build in CI
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '~> 5.0' # JQuery UI 6 sets up functions in a way that PhantomJS can't handle
 gem 'mysql2'
