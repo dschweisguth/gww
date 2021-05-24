@@ -1,5 +1,6 @@
 /.generators
 /.rakeTasks
+/dataSources.local.xml
 /git.iml
 /runConfigurations
 /workspace.xml
