@@ -1,3 +1,5 @@
 #!/bin/bash
 log_dir=`dirname $0`/../log
-mv $log_dir/production.log $log_dir/production-`date +%y%m%d-%H:%M:%S`.log
+timestamped_log=$log_dir/production-`date +%y%m%d-%H:%M:%S`.log
+mv $log_dir/production.log $timestamped_log
+gzip $timestamped_log

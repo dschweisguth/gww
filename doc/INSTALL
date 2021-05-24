@@ -89,13 +89,12 @@ Get the source: Either
         format, download it and unpack it
 Install gems
     Mac
-        > bundle config set --local without production
+        > bundle config --local without production
         > bundle
     Linux
-        > bundle config set --local deployment true
-        > bundle config set --local frozen true
-	> bundle config set --local path vendor/bundle
-        > bundle config set --local without development test
+        > bundle config --local deployment true
+        > bundle config --local frozen true
+        > bundle config --local without development test
         > bundle
 Configure
     Configure database credentials
