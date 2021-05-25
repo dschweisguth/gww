@@ -1,73 +1,40 @@
-This document describes how to install GWW on a Mac (OS 10.9, for development,
-using webrick) or Linux server (CentOS 6.7, for production, using Apache httpd
-and Phusion Passenger). It doesn't cover some things that Dave thinks are
-obvious or that are hard to document in a way that will work for everyone;
-please fill gaps as you encounter them.
+Install on a Mac, for development
+=================================
 
 Install and start mysql
 -----------------------
 
-Mac
-    If you don't already have it, install MacPorts from www.macports.org
-    > sudo port install mysql56-server
-    # and follow the instructions in its output
-    > /opt/local/lib/mysql56/bin/mysql_secure_installation
-    > ln -s /opt/local/var/run/mysql56/mysqld.sock /tmp/mysql.sock # for ogr2ogr
-    Create the following file:
-    > cat /opt/local/etc/mysql56/my.cnf 
-    [mysqld]
-    init-connect='SET NAMES utf8mb4'
-    init_connect='SET collation_connection = utf8mb4_unicode_ci'
-    character-set-server=utf8mb4
-    collation-server=utf8mb4_unicode_ci
-    skip-character-set-client-handshake
-    > sudo port load mysql56-server
-    > sudo port select mysql mysql56
-
-      If this step fails due to the absence of a manpage, appease it by
-      creating a zero-length file.
-
-Linux
-    TODO
-    Edit /etc/my.cnf (which on Linux, unlike on Mac OS, will exist on a new
-    installation) and add the settings above in the appropriate section.
-
-Install GDAL 1.8
-----------------
-
-Mac
-    Get the GDAL 1.8 Complete installer from
-	http://www.kyngchaos.com/software/frameworks and run it.
-
-Linux
-    > wget http://download.osgeo.org/proj/proj-4.7.0.tar.gz
-    > tar xf proj-4.7.0.tar.gz
-    > cd proj-4.7.0
-    > ./configure
-    > make
-    > make install
-    > wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
-    > tar xf gdal-1.8.0.tar.gz
-    > cd gdal-1.8.0
-    > ./configure --with-mysql
-    > make
-    > make install
+If you don't already have it, install MacPorts from www.macports.org
+> sudo port install mysql56-server
+# and follow the instructions in its output
+> /opt/local/lib/mysql56/bin/mysql_secure_installation
+> ln -s /opt/local/var/run/mysql56/mysqld.sock /tmp/mysql.sock # for ogr2ogr
+Create the following file:
+> cat /opt/local/etc/mysql56/my.cnf 
+[mysqld]
+init-connect='SET NAMES utf8mb4'
+init_connect='SET collation_connection = utf8mb4_unicode_ci'
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+skip-character-set-client-handshake
+> sudo port load mysql56-server
+> sudo port select mysql mysql56
+  If this step fails due to the absence of a manpage, appease it by creating a zero-length file.
 
 Install required binaries
 -------------------------
 
-Mac
-    > port install readline # irb needs current readline to save history across sessions
+> port install readline # irb needs current readline to save history across sessions
 
-Linux
-    TODO
+Install GDAL
+------------
+
+Get the GDAL 1.8 Complete installer from http://www.kyngchaos.com/software/frameworks and run it.
 
 Install ruby and friends
 ------------------------
 
-GWW currently requires the approximate Ruby version and the gems listed below.
-The specific versions are not necessarily required, but they're what GWW uses
-at this writing.
+GWW currently requires the approximate Ruby version and the gems listed below. The specific versions are not necessarily required, but they're what GWW uses at this writing.
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
@@ -84,61 +51,120 @@ Get and configure GWW
 ---------------------
 
 Get the source: Either
-    > git clone git@github.com:dschweisguth/gww.git, or
-    Browse https://github.com/dschweisguth/gww, click "Download Source", pick a
-        format, download it and unpack it
-Install gems
-    Mac
-        > bundle config --local without production
-        > bundle
-    Linux
-        > bundle config --local deployment true
-        > bundle config --local frozen true
-        > bundle config --local without development test
-        > bundle
-Configure
-    Configure database credentials
-        > cp config/database{_template,}.yml
-        Edit, change usernames if you want different ones, and choose passwords
-    Configure Flickr credentials
-        Construct a Flickr API secret, key, oauth token and oauth token secret manually per the API documentation
-        > cp config/flickr_credentials{_template,}.yml
-        Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
-    Configure Google Maps credentials
-        Make a Google Maps browser key per https://developers.google.com/maps/documentation/javascript/get-api-key#key
-        > cp config/google_maps{_template}.yml
-        Edit and fill in your key
+- > git clone git@github.com:dschweisguth/gww.git, or
+- Browse https://github.com/dschweisguth/gww, click "Download Source", pick a format, download it and unpack it
+Install gems:
+> bundle config --local without production
+> bundle
+Configure:
+  Configure database credentials
+    > cp config/database{_template,}.yml
+    Edit, change usernames if you want different ones, and choose passwords
+  Configure Flickr credentials
+    Construct a Flickr API secret, key, oauth token and oauth token secret manually per the API documentation
+    > cp config/flickr_credentials{_template,}.yml
+    Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
+  Configure Google Maps credentials
+    Make a Google Maps browser key per https://developers.google.com/maps/documentation/javascript/get-api-key#key
+    > cp config/google_maps{_template}.yml
+    Edit and fill in your key
 
 Create database users and databases
 -----------------------------------
 
-gww_dev will control the development and test environments and gww_production
-will control the production environment. Separating the two prevents gww_dev
-from damaging the production database.
-
-Create dev user
-    mysql> grant usage on gww_dev.* to gww_dev@localhost identified by 'gww_dev';
-Create dev database
+Create dev user and database
+    mysql> create user gww_dev identified by 'gww_dev';
     mysql> grant all privileges on gww_dev.* to gww_dev@localhost;
-    > bundle exec rake db:create
+    > bundle exec rake db:create # TODO check that this creates a utf8mb4 database
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww_dev -p gww_dev
 Create test database
     mysql> grant all privileges on gww_test.* to gww_dev@localhost;
     > bundle exec rake RAILS_ENV=test db:setup
-Create production database
-    mysql> grant all privileges on gww_production.* to gww_production@localhost identified by 'gww_production';
-    Allow gww_dev to browse and mysqldump the production database:
-    mysql> grant select, lock tables on gww_production.* to gww_dev@localhost;
-    > bundle exec rake RAILS_ENV=production db:create
-    > gzcat gww_production-######-##:##.sql.gz | mysql -ugww_production -p gww_production
 
 Test GWW
 --------
 
 > bundle exec rake RAILS_ENV=test
 
-Install Phusion Passenger and configure httpd (for Linux production only)
--------------------------------------------------------------------------
+Start GWW
+---------
+
+> rails s
+Browse http://localhost:3000/
+
+Update San Francisco GIS data
+-----------------------------
+
+SFGIS data from 2011 is in the current production database, so if you restored from a production backup you have it already. If you want to update to a newer version, do the following:
+
+> mkdir sfgis
+> cd sfgis
+> wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip
+> mkdir stclines stintersections
+> cd stclines
+> unzip ../stclines.zip
+> cd ../stintersections
+> unzip ../stintersections.zip
+> cd ..
+> script/load_sfgis . gww_dev gww_dev gww_dev
+
+
+Install on Linux, for production
+================================
+
+Install and start mysql
+-----------------------
+
+TODO
+Edit /etc/my.cnf (which on Linux, unlike on Mac OS, will exist on a new installation) and add the settings shown in the Mac instructions in the appropriate section.
+
+Install GDAL
+------------
+
+> wget http://download.osgeo.org/proj/proj-4.7.0.tar.gz
+> tar xf proj-4.7.0.tar.gz
+> cd proj-4.7.0
+> ./configure
+> make
+> make install
+> wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
+> tar xf gdal-1.8.0.tar.gz
+> cd gdal-1.8.0
+> ./configure --with-mysql
+> make
+> make install
+
+Install required binaries
+-------------------------
+
+TODO
+
+Install ruby and friends
+------------------------
+
+Like installing on Mac, but RUBY_CONFIGURE_OPTS isn't needed.
+
+Get and configure GWW
+---------------------
+
+Same as on Mac, but
+- Configure bundler thus:
+  > bundle config --local deployment true
+  > bundle config --local frozen true
+  > bundle config --local without development test
+  > bundle
+- Flickr and Google Maps credentials can be the same in production as in development. Database credentials will probably be different.
+
+Create database users and databases
+-----------------------------------
+
+mysql> create user gww_prod identified by 'gww_prod';
+mysql> grant all privileges on gww_prod.* to gww_prod;
+> bundle exec rake RAILS_ENV=production db:create # TODO check that this creates a utf8mb4 database
+> gzcat gww_prod-######-##:##.sql.gz | mysql -ugww_prod -pgww_prod gww_prod
+
+Install Phusion Passenger and configure httpd
+---------------------------------------------
 
 Install Phusion Passenger
     > bundle exec passenger-install-apache2-module # and follow instructions
@@ -166,34 +192,17 @@ Configure basic HTTP authentication
 Start GWW
 ---------
 
-Mac
-    > rails s
-    Browse http://localhost:3000/
-Linux
-    > sudo apachectl restart
-    Browse http://your-production-server/
+> sudo apachectl restart
+Browse http://your-production-server/
 
 Update GWW
 ----------
 
-Add something like the following to your crontab on your production server:
-30 17     * * *	/home/dave/public_html/gww/script/suppress_output_on_success /home/dave/public_html/gww/script/log_in_and_run FlickrUpdateJob::Job.run
- 0 21,0,3 * * *	/home/dave/public_html/gww/script/suppress_output_on_success /home/dave/public_html/gww/script/log_in_and_run PrecalculatorJob::Job.run
+Add something like the following to your crontab:
+30 17     * * *	/home/you/lib/gww/script/suppress_output_on_success /home/you/lib/gww/script/log_in_and_run FlickrUpdateJob::Job.run
+ 0 21,0,3 * * *	/home/you/lib/gww/script/suppress_output_on_success /home/you/lib/gww/script/log_in_and_run PrecalculatorJob::Job.run
 
 Update San Francisco GIS data
 -----------------------------
 
-SFGIS data from 2011 is in the current production database, so if you're
-restoring from a production backup you have it already. If you want to update
-to a newer version, do the following:
-
-> mkdir sfgis
-> cd sfgis
-> wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip
-> mkdir stclines stintersections
-> cd stclines
-> unzip ../stclines.zip
-> cd ../stintersections
-> unzip ../stintersections.zip
-> cd ..
-> script/load_sfgis . gww_dev gww_dev gww_dev
+As on Mac, or load the data in development, dump it, and restore it into the production database.
