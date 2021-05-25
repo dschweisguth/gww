@@ -1,0 +1,8 @@
+#!/bin/bash -e
+host=gww
+local_files=`dirname $0`/../install
+remote_root_files=/tmp/gww-install-root-files
+
+rsync -av --omit-dir-times $local_files/ec2-user/ $host:
+rsync -av --delete $local_files/root/ $host:$remote_root_files
+ssh $host sudo rsync -rlptv --omit-dir-times $remote_root_files/ /

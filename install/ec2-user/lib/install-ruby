@@ -1,0 +1,15 @@
+#!/bin/bash -e
+sudo yum install -y gcc-c++ openssl-devel readline-devel zlib-devel
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv
+src/configure
+make -C src
+mkdir plugins
+cd plugins
+git clone https://github.com/rbenv/ruby-build.git
+hash -r
+eval "$(rbenv init - bash)"
+rbenv install 2.6.7
+rbenv global 2.6.7
+gem update --system
+gem install bundler --version 1.17.3
