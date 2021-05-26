@@ -26,11 +26,6 @@ Install required binaries
 
 > port install readline # irb needs current readline to save history across sessions
 
-Install GDAL
-------------
-
-Get the GDAL 1.8 Complete installer from http://www.kyngchaos.com/software/frameworks and run it.
-
 Install ruby and friends
 ------------------------
 
@@ -97,6 +92,7 @@ Update San Francisco GIS data
 
 SFGIS data from 2011 is in the current production database, so if you restored from a production backup you have it already. If you want to update to a newer version, do the following:
 
+Get the GDAL 1.8 Complete installer from http://www.kyngchaos.com/software/frameworks and run it.
 > mkdir sfgis
 > cd sfgis
 > wget http://gispub02.sfgov.org/website/sfshare/catalog/stclines.zip http://gispub02.sfgov.org/website/sfshare/catalog/stintersections.zip
@@ -112,27 +108,13 @@ SFGIS data from 2011 is in the current production database, so if you restored f
 Install on Linux, for production
 ================================
 
+This incompletely documents the installation of GWW on the CentOS server on which it ran from 2009 to 2021.
+
 Install and start mysql
 -----------------------
 
 TODO
 Edit /etc/my.cnf (which on Linux, unlike on Mac OS, will exist on a new installation) and add the settings shown in the Mac instructions in the appropriate section.
-
-Install GDAL
-------------
-
-> wget http://download.osgeo.org/proj/proj-4.7.0.tar.gz
-> tar xf proj-4.7.0.tar.gz
-> cd proj-4.7.0
-> ./configure
-> make
-> make install
-> wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
-> tar xf gdal-1.8.0.tar.gz
-> cd gdal-1.8.0
-> ./configure --with-mysql
-> make
-> make install
 
 Install required binaries
 -------------------------
@@ -206,11 +188,26 @@ Add something like the following to your crontab:
 Update San Francisco GIS data
 -----------------------------
 
-As on Mac, or load the data in development, dump it, and restore it into the production database.
+Install GDAL:
+> wget http://download.osgeo.org/proj/proj-4.7.0.tar.gz
+> tar xf proj-4.7.0.tar.gz
+> cd proj-4.7.0
+> ./configure
+> make
+> make install
+> wget http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
+> tar xf gdal-1.8.0.tar.gz
+> cd gdal-1.8.0
+> ./configure --with-mysql
+> make
+> make install
+Proceed as on Mac, or load the data in development, dump it, and restore it into the production database.
 
 
 Install on AWS, for production
 ==============================
+
+This documents, still incompletely but much less so, the installation of GWW onthe AWS EC2 instance to which it moved in 2021.
 
 Create and configure instance:
 Create EC2 instance gww
