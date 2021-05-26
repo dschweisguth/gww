@@ -214,8 +214,7 @@ Create EC2 instance gww
 Create Elastic IP and associate
 Create A record for gww.schweisguth.org resolving to Elastic IP
 TODO move to guesswheresf.org
-In your development environment:
-$ civilize-ec2-instance/bin/civilize gww # this is a separate repo
+In this repo:
 Add .gitignored files to install. See above for how to construct them.
 $ script/push-install-to-ec2-instance
 $ ssh gww sudo reboot # to pick up time zone change
