@@ -1,4 +1,5 @@
 # min	hour	dom	month	dow	command
 59	2	7,14,21,28	*	*	/home/ec2-user/lib/gww/script/rotate-log
+0	4	*	*	*	/home/ec2-user/lib/gww/script/backup-to-s3
 30	17	*	*	*	/home/ec2-user/lib/gww/script/suppress_output_on_success /home/ec2-user/lib/gww/script/log_in_and_run FlickrUpdateJob::Job.run
 0	21,0,3	*	*	*	/home/ec2-user/lib/gww/script/suppress_output_on_success /home/ec2-user/lib/gww/script/log_in_and_run PrecalculatorJob::Job.run
