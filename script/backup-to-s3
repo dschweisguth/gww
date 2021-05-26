@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+
+# Backs up this app's production database to an S3 bucket configured to be a
+# static web site, visible at
+# http://guesswherewatcher-backups.s3-website-us-west-2.amazonaws.com/
+
+require 'date'
+require 'fileutils'
+require 'open3'
+require 'yaml'
+
+class BackUp
+  BUCKET = 's3://guesswherewatcher-backups'
+
+  def run
+    back_up
+    update_index_page
+  end
+
+  private
+
+  def back_up
+    database = database_property 'database'
+    file = "#{database}-#{DateTime.now.strftime '%y%m%d-%H:%M:%S'}.sql.gz"
+    statuses = Open3.pipeline(
+      [
+        { 'MYSQL_PWD' => database_property('password') },
+        # mysqldump uses UTF-8 despite server settings unless told otherwise
+	"mysqldump --default-character-set=utf8mb4 " +
+	  "-h#{database_property 'host'} -u#{database_property 'username'} " +
+	  "#{database}"
+      ],
+      "gzip",
+      "aws s3 cp - #{BUCKET}/#{file} --storage-class STANDARD_IA"
+    )
+    failure = statuses.map.with_index.find { |status, i| !status.success? }
+    if failure
+      warn "Couldn't back up. " +
+        "Command #{failure[1]} of 0-#{statuses.count - 1} failed: " +
+	"#{failure[0].inspect}"
+      exit 1
+    end
+  end
+
+  def database_property(name)
+    @database_properties ||=
+      YAML.load(IO.read("#{__dir__}/../config/database.yml"))['production']
+    @database_properties[name]
+  end
+
+  def update_index_page
+    upload index_page links bucket_list
+  end
+
+  def bucket_list
+    stdout, stderr, status = Open3.capture3 "aws s3 ls #{BUCKET}"
+    if !status.success?
+      warn "Couldn't list bucket: #{stderr}"
+      exit 1
+    end
+    stdout
+  end
+
+  def links(bucket_list)
+    bucket_list.
+      split("\n").
+      map(&:split).
+      reject { |fields| fields.last == 'index.html' }.
+      map do |fields|
+        [
+	  Date.strptime("#{fields[0]} #{fields[1]}", "%Y-%m-%d %H:%M:%S"),
+	  fields.last
+	]
+      end.
+      sort_by { |date, object_name| date }.
+      reverse.
+      map do |_date, object_name|
+        %Q(<a href="#{object_name}">#{object_name}</a>)
+      end
+  end
+
+  def index_page(links)
+    <<~HTML
+      <!doctype html>
+      <html>
+      <head>
+        <meta charset=utf-8>
+        <title>Guess Where Watcher backups</title>
+      </head>
+      <body>
+        #{links.join "<br/>\n"}
+      </body>
+      </html>
+    HTML
+  end
+
+  def upload(index_page)
+    output, status =
+      Open3.capture2e(
+        "aws s3 cp - #{BUCKET}/index.html --content-type text/html",
+	stdin_data: index_page)
+    if !status.success?
+      warn "Couldn't upload index page: #{output}"
+      exit 1
+    end
+  end
+
+end
+BackUp.new.run
