@@ -49,58 +49,9 @@ class BackUp
   end
 
   def update_index_page
-    upload index_page links bucket_list
-  end
-
-  def bucket_list
-    stdout, stderr, status = Open3.capture3 "aws s3 ls #{BUCKET}"
-    if !status.success?
-      warn "Couldn't list bucket: #{stderr}"
-      exit 1
-    end
-    stdout
-  end
-
-  def links(bucket_list)
-    bucket_list.
-      split("\n").
-      map(&:split).
-      reject { |fields| fields.last == 'index.html' }.
-      map do |fields|
-        [
-	  Date.strptime("#{fields[0]} #{fields[1]}", "%Y-%m-%d %H:%M:%S"),
-	  fields.last
-	]
-      end.
-      sort_by { |date, object_name| date }.
-      reverse.
-      map do |_date, object_name|
-        %Q(<a href="#{object_name}">#{object_name}</a>)
-      end
-  end
-
-  def index_page(links)
-    <<~HTML
-      <!doctype html>
-      <html>
-      <head>
-        <meta charset=utf-8>
-        <title>Guess Where Watcher backups</title>
-      </head>
-      <body>
-        #{links.join "<br/>\n"}
-      </body>
-      </html>
-    HTML
-  end
-
-  def upload(index_page)
-    output, status =
-      Open3.capture2e(
-        "aws s3 cp - #{BUCKET}/index.html --content-type text/html",
-	stdin_data: index_page)
-    if !status.success?
-      warn "Couldn't upload index page: #{output}"
+    result = system "#{__dir__}/update-backup-index-page"
+    if !result
+      warn "Couldn't run update-backup-index-page: #{$?}"
       exit 1
     end
   end
