@@ -253,5 +253,29 @@ $ mysql -hgww-database.c6n3e1wakxyr.us-west-2.rds.amazonaws.com -uroot -p < lib/
 Copy backup to instance
 $ zcat ~/gww_prod_utf8-210423-04\:00\:01.sql.gz | mysql -hgww-database.c6n3e1wakxyr.us-west-2.rds.amazonaws.com -ugww_prod -p gww_prod
 
-# service restart httpd
+# systemctl start httpd
+# systemctl enable httpd
 $ crontab lib/crontab
+
+Configure HTTPS with Let's Encrypt (per https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html):
+# yum install -y mod_ssl
+# wget -r --no-parent -A 'epel-release-*.rpm' https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/
+# rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-*.rpm
+# rm -rf dl.fedoraproject.org
+# yum-config-manager --enable epel*
+# yum install -y certbot python2-certbot-apache
+In httpd.conf, after "Listen 80", add explicit server names:
+<VirtualHost *:80>
+    DocumentRoot "/var/www/html"
+    ServerName "guesswheresf.org"
+    ServerAlias "www.guesswheresf.org"
+</VirtualHost>
+# systemctl restart httpd
+# certbot
+Certify guesswheresf.org and www.guesswheresf.org (the latter just for redirection)
+Merge /etc/httpd/conf/httpd-le-ssl.conf (just created by certbot) into /etc/httpd/conf.d/passenger.conf. Configure port 80 to do nothing but redirect to HTTPS. Configure port 443 to serve passenger and redirect from www to the apex. Remove the last line (just added by certbot) of /etc/httpd/conf/httpd.conf, which includes /etc/httpd/conf/httpd-le-ssl.conf. (httpd.conf is now unmodified again.)
+# systemctl restart httpd
+In DNS, replace forwarding from www to the apex (which now causes a certificate error) with a CNAME that does the same.
+Copy passenger.conf back to install
+# crontab ~/lib/crontab
+Test SSL configuration at https://www.ssllabs.com/ssltest/. If it is graded A, no further adjustment is necessary.

@@ -1,0 +1,2 @@
+# min	hour	dom	month	dow	command
+39	1,13	*	*	*	certbot renew --no-self-upgrade

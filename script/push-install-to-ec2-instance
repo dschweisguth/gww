@@ -1,5 +1,5 @@
 #!/bin/bash -e
-host=gww
+host=guesswheresf.org
 local_files=`dirname $0`/../install
 remote_root_files=/tmp/gww-install-root-files
 
