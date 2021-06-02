@@ -46,6 +46,5 @@ group :test do
 end
 
 group :production do
-  # 6.0.8's passenger-install-apache2-module fails in production
-  gem 'passenger', '6.0.7'
+  gem 'passenger'
 end
