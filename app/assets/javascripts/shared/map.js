@@ -13,7 +13,7 @@ GWW.shared.createMap = function () {
     setUp: function (callbackName) {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'http://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=' + callbackName;
+      script.src = 'https://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=' + callbackName;
       document.body.appendChild(script);
     },
 
@@ -80,7 +80,7 @@ GWW.shared.createMap = function () {
     $.each(config.photos.photos, function (i, photo) {
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
+        icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
         symbol: photo.symbol // Subclasses may use this to manage markers by photo type
       });
       marker.setMap(that.getMarkerParent(marker));

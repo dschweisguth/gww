@@ -5,7 +5,7 @@ GWW.shared.singlePhotoMap = (function () {
     setUp: function () {
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'http://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=GWW.shared.singlePhotoMap.mapsAPIIsLoadedCallback';
+      script.src = 'https://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=GWW.shared.singlePhotoMap.mapsAPIIsLoadedCallback';
       document.body.appendChild(script);
     },
 
@@ -22,7 +22,7 @@ GWW.shared.singlePhotoMap = (function () {
       new google.maps.Marker({
         map: map,
         position: center,
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
+        icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
         symbol: photo.symbol
       });
     }
