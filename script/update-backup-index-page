@@ -17,7 +17,7 @@ class UpdateBackupIndexPage
   private
 
   def bucket_list
-    stdout, stderr, status = Open3.capture3 "aws s3 ls #{BUCKET}"
+    stdout, stderr, status = Open3.capture3 "aws s3 ls #{BUCKET} --recursive"
     if !status.success?
       warn "Couldn't list bucket: #{stderr}"
       exit 1
