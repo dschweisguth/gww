@@ -1,9 +1,9 @@
 (function () {
   if (/^https?:\/\/www.flickr.com\/(photos|people)\/[^/]+/.test(window.location)) {
     // Do this asynchronously so Firefox doesn't treat it as a replace.
-    // See http://stackoverflow.com/questions/3731888/javascript-redirect-location-href-breaks-the-back-button-unless-settimeout-is
+    // See https://stackoverflow.com/questions/3731888/javascript-redirect-location-href-breaks-the-back-button-unless-settimeout-is
     setTimeout(function() {
-      window.location = "http://guesswheresf.org/bookmarklet/show?from=" +
+      window.location = "https://guesswheresf.org/bookmarklet/show?from=" +
         encodeURIComponent(window.location);
     }, 0);
   } else {
