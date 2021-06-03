@@ -1,2 +1,2 @@
 # min	hour	dom	month	dow	command
-39	1,13	*	*	*	certbot renew --no-self-upgrade
+39	1,13	*	*	*	/home/ec2-user/lib/gww/script/suppress_output_on_success certbot renew --no-self-upgrade
