@@ -278,3 +278,4 @@ In DNS, replace forwarding from www to the apex (which now causes a certificate 
 Copy passenger.conf back to install
 # crontab ~/lib/crontab
 Test SSL configuration at https://www.ssllabs.com/ssltest/. If it is graded A, no further adjustment is necessary.
+Request permission to send email from instance at https://console.aws.amazon.com/support/contacts?#/rdns-limits . When it's granted, create install/root/.forward and install/ec2-user/.forward.
