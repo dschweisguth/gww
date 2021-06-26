@@ -102,7 +102,7 @@ GEM
     diff-lcs (1.4.4)
     docile (1.4.0)
     erubis (2.7.0)
-    execjs (2.7.0)
+    execjs (2.8.1)
     factory_bot (5.2.0)
       activesupport (>= 4.2.0)
     factory_bot_rails (5.2.0)
@@ -278,7 +278,6 @@ DEPENDENCIES
   capybara
   cucumber-rails (~> 2.0.0)
   database_cleaner
-  execjs (~> 2.7.0)
   factory_bot_rails
   jasmine
   jquery-rails
