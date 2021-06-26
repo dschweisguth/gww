@@ -55,7 +55,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   expect(response.body).to match(/Top posters in the last week:/)
   expect(response.body).to match(/Top posters in the last month:/)
   expect(response.body).to match(/6 photos have been added to the pool since the previous report/)
-  expect(response.body).to have_link '1234 unfound photos', href: search_photos_path('game_status/unfound,unconfirmed')
+  expect(response.body).to have_link '1234 unfound photos', href: search_photos_path('game-status/unfound,unconfirmed')
   # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
   participation = '2 people have made correct guesses. ' \
     '1 people have put at least one photo in the pool but not guessed any photos correctly. ' \
