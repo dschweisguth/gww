@@ -9,6 +9,7 @@ gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/
 gem 'american_date'
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '~> 5.0' # JQuery UI 6 sets up functions in a way that PhantomJS can't handle
+gem 'mini_racer'
 gem 'mysql2'
 gem 'nokogiri'
 gem 'rails', '~> 4.2.0'
@@ -16,7 +17,6 @@ gem 'rails', '~> 4.2.0'
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
 gem 'sass-rails'
 gem 'sprockets', '~> 3.7' # 4.0 requires a manifest which I don't feel like writing right now
-gem 'therubyracer', platforms: :ruby
 gem 'uglifier'
 gem 'warning'
 gem 'will_paginate'
