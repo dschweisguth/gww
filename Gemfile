@@ -24,7 +24,7 @@ gem 'xml-simple'
 
 group :development do
   gem 'rubocop', '~> 0.52.0' # yoked to .codeclimate.yml
-  gem 'spring'
+  gem 'spring', '~> 2.1' # spring 3 requires Rails 5
   gem 'spring-commands-cucumber'
   gem 'spring-commands-rspec'
 end
