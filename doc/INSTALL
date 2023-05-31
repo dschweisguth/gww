@@ -33,14 +33,14 @@ GWW currently requires the approximate Ruby version and the gems listed below. T
 
 Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
-> RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.6.7
-> rbenv global 2.6.7
+> RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.6.10
+> rbenv global 2.6.10
 > gem update --system
 > gem --version
-3.2.16
+3.4.13
 > gem install bundler --version 1.17.3
 > gem list bundler
-bundler (default: 2.2.16, 1.17.3)
+bundler (default: 2.4.13, 1.17.3)
 
 Get and configure GWW
 ---------------------
