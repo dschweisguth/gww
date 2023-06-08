@@ -623,6 +623,32 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       expect(Comment.count).to eq(1)
     end
 
+    it "ignores a comment with no content" do
+      allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid) do
+        {
+          'comments' => [
+            {
+              'comment' => [
+                {
+                  'author' => 'commenter_flickrid',
+                  'authorname' => 'commenter_username',
+                  'content' => 'comment text',
+                  'datecreate' => '1356998400'
+                },
+                {
+                  'author' => 'commenter_flickrid_2',
+                  'authorname' => 'commenter_username_2',
+                  'datecreate' => '1356998401'
+                }
+              ]
+            }
+          ]
+        }
+      end
+      described_class.update_comments photo
+      photo_has_the_comment_from_the_request
+    end
+
     def stub_request_to_return_one_comment
       allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid) do
         {

@@ -203,7 +203,12 @@ module FlickrUpdateJob
       begin
         comments_xml = FlickrService.instance.photos_comments_get_list photo_id: photo.flickrid
         parsed_comments = comments_xml['comments'][0]['comment'] # nil if there are no comments and an array if there are
-        if parsed_comments&.any?
+        if parsed_comments.nil?
+          return
+        end
+        # Happens on photo 13744986833, on the comment supposedly containing a sad face emoji
+        parsed_comments = parsed_comments.reject { |c| !c.has_key?('content') }
+        if parsed_comments.any?
           attributes_hashes = parsed_comments.map do |parsed_comment|
             {
               flickrid: parsed_comment['author'],
