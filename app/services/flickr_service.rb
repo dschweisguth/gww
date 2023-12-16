@@ -128,6 +128,9 @@ class FlickrService
       if response.code.in? %w(500 502 503 504)
         raise StandardError, "Got response status #{response.code}"
       end
+      if response.body.include? 'err code="212" msg="Method not found"'
+        raise StandardError, 'Got response with code 212, message "Method not found"'
+      end
       response.body
     rescue StandardError => e
       failure_count += 1

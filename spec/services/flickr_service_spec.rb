@@ -54,6 +54,8 @@ describe FlickrService, type: :service do
   end
 
   describe '.request' do
+    SUCCESSFUL_RESPONSE =
+      '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>'
 
     it "sends a request to the Flickr API" do
       request_succeeds
@@ -93,6 +95,14 @@ describe FlickrService, type: :service do
       request_fails
     end
 
+    it "retries if the response is code 212, message 'Method not found'" do
+      allow(service).to receive(:get_once).and_return(
+        double(code: '200', body: '<?xml version="1.0" encoding="utf-8" ?><rsp stat="fail"><err code="212" msg="Method not found" /></rsp>'),
+        double(code: '200', body: SUCCESSFUL_RESPONSE)
+      )
+      request_succeeds
+    end
+
     it "accepts non-string option names" do
       expect(service.request('flickr.groups.pools.getPhotos', 'group_id' => FlickrService::GROUP_ID, per_page: '1')['photos']).not_to be_empty
     end
@@ -118,10 +128,7 @@ describe FlickrService, type: :service do
     end
 
     def stub_get_once_succeeds
-      stub_get_once_returns(
-        '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"><user id="26686665@N06"><username>dschweisguth</username></user></rsp>',
-        '200'
-      )
+      stub_get_once_returns(SUCCESSFUL_RESPONSE, '200')
     end
 
     def stub_get_once_returns(body, code)
