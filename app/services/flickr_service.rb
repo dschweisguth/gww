@@ -20,7 +20,6 @@ class FlickrService
   attr_accessor :retry_quantum
 
   def initialize
-    @response_code = nil
     @retry_quantum = 30
   end
 
@@ -124,7 +123,6 @@ class FlickrService
     failure_count = 0
     begin
       response = get_once url
-      @response_code = response.code
       if response.code.in? %w(500 502 503 504)
         raise StandardError, "Got response status #{response.code}"
       end
