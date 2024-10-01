@@ -5,20 +5,13 @@ Install and start mysql
 -----------------------
 
 If you don't already have it, install MacPorts from www.macports.org
-> sudo port install mysql56-server
+> sudo port install mysql57-server
 # and follow the instructions in its output
-> /opt/local/lib/mysql56/bin/mysql_secure_installation
-> ln -s /opt/local/var/run/mysql56/mysqld.sock /tmp/mysql.sock # for ogr2ogr
-Create the following file:
-> cat /opt/local/etc/mysql56/my.cnf 
-[mysqld]
-init-connect='SET NAMES utf8mb4'
-init_connect='SET collation_connection = utf8mb4_unicode_ci'
-character-set-server=utf8mb4
-collation-server=utf8mb4_unicode_ci
-skip-character-set-client-handshake
-> sudo port load mysql56-server
-> sudo port select mysql mysql56
+> sudo /opt/local/lib/mysql57/bin/mysqld --initialize --user=_mysql
+> /opt/local/lib/mysql57/bin/mysql_secure_installation
+> ln -s /opt/local/var/run/mysql57/mysqld.sock /tmp/mysql.sock # for ogr2ogr
+> sudo port load mysql57-server
+> sudo port select mysql mysql57
   If this step fails due to the absence of a manpage, appease it by creating a zero-length file.
 
 Install required binaries
@@ -35,12 +28,8 @@ Install rbenv per https://github.com/sstephenson/rbenv
 Install ruby-build per https://github.com/sstephenson/ruby-build
 > RUBY_CONFIGURE_OPTS=--with-readline-dir=/opt/local rbenv install 2.6.10
 > rbenv global 2.6.10
-> gem update --system
-> gem --version
-3.4.13
+> gem update --system 3.4.22
 > gem install bundler --version 1.17.3
-> gem list bundler
-bundler (default: 2.4.13, 1.17.3)
 
 Get and configure GWW
 ---------------------
@@ -69,12 +58,15 @@ Create database users and databases
 
 Create dev user and database
     mysql> create user gww_dev identified by 'gww_dev';
-    mysql> grant all on gww_dev.* to gww_dev@localhost;
-    > bundle exec rake db:create # TODO check that this creates a utf8mb4 database
+    mysql> grant all on gww_dev.* to gww_dev;
+    mysql> grant all on gww_test.* to gww_dev;
+    > bundle exec rake db:create
     > gzcat gww_production-######-##:##.sql.gz | mysql -ugww_dev -p gww_dev
+    # TODO the previous command must be run as a user with the privilege to
+    # "SET @@SESSION.SQL_LOG_BIN"
 Create test database
-    mysql> grant all on gww_test.* to gww_dev@localhost;
     > bundle exec rake RAILS_ENV=test db:setup
+    # TODO the following command appears to not be necessary
 
 Test GWW
 --------
