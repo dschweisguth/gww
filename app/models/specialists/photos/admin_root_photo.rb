@@ -8,7 +8,7 @@ class AdminRootPhoto < Photo
   end
 
   def self.multipoint_count
-    connection.execute("select count(*) from (#{multipoint_without_associations.to_sql}) rows").first.first.to_i
+    connection.execute("select count(*) from (#{multipoint_without_associations.to_sql}) multipoint_without_associations").first.first.to_i
   end
 
 end
