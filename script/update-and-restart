@@ -6,8 +6,6 @@
 # production; it does things that are only relevant in the production
 # environment.
 
-echo Skipping build for now
-exit
 sleep 5 # for the new tag pushed from CI to be available when we fetch
 cd `dirname $0`/..
 script/down
