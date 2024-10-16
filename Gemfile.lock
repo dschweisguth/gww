@@ -1,11 +1,11 @@
 GIT
   remote: https://github.com/dschweisguth/activerecord-mysql2spatial-adapter.git
-  revision: c1e9495cfa0e7356624940248eaff562655a72f3
-  branch: v0.5.2-ar-4.2-compatibility
+  revision: 1fc06c78fff18da7c7ee62359496385d154d4a4d
+  branch: v0.5.2-ar-4.2-mysql2-0.4-mysql-8-compatibility
   specs:
     activerecord-mysql2spatial-adapter (0.5.2)
       activerecord (~> 4.2.9)
-      mysql2 (>= 0.2.13, < 0.4.0)
+      mysql2 (>= 0.2.13, < 0.5.0)
       rgeo-activerecord (~> 2.1.1)
 
 GIT
@@ -156,7 +156,7 @@ GEM
     minitest (5.25.1)
     multi_json (1.15.0)
     multi_test (1.1.0)
-    mysql2 (0.3.21)
+    mysql2 (0.4.10)
     net-imap (0.3.7)
       date
       net-protocol
