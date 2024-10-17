@@ -32,6 +32,7 @@ ActionController::Base.allow_rescue = false
 
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
+require 'action_mailer' # database_cleaner clears it in a before hook, but doesn't require it, or not early enough
 begin
   DatabaseCleaner.strategy = :transaction
 rescue NameError

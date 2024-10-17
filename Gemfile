@@ -32,7 +32,7 @@ end
 group :test do
   gem 'activerecord-nulldb-adapter', '0.3.8'
   gem 'capybara'
-  gem 'cucumber-rails', '~> 2.0.0', require: false # 2.1 breaks all features
+  gem 'cucumber-rails', '~> 2.1.0', require: false # 2.2 requires Rails 5
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'jasmine'
