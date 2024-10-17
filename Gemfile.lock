@@ -146,9 +146,10 @@ GEM
       net-pop
       net-smtp
     matrix (0.4.2)
-    mime-types (3.5.2)
+    mime-types (3.6.0)
+      logger
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2024.0903)
+    mime-types-data (3.2024.1001)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
     mini_racer (0.6.4)
@@ -172,9 +173,10 @@ GEM
     parallel (1.24.0)
     parser (2.7.2.0)
       ast (~> 2.4.1)
-    passenger (6.0.20)
-      rack
-      rake (>= 0.8.1)
+    passenger (6.0.23)
+      rack (>= 1.6.13)
+      rackup
+      rake (>= 12.3.3)
     phantomjs (2.1.1.0)
     poltergeist (1.18.1)
       capybara (>= 2.1, < 4)
@@ -186,6 +188,9 @@ GEM
     rack (1.6.13)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rackup (1.0.0)
+      rack (< 3)
+      webrick
     rails (4.2.11.3)
       actionmailer (= 4.2.11.3)
       actionpack (= 4.2.11.3)
@@ -220,7 +225,7 @@ GEM
     rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.1)
+    rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-rails (4.1.2)
