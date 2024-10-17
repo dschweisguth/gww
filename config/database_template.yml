@@ -5,7 +5,6 @@ defaults: &defaults
   host: localhost
   encoding: utf8mb4
   pool: 5
-  reconnect: false
 
 development:
   <<: *defaults
