@@ -5,8 +5,8 @@ Install and start mysql
 -----------------------
 
 If you don't already have it, install MacPorts from www.macports.org
-> sudo port install mysql82-server
-# and follow the instructions in its output
+> sudo port install mysql8-server
+# and follow the instructions in its output:
 > sudo /opt/local/lib/mysql8/bin/mysqld --initialize --user=_mysql
 > sudo port load mysql8-server
 > /opt/local/lib/mysql8/bin/mysql_secure_installation
@@ -61,7 +61,7 @@ mysql> grant all on gww_dev.* to gww_dev;
 mysql> grant all on gww_test.* to gww_dev;
 > bundle exec rake db:create
 # In the following, -f ignores errors from unnecessary commands in dump
-> gzcat gww_production-######-##:##.sql.gz | mysql -f -ugww_dev -p gww_dev
+> gzcat gww_production-######-##:##.sql.gz|mysql -f -ugww_dev -p gww_dev
 
 Test GWW
 --------
