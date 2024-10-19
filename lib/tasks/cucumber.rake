@@ -5,7 +5,7 @@
 # files.
 
 
-unless ARGV.any? { |a| a =~ /^gems/ } # Don't load anything when running the gems:* tasks
+unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:* tasks
 
 vendored_cucumber_bin = Dir["#{Rails.root}/vendor/{gems,plugins}/cucumber*/bin/cucumber"].first
 $LOAD_PATH.unshift(File.dirname(vendored_cucumber_bin) + '/../lib') unless vendored_cucumber_bin.nil?
@@ -40,6 +40,15 @@ begin
       ::STATS_DIRECTORIES << %w(Cucumber\ features features) if File.exist?('features')
       ::CodeStatistics::TEST_TYPES << "Cucumber features" if File.exist?('features')
     end
+
+    task :annotations_setup do
+      Rails.application.configure do
+        if config.respond_to?(:annotations)
+          config.annotations.directories << 'features'
+          config.annotations.register_extensions('feature') { |tag| /#\s*(#{tag}):?\s*(.*)$/ }
+        end
+      end
+    end
   end
   desc 'Alias for cucumber:ok'
   task cucumber: 'cucumber:ok'
@@ -55,6 +64,8 @@ begin
   end
 
   task stats: 'cucumber:statsetup'
+
+  task notes: 'cucumber:annotations_setup'
 rescue LoadError
   desc 'cucumber rake task not available (cucumber not installed)'
   task :cucumber do
