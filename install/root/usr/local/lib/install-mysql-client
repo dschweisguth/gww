@@ -1,9 +1,8 @@
 #!/bin/sh -e
+rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 # Browse https://dev.mysql.com/downloads/repo/yum/ to find the current version
 # of the download link
 wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 yum localinstall -y mysql80-community-release-el7-3.noarch.rpm
 rm mysql80-community-release-el7-3.noarch.rpm
-yum-config-manager --disable mysql80-community
-yum-config-manager --enable mysql57-community
 yum install -y mysql-community-client mysql-community-devel

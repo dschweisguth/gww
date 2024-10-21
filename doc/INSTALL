@@ -221,13 +221,7 @@ lib/gww $ bundle exec passenger-install-apache2-module
 Update install/root/etc/httpd/conf.modules.d/20-passenger.conf to match the output of the previous command, script/push-install-to-ec2-instance
 
 Create database:
-Create RDS parameter group mysql57-utf8mb4 with the following parameters
-  init_connect				SET NAMES utf8mb4; SET collation_connection = utf8mb4_unicode_ci
-  character_set_server	    	  	utf8mb4
-  collation_server			utf8mb4_unicode_ci
-  skip-character-set-client-handshake	1
 Create RDS instance gww-database
-  Use the parameter group just created
 Edit gww-database security group
 Remove inbound rule allowing mysql connection from browser IP range
 Add inbound rule allowing mysql connection from gww internal IP range
