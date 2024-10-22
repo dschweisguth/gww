@@ -84,6 +84,13 @@ Feature: Administer photos
     And I press the "Reveal or guess this photo with the following text:" button
     Then I should see that the photo was guessed by the third player with the text "Because I said so"
 
+  @javascript
+  Scenario: Admin tries to reveal a photo without entering custom text
+    Given there is a photo with a comment by another player
+    When I go to the photo's edit page
+    And I press the "Reveal or guess this photo with the following text:" button
+    Then I should be on the photo's edit page
+
   Scenario: Admin deletes a photo
     Given there is a photo
     When I go to the photo's edit page
