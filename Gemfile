@@ -35,7 +35,6 @@ group :test do
   gem 'cucumber-rails', '~> 2.1.0', require: false # 2.2 requires Rails 5
   gem 'database_cleaner'
   gem 'factory_bot_rails'
-  gem 'jasmine'
   gem 'launchy'
   gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'poltergeist'
