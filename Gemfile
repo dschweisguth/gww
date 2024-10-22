@@ -36,9 +36,8 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'launchy'
-  gem 'phantomjs', require: 'phantomjs/poltergeist'
-  gem 'poltergeist'
   gem 'rspec-rails'
+  gem 'selenium-webdriver'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end

@@ -89,8 +89,9 @@ Then %r{^I should see an image-only search result for the photo added on "(\d+/\
 end
 
 def i_should_see_image_only_search_result_for_photo(photo)
-  link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"])
-  expect(link).to have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"])
+  # link and image are 'invisible' because they're behind the hover
+  link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: false
+  expect(link).to have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"]), visible: false
   expect(page).to have_no_css('.text')
 end
 
@@ -101,7 +102,8 @@ end
 
 def image_only_search_result_should_be(result_index, result_count, photo)
   result = all('.image', count: result_count)[result_index - 1]
-  expect(result).to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
+  # link is 'invisible' because it's behind the hover
+  expect(result).to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: false)
 end
 
 Then /^I should see (\d+) full search results?$/ do |result_count|
