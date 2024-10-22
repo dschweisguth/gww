@@ -8,7 +8,7 @@ gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/
   branch: 'v0.5.2-ar-4.2-mysql2-0.4-mysql-8-compatibility'
 gem 'american_date'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '~> 5.0' # JQuery UI 6 sets up functions in a way that PhantomJS can't handle, in CI only
 gem 'mini_racer'
 gem 'mysql2'
 gem 'nokogiri'
