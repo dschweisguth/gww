@@ -38,7 +38,9 @@ module GWW
     # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
     config.assets.precompile += %w(
       jquery-ui/autocomplete.css
-      jquery-ui/autocomplete.js
+      jquery-ui/core.css
+      jquery-ui/menu.css
+      jquery-ui/widgets/autocomplete.js
     )
     config.assets.precompile +=
       Find.find('vendor/assets/javascripts').select { |file| file.end_with? '.js' }.map { |file| file.sub %r(^vendor/assets/javascripts/), '' } +

@@ -16,13 +16,6 @@ essential for performance, although non-foreign key indexes would serve that
 purpose equally well.
 
 
-Javascript
-----------
-
-GWW uses jQuery UI's smoothness theme. Fortunately, that theme is the one
-provided by the jquery-ui-rails gem.
-
-
 Terminology
 -----------
 
