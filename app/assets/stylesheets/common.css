@@ -22,12 +22,6 @@ img {
   margin: 0 3px;
 }
 
-.new-list-item {
-  color: red;
-  display: inline-block;
-  padding-left: 10px;
-}
-
 /* TODO Dave extract */
 .ui-autocomplete {
   max-height: 400px;
