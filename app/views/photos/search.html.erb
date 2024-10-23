@@ -1,5 +1,6 @@
-<%= head_css 'jquery-ui/autocomplete', 'jquery-ui/core', 'jquery-ui/menu', 'photos/search' %>
-<%= head_javascript 'jquery-ui/widgets/autocomplete', 'isInViewport', 'shared/autocomplete', 'photos/search' %>
+<%= head_css 'photos/search' %>
+<%= head_javascript 'isInViewport', 'photos/search' %>
+<%= render 'shared/autocomplete' %>
 <% content_for :head do %>
   <meta name="viewport" content="width=device-width">
   <%= render 'shared/config' %>
