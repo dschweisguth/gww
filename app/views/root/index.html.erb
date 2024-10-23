@@ -29,7 +29,7 @@ see statistics and learn more about the competition.</p>
   </li>
   <li>Find a player, by username, real name, Flickr ID or GWW ID:
     <%= form_tag(find_person_path, method: :get, class: 'inline') do %>
-      <%= text_field_tag 'username' %>
+      <%= text_field_tag 'username', nil, autocomplete: 'new-password' %>
       <%= submit_tag 'Find' %>
     <% end %>
     <% if flash[:find_person_error] %><br/>
