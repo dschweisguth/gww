@@ -25,7 +25,6 @@ describe WheresiesPerson do
       single_guess = create :wheresies_guess, commented_at: Time.local(2010).getutc
       top_scorers = WheresiesPerson.most_points_in 2010
       expect(top_scorers.length).to eq(10)
-      # noinspection RubyResolve
       expect(top_scorers).not_to include(single_guess.person)
     end
 
@@ -57,7 +56,6 @@ describe WheresiesPerson do
       single_post = create :wheresies_photo, dateadded: Time.local(2010).getutc
       top_posters = WheresiesPerson.most_posts_in 2010
       expect(top_posters.length).to eq(10)
-      # noinspection RubyResolve
       expect(top_posters).not_to include(single_post.person)
     end
 
@@ -101,7 +99,6 @@ describe WheresiesPerson do
       single_guess = create :wheresies_guess, commented_at: Time.local(2010).getutc
       top_scorers = WheresiesPerson.rookies_with_most_points_in 2010
       expect(top_scorers.size).to eq(10)
-      # noinspection RubyResolve
       expect(top_scorers).not_to include(single_guess.person)
     end
 
@@ -145,7 +142,6 @@ describe WheresiesPerson do
       single_post = create :wheresies_photo, dateadded: Time.local(2010).getutc
       top_posters = WheresiesPerson.rookies_with_most_posts_in 2010
       expect(top_posters.size).to eq(10)
-      # noinspection RubyResolve
       expect(top_posters).not_to include(single_post.person)
     end
 

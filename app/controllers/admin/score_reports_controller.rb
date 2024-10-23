@@ -18,7 +18,6 @@ class Admin::ScoreReportsController < ApplicationController
     previous = ScoreReport.latest
     ScoreReport.create! previous_report: previous
     ::PageCache.clear
-    # noinspection RubyResolve
     redirect_to admin_score_reports_path
   end
 

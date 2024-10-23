@@ -50,7 +50,6 @@ class PhotosPhoto < Photo
       photos.to_a.pop
     end
     first_photo = oldest
-    # noinspection RubyResolve
     photos.each { |photo| photo.prepare_for_map first_photo.dateadded }
     as_map_json partial, bounds, photos
   end
