@@ -34,7 +34,7 @@
     <div id="comments" class="edit">
       <% @photo.comments.each do |comment| %>
         <% is_accepted_answer = comment.accepted_answer? %>
-        <% if is_accepted_answer then %>
+        <% if is_accepted_answer %>
           <%= form_tag comment.by_poster? ? remove_revelation_path(@photo) : remove_guess_path(@photo) do %>
             <div>
               <%= hidden_field_tag 'comment_id', comment.id, id: nil %>
@@ -46,7 +46,7 @@
             <div>
               <%= hidden_field_tag 'comment_id', comment.id, id: nil %>
               <%= hidden_field_tag 'username', nil, id: nil %>
-              <%= submit_tag (comment.by_poster? ? 'Accept this revelation' : 'Add this guess') %>
+              <%= submit_tag(comment.by_poster? ? 'Accept this revelation' : 'Add this guess') %>
             </div>
           <% end %>
         <% end %>
@@ -79,7 +79,7 @@
 <br/>
 
 <%= button_to 'Update this photo from Flickr', update_photo_from_flickr_path(@photo) %>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 <%= button_to 'Delete this photo', admin_photo_path(@photo), method: :delete, data: { confirm: 'Are you sure?' } %>
 
 <% end %>
