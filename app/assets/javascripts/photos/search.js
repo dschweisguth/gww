@@ -255,6 +255,7 @@ GWW.photos.search = (function () {
 
   // TODO Dave but we'd rather update the hash only when the first div in the page is at the top of the viewport
   function updateHash() {
+    // noinspection CssInvalidPseudoSelector
     $('#photos > div:in-viewport[id]:first').each(function (unused, firstDivInPage) {
       // The hash and IDs are intentionally different so that the browser doesn't scroll when we update the hash
       location.hash = "#page=" + firstDivInPage.id;
