@@ -1,4 +1,4 @@
-GWW.shared.singlePhotoMap = (function () {
+GWW.shared.singlePhotoMap = function () {
   "use strict";
 
   return {
@@ -29,4 +29,4 @@ GWW.shared.singlePhotoMap = (function () {
 
   };
 
-}());
+}();

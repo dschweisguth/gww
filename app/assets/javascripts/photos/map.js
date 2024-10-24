@@ -1,5 +1,5 @@
 GWW.photos = {};
-GWW.photos.map = (function () {
+GWW.photos.map = function () {
   "use strict";
 
   var that = GWW.shared.createMap();
@@ -11,4 +11,4 @@ GWW.photos.map = (function () {
 
   return that;
 
-}());
+}();

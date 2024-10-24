@@ -1,5 +1,5 @@
 GWW.people = {};
-GWW.people.map = (function () {
+GWW.people.map = function () {
   "use strict";
 
   var that = GWW.shared.createMap();
@@ -37,4 +37,4 @@ GWW.people.map = (function () {
   };
 
   return that;
-}());
+}();

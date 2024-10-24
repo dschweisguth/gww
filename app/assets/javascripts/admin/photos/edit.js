@@ -1,6 +1,6 @@
 GWW.admin = {};
 GWW.admin.photos = {};
-GWW.admin.photos.edit = (function () {
+GWW.admin.photos.edit = function () {
   "use strict";
 
   return {
@@ -39,4 +39,4 @@ GWW.admin.photos.edit = (function () {
     });
   }
 
-}());
+}();

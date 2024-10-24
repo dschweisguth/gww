@@ -1,4 +1,4 @@
-GWW.shared.aboutAutoMapping = (function () {
+GWW.shared.aboutAutoMapping = function () {
   "use strict";
 
   return {
@@ -11,4 +11,4 @@ GWW.shared.aboutAutoMapping = (function () {
     }
   };
 
-}());
+}();
