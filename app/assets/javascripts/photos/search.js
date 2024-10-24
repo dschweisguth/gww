@@ -13,17 +13,7 @@ GWW.photos.search = function () {
 
   function setUpAutocomplete() {
     $("#done_by").autocomplete({
-      source: function (request, response) {
-        var url = '/photos/person_autocompletions';
-        if (request.term) {
-          url += '/term/' + encodeURIComponent(request.term);
-        }
-        var gameStatus = $('form select[name="game_status[]"]');
-        if (gameStatus.val()) {
-          url += "/game-status/" + gameStatus.val();
-        }
-        $.getJSON(url, {}, response);
-      },
+      source: (request, response) => $.getJSON(photosPersonAutocompletionsURI(request), {}, response),
       minLength: 0,
       open: function () {
         $(this).autocomplete('widget').css('z-index', 100);
@@ -34,6 +24,18 @@ GWW.photos.search = function () {
       $("#done_by").autocomplete("search", "").focus();
       return false;
     });
+  }
+
+  function photosPersonAutocompletionsURI(request) {
+    let uri = '/photos/person_autocompletions';
+    if (request.term) {
+      uri += '/term/' + encodeURIComponent(request.term);
+    }
+    const gameStatus = $('form select[name="game_status[]"]').val();
+    if (gameStatus) {
+      uri += "/game-status/" + gameStatus;
+    }
+    return uri;
   }
 
   function setUpFormSubmit() {
