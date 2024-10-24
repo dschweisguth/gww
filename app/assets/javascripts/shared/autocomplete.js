@@ -9,7 +9,7 @@ GWW.shared.autocomplete = (function () {
     $("#username").autocomplete({
       source: function (request, response) {
         $.getJSON(
-          '/autocompletions/' + escape(request.term),
+          '/autocompletions/' + encodeURIComponent(request.term),
           {},
           response
         );

@@ -16,7 +16,7 @@ GWW.photos.search = (function () {
       source: function (request, response) {
         var url = '/photos/person_autocompletions';
         if (request.term) {
-          url += '/term/' + escape(request.term);
+          url += '/term/' + encodeURIComponent(request.term);
         }
         var gameStatus = $('form select[name="game_status[]"]');
         if (gameStatus.val()) {
