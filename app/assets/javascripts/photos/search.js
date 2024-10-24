@@ -43,40 +43,26 @@ GWW.photos.search = function () {
     });
   }
 
+  const appendTermParams = [
+    ['[name="did"]',            val => val !== 'posted',                                            'did',          val => val],
+    ['[name="done_by"]',        val => val,                                                         'done-by',      val => encodeURIComponent(val)],
+    ['[name="text"]',           val => val,                                                         'text',         val => encodeURIComponent(val)],
+    ['[name="game_status[]"]',  val => val,                                                         'game-status',  val => val], // Javascript automatically joins arrays with ,
+    ['[name="from_date"]',      val => val,                                                         'from-date',    val => encodeURIComponent(escapeDate(val))],
+    ['[name="to_date"]',        val => val,                                                         'to-date',      val => encodeURIComponent(escapeDate(val))],
+    ['[name="sorted_by"]',      val => val !== (did === 'posted' ? 'last-updated' : 'date-taken'),  'sorted-by',    val => val],
+    ['[name="direction"]',      val => val !== '-',                                                 'direction',    val => val]
+  ];
+
   // This function and PhotosController#uri_params must agree on the canonical parameter order
   function searchURI(form) {
-    var path = "/photos/search";
-    var did = form.find('select[name="did"]').val();
-    if (did !== 'posted') {
-      path += "/did/" + did;
-    }
-    var doneBy = form.find('[name="done_by"]');
-    if (doneBy.val()) {
-      path += "/done-by/" + encodeURIComponent(doneBy.val());
-    }
-    var text = form.find('[name="text"]');
-    if (text.val()) {
-      path += "/text/" + encodeURIComponent(text.val());
-    }
-    var gameStatus = form.find('select[name="game_status[]"]');
-    if (gameStatus.val()) {
-      path += "/game-status/" + gameStatus.val(); // Javascript automatically joins arrays with ,
-    }
-    var from_date = form.find('[name="from_date"]');
-    if (from_date.val()) {
-      path += "/from-date/" + encodeURIComponent(escapeDate(from_date.val()));
-    }
-    var to_date = form.find('[name="to_date"]');
-    if (to_date.val()) {
-      path += "/to-date/" + encodeURIComponent(escapeDate(to_date.val()));
-    }
-    var sortedBy = form.find('[name="sorted_by"]').val();
-    if (sortedBy !== (did === 'posted' ? 'last-updated' : 'date-taken')) {
-      path += "/sorted-by/" + sortedBy;
-    }
-    var direction = form.find('[name="direction"]').val();
-    if (direction !== '-') {
-      path += "/direction/" + direction;
+    return appendTermParams.reduce((path, params) => appendTerm(path, form, ...params), '/photos/search');
+  }
+
+  function appendTerm(path, form, field_selector, test, term_name, term_value) {
+    const val = form.find(field_selector).val();
+    if (test(val)) {
+      path += "/" + term_name + "/" + term_value(val);
     }
     return path;
   }
