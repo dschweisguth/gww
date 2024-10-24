@@ -17,7 +17,7 @@ gem 'rails', '~> 4.2.0'
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
 gem 'sass-rails'
 gem 'sprockets', '~> 3.7' # 4.0 requires a manifest which I don't feel like writing right now
-gem 'uglifier'
+gem 'terser'
 gem 'warning'
 gem 'will_paginate'
 gem 'xml-simple'
