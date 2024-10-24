@@ -11,9 +11,9 @@ GWW.shared.createMap = function () {
     markers: [],
 
     setUp: function (callbackName) {
-      var script = document.createElement('script');
+      const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'https://maps.google.com/maps/api/js?v=3&key=' + GWW.config.api_key + '&callback=' + callbackName;
+      script.src = `https://maps.googleapis.com/maps/api/js?v=3&libraries=marker&key=${GWW.config.api_key}&callback=${callbackName}`;
       document.body.appendChild(script);
     },
 
@@ -21,7 +21,8 @@ GWW.shared.createMap = function () {
       that.map = new google.maps.Map($('#map_canvas')[0], {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.435),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapId: "DEMO_MAP_ID"
       });
 
       new google.maps.Polyline({
@@ -78,10 +79,14 @@ GWW.shared.createMap = function () {
     $.each(that.markers, function (i, marker) { marker.setMap(null); });
     that.markers.length = 0;
     $.each(config.photos.photos, function (i, photo) {
-      var marker = new google.maps.Marker({
+      const pin = new google.maps.marker.PinElement({
+        background: `#${photo.color}`,
+        borderColor: 'black',
+        glyph: photo.symbol
+      })
+      const marker = new google.maps.marker.AdvancedMarkerElement({
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        icon: 'https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + encodeURIComponent(photo.symbol) + '|' + photo.color + '|000000',
-        symbol: photo.symbol // Subclasses may use this to manage markers by photo type
+        content: pin.element
       });
       marker.setMap(that.getMarkerParent(marker));
       that.markers.push(marker);
