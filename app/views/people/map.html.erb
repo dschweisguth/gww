@@ -1,4 +1,4 @@
-<%= head_javascript 'shared/createMap', 'people/map' %>
+<%= head_javascript 'shared/loadGoogleMaps', 'shared/createMap', 'people/map' %>
 <% content_for :head do javascript_tag '$(GWW.people.map.setUp);' end %>
 <%= sandwich 'person_breadcrumbs' do %>
 <%= title_and_h1 "Mapped photos posted or guessed by #{@person.username}" %>

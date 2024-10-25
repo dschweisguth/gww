@@ -1,7 +1,7 @@
 <%= head_javascript %>
 <% content_for :head do %>
   <% if @page_config %>
-    <%= javascript_include_tag 'shared/singlePhotoMap' %>
+    <%= javascript_include_tag 'shared/loadGoogleMaps', 'shared/singlePhotoMap' %>
     <%= javascript_tag '$(GWW.shared.singlePhotoMap.setUp);' %>
   <% else %>
     <%= javascript_include_tag 'shared/aboutAutoMapping' %>

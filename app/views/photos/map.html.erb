@@ -1,4 +1,4 @@
-<%= head_javascript 'shared/createMap', 'photos/map' %>
+<%= head_javascript 'shared/loadGoogleMaps', 'shared/createMap', 'photos/map' %>
 <% content_for :head do javascript_tag '$(GWW.photos.map.setUp);' end %>
 <%= sandwich do %>
 <%= title_and_h1 'Mapped photos' %>
