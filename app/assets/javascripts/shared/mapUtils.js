@@ -7,3 +7,11 @@ GWW.shared.loadGoogleMaps = function (callbackName) {
   script.src = `https://maps.googleapis.com/maps/api/js?v=3&loading=async&libraries=marker&key=${GWW.config.api_key}&callback=${callbackName}`;
   document.body.appendChild(script);
 }
+
+GWW.shared.createPin = function (photo) {
+  return new google.maps.marker.PinElement({
+    background: `#${photo.color}`,
+    borderColor: 'black',
+    glyph: photo.symbol
+  })
+}

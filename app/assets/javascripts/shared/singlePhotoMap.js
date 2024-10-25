@@ -17,15 +17,10 @@ GWW.shared.singlePhotoMap = function () {
         zoomControl: true,
         mapId: "DEMO_MAP_ID"
       });
-      const pin = new google.maps.marker.PinElement({
-        background: `#${photo.color}`,
-        borderColor: 'black',
-        glyph: photo.symbol
-      })
       new google.maps.marker.AdvancedMarkerElement({
         map: map,
         position: center,
-        content: pin.element
+        content: GWW.shared.createPin(photo).element
       });
     }
 

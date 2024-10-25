@@ -76,14 +76,9 @@ GWW.shared.createMap = function () {
     $.each(that.markers, function (i, marker) { marker.setMap(null); });
     that.markers.length = 0;
     $.each(config.photos.photos, function (i, photo) {
-      const pin = new google.maps.marker.PinElement({
-        background: `#${photo.color}`,
-        borderColor: 'black',
-        glyph: photo.symbol
-      })
       const marker = new google.maps.marker.AdvancedMarkerElement({
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
-        content: pin.element
+        content: GWW.shared.createPin(photo).element
       });
       marker.setMap(that.getMarkerParent(marker));
       that.markers.push(marker);
