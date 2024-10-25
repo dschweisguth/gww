@@ -150,7 +150,7 @@ GWW.photos.search = function () {
   }
 
   function addPage(afterPageAdded, afterAllPagesAdded) {
-    startLoadingAnimation();
+    GWW.photos.loadingAnimation.start();
     $.ajax({
       url: searchDataURI(),
       success: function (data) {
@@ -169,55 +169,9 @@ GWW.photos.search = function () {
       },
       complete: function () {
         willScrollLater = false;
-        stopLoadingAnimation();
+        GWW.photos.loadingAnimation.stop();
       }
     });
-  }
-
-  // Loading animation based on http://superdit.com/2011/02/25/flickr-style-loading-animation-using-jquery/
-
-  var distanceToMove;
-  var loadingAnimationThread;
-
-  function startLoadingAnimation() {
-    var container = $('#loading-animation');
-    container.toggle();
-    var leftDot = container.find('> div:nth-child(1)');
-    leftDot.css('left', ($(window).width() / 2) - leftDot.width());
-    distanceToMove = leftDot.width() + 4;
-    container.find('> div:nth-child(2)').css('left', leftDot.position().left + distanceToMove);
-    loadingAnimationThread = setInterval(playLoadingAnimation, 800);
-  }
-
-  function playLoadingAnimation() {
-    var container = $('#loading-animation');
-    var leftDot = container.find('> div:nth-child(1)');
-    var rightDot = container.find('> div:nth-child(2)');
-    moveDotLeft(leftDot);
-    moveDotRight(leftDot);
-    moveDotRight(rightDot);
-    moveDotLeft(rightDot);
-  }
-
-  function moveDotLeft(element) {
-    moveDot(element, true);
-  }
-
-  function moveDotRight(element) {
-    moveDot(element, false);
-  }
-
-  function moveDot(element, left) {
-    $(element).animate({ left: (left ? '+=' : '-=') + distanceToMove }, 800,
-      function () {
-        $(element).css('z-index', (left ? '-100' : '100'));
-      }
-    );
-  }
-
-  function stopLoadingAnimation() {
-    $('#loading-animation').toggle();
-    clearInterval(loadingAnimationThread);
   }
 
   function searchDataURI() {
