@@ -4,12 +4,12 @@ GWW.people.map = function () {
 
   var that = GWW.shared.createMap();
 
-  var superSetUp = GWW.superior(that, 'setUp');
+  var superSetUp = GWW.shared.superior(that, 'setUp');
   that.setUp = function () {
     superSetUp('GWW.people.map.mapsAPIIsLoadedCallback');
   };
 
-  var superMapsAPIIsLoadedCallback = GWW.superior(that, 'mapsAPIIsLoadedCallback');
+  var superMapsAPIIsLoadedCallback = GWW.shared.superior(that, 'mapsAPIIsLoadedCallback');
   that.mapsAPIIsLoadedCallback = function () {
     superMapsAPIIsLoadedCallback();
     addToggleHandler('guesses', function (symbol) { return symbol === '!'; });

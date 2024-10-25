@@ -1,7 +1,7 @@
 var GWW = {};
 GWW.shared = {};
 
-GWW.superior = function (object, funcName) {
+GWW.shared.superior = function (object, funcName) {
   "use strict";
 
   var superFunc = object[funcName];

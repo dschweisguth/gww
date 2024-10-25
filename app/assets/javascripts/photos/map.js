@@ -4,7 +4,7 @@ GWW.photos.map = function () {
 
   var that = GWW.shared.createMap();
 
-  var superSetUp = GWW.superior(that, 'setUp');
+  var superSetUp = GWW.shared.superior(that, 'setUp');
   that.setUp = function () {
     superSetUp('GWW.photos.map.mapsAPIIsLoadedCallback');
   };
