@@ -1,4 +1,3 @@
-GWW.photos = {};
 GWW.photos.map = function () {
   "use strict";
 

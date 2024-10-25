@@ -1,5 +1,4 @@
 // TODO Dave add pages when scrolling backwards instead of loading all pages right away
-GWW.photos = {};
 GWW.photos.search = function () {
   "use strict";
 
