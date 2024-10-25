@@ -11,14 +11,7 @@ GWW.photos.search = function () {
   }
 
   function setUpAutocomplete() {
-    $("#done_by").autocomplete({
-      source: (request, response) => $.getJSON(photosPersonAutocompletionsURI(request), {}, response),
-      minLength: 0,
-      open: function () {
-        $(this).autocomplete('widget').css('z-index', 100);
-        return false;
-      }
-    });
+    GWW.shared.autocomplete("#done_by", photosPersonAutocompletionsURI);
     $("form img").click(function () {
       $("#done_by").autocomplete("search", "").focus();
       return false;
