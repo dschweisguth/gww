@@ -24,7 +24,7 @@ GWW.people.map = function () {
     return function () {
       var markerParent = this.checked ? that.map : null;
       $.each(that.markers, function (i, marker) {
-        if (matcher(marker.symbol)) {
+        if (matcher(marker.content.textContent)) {
           marker.setMap(markerParent);
         }
       });
@@ -32,8 +32,15 @@ GWW.people.map = function () {
   };
 
   that.getMarkerParent = function (marker) {
-    var guesses = $('#guesses');
-    return guesses.length === 0 || guesses.prop('checked') && marker.symbol === '!' || $('#posts').prop('checked') && marker.symbol !== '!' ? that.map : null;
+    const guesses = $('#guesses');
+    if (guesses.length === 0) {
+      return that.map;
+    }
+    const symbol = marker.content.textContent;
+    if (guesses.prop('checked') && symbol === '!' || $('#posts').prop('checked') && symbol !== '!') {
+      return that.map;
+    }
+    return null;
   };
 
   return that;
