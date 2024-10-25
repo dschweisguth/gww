@@ -1,4 +1,4 @@
-GWW.shared.autocomplete = function () {
+GWW.shared.autocompletions = function () {
   "use strict";
 
   return {
@@ -23,4 +23,4 @@ GWW.shared.autocomplete = function () {
   }
 
 }();
-$(GWW.shared.autocomplete.setUp);
+$(GWW.shared.autocompletions.setUp);

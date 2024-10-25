@@ -1,7 +1,7 @@
 <%= head_css %>
 <%= head_javascript 'admin/photos/edit' %>
 <%= render 'shared/autocomplete' %>
-<%= javascript_include_tag('shared/autocomplete') %>
+<%= javascript_include_tag('shared/autocompletions') %>
 <% content_for :head do %>
   <%= javascript_tag '$(GWW.admin.photos.edit.setUp);' %>
   <% if @page_config %>
