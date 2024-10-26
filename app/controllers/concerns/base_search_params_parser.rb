@@ -43,66 +43,26 @@ class BaseSearchParamsParser
   # Removes known parameters which have invalid values or whose presence or value conflicts with other parameters.
   # Does not bother to remove unknown parameters because those will be ignored later anyway.
   def remove_invalid(form_params)
-    form_params = form_params.dup
+    form_params.
+      reject { |k, v| k == 'did' && !v.in?(%w[posted activity]) }.
+      reject { |k, v| k == 'did' && v == 'activity' && !form_params['done-by'] }.
+      reject { |k, v| k == 'done-by' && !Person.exists?(username: v) }.
+      reject { |k, _| k.in?(%w[text game-status]) && form_params['did'] == 'activity' }.
+      reject { |k, v| k == 'game-status' && v.any? { |game_status| !game_status.in?(%w(unfound unconfirmed found revealed)) } }.
+      reject { |k, v| k.in?(%w[from-date to-date]) && !parseable_to_date(v) }.
+      reject { |k, v| k == 'to-date' && form_params['from-date'] && Date.parse(v) < Date.parse(form_params['from-date']) }.
+      reject { |k, v| k == 'sorted-by' && form_params['did'] != 'activity' && !v.in?(%w(date-taken date-added last-updated)) }.
+      reject { |k, v| k == 'sorted-by' && form_params['did'] == 'activity' && v != 'date-taken' }.
+      reject { |k, v| k == 'direction' && !v.in?(%w[- +]) }.
+      reject { |k, v| k == 'page' && !Integer(v, exception: false) }
+  end
 
-    if !form_params['did'].in?([nil, 'posted', 'activity'])
-      form_params.delete 'did'
+  def parseable_to_date(string)
+    begin
+      Date.parse string
+    rescue ArgumentError
+      false
     end
-
-    if form_params['did'] == 'activity'
-      if !form_params.key?('done-by')
-        form_params.delete 'did'
-      end
-      %w(text game-status).each do |field|
-        if form_params.key? field
-          form_params.delete field
-        end
-      end
-    end
-
-    if form_params.key?('done-by') && !Person.exists?(username: form_params['done-by'])
-      form_params.delete 'done-by'
-    end
-
-    if form_params['game-status']&.any? { |game_status| !game_status.in? %w(unfound unconfirmed found revealed) }
-      form_params.delete 'game-status'
-    end
-
-    %w(from-date to-date).each do |field|
-      if form_params.key? field
-        begin
-          Date.parse form_params[field]
-        rescue ArgumentError
-          form_params.delete field
-        end
-      end
-    end
-    if form_params.key?('from-date') && form_params.key?('to-date') && Date.parse(form_params['from-date']) > Date.parse(form_params['to-date'])
-      %w(from-date to-date).each do |field|
-        form_params.delete field
-      end
-    end
-
-    if form_params.key? 'sorted-by'
-      valid_orders = form_params['did'] == 'activity' ? %w(date-taken) : %w(date-taken date-added last-updated)
-      if !valid_orders.include?(form_params['sorted-by'])
-        form_params.delete 'sorted-by'
-      end
-    end
-
-    if !form_params['direction'].in?([nil, '-', '+'])
-      form_params.delete 'direction'
-    end
-
-    if form_params.key? 'page'
-      begin
-        Integer form_params['page']
-      rescue ArgumentError
-        form_params.delete 'page'
-      end
-    end
-
-    form_params
   end
 
   def remove_uri_defaults(uri_params)

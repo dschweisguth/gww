@@ -16,8 +16,8 @@ describe 'SearchParamsParser' do
       parser_canonicalizes('did/posted/sorted-by/last-updated').into ''
     end
 
-    it "removes backwards dates from the segments" do
-      parser_canonicalizes('from-date/1-2-14/to-date/1-1-14').into ''
+    it "removes a to-date that is before a from-date from the segments" do
+      parser_canonicalizes('from-date/1-2-14/to-date/1-1-14').into 'from-date/1-2-14'
     end
 
     it "returns form search parameters for an activity search" do
