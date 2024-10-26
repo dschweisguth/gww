@@ -46,9 +46,6 @@ Style/PercentLiteralDelimiters:
 Style/RedundantReturn:
   AllowMultipleReturnValues: true
 
-Style/SignalException:
-  EnforcedStyle: only_raise
-
 # Disabled cops
 
 Layout/ArrayAlignment:
