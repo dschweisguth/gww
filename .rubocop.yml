@@ -1,7 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.6
   Exclude:
     - bin/rails
     - config.ru
@@ -19,7 +19,7 @@ Layout/DotPosition:
   EnforcedStyle: trailing
 
 Naming/PredicateName:
-  NamePrefixBlacklist:
+  ForbiddenPrefixes:
     - is_
   Exclude:
     - 'spec/**/*'
@@ -51,19 +51,12 @@ Style/PercentLiteralDelimiters:
 Style/RedundantReturn:
   AllowMultipleReturnValues: true
 
-Style/RegexpLiteral:
-  EnforcedStyle: mixed
-
 Style/SignalException:
   EnforcedStyle: only_raise
 
 # Disabled cops
 
-Layout/AlignArray:
-  Enabled: false
-Layout/AlignHash:
-  Enabled: false
-Layout/AlignParameters:
+Layout/ArrayAlignment:
   Enabled: false
 # Doesn't handle per-method access modifiers
 Layout/EmptyLinesAroundArguments:
@@ -76,11 +69,17 @@ Layout/EmptyLinesAroundMethodBody:
   Enabled: false
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false
+Layout/HashAlignment:
+  Enabled: false
+Layout/LineLength:
+  Enabled: false
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 Layout/MultilineOperationIndentation:
+  Enabled: false
+Layout/ParameterAlignment:
   Enabled: false
 Layout/SpaceAfterNot:
   Enabled: false
@@ -114,8 +113,6 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
-Metrics/LineLength:
-  Enabled: false
 Metrics/MethodLength:
   Enabled: false
 Metrics/ModuleLength:
@@ -125,21 +122,7 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Performance/RedundantMerge:
-  Enabled: false
-
-# The Rails date and time cops might be valid, but everything seems to be working fine so I'm blowing them off.
-
-Rails/Date:
-  Enabled: false
-Rails/PluralizationGrammar:
-  Enabled: false
-Rails/TimeZone:
-  Enabled: false
-
 Style/AsciiComments:
-  Enabled: false
-Style/BracesAroundHashParameters:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -155,7 +138,7 @@ Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
-Style/MethodMissing:
+Style/MissingRespondToMissing:
   Enabled: false
 Style/MixinGrouping:
   Enabled: false
@@ -175,6 +158,8 @@ Style/RaiseArgs:
   Enabled: false
 Style/RedundantBegin:
   Enabled: false
+Style/RedundantPercentQ:
+  Enabled: false
 # Gives false positive on Cucumber step definitions
 Style/RegexpLiteral:
   Enabled: false
@@ -185,8 +170,6 @@ Style/StringLiteralsInInterpolation:
 Style/StructInheritance:
   Enabled: false
 Style/TernaryParentheses:
-  Enabled: false
-Style/UnneededPercentQ:
   Enabled: false
 Style/WordArray:
   Enabled: false

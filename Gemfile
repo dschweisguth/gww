@@ -9,6 +9,7 @@ gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/
 gem 'american_date'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'json', '~> 2.7' # without this, cucumber features use the default version and fail
 gem 'mini_racer'
 gem 'mysql2'
 gem 'nokogiri'
@@ -23,7 +24,7 @@ gem 'will_paginate'
 gem 'xml-simple'
 
 group :development do
-  gem 'rubocop', '~> 0.52.0' # yoked to .codeclimate.yml
+  gem 'rubocop', '~> 1.50.2' # yoked to Code Climate
   gem 'spring', '~> 2.1' # spring 3 requires Rails 5
   gem 'spring-commands-cucumber'
   gem 'spring-commands-rspec'
