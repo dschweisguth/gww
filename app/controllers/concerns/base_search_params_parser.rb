@@ -44,16 +44,16 @@ class BaseSearchParamsParser
   # Does not bother to remove unknown parameters because those will be ignored later anyway.
   def remove_invalid(form_params)
     form_params.
-      reject { |k, v| k == 'did' && !v.in?(%w[posted activity]) }.
+      reject { |k, v| k == 'did' && !v.in?(%w(posted activity)) }.
       reject { |k, v| k == 'did' && v == 'activity' && !form_params['done-by'] }.
       reject { |k, v| k == 'done-by' && !Person.exists?(username: v) }.
-      reject { |k, _| k.in?(%w[text game-status]) && form_params['did'] == 'activity' }.
+      reject { |k, _| k.in?(%w(text game-status)) && form_params['did'] == 'activity' }.
       reject { |k, v| k == 'game-status' && v.any? { |game_status| !game_status.in?(%w(unfound unconfirmed found revealed)) } }.
-      reject { |k, v| k.in?(%w[from-date to-date]) && !parseable_to_date(v) }.
+      reject { |k, v| k.in?(%w(from-date to-date)) && !parseable_to_date(v) }.
       reject { |k, v| k == 'to-date' && form_params['from-date'] && Date.parse(v) < Date.parse(form_params['from-date']) }.
       reject { |k, v| k == 'sorted-by' && form_params['did'] != 'activity' && !v.in?(%w(date-taken date-added last-updated)) }.
       reject { |k, v| k == 'sorted-by' && form_params['did'] == 'activity' && v != 'date-taken' }.
-      reject { |k, v| k == 'direction' && !v.in?(%w[- +]) }.
+      reject { |k, v| k == 'direction' && !v.in?(%w(- +)) }.
       reject { |k, v| k == 'page' && !Integer(v, exception: false) }
   end
 
