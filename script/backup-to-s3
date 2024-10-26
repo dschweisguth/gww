@@ -26,9 +26,9 @@ class BackUp
       [
         { 'MYSQL_PWD' => database_property('password') },
         # mysqldump uses UTF-8 despite server settings unless told otherwise
-	"mysqldump --default-character-set=utf8mb4 " +
-	  "-h#{database_property 'host'} -u#{database_property 'username'} " +
-	  "#{database}"
+        "mysqldump --default-character-set=utf8mb4 " +
+          "-h#{database_property 'host'} -u#{database_property 'username'} " +
+          "#{database}"
       ],
       "gzip",
       "aws s3 cp - #{BUCKET}/#{file} --storage-class STANDARD_IA"

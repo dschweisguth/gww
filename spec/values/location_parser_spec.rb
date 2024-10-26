@@ -72,17 +72,17 @@ describe LocationParser, type: :value do
     end
 
     it "finds multiple locations" do
-      expect(parser.parse('25th and Valencia 26th and Valencia')).to eq(
-        [Intersection.new('25th and Valencia', '25th', nil, 'Valencia', nil),
-          Intersection.new('26th and Valencia', '26th', nil, 'Valencia', nil)]
-      )
+      expect(parser.parse('25th and Valencia 26th and Valencia')).to eq([
+        Intersection.new('25th and Valencia', '25th', nil, 'Valencia', nil),
+        Intersection.new('26th and Valencia', '26th', nil, 'Valencia', nil)
+      ])
     end
 
     it "finds overlapping locations" do
-      expect(parser.parse('lions and tigers and bears')).to eq(
-        [Intersection.new('lions and tigers', 'lions', nil, 'tigers', nil),
-          Intersection.new('tigers and bears', 'tigers', nil, 'bears', nil)]
-      )
+      expect(parser.parse('lions and tigers and bears')).to eq([
+        Intersection.new('lions and tigers', 'lions', nil, 'tigers', nil),
+        Intersection.new('tigers and bears', 'tigers', nil, 'bears', nil)
+      ])
     end
 
     context "parser knows that Dirk Dirksen is a multiword street name" do

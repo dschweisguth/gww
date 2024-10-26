@@ -48,8 +48,6 @@ Style/RedundantReturn:
 
 # Disabled cops
 
-Layout/ArrayAlignment:
-  Enabled: false
 # Doesn't handle per-method access modifiers
 Layout/EmptyLinesAroundArguments:
   Enabled: false
