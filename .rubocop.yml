@@ -19,8 +19,6 @@ Layout/DotPosition:
   EnforcedStyle: trailing
 
 Naming/PredicateName:
-  ForbiddenPrefixes:
-    - is_
   Exclude:
     - 'spec/**/*'
 

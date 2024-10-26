@@ -232,7 +232,7 @@ describe PeopleController do
 
       it "highlights a guessed post with an obsolete tag" do
         stub_guessed_post
-        allow(photo).to receive(:has_obsolete_tags?) { true }
+        allow(photo).to receive(:obsolete_tags?) { true }
         get :show, id: person.id
 
         expect(top_node).to have_css('.photo-links a.needs-attention')
@@ -241,7 +241,7 @@ describe PeopleController do
 
       it "highlights a revealed post with an obsolete tag" do
         stub_revealed_post
-        allow(photo).to receive(:has_obsolete_tags?) { true }
+        allow(photo).to receive(:obsolete_tags?) { true }
         get :show, id: person.id
 
         expect(top_node).to have_css('.photo-links a.needs-attention')

@@ -38,7 +38,7 @@ class PeopleShowPhoto < Photo
     end
   end
 
-  def has_obsolete_tags?
+  def obsolete_tags?
     if game_status.in?(%w(found revealed))
       raws = tags.map { |tag| tag.raw.downcase }
       raws.include?('unfoundinsf') &&
