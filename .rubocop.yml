@@ -32,7 +32,7 @@ Style/FormatString:
   EnforcedStyle: percent
 
 Style/NumericLiterals:
-  MinDigits: 15
+  MinDigits: 12
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
