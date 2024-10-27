@@ -605,8 +605,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       create :comment, photo: photo
       allow(FlickrService.instance).to receive(:photos_comments_get_list) do
         {
-          'comments' => [{
-          }]
+          'comments' => [{}]
         }
       end
       described_class.update_comments photo
@@ -709,8 +708,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid) do
         {
           'photo' => [{
-            'tags' => [{
-            }]
+            'tags' => [{}]
           }]
         }
       end
