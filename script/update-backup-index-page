@@ -62,7 +62,7 @@ class UpdateBackupIndexPage
     output, status =
       Open3.capture2e(
         "aws s3 cp - #{BUCKET}/index.html --content-type text/html",
-	      stdin_data: index_page)
+        stdin_data: index_page)
     if !status.success?
       warn "Couldn't upload index page: #{output}"
       exit 1

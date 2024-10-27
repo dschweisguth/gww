@@ -37,7 +37,7 @@ class BackUp
     if failure
       warn "Couldn't back up. " +
         "Command #{failure[1]} of 0-#{statuses.count - 1} failed: " +
-	      "#{failure[0].inspect}"
+        "#{failure[0].inspect}"
       exit 1
     end
   end
