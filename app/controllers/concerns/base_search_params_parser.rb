@@ -103,8 +103,4 @@ class BaseSearchParamsParser
     uri_params.transform_keys { |key| key.tr('-', '_').to_sym }
   end
 
-  public def transform_keys(hash)
-    hash.map { |key, value| [yield(key), value] }.to_h
-  end
-
 end

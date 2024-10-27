@@ -7,7 +7,7 @@ module GWW
 
       class HaveAttributes
         def initialize(expected)
-          @expected = expected.map { |name, value| [name.to_s, value] }.to_h
+          @expected = expected.transform_keys(&:to_s)
         end
 
         def matches?(subject)
