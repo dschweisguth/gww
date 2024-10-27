@@ -56,6 +56,8 @@ Style/RedundantReturn:
 
 Layout/ArgumentAlignment:
   Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 Layout/EmptyLinesAroundClassBody:
@@ -63,6 +65,8 @@ Layout/EmptyLinesAroundClassBody:
 Layout/EmptyLinesAroundMethodBody:
   Enabled: false
 Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+Layout/FirstArrayElementIndentation:
   Enabled: false
 Layout/HashAlignment:
   Enabled: false
