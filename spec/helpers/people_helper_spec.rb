@@ -54,7 +54,7 @@ describe PeopleHelper do
     end
 
     it "returns HTML for a very large number" do
-      expect(helper.almost_infinity_or(Float::MAX - 10 ** 301)).to eq('&#8734;')
+      expect(helper.almost_infinity_or(Float::MAX - 10**301)).to eq('&#8734;')
     end
 
   end

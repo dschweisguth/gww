@@ -17,7 +17,7 @@ module PeopleHelper
     infinity_or(seconds) { |seconds| seconds / 86400 }
   end
 
-  ALMOST_INFINITY = Float::MAX - 10 ** 302
+  ALMOST_INFINITY = Float::MAX - 10**302
 
   # Represents any number as infinity which is as large as, or nearly as large as, the number to which Float::MAX is
   # rounded by being assigned to a precision 7 scale 4 ActiveRecord attribute
