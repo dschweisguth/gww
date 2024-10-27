@@ -7,13 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-# Configuration parameters: AllowedPatterns.
-# AllowedPatterns: (?-mix:(exactly|at_least|at_most)\(\d+\)\.times)
-Lint/UnreachableLoop:
-  Exclude:
-    - 'spec/services/flickr_service_spec.rb'
-
-# Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
 Lint/UnusedBlockArgument:

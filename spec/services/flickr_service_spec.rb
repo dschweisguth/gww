@@ -114,7 +114,7 @@ describe FlickrService, type: :service do
     end
 
     def stub_get_once_times_out(times)
-      allow(service).to receive(:get_once).exactly(times).times { raise Timeout::Error }
+      allow(service).to receive(:get_once).exactly(times) { raise Timeout::Error }
     end
 
     def stub_get_once_succeeds
