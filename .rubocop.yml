@@ -54,6 +54,8 @@ Style/RedundantReturn:
 
 # Disabled cops
 
+Layout/ArgumentAlignment:
+  Enabled: false
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 Layout/EmptyLinesAroundClassBody:
