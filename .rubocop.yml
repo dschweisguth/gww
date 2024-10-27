@@ -3,7 +3,9 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   TargetRubyVersion: 2.6
   Exclude:
-    - bin/rails
+    - bin/*
+    - config/boot.rb
+    - config/environment.rb
     - config.ru
     - db/schema.rb
     - features/support/env.rb
