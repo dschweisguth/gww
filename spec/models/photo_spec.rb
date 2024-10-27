@@ -35,14 +35,13 @@ describe Photo do
         attrs[attr] = nil
         expect(build(:photo, attrs)).not_to be_valid
       end
-    end
 
-    %i(latitude longitude accuracy).each do |attr|
       it "is invalid if only #{attr} is present" do
         attrs = { latitude: nil, longitude: nil, accuracy: nil }
         attrs[attr] = 0
         expect(build(:photo, attrs)).not_to be_valid
       end
+
     end
 
   end
