@@ -111,8 +111,6 @@ Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
-Style/MissingRespondToMissing:
-  Enabled: false
 Style/MixinGrouping:
   Enabled: false
 Style/MultilineBlockChain:
