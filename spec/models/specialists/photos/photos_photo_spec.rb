@@ -513,10 +513,8 @@ describe PhotosPhoto do
     end
 
     def comments_that_match(comment, terms)
-      create(:photos_photo).tap do |photo|
-        create :comment, photo: photo, comment_text: comment
-      end.
-      comments_that_match(terms)
+      create(:photos_photo).tap { |photo| create :comment, photo: photo, comment_text: comment }.
+        comments_that_match(terms)
     end
 
   end
