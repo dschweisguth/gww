@@ -122,6 +122,8 @@ Style/CommentAnnotation:
   Enabled: false
 Style/Documentation:
   Enabled: false
+Style/EachForSimpleLoop:
+  Enabled: false
 Style/FormatStringToken:
   Enabled: false
 Style/FrozenStringLiteralComment:
