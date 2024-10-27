@@ -21,6 +21,9 @@ Layout/DotPosition:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+
 Naming/PredicateName:
   Exclude:
     - 'spec/**/*'
@@ -66,8 +69,6 @@ Layout/LineLength:
 Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineOperationIndentation:
-  Enabled: false
-Layout/ParameterAlignment:
   Enabled: false
 Layout/SpaceAfterNot:
   Enabled: false

@@ -1,6 +1,6 @@
 class Address < Struct.new :text, :number, :street, :at, :between1, :between2
   def initialize(text, number, street_name, street_type,
-      near1_name = nil, near1_type = nil, near2_name = nil, near2_type = nil)
+    near1_name = nil, near1_type = nil, near2_name = nil, near2_type = nil)
     if !near1_name && near2_name
       raise ArgumentError, "near1_name must be non-nil if near2_name is non-nil, but " \
         "near1_name was nil and near2_name was #{near2_name}"
