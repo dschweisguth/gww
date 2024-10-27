@@ -42,7 +42,7 @@ class PeopleShowPhoto < Photo
     if game_status.in?(%w(found revealed))
       raws = tags.map { |tag| tag.raw.downcase }
       raws.include?('unfoundinsf') &&
-        ! (raws.include?('foundinsf') || game_status == 'revealed' && raws.include?('revealedinsf'))
+        !(raws.include?('foundinsf') || game_status == 'revealed' && raws.include?('revealedinsf'))
     end
   end
 

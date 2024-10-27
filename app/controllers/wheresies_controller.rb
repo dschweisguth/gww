@@ -3,7 +3,7 @@ class WheresiesController < ApplicationController
   def show
     @wheresies_years = ScoreReport.minimum(:created_at).getlocal.year..Time.now.year
     @year = params[:year].to_i
-    if ! @wheresies_years.include? @year
+    if !@wheresies_years.include? @year
       raise ActiveRecord::RecordNotFound, "We don't know anything about the Wheresies for that year."
     end
     @most_points_in_year = WheresiesPerson.most_points_in @year

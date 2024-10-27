@@ -70,8 +70,6 @@ Layout/MultilineMethodCallBraceLayout:
   Enabled: false
 Layout/MultilineOperationIndentation:
   Enabled: false
-Layout/SpaceAfterNot:
-  Enabled: false
 
 Lint/AmbiguousBlockAssociation:
   Enabled: false

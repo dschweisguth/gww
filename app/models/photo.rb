@@ -14,7 +14,7 @@ class Photo < ActiveRecord::Base
   validate do |photo|
     attrs = %i(latitude longitude accuracy)
     are_nil = attrs.map { |attr| photo.send(attr).nil? }
-    if ! (are_nil.none? || are_nil.all?)
+    if !(are_nil.none? || are_nil.all?)
       attrs.each do |attr|
         photo.errors.add attr, "must be nil only if all of #{attrs.to_sentence} are nil, but is #{photo.send(attr) || 'nil'}"
       end
