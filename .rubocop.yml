@@ -24,6 +24,9 @@ Layout/MultilineMethodCallIndentation:
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
+Naming/MethodParameterName:
+  MinNameLength: 1
+
 Naming/PredicateName:
   Exclude:
     - 'spec/**/*'
