@@ -157,7 +157,7 @@ module FlickrUpdateJob
 
     private_class_method def self.to_float_or_nil(string)
       number = string.to_f
-      number == 0.0 ? nil : number
+      number.zero? ? nil : number # Use .zero? to evade rubocop cop that claims to allow == 0 but doesn't
     end
 
     private_class_method def self.to_integer_or_nil(string)
