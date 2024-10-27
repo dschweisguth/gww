@@ -48,9 +48,6 @@ Style/RedundantReturn:
 
 # Disabled cops
 
-# Doesn't handle per-method access modifiers
-Layout/EmptyLinesAroundArguments:
-  Enabled: false
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 Layout/EmptyLinesAroundClassBody:
