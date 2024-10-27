@@ -1,4 +1,4 @@
-class Address < Struct.new :text, :number, :street, :at, :between1, :between2
+Address = Struct.new :text, :number, :street, :at, :between1, :between2 do
   def initialize(text, number, street_name, street_type,
     near1_name = nil, near1_type = nil, near2_name = nil, near2_type = nil)
     if !near1_name && near2_name

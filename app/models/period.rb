@@ -1,4 +1,4 @@
-class Period < Struct.new :start, :finish, :scores
+Period = Struct.new :start, :finish, :scores do
   def initialize(start, finish)
     self.start = start
     self.finish = finish

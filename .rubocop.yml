@@ -138,8 +138,6 @@ Style/StringLiterals:
   Enabled: false
 Style/StringLiteralsInInterpolation:
   Enabled: false
-Style/StructInheritance:
-  Enabled: false
 Style/TernaryParentheses:
   Enabled: false
 Style/WordArray:

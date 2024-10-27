@@ -29,7 +29,7 @@ describe 'SearchDataParamsParser' do
       ModelParamsResultAsserter.new segments
     end
 
-    class ModelParamsResultAsserter < Struct.new(:segments)
+    ModelParamsResultAsserter = Struct.new(:segments) do
       include RSpec::Matchers
 
       def into(params)
@@ -42,7 +42,7 @@ describe 'SearchDataParamsParser' do
       ModelParamsErrorAsserter.new segments
     end
 
-    class ModelParamsErrorAsserter < Struct.new(:segments)
+    ModelParamsErrorAsserter = Struct.new(:segments) do
       include RSpec::Matchers
 
       def into(canonical_uri)

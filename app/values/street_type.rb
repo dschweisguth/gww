@@ -1,7 +1,7 @@
-class StreetType < Struct.new :name, :is_abbr, :synonyms
-  Synonym = Struct.new :name, :is_abbr
+StreetType = Struct.new :name, :is_abbr, :synonyms do
+  self::Synonym = Struct.new :name, :is_abbr
 
-  INSTANCES = [
+  self::INSTANCES = [
     ['ALY',  true, ['ALLEY', false]],
     ['AVE',  true, ['AVENUE', false]],
     ['BLVD', true, ['BOULEVARD', false]],
@@ -27,20 +27,20 @@ class StreetType < Struct.new :name, :is_abbr, :synonyms
     ['TUNL', true, ['TUNNEL', false]],
     ['WALK', false],
     ['WAY',  false, ['WY', true]]
-  ].map { |name, is_abbr, *synonyms| new name, is_abbr, synonyms.map { |args| Synonym.new *args } }
+  ].map { |name, is_abbr, *synonyms| new name, is_abbr, synonyms.map { |args| self::Synonym.new *args } }
 
   def self.get(name)
     if !name
       return nil
     end
     sanitized_name = name.chomp('.').upcase
-    INSTANCES.find do |type|
+    self::INSTANCES.find do |type|
       type.name == sanitized_name || type.synonyms.find { |synonym| synonym.name == sanitized_name }
     end
   end
 
   def self.regexp
-    INSTANCES.each_with_object('') do |type, regexp|
+    self::INSTANCES.each_with_object('') do |type, regexp|
       add_name regexp, type
       type.synonyms.each { |synonym| add_name regexp, synonym }
     end

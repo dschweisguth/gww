@@ -1,6 +1,5 @@
-class Street < Struct.new :name, :type
-
-  SYNONYM = {
+Street = Struct.new :name, :type do
+  self::SYNONYM = {
     '1' => '1ST',
     '2' => '2ND',
     '3' => '3RD',
@@ -85,7 +84,7 @@ class Street < Struct.new :name, :type
       gsub(/['.,]/, '').
       sub(/^ST\b/, 'SAINT').
       sub(/ JUNIOR$/, ' JR')
-    super SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
+    super self.class::SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
   end
 
 end

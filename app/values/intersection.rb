@@ -1,4 +1,4 @@
-class Intersection < Struct.new :text, :at1, :at2
+Intersection = Struct.new :text, :at1, :at2 do
   include TwoStreets
 
   def initialize(text, at1_name, at1_type, at2_name, at2_type)

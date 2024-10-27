@@ -1,4 +1,4 @@
-class Block < Struct.new :text, :on, :between1, :between2
+Block = Struct.new :text, :on, :between1, :between2 do
   include TwoStreets
 
   def initialize(text, on_name, on_type, between1_name, between1_type, between2_name, between2_type)
