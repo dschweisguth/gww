@@ -44,7 +44,7 @@ class WheresiesPerson < Person
             achievements.#{date_column} < :year_end
           group by people.id order by #{count_attribute} desc limit 10
         },
-      year_start: Time.local(year).getutc, year_end: Time.local(year + 1).getutc
+      { year_start: Time.local(year).getutc, year_end: Time.local(year + 1).getutc }
     ]
   end
 
