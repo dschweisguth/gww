@@ -44,7 +44,7 @@ class BackUp
 
   def database_property(name)
     @database_properties ||=
-      YAML.load(IO.read("#{__dir__}/../config/database.yml"))['production']
+      YAML.safe_load(IO.read("#{__dir__}/../config/database.yml"))['production']
     @database_properties[name]
   end
 
