@@ -108,6 +108,10 @@ Lint/UriEscapeUnescape:
 Metrics:
   Enabled: false
 
+Naming/VariableNumber:
+  Exclude:
+    - 'spec/**/*.rb'
+
 Style/AsciiComments:
   Enabled: false
 Style/ClassAndModuleChildren:
