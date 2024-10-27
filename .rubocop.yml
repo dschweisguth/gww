@@ -112,6 +112,8 @@ Naming/VariableNumber:
   Exclude:
     - 'spec/**/*.rb'
 
+Style/AccessModifierDeclarations:
+  Enabled: false
 Style/AsciiComments:
   Enabled: false
 Style/ClassAndModuleChildren:

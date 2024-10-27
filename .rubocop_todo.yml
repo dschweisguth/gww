@@ -6,28 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 15
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle, AllowModifiersOnSymbols.
-# SupportedStyles: inline, group
-Style/AccessModifierDeclarations:
-  Exclude:
-    - 'app/controllers/admin/photos_controller.rb'
-    - 'app/controllers/concerns/base_search_params_parser.rb'
-    - 'app/controllers/concerns/google_maps_config.rb'
-    - 'app/controllers/concerns/map_controller_support.rb'
-    - 'app/controllers/concerns/multi_photo_map_controller_support.rb'
-    - 'app/controllers/concerns/score_reports_controller_support.rb'
-    - 'app/controllers/concerns/single_photo_map_controller_support.rb'
-    - 'app/controllers/people_controller.rb'
-    - 'app/controllers/photos_controller.rb'
-    - 'app/helpers/photos_helper.rb'
-    - 'app/models/specialists/people/people_show_person.rb'
-    - 'app/models/specialists/person_score_support.rb'
-    - 'app/models/specialists/photos/admin_photos_photo.rb'
-    - 'app/services/flickr_service.rb'
-    - 'app/values/location_parser.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/ColonMethodCall:
