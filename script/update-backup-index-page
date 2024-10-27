@@ -32,11 +32,11 @@ class UpdateBackupIndexPage
       reject { |fields| fields.last == 'index.html' }.
       map do |fields|
         [
-	  Date.strptime("#{fields[0]} #{fields[1]}", "%Y-%m-%d %H:%M:%S"),
-	  fields.last
-	]
+          Date.strptime("#{fields[0]} #{fields[1]}", "%Y-%m-%d %H:%M:%S"),
+          fields.last
+        ]
       end.
-      sort_by { |date, object_name| date }.
+      sort_by { |date, _object_name| date }.
       reverse.
       map do |_date, object_name|
         %Q(<a href="#{object_name}">#{object_name}</a>)
@@ -62,7 +62,7 @@ class UpdateBackupIndexPage
     output, status =
       Open3.capture2e(
         "aws s3 cp - #{BUCKET}/index.html --content-type text/html",
-	stdin_data: index_page)
+	      stdin_data: index_page)
     if !status.success?
       warn "Couldn't upload index page: #{output}"
       exit 1
