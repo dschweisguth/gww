@@ -3,7 +3,7 @@ class BookmarkletController < ApplicationController
     from = params[:from]
     path = root_path
     message = nil
-    if from =~ %r{^https?://www.flickr.com/photos/[^/]+\/(\d+)}
+    if from =~ %r{^https?://www.flickr.com/photos/[^/]+/(\d+)}
       flickrid = Regexp.last_match[1]
       photo = Photo.find_by_flickrid flickrid
       if photo
@@ -14,7 +14,7 @@ class BookmarkletController < ApplicationController
           "or perhaps GWW hasn't updated since it was added. " \
           "If you like, you can <a href=\"#{from}\">go back where you came from</a>."
       end
-    elsif from =~ %r{^https?://www.flickr.com/(?:people|photos)/([^\/]+)}
+    elsif from =~ %r{^https?://www.flickr.com/(?:people|photos)/([^/]+)}
       person_identifier = Regexp.last_match[1]
       person = Person.find_by_pathalias(person_identifier) || Person.find_by_flickrid(person_identifier)
       if person

@@ -31,7 +31,7 @@ module FlickrUpdateJob
       if realname == {} # ... empty
         realname = nil
       end
-      pathalias = parsed_person['photosurl'][0].match(%r{https://www.flickr.com/photos/([^\/]+)/})[1]
+      pathalias = parsed_person['photosurl'][0].match(%r{https://www.flickr.com/photos/([^/]+)/})[1]
       ispro = parsed_person['ispro'] == '1'
       photos_count = parsed_person['photos'][0]['count'][0].to_i
 
