@@ -8,12 +8,6 @@
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
-Security/IoMethods:
-  Exclude:
-    - 'script/backup-to-s3'
-
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
 Style/EnvHome:
   Exclude:
     - 'lib/tasks/ci.rake'
