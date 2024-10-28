@@ -21,6 +21,9 @@ Layout/CaseIndentation:
 Layout/DotPosition:
   EnforcedStyle: trailing
 
+Layout/LineEndStringConcatenationIndentation:
+  EnforcedStyle: indented
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 

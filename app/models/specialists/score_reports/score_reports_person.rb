@@ -9,7 +9,7 @@ class ScoreReportsPerson < Person
   def self.all_before(date)
     utc_date = date.getutc
     where "exists (select 1 from photos where person_id = people.id and dateadded <= ?) or " \
-        "exists (select 1 from guesses where person_id = people.id and added_at <= ?)", utc_date, utc_date
+      "exists (select 1 from guesses where person_id = people.id and added_at <= ?)", utc_date, utc_date
   end
 
   def self.by_score(people, to_date)
