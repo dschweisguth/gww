@@ -59,6 +59,13 @@ Style/RedundantReturn:
 
 # Disabled cops
 
+Gemspec/DeprecatedAttributeAssignment:
+  Enabled: false
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+Gemspec/RequireMFA:
+  Enabled: false
+
 Layout/ArgumentAlignment:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
