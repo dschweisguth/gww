@@ -4,6 +4,7 @@
 # static web site, visible at
 # http://guesswherewatcher-backups.s3-website-us-west-2.amazonaws.com/
 
+require 'English'
 require 'date'
 require 'fileutils'
 require 'open3'
@@ -51,7 +52,7 @@ class BackUp
   def update_index_page
     result = system "#{__dir__}/update-backup-index-page"
     if !result
-      warn "Couldn't run update-backup-index-page: #{$?}"
+      warn "Couldn't run update-backup-index-page: #{$CHILD_STATUS}"
       exit 1
     end
   end
