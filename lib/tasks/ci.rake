@@ -7,7 +7,7 @@ task ci: ['ci:config', 'db:reset', 'db:schema:dump', :default]
 namespace :ci do
   task :config do
     %w(database.yml flickr_credentials.yml google_maps.yml).each do |file|
-      FileUtils.cp "#{ENV['HOME']}/lib/TeamCity-config/#{file}", 'config'
+      FileUtils.cp "#{Dir.home}/lib/TeamCity-config/#{file}", 'config'
     end
   end
 end
