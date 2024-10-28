@@ -84,7 +84,7 @@ Street = Struct.new :name, :type do
       gsub(/['.,]/, '').
       sub(/^ST\b/, 'SAINT').
       sub(/ JUNIOR$/, ' JR')
-    super self.class::SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type ? type.strip : nil)
+    super self.class::SYNONYM[sanitized_name] || sanitized_name, StreetType.get(type&.strip)
   end
 
 end

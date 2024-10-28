@@ -8,14 +8,6 @@
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
-# AllowedMethods: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'app/values/street.rb'
-
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish.
 # SupportedStyles: use_perl_names, use_english_names, use_builtin_english_names
 Style/SpecialGlobalVars:
