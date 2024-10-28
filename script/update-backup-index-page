@@ -8,7 +8,7 @@ require 'date'
 require 'open3'
 
 class UpdateBackupIndexPage
-  BUCKET = 's3://guesswherewatcher-backups'
+  BUCKET = 's3://guesswherewatcher-backups'.freeze
 
   def run
     upload index_page links bucket_list

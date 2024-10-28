@@ -10,7 +10,7 @@ require 'open3'
 require 'yaml'
 
 class BackUp
-  BUCKET = 's3://guesswherewatcher-backups'
+  BUCKET = 's3://guesswherewatcher-backups'.freeze
 
   def run
     back_up

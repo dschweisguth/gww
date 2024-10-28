@@ -7,7 +7,7 @@ module PeopleHelper
     "%.4f" % x
   end
 
-  HTML_INFINITY = '&#8734;'
+  HTML_INFINITY = '&#8734;'.freeze
 
   def infinity_or(x)
     x == Float::MAX ? HTML_INFINITY : to_4_places(block_given? ? yield(x) : x)
