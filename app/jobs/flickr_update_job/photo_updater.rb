@@ -207,7 +207,7 @@ module FlickrUpdateJob
           return
         end
         # Happens on photo 13744986833, on the comment supposedly containing a sad face emoji
-        parsed_comments = parsed_comments.select { |c| c.has_key?('content') }
+        parsed_comments = parsed_comments.select { |c| c.key?('content') }
         if parsed_comments.any?
           attributes_hashes = parsed_comments.map do |parsed_comment|
             {
