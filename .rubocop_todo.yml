@@ -8,12 +8,6 @@
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-Style/NegatedIfElseCondition:
-  Exclude:
-    - 'app/models/person.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
 Style/RedundantConstantBase:
   Exclude:
     - 'config/environments/production.rb'
