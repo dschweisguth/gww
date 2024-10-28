@@ -38,7 +38,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   people_by_score = { 0 => [person0], 1 => [person1], 2 => [person2] }
   allow(ScoreReportsPerson).to receive(:by_score).with(people, report_date) { people_by_score }
   guessers = [[person2, [guess21, guess22]], [person1, [guess11]]]
-  allow(ScoreReportsPerson).to receive(:add_change_in_standings).with(people_by_score, people, previous_report_date, guessers) {}
+  allow(ScoreReportsPerson).to receive(:add_change_in_standings).with(people_by_score, people, previous_report_date, guessers)
 
   allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, member_count: 3 }
 
