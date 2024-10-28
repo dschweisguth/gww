@@ -134,6 +134,10 @@ Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
+Style/KeywordParametersOrder:
+  Enabled: false
+Style/LineEndConcatenation:
+  Enabled: false
 Style/MixinGrouping:
   Enabled: false
 Style/MultilineBlockChain:
