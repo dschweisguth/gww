@@ -88,19 +88,21 @@ Layout/MultilineOperationIndentation:
 
 Lint/AmbiguousBlockAssociation:
   Enabled: false
-
-# These cops want parentheses that really aren't necessary
 Lint/AmbiguousOperator:
+  Enabled: false
+Lint/AmbiguousOperatorPrecedence:
   Enabled: false
 Lint/AmbiguousRegexpLiteral:
   Enabled: false
-
 Lint/ConstantDefinitionInBlock:
   Exclude:
     - 'spec/**/*.rb'
 
 # Gives false positives for Cucumber steps that aren't used
 Lint/Debugger:
+  Enabled: false
+
+Lint/DuplicateBranch:
   Enabled: false
 
 # What else am I supposed to call the block variable when using find or each_with_object?
