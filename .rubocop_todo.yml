@@ -6,15 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 5
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/MapToHash:
-  Exclude:
-    - 'app/models/score_report.rb'
-    - 'app/models/specialists/score_reports/score_reports_person.rb'
-    - 'app/services/flickr_service.rb'
-    - 'spec/support/matchers/model.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/NegatedIfElseCondition:

@@ -21,7 +21,7 @@ module GWW
             if missing_attr_names.any?
               "#{missing_attr_names} #{missing_attr_names.size == 1 ? 'was' : 'were'} missing"
             else
-              "they included #{@expected.reject { |name, value| @actual[name] == value }.map { |name, _| [name, @actual[name]] }.to_h}"
+              "they included #{@expected.reject { |name, value| @actual[name] == value }.to_h { |name, _| [name, @actual[name]] }}"
             end
         end
 
@@ -52,7 +52,7 @@ module GWW
         end
 
         def names_and_values(object)
-          @attr_names.map { |name| [name, object[name]] }.to_h
+          @attr_names.to_h { |name| [name, object[name]] }
         end
 
       end

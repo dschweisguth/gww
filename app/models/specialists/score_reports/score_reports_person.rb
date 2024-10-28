@@ -24,7 +24,7 @@ class ScoreReportsPerson < Person
     people_by_previous_score = by_score people, previous_report_date
     add_score_and_place people_by_previous_score, :previous_score, :previous_place
     ScoreReportsPhoto.add_posts people, previous_report_date, :previous_post_count
-    scored_people = people.map { |person| [person, person] }.to_h
+    scored_people = people.to_h { |person| [person, person] }
     guessers.each do |guesser_and_guesses|
       guesser = guesser_and_guesses[0]
       scored_guesser = scored_people[guesser]

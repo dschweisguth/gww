@@ -96,7 +96,7 @@ class FlickrService
       'oauth_nonce' => rand(10**8).to_s.rjust(8, '0'),
       'method' => api_method
     }
-    params.merge! extra_params.map { |name, value| [name.to_s, value.to_s] }.to_h
+    params.merge! extra_params.to_h { |name, value| [name.to_s, value.to_s] }
     params['oauth_signature'] = signature params
     "#{API_URL}?" +
       params.each_with_object('') do |param, query_string|
