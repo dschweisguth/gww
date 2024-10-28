@@ -140,6 +140,8 @@ Style/GuardClause:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
+Style/IfWithBooleanLiteralBranches:
+  Enabled: false
 Style/KeywordParametersOrder:
   Enabled: false
 Style/LineEndConcatenation:
