@@ -148,6 +148,8 @@ Style/NegatedIf:
   Enabled: false
 Style/NestedParenthesizedCalls:
   Enabled: false
+Style/NestedTernaryOperator:
+  Enabled: false
 Style/Next:
   Enabled: false
 Style/NumericPredicate:
