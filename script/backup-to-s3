@@ -28,7 +28,7 @@ class BackUp
         # mysqldump uses UTF-8 despite server settings unless told otherwise
         "mysqldump --default-character-set=utf8mb4 " +
           "-h#{database_property 'host'} -u#{database_property 'username'} " +
-          "#{database}"
+          database
       ],
       "gzip",
       "aws s3 cp - #{BUCKET}/#{file} --storage-class STANDARD_IA"
@@ -37,7 +37,7 @@ class BackUp
     if failure
       warn "Couldn't back up. " +
         "Command #{failure[1]} of 0-#{statuses.count - 1} failed: " +
-        "#{failure[0].inspect}"
+        failure[0].inspect
       exit 1
     end
   end
