@@ -72,56 +72,65 @@ class PhotosPhoto < Photo
 
   def self.search(did:, done_by: nil, text: nil, game_status: nil, from_date: nil, to_date: nil,
     sorted_by:, direction:, page:, per_page:)
-    query = all
-    if did == 'activity' && done_by
-      query = query.select("*", "activities.acted_at acted_on_at").
-        joins(%q(join (
+    query =
+      if did == 'activity' && done_by
+        search_activity(done_by, from_date, to_date, direction)
+      else
+        search_posts(done_by, text, game_status, from_date, to_date, sorted_by, direction)
+      end
+    query.paginate page: page, per_page: per_page
+  end
+
+  private_class_method def self.search_activity(done_by, from_date, to_date, direction)
+    query = select("*", "activities.acted_at acted_on_at").
+      joins(%q(join (
           select f1.id, f1.datetaken acted_at from photos f1 join people p on p.id = f1.person_id and p.username = %s
           union
           select c.photo_id, c.commented_at from comments c where c.username = %s) activities on activities.id = photos.id
         ) % Array.new(2, ActiveRecord::Base.sanitize(done_by)))
-      if from_date
-        query = query.where "? <= activities.acted_at", from_date
-      end
-      if to_date
-        query = query.where "activities.acted_at < ?", to_date + 1.day
-      end
-      query = query.
-        order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}").
-        includes(:person, :tags, :comments)
-      # .includes mostly doesn't work here; in general it seems not to work with queries that return the same object
-      # more than once. I posted to rubyonrails-talk to see whether this is a bug and got no response:
-      # https://groups.google.com/forum/#!searchin/rubyonrails-talk/includes/rubyonrails-talk/Pn1weH5Kz7Y/BCSS_HUdBuoJ
-      # This Rails issue might be the same: https://github.com/rails/rails/issues/16436 # TODO Dave check back
-    else
-      if done_by
-        query = query.joins(:person).where(people: { username: done_by })
-      end
-      text&.each do |words|
-        clauses = [
-          "title regexp ?",
-          "description regexp ?",
-          "exists (select 1 from tags t where photos.id = t.photo_id and lower(t.raw) regexp ?)"
-        ]
-        sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
-          "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and "}))"
-        query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "\\b#{word.downcase}\\b" }).
-          includes :tags, :comments # because we display them when it's a text search
-      end
-      if game_status
-        query = query.where game_status: game_status
-      end
-      if from_date
-        query = query.where "? <= dateadded", from_date
-      end
-      if to_date
-        query = query.where "dateadded < ?", to_date + 1.day
-      end
-      query = query.
-        order("#{ORDERS[sorted_by]} #{direction == '+' ? 'asc' : 'desc'}").
-        includes(:person)
+    if from_date
+      query = query.where "? <= activities.acted_at", from_date
     end
-    query.paginate page: page, per_page: per_page
+    if to_date
+      query = query.where "activities.acted_at < ?", to_date + 1.day
+    end
+    query.
+      order("acted_on_at #{direction == '+' ? 'asc' : 'desc'}").
+      includes(:person, :tags, :comments)
+    # .includes mostly doesn't work here; in general it seems not to work with queries that return the same object
+    # more than once. I posted to rubyonrails-talk to see whether this is a bug and got no response:
+    # https://groups.google.com/forum/#!searchin/rubyonrails-talk/includes/rubyonrails-talk/Pn1weH5Kz7Y/BCSS_HUdBuoJ
+    # This Rails issue might be the same: https://github.com/rails/rails/issues/16436 # TODO Dave check back
+  end
+
+  private_class_method def self.search_posts(done_by, text, game_status, from_date, to_date, sorted_by, direction)
+    query = all
+    if done_by
+      query = query.joins(:person).where(people: { username: done_by })
+    end
+    text&.each do |words|
+      clauses = [
+        "title regexp ?",
+        "description regexp ?",
+        "exists (select 1 from tags t where photos.id = t.photo_id and lower(t.raw) regexp ?)"
+      ]
+      sql = clauses.map { |clause| Array.new(words.length) { clause }.join(" and ") + " or " }.join +
+        "exists (select 1 from comments c where photos.id = c.photo_id and (#{Array.new(words.length) { "c.comment_text regexp ?" }.join " and "}))"
+      query = query.where(sql, *Array.new(clauses.length + 1, words).flatten.map { |word| "\\b#{word.downcase}\\b" }).
+        includes :tags, :comments # because we display them when it's a text search
+    end
+    if game_status
+      query = query.where game_status: game_status
+    end
+    if from_date
+      query = query.where "? <= dateadded", from_date
+    end
+    if to_date
+      query = query.where "dateadded < ?", to_date + 1.day
+    end
+    query.
+      order("#{ORDERS[sorted_by]} #{direction == '+' ? 'asc' : 'desc'}").
+      includes(:person)
   end
 
   def comments_that_match(text_term_groups)
