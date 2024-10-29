@@ -24,14 +24,14 @@ describe Stintersection do
       make_intersection 2, '26TH', 'ST', point(1, 3)
       make_intersection 2, 'VALENCIA', 'ST', point(1, 3)
       location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
-      expect(Stintersection.geocode(location)).to eq(nil)
+      expect(Stintersection.geocode(location)).to be_nil
     end
 
     it "returns nil if the block's second intersection isn't found" do
       make_intersection 1, '25TH', 'ST', point(2, 4)
       make_intersection 1, 'VALENCIA', 'ST', point(2, 4)
       location = Block.new 'Valencia between 25th and 26th', 'Valencia', nil, '25th', nil, '26th', nil
-      expect(Stintersection.geocode(location)).to eq(nil)
+      expect(Stintersection.geocode(location)).to be_nil
     end
 
     it "converts an address to a lat + long" do
@@ -47,7 +47,7 @@ describe Stintersection do
       make_intersection 2, '26TH', 'AVE', point(3, 4)
       make_intersection 2, 'VALENCIA', 'ST', point(3, 4)
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', 'St'
-      expect(Stintersection.geocode(location)).to eq(nil)
+      expect(Stintersection.geocode(location)).to be_nil
     end
 
     it "uses the street's type when present" do
@@ -82,7 +82,7 @@ describe Stintersection do
       make_intersection 1, 'GUERRERO', 'ST', point(1, 2)
       make_intersection 2, '20TH', 'AVE', point(3, 4)
       make_intersection 2, 'GUERRERO', 'AVE', point(3, 4)
-      expect(Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero'))).to eq(nil)
+      expect(Stintersection.street_type(Street.new('20TH'), Street.new('Guerrero'))).to be_nil
     end
 
     it "succeeds if the intersection is ambiguous but the street type is not" do

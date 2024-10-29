@@ -49,28 +49,28 @@ describe Stcline do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1451, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
-      expect(Stcline.geocode(Address.new('1449 Valencia', '1449', 'Valencia', nil))).to eq(nil)
+      expect(Stcline.geocode(Address.new('1449 Valencia', '1449', 'Valencia', nil))).to be_nil
     end
 
     it "ignores a too-low address range on the left side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1449, rt_fadd: 1400, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
-      expect(Stcline.geocode(Address.new('1451 Valencia', '1451', 'Valencia', nil))).to eq(nil)
+      expect(Stcline.geocode(Address.new('1451 Valencia', '1451', 'Valencia', nil))).to be_nil
     end
 
     it "ignores a too-high address range on the right side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1450, rt_toadd: 1498,
         SHAPE: line(point(1, 4), point(3, 6))
-      expect(Stcline.geocode(Address.new('1448 Valencia', '1448', 'Valencia', nil))).to eq(nil)
+      expect(Stcline.geocode(Address.new('1448 Valencia', '1448', 'Valencia', nil))).to be_nil
     end
 
     it "ignores a too-low address range on the right side of the street" do
       Stcline.create! street: 'VALENCIA',
         lf_fadd: 1401, lf_toadd: 1499, rt_fadd: 1400, rt_toadd: 1450,
         SHAPE: line(point(1, 4), point(3, 6))
-      expect(Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil))).to eq(nil)
+      expect(Stcline.geocode(Address.new('1452 Valencia', '1452', 'Valencia', nil))).to be_nil
     end
 
     it "handles missing odd address numbers when looking up an even address number" do
@@ -89,7 +89,7 @@ describe Stcline do
       Stcline.create! street: 'CALIFORNIA', st_type: 'AVE',
         lf_fadd: 501, lf_toadd: 599, rt_fadd: 500, rt_toadd: 598,
         SHAPE: line(point(11, 14), point(13, 16))
-      expect(Stcline.geocode(Address.new('555 California', '555', 'California', nil))).to eq(nil)
+      expect(Stcline.geocode(Address.new('555 California', '555', 'California', nil))).to be_nil
     end
 
     it "considers street type" do

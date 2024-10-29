@@ -212,8 +212,8 @@ describe StatisticsPhoto do
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
-      expect(answer.photo.inferred_latitude).to eq(nil)
-      expect(answer.photo.inferred_longitude).to eq(nil)
+      expect(answer.photo.inferred_latitude).to be_nil
+      expect(answer.photo.inferred_longitude).to be_nil
 
     end
 
@@ -226,8 +226,8 @@ describe StatisticsPhoto do
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
-      expect(answer.photo.inferred_latitude).to eq(nil)
-      expect(answer.photo.inferred_longitude).to eq(nil)
+      expect(answer.photo.inferred_latitude).to be_nil
+      expect(answer.photo.inferred_longitude).to be_nil
 
     end
 
@@ -242,8 +242,8 @@ describe StatisticsPhoto do
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
-      expect(answer.photo.inferred_latitude).to eq(nil)
-      expect(answer.photo.inferred_longitude).to eq(nil)
+      expect(answer.photo.inferred_latitude).to be_nil
+      expect(answer.photo.inferred_longitude).to be_nil
 
     end
 

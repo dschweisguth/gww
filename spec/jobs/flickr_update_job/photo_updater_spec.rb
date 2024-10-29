@@ -567,14 +567,14 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1) do
         raise REXML::ParseException, "Oops!"
       end
-      expect(described_class.fave_count('photo_flickrid')).to eq(nil)
+      expect(described_class.fave_count('photo_flickrid')).to be_nil
     end
 
     it "returns nil if there is a FlickrService::FlickrRequestFailedError" do
       allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1) do
         raise FlickrService::FlickrRequestFailedError
       end
-      expect(described_class.fave_count('photo_flickrid')).to eq(nil)
+      expect(described_class.fave_count('photo_flickrid')).to be_nil
     end
 
   end

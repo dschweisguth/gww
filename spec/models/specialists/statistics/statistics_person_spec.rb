@@ -4,9 +4,9 @@ describe StatisticsPerson do
       person = create :statistics_person, comments_to_guess: 1, comments_per_post: 1, comments_to_be_guessed: 1
       StatisticsPerson.update_statistics
       person.reload
-      expect(person.comments_to_guess).to eq(nil)
+      expect(person.comments_to_guess).to be_nil
       expect(person.comments_per_post).to eq(0)
-      expect(person.comments_to_be_guessed).to eq(nil)
+      expect(person.comments_to_be_guessed).to be_nil
     end
 
     describe 'when updating comments_to_guess' do

@@ -6,9 +6,9 @@ describe Address, type: :value do
       expect(address.text).to eq('text')
       expect(address.number).to eq(1)
       expect(address.street).to eq(Street.new('street_name'))
-      expect(address.at).to eq(nil)
-      expect(address.between1).to eq(nil)
-      expect(address.between2).to eq(nil)
+      expect(address.at).to be_nil
+      expect(address.between1).to be_nil
+      expect(address.between2).to be_nil
     end
 
     it "makes an address at an intersection" do
@@ -17,8 +17,8 @@ describe Address, type: :value do
       expect(address.number).to eq(1)
       expect(address.street).to eq(Street.new('street_name'))
       expect(address.at).to eq(Street.new('at_name'))
-      expect(address.between1).to eq(nil)
-      expect(address.between2).to eq(nil)
+      expect(address.between1).to be_nil
+      expect(address.between2).to be_nil
     end
 
     it "makes an address between streets" do
@@ -26,7 +26,7 @@ describe Address, type: :value do
       expect(address.text).to eq('text')
       expect(address.number).to eq(1)
       expect(address.street).to eq(Street.new('street_name'))
-      expect(address.at).to eq(nil)
+      expect(address.at).to be_nil
       expect(address.between1).to eq(Street.new('between1_name'))
       expect(address.between2).to eq(Street.new('between2_name'))
     end

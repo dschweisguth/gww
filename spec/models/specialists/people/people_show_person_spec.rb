@@ -197,7 +197,7 @@ describe PeopleShowPerson do
     it "ignores a guess that precedes its post" do
       photo1 = create :people_show_photo, dateadded: Time.utc(2001)
       create :people_show_guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
-      expect(guesser.oldest_guess).to eq(nil)
+      expect(guesser.oldest_guess).to be_nil
     end
 
   end
@@ -233,7 +233,7 @@ describe PeopleShowPerson do
     it "ignores a guess that precedes its post" do
       photo1 = create :people_show_photo, dateadded: Time.utc(2001)
       create :people_show_guess, person: guesser, photo: photo1, commented_at: Time.utc(2000)
-      expect(guesser.fastest_guess).to eq(nil)
+      expect(guesser.fastest_guess).to be_nil
     end
 
   end
@@ -270,7 +270,7 @@ describe PeopleShowPerson do
     it "ignores a guess that precedes its post" do
       photo1 = create :people_show_photo, person: poster, dateadded: Time.utc(2001)
       create :people_show_guess, photo: photo1, commented_at: Time.utc(2000)
-      expect(poster.guess_of_longest_lasting_post).to eq(nil)
+      expect(poster.guess_of_longest_lasting_post).to be_nil
     end
 
   end
@@ -307,7 +307,7 @@ describe PeopleShowPerson do
     it "ignores a guess that precedes its post" do
       photo1 = create :people_show_photo, person: poster, dateadded: Time.utc(2001)
       create :people_show_guess, photo: photo1, commented_at: Time.utc(2000)
-      expect(poster.guess_of_shortest_lasting_post).to eq(nil)
+      expect(poster.guess_of_shortest_lasting_post).to be_nil
     end
 
   end

@@ -187,38 +187,38 @@ describe Photo do
 
   describe '#mapped' do
     it "returns false if the photo is not mapped" do
-      expect(build(:photo).mapped?).to eq(false)
+      expect(build(:photo).mapped?).to be(false)
     end
 
     it "returns true if the photo is mapped at sufficient accuracy" do
-      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 12).mapped?).to eq(true)
+      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 12).mapped?).to be(true)
     end
 
     it "returns false if the photo is mapped at insufficient accuracy" do
-      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 11).mapped?).to eq(false)
+      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 11).mapped?).to be(false)
     end
 
     it "returns false even if the photo is auto-mapped" do
-      expect(build(:photo, inferred_latitude: 37, inferred_longitude: -122).mapped?).to eq(false)
+      expect(build(:photo, inferred_latitude: 37, inferred_longitude: -122).mapped?).to be(false)
     end
 
   end
 
   describe '#mapped_or_automapped' do
     it "returns false if the photo is not mapped" do
-      expect(build(:photo).mapped_or_automapped?).to eq(false)
+      expect(build(:photo).mapped_or_automapped?).to be(false)
     end
 
     it "returns true if the photo is mapped at sufficient accuracy" do
-      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 12).mapped_or_automapped?).to eq(true)
+      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 12).mapped_or_automapped?).to be(true)
     end
 
     it "returns false if the photo is mapped at insufficient accuracy" do
-      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 11).mapped_or_automapped?).to eq(false)
+      expect(build(:photo, latitude: 37, longitude: -122, accuracy: 11).mapped_or_automapped?).to be(false)
     end
 
     it "returns true if the photo is auto-mapped" do
-      expect(build(:photo, inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?).to eq(true)
+      expect(build(:photo, inferred_latitude: 37, inferred_longitude: -122).mapped_or_automapped?).to be(true)
     end
 
   end

@@ -20,7 +20,7 @@ describe Tag do
     it { does have_readonly_attribute :machine_tag }
 
     it "defaults to false" do
-      expect(Tag.new(raw: 'text').machine_tag).to eq(false)
+      expect(Tag.new(raw: 'text').machine_tag).to be(false)
     end
 
     [false, true].each do |boolean|
