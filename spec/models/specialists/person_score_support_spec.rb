@@ -1,4 +1,4 @@
-describe ScoreReportsPerson do
+describe PersonScoreSupport do
   describe '.high_scorers' do
     let(:report_date) { Time.utc(2011) }
 

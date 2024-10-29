@@ -65,6 +65,9 @@ Style/RedundantReturn:
 Capybara/NegationMatcher:
   EnforcedStyle: not_to
 
+RSpec/FilePath:
+  SpecSuffixOnly: true
+
 # Disabled cops
 
 Layout/ArgumentAlignment:
