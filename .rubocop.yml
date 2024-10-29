@@ -14,7 +14,7 @@ AllCops:
     - lib/tasks/cucumber.rake
     - spec/spec_helper.rb
 
-# Customized cops
+# Customized coeps
 
 Layout/CaseIndentation:
   IndentOneStep: true

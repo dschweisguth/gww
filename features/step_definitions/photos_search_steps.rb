@@ -54,7 +54,7 @@ When /^I select "([^"]+)" from "([^"]+)"$/ do |value, field|
 end
 
 Then /^the URL should be "([^"]+)"$/ do |uri|
-  expect(current_path).to eq(uri)
+  expect(page).to have_current_path(uri)
 end
 
 Then /^the "([^"]+)" field should contain "([^"]+)"$/ do |field, value|
