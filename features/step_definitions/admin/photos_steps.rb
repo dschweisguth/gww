@@ -29,7 +29,7 @@ Given /^there is a third player$/ do
 end
 
 When /^I enter the third player's username$/ do
-  find('#username_form').fill_in 'username', with: @third_player.username
+  find_by_id('username_form').fill_in 'username', with: @third_player.username
 end
 
 Then /^I should see that the photo was guessed by the commenter$/ do
