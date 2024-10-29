@@ -6,14 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: have_no, not_to
-Capybara/NegationMatcher:
-  Exclude:
-    - 'features/step_definitions/photos_search_steps.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Capybara/SpecificFinders:

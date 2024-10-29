@@ -80,7 +80,7 @@ end
 
 Then /^I should see (\d+) image-only search results?$/ do |result_count|
   expect(page).to have_css('.image', count: result_count)
-  expect(page).to have_no_css('.text')
+  expect(page).not_to have_css('.text')
 end
 
 Then %r{^I should see an image-only search result for the photo added on "(\d+/\d+/\d+)"} do |date|
@@ -92,7 +92,7 @@ def i_should_see_image_only_search_result_for_photo(photo)
   # link and image are 'invisible' because they're behind the hover
   link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: false
   expect(link).to have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"]), visible: false
-  expect(page).to have_no_css('.text')
+  expect(page).not_to have_css('.text')
 end
 
 Then /^image-only search result (\d+) of (\d+) should be the photo added on "([^"]+)"$/ do |result_index, result_count, date|
@@ -130,7 +130,7 @@ end
 
 Then %r{^I should not see a search result for the photo added on "(\d+/\d+/\d+)"} do |date|
   photo = Photo.where(dateadded: Date.parse_utc_time(date)).first
-  expect(page).to have_no_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
+  expect(page).not_to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]))
 end
 
 Then /^I should see the photo's title$/ do
