@@ -190,6 +190,10 @@ Style/TernaryParentheses:
 Style/WordArray:
   Enabled: false
 
+RSpec/BeforeAfterAll:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
 RSpec/ExampleLength:
   Enabled: false
 RSpec/MultipleExpectations:
