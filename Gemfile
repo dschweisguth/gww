@@ -26,6 +26,7 @@ gem 'xml-simple'
 group :development do
   gem 'irb'
   gem 'rubocop', '~> 1.50.2' # yoked to Code Climate
+  gem 'rubocop-rspec'
   gem 'spring', '~> 2.1' # spring 3 requires Rails 5
   gem 'spring-commands-cucumber'
   gem 'spring-commands-rspec'
