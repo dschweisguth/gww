@@ -7,11 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 2
-Capybara/SpecificMatcher:
-  Exclude:
-    - 'spec/controllers/people_controller_spec.rb'
-
-# Offense count: 2
 Capybara/VisibilityMatcher:
   Exclude:
     - 'features/step_definitions/photos_search_steps.rb'

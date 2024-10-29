@@ -399,9 +399,9 @@ describe PeopleController do
       get :map, id: person.id
 
       expect(response).to be_success
-      expect(response.body).to have_css 'input[id=posts]'
+      expect(response.body).to have_field 'posts'
       expect(response.body).to have_css 'label', text: '1 mapped post (?, -)'
-      expect(response.body).to have_css 'input[id=guesses]'
+      expect(response.body).to have_field 'guesses'
       expect(response.body).to have_css 'label', text: '1 mapped guess (!)'
       page_config = controller.with_google_maps_api_key(photos: photos_json_data)
       expect(response.body).to match(/GWW\.config = #{Regexp.escape page_config.to_json};/)
