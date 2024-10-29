@@ -3,6 +3,10 @@ describe Stintersection do
     clear_stintersections
   end
 
+  after do
+    clear_stintersections
+  end
+
   describe '.geocode' do
     it "converts an intersection to a lat + long" do
       make_intersection 1, '26TH', 'ST', point(1, 2)
@@ -109,10 +113,6 @@ describe Stintersection do
 
   def make_intersection(cnn, street_name, street_type, point)
     Stintersection.create! cnn: cnn, st_name: street_name, st_type: street_type, SHAPE: point
-  end
-
-  after do
-    clear_stintersections
   end
 
   def clear_stintersections

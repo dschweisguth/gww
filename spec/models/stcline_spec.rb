@@ -3,6 +3,10 @@ describe Stcline do
     clear_stclines
   end
 
+  after do
+    clear_stclines
+  end
+
   describe '.street_names' do
     it "lists multiword street names" do
       Stcline.create! street: 'SAN JOSE', SHAPE: point(1, 1)
@@ -157,10 +161,6 @@ describe Stcline do
 
   def line(first, last)
     RGeo::Cartesian.preferred_factory.line(first, last)
-  end
-
-  after do
-    clear_stclines
   end
 
   def clear_stclines
