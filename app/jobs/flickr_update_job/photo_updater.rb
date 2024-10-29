@@ -45,65 +45,86 @@ module FlickrUpdateJob
     end
 
     private_class_method def self.create_or_update_photo_from(parsed_photo, person, now)
-      flickrid = parsed_photo['id']
-      photo = FlickrUpdatePhoto.find_by_flickrid flickrid
-      lastupdate = Time.at(parsed_photo['lastupdate'].to_i).getutc
-      photo_needs_full_update = !photo || lastupdate != photo.lastupdate
+      photo = FlickrUpdatePhoto.find_by_flickrid parsed_photo['id']
+      if photo
+        update_photo_from(parsed_photo, now, photo)
+        0
+      else
+        create_photo_from(parsed_photo, person, now)
+        1
+      end
+    end
+
+    private_class_method def self.create_photo_from(parsed_photo, person, now)
+      attributes = {
+        person_id: person.id,
+        flickrid: parsed_photo['id'],
+        dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
+        game_status: 'unfound',
+        seen_at: now,
+        views: parsed_photo['views'].to_i
+      }
+      add_full_attributes_from(parsed_photo, attributes)
+      attributes[:faves] = fave_count(parsed_photo['id']) || 0
+
+      photo = FlickrUpdatePhoto.create! attributes
+
+      update_comments photo
+      update_tags photo
+    end
+
+    private_class_method def self.update_photo_from(parsed_photo, now, photo)
+      photo_needs_full_update = photo.lastupdate != lastupdate(parsed_photo['lastupdate'])
       views = parsed_photo['views'].to_i
 
       attributes = { seen_at: now, views: views }
       if photo_needs_full_update
-        attributes.merge!(
-          farm: parsed_photo['farm'],
-          server: parsed_photo['server'],
-          secret: parsed_photo['secret'],
-          title: parsed_photo['title'],
-          description: to_string_or_nil(parsed_photo['description']),
-          datetaken: datetaken(parsed_photo['datetaken']),
-          lastupdate: lastupdate,
-          latitude: to_float_or_nil(parsed_photo['latitude']),
-          longitude: to_float_or_nil(parsed_photo['longitude']),
-          accuracy: to_integer_or_nil(parsed_photo['accuracy'])
-        )
+        add_full_attributes_from(parsed_photo, attributes)
       end
 
-      if photo_needs_full_update || views != photo.views
-        fave_count = fave_count flickrid
+      if photo_needs_full_update || photo.views != views
+        fave_count = fave_count parsed_photo['id']
         if fave_count
           attributes[:faves] = fave_count
-        elsif !photo
-          attributes[:faves] = 0
         end
       end
 
-      if photo
-        photo.update! attributes
-        created = 0
-      else
-        attributes.merge!(
-          person_id: person.id,
-          flickrid: flickrid,
-          dateadded: Time.at(parsed_photo['dateadded'].to_i).getutc,
-          game_status: 'unfound'
-        )
-        photo = FlickrUpdatePhoto.create! attributes
-        created = 1
-      end
+      photo.update! attributes
 
       if photo_needs_full_update
         update_comments photo
         update_tags photo
       end
-
-      created
     end
 
+    private_class_method def self.add_full_attributes_from(parsed_photo, attributes)
+      attributes.merge!(
+        farm: parsed_photo['farm'],
+        server: parsed_photo['server'],
+        secret: parsed_photo['secret'],
+        title: parsed_photo['title'],
+        description: to_string_or_nil(parsed_photo['description']),
+        datetaken: datetaken(parsed_photo['datetaken']),
+        lastupdate: lastupdate(parsed_photo['lastupdate']),
+        latitude: to_float_or_nil(parsed_photo['latitude']),
+        longitude: to_float_or_nil(parsed_photo['longitude']),
+        accuracy: to_integer_or_nil(parsed_photo['accuracy'])
+      )
+    end
+
+    # create_or_update_photo_from updates views and faves if lastupdate or views have changed.
+    # This method only does so if lastupdate has changed. It's unclear whether this is because
+    # lastupdate from flickr.groups.pools.getPhotos does not reflect views but that from
+    # flickr.photos.getInfo does, or whether it's just an oversight. It doesn't matter much,
+    # since this method is only used before an admin edits a photo, and the other method runs
+    # nightly.
     def self.update(photo)
       photo.person.update! PersonUpdater.attributes(photo.person.flickrid)
 
       parsed_photo = FlickrService.instance.photos_get_info(photo_id: photo.flickrid)['photo'].first
-      lastupdate = Time.at(parsed_photo['dates'][0]['lastupdate'].to_i).getutc
-      photo_needs_full_update = lastupdate != photo.lastupdate
+      lastupdate = lastupdate(parsed_photo['dates'][0]['lastupdate'])
+      photo_needs_full_update = photo.lastupdate != lastupdate
+
       attributes = { seen_at: Time.now }
       if photo_needs_full_update
         latitude, longitude, accuracy = location photo
@@ -125,6 +146,7 @@ module FlickrUpdateJob
           attributes[:faves] = fave_count
         end
       end
+
       photo.update! attributes
 
       if photo_needs_full_update
@@ -155,6 +177,10 @@ module FlickrUpdateJob
       end
     end
 
+    private_class_method def self.lastupdate(string)
+      Time.at(string.to_i).getutc
+    end
+
     private_class_method def self.to_float_or_nil(string)
       number = string.to_f
       number.zero? ? nil : number # Use .zero? to evade rubocop cop that claims to allow == 0 but doesn't
@@ -170,7 +196,7 @@ module FlickrUpdateJob
       description == {} ? nil : description
     end
 
-    def self.datetaken(mysql_time)
+    private_class_method def self.datetaken(mysql_time)
       # A few photos have times like "0000-00-00 00:00:00" or "2010-00-01 00:00:00"
       begin
         ActiveSupport::TimeZone['Pacific Time (US & Canada)'].parse(mysql_time).getutc
