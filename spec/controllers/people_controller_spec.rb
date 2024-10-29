@@ -103,14 +103,16 @@ describe PeopleController do
 
   describe '#show' do
     let(:person) { build_stubbed :people_show_person, high_score: 1, top_post_count: 1 }
+    let(:now) { Time.now }
+    let(:favorite_poster) { build_stubbed :people_show_person, bias: 2.5 }
+    let(:favoring_guesser) { build_stubbed :people_show_person, bias: 3.6 }
 
     before do
       allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
       allow(person).to receive(:score_standing).and_return([1, false])
       allow(person).to receive(:posts_standing).and_return([1, false])
 
-      @now = Time.now
-      allow(Time).to receive(:now) { @now }
+      allow(Time).to receive(:now).and_return(now)
 
     end
 
@@ -151,8 +153,8 @@ describe PeopleController do
       stub_guesses
 
       allow(person).to receive(:mapped_photo_count).and_return(0)
-      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 7).and_return([])
-      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 30).and_return([])
+      allow(PeopleShowPerson).to receive(:top_posters).with(now, 7).and_return([])
+      allow(PeopleShowPerson).to receive(:top_posters).with(now, 30).and_return([])
       allow(person).to receive(:first_photo)
       allow(person).to receive(:most_recent_photo)
       allow(person).to receive(:oldest_unfound_photo)
@@ -262,8 +264,8 @@ describe PeopleController do
 
     def stub_no_guesses
       allow(person).to receive(:mapped_guess_count).and_return(0)
-      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 7).and_return([])
-      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 30).and_return([])
+      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 7).and_return([])
+      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 30).and_return([])
       allow(person).to receive(:first_guess)
       allow(person).to receive(:most_recent_guess)
       allow(person).to receive(:oldest_guess)
@@ -277,8 +279,8 @@ describe PeopleController do
     def stub_guesses
       allow(person).to receive(:mapped_guess_count).and_return(1)
 
-      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 7) { [person] }
-      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 30) { [person] }
+      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 7) { [person] }
+      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 30) { [person] }
 
       allow(person).to receive(:first_guess) { build_stubbed :people_show_guess }
       allow(person).to receive(:most_recent_guess) { build_stubbed :people_show_guess }
@@ -291,16 +293,15 @@ describe PeopleController do
       # It's important to the test that these guesses are of photos by different people with different IDs
       allow(person).to receive(:guesses_with_associations) { [build_stubbed(:people_show_guess), build_stubbed(:people_show_guess)] }
 
-      @favorite_poster = build_stubbed :people_show_person, bias: 2.5
-      allow(person).to receive(:favorite_posters) { [@favorite_poster] }
+      allow(person).to receive(:favorite_posters) { [favorite_poster] }
 
     end
 
     def stub_posts
       allow(person).to receive(:mapped_photo_count).and_return(1)
 
-      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 7) { [person] }
-      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 30) { [person] }
+      allow(PeopleShowPerson).to receive(:top_posters).with(now, 7) { [person] }
+      allow(PeopleShowPerson).to receive(:top_posters).with(now, 30) { [person] }
 
       first_post = build_stubbed :people_show_photo
       allow(person).to receive(:first_photo) { first_post }
@@ -319,8 +320,7 @@ describe PeopleController do
       allow(found2.photo).to receive(:guesses) { [found2] }
       allow(person).to receive(:photos_with_associations) { [found1.photo, found2.photo] }
 
-      @favoring_guesser = build_stubbed :people_show_person, bias: 3.6
-      allow(person).to receive(:favoring_guessers) { [@favoring_guesser] }
+      allow(person).to receive(:favoring_guessers) { [favoring_guesser] }
 
       allow(person).to receive(:unfound_photos) { [build_stubbed(:people_show_photo)] }
       allow(person).to receive(:revealed_photos) { [build_stubbed(:people_show_photo)] }
@@ -333,7 +333,7 @@ describe PeopleController do
       expect(response.body).to include "#{person.username} scored the most points in the last month"
       expect(response.body).to have_css 'h2', text: "#{person.username} has correctly guessed 2 photos"
       expect(response.body).to include "Of the photos that #{person.username} has guessed,"
-      expect(response.body).to have_link @favorite_poster.username
+      expect(response.body).to have_link favorite_poster.username
     end
 
     def renders_bits_for_user_who_has_posted
@@ -343,7 +343,7 @@ describe PeopleController do
       expect(response.body).to have_css 'h2', text: "#{person.username} has posted 2 photos"
       expect(response.body).to include '1 remains unfound'
       expect(response.body).to include '1 was revealed'
-      expect(response.body).to have_link @favoring_guesser.username
+      expect(response.body).to have_link favoring_guesser.username
     end
 
   end

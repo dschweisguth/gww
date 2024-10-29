@@ -18,21 +18,22 @@ describe ScoreReportsController do
   end
 
   describe '#show' do
+    let(:report_date) { Time.local(2011, 1, 5) }
+
     before do
-      @report_date = Time.local(2011, 1, 5)
-      allow(ScoreReport).to receive(:find).with('1') { build_stubbed :score_report, created_at: @report_date.getutc }
+      allow(ScoreReport).to receive(:find).with('1') { build_stubbed :score_report, created_at: report_date.getutc }
     end
 
     it "renders the page" do
       previous_report_date = Time.local(2011).getutc
       previous_report = build_stubbed :score_report, created_at: previous_report_date
-      allow(ScoreReport).to receive(:previous).with(@report_date.getutc) { previous_report }
-      renders_report_for @report_date, previous_report_date, :show, id: '1'
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc) { previous_report }
+      renders_report_for report_date, previous_report_date, :show, id: '1'
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
-      allow(ScoreReport).to receive(:previous).with(@report_date.getutc).and_return(nil)
-      renders_report_for @report_date, Time.utc(2005), :show, id: '1'
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc).and_return(nil)
+      renders_report_for report_date, Time.utc(2005), :show, id: '1'
     end
 
   end

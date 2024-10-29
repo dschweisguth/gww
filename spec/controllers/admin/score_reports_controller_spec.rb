@@ -50,21 +50,22 @@ describe Admin::ScoreReportsController do
   end
 
   describe '#new' do
+    let(:report_date) { Time.local(2011, 1, 5) }
+
     before do
-      @report_date = Time.local(2011, 1, 5)
-      allow(Time).to receive(:now) { @report_date }
+      allow(Time).to receive(:now) { report_date }
     end
 
     it "renders the page" do
       previous_report_date = Time.local(2011).getutc
       previous_report = build_stubbed :score_report, created_at: previous_report_date
-      allow(ScoreReport).to receive(:previous).with(@report_date.getutc) { previous_report }
-      renders_report_for @report_date, previous_report_date, :new
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc) { previous_report }
+      renders_report_for report_date, previous_report_date, :new
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
-      allow(ScoreReport).to receive(:previous).with(@report_date.getutc).and_return(nil)
-      renders_report_for @report_date, Time.utc(2005), :new
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc).and_return(nil)
+      renders_report_for report_date, Time.utc(2005), :new
     end
 
   end

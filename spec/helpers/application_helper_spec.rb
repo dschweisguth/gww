@@ -68,19 +68,17 @@ describe ApplicationHelper do
   end
 
   describe '#thumbnail' do
-    before do
-      @photo = build_stubbed :photo
-    end
+    let(:photo) { build_stubbed :photo }
 
     it "returns a photo's thumbnail with empty alt and title wrapped in a link to the photo's page" do
-      expect(helper.thumbnail(@photo)).to eq(
-        %Q(<a href="#{photo_path @photo}"><img alt="" title="" src="#{url_for_flickr_image @photo, 't'}" /></a>)
+      expect(helper.thumbnail(photo)).to eq(
+        %Q(<a href="#{photo_path photo}"><img alt="" title="" src="#{url_for_flickr_image photo, 't'}" /></a>)
       )
     end
 
     it "returns a photo's thumbnail with non-empty alt and title wrapped in a link to the photo's page" do
-      expect(helper.thumbnail(@photo, "alt text")).to eq(
-        %Q(<a href="#{photo_path @photo}"><img alt="alt text" title="alt text" src="#{url_for_flickr_image @photo, 't'}" /></a>)
+      expect(helper.thumbnail(photo, "alt text")).to eq(
+        %Q(<a href="#{photo_path photo}"><img alt="alt text" title="alt text" src="#{url_for_flickr_image photo, 't'}" /></a>)
       )
     end
 

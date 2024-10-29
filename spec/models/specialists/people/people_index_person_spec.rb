@@ -1,5 +1,7 @@
 describe PeopleIndexPerson do
   describe '.all_sorted' do
+    let(:people) { Array.new(2) } # pseudo-instance variables to appease rubocop
+
     before do
       group = double count: {}
       allow(Photo).to receive(:group).with(:person_id) { group }
@@ -94,42 +96,42 @@ describe PeopleIndexPerson do
 
     it "sorts by guesses per day" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:guesses_per_day) { { @person1.id => 1, @person2.id => 2 } }
+      allow(PeopleIndexPerson).to receive(:guesses_per_day) { { people[0].id => 1, people[1].id => 2 } }
       stub_score 2, 1
       puts_person2_before_person1 'guesses-per-day'
     end
 
     it "sorts by guesses per day, score" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:guesses_per_day) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:guesses_per_day) { { people[0].id => 1, people[1].id => 1 } }
       stub_score 1, 2
       puts_person2_before_person1 'guesses-per-day'
     end
 
     it "sorts by guesses per day, score, username" do
       create_people_named 'z', 'a'
-      allow(PeopleIndexPerson).to receive(:guesses_per_day) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:guesses_per_day) { { people[0].id => 1, people[1].id => 1 } }
       stub_score 1, 1
       puts_person2_before_person1 'guesses-per-day'
     end
 
     it "sorts by posts per day" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:posts_per_day) { { @person1.id => 1, @person2.id => 2 } }
+      allow(PeopleIndexPerson).to receive(:posts_per_day) { { people[0].id => 1, people[1].id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'posts-per-day'
     end
 
     it "sorts by posts per day, post count" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:posts_per_day) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:posts_per_day) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'posts-per-day'
     end
 
     it "sorts by posts per day, post count, username" do
       create_people_named 'z', 'a'
-      allow(PeopleIndexPerson).to receive(:posts_per_day) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:posts_per_day) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'posts-per-day'
     end
@@ -157,182 +159,182 @@ describe PeopleIndexPerson do
 
     it "sorts by time-to-guess" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:guess_speeds) { { @person1.id => 1, @person2.id => 2 } }
+      allow(PeopleIndexPerson).to receive(:guess_speeds) { { people[0].id => 1, people[1].id => 2 } }
       stub_score 2, 1
       puts_person2_before_person1 'time-to-guess'
     end
 
     it "sorts by time-to-guess, score" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:guess_speeds) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:guess_speeds) { { people[0].id => 1, people[1].id => 1 } }
       stub_score 1, 2
       puts_person2_before_person1 'time-to-guess'
     end
 
     it "sorts by time-to-guess, score, username" do
       create_people_named 'z', 'a'
-      allow(PeopleIndexPerson).to receive(:guess_speeds) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:guess_speeds) { { people[0].id => 1, people[1].id => 1 } }
       stub_score 1, 1
       puts_person2_before_person1 'time-to-guess'
     end
 
     it "sorts by time-to-be-guessed" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { { @person1.id => 1, @person2.id => 2 } }
+      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { { people[0].id => 1, people[1].id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it "sorts by time-to-be-guessed, post count" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it "sorts by time-to-be-guessed, post count, username" do
       create_people_named 'z', 'a'
-      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'time-to-be-guessed'
     end
 
     it "sorts by comments-to-guess" do
       create_people_named 'a', 'z'
-      @person1.update! comments_to_guess: 1
-      @person2.update! comments_to_guess: 2
+      people[0].update! comments_to_guess: 1
+      people[1].update! comments_to_guess: 2
       stub_score 2, 1
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it "sorts by comments-to-guess, score" do
       create_people_named 'a', 'z'
-      @person1.update! comments_to_guess: 1
-      @person2.update! comments_to_guess: 1
+      people[0].update! comments_to_guess: 1
+      people[1].update! comments_to_guess: 1
       stub_score 1, 2
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it "sorts by comments-to-guess, score, username" do
       create_people_named 'z', 'a'
-      @person1.update! comments_to_guess: 1
-      @person2.update! comments_to_guess: 1
+      people[0].update! comments_to_guess: 1
+      people[1].update! comments_to_guess: 1
       stub_score 1, 1
       puts_person2_before_person1 'comments-to-guess'
     end
 
     it "sorts by comments-per-post" do
       create_people_named 'a', 'z'
-      @person1.update! comments_per_post: 1
-      @person2.update! comments_per_post: 2
+      people[0].update! comments_per_post: 1
+      people[1].update! comments_per_post: 2
       stub_post_count 2, 1
       puts_person2_before_person1 'comments-per-post'
     end
 
     it "sorts by comments-per-post, post count" do
       create_people_named 'a', 'z'
-      @person1.update! comments_per_post: 1
-      @person2.update! comments_per_post: 1
+      people[0].update! comments_per_post: 1
+      people[1].update! comments_per_post: 1
       stub_post_count 1, 2
       puts_person2_before_person1 'comments-per-post'
     end
 
     it "sorts by comments-per-post, post count, username" do
       create_people_named 'z', 'a'
-      @person1.update! comments_per_post: 1
-      @person2.update! comments_per_post: 1
+      people[0].update! comments_per_post: 1
+      people[1].update! comments_per_post: 1
       stub_post_count 1, 1
       puts_person2_before_person1 'comments-per-post'
     end
 
     it "sorts by comments-to-be-guessed" do
       create_people_named 'a', 'z'
-      @person1.update! comments_to_be_guessed: 1
-      @person2.update! comments_to_be_guessed: 2
+      people[0].update! comments_to_be_guessed: 1
+      people[1].update! comments_to_be_guessed: 2
       stub_post_count 2, 1
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it "sorts by comments-to-be-guessed, post count" do
       create_people_named 'a', 'z'
-      @person1.update! comments_to_be_guessed: 1
-      @person2.update! comments_to_be_guessed: 1
+      people[0].update! comments_to_be_guessed: 1
+      people[1].update! comments_to_be_guessed: 1
       stub_post_count 1, 2
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it "sorts by comments-to-be-guessed, post count, username" do
       create_people_named 'z', 'a'
-      @person1.update! comments_to_be_guessed: 1
-      @person2.update! comments_to_be_guessed: 1
+      people[0].update! comments_to_be_guessed: 1
+      people[1].update! comments_to_be_guessed: 1
       stub_post_count 1, 1
       puts_person2_before_person1 'comments-to-be-guessed'
     end
 
     it "sorts by views-per-post" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:views_per_post) { { @person1.id => 1, @person2.id => 2 } }
+      allow(PeopleIndexPerson).to receive(:views_per_post) { { people[0].id => 1, people[1].id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'views-per-post'
     end
 
     it "sorts by views-per-post, post count" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:views_per_post) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:views_per_post) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'views-per-post'
     end
 
     it "sorts by views-per-post, post count, username" do
       create_people_named 'z', 'a'
-      allow(PeopleIndexPerson).to receive(:views_per_post) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:views_per_post) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'views-per-post'
     end
 
     it "sorts by faves-per-post" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:faves_per_post) { { @person1.id => 1, @person2.id => 2 } }
+      allow(PeopleIndexPerson).to receive(:faves_per_post) { { people[0].id => 1, people[1].id => 2 } }
       stub_post_count 2, 1
       puts_person2_before_person1 'faves-per-post'
     end
 
     it "sorts by faves-per-post, post count" do
       create_people_named 'a', 'z'
-      allow(PeopleIndexPerson).to receive(:faves_per_post) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:faves_per_post) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 2
       puts_person2_before_person1 'faves-per-post'
     end
 
     it "sorts by faves-per-post, post count, username" do
       create_people_named 'z', 'a'
-      allow(PeopleIndexPerson).to receive(:faves_per_post) { { @person1.id => 1, @person2.id => 1 } }
+      allow(PeopleIndexPerson).to receive(:faves_per_post) { { people[0].id => 1, people[1].id => 1 } }
       stub_post_count 1, 1
       puts_person2_before_person1 'faves-per-post'
     end
 
     it "sorts the other direction, too" do
       create_people_named 'a', 'z'
-      expect(PeopleIndexPerson.all_sorted('username', '-')).to eq([@person2, @person1])
+      expect(PeopleIndexPerson.all_sorted('username', '-')).to eq([people[1], people[0]])
     end
 
     def create_people_named(username1, username2)
-      @person1 = create :people_index_person, username: username1
-      @person2 = create :people_index_person, username: username2
+      people[0] = create :people_index_person, username: username1
+      people[1] = create :people_index_person, username: username2
     end
 
     def stub_post_count(count1, count2)
-      group = double count: { @person1.id => count1, @person2.id => count2 }
+      group = double count: { people[0].id => count1, people[1].id => count2 }
       allow(Photo).to receive(:group).with(:person_id) { group }
     end
 
     def stub_score(count1, count2)
-      group = double count: { @person1.id => count1, @person2.id => count2 }
+      group = double count: { people[0].id => count1, people[1].id => count2 }
       allow(Guess).to receive(:group).with(:person_id) { group }
     end
 
     def puts_person2_before_person1(sorted_by)
-      expect(PeopleIndexPerson.all_sorted(sorted_by, '+')).to eq([@person2, @person1])
+      expect(PeopleIndexPerson.all_sorted(sorted_by, '+')).to eq([people[1], people[0]])
     end
 
     it "explodes if sorted_by is invalid" do
