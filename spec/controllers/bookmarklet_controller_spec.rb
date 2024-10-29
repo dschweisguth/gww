@@ -20,7 +20,7 @@ describe BookmarkletController do
     end
 
     it "punts an unknown photo Flickr ID" do
-      allow(Photo).to receive(:find_by_flickrid).with('0123456789') { nil }
+      allow(Photo).to receive(:find_by_flickrid).with('0123456789').and_return(nil)
       get :show, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
       expect(response).to redirect_to root_path
@@ -49,7 +49,7 @@ describe BookmarkletController do
 
     it "handles a URL with a flickrid" do
       person = build_stubbed :person
-      allow(Person).to receive(:find_by_pathalias).with(person.flickrid) { nil }
+      allow(Person).to receive(:find_by_pathalias).with(person.flickrid).and_return(nil)
       allow(Person).to receive(:find_by_flickrid).with(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/people/#{person.flickrid}/"
 
@@ -58,8 +58,8 @@ describe BookmarkletController do
     end
 
     it "punts an unknown person" do
-      allow(Person).to receive(:find_by_pathalias).with('person_flickrid') { nil }
-      allow(Person).to receive(:find_by_flickrid).with('person_flickrid') { nil }
+      allow(Person).to receive(:find_by_pathalias).with('person_flickrid').and_return(nil)
+      allow(Person).to receive(:find_by_flickrid).with('person_flickrid').and_return(nil)
       get :show, from: "https://www.flickr.com/people/person_flickrid/"
 
       expect(response).to redirect_to root_path
@@ -69,7 +69,7 @@ describe BookmarkletController do
 
     it "handles a /photo/ URL with a person Flickr ID but no photo Flickr ID" do
       person = build_stubbed :person
-      allow(Person).to receive(:find_by_pathalias).with(person.flickrid) { nil }
+      allow(Person).to receive(:find_by_pathalias).with(person.flickrid).and_return(nil)
       allow(Person).to receive(:find_by_flickrid).with(person.flickrid) { person }
       get :show, from: "https://www.flickr.com/photos/#{person.flickrid}/"
 

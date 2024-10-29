@@ -31,7 +31,7 @@ describe ScoreReportsController do
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
-      allow(ScoreReport).to receive(:previous).with(@report_date.getutc) { nil }
+      allow(ScoreReport).to receive(:previous).with(@report_date.getutc).and_return(nil)
       renders_report_for @report_date, Time.utc(2005), :show, id: '1'
     end
 

@@ -156,13 +156,6 @@ RSpec/RepeatedDescription:
   Exclude:
     - 'spec/routing/matchers_spec.rb'
 
-# Offense count: 136
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: and_return, block
-RSpec/ReturnFromStub:
-  Enabled: false
-
 # Offense count: 3
 RSpec/StubbedMock:
   Exclude:

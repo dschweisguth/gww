@@ -23,8 +23,8 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 7) { [person2, person1] }
   allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 30) { [person2, person1] }
 
-  allow(ScoreReportsPhoto).to receive(:count_between).with(previous_report_date, report_date.getutc) { 6 }
-  allow(ScoreReportsPhoto).to receive(:unfound_or_unconfirmed_count_before).with(report_date) { 1234 }
+  allow(ScoreReportsPhoto).to receive(:count_between).with(previous_report_date, report_date.getutc).and_return(6)
+  allow(ScoreReportsPhoto).to receive(:unfound_or_unconfirmed_count_before).with(report_date).and_return(1234)
 
   # Note that we're ignoring the test guesses' photos' people
   people = [person0, person1, person2]

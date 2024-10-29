@@ -81,6 +81,8 @@ Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 Layout/FirstArrayElementIndentation:
   Enabled: false
+Layout/FirstHashElementIndentation:
+  Enabled: false
 Layout/HashAlignment:
   Enabled: false
 Layout/LineLength:

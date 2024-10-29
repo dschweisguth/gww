@@ -8,7 +8,7 @@ describe Admin::PhotosController do
       end
 
       it "renders the page" do
-        allow(photo).to receive(:tags) { [] }
+        allow(photo).to receive(:tags).and_return([])
         get :unfound
         lists_photo
       end
@@ -27,7 +27,7 @@ describe Admin::PhotosController do
     describe '#inaccessible' do
       it "renders the page" do
         allow(AdminPhotosPhoto).to receive(:inaccessible) { [photo] }
-        allow(photo).to receive(:tags) { [] }
+        allow(photo).to receive(:tags).and_return([])
         get :inaccessible
         lists_photo
       end
@@ -36,7 +36,7 @@ describe Admin::PhotosController do
     describe '#multipoint' do
       it "renders the page" do
         allow(AdminPhotosPhoto).to receive(:multipoint) { [photo] }
-        allow(photo).to receive(:tags) { [] }
+        allow(photo).to receive(:tags).and_return([])
         get :multipoint
         lists_photo
       end
@@ -59,10 +59,10 @@ describe Admin::PhotosController do
     before do
       allow(FlickrUpdatePhoto).to receive(:find_with_associations).with(flickr_update_photo.id) { flickr_update_photo }
       allow(AdminPhotosPhoto).to receive(:find_with_associations).with(admin_photos_photo.id) { admin_photos_photo }
-      allow(admin_photos_photo).to receive(:comments) { [] }
-      allow(admin_photos_photo).to receive(:guesses) { [] }
-      allow(admin_photos_photo).to receive(:revelation) { nil }
-      allow(admin_photos_photo).to receive(:tags) { [] }
+      allow(admin_photos_photo).to receive(:comments).and_return([])
+      allow(admin_photos_photo).to receive(:guesses).and_return([])
+      allow(admin_photos_photo).to receive(:revelation).and_return(nil)
+      allow(admin_photos_photo).to receive(:tags).and_return([])
     end
 
     it "renders the page without loading comments" do
@@ -128,7 +128,7 @@ describe Admin::PhotosController do
     end
 
     it "punts an unknown photo Flickr ID" do
-      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with('0123456789') { nil }
+      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with('0123456789').and_return(nil)
       get :edit_in_gww, from: 'https://www.flickr.com/photos/person_flickrid/0123456789/'
 
       expect(response).to redirect_to admin_root_path

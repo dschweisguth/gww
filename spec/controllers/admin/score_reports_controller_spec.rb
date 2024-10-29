@@ -27,8 +27,8 @@ describe Admin::ScoreReportsController do
 
     it "doesn't allow deletion of the last report" do
       allow(ScoreReport).to receive(:order) { [build_stubbed(:score_report, created_at: Time.now)] }
-      allow(ScoreReport).to receive(:guess_counts) { {} }
-      allow(ScoreReport).to receive(:revelation_counts) { {} }
+      allow(ScoreReport).to receive(:guess_counts).and_return({})
+      allow(ScoreReport).to receive(:revelation_counts).and_return({})
       get :index
 
       expect(response).to be_success
@@ -38,8 +38,8 @@ describe Admin::ScoreReportsController do
 
     it "doesn't allow deletion of a report more than a day old" do
       allow(ScoreReport).to receive(:order) { [build_stubbed(:score_report, created_at: Time.now - 1.day - 1.second)] }
-      allow(ScoreReport).to receive(:guess_counts) { {} }
-      allow(ScoreReport).to receive(:revelation_counts) { {} }
+      allow(ScoreReport).to receive(:guess_counts).and_return({})
+      allow(ScoreReport).to receive(:revelation_counts).and_return({})
       get :index
 
       expect(response).to be_success
@@ -63,7 +63,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
-      allow(ScoreReport).to receive(:previous).with(@report_date.getutc) { nil }
+      allow(ScoreReport).to receive(:previous).with(@report_date.getutc).and_return(nil)
       renders_report_for @report_date, Time.utc(2005), :new
     end
 

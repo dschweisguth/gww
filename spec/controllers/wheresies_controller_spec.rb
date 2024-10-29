@@ -10,15 +10,15 @@ describe WheresiesController do
       allow(Time).to receive(:now) { Time.local 2010 }
       year = 2009
       allow(ScoreReport).to receive(:minimum) { Time.local(year).getutc }
-      allow(WheresiesPerson).to receive(:most_points_in).with(year) { [] }
-      allow(WheresiesPerson).to receive(:most_posts_in).with(year) { [] }
-      allow(WheresiesPerson).to receive(:rookies_with_most_points_in).with(year) { [] }
-      allow(WheresiesPerson).to receive(:rookies_with_most_posts_in).with(year) { [] }
-      allow(WheresiesPhoto).to receive(:most_viewed_in).with(year) { [] }
-      allow(WheresiesPhoto).to receive(:most_faved_in).with(year) { [] }
-      allow(WheresiesPhoto).to receive(:most_commented_in).with(year) { [] }
-      allow(WheresiesGuess).to receive(:longest_in).with(year) { [] }
-      allow(WheresiesGuess).to receive(:shortest_in).with(year) { [] }
+      allow(WheresiesPerson).to receive(:most_points_in).with(year).and_return([])
+      allow(WheresiesPerson).to receive(:most_posts_in).with(year).and_return([])
+      allow(WheresiesPerson).to receive(:rookies_with_most_points_in).with(year).and_return([])
+      allow(WheresiesPerson).to receive(:rookies_with_most_posts_in).with(year).and_return([])
+      allow(WheresiesPhoto).to receive(:most_viewed_in).with(year).and_return([])
+      allow(WheresiesPhoto).to receive(:most_faved_in).with(year).and_return([])
+      allow(WheresiesPhoto).to receive(:most_commented_in).with(year).and_return([])
+      allow(WheresiesGuess).to receive(:longest_in).with(year).and_return([])
+      allow(WheresiesGuess).to receive(:shortest_in).with(year).and_return([])
       get :show, year: year.to_s
       expect(response).to be_success
       expect(response.body).not_to have_css 'h1', text: "#{year} Wheresies (preliminary)"

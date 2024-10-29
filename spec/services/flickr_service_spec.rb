@@ -138,7 +138,7 @@ describe FlickrService, type: :service do
 
     context "when not in tests" do
       before do
-        allow(Rails.env).to receive(:test?) { false }
+        allow(Rails.env).to receive(:test?).and_return(false)
       end
 
       it "returns 0 the first time it's called" do

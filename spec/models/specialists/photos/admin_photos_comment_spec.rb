@@ -149,21 +149,19 @@ describe AdminPhotosComment do
       end
 
       def stub_person_request
-        allow(FlickrService.instance).to receive(:people_get_info) do
-          {
-            'person' => [{
-              'username' => ['username_from_request'],
-              'realname' => ['realname_from_request'],
-              'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/'],
-              'ispro' => '1',
-              'photos' => [
-                {
-                  'count' => [1]
-                }
-              ]
-            }]
-          }
-        end
+        allow(FlickrService.instance).to receive(:people_get_info).and_return({
+          'person' => [{
+            'username' => ['username_from_request'],
+            'realname' => ['realname_from_request'],
+            'photosurl' => ['https://www.flickr.com/photos/pathalias_from_request/'],
+            'ispro' => '1',
+            'photos' => [
+              {
+                'count' => [1]
+              }
+            ]
+          }]
+        })
       end
 
       def photo_is_guessed(comment, guesser)

@@ -4,12 +4,12 @@ describe PeopleIndexPerson do
       group = double count: {}
       allow(Photo).to receive(:group).with(:person_id) { group }
       allow(Guess).to receive(:group).with(:person_id) { group }
-      allow(PeopleIndexPerson).to receive(:guesses_per_day) { {} }
-      allow(PeopleIndexPerson).to receive(:posts_per_day) { {} }
-      allow(PeopleIndexPerson).to receive(:guess_speeds) { {} }
-      allow(PeopleIndexPerson).to receive(:be_guessed_speeds) { {} }
-      allow(PeopleIndexPerson).to receive(:views_per_post) { {} }
-      allow(PeopleIndexPerson).to receive(:faves_per_post) { {} }
+      allow(PeopleIndexPerson).to receive(:guesses_per_day).and_return({})
+      allow(PeopleIndexPerson).to receive(:posts_per_day).and_return({})
+      allow(PeopleIndexPerson).to receive(:guess_speeds).and_return({})
+      allow(PeopleIndexPerson).to receive(:be_guessed_speeds).and_return({})
+      allow(PeopleIndexPerson).to receive(:views_per_post).and_return({})
+      allow(PeopleIndexPerson).to receive(:faves_per_post).and_return({})
     end
 
     it "sorts by username" do

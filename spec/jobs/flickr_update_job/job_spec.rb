@@ -4,14 +4,12 @@ describe FlickrUpdateJob::Job, type: :job do
   describe '#update' do
     it "does some work" do
       mock_clear_page_cache 2
-      allow(FlickrService.instance).to receive(:groups_get_info).with(group_id: FlickrService::GROUP_ID) do
-        {
-          'group' => [{
-            'members' => ['1492']
-          }]
-        }
-      end
-      expect(FlickrUpdateJob::PhotoUpdater).to receive(:update_all) { [1, 2, 3, 4] }
+      allow(FlickrService.instance).to receive(:groups_get_info).with(group_id: FlickrService::GROUP_ID).and_return({
+        'group' => [{
+          'members' => ['1492']
+        }]
+      })
+      expect(FlickrUpdateJob::PhotoUpdater).to receive(:update_all).and_return([1, 2, 3, 4])
       expect(FlickrUpdateJob::PersonUpdater).to receive(:update_all)
       allow(Time).to receive(:now) { Time.utc(2011) }
       expect(FlickrUpdateJob::Job.run).to eq("Created 1 new photos and 2 new users. Got 3 pages out of 4.")

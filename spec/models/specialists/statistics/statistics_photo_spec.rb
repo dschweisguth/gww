@@ -208,7 +208,7 @@ describe StatisticsPhoto do
     it "removes an existing inferred geocode if the comment can't be parsed" do
       photo = create :statistics_photo, inferred_latitude: 37, inferred_longitude: -122
       answer = create :guess, photo: photo, comment_text: 'An unparseable comment'
-      allow(parser).to receive(:parse).with(answer.comment_text) { [] }
+      allow(parser).to receive(:parse).with(answer.comment_text).and_return([])
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload
@@ -222,7 +222,7 @@ describe StatisticsPhoto do
       answer = create :guess, photo: photo, comment_text: 'A parseable but not geocodable comment'
       location = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       allow(parser).to receive(:parse).with(answer.comment_text) { [location] }
-      allow(Stintersection).to receive(:geocode).with(location) { nil }
+      allow(Stintersection).to receive(:geocode).with(location).and_return(nil)
       StatisticsPhoto.infer_geocodes
 
       answer.photo.reload

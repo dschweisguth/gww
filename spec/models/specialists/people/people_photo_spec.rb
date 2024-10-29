@@ -97,8 +97,8 @@ describe PeoplePhoto do
     end
 
     it "handles no photos" do
-      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [] }
-      allow(PeoplePhoto).to receive(:oldest) { nil }
+      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2).and_return([])
+      allow(PeoplePhoto).to receive(:oldest).and_return(nil)
       expect(PeoplePhoto.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
         bounds: bounds,

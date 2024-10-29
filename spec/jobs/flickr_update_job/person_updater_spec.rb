@@ -6,21 +6,19 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
     end
 
     it "updates an existing user's username, realname and pathalias" do
-      allow(FlickrService.instance).to receive(:people_get_info) do
-        {
-          'person' => [{
-            'username' => ['new_username'],
-            'realname' => ['new_realname'],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
-            'ispro' => '1',
-            'photos' => [
-              {
-                'count' => [1]
-              }
-            ]
-          }]
-        }
-      end
+      allow(FlickrService.instance).to receive(:people_get_info).and_return({
+        'person' => [{
+          'username' => ['new_username'],
+          'realname' => ['new_realname'],
+          'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+          'ispro' => '1',
+          'photos' => [
+            {
+              'count' => [1]
+            }
+          ]
+        }]
+      })
       update_all_and_expect_person_to_have(
         username: 'new_username', realname: 'new_realname', pathalias: 'new_pathalias', ispro: true, photos_count: 1)
     end
@@ -34,8 +32,7 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
     end
 
     it "handles a missing realname" do
-      allow(FlickrService.instance).to receive(:people_get_info) do
-        {
+      allow(FlickrService.instance).to receive(:people_get_info).and_return({
           'person' => [{
             'username' => ['new_username'],
             'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
@@ -46,16 +43,14 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
               }
             ]
           }]
-        }
-      end
+        })
       # if a user hides their real name, updating should forget it
       update_all_and_expect_person_to_have(
         username: 'new_username', realname: nil, pathalias: 'new_pathalias', ispro: true, photos_count: 1)
     end
 
     it "handles an empty realname" do
-      allow(FlickrService.instance).to receive(:people_get_info) do
-        {
+      allow(FlickrService.instance).to receive(:people_get_info).and_return({
           'person' => [{
             'username' => ['new_username'],
             'realname' => [{}],
@@ -67,8 +62,7 @@ describe FlickrUpdateJob::PersonUpdater, type: :job do
               }
             ]
           }]
-        }
-      end
+        })
       # if a user hides their real name, updating should forget it
       update_all_and_expect_person_to_have(
         username: 'new_username', realname: nil, pathalias: 'new_pathalias', ispro: true, photos_count: 1)

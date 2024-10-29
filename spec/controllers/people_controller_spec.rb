@@ -12,7 +12,7 @@ describe PeopleController do
     end
 
     it "punts back to the home page" do
-      allow(PeoplePerson).to receive(:find_by_multiple_fields).with('xxx') { nil }
+      allow(PeoplePerson).to receive(:find_by_multiple_fields).with('xxx').and_return(nil)
       get :find, username: 'xxx'
       expect(response).to redirect_to root_path
       expect(flash[:find_person_error]).to eq('xxx')
@@ -106,8 +106,8 @@ describe PeopleController do
 
     before do
       allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
-      allow(person).to receive(:score_standing) { [1, false] }
-      allow(person).to receive(:posts_standing) { [1, false] }
+      allow(person).to receive(:score_standing).and_return([1, false])
+      allow(person).to receive(:posts_standing).and_return([1, false])
 
       @now = Time.now
       allow(Time).to receive(:now) { @now }
@@ -150,19 +150,19 @@ describe PeopleController do
     it "handles a person who has never posted" do
       stub_guesses
 
-      allow(person).to receive(:mapped_photo_count) { 0 }
-      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 7) { [] }
-      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 30) { [] }
+      allow(person).to receive(:mapped_photo_count).and_return(0)
+      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 7).and_return([])
+      allow(PeopleShowPerson).to receive(:top_posters).with(@now, 30).and_return([])
       allow(person).to receive(:first_photo)
       allow(person).to receive(:most_recent_photo)
       allow(person).to receive(:oldest_unfound_photo)
       allow(person).to receive(:most_commented_photo)
       allow(person).to receive(:most_viewed_photo)
       allow(person).to receive(:most_faved_photo)
-      allow(person).to receive(:photos_with_associations) { [] }
-      allow(person).to receive(:favoring_guessers) { [] }
-      allow(person).to receive(:unfound_photos) { [] }
-      allow(person).to receive(:revealed_photos) { [] }
+      allow(person).to receive(:photos_with_associations).and_return([])
+      allow(person).to receive(:favoring_guessers).and_return([])
+      allow(person).to receive(:unfound_photos).and_return([])
+      allow(person).to receive(:revealed_photos).and_return([])
 
       get :show, id: person.id
 
@@ -188,13 +188,13 @@ describe PeopleController do
       before do
         stub_no_guesses
         stub_posts
-        allow(person).to receive(:photos_with_associations) { [] }
-        allow(person).to receive(:revealed_photos) { [] }
+        allow(person).to receive(:photos_with_associations).and_return([])
+        allow(person).to receive(:revealed_photos).and_return([])
       end
 
       it "does not highlight a guessed post which is mapped and has no obsolete tags" do
         stub_guessed_post
-        allow(photo).to receive(:mapped_or_automapped?) { true }
+        allow(photo).to receive(:mapped_or_automapped?).and_return(true)
         get :show, id: person.id
 
         expect(top_node).not_to have_css('.photo-links a.unmapped')
@@ -204,7 +204,7 @@ describe PeopleController do
 
       it "does not highlight a revealed post which is mapped and has no obsolete tags" do
         stub_revealed_post
-        allow(photo).to receive(:mapped_or_automapped?) { true }
+        allow(photo).to receive(:mapped_or_automapped?).and_return(true)
         get :show, id: person.id
 
         expect(top_node).not_to have_css('.photo-links a.unmapped')
@@ -214,7 +214,7 @@ describe PeopleController do
 
       it "highlights a guessed post which is not mapped" do
         stub_guessed_post
-        allow(photo).to receive(:mapped_or_automapped?) { false }
+        allow(photo).to receive(:mapped_or_automapped?).and_return(false)
         get :show, id: person.id
 
         expect(top_node).to have_css('.photo-links a.unmapped')
@@ -223,7 +223,7 @@ describe PeopleController do
 
       it "highlights a revealed post which is not mapped" do
         stub_revealed_post
-        allow(photo).to receive(:mapped_or_automapped?) { false }
+        allow(photo).to receive(:mapped_or_automapped?).and_return(false)
         get :show, id: person.id
 
         expect(top_node).to have_css('.photo-links a.unmapped')
@@ -232,7 +232,7 @@ describe PeopleController do
 
       it "highlights a guessed post with an obsolete tag" do
         stub_guessed_post
-        allow(photo).to receive(:obsolete_tags?) { true }
+        allow(photo).to receive(:obsolete_tags?).and_return(true)
         get :show, id: person.id
 
         expect(top_node).to have_css('.photo-links a.needs-attention')
@@ -241,7 +241,7 @@ describe PeopleController do
 
       it "highlights a revealed post with an obsolete tag" do
         stub_revealed_post
-        allow(photo).to receive(:obsolete_tags?) { true }
+        allow(photo).to receive(:obsolete_tags?).and_return(true)
         get :show, id: person.id
 
         expect(top_node).to have_css('.photo-links a.needs-attention')
@@ -261,21 +261,21 @@ describe PeopleController do
     end
 
     def stub_no_guesses
-      allow(person).to receive(:mapped_guess_count) { 0 }
-      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 7) { [] }
-      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 30) { [] }
+      allow(person).to receive(:mapped_guess_count).and_return(0)
+      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 7).and_return([])
+      allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 30).and_return([])
       allow(person).to receive(:first_guess)
       allow(person).to receive(:most_recent_guess)
       allow(person).to receive(:oldest_guess)
       allow(person).to receive(:fastest_guess)
       allow(person).to receive(:guess_of_longest_lasting_post)
       allow(person).to receive(:guess_of_shortest_lasting_post)
-      allow(person).to receive(:guesses_with_associations) { [] }
-      allow(person).to receive(:favorite_posters) { [] }
+      allow(person).to receive(:guesses_with_associations).and_return([])
+      allow(person).to receive(:favorite_posters).and_return([])
     end
 
     def stub_guesses
-      allow(person).to receive(:mapped_guess_count) { 1 }
+      allow(person).to receive(:mapped_guess_count).and_return(1)
 
       allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 7) { [person] }
       allow(PeopleShowPerson).to receive(:high_scorers).with(@now, 30) { [person] }
@@ -297,7 +297,7 @@ describe PeopleController do
     end
 
     def stub_posts
-      allow(person).to receive(:mapped_photo_count) { 1 }
+      allow(person).to receive(:mapped_photo_count).and_return(1)
 
       allow(PeopleShowPerson).to receive(:top_posters).with(@now, 7) { [person] }
       allow(PeopleShowPerson).to receive(:top_posters).with(@now, 30) { [person] }
@@ -391,8 +391,8 @@ describe PeopleController do
       person = build_stubbed :people_show_person
       allow(PeoplePerson).to receive(:find).with(person.id) { person }
       allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
-      allow(person).to receive(:mapped_photo_count) { 1 }
-      allow(person).to receive(:mapped_guess_count) { 1 }
+      allow(person).to receive(:mapped_photo_count).and_return(1)
+      allow(person).to receive(:mapped_guess_count).and_return(1)
       photos_json_data = { 'property' => 'value' }
       allow(PeoplePhoto).to receive(:for_person_for_map).
         with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { photos_json_data }
@@ -423,7 +423,7 @@ describe PeopleController do
 
     it "supports arbitrary bounds" do
       allow(PeoplePhoto).to receive(:for_person_for_map).
-        with(1, Bounds.new(0, 1, 10, 11), PeopleController::MAX_MAP_PHOTOS) { { 'property' => 'value' } }
+        with(1, Bounds.new(0, 1, 10, 11), PeopleController::MAX_MAP_PHOTOS).and_return({ 'property' => 'value' })
       get :map_json, id: 1, sw: '0,10', ne: '1,11'
     end
 

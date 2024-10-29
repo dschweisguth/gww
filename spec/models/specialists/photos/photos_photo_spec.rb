@@ -156,8 +156,8 @@ describe PhotosPhoto do
     end
 
     it "handles no photos" do
-      allow(PhotosPhoto).to receive(:mapped).with(bounds, 2) { [] }
-      allow(PhotosPhoto).to receive(:oldest) { nil }
+      allow(PhotosPhoto).to receive(:mapped).with(bounds, 2).and_return([])
+      allow(PhotosPhoto).to receive(:oldest).and_return(nil)
       expect(PhotosPhoto.all_for_map(bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
