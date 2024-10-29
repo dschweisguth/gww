@@ -20,14 +20,6 @@ RSpec/DescribedClass:
 RSpec/FactoryBot/ConsistentParenthesesStyle:
   Enabled: false
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: single_line_only, single_statement_only, disallow, require_implicit
-RSpec/ImplicitSubject:
-  Exclude:
-    - 'spec/support/helpers/rspec.rb'
-
 # Offense count: 91
 # Configuration parameters: AssignmentOnly.
 RSpec/InstanceVariable:

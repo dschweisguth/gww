@@ -68,6 +68,9 @@ Capybara/NegationMatcher:
 RSpec/FilePath:
   SpecSuffixOnly: true
 
+RSpec/ImplicitSubject:
+  EnforcedStyle: single_statement_only
+
 # Disabled cops
 
 Layout/ArgumentAlignment:
