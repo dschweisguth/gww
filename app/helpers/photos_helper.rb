@@ -18,23 +18,20 @@ module PhotosHelper
     now = Time.now.getutc
     time = time.getutc
     elapsed = now - time
-    value, unit, per_next_larger_unit =
+    value, unit =
       if elapsed < 1.second
-        [now - time, 'usec', 1000000]
+        [now - time, 'usec']
       elsif elapsed < 1.minute
-        [(now - time).to_i, 'second', 60]
+        [(now - time).to_i, 'second']
       elsif elapsed < 1.hour
-        [now.min - time.min, 'minute', 60]
+        [wrap(now.min - time.min, 60), 'minute']
       elsif elapsed < 37.hours
-        [now.hour - time.hour, 'hour', 24]
+        [wrap(now.hour - time.hour, 24), 'hour']
       elsif elapsed < 1.month
-        [(now + 12.hours).yday - time.yday, 'day', 365]
+        [wrap((now + 12.hours).yday - time.yday, 365), 'day']
       else
-        [now.month - time.month + 12 * (now.year - time.year), 'month', 12]
+        [wrap(now.month - time.month + 12 * (now.year - time.year), 12), 'month']
       end
-    if value < 0
-      value += per_next_larger_unit
-    end
 
     if unit == 'day' && value >= 10
       value = (value + 4) / 7
@@ -42,6 +39,10 @@ module PhotosHelper
     end
 
     return value, unit
+  end
+
+  private def wrap(value, per_next_larger_unit)
+    value >= 0 ? value : value + per_next_larger_unit
   end
 
   def highlighted(string, text_terms, other_strings_that_count = [])
