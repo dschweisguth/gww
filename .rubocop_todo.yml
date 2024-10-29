@@ -44,11 +44,6 @@ RSpec/ContextWording:
 RSpec/DescribedClass:
   Enabled: false
 
-# Offense count: 144
-# Configuration parameters: CountAsOne.
-RSpec/ExampleLength:
-  Max: 38
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 RSpec/ExcessiveDocstringSpacing:
@@ -126,15 +121,6 @@ RSpec/MatchArray:
 # SupportedStyles: have_received, receive
 RSpec/MessageSpies:
   EnforcedStyle: receive
-
-# Offense count: 129
-RSpec/MultipleExpectations:
-  Max: 22
-
-# Offense count: 3
-# Configuration parameters: AllowedGroups.
-RSpec/NestedGroups:
-  Max: 4
 
 # Offense count: 313
 # Configuration parameters: AllowedPatterns.
