@@ -90,8 +90,8 @@ end
 
 def i_should_see_image_only_search_result_for_photo(photo)
   # link and image are 'invisible' because they're behind the hover
-  link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: false
-  expect(link).to have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"]), visible: false
+  link = find %Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: :all
+  expect(link).to have_css %Q(img[src="#{url_for_flickr_image photo, 'm'}"]), visible: :all
   expect(page).not_to have_css('.text')
 end
 
@@ -103,7 +103,7 @@ end
 def image_only_search_result_should_be(result_index, result_count, photo)
   result = all('.image', count: result_count)[result_index - 1]
   # link is 'invisible' because it's behind the hover
-  expect(result).to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: false)
+  expect(result).to have_css(%Q(a[href="#{url_for_flickr_photo_in_pool photo}"]), visible: :all)
 end
 
 Then /^I should see (\d+) full search results?$/ do |result_count|
