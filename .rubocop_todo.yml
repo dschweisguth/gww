@@ -13,12 +13,6 @@
 RSpec/DescribedClass:
   Enabled: false
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/ExcessiveDocstringSpacing:
-  Exclude:
-    - 'spec/helpers/photos_helper_spec.rb'
-
 # Offense count: 822
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.

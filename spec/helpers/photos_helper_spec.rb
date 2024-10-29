@@ -25,7 +25,7 @@ describe PhotosHelper do
       ago_in_words_returns 2011, 2011, 'a moment ago'
     end
 
-    it "returns 'n seconds ago' if 1 second ago <= time < 1 minute ago " do
+    it "returns 'n seconds ago' if 1 second ago <= time < 1 minute ago" do
       ago_in_words_returns [2011, 1, 1, 0, 0, 1], 2011, '1 second ago'
     end
 
