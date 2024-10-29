@@ -20,14 +20,6 @@ RSpec/DescribedClass:
 RSpec/FactoryBot/ConsistentParenthesesStyle:
   Enabled: false
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, each, example
-RSpec/HookArgument:
-  Exclude:
-    - 'spec/rails_helper.rb'
-
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 RSpec/HooksBeforeExamples:

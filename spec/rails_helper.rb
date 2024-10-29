@@ -63,7 +63,7 @@ RSpec.configure do |config|
   %i(controller helper initializer routing service value).each do |type|
     config.include NullDB::RSpec::NullifiedDatabase, type: type
 
-    config.after :example, type: type do
+    config.after type: type do
       begin
         expect(ActiveRecord::Base.connection).not_to have_executed(:anything)
       rescue RSpec::Expectations::ExpectationNotMetError
@@ -83,7 +83,7 @@ RSpec.configure do |config|
   end
 
   # Prevent FlickrService usage
-  config.before :example do
+  config.before do
     allow(FlickrService).to receive(:instance).and_return(MockFlickrService.new)
   end
 
