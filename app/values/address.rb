@@ -14,6 +14,15 @@ Address = Struct.new :text, :number, :street, :at, :between1, :between2 do
     end
   end
 
+  def street_type
+    street.type&.name ||
+      begin
+        cross_street = at || between1
+        cross_street && Stintersection.street_type(street, cross_street) ||
+          between2 && Stintersection.street_type(street, between2)
+      end
+  end
+
   # TODO this ignores the possibility that the between streets will disambiguate a missing street type
   def will_have_same_geocode_as(other)
     other.is_a?(Address) && other.number == number && other.street == street
