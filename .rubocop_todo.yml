@@ -5,11 +5,3 @@
 # one by one as the offenses are removed from the code base.
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
-
-# Offense count: 10
-# Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
-RSpec/VerifiedDoubles:
-  Exclude:
-    - 'spec/helpers/people_helper_spec.rb'
-    - 'spec/models/specialists/people/people_index_person_spec.rb'
-    - 'spec/services/flickr_service_spec.rb'

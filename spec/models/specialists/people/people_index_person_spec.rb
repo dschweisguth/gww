@@ -3,7 +3,7 @@ describe PeopleIndexPerson do
     let(:people) { Array.new(2) } # pseudo-instance variables to appease rubocop
 
     before do
-      group = double count: {}
+      group = instance_double Hash, count: {}
       allow(Photo).to receive(:group).with(:person_id) { group }
       allow(Guess).to receive(:group).with(:person_id) { group }
       allow(PeopleIndexPerson).to receive(:guesses_per_day).and_return({})
@@ -324,12 +324,12 @@ describe PeopleIndexPerson do
     end
 
     def stub_post_count(count1, count2)
-      group = double count: { people[0].id => count1, people[1].id => count2 }
+      group = instance_double Hash, count: { people[0].id => count1, people[1].id => count2 }
       allow(Photo).to receive(:group).with(:person_id) { group }
     end
 
     def stub_score(count1, count2)
-      group = double count: { people[0].id => count1, people[1].id => count2 }
+      group = instance_double Hash, count: { people[0].id => count1, people[1].id => count2 }
       allow(Guess).to receive(:group).with(:person_id) { group }
     end
 

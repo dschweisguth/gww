@@ -71,7 +71,7 @@ describe FlickrService, type: :service do
 
     %w(500 502 503 504).each do |code|
       it "raises an error if the response has status #{code}" do
-        allow(service).to receive(:get_once) { double code: code }
+        allow(service).to receive(:get_once) { instance_double Net::HTTPResponse, code: code }
         request_fails
       end
     end
@@ -125,7 +125,7 @@ describe FlickrService, type: :service do
     end
 
     def stub_get_once_returns(body, code)
-      allow(service).to receive(:get_once) { double(body: body, code: code) }
+      allow(service).to receive(:get_once) { instance_double Net::HTTPResponse, body: body, code: code }
     end
 
   end
