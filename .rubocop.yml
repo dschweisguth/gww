@@ -71,6 +71,9 @@ RSpec/FilePath:
 RSpec/ImplicitSubject:
   EnforcedStyle: single_statement_only
 
+RSpec/FactoryBot/ConsistentParenthesesStyle:
+  EnforcedStyle: omit_parentheses
+
 # Disabled cops
 
 Layout/ArgumentAlignment:
