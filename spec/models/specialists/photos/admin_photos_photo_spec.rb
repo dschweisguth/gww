@@ -6,22 +6,22 @@ describe AdminPhotosPhoto do
 
     it "lists photos not seen since the last update" do
       photo = create :admin_photos_photo, seen_at: Time.utc(2010)
-      expect(AdminPhotosPhoto.inaccessible).to eq([photo])
+      expect(described_class.inaccessible).to eq([photo])
     end
 
     it "includes unconfirmed photos" do
       photo = create :admin_photos_photo, seen_at: Time.utc(2010), game_status: 'unconfirmed'
-      expect(AdminPhotosPhoto.inaccessible).to eq([photo])
+      expect(described_class.inaccessible).to eq([photo])
     end
 
     it "ignores photos seen since the last update" do
       create :admin_photos_photo, seen_at: Time.utc(2011)
-      expect(AdminPhotosPhoto.inaccessible).to eq([])
+      expect(described_class.inaccessible).to eq([])
     end
 
     it "ignores statuses other than unfound and unconfirmed" do
       create :admin_photos_photo, seen_at: Time.utc(2010), game_status: 'found'
-      expect(AdminPhotosPhoto.inaccessible).to eq([])
+      expect(described_class.inaccessible).to eq([])
     end
 
   end
@@ -31,12 +31,12 @@ describe AdminPhotosPhoto do
 
     it "returns photos for which more than one person got a point" do
       create_list :admin_photos_guess, 2, photo: photo
-      expect(AdminPhotosPhoto.multipoint).to eq([photo])
+      expect(described_class.multipoint).to eq([photo])
     end
 
     it "ignores photos for which only one person got a point" do
       create :admin_photos_guess, photo: photo
-      expect(AdminPhotosPhoto.multipoint).to eq([])
+      expect(described_class.multipoint).to eq([])
     end
 
   end
@@ -45,20 +45,20 @@ describe AdminPhotosPhoto do
     let(:photo) { create :admin_photos_photo }
 
     it "changes the photo's status" do
-      AdminPhotosPhoto.change_game_status photo.id, 'unconfirmed'
+      described_class.change_game_status photo.id, 'unconfirmed'
       photo.reload
       expect(photo.game_status).to eq('unconfirmed')
     end
 
     it "deletes existing guesses" do
       create :admin_photos_guess, photo: photo
-      AdminPhotosPhoto.change_game_status photo.id, 'unconfirmed'
+      described_class.change_game_status photo.id, 'unconfirmed'
       expect(Guess.count).to eq(0)
     end
 
     it "deletes existing revelations" do
       create :admin_photos_revelation, photo: photo
-      AdminPhotosPhoto.change_game_status photo.id, 'unconfirmed'
+      described_class.change_game_status photo.id, 'unconfirmed'
       expect(Revelation.count).to eq(0)
     end
 
@@ -70,25 +70,25 @@ describe AdminPhotosPhoto do
 
     context "when adding a revelation" do
       it "needs a non-empty comment text" do
-        expect { AdminPhotosPhoto.add_entered_answer photo.id, photo.person.username, '' }.to raise_error ArgumentError
+        expect { described_class.add_entered_answer photo.id, photo.person.username, '' }.to raise_error ArgumentError
       end
 
       it "adds a revelation" do
         set_time
-        AdminPhotosPhoto.add_entered_answer photo.id, photo.person.username, 'comment text'
+        described_class.add_entered_answer photo.id, photo.person.username, 'comment text'
         is_revealed photo, 'comment text'
       end
 
       it "defaults to the photo's owner" do
         set_time
-        AdminPhotosPhoto.add_entered_answer photo.id, '', 'comment text'
+        described_class.add_entered_answer photo.id, '', 'comment text'
         is_revealed photo, 'comment text'
       end
 
       it "updates an existing revelation" do
         create :admin_photos_revelation, photo: photo
         set_time
-        AdminPhotosPhoto.add_entered_answer photo.id, photo.person.username, 'new comment text'
+        described_class.add_entered_answer photo.id, photo.person.username, 'new comment text'
         is_revealed photo, 'new comment text'
       end
 
@@ -102,7 +102,7 @@ describe AdminPhotosPhoto do
 
       it "deletes an existing guess" do
         create :admin_photos_guess, photo: photo
-        AdminPhotosPhoto.add_entered_answer photo.id, photo.person.username, 'comment text'
+        described_class.add_entered_answer photo.id, photo.person.username, 'comment text'
         expect(Guess.any?).to be_falsy
       end
 
@@ -113,7 +113,7 @@ describe AdminPhotosPhoto do
         guesser = create :admin_photos_person
         set_time
         stub_person_request
-        AdminPhotosPhoto.add_entered_answer photo.id, guesser.username, 'comment text'
+        described_class.add_entered_answer photo.id, guesser.username, 'comment text'
 
         photo.reload
         expect(photo.guesses.length).to eq(1)
@@ -133,7 +133,7 @@ describe AdminPhotosPhoto do
         comment = create :admin_photos_comment
         set_time
         stub_person_request
-        AdminPhotosPhoto.add_entered_answer photo.id, comment.username, 'comment text'
+        described_class.add_entered_answer photo.id, comment.username, 'comment text'
         guess = Guess.includes(:person).find_by_photo_id photo
         expect(guess.person.flickrid).to eq(comment.flickrid)
         has_attributes_from_flickr(guess.person)
@@ -143,7 +143,7 @@ describe AdminPhotosPhoto do
         old_guess = create :admin_photos_guess, photo: photo
         set_time
         stub_person_request
-        AdminPhotosPhoto.add_entered_answer photo.id, old_guess.person.username, 'new comment text'
+        described_class.add_entered_answer photo.id, old_guess.person.username, 'new comment text'
 
         guesses = photo.reload.guesses
         expect(guesses.length).to eq(2)
@@ -157,12 +157,12 @@ describe AdminPhotosPhoto do
         create :admin_photos_revelation, photo: photo
         guesser = create :admin_photos_person
         stub_person_request
-        AdminPhotosPhoto.add_entered_answer photo.id, guesser.username, 'comment text'
+        described_class.add_entered_answer photo.id, guesser.username, 'comment text'
         expect(Revelation.any?).to be_falsy
       end
 
       it "blows up if an unknown username is specified" do
-        expect { AdminPhotosPhoto.add_entered_answer photo.id, 'unknown_username', 'comment text' }.to raise_error AdminPhotosPhoto::AddAnswerError
+        expect { described_class.add_entered_answer photo.id, 'unknown_username', 'comment text' }.to raise_error described_class::AddAnswerError
       end
 
       def stub_person_request

@@ -4,34 +4,34 @@ describe PhotosSearchAutocompletionsPerson do
       let(:person) { create :photos_search_autocompletions_person, photo_count: 0 }
 
       it "finds a username" do
-        expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, nil)).to eq([autocompletion(person)])
+        expect(described_class.photo_search_autocompletions(person.username, nil)).to eq([autocompletion(person)])
       end
 
       it "finds a realname" do
-        expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.realname, nil)).to eq([autocompletion(person)])
+        expect(described_class.photo_search_autocompletions(person.realname, nil)).to eq([autocompletion(person)])
       end
 
       it "doesn't find anything when it shouldn't" do
-        expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions("not their username or realname", nil)).to eq([])
+        expect(described_class.photo_search_autocompletions("not their username or realname", nil)).to eq([])
       end
     end
 
     it "counts a photo by the person with the given game status" do
       person = create :photos_search_autocompletions_person, photo_count: 1
       create :photo, person: person, game_status: 'unfound'
-      expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, 'unfound')).to eq([autocompletion(person)])
+      expect(described_class.photo_search_autocompletions(person.username, 'unfound')).to eq([autocompletion(person)])
     end
 
     it "ignores a photo by another person" do
       person = create :photos_search_autocompletions_person
       create :photo, game_status: 'unfound'
-      expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, 'unfound')).to eq([])
+      expect(described_class.photo_search_autocompletions(person.username, 'unfound')).to eq([])
     end
 
     it "ignores a photo with a different game status" do
       person = create :photos_search_autocompletions_person
       create :photo, person: person, game_status: 'found'
-      expect(PhotosSearchAutocompletionsPerson.photo_search_autocompletions(person.username, 'unfound')).to eq([])
+      expect(described_class.photo_search_autocompletions(person.username, 'unfound')).to eq([])
     end
 
     def autocompletion(person)
