@@ -24,6 +24,7 @@ gem 'will_paginate'
 gem 'xml-simple'
 
 group :development do
+  gem 'brakeman'
   gem 'irb'
   gem 'rubocop', '~> 1.50.2' # yoked to Code Climate
   gem 'rubocop-rspec'

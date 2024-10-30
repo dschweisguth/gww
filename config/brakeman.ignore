@@ -1,0 +1,917 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "067224f6c58796ca7c1e863a777d4359846906d3fabcaf5ca6462cdfb3b0a75f",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/photos/search_data.html.erb",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "highlighted(photo.description.gsub(\"\\n\", \"<br/>\"), (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "search_data",
+          "line": 45,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/search_data",
+            "file": "app/views/photos/search_data.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/search_data"
+      },
+      "user_input": "params[:segments]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "0997f3e491b0e435b44cfd4f3d955748c08de1733e4516d1c107b65afba13886",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/photos/map/_popup.html.erb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "PhotosPhoto.find_with_associations(params[:id].to_i).guesses.map do\n \"#{link_to_person(guess.person)}, #{guess.commented_at.getlocal.strftime(\"%B %e, %Y\")}\"\n end.join(\"; \")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "map_popup",
+          "line": 21,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/map/_popup",
+            "file": "app/views/photos/map/_popup.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/map/_popup"
+      },
+      "user_input": "PhotosPhoto.find_with_associations(params[:id].to_i).guesses",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "281a99bb7b47fd307770f83578b5bfb65aa855803d5e095c323500dd29ba272f",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 51,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "PeopleShowPerson.find(params[:id].to_i).guess_of_shortest_lasting_post.time_elapsed",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "5436ffe86d668a6a086081144d0e9c6016bb15272c4ea96612027c963b79f91b",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/specialists/wheresies/wheresies_photo.rb",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"? <= dateadded\", Time.local(year).getutc).where(\"dateadded < ?\", Time.local((year + 1)).getutc).order(\"#{column} desc\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "WheresiesPhoto",
+        "method": "WheresiesPhoto.most_loved_in"
+      },
+      "user_input": "column",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "5b93c41a893dd8fac3f1364595ae3bc157a8701a17ba1fe1d8343e1844b0629e",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 48,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "PeopleShowPerson.find(params[:id].to_i).oldest_guess.ymd_elapsed",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "5d7eaaccdd90c02121df3fd9db64eb86be30bd222eaf7a5aae1e3317b207b2c8",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/photos/show.html.erb",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "(Unresolved Model).new.comment_text",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "show",
+          "line": 63,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/show",
+            "file": "app/views/photos/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "692860fba2a04cb65e407f66448bd1b8037e539c551445d4eff7b3adef8569aa",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 54,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "pluralize(PeopleShowPerson.find(params[:id].to_i).most_viewed_photo.views, \"view\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": "PeopleShowPerson.find(params[:id].to_i).most_viewed_photo",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "6dfd51376e59ba20f03572b397cab7edb52a36f554f5087972f44d99d110b266",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 52,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "PeopleShowPerson.find(params[:id].to_i).oldest_unfound_photo.ymd_elapsed",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "6fcc40675b2432ef5ac3b54307e914497d70c234a929a9c82f444c22af8368b0",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "PeopleShowPerson.find(params[:id].to_i).fastest_guess.time_elapsed",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "81661f23afb07e0ec90689f702fa02a99238cb1a2ecdcb073752f926b5a65b76",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 55,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "pluralize(PeopleShowPerson.find(params[:id].to_i).most_faved_photo.faves, \"fave\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": "PeopleShowPerson.find(params[:id].to_i).most_faved_photo",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "8192db6bc1e5fdd6372658259299bb774414af1255d74a28659cc663a04afe3d",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/photos/search_data.html.erb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "highlighted(h(tag), (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []), photo.human_tags.map(&:raw))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "search_data",
+          "line": 45,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/search_data",
+            "file": "app/views/photos/search_data.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/search_data"
+      },
+      "user_input": "params[:segments]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "93edc9f949a393aa91219335bee174b3192ff202902138ede8996820d062c8dd",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 50,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "PeopleShowPerson.find(params[:id].to_i).guess_of_longest_lasting_post.ymd_elapsed",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "b005c9a7591fb0b6340107f4837d34ae91e179664e6ce0505f4f8ab3a11d33d8",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/shared/_wheresies.html.erb",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "(ScoreReport.minimum(:created_at).getlocal.year..Time.now.year).map do\n if defined? @year and (year == @year) then\n  year\nelse\n  link_to(year, wheresies_path(year))\nend\n end.join(\", \")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "RootController",
+          "method": "index",
+          "line": 5,
+          "file": "app/controllers/root_controller.rb",
+          "rendered": {
+            "name": "root/index",
+            "file": "app/views/root/index.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "root/index",
+          "line": 58,
+          "file": "app/views/root/index.html.erb",
+          "rendered": {
+            "name": "shared/_wheresies",
+            "file": "app/views/shared/_wheresies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "shared/_wheresies"
+      },
+      "user_input": "ScoreReport.minimum(:created_at).getlocal",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "b4d7d3629f986b141a22817bae9bec883f270b054cd2ebba38f9f1c8b6ff1d6e",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/photos/search_data.html.erb",
+      "line": 26,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "highlighted(h(photo.title), (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "search_data",
+          "line": 45,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/search_data",
+            "file": "app/views/photos/search_data.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/search_data"
+      },
+      "user_input": "params[:segments]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "c4501755f1d3931e9839f787313be9b8a8a08da1e9817422704b335d93b47f3f",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/guess.rb",
+      "line": 33,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "order(\"#{\"unix_timestamp(guesses.commented_at) - unix_timestamp(photos.dateadded)\"} #{direction}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Guess",
+        "method": "Guess.order_by_age"
+      },
+      "user_input": "direction",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Request Forgery",
+      "warning_code": 116,
+      "fingerprint": "c8697fda60549ca065789e2ea74c94effecef88b2b5483bae17ddd62ece47194",
+      "check_name": "CSRFTokenForgeryCVE",
+      "message": "Rails 4.2.11.3 has a vulnerability that may allow CSRF token forgery. Upgrade to Rails 5.2.4.3 or patch",
+      "file": "Gemfile.lock",
+      "line": 202,
+      "link": "https://groups.google.com/g/rubyonrails-security/c/NOjKiGeXUgw",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        352
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "c995a4586752b54eb4c6fd827f43dee8c021c51e5d25913092c90c03489f4e0e",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/photos/_image_and_status.html.erb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "AdminPhotosPhoto.find_with_associations(params[:id].to_i).revelation.comment_text",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::PhotosController",
+          "method": "edit",
+          "line": 32,
+          "file": "app/controllers/admin/photos_controller.rb",
+          "rendered": {
+            "name": "admin/photos/edit",
+            "file": "app/views/admin/photos/edit.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "admin/photos/edit",
+          "line": 24,
+          "file": "app/views/admin/photos/edit.html.erb",
+          "rendered": {
+            "name": "photos/_image_and_status",
+            "file": "app/views/photos/_image_and_status.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/_image_and_status"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "d1a82bf669a44c24f40535f99092e0086c091e2ad34cb133cfdad6d6f4150038",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/photos/edit.html.erb",
+      "line": 56,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "(Unresolved Model).new.comment_text",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::PhotosController",
+          "method": "edit",
+          "line": 32,
+          "file": "app/controllers/admin/photos_controller.rb",
+          "rendered": {
+            "name": "admin/photos/edit",
+            "file": "app/views/admin/photos/edit.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/photos/edit"
+      },
+      "user_input": "(Unresolved Model).new.comment_text",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 120,
+      "fingerprint": "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 4.2.11.3 ended on 2017-04-27",
+      "file": "Gemfile.lock",
+      "line": 202,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e0fb91ebae6e75207c9e54cfb1c0d2aa74dacbdbf6da0ed4baa2cdf40ae49c92",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/photos/_image_and_status.html.erb",
+      "line": 4,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "AdminPhotosPhoto.find_with_associations(params[:id].to_i).description",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::PhotosController",
+          "method": "edit",
+          "line": 32,
+          "file": "app/controllers/admin/photos_controller.rb",
+          "rendered": {
+            "name": "admin/photos/edit",
+            "file": "app/views/admin/photos/edit.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "admin/photos/edit",
+          "line": 24,
+          "file": "app/views/admin/photos/edit.html.erb",
+          "rendered": {
+            "name": "photos/_image_and_status",
+            "file": "app/views/photos/_image_and_status.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/_image_and_status"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e8b4b6dc951f812eab660bbcd9ba5d0baf680d5cd8348f257918806c40525d64",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/people/show/_trophies.html.erb",
+      "line": 53,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "pluralize(PeopleShowPerson.find(params[:id].to_i).most_commented_photo.other_user_comments, \"comment\")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PeopleController",
+          "method": "show",
+          "line": 85,
+          "file": "app/controllers/people_controller.rb",
+          "rendered": {
+            "name": "people/show",
+            "file": "app/views/people/show.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "people/show",
+          "line": 39,
+          "file": "app/views/people/show.html.erb",
+          "rendered": {
+            "name": "people/show/_trophies",
+            "file": "app/views/people/show/_trophies.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "people/show/_trophies"
+      },
+      "user_input": "PeopleShowPerson.find(params[:id].to_i).most_commented_photo",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 121,
+      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
+      "check_name": "EOLRuby",
+      "message": "Support for Ruby 2.6.10 ended on 2022-03-31",
+      "file": ".ruby-version",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Session Setting",
+      "warning_code": 29,
+      "fingerprint": "f0ee1cc1980474c82a013645508f002dcc801e00db5592f7dd8cd6bdb93c73fe",
+      "check_name": "SessionSettings",
+      "message": "Session secret should not be included in version control",
+      "file": "config/secrets.yml",
+      "line": 4,
+      "link": "https://brakemanscanner.org/docs/warning_types/session_setting/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        798
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "f618f2d66a276429086176a119788e317d8b364c567cd320502b42f4cfa6c30f",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/photos/search_data.html.erb",
+      "line": 43,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "highlighted(comment.comment_text, (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "search_data",
+          "line": 45,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/search_data",
+            "file": "app/views/photos/search_data.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/search_data"
+      },
+      "user_input": "params[:segments]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "ff522c0a9992af15e4f398fbeb06517c99c8d30a24b2b01e8444624be3ac080e",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/specialists/people/people_show_person.rb",
+      "line": 132,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "photos.includes(:person).order(\"#{attribute} desc\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "PeopleShowPerson",
+        "method": "most_something_photo"
+      },
+      "user_input": "attribute",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "ff62976cabaa578e5e2c7c17105f06d45b57f6268d2ad662cdb0525ea6d8bd0b",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/photos/_image_and_status.html.erb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "(Unresolved Model).new.comment_text",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::PhotosController",
+          "method": "edit",
+          "line": 32,
+          "file": "app/controllers/admin/photos_controller.rb",
+          "rendered": {
+            "name": "admin/photos/edit",
+            "file": "app/views/admin/photos/edit.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "admin/photos/edit",
+          "line": 24,
+          "file": "app/views/admin/photos/edit.html.erb",
+          "rendered": {
+            "name": "photos/_image_and_status",
+            "file": "app/views/photos/_image_and_status.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/_image_and_status"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    }
+  ],
+  "updated": "2024-10-30 16:46:51 -0700",
+  "brakeman_version": "5.4.1"
+}
