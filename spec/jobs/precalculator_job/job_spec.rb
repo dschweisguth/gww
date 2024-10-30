@@ -1,4 +1,4 @@
-describe PrecalculatorJob::Job, type: :job do
+describe PrecalculatorJob::Job do
   describe '#calculate_statistics_and_maps' do
     it "does some work" do
       allow(StatisticsPerson).to receive(:update_statistics)

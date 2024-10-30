@@ -1,4 +1,4 @@
-describe FlickrUpdateJob::PhotoUpdater, type: :job do
+describe FlickrUpdateJob::PhotoUpdater do
   describe '.update_all' do
     let!(:now) { Time.utc 2014 }
 

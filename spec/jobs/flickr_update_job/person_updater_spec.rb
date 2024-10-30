@@ -1,4 +1,4 @@
-describe FlickrUpdateJob::PersonUpdater, type: :job do
+describe FlickrUpdateJob::PersonUpdater do
   describe '.update_all' do
     let!(:person) do
       create :person,

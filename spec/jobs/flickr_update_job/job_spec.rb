@@ -1,4 +1,4 @@
-describe FlickrUpdateJob::Job, type: :job do
+describe FlickrUpdateJob::Job do
   include GWW::Helpers::PageCache
 
   describe '#update' do
