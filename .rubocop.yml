@@ -216,3 +216,5 @@ RSpec/MultipleExpectations:
   Enabled: false
 RSpec/NestedGroups:
   Enabled: false
+RSpec/NoExpectationExample:
+  Enabled: false

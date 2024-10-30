@@ -20,12 +20,6 @@ RSpec/MatchArray:
 RSpec/MessageSpies:
   EnforcedStyle: receive
 
-# Offense count: 313
-# Configuration parameters: AllowedPatterns.
-# AllowedPatterns: ^expect_, ^assert_
-RSpec/NoExpectationExample:
-  Enabled: false
-
 # Offense count: 59
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: Strict, EnforcedStyle, AllowedExplicitMatchers.
