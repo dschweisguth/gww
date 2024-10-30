@@ -207,6 +207,11 @@ RSpec/ExampleLength:
   Enabled: false
 RSpec/DescribedClass:
   Enabled: false
+
+# The issue that this cop detects is real, but the cure is worse than the disease
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
 RSpec/MultipleExpectations:
   Enabled: false
 RSpec/NestedGroups:
