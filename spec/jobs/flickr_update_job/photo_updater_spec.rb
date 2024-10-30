@@ -669,7 +669,7 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "loads tags from Flickr" do
       stub_get_tags Tag.new(raw: 'Tag 1'), Tag.new(raw: 'Tag 2', machine_tag: true)
       described_class.update_tags photo
-      expect(photo.tags.map { |tag| [tag.raw, tag.machine_tag] }).to match_array([['Tag 1', false], ['Tag 2', true]])
+      expect(photo.tags.map { |tag| [tag.raw, tag.machine_tag] }).to contain_exactly(['Tag 1', false], ['Tag 2', true])
     end
 
     it "deletes previous tags" do

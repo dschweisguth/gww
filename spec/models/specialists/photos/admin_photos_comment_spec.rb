@@ -129,7 +129,7 @@ describe AdminPhotosComment do
         expect(guesses.length).to eq(2)
         expect(guesses.all? { |guess| guess.photo == old_guess.photo }).to be_truthy
         expect(guesses.all? { |guess| guess.person == old_guess.person }).to be_truthy
-        expect(guesses.map(&:comment_text)).to match_array([old_guess.comment_text, comment.comment_text])
+        expect(guesses.map(&:comment_text)).to contain_exactly(old_guess.comment_text, comment.comment_text)
 
       end
 
