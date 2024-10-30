@@ -24,11 +24,11 @@ describe GWW::Matchers::Routing do
         to eq("have a route named one_param, where e.g. one_param_path(666) == /one_param")
     end
 
-    it "asserts that the given name has a named route helper that returns the given path" do
+    it "asserts that the given name has a named route helper that returns the given path with no params" do
       has_named_route? :no_params, '/no_params'
     end
 
-    it "asserts that the given name has a named route helper that returns the given path" do
+    it "asserts that the given name has a named route helper that returns the given path with a param" do
       has_named_route? :one_param, 666, '/one_param/666'
     end
 
