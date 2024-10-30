@@ -3,7 +3,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     let!(:now) { Time.utc 2014 }
 
     before do
-      allow(Time).to receive(:now) { now }
+      allow(Time).to receive(:now).and_return(now)
     end
 
     def stub_get_photos(opts = {}, stub_opts = {})
@@ -147,7 +147,7 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     it "propagates errors other than that which comes from an invalid datetime" do
       stub_get_photos
-      allow(ActiveSupport::TimeZone['Pacific Time (US & Canada)']).to receive(:parse) { raise ArgumentError, "some other error" }
+      allow(ActiveSupport::TimeZone['Pacific Time (US & Canada)']).to receive(:parse).and_raise(ArgumentError, "some other error")
       expect { described_class.update_all }.to raise_error(ArgumentError, "some other error")
     end
 
@@ -378,7 +378,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     let!(:now) { Time.utc 2014 }
 
     before do
-      allow(Time).to receive(:now) { now }
+      allow(Time).to receive(:now).and_return(now)
     end
 
     it "loads the photo and its person, location, faves, comments and tags from Flickr" do
@@ -439,7 +439,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo
       error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "whatever"
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid) { raise error }
+      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
       expect { described_class.update photo }.to raise_error error
     end
 
@@ -447,7 +447,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo
       error = FlickrService::FlickrRequestFailedError
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid) { raise error }
+      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
       expect { described_class.update photo }.to raise_error error
     end
 

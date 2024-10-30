@@ -138,8 +138,8 @@ describe PhotosPhoto do
 
     it "returns an unfound photo" do
       photo = build :photos_photo, latitude: 37, longitude: -122
-      allow(PhotosPhoto).to receive(:mapped).with(bounds, 2) { [photo] }
-      allow(PhotosPhoto).to receive(:oldest) { build :photos_photo, dateadded: 1.day.ago }
+      allow(PhotosPhoto).to receive(:mapped).with(bounds, 2).and_return([photo])
+      allow(PhotosPhoto).to receive(:oldest).and_return(build :photos_photo, dateadded: 1.day.ago)
       expect(PhotosPhoto.all_for_map(bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
@@ -168,8 +168,8 @@ describe PhotosPhoto do
     it "returns no more than a maximum number of photos" do
       photo = build :photos_photo, latitude: 37, longitude: -122
       oldest_photo = build :photos_photo, dateadded: 1.day.ago
-      allow(PhotosPhoto).to receive(:mapped).with(bounds, 2) { [photo, oldest_photo] }
-      allow(PhotosPhoto).to receive(:oldest) { oldest_photo }
+      allow(PhotosPhoto).to receive(:mapped).with(bounds, 2).and_return([photo, oldest_photo])
+      allow(PhotosPhoto).to receive(:oldest).and_return(oldest_photo)
       expect(PhotosPhoto.all_for_map(bounds, 1)).to eq(
         partial: true,
         bounds: bounds,

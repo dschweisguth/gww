@@ -6,7 +6,7 @@ describe PhotosController do
       photo = build_stubbed :photos_photo, dateadded: Time.local(2011)
       allow(photo).to receive(:guesses).and_return([])
       allow(photo).to receive(:revelation).and_return(nil)
-      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id).and_return(photo)
       get :map_popup, id: photo.id
 
       expect(response).to be_success
@@ -22,9 +22,9 @@ describe PhotosController do
     it "displays guesses" do
       photo = build_stubbed :photos_photo, dateadded: Time.local(2011)
       guess = build_stubbed :guess, photo: photo, commented_at: Time.local(2011, 2)
-      allow(photo).to receive(:guesses) { [guess] }
+      allow(photo).to receive(:guesses).and_return([guess])
       allow(photo).to receive(:revelation).and_return(nil)
-      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id).and_return(photo)
       get :map_popup, id: photo.id
 
       expect(response.body).to have_link guess.person.username, href: person_path(guess.person)
@@ -36,8 +36,8 @@ describe PhotosController do
     it "displays a revelation" do
       photo = build_stubbed :photos_photo, dateadded: Time.local(2011)
       allow(photo).to receive(:guesses).and_return([])
-      allow(photo).to receive(:revelation) { build_stubbed :revelation, photo: photo, commented_at: Time.local(2011, 2) }
-      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id) { photo }
+      allow(photo).to receive(:revelation).and_return(build_stubbed :revelation, photo: photo, commented_at: Time.local(2011, 2))
+      allow(PhotosPhoto).to receive(:find_with_associations).with(photo.id).and_return(photo)
       get :map_popup, id: photo.id
 
       expect(response.body).not_to include 'Guessed by'
@@ -65,10 +65,10 @@ describe PhotosController do
     it "renders the page" do
       photo = build_stubbed :photos_photo, datetaken: Time.local(2009), dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
       guess = build_stubbed :guess, photo: photo
-      allow(photo).to receive(:guesses) { [guess] }
-      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      allow(photo).to receive(:guesses).and_return([guess])
+      allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       comment = build_stubbed :comment, photo: photo
-      allow(photo).to receive(:comments) { [comment] }
+      allow(photo).to receive(:comments).and_return([comment])
       allow(photo).to receive(:human_tags).and_return([])
       allow(photo).to receive(:machine_tags).and_return([])
       get :show, id: photo.id
@@ -103,10 +103,10 @@ describe PhotosController do
     it "handles a photo without datetaken" do
       photo = build_stubbed :photos_photo, dateadded: Time.local(2010), other_user_comments: 11, views: 22, faves: 33
       guess = build_stubbed :guess, photo: photo
-      allow(photo).to receive(:guesses) { [guess] }
-      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      allow(photo).to receive(:guesses).and_return([guess])
+      allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       comment = build_stubbed :comment, photo: photo
-      allow(photo).to receive(:comments) { [comment] }
+      allow(photo).to receive(:comments).and_return([comment])
       allow(photo).to receive(:human_tags).and_return([])
       allow(photo).to receive(:machine_tags).and_return([])
       get :show, id: photo.id
@@ -123,9 +123,9 @@ describe PhotosController do
       allow(photo).to receive(:revelation).and_return(nil)
       allow(photo).to receive(:human_tags).and_return([])
       allow(photo).to receive(:machine_tags).and_return([])
-      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       oldest = build_stubbed :photos_photo, dateadded: 1.day.ago
-      allow(PhotosPhoto).to receive(:oldest) { oldest }
+      allow(PhotosPhoto).to receive(:oldest).and_return(oldest)
       get :show, id: photo.id
 
       expect(response).to be_success
@@ -153,9 +153,9 @@ describe PhotosController do
       allow(photo).to receive(:revelation).and_return(nil)
       allow(photo).to receive(:human_tags).and_return([])
       allow(photo).to receive(:machine_tags).and_return([])
-      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       oldest = build_stubbed :photos_photo, dateadded: 1.day.ago
-      allow(PhotosPhoto).to receive(:oldest) { oldest }
+      allow(PhotosPhoto).to receive(:oldest).and_return(oldest)
       get :show, id: photo.id
 
       expect(response).to be_success
@@ -187,7 +187,7 @@ describe PhotosController do
       allow(photo).to(receive(:machine_tags)) do
         [build_stubbed(:tag, raw: 'Machine tag 2'), build_stubbed(:tag, raw: 'Machine tag 1')]
       end
-      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       get :show, id: photo.id
 
       expect(response.body).to match(/Tags.*Tag 2.*Tag 1/m)
@@ -200,9 +200,9 @@ describe PhotosController do
       allow(photo).to receive(:comments).and_return([])
       allow(photo).to receive(:guesses).and_return([])
       allow(photo).to receive(:revelation).and_return(nil)
-      allow(photo).to receive(:human_tags) { [build_stubbed(:tag, raw: 'foundinSF')] }
+      allow(photo).to receive(:human_tags).and_return([build_stubbed(:tag, raw: 'foundinSF')])
       allow(photo).to receive(:machine_tags).and_return([])
-      allow(PhotosPhoto).to receive(:find).with(photo.id) { photo }
+      allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       get :show, id: photo.id
 
       expect(response.body).to have_css 'li.incorrect'

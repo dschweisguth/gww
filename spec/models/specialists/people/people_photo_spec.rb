@@ -21,8 +21,8 @@ describe PeoplePhoto do
 
     def returns_post(game_status, color, symbol)
       post = build :people_photo, person_id: person.id, latitude: 37, longitude: -122, game_status: game_status
-      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [post] }
-      allow(PeoplePhoto).to receive(:oldest) { build :people_photo, dateadded: 1.day.ago }
+      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2).and_return([post])
+      allow(PeoplePhoto).to receive(:oldest).and_return(build :people_photo, dateadded: 1.day.ago)
       expect(PeoplePhoto.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
@@ -40,8 +40,8 @@ describe PeoplePhoto do
 
     it "copies an inferred geocode to the stated one" do
       post = build :people_photo, person_id: person.id, inferred_latitude: 37, inferred_longitude: -122
-      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [post] }
-      allow(PeoplePhoto).to receive(:oldest) { build :people_photo, dateadded: 1.day.ago }
+      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2).and_return([post])
+      allow(PeoplePhoto).to receive(:oldest).and_return(build :people_photo, dateadded: 1.day.ago)
       expect(PeoplePhoto.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
@@ -59,8 +59,8 @@ describe PeoplePhoto do
 
     it "returns a guess" do
       photo = build :people_photo, person_id: 2, latitude: 37, longitude: -122
-      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [photo] }
-      allow(PeoplePhoto).to receive(:oldest) { build :people_photo, dateadded: 1.day.ago }
+      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2).and_return([photo])
+      allow(PeoplePhoto).to receive(:oldest).and_return(build :people_photo, dateadded: 1.day.ago)
       expect(PeoplePhoto.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: false,
         bounds: bounds,
@@ -79,8 +79,8 @@ describe PeoplePhoto do
     it "returns no more than a maximum number of photos" do
       post = build :people_photo, person_id: person.id, latitude: 37, longitude: -122
       oldest_photo = build :people_photo, dateadded: 1.day.ago
-      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2) { [post, oldest_photo] }
-      allow(PeoplePhoto).to receive(:oldest) { oldest_photo }
+      allow(PeoplePhoto).to receive(:posted_or_guessed_by_and_mapped).with(person.id, bounds, 2).and_return([post, oldest_photo])
+      allow(PeoplePhoto).to receive(:oldest).and_return(oldest_photo)
       expect(PeoplePhoto.for_person_for_map(person.id, bounds, 1)).to eq(
         partial: true,
         bounds: bounds,

@@ -10,7 +10,7 @@ describe FlickrUpdateJob::Job do
       })
       allow(FlickrUpdateJob::PhotoUpdater).to receive(:update_all).and_return([1, 2, 3, 4])
       allow(FlickrUpdateJob::PersonUpdater).to receive(:update_all)
-      allow(Time).to receive(:now) { Time.utc(2011) }
+      allow(Time).to receive(:now).and_return(Time.utc(2011))
       allow_clear_page_cache
       message = FlickrUpdateJob::Job.run
 

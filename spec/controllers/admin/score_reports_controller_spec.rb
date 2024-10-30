@@ -5,10 +5,10 @@ describe Admin::ScoreReportsController do
     it "renders the page" do
       report2 = build_stubbed :score_report, created_at: Time.local(2011, 1, 2)
       report1 = build_stubbed :score_report, created_at: Time.local(2011)
-      allow(ScoreReport).to receive(:order) { [report2, report1] }
-      allow(ScoreReport).to receive(:guess_counts) { { report2.id => 4, report1.id => 3 } }
-      allow(ScoreReport).to receive(:revelation_counts) { { report2.id => 1 } }
-      allow(Time).to receive(:now) { Time.local(2011, 1, 2) }
+      allow(ScoreReport).to receive(:order).and_return([report2, report1])
+      allow(ScoreReport).to receive(:guess_counts).and_return(report2.id => 4, report1.id => 3)
+      allow(ScoreReport).to receive(:revelation_counts).and_return(report2.id => 1)
+      allow(Time).to receive(:now).and_return(Time.local(2011, 1, 2))
       get :index
 
       expect(response).to be_success
@@ -26,7 +26,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of the last report" do
-      allow(ScoreReport).to receive(:order) { [build_stubbed(:score_report, created_at: Time.now)] }
+      allow(ScoreReport).to receive(:order).and_return([build_stubbed(:score_report, created_at: Time.now)])
       allow(ScoreReport).to receive(:guess_counts).and_return({})
       allow(ScoreReport).to receive(:revelation_counts).and_return({})
       get :index
@@ -37,7 +37,7 @@ describe Admin::ScoreReportsController do
     end
 
     it "doesn't allow deletion of a report more than a day old" do
-      allow(ScoreReport).to receive(:order) { [build_stubbed(:score_report, created_at: Time.now - 1.day - 1.second)] }
+      allow(ScoreReport).to receive(:order).and_return([build_stubbed(:score_report, created_at: Time.now - 1.day - 1.second)])
       allow(ScoreReport).to receive(:guess_counts).and_return({})
       allow(ScoreReport).to receive(:revelation_counts).and_return({})
       get :index
@@ -53,13 +53,13 @@ describe Admin::ScoreReportsController do
     let(:report_date) { Time.local(2011, 1, 5) }
 
     before do
-      allow(Time).to receive(:now) { report_date }
+      allow(Time).to receive(:now).and_return(report_date)
     end
 
     it "renders the page" do
       previous_report_date = Time.local(2011).getutc
       previous_report = build_stubbed :score_report, created_at: previous_report_date
-      allow(ScoreReport).to receive(:previous).with(report_date.getutc) { previous_report }
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc).and_return(previous_report)
       renders_report_for report_date, previous_report_date, :new
     end
 
@@ -73,7 +73,7 @@ describe Admin::ScoreReportsController do
   describe '#create' do
     it "creates and redirects" do
       previous = build_stubbed :score_report
-      allow(ScoreReport).to receive(:latest) { previous }
+      allow(ScoreReport).to receive(:latest).and_return(previous)
       allow(ScoreReport).to receive(:create!).with previous_report: previous
       allow_clear_page_cache
       post :create

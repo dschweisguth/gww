@@ -63,7 +63,7 @@ Then /^show me the screen$/ do
 end
 
 Given(/^Capybara\.default_max_wait_time is (\d+\.\d+) s$/) do |default_max_wait_time|
-  allow(Capybara).to receive(:default_max_wait_time) { default_max_wait_time.to_f }
+  allow(Capybara).to receive(:default_max_wait_time).and_return(default_max_wait_time.to_f)
 end
 
 When(/^I wait_for something that takes (\d+(?:\.\d+)?) s with an interval of (\d+\.\d+) s then the thing happens/) do |time_to_wait, interval|

@@ -2,7 +2,7 @@ describe PeopleShowPhoto do
   describe '#ymd_elapsed' do
     it "returns the age with a precision of days in English" do
       photo = described_class.new dateadded: Time.utc(2000)
-      allow(Time).to receive(:now) { Time.utc(2001, 2, 2, 1, 1, 1) }
+      allow(Time).to receive(:now).and_return(Time.utc(2001, 2, 2, 1, 1, 1))
       expect(photo.ymd_elapsed).to eq('1&nbsp;year, 1&nbsp;month, 1&nbsp;day')
     end
   end

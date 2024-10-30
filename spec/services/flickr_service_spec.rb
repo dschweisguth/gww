@@ -71,7 +71,7 @@ describe FlickrService, type: :service do
 
     %w(500 502 503 504).each do |code|
       it "raises an error if the response has status #{code}" do
-        allow(service).to receive(:get_once) { instance_double Net::HTTPResponse, code: code }
+        allow(service).to receive(:get_once).and_return(instance_double Net::HTTPResponse, code: code)
         request_fails
       end
     end
@@ -114,7 +114,7 @@ describe FlickrService, type: :service do
     end
 
     def stub_get_once_times_out(times)
-      allow(service).to receive(:get_once).exactly(times) { raise Timeout::Error }
+      allow(service).to receive(:get_once).exactly(times).and_raise Timeout::Error
     end
 
     def stub_get_once_succeeds
@@ -125,7 +125,7 @@ describe FlickrService, type: :service do
     end
 
     def stub_get_once_returns(body, code)
-      allow(service).to receive(:get_once) { instance_double Net::HTTPResponse, body: body, code: code }
+      allow(service).to receive(:get_once).and_return(instance_double Net::HTTPResponse, body: body, code: code)
     end
 
   end
@@ -146,22 +146,22 @@ describe FlickrService, type: :service do
       end
 
       it "returns 1 if it's been 0 seconds since it was last called" do
-        allow(Time).to receive(:now) { Time.utc(2014) }
+        allow(Time).to receive(:now).and_return(Time.utc(2014))
         service.seconds_to_wait
         expect(service.seconds_to_wait).to eq(1)
       end
 
       it "returns 0.25 if it's been 0.75 seconds since it was last called" do
-        allow(Time).to receive(:now) { Time.utc(2014) }
+        allow(Time).to receive(:now).and_return(Time.utc(2014))
         service.seconds_to_wait
-        allow(Time).to receive(:now) { Time.utc(2014) + 0.75.seconds }
+        allow(Time).to receive(:now).and_return(Time.utc(2014) + 0.75.seconds)
         expect(service.seconds_to_wait).to eq(0.25)
       end
 
       it "returns 0 if it's been more than 1 second since it was last called" do
-        allow(Time).to receive(:now) { Time.utc(2014) }
+        allow(Time).to receive(:now).and_return(Time.utc(2014))
         service.seconds_to_wait
-        allow(Time).to receive(:now) { Time.utc(2014) + 2.seconds }
+        allow(Time).to receive(:now).and_return(Time.utc(2014) + 2.seconds)
         expect(service.seconds_to_wait).to eq(0)
       end
 

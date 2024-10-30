@@ -4,9 +4,9 @@ describe ScoreReportsController do
   describe '#index' do
     it "renders the page" do
       report = build_stubbed :score_report, created_at: Time.local(2011)
-      allow(ScoreReport).to receive(:order) { [report] }
-      allow(ScoreReport).to receive(:guess_counts) { { report.id => 1 } }
-      allow(ScoreReport).to receive(:revelation_counts) { { report.id => 2 } }
+      allow(ScoreReport).to receive(:order).and_return([report])
+      allow(ScoreReport).to receive(:guess_counts).and_return(report.id => 1)
+      allow(ScoreReport).to receive(:revelation_counts).and_return(report.id => 2)
       get :index
 
       expect(response).to be_success
@@ -21,13 +21,13 @@ describe ScoreReportsController do
     let(:report_date) { Time.local(2011, 1, 5) }
 
     before do
-      allow(ScoreReport).to receive(:find).with('1') { build_stubbed :score_report, created_at: report_date.getutc }
+      allow(ScoreReport).to receive(:find).with('1').and_return(build_stubbed :score_report, created_at: report_date.getutc)
     end
 
     it "renders the page" do
       previous_report_date = Time.local(2011).getutc
       previous_report = build_stubbed :score_report, created_at: previous_report_date
-      allow(ScoreReport).to receive(:previous).with(report_date.getutc) { previous_report }
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc).and_return(previous_report)
       renders_report_for report_date, previous_report_date, :show, id: '1'
     end
 

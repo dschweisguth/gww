@@ -194,7 +194,7 @@ describe AdminPhotosPhoto do
     # Specs of add_entered_answer call this immediately before calling add_selected_answer so
     # that it doesn't affect test objects' date attributes and assertions on those attributes don't pass by accident
     def set_time
-      allow(Time).to receive(:now) { now }
+      allow(Time).to receive(:now).and_return(now)
     end
 
   end

@@ -184,7 +184,7 @@ describe ScoreReportsPerson do
 
     def adds_change(people, people_by_score, people_by_previous_score, expected_change)
       previous_report_date = Time.utc(2010)
-      allow(ScoreReportsPerson).to receive(:by_score).with(people, previous_report_date) { people_by_previous_score }
+      allow(ScoreReportsPerson).to receive(:by_score).with(people, previous_report_date).and_return(people_by_previous_score)
       allow(ScoreReportsPhoto).to receive(:add_posts).with people, previous_report_date, :previous_post_count
       guessers = [[person, []]]
       ScoreReportsPerson.add_change_in_standings people_by_score, people, previous_report_date, guessers

@@ -4,7 +4,7 @@ describe PeopleController do
   describe '#find' do
     it "finds a person" do
       person = build_stubbed :people_person
-      allow(PeoplePerson).to receive(:find_by_multiple_fields).with('username') { person }
+      allow(PeoplePerson).to receive(:find_by_multiple_fields).with('username').and_return(person)
       get :find, username: 'username'
 
       expect(response).to redirect_to person_path person
@@ -39,7 +39,7 @@ describe PeopleController do
       person.comments_to_be_guessed = 1.0
       person.views_per_post = 1.0
       person.faves_per_post = 1.0
-      allow(PeopleIndexPerson).to receive(:all_sorted).with(sorted_by_param, order_param) { [person] }
+      allow(PeopleIndexPerson).to receive(:all_sorted).with(sorted_by_param, order_param).and_return([person])
       get :index, sorted_by: sorted_by_param, order: order_param
 
       expect(response).to be_success
@@ -54,7 +54,7 @@ describe PeopleController do
       guesser = build_stubbed :people_person, bias: 2.5
       poster = build_stubbed :people_person
       guesser.poster = poster
-      allow(PeoplePerson).to receive(:nemeses) { [guesser] }
+      allow(PeoplePerson).to receive(:nemeses).and_return([guesser])
       get :nemeses
 
       expect(response).to be_success
@@ -79,7 +79,7 @@ describe PeopleController do
       person = build_stubbed :people_person
       guess = build_stubbed :people_guess, person: person, commented_at: report_day
       (0..3).each { |division| top_guessers[division][0].scores[1] = [person] }
-      allow(PeoplePerson).to receive(:top_guessers) { top_guessers }
+      allow(PeoplePerson).to receive(:top_guessers).and_return(top_guessers)
       get :top_guessers
 
       expect(response).to be_success
@@ -108,7 +108,7 @@ describe PeopleController do
     let(:favoring_guesser) { build_stubbed :people_show_person, bias: 3.6 }
 
     before do
-      allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
+      allow(PeopleShowPerson).to receive(:find).with(person.id).and_return(person)
       allow(person).to receive(:score_standing).and_return([1, false])
       allow(person).to receive(:posts_standing).and_return([1, false])
 
@@ -252,12 +252,12 @@ describe PeopleController do
 
       def stub_guessed_post
         found1 = build_stubbed :people_show_guess, photo: photo, person: build_stubbed(:people_show_person)
-        allow(photo).to receive(:guesses) { [found1] }
-        allow(person).to receive(:photos_with_associations) { [photo] }
+        allow(photo).to receive(:guesses).and_return([found1])
+        allow(person).to receive(:photos_with_associations).and_return([photo])
       end
 
       def stub_revealed_post
-        allow(person).to receive(:revealed_photos) { [photo] }
+        allow(person).to receive(:revealed_photos).and_return([photo])
       end
 
     end
@@ -279,51 +279,51 @@ describe PeopleController do
     def stub_guesses
       allow(person).to receive(:mapped_guess_count).and_return(1)
 
-      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 7) { [person] }
-      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 30) { [person] }
+      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 7).and_return([person])
+      allow(PeopleShowPerson).to receive(:high_scorers).with(now, 30).and_return([person])
 
-      allow(person).to receive(:first_guess) { build_stubbed :people_show_guess }
-      allow(person).to receive(:most_recent_guess) { build_stubbed :people_show_guess }
-      allow(person).to receive(:oldest_guess) { build_stubbed :people_show_guess, place: 1 }
-      allow(person).to receive(:fastest_guess) { build_stubbed :people_show_guess, place: 1 }
+      allow(person).to receive(:first_guess).and_return(build_stubbed :people_show_guess)
+      allow(person).to receive(:most_recent_guess).and_return(build_stubbed :people_show_guess)
+      allow(person).to receive(:oldest_guess).and_return(build_stubbed :people_show_guess, place: 1)
+      allow(person).to receive(:fastest_guess).and_return(build_stubbed :people_show_guess, place: 1)
 
-      allow(person).to receive(:guess_of_longest_lasting_post) { build_stubbed :people_show_guess, place: 1 }
-      allow(person).to receive(:guess_of_shortest_lasting_post) { build_stubbed :people_show_guess, place: 1 }
+      allow(person).to receive(:guess_of_longest_lasting_post).and_return(build_stubbed :people_show_guess, place: 1)
+      allow(person).to receive(:guess_of_shortest_lasting_post).and_return(build_stubbed :people_show_guess, place: 1)
 
       # It's important to the test that these guesses are of photos by different people with different IDs
-      allow(person).to receive(:guesses_with_associations) { [build_stubbed(:people_show_guess), build_stubbed(:people_show_guess)] }
+      allow(person).to receive(:guesses_with_associations).and_return([build_stubbed(:people_show_guess), build_stubbed(:people_show_guess)])
 
-      allow(person).to receive(:favorite_posters) { [favorite_poster] }
+      allow(person).to receive(:favorite_posters).and_return([favorite_poster])
 
     end
 
     def stub_posts
       allow(person).to receive(:mapped_photo_count).and_return(1)
 
-      allow(PeopleShowPerson).to receive(:top_posters).with(now, 7) { [person] }
-      allow(PeopleShowPerson).to receive(:top_posters).with(now, 30) { [person] }
+      allow(PeopleShowPerson).to receive(:top_posters).with(now, 7).and_return([person])
+      allow(PeopleShowPerson).to receive(:top_posters).with(now, 30).and_return([person])
 
       first_post = build_stubbed :people_show_photo
-      allow(person).to receive(:first_photo) { first_post }
+      allow(person).to receive(:first_photo).and_return(first_post)
 
       most_recent_post = build_stubbed :people_show_photo
-      allow(person).to receive(:most_recent_photo) { most_recent_post }
+      allow(person).to receive(:most_recent_photo).and_return(most_recent_post)
 
-      allow(person).to receive(:oldest_unfound_photo) { build_stubbed :people_show_photo, place: 1 }
-      allow(person).to receive(:most_commented_photo) { build_stubbed :people_show_photo, place: 1 }
-      allow(person).to receive(:most_viewed_photo) { build_stubbed :people_show_photo, place: 1 }
-      allow(person).to receive(:most_faved_photo) { build_stubbed :people_show_photo, place: 1 }
+      allow(person).to receive(:oldest_unfound_photo).and_return(build_stubbed :people_show_photo, place: 1)
+      allow(person).to receive(:most_commented_photo).and_return(build_stubbed :people_show_photo, place: 1)
+      allow(person).to receive(:most_viewed_photo).and_return(build_stubbed :people_show_photo, place: 1)
+      allow(person).to receive(:most_faved_photo).and_return(build_stubbed :people_show_photo, place: 1)
 
       found1 = build_stubbed :people_show_guess
-      allow(found1.photo).to receive(:guesses) { [found1] }
+      allow(found1.photo).to receive(:guesses).and_return([found1])
       found2 = build_stubbed :people_show_guess
-      allow(found2.photo).to receive(:guesses) { [found2] }
-      allow(person).to receive(:photos_with_associations) { [found1.photo, found2.photo] }
+      allow(found2.photo).to receive(:guesses).and_return([found2])
+      allow(person).to receive(:photos_with_associations).and_return([found1.photo, found2.photo])
 
-      allow(person).to receive(:favoring_guessers) { [favoring_guesser] }
+      allow(person).to receive(:favoring_guessers).and_return([favoring_guesser])
 
-      allow(person).to receive(:unfound_photos) { [build_stubbed(:people_show_photo)] }
-      allow(person).to receive(:revealed_photos) { [build_stubbed(:people_show_photo)] }
+      allow(person).to receive(:unfound_photos).and_return([build_stubbed(:people_show_photo)])
+      allow(person).to receive(:revealed_photos).and_return([build_stubbed(:people_show_photo)])
 
     end
 
@@ -351,7 +351,7 @@ describe PeopleController do
   describe '#guesses' do
     it "renders the page" do
       guesser = build_stubbed :people_person
-      allow(PeoplePerson).to receive(:find).with(guesser.id) { guesser }
+      allow(PeoplePerson).to receive(:find).with(guesser.id).and_return(guesser)
       poster = build_stubbed :people_person
       photo = build_stubbed :people_photo, person: poster
       allow(guesser).to receive(:guesses_with_associations_ordered_by_comments) do
@@ -369,11 +369,11 @@ describe PeopleController do
   describe '#comments' do
     it "renders the page" do
       person = build_stubbed :people_person
-      allow(PeoplePerson).to receive(:find).with(person.id) { person }
+      allow(PeoplePerson).to receive(:find).with(person.id).and_return(person)
 
       photo = build_stubbed :people_photo
       paginated_photos = [photo].paginate
-      allow(person).to receive(:paginated_commented_photos).with('1') { paginated_photos }
+      allow(person).to receive(:paginated_commented_photos).with('1').and_return(paginated_photos)
 
       get :comments, id: person.id, page: '1'
 
@@ -389,13 +389,13 @@ describe PeopleController do
   describe '#map' do
     it "renders the page" do
       person = build_stubbed :people_show_person
-      allow(PeoplePerson).to receive(:find).with(person.id) { person }
-      allow(PeopleShowPerson).to receive(:find).with(person.id) { person }
+      allow(PeoplePerson).to receive(:find).with(person.id).and_return(person)
+      allow(PeopleShowPerson).to receive(:find).with(person.id).and_return(person)
       allow(person).to receive(:mapped_photo_count).and_return(1)
       allow(person).to receive(:mapped_guess_count).and_return(1)
       photos_json_data = { 'property' => 'value' }
       allow(PeoplePhoto).to receive(:for_person_for_map).
-        with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { photos_json_data }
+        with(person.id, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS).and_return(photos_json_data)
       get :map, id: person.id
 
       expect(response).to be_success
@@ -413,7 +413,7 @@ describe PeopleController do
     it "renders the page" do
       photos_json_data = { 'property' => 'value' }
       allow(PeoplePhoto).to receive(:for_person_for_map).
-        with(1, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS) { photos_json_data }
+        with(1, PeopleController::INITIAL_MAP_BOUNDS, PeopleController::MAX_MAP_PHOTOS).and_return(photos_json_data)
       get :map_json, id: 1
 
       expect(response).to be_success
@@ -423,7 +423,7 @@ describe PeopleController do
 
     it "supports arbitrary bounds" do
       allow(PeoplePhoto).to receive(:for_person_for_map).
-        with(1, Bounds.new(0, 1, 10, 11), PeopleController::MAX_MAP_PHOTOS).and_return({ 'property' => 'value' })
+        with(1, Bounds.new(0, 1, 10, 11), PeopleController::MAX_MAP_PHOTOS).and_return('property' => 'value')
       get :map_json, id: 1, sw: '0,10', ne: '1,11'
     end
 

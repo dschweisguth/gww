@@ -7,7 +7,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   guess11 = build_stubbed :score_reports_guess, person: person1
   guess21 = build_stubbed :score_reports_guess, person: person2
   guess22 = build_stubbed :score_reports_guess, person: person2
-  allow(ScoreReportsGuess).to receive(:all_between).with(previous_report_date, report_date.getutc) { [guess11, guess21, guess22] }
+  allow(ScoreReportsGuess).to receive(:all_between).with(previous_report_date, report_date.getutc).and_return([guess11, guess21, guess22])
 
   revealed_photo11 = build_stubbed :score_reports_photo, person: person1
   revealed_photo21 = build_stubbed :score_reports_photo, person: person2
@@ -15,20 +15,20 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   revelation11 = build_stubbed :score_reports_revelation, photo: revealed_photo11
   revelation21 = build_stubbed :score_reports_revelation, photo: revealed_photo21
   revelation22 = build_stubbed :score_reports_revelation, photo: revealed_photo22
-  allow(Revelation).to receive(:all_between).with(previous_report_date, report_date.getutc) { [revelation11, revelation21, revelation22] }
+  allow(Revelation).to receive(:all_between).with(previous_report_date, report_date.getutc).and_return([revelation11, revelation21, revelation22])
 
-  allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 7) { [person2, person1] }
-  allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 30) { [person2, person1] }
+  allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 7).and_return([person2, person1])
+  allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 30).and_return([person2, person1])
 
-  allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 7) { [person2, person1] }
-  allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 30) { [person2, person1] }
+  allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 7).and_return([person2, person1])
+  allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 30).and_return([person2, person1])
 
   allow(ScoreReportsPhoto).to receive(:count_between).with(previous_report_date, report_date.getutc).and_return(6)
   allow(ScoreReportsPhoto).to receive(:unfound_or_unconfirmed_count_before).with(report_date).and_return(1234)
 
   # Note that we're ignoring the test guesses' photos' people
   people = [person0, person1, person2]
-  allow(ScoreReportsPerson).to receive(:all_before).with(report_date) { people }
+  allow(ScoreReportsPerson).to receive(:all_before).with(report_date).and_return(people)
 
   allow(ScoreReportsPhoto).to receive(:add_posts).with(people, report_date, :post_count)
   person0.post_count = 0
@@ -36,11 +36,11 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   person2.post_count = 2
 
   people_by_score = { 0 => [person0], 1 => [person1], 2 => [person2] }
-  allow(ScoreReportsPerson).to receive(:by_score).with(people, report_date) { people_by_score }
+  allow(ScoreReportsPerson).to receive(:by_score).with(people, report_date).and_return(people_by_score)
   guessers = [[person2, [guess21, guess22]], [person1, [guess11]]]
   allow(ScoreReportsPerson).to receive(:add_change_in_standings).with(people_by_score, people, previous_report_date, guessers)
 
-  allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, member_count: 3 }
+  allow(FlickrUpdate).to receive(:latest).and_return(build_stubbed :flickr_update, member_count: 3)
 
   get action, params
 
@@ -56,7 +56,7 @@ def renders_report_for(report_date, previous_report_date, action, params = {})
   expect(response.body).to match(/Top posters in the last month:/)
   expect(response.body).to match(/6 photos have been added to the pool since the previous report/)
   expect(response.body).to have_link '1234 unfound photos', href: search_photos_path('game-status/unfound,unconfirmed')
-  # Doesn't see worth fixing the grammatical errors, since the numbers are always larger in production
+  # Doesn't seem worth fixing the grammatical errors, since the numbers are always larger in production
   participation = '2 people have made correct guesses. ' \
     '1 people have put at least one photo in the pool but not guessed any photos correctly. ' \
     'That means that at least 3 of our 3 members have participated in the game.'

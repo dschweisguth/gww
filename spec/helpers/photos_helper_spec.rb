@@ -90,7 +90,7 @@ describe PhotosHelper do
     end
 
     def ago_in_words_returns(now, time, expected)
-      allow(Time).to receive(:now) { Time.utc(*now) }
+      allow(Time).to receive(:now).and_return(Time.utc(*now))
       expect(helper.ago_in_words(Time.utc(*time))).to eq(expected)
     end
 

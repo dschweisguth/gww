@@ -3,8 +3,8 @@ describe RootController do
     let(:now) { Time.local(2011) }
 
     it "renders the page" do
-      allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, created_at: now.getutc }
-      allow(ScoreReport).to receive(:minimum) { now.getutc }
+      allow(FlickrUpdate).to receive(:latest).and_return(build_stubbed :flickr_update, created_at: now.getutc)
+      allow(ScoreReport).to receive(:minimum).and_return(now.getutc)
       get :index
 
       expect(response).to be_success
@@ -13,8 +13,8 @@ describe RootController do
     end
 
     it "reports a completed update" do
-      allow(FlickrUpdate).to receive(:latest) { build_stubbed :flickr_update, created_at: now, completed_at: Time.local(2001, 1, 1, 0, 6) }
-      allow(ScoreReport).to receive(:minimum) { now.getutc }
+      allow(FlickrUpdate).to receive(:latest).and_return(build_stubbed :flickr_update, created_at: now, completed_at: Time.local(2001, 1, 1, 0, 6))
+      allow(ScoreReport).to receive(:minimum).and_return(now.getutc)
       get :index
 
       expect(response).to be_success

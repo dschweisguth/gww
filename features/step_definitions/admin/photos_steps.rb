@@ -1,5 +1,5 @@
 Given /^updating a photo from Flickr does nothing$/ do
-  allow(FlickrUpdateJob::PhotoUpdater).to receive(:update) { nil }
+  allow(FlickrUpdateJob::PhotoUpdater).to receive(:update).and_return(nil)
 end
 
 Given /^there is an inaccessible photo$/ do

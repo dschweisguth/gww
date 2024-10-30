@@ -41,7 +41,7 @@ describe Stintersection do
     it "converts an address to a lat + long" do
       location = Address.new '555 California', '555', 'California', nil
       point = point(1, 2)
-      allow(Stcline).to receive(:geocode).with(location) { point }
+      allow(Stcline).to receive(:geocode).with(location).and_return(point)
       expect(Stintersection.geocode(location)).to eq(point)
     end
 
