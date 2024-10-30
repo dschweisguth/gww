@@ -74,10 +74,12 @@ describe Admin::ScoreReportsController do
     it "creates and redirects" do
       previous = build_stubbed :score_report
       allow(ScoreReport).to receive(:latest) { previous }
-      expect(ScoreReport).to receive(:create!).with previous_report: previous
-      mock_clear_page_cache
+      allow(ScoreReport).to receive(:create!).with previous_report: previous
+      allow_clear_page_cache
       post :create
 
+      expect(ScoreReport).to have_received(:create!).with previous_report: previous
+      expect_clear_page_cache
       expect(response).to redirect_to admin_score_reports_path
 
     end
@@ -85,10 +87,12 @@ describe Admin::ScoreReportsController do
 
   describe '#destroy' do
     it "destroys and redirects" do
-      expect(ScoreReport).to receive(:destroy).with '666'
-      mock_clear_page_cache
+      allow(ScoreReport).to receive(:destroy).with '666'
+      allow_clear_page_cache
       get :destroy, id: '666'
 
+      expect(ScoreReport).to have_received(:destroy).with '666'
+      expect_clear_page_cache
       expect(response).to redirect_to admin_score_reports_path
 
     end

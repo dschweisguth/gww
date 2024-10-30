@@ -62,15 +62,19 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     end
 
     def mock_get_comments_and_tags
-      expect(described_class).to receive(:update_comments).with an_instance_of(FlickrUpdatePhoto)
-      expect(described_class).to receive(:update_tags).with an_instance_of(FlickrUpdatePhoto)
+      allow(described_class).to receive(:update_comments).with an_instance_of(FlickrUpdatePhoto)
+      allow(described_class).to receive(:update_tags).with an_instance_of(FlickrUpdatePhoto)
+      yield
+      expect(described_class).to have_received(:update_comments)
+      expect(described_class).to have_received(:update_tags)
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
       stubbed_photo = stub_get_photos
       stubbed_faves = stub_get_faves
-      mock_get_comments_and_tags
-      expect(described_class.update_all).to eq([1, 1, 1, 1])
+      mock_get_comments_and_tags do
+        expect(described_class.update_all).to eq([1, 1, 1, 1])
+      end
 
       photo = Photo.first_and_only
 
@@ -106,8 +110,9 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "replaces an empty-string pathalias with the person's flickrid" do
       stubbed_photo = stub_get_photos pathalias: ''
       stub_get_faves
-      mock_get_comments_and_tags
-      described_class.update_all
+      mock_get_comments_and_tags do
+        described_class.update_all
+      end
 
       expect(Person.first_and_only).to have_attributes?(
         flickrid: stubbed_photo[:owner],
@@ -120,9 +125,10 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "uses an existing person" do
       stubbed_photo = stub_get_photos
       stub_get_faves
-      mock_get_comments_and_tags
       person_before = create :person, flickrid: stubbed_photo[:owner]
-      expect(described_class.update_all).to eq([1, 0, 1, 1])
+      mock_get_comments_and_tags do
+        expect(described_class.update_all).to eq([1, 0, 1, 1])
+      end
 
       # Note that a username or pathalias that changes during the update is not updated
       expect(Person.first_and_only).to have_the_same_attributes_as?(person_before)
@@ -133,8 +139,9 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "handles an invalid datetaken" do
       stub_get_photos({}, 'datetaken' => "0000-00-00 00:00:00")
       stub_get_faves
-      mock_get_comments_and_tags
-      described_class.update_all
+      mock_get_comments_and_tags do
+        described_class.update_all
+      end
       expect(Photo.first_and_only.datetaken).to be_nil
     end
 
@@ -147,15 +154,15 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "handles an empty description" do
       stub_get_photos description: {}
       stub_get_faves
-      mock_get_comments_and_tags
-      described_class.update_all
+      mock_get_comments_and_tags do
+        described_class.update_all
+      end
       expect(Photo.first_and_only.description).to be_nil
     end
 
     it "uses an existing photo, and updates attributes that changed" do
       stubbed_photo = stub_get_photos
       stubbed_faves = stub_get_faves
-      mock_get_comments_and_tags
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
         person: person,
@@ -171,7 +178,9 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      expect(described_class.update_all).to eq([0, 0, 1, 1])
+      mock_get_comments_and_tags do
+        expect(described_class.update_all).to eq([0, 0, 1, 1])
+      end
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -199,8 +208,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "updates only seen_at, views and faves if Flickr says the photo hasn't been updated" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
       stubbed_faves = stub_get_faves
-      expect(described_class).not_to receive(:update_comments)
-      expect(described_class).not_to receive(:update_tags)
+      allow(described_class).to receive(:update_comments)
+      allow(described_class).to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
         person: person,
@@ -217,6 +226,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
         views: 40,
         faves: 6
       described_class.update_all
+      expect(described_class).not_to have_received(:update_comments)
+      expect(described_class).not_to have_received(:update_tags)
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -241,8 +252,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
 
     it "updates only seen_at if Flickr says the photo hasn't been updated and views hasn't changed" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1), views: 40
-      expect(described_class).not_to receive(:update_comments)
-      expect(described_class).not_to receive(:update_tags)
+      allow(described_class).to receive(:update_comments)
+      allow(described_class).to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
         person: person,
@@ -259,6 +270,8 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
         views: 40,
         faves: 6
       described_class.update_all
+      expect(described_class).not_to have_received(:update_comments)
+      expect(described_class).not_to have_received(:update_tags)
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -284,7 +297,6 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
     it "updates faves if Flickr says the photo has been updated but views hasn't changed" do
       stubbed_photo = stub_get_photos views: 40
       stubbed_faves = stub_get_faves
-      mock_get_comments_and_tags
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
         person: person,
@@ -300,7 +312,9 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
         lastupdate: Time.utc(2010, 1, 1, 1),
         views: 40,
         faves: 6
-      expect(described_class.update_all).to eq([0, 0, 1, 1])
+      mock_get_comments_and_tags do
+        expect(described_class.update_all).to eq([0, 0, 1, 1])
+      end
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -327,26 +341,29 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
-      mock_get_comments_and_tags
       allow(described_class).to receive(:fave_count).and_return(nil)
-      described_class.update_all
+      mock_get_comments_and_tags do
+        described_class.update_all
+      end
       expect(Photo.first.faves).to eq(0)
     end
 
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
-      mock_get_comments_and_tags
       allow(described_class).to receive(:fave_count).and_return(nil)
       photo = create :flickr_update_photo, faves: 6
-      described_class.update_all
+      mock_get_comments_and_tags do
+        described_class.update_all
+      end
       expect(photo.reload.faves).to eq(6)
     end
 
     it "stores 0 latitude, longitude and accuracy as nil" do
       stub_get_photos latitude: 0, longitude: 0, accuracy: 0
       stub_get_faves
-      mock_get_comments_and_tags
-      expect(described_class.update_all).to eq([1, 1, 1, 1])
+      mock_get_comments_and_tags do
+        expect(described_class.update_all).to eq([1, 1, 1, 1])
+      end
       expect(Photo.first_and_only).to have_attributes?(
         latitude: nil,
         longitude: nil,
@@ -369,10 +386,12 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       stub_get_photo
       stub_get_photo_location
       allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
-      expect(described_class).to receive(:update_comments).with photo
-      expect(described_class).to receive(:update_tags).with photo
+      allow(described_class).to receive(:update_comments).with photo
+      allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
 
+      expect(described_class).to have_received(:update_comments)
+      expect(described_class).to have_received(:update_tags)
       expect(photo.person).to have_attributes?(
         username: 'new_username',
         pathalias: 'new_pathalias',
@@ -448,12 +467,16 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       old_photo_attrs = photo.attributes
       stub_get_person
       stub_get_photo lastupdate: Time.utc(2013)
-      expect(FlickrService.instance).not_to receive(:photos_geo_get_location)
-      expect(described_class).not_to receive(:fave_count)
-      expect(described_class).not_to receive(:update_comments)
-      expect(described_class).not_to receive(:update_tags)
+      allow(FlickrService.instance).to receive(:photos_geo_get_location)
+      allow(described_class).to receive(:fave_count)
+      allow(described_class).to receive(:update_comments)
+      allow(described_class).to receive(:update_tags)
       described_class.update photo
 
+      expect(FlickrService.instance).not_to have_received(:photos_geo_get_location)
+      expect(described_class).not_to have_received(:fave_count)
+      expect(described_class).not_to have_received(:update_comments)
+      expect(described_class).not_to have_received(:update_tags)
       expect(photo.person).to have_attributes?(
         username: 'new_username',
         pathalias: 'new_pathalias'
@@ -481,9 +504,11 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       stub_get_photo comments: 0
       stub_get_photo_location
       allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
-      expect(described_class).not_to receive(:update_comments)
+      allow(described_class).to receive(:update_comments)
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
+
+      expect(described_class).not_to have_received(:update_comments)
     end
 
     it "doesn't request tags if the photo has none, for performance" do
@@ -492,8 +517,10 @@ describe FlickrUpdateJob::PhotoUpdater, type: :job do
       stub_get_photo_location
       allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments)
-      expect(described_class).not_to receive(:update_tags)
+      allow(described_class).to receive(:update_tags)
       described_class.update photo
+
+      expect(described_class).not_to have_received(:update_tags)
     end
 
     def stub_get_person

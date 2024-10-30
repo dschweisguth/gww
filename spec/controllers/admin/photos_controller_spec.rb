@@ -72,8 +72,10 @@ describe Admin::PhotosController do
 
     it "loads comments and renders the page" do
       allow(FlickrUpdateJob::PhotoUpdater).to receive(:update).with(flickr_update_photo)
-      mock_clear_page_cache
+      allow_clear_page_cache
       get :edit, id: admin_photos_photo.id, update_from_flickr: true
+
+      expect_clear_page_cache
       expect(response).to be_success
     end
 
@@ -81,10 +83,11 @@ describe Admin::PhotosController do
 
   describe '#add_selected_answer' do
     it "notifies the user if there was an error" do
-      expect(AdminPhotosComment).to receive(:add_selected_answer).with('2', 'username') do
+      allow(AdminPhotosComment).to receive(:add_selected_answer).with('2', 'username') do
         raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
       end
       post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
+      expect(AdminPhotosComment).to have_received(:add_selected_answer).with('2', 'username')
       redirects_to_edit_path 1
       expect(flash[:notice]).to eq('Sorry')
     end
@@ -92,10 +95,11 @@ describe Admin::PhotosController do
 
   describe '#add_entered_answer' do
     it "notifies the user if there was an error" do
-      expect(AdminPhotosPhoto).to receive(:add_entered_answer).with(1, 'username', 'answer text') do
+      allow(AdminPhotosPhoto).to receive(:add_entered_answer).with(1, 'username', 'answer text') do
         raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
       end
       post :add_entered_answer, id: '1', username: 'username', answer_text: 'answer text'
+      expect(AdminPhotosPhoto).to have_received(:add_entered_answer).with(1, 'username', 'answer text')
       redirects_to_edit_path 1
       expect(flash[:notice]).to eq('Sorry')
     end
@@ -103,9 +107,12 @@ describe Admin::PhotosController do
 
   describe '#remove_revelation' do
     it "removes a revelation" do
-      expect(AdminPhotosComment).to receive(:remove_revelation).with '2'
-      mock_clear_page_cache
+      allow(AdminPhotosComment).to receive(:remove_revelation).with '2'
+      allow_clear_page_cache
       post :remove_revelation, id: '1', comment_id: '2'
+
+      expect(AdminPhotosComment).to have_received(:remove_revelation).with '2'
+      expect_clear_page_cache
       redirects_to_edit_path 1
     end
   end

@@ -34,8 +34,9 @@ describe Admin::RootController do
 
   describe '#update_from_flickr' do
     it "does the update and redirects" do
-      expect(FlickrUpdateJob::Job).to receive(:run).and_return("The message")
+      allow(FlickrUpdateJob::Job).to receive(:run).and_return("The message")
       get :update_from_flickr
+      expect(FlickrUpdateJob::Job).to have_received(:run)
       expect(response).to redirect_to admin_root_path
       expect(flash[:notice]).to eq("The message")
     end
@@ -43,8 +44,9 @@ describe Admin::RootController do
 
   describe '#calculate_statistics_and_maps' do
     it "does the update and redirects" do
-      expect(PrecalculatorJob::Job).to receive(:run).and_return("The message")
+      allow(PrecalculatorJob::Job).to receive(:run).and_return("The message")
       get :calculate_statistics_and_maps
+      expect(PrecalculatorJob::Job).to have_received(:run)
       expect(response).to redirect_to admin_root_path
       expect(flash[:notice]).to eq("The message")
     end
