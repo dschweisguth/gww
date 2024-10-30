@@ -4,7 +4,7 @@ describe Admin::PhotosController do
 
     describe '#unfound' do
       before do
-        allow(AdminPhotosPhoto).to receive(:unfound_or_unconfirmed) { [photo] }
+        allow(AdminPhotosPhoto).to receive(:unfound_or_unconfirmed).and_return([photo])
       end
 
       it "renders the page" do
@@ -26,7 +26,7 @@ describe Admin::PhotosController do
 
     describe '#inaccessible' do
       it "renders the page" do
-        allow(AdminPhotosPhoto).to receive(:inaccessible) { [photo] }
+        allow(AdminPhotosPhoto).to receive(:inaccessible).and_return([photo])
         allow(photo).to receive(:tags).and_return([])
         get :inaccessible
         lists_photo
@@ -35,7 +35,7 @@ describe Admin::PhotosController do
 
     describe '#multipoint' do
       it "renders the page" do
-        allow(AdminPhotosPhoto).to receive(:multipoint) { [photo] }
+        allow(AdminPhotosPhoto).to receive(:multipoint).and_return([photo])
         allow(photo).to receive(:tags).and_return([])
         get :multipoint
         lists_photo
@@ -57,8 +57,8 @@ describe Admin::PhotosController do
     let(:admin_photos_photo) { build_stubbed :admin_photos_photo, id: 1 }
 
     before do
-      allow(FlickrUpdatePhoto).to receive(:find_with_associations).with(flickr_update_photo.id) { flickr_update_photo }
-      allow(AdminPhotosPhoto).to receive(:find_with_associations).with(admin_photos_photo.id) { admin_photos_photo }
+      allow(FlickrUpdatePhoto).to receive(:find_with_associations).with(flickr_update_photo.id).and_return(flickr_update_photo)
+      allow(AdminPhotosPhoto).to receive(:find_with_associations).with(admin_photos_photo.id).and_return(admin_photos_photo)
       allow(admin_photos_photo).to receive(:comments).and_return([])
       allow(admin_photos_photo).to receive(:guesses).and_return([])
       allow(admin_photos_photo).to receive(:revelation).and_return(nil)
@@ -127,7 +127,7 @@ describe Admin::PhotosController do
   describe '#edit_in_gww' do
     it "redirects to the given photo" do
       photo = build_stubbed :admin_photos_photo
-      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with(photo.flickrid) { photo }
+      allow(AdminPhotosPhoto).to receive(:find_by_flickrid).with(photo.flickrid).and_return(photo)
       get :edit_in_gww, from: url_for_flickr_photo(photo)
 
       redirects_to_edit_path photo, update_from_flickr: true
