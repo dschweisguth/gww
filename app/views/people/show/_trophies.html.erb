@@ -45,14 +45,14 @@
   <% if @most_faved %><td><%= thumbnail_with_alt @most_faved %></td><% end %>
 </tr>
 <tr class="trophies-text">
-  <% if @oldest_guess %><td>Guessed after <%= raw @oldest_guess.ymd_elapsed %></td><% end %>
-  <% if @fastest_guess %><td>Guessed in <%= raw @fastest_guess.time_elapsed %></td><% end %>
-  <% if @guess_of_longest_lasting_post %><td>Guessed after <%= raw @guess_of_longest_lasting_post.ymd_elapsed %></td><% end %>
-  <% if @guess_of_shortest_lasting_post %><td>Guessed in <%= raw @guess_of_shortest_lasting_post.time_elapsed %></td><% end %>
-  <% if @oldest_unfound %><td><%= raw @oldest_unfound.ymd_elapsed %> old</td><% end %>
-  <% if @most_commented %><td><%= raw pluralize @most_commented.other_user_comments, 'comment' %></td><% end %>
-  <% if @most_viewed %><td><%= raw pluralize @most_viewed.views, 'view' %></td><% end %>
-  <% if @most_faved %><td><%= raw pluralize @most_faved.faves, 'fave' %></td><% end %>
+  <% if @oldest_guess %><td>Guessed after <%= sanitize @oldest_guess.ymd_elapsed %></td><% end %>
+  <% if @fastest_guess %><td>Guessed in <%= sanitize @fastest_guess.time_elapsed %></td><% end %>
+  <% if @guess_of_longest_lasting_post %><td>Guessed after <%= sanitize @guess_of_longest_lasting_post.ymd_elapsed %></td><% end %>
+  <% if @guess_of_shortest_lasting_post %><td>Guessed in <%= sanitize @guess_of_shortest_lasting_post.time_elapsed %></td><% end %>
+  <% if @oldest_unfound %><td><%= sanitize @oldest_unfound.ymd_elapsed %> old</td><% end %>
+  <% if @most_commented %><td><%= sanitize pluralize @most_commented.other_user_comments, 'comment' %></td><% end %>
+  <% if @most_viewed %><td><%= sanitize pluralize @most_viewed.views, 'view' %></td><% end %>
+  <% if @most_faved %><td><%= sanitize pluralize @most_faved.faves, 'fave' %></td><% end %>
 </tr>
 <tr class="trophies-places">
   <% if @oldest_guess %><%= place @oldest_guess, :age %><% end %>

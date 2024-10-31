@@ -53,7 +53,7 @@
         <% end %>
         <div class="comment">
           <strong><%= comment.username %></strong> <span class="ago">(<%= ago_in_words comment.commented_at %>)</span><br/>
-          <%= raw wrap_if(comment.by_poster?, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { comment.comment_text } } -%>
+          <%= raw wrap_if(comment.by_poster?, '<span class="poster">', '</span>') { wrap_if(is_accepted_answer, '<span class="accepted">', '</span>') { sanitize(comment.comment_text) } } -%>
         </div>
         <br/>
       <% end %>

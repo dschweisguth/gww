@@ -1,1 +1,1 @@
-<%= raw(@wheresies_years.map { |year| defined?(@year) && year == @year ? year : (link_to year, wheresies_path(year)) }.join ', ') %>
+<% @wheresies_years.each_with_index { |year, i| %><% if i > 0 %>, <% end %><%= defined?(@year) && year == @year ? year : link_to(year, wheresies_path(year)) %><% } %>

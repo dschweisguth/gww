@@ -19,7 +19,7 @@
     <% @comments.each do |comment| %>
       <div class="comment">
         <strong><%= comment.username %></strong> <span class="ago">(<%= ago_in_words comment.commented_at %>)</span><br/>
-        <%= raw comment.comment_text %><br/>
+        <%= sanitize comment.comment_text %><br/>
       </div>
       <br/>
     <% end %>

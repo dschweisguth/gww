@@ -25,7 +25,7 @@
         <h2><%= raw highlighted(h(photo.title), @text_terms) %></h2>
       <% end %>
       <% if photo.description %>
-        <p><%= raw highlighted(photo.description.gsub("\n", "<br/>"), @text_terms) %></p>
+        <p><%= raw highlighted(sanitize(photo.description).gsub("\n", "<br/>"), @text_terms) %></p>
       <% end %>
       <% if photo.human_tags.any? %>
         <ul class="tags">
@@ -39,7 +39,7 @@
       <% if matching_comments.any? %>
         <br/>
         <% matching_comments.each do |comment| %>
-          <b><%= comment.username %></b> <span class="comment-date">(<%= dmy_local_date comment.commented_at %>)</span> <%= raw highlighted(comment.comment_text, @text_terms) %><br/>
+          <b><%= comment.username %></b> <span class="comment-date">(<%= dmy_local_date comment.commented_at %>)</span> <%= raw highlighted(sanitize(comment.comment_text), @text_terms) %><br/>
         <% end %>
       <% end %>
     </div>

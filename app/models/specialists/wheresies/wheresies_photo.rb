@@ -10,7 +10,7 @@ class WheresiesPhoto < Photo
     most_loved_in year, :faves
   end
 
-  def self.most_loved_in(year, column)
+  private_class_method def self.most_loved_in(year, column)
     where('? <= dateadded', Time.local(year).getutc).where('dateadded < ?', Time.local(year + 1).getutc).
       order("#{column} desc").limit(10).includes(:person)
   end
