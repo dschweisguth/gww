@@ -38,14 +38,14 @@ GWW.photos.search = function () {
   }
 
   const appendTermParams = [
-    ['[name="did"]',            val => val !== 'posted',                                            'did',          val => val],
-    ['[name="done_by"]',        val => val,                                                         'done-by',      val => encodeURIComponent(val)],
-    ['[name="text"]',           val => val,                                                         'text',         val => encodeURIComponent(val)],
-    ['[name="game_status[]"]',  val => val,                                                         'game-status',  val => val], // Javascript automatically joins arrays with ,
-    ['[name="from_date"]',      val => val,                                                         'from-date',    val => encodeURIComponent(escapeDate(val))],
-    ['[name="to_date"]',        val => val,                                                         'to-date',      val => encodeURIComponent(escapeDate(val))],
-    ['[name="sorted_by"]',      val => val !== (did === 'posted' ? 'last-updated' : 'date-taken'),  'sorted-by',    val => val],
-    ['[name="direction"]',      val => val !== '-',                                                 'direction',    val => val]
+    ['[name="did"]',            val         => val !== 'posted',                                                                        'did',          val => val],
+    ['[name="done_by"]',        val         => val,                                                                                     'done-by',      val => encodeURIComponent(val)],
+    ['[name="text"]',           val         => val,                                                                                     'text',         val => encodeURIComponent(val)],
+    ['[name="game_status[]"]',  val         => val,                                                                                     'game-status',  val => val], // Javascript automatically joins arrays with ,
+    ['[name="from_date"]',      val         => val,                                                                                     'from-date',    val => encodeURIComponent(escapeDate(val))],
+    ['[name="to_date"]',        val         => val,                                                                                     'to-date',      val => encodeURIComponent(escapeDate(val))],
+    ['[name="sorted_by"]',      (val, form) => val !== (form.find('[name="did"]').val() === 'posted' ? 'last-updated' : 'date-taken'),  'sorted-by',    val => val],
+    ['[name="direction"]',      val         => val !== '-',                                                                             'direction',    val => val]
   ];
 
   // This function and PhotosController#uri_params must agree on the canonical parameter order
@@ -53,9 +53,9 @@ GWW.photos.search = function () {
     return appendTermParams.reduce((path, params) => appendTerm(path, form, ...params), '/photos/search');
   }
 
-  function appendTerm(path, form, field_selector, test, term_name, term_value) {
+  function appendTerm(path, form, field_selector, shouldAppendTerm, term_name, term_value) {
     const val = form.find(field_selector).val();
-    if (test(val)) {
+    if (shouldAppendTerm(val, form)) {
       path += "/" + term_name + "/" + term_value(val);
     }
     return path;
