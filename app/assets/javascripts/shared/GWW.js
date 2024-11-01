@@ -1,10 +1,10 @@
-var GWW = {};
+const GWW = {}; // eslint-disable-line
 GWW.shared = {};
 
 GWW.shared.superior = function (object, funcName) {
   "use strict";
 
-  var superFunc = object[funcName];
+  const superFunc = object[funcName];
 
   return function () {
     return superFunc.apply(object, arguments);

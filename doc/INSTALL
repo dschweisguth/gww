@@ -91,6 +91,16 @@ Get the GDAL 1.8 Complete installer from http://www.kyngchaos.com/software/frame
 > cd ..
 > script/load_sfgis . gww_dev gww_dev gww_dev
 
+Install ESLint
+--------------
+Install nvm
+> nvm install
+> npm install
+
+Run ESLint
+----------
+> npx eslint app/assets/javascripts public/javascripts
+
 
 Install on Linux, for production
 ================================

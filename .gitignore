@@ -1,6 +1,7 @@
 .DS_Store
-/.bundle
+/.bundle/
 /.rbenv-gemsets
 /.ruby-version
-/coverage
-/tmp
+/coverage/
+/node_modules/
+/tmp/
