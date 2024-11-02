@@ -3,6 +3,40 @@
     {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
+      "fingerprint": "491c94207e452a557c0cd5b48f21980dc1816ca1fe9099a305a55f0d11d4254b",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/photos/edit.html.erb",
+      "line": 56,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "sanitize((Unresolved Model).new.comment_text)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::PhotosController",
+          "method": "edit",
+          "line": 32,
+          "file": "app/controllers/admin/photos_controller.rb",
+          "rendered": {
+            "name": "admin/photos/edit",
+            "file": "app/views/admin/photos/edit.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/photos/edit"
+      },
+      "user_input": "(Unresolved Model).new.comment_text",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
       "fingerprint": "8192db6bc1e5fdd6372658259299bb774414af1255d74a28659cc663a04afe3d",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped parameter value",
@@ -10,6 +44,40 @@
       "line": 35,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "highlighted(h(tag), (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []), photo.human_tags.map(&:raw))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "search_data",
+          "line": 45,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/search_data",
+            "file": "app/views/photos/search_data.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/search_data"
+      },
+      "user_input": "params[:segments]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "9db511ca86bc54c52ea53ff06521b48ae7aee20fddfdb52d0ae1d49f709f372b",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/photos/search_data.html.erb",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "highlighted(sanitize(photo.description).gsub(\"\\n\", \"<br/>\"), (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []))",
       "render_path": [
         {
           "type": "controller",
@@ -130,6 +198,40 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e424a7027be71c5b95b46edbe8ff25e75b1282de066d32a65e1a8f4cca3ec4a9",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/photos/search_data.html.erb",
+      "line": 43,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "highlighted(sanitize(comment.comment_text), (SearchDataParamsParser.new.model_params(params[:segments])[:text] or []))",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PhotosController",
+          "method": "search_data",
+          "line": 45,
+          "file": "app/controllers/photos_controller.rb",
+          "rendered": {
+            "name": "photos/search_data",
+            "file": "app/views/photos/search_data.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "photos/search_data"
+      },
+      "user_input": "params[:segments]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Unmaintained Dependency",
       "warning_code": 121,
       "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
@@ -191,6 +293,6 @@
       "note": ""
     }
   ],
-  "updated": "2024-10-31 11:57:56 -0700",
+  "updated": "2024-11-02 15:48:34 -0700",
   "brakeman_version": "5.4.1"
 }
