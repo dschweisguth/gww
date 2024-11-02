@@ -1,5 +1,7 @@
-// This project uses ESLint 8 and the old config file format to match Code Climate
-module.exports = {
+// This project uses ESLint 8 and the old config file format to match Code Climate.
+// This project does not recommend running ESLint on this file (see doc/INSTALL),
+// but Code Climate does, thus the following comment.
+module.exports = { // eslint-disable-line no-undef
   extends: 'eslint:recommended',
   env: {
     es2024: true,
