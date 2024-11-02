@@ -1,4 +1,4 @@
-var GWW = {}; // eslint-disable-line
+var GWW = {}; // eslint-disable-line no-redeclare
 GWW.shared = {};
 
 GWW.shared.superior = function (object, funcName) {
