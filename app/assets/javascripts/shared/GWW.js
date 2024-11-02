@@ -1,4 +1,4 @@
-const GWW = {}; // eslint-disable-line
+var GWW = {}; // eslint-disable-line
 GWW.shared = {};
 
 GWW.shared.superior = function (object, funcName) {
