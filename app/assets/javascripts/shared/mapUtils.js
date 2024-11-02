@@ -9,6 +9,8 @@ GWW.shared.loadGoogleMaps = function (callbackName) {
 }
 
 GWW.shared.createPin = function (photo) {
+  "use strict";
+
   return new google.maps.marker.PinElement({
     background: `#${photo.color}`,
     borderColor: 'black',

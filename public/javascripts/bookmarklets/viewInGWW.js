@@ -1,4 +1,6 @@
 (function () {
+  "use strict";
+
   if (/^https?:\/\/www.flickr.com\/(photos|people)\/[^/]+/.test(window.location)) {
     // Do this asynchronously so Firefox doesn't treat it as a replace.
     // See https://stackoverflow.com/questions/3731888/javascript-redirect-location-href-breaks-the-back-button-unless-settimeout-is
