@@ -1,3 +1,4 @@
+// This project uses ESLint 8 and the old config file format to match Code Climate
 module.exports = {
   extends: 'eslint:recommended',
   env: {
