@@ -15,7 +15,7 @@ GWW.shared.createMap = function () {
     },
 
     mapsAPIIsLoadedCallback: function () {
-      that.map = new google.maps.Map($('#map_canvas')[0], {
+      that.map = new google.maps.Map($('#map-canvas')[0], {
         zoom: 13,
         center: new google.maps.LatLng(37.76, -122.435),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
