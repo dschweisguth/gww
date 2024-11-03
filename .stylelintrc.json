@@ -6,6 +6,8 @@
     "declaration-block-no-redundant-longhand-properties": null,
     "no-descending-specificity": null,
     "selector-attribute-quotes": "never",
+    "selector-class-pattern": null,
+    "selector-id-pattern": null,
     "shorthand-property-no-redundant-values": null
   }
 }
