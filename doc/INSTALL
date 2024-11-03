@@ -99,7 +99,7 @@ Install nvm
 
 Run ESLint
 ----------
-> npx eslint app/assets/javascripts public/javascripts
+> npx eslint .
 
 Run StyleLine
 > npx stylelint "**/*.css"

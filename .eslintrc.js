@@ -2,6 +2,7 @@
 // This project does not recommend running ESLint on this file (see doc/INSTALL),
 // but Code Climate does, thus the following comment.
 module.exports = { // eslint-disable-line no-undef
+  ignorePatterns: ["/coverage/", "/public/assets/", "/vendor/"],
   extends: 'eslint:recommended',
   env: {
     es2024: true,
