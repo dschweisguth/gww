@@ -25,6 +25,10 @@ module PathTo
       when "the photo's edit page"
         edit_admin_photo_path @photo
 
+      else
+        # :nocov:
+        raise "Unknown page name: #{page_name}"
+        # :nocov:
     end
   end
 end
