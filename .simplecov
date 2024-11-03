@@ -1,4 +1,6 @@
 SimpleCov.start 'rails' do
+  enable_coverage :branch
+
   # Undo simplecov's default configuration of ignoring coverage of test code. We want to know about dead code in tests.
   filters.reject! { |filter| %w(/spec/ /features/).include? filter.filter_argument.to_s }
 
