@@ -1,3 +1,11 @@
 {
-  "extends": ["stylelint-config-standard"]
+  "ignoreFiles": ["coverage/**/*.css", "public/assets/**/*.css"],
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "color-hex-length": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "no-descending-specificity": null,
+    "selector-attribute-quotes": "never",
+    "shorthand-property-no-redundant-values": null
+  }
 }
