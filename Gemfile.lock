@@ -308,6 +308,7 @@ GEM
     thor (1.3.2)
     thread_safe (0.3.6)
     tilt (2.4.0)
+    timecop (0.9.10)
     timeout (0.4.1)
     tzinfo (1.2.11)
       thread_safe (~> 0.1)
@@ -356,6 +357,7 @@ DEPENDENCIES
   spring-commands-rspec
   sprockets (~> 3.7)
   terser
+  timecop
   warning
   will_paginate
   xml-simple

@@ -118,14 +118,12 @@ Then /^the player "([^"]*)" should be first on the longest-lasting list with a p
   longest_lasting_list = all('body > div > table')[0]
   tds_in_first_row = longest_lasting_list.all('tr')[1].all 'td'
   expect(tds_in_first_row[2].text).to eq(username)
-  # Allow both "3 years" and "3 years, 1 second" to pass in case the test runs slowly
-  expect(tds_in_first_row.last.text.start_with?("#{years} year#{if years != 1 then 's' end}")).to be_truthy
+  expect(tds_in_first_row.last.text).to eq("#{years} years")
 end
 
-Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after (\d+) seconds?$/ do |username, seconds|
+Then /^the player "([^"]*)" should be first on the fastest-guessed list with a photo guessed after 1 second$/ do |username|
   fastest_guessed_list = all('body > div > table')[1]
   tds_in_first_row = fastest_guessed_list.all('tr')[1].all 'td'
   expect(tds_in_first_row[2].text).to eq(username)
-  # Allow one more second than specified in case the test runs slowly
-  expect(["#{seconds} second#{if seconds != 1 then 's' end}", "#{seconds + 1} seconds"]).to include(tds_in_first_row.last.text)
+  expect(tds_in_first_row.last.text).to eq("1 second")
 end

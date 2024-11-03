@@ -3,6 +3,7 @@ Feature: Wheresies
   I want to see objective statistics for the past year
   So that I can nominate other players for or award them a coveted Wheresie
 
+  @frozen-in-time
   Scenario: Player views wheresies page
     Given there is a Flickr update
     And scores were reported this year
