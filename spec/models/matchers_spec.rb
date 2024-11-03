@@ -16,6 +16,13 @@ describe GWW::Matchers::Model do
         %q(expected attributes to be a superset of {"unknown"=>"unknown"}, but ["unknown"] was missing))
     end
 
+    it "fails grammatically if multiple attributes are missing" do
+      expect { expect(person).to have_attributes?(unknown1: 'unknown1', unknown2: 'unknown2') }.to raise_error(
+        RSpec::Expectations::ExpectationNotMetError,
+        %q(expected attributes to be a superset of {"unknown1"=>"unknown1", "unknown2"=>"unknown2"}, ) +
+          %q(but ["unknown1", "unknown2"] were missing))
+    end
+
     it "fails if an attribute is different" do
       expect { expect(person).to have_attributes?(flickrid: nil) }.to raise_error(
         RSpec::Expectations::ExpectationNotMetError,
