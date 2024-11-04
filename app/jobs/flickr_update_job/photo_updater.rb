@@ -65,7 +65,7 @@ module FlickrUpdateJob
         views: parsed_photo['views'].to_i
       }
       add_full_attributes_from parsed_photo, attributes
-      attributes[:faves] = fave_count(parsed_photo['id']) || 0
+      attributes[:faves] = FaveCounter.count(parsed_photo['id']) || 0
 
       photo = FlickrUpdatePhoto.create! attributes
 
@@ -83,7 +83,7 @@ module FlickrUpdateJob
       end
 
       if photo_needs_full_update || photo.views != views
-        fave_count = fave_count parsed_photo['id']
+        fave_count = FaveCounter.count parsed_photo['id']
         if fave_count
           attributes[:faves] = fave_count
         end
@@ -141,7 +141,7 @@ module FlickrUpdateJob
           longitude: longitude,
           accuracy: accuracy
         )
-        fave_count = fave_count photo.flickrid
+        fave_count = FaveCounter.count photo.flickrid
         if fave_count
           attributes[:faves] = fave_count
         end
@@ -207,21 +207,6 @@ module FlickrUpdateJob
         else
           raise
         end
-      end
-    end
-
-    def self.fave_count(flickrid)
-      begin
-        parsed_faves = FlickrService.instance.photos_get_favorites photo_id: flickrid, per_page: 1
-        parsed_faves['photo'][0]['total'].to_i
-      rescue REXML::ParseException => e
-        Rails.logger.warn "Couldn't get faves for photo flickrid #{flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
-        nil
-      rescue FlickrService::FlickrRequestFailedError => e
-        Rails.logger.warn "Couldn't get faves for photo flickrid #{flickrid}: FlickrService::FlickrRequestFailedError #{e.message}"
-        # This happens when a photo is private but visible to the caller because it's added to a group of which
-        # the caller is a member. Not clear yet whether this is a bug or intended behavior.
-        nil
       end
     end
 

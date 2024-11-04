@@ -55,7 +55,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     end
 
     def stub_get_faves
-      allow(described_class).to receive(:fave_count).with('incoming_photo_flickrid').and_return(7)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).with('incoming_photo_flickrid').and_return(7)
       7
     end
 
@@ -348,7 +348,7 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     it "sets a new photo's faves to 0 if the request for faves fails" do
       stub_get_photos
-      allow(described_class).to receive(:fave_count).and_return(nil)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).and_return(nil)
       mock_get_comments_and_tags do
         described_class.update_all
       end
@@ -357,7 +357,7 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
-      allow(described_class).to receive(:fave_count).and_return(nil)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).and_return(nil)
       photo = create :flickr_update_photo, flickrid: 'incoming_photo_flickrid', faves: 6
       mock_get_comments_and_tags do
         described_class.update_all
@@ -392,7 +392,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo
       stub_get_photo_location
-      allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments).with photo
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
@@ -428,7 +428,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo
       error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 2, msg: "whatever"
       allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
-      allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments).with photo
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
@@ -461,7 +461,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo
       stub_get_photo_location
-      allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(nil)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(nil)
       allow(described_class).to receive(:update_comments).with photo
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
@@ -474,13 +474,13 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo lastupdate: Time.utc(2013)
       allow(FlickrService.instance).to receive(:photos_geo_get_location)
-      allow(described_class).to receive(:fave_count)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count)
       allow(described_class).to receive(:update_comments)
       allow(described_class).to receive(:update_tags)
       described_class.update photo
 
       expect(FlickrService.instance).not_to have_received(:photos_geo_get_location)
-      expect(described_class).not_to have_received(:fave_count)
+      expect(FlickrUpdateJob::FaveCounter).not_to have_received(:count)
       expect(described_class).not_to have_received(:update_comments)
       expect(described_class).not_to have_received(:update_tags)
       expect(photo.person).to have_attributes?(
@@ -509,7 +509,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo comments: 0
       stub_get_photo_location
-      allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments)
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
@@ -521,7 +521,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_person
       stub_get_photo tags: []
       stub_get_photo_location
-      allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
+      allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments)
       allow(described_class).to receive(:update_tags)
       described_class.update photo
@@ -581,29 +581,6 @@ describe FlickrUpdateJob::PhotoUpdater do
           }]
         }]
       })
-    end
-
-  end
-
-  describe '.fave_count' do
-    it "returns the number of faves that the photo has" do
-      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1).and_return({
-        'stat' => 'ok',
-        'photo' => [{ 'total' => '7' }]
-      })
-      expect(described_class.fave_count('photo_flickrid')).to eq(7)
-    end
-
-    it "returns nil if there is a REXML::ParseException" do
-      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1).
-        and_raise(REXML::ParseException, "Oops!")
-      expect(described_class.fave_count('photo_flickrid')).to be_nil
-    end
-
-    it "returns nil if there is a FlickrService::FlickrRequestFailedError" do
-      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1).
-        and_raise(FlickrService::FlickrRequestFailedError)
-      expect(described_class.fave_count('photo_flickrid')).to be_nil
     end
 
   end
