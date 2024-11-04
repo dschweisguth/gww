@@ -84,7 +84,7 @@ class StatisticsPhoto < Photo
   def update_geocode!(point)
     lat = point&.y
     long = point&.x
-    if inferred_latitude != lat || inferred_longitude != long
+    if inferred_latitude != lat.to_d || inferred_longitude != long.to_d
       update! inferred_latitude: lat, inferred_longitude: long
     end
   end

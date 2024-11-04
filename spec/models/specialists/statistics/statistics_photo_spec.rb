@@ -1,4 +1,6 @@
 describe StatisticsPhoto do
+  let(:factory) { RGeo::Cartesian.preferred_factory }
+
   describe '.update_statistics' do
     context "when updating other user comments" do
       it "counts comments" do
@@ -168,7 +170,7 @@ describe StatisticsPhoto do
 
   end
 
-  describe '#infer_geocodes' do
+  describe '.infer_geocodes' do
     let(:parser) do
       street_names = %w(26TH VALENCIA)
       allow(Stcline).to receive(:multiword_street_names).and_return(street_names)
@@ -176,8 +178,6 @@ describe StatisticsPhoto do
       allow(LocationParser).to receive(:new).with(street_names).and_return(parser)
       parser
     end
-
-    let(:factory) { RGeo::Cartesian.preferred_factory }
 
     it "infers each guessed photo's lat+long from its guess" do
       answer = create :guess, comment_text: 'A parseable comment'
@@ -245,6 +245,35 @@ describe StatisticsPhoto do
       expect(answer.photo.inferred_latitude).to be_nil
       expect(answer.photo.inferred_longitude).to be_nil
 
+    end
+
+  end
+
+  describe '#update_geocode!' do
+    let(:photo) { create :statistics_photo, inferred_latitude: 37, inferred_longitude: -122 }
+
+    it "updates an existing geocode if the newly inferred geocode differs only in latitude" do
+      photo.update_geocode! factory.point(-122, 38)
+
+      expect(photo.inferred_latitude).to eq(BigDecimal('38.0'))
+      expect(photo.inferred_longitude).to eq(BigDecimal('-122.0'))
+
+    end
+
+    it "updates an existing geocode if the newly inferred geocode differs only in longitude" do
+      photo.update_geocode! factory.point(-123, 37)
+
+      expect(photo.inferred_latitude).to eq(BigDecimal('37.0'))
+      expect(photo.inferred_longitude).to eq(BigDecimal('-123.0'))
+
+    end
+
+    it "doesn't update an existing geocode if the newly inferred geocode is identical" do
+      allow(photo).to receive(:update!)
+      photo.update_geocode! factory.point(-122, 37)
+      StatisticsPhoto.infer_geocodes
+
+      expect(photo).not_to have_received(:update!)
     end
 
   end
