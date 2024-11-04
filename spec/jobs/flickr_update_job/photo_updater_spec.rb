@@ -61,10 +61,10 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     def mock_get_comments_and_tags
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with an_instance_of(FlickrUpdatePhoto)
-      allow(described_class).to receive(:update_tags).with an_instance_of(FlickrUpdatePhoto)
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update).with an_instance_of(FlickrUpdatePhoto)
       yield
       expect(FlickrUpdateJob::CommentUpdater).to have_received(:update)
-      expect(described_class).to have_received(:update_tags)
+      expect(FlickrUpdateJob::TagUpdater).to have_received(:update)
     end
 
     it "gets the state of the group's photos from Flickr and stores it" do
@@ -216,7 +216,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
       stubbed_faves = stub_get_faves
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
-      allow(described_class).to receive(:update_tags)
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update)
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
         person: person,
@@ -234,7 +234,7 @@ describe FlickrUpdateJob::PhotoUpdater do
         faves: 6
       described_class.update_all
       expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
-      expect(described_class).not_to have_received(:update_tags)
+      expect(FlickrUpdateJob::TagUpdater).not_to have_received(:update)
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -260,7 +260,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     it "updates only seen_at if Flickr says the photo hasn't been updated and views hasn't changed" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1), views: 40
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
-      allow(described_class).to receive(:update_tags)
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update)
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
         person: person,
@@ -278,7 +278,7 @@ describe FlickrUpdateJob::PhotoUpdater do
         faves: 6
       described_class.update_all
       expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
-      expect(described_class).not_to have_received(:update_tags)
+      expect(FlickrUpdateJob::TagUpdater).not_to have_received(:update)
 
       expect(Photo.first_and_only).to have_attributes?(
         id: photo_before.id,
@@ -394,11 +394,11 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with photo
-      allow(described_class).to receive(:update_tags).with photo
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update).with photo
       described_class.update photo
 
       expect(FlickrUpdateJob::CommentUpdater).to have_received(:update)
-      expect(described_class).to have_received(:update_tags)
+      expect(FlickrUpdateJob::TagUpdater).to have_received(:update)
       expect(photo.person).to have_attributes?(
         username: 'new_username',
         pathalias: 'new_pathalias',
@@ -429,7 +429,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       allow(FlickrUpdateJob::LocationGetter).to receive(:get).with(photo.flickrid).and_return([nil, nil, nil])
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with(photo)
-      allow(described_class).to receive(:update_tags).with photo
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update).with photo
       described_class.update photo
 
       expect(photo).to have_attributes?(
@@ -446,7 +446,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(nil)
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with(photo)
-      allow(described_class).to receive(:update_tags).with photo
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update).with photo
       described_class.update photo
       expect(photo.faves).to eq(0)
     end
@@ -459,13 +459,13 @@ describe FlickrUpdateJob::PhotoUpdater do
       allow(FlickrUpdateJob::LocationGetter).to receive(:get)
       allow(FlickrUpdateJob::FaveCounter).to receive(:count)
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
-      allow(described_class).to receive(:update_tags)
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update)
       described_class.update photo
 
       expect(FlickrUpdateJob::LocationGetter).not_to have_received(:get)
       expect(FlickrUpdateJob::FaveCounter).not_to have_received(:count)
       expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
-      expect(described_class).not_to have_received(:update_tags)
+      expect(FlickrUpdateJob::TagUpdater).not_to have_received(:update)
       expect(photo.person).to have_attributes?(
         username: 'new_username',
         pathalias: 'new_pathalias'
@@ -494,7 +494,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
-      allow(described_class).to receive(:update_tags).with photo
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update).with photo
       described_class.update photo
 
       expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
@@ -506,10 +506,10 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
-      allow(described_class).to receive(:update_tags)
+      allow(FlickrUpdateJob::TagUpdater).to receive(:update)
       described_class.update photo
 
-      expect(described_class).not_to have_received(:update_tags)
+      expect(FlickrUpdateJob::TagUpdater).not_to have_received(:update)
     end
 
     def stub_get_person
@@ -556,61 +556,6 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     def stub_get_photo_location
       allow(FlickrUpdateJob::LocationGetter).to receive(:get).with(photo.flickrid).and_return([37.123456, -122.654321, 16])
-    end
-
-  end
-
-  describe '.update_tags' do
-    let(:photo) { create :flickr_update_photo }
-
-    it "loads tags from Flickr" do
-      stub_get_tags Tag.new(raw: 'Tag 1'), Tag.new(raw: 'Tag 2', machine_tag: true)
-      described_class.update_tags photo
-      expect(photo.tags.map { |tag| [tag.raw, tag.machine_tag] }).to contain_exactly(['Tag 1', false], ['Tag 2', true])
-    end
-
-    it "deletes previous tags" do
-      create :tag, photo: photo, raw: 'old tag'
-      stub_get_tags Tag.new(raw: 'new tag')
-      described_class.update_tags photo
-      expect(photo.tags.map(&:raw)).to eq(['new tag'])
-    end
-
-    def stub_get_tags(*tags)
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).and_return({
-        'photo' => [{
-          'tags' => [{
-            'tag' => tags.map { |tag| { 'raw' => tag.raw, 'machine_tag' => (tag.machine_tag ? 1 : 0).to_s } }
-          }]
-        }]
-      })
-    end
-
-    it "deletes previous tags if the photo currently has no tags" do
-      create :tag, photo: photo, raw: 'old tag'
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).and_return({
-        'photo' => [{
-          'tags' => [{}]
-        }]
-      })
-      described_class.update_tags photo
-      expect(photo.tags).to be_empty
-    end
-
-    it "leaves previous tags alone if the request for tags fails due to FlickrService::FlickrRequestFailedError" do
-      create :tag, photo: photo, raw: 'old tag'
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).
-        and_raise(FlickrService::FlickrRequestFailedError)
-      described_class.update_tags photo
-      expect(photo.tags.map(&:raw)).to eq(['old tag'])
-    end
-
-    it "leaves previous tags alone if the request for tags fails due to REXML::ParseException" do
-      create :tag, photo: photo, raw: 'old tag'
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).
-        and_raise(REXML::ParseException, "Flickr sent bad XML")
-      described_class.update_tags photo
-      expect(photo.tags.map(&:raw)).to eq(['old tag'])
     end
 
   end
