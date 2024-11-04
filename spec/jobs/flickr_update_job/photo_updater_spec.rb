@@ -160,6 +160,17 @@ describe FlickrUpdateJob::PhotoUpdater do
       expect(Photo.first_and_only.description).to be_nil
     end
 
+    it "handles an API response with no photos" do
+      allow(FlickrService.instance).to receive(:groups_pools_get_photos) do
+        {
+          'photos' => [{
+            'pages' => '1',
+          }]
+        }
+      end
+      expect(described_class.update_all).to eq([0, 0, 1, 1])
+    end
+
     it "uses an existing photo, and updates attributes that changed" do
       stubbed_photo = stub_get_photos
       stubbed_faves = stub_get_faves
@@ -351,7 +362,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     it "leaves an existing photo's faves alone if the request for faves fails" do
       stub_get_photos
       allow(described_class).to receive(:fave_count).and_return(nil)
-      photo = create :flickr_update_photo, faves: 6
+      photo = create :flickr_update_photo, flickrid: 'incoming_photo_flickrid', faves: 6
       mock_get_comments_and_tags do
         described_class.update_all
       end
@@ -663,6 +674,26 @@ describe FlickrUpdateJob::PhotoUpdater do
         })
       described_class.update_comments photo
       photo_has_the_comment_from_the_request
+    end
+
+    it "does not delete previous comments if the photo only has a comment with no content" do
+      create :comment, photo: photo
+      allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid).and_return({
+        'comments' => [
+          {
+            'comment' => [
+              {
+                'author' => 'commenter_flickrid_2',
+                'authorname' => 'commenter_username_2',
+                'datecreate' => '1356998401'
+              }
+            ]
+          }
+        ]
+      })
+      described_class.update_comments photo
+      expect(photo.comments.length).to eq(1)
+      expect(Comment.count).to eq(1)
     end
 
     def stub_request_to_return_one_comment
