@@ -1,5 +1,7 @@
 module FlickrUpdateJob
   class PhotoUpdater
+    extend Coercions
+
     def self.update_all
       page = 1
       parsed_photos = nil
@@ -127,7 +129,7 @@ module FlickrUpdateJob
 
       attributes = { seen_at: Time.now }
       if photo_needs_full_update
-        latitude, longitude, accuracy = location photo
+        latitude, longitude, accuracy = LocationGetter.get photo.flickrid
         attributes.merge!(
           farm: parsed_photo['farm'],
           server: parsed_photo['server'],
@@ -161,39 +163,8 @@ module FlickrUpdateJob
       end
     end
 
-    private_class_method def self.location(photo)
-      begin
-        location = FlickrService.instance.photos_geo_get_location(photo_id: photo.flickrid)['photo'].first['location'].first
-        latitude = to_float_or_nil location['latitude']
-        longitude = to_float_or_nil location['longitude']
-        accuracy = to_integer_or_nil location['accuracy']
-        [latitude, longitude, accuracy]
-      rescue FlickrService::FlickrReturnedAnError => e
-        if e.code == 2
-          [nil, nil, nil]
-        else
-          raise
-        end
-      end
-    end
-
     private_class_method def self.lastupdate(string)
       Time.at(string.to_i).getutc
-    end
-
-    private_class_method def self.to_float_or_nil(string)
-      number = string.to_f
-      number.zero? ? nil : number # Use .zero? to evade rubocop cop that claims to allow == 0 but doesn't
-    end
-
-    private_class_method def self.to_integer_or_nil(string)
-      number = string.to_i
-      number == 0 ? nil : number
-    end
-
-    private_class_method def self.to_string_or_nil(content)
-      description = content.first
-      description == {} ? nil : description
     end
 
     private_class_method def self.datetaken(mysql_time)

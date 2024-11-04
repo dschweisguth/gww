@@ -426,8 +426,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     it "handles a photo with no location information" do
       stub_get_person
       stub_get_photo
-      error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 2, msg: "whatever"
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
+      allow(FlickrUpdateJob::LocationGetter).to receive(:get).with(photo.flickrid).and_return([nil, nil, nil])
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments).with photo
       allow(described_class).to receive(:update_tags).with photo
@@ -439,22 +438,6 @@ describe FlickrUpdateJob::PhotoUpdater do
         accuracy: nil
       )
 
-    end
-
-    it "does not attempt to handle other errors returned when requesting location" do
-      stub_get_person
-      stub_get_photo
-      error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "whatever"
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
-      expect { described_class.update photo }.to raise_error error
-    end
-
-    it "does not attempt to handle other errors when requesting location" do
-      stub_get_person
-      stub_get_photo
-      error = FlickrService::FlickrRequestFailedError
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
-      expect { described_class.update photo }.to raise_error error
     end
 
     it "moves on if there is an error getting faves" do
@@ -473,13 +456,13 @@ describe FlickrUpdateJob::PhotoUpdater do
       old_photo_attrs = photo.attributes
       stub_get_person
       stub_get_photo lastupdate: Time.utc(2013)
-      allow(FlickrService.instance).to receive(:photos_geo_get_location)
+      allow(FlickrUpdateJob::LocationGetter).to receive(:get)
       allow(FlickrUpdateJob::FaveCounter).to receive(:count)
       allow(described_class).to receive(:update_comments)
       allow(described_class).to receive(:update_tags)
       described_class.update photo
 
-      expect(FlickrService.instance).not_to have_received(:photos_geo_get_location)
+      expect(FlickrUpdateJob::LocationGetter).not_to have_received(:get)
       expect(FlickrUpdateJob::FaveCounter).not_to have_received(:count)
       expect(described_class).not_to have_received(:update_comments)
       expect(described_class).not_to have_received(:update_tags)
@@ -572,15 +555,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     end
 
     def stub_get_photo_location
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_return({
-        'photo' => [{
-          'location' => [{
-            'latitude' => '37.123456',
-            'longitude' => '-122.654321',
-            'accuracy' => '16'
-          }]
-        }]
-      })
+      allow(FlickrUpdateJob::LocationGetter).to receive(:get).with(photo.flickrid).and_return([37.123456, -122.654321, 16])
     end
 
   end
