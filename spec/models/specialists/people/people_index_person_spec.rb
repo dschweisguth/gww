@@ -325,12 +325,12 @@ describe PeopleIndexPerson do
 
     def stub_post_count(count1, count2)
       group = instance_double Hash, count: { people[0].id => count1, people[1].id => count2 }
-      allow(Photo).to receive(:group).with(:person_id) { group }
+      allow(Photo).to receive(:group).with(:person_id).and_return(group)
     end
 
     def stub_score(count1, count2)
       group = instance_double Hash, count: { people[0].id => count1, people[1].id => count2 }
-      allow(Guess).to receive(:group).with(:person_id) { group }
+      allow(Guess).to receive(:group).with(:person_id).and_return(group)
     end
 
     def puts_person2_before_person1(sorted_by)

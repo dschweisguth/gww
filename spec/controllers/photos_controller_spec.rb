@@ -181,12 +181,10 @@ describe PhotosController do
       allow(photo).to receive(:comments).and_return([])
       allow(photo).to receive(:guesses).and_return([])
       allow(photo).to receive(:revelation).and_return(nil)
-      allow(photo).to(receive(:human_tags)) do
-        [build_stubbed(:tag, raw: 'Tag 2'), build_stubbed(:tag, raw: 'Tag 1')]
-      end
-      allow(photo).to(receive(:machine_tags)) do
-        [build_stubbed(:tag, raw: 'Machine tag 2'), build_stubbed(:tag, raw: 'Machine tag 1')]
-      end
+      allow(photo).to(receive(:human_tags)).
+        and_return([build_stubbed(:tag, raw: 'Tag 2'), build_stubbed(:tag, raw: 'Tag 1')])
+      allow(photo).to(receive(:machine_tags)).
+        and_return([build_stubbed(:tag, raw: 'Machine tag 2'), build_stubbed(:tag, raw: 'Machine tag 1')])
       allow(PhotosPhoto).to receive(:find).with(photo.id).and_return(photo)
       get :show, id: photo.id
 

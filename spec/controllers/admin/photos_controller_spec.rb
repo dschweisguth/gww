@@ -15,7 +15,7 @@ describe Admin::PhotosController do
 
       it "highlights a photo tagged foundinSF" do
         tag = build_stubbed :tag, photo: photo, raw: 'foundinSF'
-        allow(photo).to receive(:tags) { [tag] }
+        allow(photo).to receive(:tags).and_return([tag])
         get :unfound
         tr = top_node.all('tr')[1]
         expect(tr.all('td')[5].text).to eq('foundinSF')
@@ -83,9 +83,8 @@ describe Admin::PhotosController do
 
   describe '#add_selected_answer' do
     it "notifies the user if there was an error" do
-      allow(AdminPhotosComment).to receive(:add_selected_answer).with('2', 'username') do
-        raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
-      end
+      allow(AdminPhotosComment).to receive(:add_selected_answer).with('2', 'username').
+        and_raise(AdminPhotosPhoto::AddAnswerError, 'Sorry')
       post :add_selected_answer, id: '1', comment_id: '2', username: 'username'
       expect(AdminPhotosComment).to have_received(:add_selected_answer).with('2', 'username')
       redirects_to_edit_path 1
@@ -95,9 +94,8 @@ describe Admin::PhotosController do
 
   describe '#add_entered_answer' do
     it "notifies the user if there was an error" do
-      allow(AdminPhotosPhoto).to receive(:add_entered_answer).with(1, 'username', 'answer text') do
-        raise AdminPhotosPhoto::AddAnswerError, 'Sorry'
-      end
+      allow(AdminPhotosPhoto).to receive(:add_entered_answer).with(1, 'username', 'answer text').
+        and_raise(AdminPhotosPhoto::AddAnswerError, 'Sorry')
       post :add_entered_answer, id: '1', username: 'username', answer_text: 'answer text'
       expect(AdminPhotosPhoto).to have_received(:add_entered_answer).with(1, 'username', 'answer text')
       redirects_to_edit_path 1

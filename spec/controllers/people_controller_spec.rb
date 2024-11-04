@@ -365,9 +365,8 @@ describe PeopleController do
       allow(PeoplePerson).to receive(:find).with(guesser.id).and_return(guesser)
       poster = build_stubbed :people_person
       photo = build_stubbed :people_photo, person: poster
-      allow(guesser).to receive(:guesses_with_associations_ordered_by_comments) do
-        [build_stubbed(:people_guess, person: guesser, photo: photo)]
-      end
+      allow(guesser).to receive(:guesses_with_associations_ordered_by_comments).
+        and_return([build_stubbed(:people_guess, person: guesser, photo: photo)])
       get :guesses, id: guesser.id
 
       expect(response).to be_success

@@ -7,9 +7,8 @@ Given /^there is an inaccessible photo$/ do
 end
 
 Given /^updating a photo from Flickr returns an error$/ do
-  allow(FlickrUpdateJob::PhotoUpdater).to receive(:update) do
-    raise FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 1, msg: "Photo not found"
-  end
+  allow(FlickrUpdateJob::PhotoUpdater).to receive(:update).
+    and_raise(FlickrService::FlickrReturnedAnError, stat: 'fail', code: 1, msg: "Photo not found")
 end
 
 Given /^getting a person's attributes from Flickr returns what we'd expect given what's in the database$/ do

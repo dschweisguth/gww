@@ -17,9 +17,8 @@ describe Admin::RootController do
     end
 
     it "reports a completed update" do
-      allow(FlickrUpdate).to receive(:latest) do
-        build_stubbed :flickr_update, created_at: now, completed_at: Time.local(2001, 1, 1, 0, 6)
-      end
+      allow(FlickrUpdate).to receive(:latest).
+        and_return(build_stubbed(:flickr_update, created_at: now, completed_at: Time.local(2001, 1, 1, 0, 6)))
       allow(AdminRootPhoto).to receive(:unfound_or_unconfirmed_count).and_return(111)
       allow(AdminRootPhoto).to receive(:inaccessible_count).and_return(222)
       allow(AdminRootPhoto).to receive(:multipoint_count).and_return(2)

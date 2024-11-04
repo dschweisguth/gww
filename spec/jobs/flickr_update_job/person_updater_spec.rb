@@ -24,26 +24,25 @@ describe FlickrUpdateJob::PersonUpdater do
     end
 
     it "handles an error" do
-      allow(FlickrService.instance).to receive(:people_get_info) do
-        raise FlickrService::FlickrRequestFailedError, "Couldn't get info from Flickr"
-      end
+      allow(FlickrService.instance).to receive(:people_get_info).
+        and_raise(FlickrService::FlickrRequestFailedError, "Couldn't get info from Flickr")
       update_all_and_expect_person_to_have(
         username: 'old_username', realname: 'old_realname', pathalias: 'old_pathalias', ispro: false, photos_count: 0)
     end
 
     it "handles a missing realname" do
       allow(FlickrService.instance).to receive(:people_get_info).and_return({
-          'person' => [{
-            'username' => ['new_username'],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
-            'ispro' => '1',
-            'photos' => [
-              {
-                'count' => [1]
-              }
-            ]
-          }]
-        })
+        'person' => [{
+          'username' => ['new_username'],
+          'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+          'ispro' => '1',
+          'photos' => [
+            {
+              'count' => [1]
+            }
+          ]
+        }]
+      })
       # if a user hides their real name, updating should forget it
       update_all_and_expect_person_to_have(
         username: 'new_username', realname: nil, pathalias: 'new_pathalias', ispro: true, photos_count: 1)
@@ -51,18 +50,18 @@ describe FlickrUpdateJob::PersonUpdater do
 
     it "handles an empty realname" do
       allow(FlickrService.instance).to receive(:people_get_info).and_return({
-          'person' => [{
-            'username' => ['new_username'],
-            'realname' => [{}],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
-            'ispro' => '1',
-            'photos' => [
-              {
-                'count' => [1]
-              }
-            ]
-          }]
-        })
+        'person' => [{
+          'username' => ['new_username'],
+          'realname' => [{}],
+          'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+          'ispro' => '1',
+          'photos' => [
+            {
+              'count' => [1]
+            }
+          ]
+        }]
+      })
       # if a user hides their real name, updating should forget it
       update_all_and_expect_person_to_have(
         username: 'new_username', realname: nil, pathalias: 'new_pathalias', ispro: true, photos_count: 1)

@@ -727,42 +727,38 @@ describe FlickrUpdateJob::PhotoUpdater do
     end
 
     def stub_get_tags(*tags)
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid) do
-        {
-          'photo' => [{
-            'tags' => [{
-              'tag' => tags.map { |tag| { 'raw' => tag.raw, 'machine_tag' => (tag.machine_tag ? 1 : 0).to_s } }
-            }]
+      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).and_return({
+        'photo' => [{
+          'tags' => [{
+            'tag' => tags.map { |tag| { 'raw' => tag.raw, 'machine_tag' => (tag.machine_tag ? 1 : 0).to_s } }
           }]
-        }
-      end
+        }]
+      })
     end
 
     it "deletes previous tags if the photo currently has no tags" do
       create :tag, photo: photo, raw: 'old tag'
       allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).and_return({
-          'photo' => [{
-            'tags' => [{}]
-          }]
-        })
+        'photo' => [{
+          'tags' => [{}]
+        }]
+      })
       described_class.update_tags photo
       expect(photo.tags).to be_empty
     end
 
     it "leaves previous tags alone if the request for tags fails due to FlickrService::FlickrRequestFailedError" do
       create :tag, photo: photo, raw: 'old tag'
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid) do
-        raise FlickrService::FlickrRequestFailedError
-      end
+      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).
+        and_raise(FlickrService::FlickrRequestFailedError)
       described_class.update_tags photo
       expect(photo.tags.map(&:raw)).to eq(['old tag'])
     end
 
     it "leaves previous tags alone if the request for tags fails due to REXML::ParseException" do
       create :tag, photo: photo, raw: 'old tag'
-      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid) do
-        raise REXML::ParseException, "Flickr sent bad XML"
-      end
+      allow(FlickrService.instance).to receive(:tags_get_list_photo).with(photo_id: photo.flickrid).
+        and_raise(REXML::ParseException, "Flickr sent bad XML")
       described_class.update_tags photo
       expect(photo.tags.map(&:raw)).to eq(['old tag'])
     end
