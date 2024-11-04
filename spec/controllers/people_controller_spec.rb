@@ -290,10 +290,13 @@ describe PeopleController do
       allow(person).to receive(:guess_of_longest_lasting_post).and_return(build_stubbed :people_show_guess, place: 1)
       allow(person).to receive(:guess_of_shortest_lasting_post).and_return(build_stubbed :people_show_guess, place: 1)
 
-      # It's important to the test that these guesses are of photos by different people with different IDs
-      allow(person).to receive(:guesses_with_associations).and_return([build_stubbed(:people_show_guess), build_stubbed(:people_show_guess)])
-
       allow(person).to receive(:favorite_posters).and_return([favorite_poster])
+
+      guess1 = build_stubbed :people_show_guess
+      guess2 = build_stubbed :people_show_guess
+      guess3 = build_stubbed :people_show_guess
+      allow(guess3.photo).to receive(:person).and_return(guess2.photo.person)
+      allow(person).to receive(:guesses_with_associations).and_return([guess1, guess2, guess3])
 
     end
 
@@ -314,36 +317,44 @@ describe PeopleController do
       allow(person).to receive(:most_viewed_photo).and_return(build_stubbed :people_show_photo, place: 1)
       allow(person).to receive(:most_faved_photo).and_return(build_stubbed :people_show_photo, place: 1)
 
-      found1 = build_stubbed :people_show_guess
-      allow(found1.photo).to receive(:guesses).and_return([found1])
-      found2 = build_stubbed :people_show_guess
-      allow(found2.photo).to receive(:guesses).and_return([found2])
-      allow(person).to receive(:photos_with_associations).and_return([found1.photo, found2.photo])
-
       allow(person).to receive(:favoring_guessers).and_return([favoring_guesser])
 
       allow(person).to receive(:unfound_photos).and_return([build_stubbed(:people_show_photo)])
       allow(person).to receive(:revealed_photos).and_return([build_stubbed(:people_show_photo)])
 
+      found1 = build_stubbed :people_show_guess
+      allow(found1.photo).to receive(:guesses).and_return([found1])
+      found2 = build_stubbed :people_show_guess
+      allow(found2.photo).to receive(:guesses).and_return([found2])
+      found3 = build_stubbed :people_show_guess, person: found2.person
+      allow(found3.photo).to receive(:guesses).and_return([found3])
+      allow(person).to receive(:photos_with_associations).and_return([found1.photo, found2.photo, found3.photo])
+
     end
 
     def renders_bits_for_user_who_has_guessed
-      expect(response.body).to include "#{person.username} is in 1st place with a score of 2."
+      expect(response.body).to include "#{person.username} is in 1st place with a score of 3."
       expect(response.body).to include "#{person.username} scored the most points in the last week"
       expect(response.body).to include "#{person.username} scored the most points in the last month"
-      expect(response.body).to have_css 'h2', text: "#{person.username} has correctly guessed 2 photos"
-      expect(response.body).to include "Of the photos that #{person.username} has guessed,"
+
+      expect(response.body).to have_css 'h2', text: "#{person.username} has correctly guessed 3 photos"
       expect(response.body).to have_link favorite_poster.username
+      expect(response.body).to include "Of the photos that #{person.username} has guessed,"
+      expect(response.body).to include "2 were posted by"
+      expect(response.body).to include "1 was posted by"
     end
 
     def renders_bits_for_user_who_has_posted
-      expect(response.body).to include "#{person.username} has posted 2 photos to the group, the most"
+      expect(response.body).to include "#{person.username} has posted 3 photos to the group, the most"
       expect(response.body).to include "#{person.username} posted the most photos in the last week"
       expect(response.body).to include "#{person.username} posted the most photos in the last month"
-      expect(response.body).to have_css 'h2', text: "#{person.username} has posted 2 photos"
+
+      expect(response.body).to have_css 'h2', text: "#{person.username} has posted 3 photos"
+      expect(response.body).to have_link favoring_guesser.username
       expect(response.body).to include '1 remains unfound'
       expect(response.body).to include '1 was revealed'
-      expect(response.body).to have_link favoring_guesser.username
+      expect(response.body).to include '2 were guessed by'
+      expect(response.body).to include '1 was guessed by'
     end
 
   end
