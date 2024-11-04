@@ -60,10 +60,10 @@ describe FlickrUpdateJob::PhotoUpdater do
     end
 
     def mock_get_comments_and_tags
-      allow(described_class).to receive(:update_comments).with an_instance_of(FlickrUpdatePhoto)
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with an_instance_of(FlickrUpdatePhoto)
       allow(described_class).to receive(:update_tags).with an_instance_of(FlickrUpdatePhoto)
       yield
-      expect(described_class).to have_received(:update_comments)
+      expect(FlickrUpdateJob::CommentUpdater).to have_received(:update)
       expect(described_class).to have_received(:update_tags)
     end
 
@@ -215,7 +215,7 @@ describe FlickrUpdateJob::PhotoUpdater do
     it "updates only seen_at, views and faves if Flickr says the photo hasn't been updated" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1)
       stubbed_faves = stub_get_faves
-      allow(described_class).to receive(:update_comments)
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
       allow(described_class).to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
@@ -233,7 +233,7 @@ describe FlickrUpdateJob::PhotoUpdater do
         views: 40,
         faves: 6
       described_class.update_all
-      expect(described_class).not_to have_received(:update_comments)
+      expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
       expect(described_class).not_to have_received(:update_tags)
 
       expect(Photo.first_and_only).to have_attributes?(
@@ -259,7 +259,7 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     it "updates only seen_at if Flickr says the photo hasn't been updated and views hasn't changed" do
       stubbed_photo = stub_get_photos lastupdate: Time.utc(2010, 1, 1, 1), views: 40
-      allow(described_class).to receive(:update_comments)
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
       allow(described_class).to receive(:update_tags)
       person = create :person, flickrid: 'incoming_person_flickrid'
       photo_before = create :flickr_update_photo,
@@ -277,7 +277,7 @@ describe FlickrUpdateJob::PhotoUpdater do
         views: 40,
         faves: 6
       described_class.update_all
-      expect(described_class).not_to have_received(:update_comments)
+      expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
       expect(described_class).not_to have_received(:update_tags)
 
       expect(Photo.first_and_only).to have_attributes?(
@@ -393,11 +393,11 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
-      allow(described_class).to receive(:update_comments).with photo
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with photo
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
 
-      expect(described_class).to have_received(:update_comments)
+      expect(FlickrUpdateJob::CommentUpdater).to have_received(:update)
       expect(described_class).to have_received(:update_tags)
       expect(photo.person).to have_attributes?(
         username: 'new_username',
@@ -428,7 +428,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo
       allow(FlickrUpdateJob::LocationGetter).to receive(:get).with(photo.flickrid).and_return([nil, nil, nil])
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
-      allow(described_class).to receive(:update_comments).with photo
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with(photo)
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
 
@@ -445,7 +445,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(nil)
-      allow(described_class).to receive(:update_comments).with photo
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update).with(photo)
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
       expect(photo.faves).to eq(0)
@@ -458,13 +458,13 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo lastupdate: Time.utc(2013)
       allow(FlickrUpdateJob::LocationGetter).to receive(:get)
       allow(FlickrUpdateJob::FaveCounter).to receive(:count)
-      allow(described_class).to receive(:update_comments)
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
       allow(described_class).to receive(:update_tags)
       described_class.update photo
 
       expect(FlickrUpdateJob::LocationGetter).not_to have_received(:get)
       expect(FlickrUpdateJob::FaveCounter).not_to have_received(:count)
-      expect(described_class).not_to have_received(:update_comments)
+      expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
       expect(described_class).not_to have_received(:update_tags)
       expect(photo.person).to have_attributes?(
         username: 'new_username',
@@ -493,11 +493,11 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo comments: 0
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
-      allow(described_class).to receive(:update_comments)
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
       allow(described_class).to receive(:update_tags).with photo
       described_class.update photo
 
-      expect(described_class).not_to have_received(:update_comments)
+      expect(FlickrUpdateJob::CommentUpdater).not_to have_received(:update)
     end
 
     it "doesn't request tags if the photo has none, for performance" do
@@ -505,7 +505,7 @@ describe FlickrUpdateJob::PhotoUpdater do
       stub_get_photo tags: []
       stub_get_photo_location
       allow(FlickrUpdateJob::FaveCounter).to receive(:count).with(photo.flickrid).and_return(7)
-      allow(described_class).to receive(:update_comments)
+      allow(FlickrUpdateJob::CommentUpdater).to receive(:update)
       allow(described_class).to receive(:update_tags)
       described_class.update photo
 
@@ -556,108 +556,6 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     def stub_get_photo_location
       allow(FlickrUpdateJob::LocationGetter).to receive(:get).with(photo.flickrid).and_return([37.123456, -122.654321, 16])
-    end
-
-  end
-
-  describe '.update_comments' do
-    let(:photo) { create :flickr_update_photo }
-
-    it "loads comments from Flickr" do
-      stub_request_to_return_one_comment
-      described_class.update_comments photo
-      photo_has_the_comment_from_the_request
-    end
-
-    it "deletes previous comments" do
-      create :comment, photo: photo
-      stub_request_to_return_one_comment
-      described_class.update_comments photo
-      photo_has_the_comment_from_the_request
-    end
-
-    it "does not delete previous comments if the photo currently has no comments" do
-      create :comment, photo: photo
-      allow(FlickrService.instance).to receive(:photos_comments_get_list).and_return({
-        'comments' => [{}]
-      })
-      described_class.update_comments photo
-      expect(photo.comments.length).to eq(1)
-      expect(Comment.count).to eq(1)
-    end
-
-    it "leaves previous comments alone if the request for comments fails" do
-      create :comment, photo: photo
-      allow(FlickrService.instance).to receive(:photos_comments_get_list).and_raise(FlickrService::FlickrRequestFailedError)
-      described_class.update_comments photo
-      expect(Comment.count).to eq(1)
-    end
-
-    it "ignores a comment with no content" do
-      allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid).and_return({
-        'comments' => [
-          {
-            'comment' => [
-              {
-                'author' => 'commenter_flickrid',
-                'authorname' => 'commenter_username',
-                'content' => 'comment text',
-                'datecreate' => '1356998400'
-              },
-              {
-                'author' => 'commenter_flickrid_2',
-                'authorname' => 'commenter_username_2',
-                'datecreate' => '1356998401'
-              }
-            ]
-          }
-        ]
-      })
-      described_class.update_comments photo
-      photo_has_the_comment_from_the_request
-    end
-
-    it "does not delete previous comments if the photo only has a comment with no content" do
-      create :comment, photo: photo
-      allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid).and_return({
-        'comments' => [
-          {
-            'comment' => [
-              {
-                'author' => 'commenter_flickrid_2',
-                'authorname' => 'commenter_username_2',
-                'datecreate' => '1356998401'
-              }
-            ]
-          }
-        ]
-      })
-      described_class.update_comments photo
-      expect(photo.comments.length).to eq(1)
-      expect(Comment.count).to eq(1)
-    end
-
-    def stub_request_to_return_one_comment
-      allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid).and_return({
-        'comments' => [{
-          'comment' => [{
-            'author' => 'commenter_flickrid',
-            'authorname' => 'commenter_username',
-            'content' => 'comment text',
-            'datecreate' => '1356998400'
-          }]
-        }]
-      })
-    end
-
-    def photo_has_the_comment_from_the_request
-      expect(photo.comments.length).to eq(1)
-      expect(photo.comments.first).to have_attributes?(
-        flickrid: 'commenter_flickrid',
-        username: 'commenter_username',
-        comment_text: 'comment text',
-        commented_at: Time.utc(2013)
-      )
     end
 
   end
