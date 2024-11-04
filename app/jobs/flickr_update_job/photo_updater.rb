@@ -239,7 +239,7 @@ module FlickrUpdateJob
             {
               flickrid: parsed_comment['author'],
               username: parsed_comment['authorname'],
-              comment_text: parsed_comment['content']&.scrub, # we got non-UTF8 text once
+              comment_text: parsed_comment['content'].scrub, # we got non-UTF8 text once
               commented_at: Time.at(parsed_comment['datecreate'].to_i).getutc
             }
           end
