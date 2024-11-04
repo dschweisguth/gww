@@ -47,10 +47,10 @@ module FlickrUpdateJob
     private_class_method def self.create_or_update_photo_from(parsed_photo, person, now)
       photo = FlickrUpdatePhoto.find_by_flickrid parsed_photo['id']
       if photo
-        update_photo_from(parsed_photo, now, photo)
+        update_photo_from parsed_photo, now, photo
         0
       else
-        create_photo_from(parsed_photo, person, now)
+        create_photo_from parsed_photo, person, now
         1
       end
     end
@@ -64,7 +64,7 @@ module FlickrUpdateJob
         seen_at: now,
         views: parsed_photo['views'].to_i
       }
-      add_full_attributes_from(parsed_photo, attributes)
+      add_full_attributes_from parsed_photo, attributes
       attributes[:faves] = fave_count(parsed_photo['id']) || 0
 
       photo = FlickrUpdatePhoto.create! attributes
@@ -79,7 +79,7 @@ module FlickrUpdateJob
 
       attributes = { seen_at: now, views: views }
       if photo_needs_full_update
-        add_full_attributes_from(parsed_photo, attributes)
+        add_full_attributes_from parsed_photo, attributes
       end
 
       if photo_needs_full_update || photo.views != views

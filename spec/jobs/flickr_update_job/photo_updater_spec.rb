@@ -27,32 +27,30 @@ describe FlickrUpdateJob::PhotoUpdater do
           title: 'The title',
           description: 'The description'
         }.merge opts
-      allow(FlickrService.instance).to receive(:groups_pools_get_photos) do
-        {
-          'photos' => [{
-            'pages' => '1',
-            'photo' => [{
-              'id' => stubbed_photo[:id],
-              'owner' => stubbed_photo[:owner],
-              'ownername' => stubbed_photo[:ownername],
-              'pathalias' => stubbed_photo[:pathalias],
-              'ispro' => stubbed_photo[:ispro] ? '1' : '0',
-              'farm' => stubbed_photo[:farm],
-              'server' => stubbed_photo[:server],
-              'secret' => stubbed_photo[:secret],
-              'datetaken' => stubbed_photo[:datetaken].strftime("%Y-%m-%d %H-%M-%S"),
-              'dateadded' => stubbed_photo[:dateadded].to_i.to_s,
-              'latitude' => stubbed_photo[:latitude].to_s,
-              'longitude' => stubbed_photo[:longitude].to_s,
-              'accuracy' => stubbed_photo[:accuracy].to_s,
-              'lastupdate' => stubbed_photo[:lastupdate].to_i.to_s,
-              'views' => stubbed_photo[:views].to_s,
-              'title' => stubbed_photo[:title],
-              'description' => [stubbed_photo[:description]]
-            }.merge(stub_opts)]
-          }]
-        }
-      end
+      allow(FlickrService.instance).to receive(:groups_pools_get_photos).and_return({
+        'photos' => [{
+          'pages' => '1',
+          'photo' => [{
+            'id' => stubbed_photo[:id],
+            'owner' => stubbed_photo[:owner],
+            'ownername' => stubbed_photo[:ownername],
+            'pathalias' => stubbed_photo[:pathalias],
+            'ispro' => stubbed_photo[:ispro] ? '1' : '0',
+            'farm' => stubbed_photo[:farm],
+            'server' => stubbed_photo[:server],
+            'secret' => stubbed_photo[:secret],
+            'datetaken' => stubbed_photo[:datetaken].strftime("%Y-%m-%d %H-%M-%S"),
+            'dateadded' => stubbed_photo[:dateadded].to_i.to_s,
+            'latitude' => stubbed_photo[:latitude].to_s,
+            'longitude' => stubbed_photo[:longitude].to_s,
+            'accuracy' => stubbed_photo[:accuracy].to_s,
+            'lastupdate' => stubbed_photo[:lastupdate].to_i.to_s,
+            'views' => stubbed_photo[:views].to_s,
+            'title' => stubbed_photo[:title],
+            'description' => [stubbed_photo[:description]]
+          }.merge(stub_opts)]
+        }]
+      })
       stubbed_photo
     end
 
@@ -161,13 +159,11 @@ describe FlickrUpdateJob::PhotoUpdater do
     end
 
     it "handles an API response with no photos" do
-      allow(FlickrService.instance).to receive(:groups_pools_get_photos) do
-        {
-          'photos' => [{
-            'pages' => '1',
-          }]
-        }
-      end
+      allow(FlickrService.instance).to receive(:groups_pools_get_photos).and_return({
+        'photos' => [{
+          'pages' => '1',
+        }]
+      })
       expect(described_class.update_all).to eq([0, 0, 1, 1])
     end
 
@@ -430,9 +426,8 @@ describe FlickrUpdateJob::PhotoUpdater do
     it "handles a photo with no location information" do
       stub_get_person
       stub_get_photo
-      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid) do
-        raise FlickrService::FlickrReturnedAnError, stat: 'fail', code: 2, msg: "whatever"
-      end
+      error = FlickrService::FlickrReturnedAnError.new stat: 'fail', code: 2, msg: "whatever"
+      allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_raise(error)
       allow(described_class).to receive(:fave_count).with(photo.flickrid).and_return(7)
       allow(described_class).to receive(:update_comments).with photo
       allow(described_class).to receive(:update_tags).with photo
@@ -536,58 +531,56 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     def stub_get_person
       allow(FlickrService.instance).to receive(:people_get_info).with(user_id: photo.person.flickrid).and_return({
-          'person' => [{
-            'username' => ['new_username'],
-            'realname' => ['new_realname'],
-            'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
-            'ispro' => '1',
-            'photos' => [
-              {
-                'count' => [1]
-              }
-            ]
-          }]
-        })
+        'person' => [{
+          'username' => ['new_username'],
+          'realname' => ['new_realname'],
+          'photosurl' => ['https://www.flickr.com/photos/new_pathalias/'],
+          'ispro' => '1',
+          'photos' => [
+            {
+              'count' => [1]
+            }
+          ]
+        }]
+      })
     end
 
     def stub_get_photo(lastupdate: Time.utc(2011, 1, 1, 1), comments: 1, tags: ['Tag 1'])
-      allow(FlickrService.instance).to receive(:photos_get_info).with(photo_id: photo.flickrid) do
-        {
-          'photo' => [{
-            'farm' => '1',
-            'server' => 'incoming_server',
-            'secret' => 'incoming_secret',
-            'views' => '50',
-            'title' => ['The title'],
-            'description' => ['The description'],
-            'dates' => [{
-              'taken' => Time.utc(2010).strftime("%Y-%m-%d %H-%M-%S"),
-              'lastupdate' => lastupdate.to_i.to_s
-            }],
-            'comments' => [comments.to_s],
-            'tags' => [
-              # The response is structured differently if there are no tags than if there are tags
-              if tags.any?
-                { 'tag' => tags.map { |tag| { 'raw' => tag } } }
-              else
-                {}
-              end
-            ]
-          }]
-        }
-      end
+      allow(FlickrService.instance).to receive(:photos_get_info).with(photo_id: photo.flickrid).and_return({
+        'photo' => [{
+          'farm' => '1',
+          'server' => 'incoming_server',
+          'secret' => 'incoming_secret',
+          'views' => '50',
+          'title' => ['The title'],
+          'description' => ['The description'],
+          'dates' => [{
+            'taken' => Time.utc(2010).strftime("%Y-%m-%d %H-%M-%S"),
+            'lastupdate' => lastupdate.to_i.to_s
+          }],
+          'comments' => [comments.to_s],
+          'tags' => [
+            # The response is structured differently if there are no tags than if there are tags
+            if tags.any?
+              { 'tag' => tags.map { |tag| { 'raw' => tag } } }
+            else
+              {}
+            end
+          ]
+        }]
+      })
     end
 
     def stub_get_photo_location
       allow(FlickrService.instance).to receive(:photos_geo_get_location).with(photo_id: photo.flickrid).and_return({
-          'photo' => [{
-            'location' => [{
-              'latitude' => '37.123456',
-              'longitude' => '-122.654321',
-              'accuracy' => '16'
-            }]
+        'photo' => [{
+          'location' => [{
+            'latitude' => '37.123456',
+            'longitude' => '-122.654321',
+            'accuracy' => '16'
           }]
-        })
+        }]
+      })
     end
 
   end
@@ -595,23 +588,21 @@ describe FlickrUpdateJob::PhotoUpdater do
   describe '.fave_count' do
     it "returns the number of faves that the photo has" do
       allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1).and_return({
-          'stat' => 'ok',
-          'photo' => [{ 'total' => '7' }]
-        })
+        'stat' => 'ok',
+        'photo' => [{ 'total' => '7' }]
+      })
       expect(described_class.fave_count('photo_flickrid')).to eq(7)
     end
 
     it "returns nil if there is a REXML::ParseException" do
-      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1) do
-        raise REXML::ParseException, "Oops!"
-      end
+      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1).
+        and_raise(REXML::ParseException, "Oops!")
       expect(described_class.fave_count('photo_flickrid')).to be_nil
     end
 
     it "returns nil if there is a FlickrService::FlickrRequestFailedError" do
-      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1) do
-        raise FlickrService::FlickrRequestFailedError
-      end
+      allow(FlickrService.instance).to receive(:photos_get_favorites).with(photo_id: 'photo_flickrid', per_page: 1).
+        and_raise(FlickrService::FlickrRequestFailedError)
       expect(described_class.fave_count('photo_flickrid')).to be_nil
     end
 
@@ -636,8 +627,8 @@ describe FlickrUpdateJob::PhotoUpdater do
     it "does not delete previous comments if the photo currently has no comments" do
       create :comment, photo: photo
       allow(FlickrService.instance).to receive(:photos_comments_get_list).and_return({
-          'comments' => [{}]
-        })
+        'comments' => [{}]
+      })
       described_class.update_comments photo
       expect(photo.comments.length).to eq(1)
       expect(Comment.count).to eq(1)
@@ -645,33 +636,31 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     it "leaves previous comments alone if the request for comments fails" do
       create :comment, photo: photo
-      allow(FlickrService.instance).to receive(:photos_comments_get_list) do
-        raise FlickrService::FlickrRequestFailedError
-      end
+      allow(FlickrService.instance).to receive(:photos_comments_get_list).and_raise(FlickrService::FlickrRequestFailedError)
       described_class.update_comments photo
       expect(Comment.count).to eq(1)
     end
 
     it "ignores a comment with no content" do
       allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid).and_return({
-          'comments' => [
-            {
-              'comment' => [
-                {
-                  'author' => 'commenter_flickrid',
-                  'authorname' => 'commenter_username',
-                  'content' => 'comment text',
-                  'datecreate' => '1356998400'
-                },
-                {
-                  'author' => 'commenter_flickrid_2',
-                  'authorname' => 'commenter_username_2',
-                  'datecreate' => '1356998401'
-                }
-              ]
-            }
-          ]
-        })
+        'comments' => [
+          {
+            'comment' => [
+              {
+                'author' => 'commenter_flickrid',
+                'authorname' => 'commenter_username',
+                'content' => 'comment text',
+                'datecreate' => '1356998400'
+              },
+              {
+                'author' => 'commenter_flickrid_2',
+                'authorname' => 'commenter_username_2',
+                'datecreate' => '1356998401'
+              }
+            ]
+          }
+        ]
+      })
       described_class.update_comments photo
       photo_has_the_comment_from_the_request
     end
@@ -698,15 +687,15 @@ describe FlickrUpdateJob::PhotoUpdater do
 
     def stub_request_to_return_one_comment
       allow(FlickrService.instance).to receive(:photos_comments_get_list).with(photo_id: photo.flickrid).and_return({
-          'comments' => [{
-            'comment' => [{
-              'author' => 'commenter_flickrid',
-              'authorname' => 'commenter_username',
-              'content' => 'comment text',
-              'datecreate' => '1356998400'
-            }]
+        'comments' => [{
+          'comment' => [{
+            'author' => 'commenter_flickrid',
+            'authorname' => 'commenter_username',
+            'content' => 'comment text',
+            'datecreate' => '1356998400'
           }]
-        })
+        }]
+      })
     end
 
     def photo_has_the_comment_from_the_request
