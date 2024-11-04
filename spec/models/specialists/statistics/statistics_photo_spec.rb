@@ -233,7 +233,7 @@ describe StatisticsPhoto do
 
     it "removes an existing inferred geocode if the comment has multiple geocodable locations" do
       photo = create :statistics_photo, inferred_latitude: 37, inferred_longitude: -122
-      answer = create :guess, photo: photo, comment_text: 'A comment with multiple gecodable locations'
+      answer = create :guess, photo: photo, comment_text: 'A comment with multiple geocodable locations'
       location1 = Intersection.new '25th and Valencia', '25th', nil, 'Valencia', nil
       location2 = Intersection.new '26th and Valencia', '26th', nil, 'Valencia', nil
       allow(parser).to receive(:parse).with(answer.comment_text).and_return([location1, location2])
