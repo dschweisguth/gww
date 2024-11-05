@@ -34,6 +34,12 @@ describe PhotosSearchAutocompletionsPerson do
       expect(described_class.photo_search_autocompletions(person.username, 'unfound')).to eq([])
     end
 
+    it "handles a missing username" do
+      person = create :photos_search_autocompletions_person, photo_count: 1
+      create :photo, person: person, game_status: 'unfound'
+      expect(described_class.photo_search_autocompletions(nil, 'unfound')).to eq([autocompletion(person)])
+    end
+
     def autocompletion(person)
       { value: person.username, label: person.photo_search_autocompletion_label }
     end
