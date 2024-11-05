@@ -78,6 +78,8 @@ RSpec/FactoryBot/ConsistentParenthesesStyle:
 
 Layout/ArgumentAlignment:
   Enabled: false
+Layout/CommentIndentation:
+  Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Layout/EmptyLinesAroundBlockBody:

@@ -171,7 +171,7 @@ Then /^I should see a tag with "([^"]*)" highlighted$/ do |term|
 end
 
 Then /^I should not see the comment$/ do
-  expect(page).to_not have_content(@comment.comment_text)
+  expect(page).not_to have_content(@comment.comment_text)
 end
 
 Then /^I should see the comment with "([^"]+)" and "([^"]+)" highlighted$/ do |term1, term2|

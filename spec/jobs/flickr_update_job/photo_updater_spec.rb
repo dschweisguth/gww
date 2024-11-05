@@ -162,7 +162,7 @@ module FlickrUpdateJob
       it "handles an API response with no photos" do
         allow(FlickrService.instance).to receive(:groups_pools_get_photos).and_return({
           'photos' => [{
-            'pages' => '1',
+            'pages' => '1'
           }]
         })
         expect(PhotoUpdater.update_all).to eq([0, 0, 1, 1])
