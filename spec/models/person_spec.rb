@@ -1,4 +1,32 @@
 describe Person do
+  describe '.sort_by_photo_count_and_username' do
+    let(:guesser_a) { double(username: 'guesser_a') }
+    let(:guesser_b) { double(username: 'guesser_b') }
+
+    it "sorts first by photo count, descending" do
+      guessers = {
+        guesser_a => [nil],
+        guesser_b => [nil, nil]
+      }
+      expect(Person.sort_by_photo_count_and_username(guessers)).to eq([
+        [guesser_b, [nil, nil]],
+        [guesser_a, [nil]]
+      ])
+    end
+
+    it "sorts second by username, ascending" do
+      guessers = {
+        guesser_b => [nil],
+        guesser_a => [nil]
+      }
+      expect(Person.sort_by_photo_count_and_username(guessers)).to eq([
+        [guesser_a, [nil]],
+        [guesser_b, [nil]]
+      ])
+    end
+
+  end
+
   describe '#flickrid' do
     it { does validate_presence_of :flickrid }
     it { does have_readonly_attribute :flickrid }
