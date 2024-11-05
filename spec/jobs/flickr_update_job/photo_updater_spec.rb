@@ -121,6 +121,23 @@ module FlickrUpdateJob
 
       end
 
+      it "interprets ispro" do
+        stubbed_photo = stub_get_photos ispro: false
+        stub_get_faves
+        mock_get_comments_and_tags do
+          expect(PhotoUpdater.update_all).to eq([1, 1, 1, 1])
+        end
+
+        expect(Photo.first_and_only.person).to have_attributes?(
+          flickrid: stubbed_photo[:owner],
+          username: stubbed_photo[:ownername],
+          pathalias: stubbed_photo[:pathalias],
+          ispro: false,
+          photos_count: 0
+        )
+
+      end
+
       it "uses an existing person" do
         stubbed_photo = stub_get_photos
         stub_get_faves
