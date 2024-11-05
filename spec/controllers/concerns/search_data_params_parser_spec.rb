@@ -1,6 +1,6 @@
 describe 'SearchDataParamsParser' do
   describe '#model_params' do
-    # See search_data_params_parser_spec for examples that are common to the two parsers
+    # See search_params_parser_spec for examples that are common to the two parsers
 
     it "returns model search parameters including defaults not present in the segments" do
       parser_parses('page/1').into \
