@@ -43,7 +43,7 @@ module ScoreReportsControllerSupport
     @total_posters_only = @people_by_score[0].nil? ? 0 : @people_by_score[0].length
     @total_correct_guessers = @total_participants - @total_posters_only
     @member_count = FlickrUpdate.latest.member_count
-    @total_single_guessers = @people_by_score[1].nil? ? 1 : @people_by_score[1].length
+    @total_single_guessers = @people_by_score[1].nil? ? 0 : @people_by_score[1].length
 
     raw_html = render_to_string(partial: 'score_reports/raw_stats').chomp
     @gww_stats_html = raw_html.gsub /$/, '<br/>'

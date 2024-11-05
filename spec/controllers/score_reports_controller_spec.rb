@@ -24,11 +24,42 @@ describe ScoreReportsController do
       allow(ScoreReport).to receive(:find).with('1').and_return(build_stubbed :score_report, created_at: report_date.getutc)
     end
 
-    it "renders the page" do
+    it "shows a report with all scores" do
       previous_report_date = Time.local(2011).getutc
       previous_report = build_stubbed :score_report, created_at: previous_report_date
       allow(ScoreReport).to receive(:previous).with(report_date.getutc).and_return(previous_report)
       renders_report_for report_date, previous_report_date, :show, id: '1'
+    end
+
+    it "shows a report with no scores" do
+      previous_report_date = Time.local(2011).getutc
+      previous_report = build_stubbed :score_report, created_at: previous_report_date
+      allow(ScoreReport).to receive(:previous).with(report_date.getutc).and_return(previous_report)
+
+      allow(ScoreReportsGuess).to receive(:all_between).with(previous_report_date, report_date.getutc).and_return([])
+      allow(Revelation).to receive(:all_between).with(previous_report_date, report_date.getutc).and_return([])
+
+      allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 7).and_return([])
+      allow(ScoreReportsPerson).to receive(:high_scorers).with(report_date, 30).and_return([])
+
+      allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 7).and_return([])
+      allow(ScoreReportsPerson).to receive(:top_posters).with(report_date, 30).and_return([])
+
+      allow(ScoreReportsPhoto).to receive(:count_between).with(previous_report_date, report_date.getutc).and_return(0)
+      allow(ScoreReportsPhoto).to receive(:unfound_or_unconfirmed_count_before).with(report_date).and_return(0)
+
+      allow(ScoreReportsPerson).to receive(:all_before).with(report_date).and_return([])
+
+      allow(ScoreReportsPhoto).to receive(:add_posts).with([], report_date, :post_count)
+      allow(ScoreReportsPerson).to receive(:by_score).with([], report_date).and_return({})
+      allow(ScoreReportsPerson).to receive(:add_change_in_standings).with({}, [], previous_report_date, [])
+
+      allow(FlickrUpdate).to receive(:latest).and_return(build_stubbed :flickr_update, member_count: 0)
+
+      get :show, id: '1'
+
+      expect(response.body).not_to match(/new guesses by .../)
+      expect(response.body).not_to match(/photos revealed by .../)
     end
 
     it "uses a hardcoded previous report date for the earliest real one" do
