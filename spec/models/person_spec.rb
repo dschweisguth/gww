@@ -1,7 +1,7 @@
 describe Person do
   describe '.sort_by_photo_count_and_username' do
-    let(:guesser_a) { double(username: 'guesser_a') }
-    let(:guesser_b) { double(username: 'guesser_b') }
+    let(:guesser_a) { instance_double(Person, username: 'guesser_a') }
+    let(:guesser_b) { instance_double(Person, username: 'guesser_b') }
 
     it "sorts first by photo count, descending" do
       guessers = {
