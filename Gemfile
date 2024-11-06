@@ -50,3 +50,8 @@ group :production do
   gem 'passenger'
   gem 'sass-rails'
 end
+
+group :test, :production do
+  # Work around https://github.com/ffi/ffi/issues/1103 in test Github action
+  gem 'ffi', '~> 1.16.3'
+end
