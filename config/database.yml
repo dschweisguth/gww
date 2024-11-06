@@ -1,0 +1,15 @@
+defaults: &defaults
+  adapter: mysql2spatial
+  encoding: utf8mb4
+  pool: 5
+  host: localhost
+  username: gww_dev
+  password: gww_dev
+
+development:
+  <<: *defaults
+  database: gww_dev
+
+test:
+  <<: *defaults
+  database: gww_test
