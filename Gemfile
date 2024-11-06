@@ -10,7 +10,6 @@ gem 'american_date'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'json', '~> 2.7' # without this, cucumber features use the default version and fail
-gem 'mini_racer'
 gem 'mysql2'
 gem 'nokogiri'
 gem 'rails', '~> 4.2.0'
