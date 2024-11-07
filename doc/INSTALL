@@ -41,6 +41,7 @@ Install gems:
 > bundle config build.mysql2 --with-opt-dir=/opt/local
 > bundle
 Configure:
+  > cp .env-template .env
   Configure database credentials
     > cp config/database{_template,}.yml
     Edit, change usernames if you want different ones, and choose passwords
@@ -50,8 +51,7 @@ Configure:
     Edit and fill in your secret, api_key, oauth_token and oauth_token_secret
   Configure Google Maps credentials
     Make a Google Maps browser key per https://developers.google.com/maps/documentation/javascript/get-api-key#key
-    > cp config/google_maps{_template}.yml
-    Edit and fill in your key
+    Add to .env
 
 Create database user and databases
 -----------------------------------
