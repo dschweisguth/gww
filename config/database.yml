@@ -1,10 +1,11 @@
 defaults: &defaults
   adapter: mysql2spatial
   encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
   pool: 5
-  host: localhost
+  host: <%= ENV['DATABASE_HOST'] %>
   username: gww_dev
-  password: gww_dev
+  password: <%= ENV['DATABASE_PASSWORD'] %>
 
 development:
   <<: *defaults
@@ -13,3 +14,8 @@ development:
 test:
   <<: *defaults
   database: gww_test
+
+production:
+  <<: *defaults
+  database: gww_prod
+  username: gww_prod

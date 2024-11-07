@@ -7,6 +7,7 @@ gem 'actionpack-page_caching'
 gem 'activerecord-mysql2spatial-adapter', git: 'https://github.com/dschweisguth/activerecord-mysql2spatial-adapter.git',
   branch: 'v0.5.2-ar-4.2-mysql2-0.4-mysql-8-compatibility'
 gem 'american_date'
+gem 'dotenv-rails', '~> 2.8.1'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'json', '~> 2.7' # without this, cucumber features use the default version and fail
