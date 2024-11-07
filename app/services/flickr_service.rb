@@ -4,14 +4,12 @@ require 'xmlsimple'
 
 class FlickrService
   API_URL = "https://api.flickr.com/services/rest/".freeze
-  FILE = YAML.load_file "#{Rails.root}/config/flickr_credentials.yml"
-  CREDENTIALS = FILE['flickr_credentials']
-  SECRET = CREDENTIALS['secret']
-  OAUTH_CONSUMER_KEY = CREDENTIALS['api_key']
-  OAUTH_TOKEN = CREDENTIALS['oauth_token']
-  OAUTH_TOKEN_SECRET = CREDENTIALS['oauth_token_secret']
-  GROUP_ID = CREDENTIALS['group_id']
-  SCORE_TOPIC_URL = CREDENTIALS['score_topic_url']
+  SECRET = ENV['FLICKR_SECRET']
+  OAUTH_CONSUMER_KEY = ENV['FLICKR_API_KEY']
+  OAUTH_TOKEN = ENV['FLICKR_OAUTH_TOKEN']
+  OAUTH_TOKEN_SECRET = ENV['FLICKR_OAUTH_TOKEN_SECRET']
+  GROUP_ID = ENV['FLICKR_GROUP_ID']
+  SCORE_TOPIC_URL = ENV['FLICKR_SCORE_TOPIC_URL']
 
   def self.instance
     @instance ||= new
