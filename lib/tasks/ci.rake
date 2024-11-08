@@ -7,8 +7,5 @@ task ci: ['ci:config', 'db:reset', 'db:schema:dump', :default]
 namespace :ci do
   task :config do
     FileUtils.cp "#{Dir.home}/lib/TeamCity-config/.env", '.'
-    %w(flickr_credentials.yml).each do |file|
-      FileUtils.cp "#{Dir.home}/lib/TeamCity-config/#{file}", 'config'
-    end
   end
 end
