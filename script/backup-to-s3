@@ -6,14 +6,14 @@
 
 require 'English'
 require 'date'
-require 'fileutils'
+require 'dotenv'
 require 'open3'
-require 'yaml'
 
 class BackUp
   BUCKET = 's3://guesswherewatcher-backups'.freeze
 
   def run
+    Dotenv.load "#{__dir__}/../.env"
     back_up
     update_index_page
   end
@@ -21,15 +21,14 @@ class BackUp
   private
 
   def back_up
-    database = database_property 'database'
+    database = 'gww_prod'
     file = "#{database}-#{DateTime.now.strftime '%y%m%d-%H:%M:%S'}.sql.gz"
     statuses = Open3.pipeline(
       [
-        { 'MYSQL_PWD' => database_property('password') },
+        { 'MYSQL_PWD' => ENV['DATABASE_PASSWORD'] },
         # mysqldump uses UTF-8 despite server settings unless told otherwise
         "mysqldump --default-character-set=utf8mb4 " +
-          "-h#{database_property 'host'} -u#{database_property 'username'} " +
-          database
+          "-h#{ENV['DATABASE_HOST']} -ugww_prod #{database}"
       ],
       "gzip",
       "aws s3 cp - #{BUCKET}/#{file} --storage-class STANDARD_IA"
@@ -41,12 +40,6 @@ class BackUp
         failure[0].inspect
       exit 1
     end
-  end
-
-  def database_property(name)
-    @database_properties ||=
-      YAML.safe_load(File.read("#{__dir__}/../config/database.yml"))['production']
-    @database_properties[name]
   end
 
   def update_index_page
