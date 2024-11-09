@@ -50,12 +50,12 @@ jobs:
                 .data.map(tag => parseInt(tag.ref.split('-')[1]))
                 .reduce((largest_so_far, n) => Math.max(largest_so_far, n), 0)
             const newBuildTag = `build-${previousSuccessfulBuildNumber + 1}`
-            //github.rest.git.createRef({
-            //  owner: context.repo.owner,
-            //  repo: context.repo.repo,
-            //  sha: context.sha,
-            //  ref: `refs/tags/${newBuildTag}`
-            //})
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              ref: `refs/tags/${newBuildTag}`
+            })
             console.log(`Tagged ${context.sha} ${newBuildTag}`)
 
       - name: Deploy
@@ -69,4 +69,4 @@ jobs:
           END
           echo "${{secrets.DEPLOY_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          #ssh ec2-user@guesswheresf.org lib/gww/script/update-and-restart
+          ssh ec2-user@guesswheresf.org lib/gww/script/update-and-restart
