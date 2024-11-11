@@ -16,7 +16,7 @@ gem 'nokogiri'
 gem 'rails', '~> 4.2.0'
 # See https://github.com/rgeo/rgeo-activerecord/issues/23
 gem 'rgeo-activerecord', git: 'https://github.com/dschweisguth/rgeo-activerecord.git', tag: 'v2.1.1-dump-schema'
-gem 'sprockets', '~> 3.7' # 4.0 requires a manifest which I don't feel like writing right now
+gem 'sprockets'
 gem 'terser'
 gem 'warning'
 gem 'will_paginate'
