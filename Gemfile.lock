@@ -146,6 +146,7 @@ GEM
     json (2.7.5)
     launchy (2.5.2)
       addressable (~> 2.8)
+    libv8-node (16.19.0.1)
     logger (1.6.1)
     loofah (2.23.1)
       crass (~> 1.0.2)
@@ -163,6 +164,8 @@ GEM
     mime-types-data (3.2024.1001)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
+    mini_racer (0.6.4)
+      libv8-node (~> 16.19.0.0)
     minitest (5.25.1)
     multi_test (0.1.2)
     mysql2 (0.4.10)
@@ -340,6 +343,7 @@ DEPENDENCIES
   jquery-ui-rails
   json (~> 2.7)
   launchy
+  mini_racer
   mysql2
   nokogiri
   passenger

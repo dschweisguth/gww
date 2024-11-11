@@ -47,6 +47,7 @@ group :test do
 end
 
 group :production do
+  gem 'mini_racer'
   gem 'passenger'
   gem 'sass-rails'
 end
