@@ -63,7 +63,7 @@ end
 
 def page_config_json(bounds, photos)
   {
-    api_key: ENV['GOOGLE_MAPS_API_KEY'],
+    api_key: ENV.fetch('GOOGLE_MAPS_API_KEY'),
     photos: {
       partial: false,
       bounds: bounds.as_json,

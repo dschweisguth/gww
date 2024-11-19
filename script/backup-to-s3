@@ -25,10 +25,10 @@ class BackUp
     file = "#{database}-#{DateTime.now.strftime '%y%m%d-%H:%M:%S'}.sql.gz"
     statuses = Open3.pipeline(
       [
-        { 'MYSQL_PWD' => ENV['DATABASE_PASSWORD'] },
+        { 'MYSQL_PWD' => ENV.fetch('DATABASE_PASSWORD') },
         # mysqldump uses UTF-8 despite server settings unless told otherwise
         "mysqldump --default-character-set=utf8mb4 " +
-          "-h#{ENV['DATABASE_HOST']} -ugww_prod #{database}"
+          "-h#{ENV.fetch('DATABASE_HOST')} -ugww_prod #{database}"
       ],
       "gzip",
       "aws s3 cp - #{BUCKET}/#{file} --storage-class STANDARD_IA"
