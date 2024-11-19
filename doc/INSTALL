@@ -99,7 +99,7 @@ Run ESLint
 ----------
 > npx eslint .
 
-Run StyleLine
+Run StyleLint
 > npx stylelint "**/*.css"
 
 Install on Linux, for production
