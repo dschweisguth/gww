@@ -22,8 +22,14 @@ jobs:
       - run: sudo systemctl start mysql
       - run: mysql -uroot -proot < db/create-user.sql
       - name: Run tests
-        run: bundle exec rake db:create db:structure:load db:schema:dump default
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > cc-test-reporter
+          chmod 755 cc-test-reporter
+          ./cc-test-reporter before-build
+          bundle exec rake db:create db:structure:load db:schema:dump default
+          ./cc-test-reporter after-build --exit-code $?
         env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
           RAILS_ENV: test
           DATABASE_HOST: localhost
           DATABASE_PASSWORD: gww_dev
