@@ -1,4 +1,4 @@
-# Guess Where Watcher [![Maintainability](https://api.codeclimate.com/v1/badges/c069f479d506278a2657/maintainability)](https://codeclimate.com/github/dschweisguth/gww/maintainability)
+# Guess Where Watcher [![Test Coverage](https://api.codeclimate.com/v1/badges/c069f479d506278a2657/test_coverage)](https://codeclimate.com/github/dschweisguth/gww/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/c069f479d506278a2657/maintainability)](https://codeclimate.com/github/dschweisguth/gww/maintainability)
 
 Guess Where Watcher (GWW) is the scoring, statistics and search application
 for the Guess Where SF Flickr group. It was written by Tomas Apodaca and is
