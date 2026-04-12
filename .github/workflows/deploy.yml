@@ -11,6 +11,9 @@ jobs:
         with:
           timezoneLinux: "America/Los_Angeles"
       - uses: actions/checkout@v4
+      - uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: 8.4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6.10
@@ -18,9 +21,11 @@ jobs:
           cache-version: 2
         env:
           BUNDLE_WITHOUT: production
-      - run: mysql --version # the default runner currently includes 8.0.39
-      - run: sudo systemctl start mysql
-      - run: mysql -uroot -proot < db/create-user.sql
+      - name: Log mysql client version
+        run: mysql --version
+      - name: Log mysql server version
+        run: mysql -uroot -e 'SELECT version()'
+      - run: mysql -uroot < db/create-user.sql
       - name: Run tests
         run: |
           bundle exec rake db:create db:structure:load db:schema:dump default
