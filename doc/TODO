@@ -10,6 +10,8 @@ Debt
 Review slow tests
 Measure Javascript coverage
 Merge revelations into guesses?
+Upgrade to Rails 5
+Update SF streets data
 
 Features
 
@@ -22,6 +24,7 @@ Parse
 - "1535 7th, on the west side between Kirkham and Lawton"
 - Mount and Mt(.)
 - "Market Street and Seventh Street?"
+- x side of y just z of ɑ
 Post scores to Flickr group automatically
 Add last-updated dates to photos which
   - reflect only things relevant to scoring
