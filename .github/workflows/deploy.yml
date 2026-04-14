@@ -29,7 +29,8 @@ jobs:
       - run: mysql -uroot -e'show databases;'
       - name: Run tests
         run: |
-          bundle exec rake db:create db:structure:load db:schema:dump default
+          bundle exec rake db:create
+          bundle exec rake db:structure:load db:schema:dump default
         env:
           RAILS_ENV: test
           DATABASE_HOST: localhost
