@@ -34,7 +34,7 @@ jobs:
           bundle exec rake db:structure:load db:schema:dump default
         env:
           RAILS_ENV: test
-          DATABASE_HOST: localhost
+          DATABASE_HOST: 127.0.0.1
           DATABASE_PASSWORD: gww_dev
           FLICKR_SECRET: ${{secrets.FLICKR_SECRET}}
           FLICKR_API_KEY: ${{secrets.FLICKR_API_KEY}}
