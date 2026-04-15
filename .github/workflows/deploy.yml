@@ -27,8 +27,7 @@ jobs:
         run: mysql -uroot -e 'SELECT version()'
       - run: mysql -uroot < db/create-user.sql
       - name: Run tests
-        run: |
-          bundle exec rake db:create db:structure:load db:schema:dump default
+        run: bundle exec rake db:create db:structure:load db:schema:dump default
         env:
           RAILS_ENV: test
           DATABASE_HOST: 127.0.0.1 # Connect through TCP. Connecting to "localhost" would connect through a socket, which the mysql setup action puts in a nonstandard place.
